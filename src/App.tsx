@@ -17,11 +17,9 @@ const theme = createTheme({
   palette: {
     primary: {
       main: "#F37165", // Primary 색상 설정
-      // contrastText: "#FFFFFF", // 버튼의 텍스트 색상을 흰색으로 설정
     },
     secondary: {
       main: "#FEF2F1", // Secondary 색상 설정
-      // contrastText: "#F37165", // 버튼의 텍스트 색상을 흰색으로 설정
     },
   },
   typography: {
