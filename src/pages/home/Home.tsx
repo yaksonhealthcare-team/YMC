@@ -31,7 +31,7 @@ const Home = () => {
         <TextField
           placeholder="Enter your name"
           label="Label goes here"
-          helperText=""
+          helperText="Hint message goes here"
           value={value}
           state="default"
           iconRight={<ReloadIcon />}
