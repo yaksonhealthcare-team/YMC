@@ -1,6 +1,7 @@
 import ReloadIcon from "@components/icons/ReloadIcon"
 import Button from "@components/Button"
 import TextField from "@components/TextField"
+import TextArea from "@components/TextArea"
 import { useState } from "react"
 
 const Home = () => {
@@ -37,6 +38,18 @@ const Home = () => {
           state="default"
           iconRight={<ReloadIcon />}
           button
+          onChange={(e: any) => setValue(e.target.value)}
+        />
+      </div>
+      <div className="p-4">
+        {"TextArea: "}
+        <TextArea
+          disabled
+          placeholder="Enter your name"
+          label="Label goes here"
+          helperText="Hint message goes here"
+          maxLength={100}
+          value={value}
           onChange={(e: any) => setValue(e.target.value)}
         />
       </div>
