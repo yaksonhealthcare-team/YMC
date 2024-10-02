@@ -31,7 +31,6 @@ const Home = () => {
       <div className="p-4">
         {"TextFields: "}
         <TextField
-          disabled
           placeholder="Enter your name"
           label="Label goes here"
           helperText="Hint message goes here"
@@ -45,7 +44,6 @@ const Home = () => {
       <div className="p-4">
         {"TextArea: "}
         <TextArea
-          disabled
           placeholder="Enter your name"
           label="Label goes here"
           helperText="Hint message goes here"

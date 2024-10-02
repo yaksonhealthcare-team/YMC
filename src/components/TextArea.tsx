@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { TextField } from "@mui/material"
+import clsx from "clsx"
 
 interface TextAreaProps {
   placeholder?: string
@@ -70,9 +71,21 @@ const TextArea = (props: TextAreaProps) => {
         className={`flex items-center mt-1 mx-2 ${helperText ? "justify-between" : "justify-end"}`}
       >
         {helperText && (
-          <span className="font-m text-12px text-gray-400">{helperText}</span>
+          <span
+            className={clsx(
+              "font-m text-12px",
+              isError ? "text-[#FF453A]" : "text-gray-400",
+            )}
+          >
+            {helperText}
+          </span>
         )}
-        <span className="font-m text-12px text-gray-400">
+        <span
+          className={clsx(
+            "font-m text-12px",
+            isError ? "text-[#FF453A]" : "text-gray-400",
+          )}
+        >
           {value.length} / {maxLength}
         </span>
       </div>
