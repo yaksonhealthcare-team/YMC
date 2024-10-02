@@ -14,12 +14,9 @@ interface CustomTabsProps {
   activeTab: string // 현재 활성화된 탭
 }
 
-const CustomTabs: React.FC<CustomTabsProps> = ({
-  type,
-  tabs,
-  onChange,
-  activeTab,
-}) => {
+const CustomTabs = (props: CustomTabsProps) => {
+  const { type, tabs, onChange, activeTab } = props
+
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     onChange(newValue)
   }
