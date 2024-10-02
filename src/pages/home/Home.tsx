@@ -2,6 +2,7 @@ import ReloadIcon from "@components/icons/ReloadIcon"
 import Button from "@components/Button"
 import TextField from "@components/TextField"
 import TextArea from "@components/TextArea"
+import SearchField from "@components/SearchField"
 import { useState } from "react"
 
 const Home = () => {
@@ -51,6 +52,15 @@ const Home = () => {
           maxLength={100}
           value={value}
           onChange={(e: any) => setValue(e.target.value)}
+        />
+      </div>
+      <div className="p-4">
+        {"SearchField: "}
+        <SearchField
+          placeholder="도로명, 건물명, 지번으로 검색하세요."
+          value={value}
+          onChange={(e: any) => setValue(e.target.value)}
+          onClear={(e: any) => setValue("")}
         />
       </div>
     </>
