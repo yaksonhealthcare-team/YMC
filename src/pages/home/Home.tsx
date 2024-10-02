@@ -3,10 +3,22 @@ import Button from "@components/Button"
 import TextField from "@components/TextField"
 import TextArea from "@components/TextArea"
 import SearchField from "@components/SearchField"
+import Tabs from "@components/Tabs"
 import { useState } from "react"
 
 const Home = () => {
   const [value, setValue] = useState("")
+
+  const [activeTab, setActiveTab] = useState("reservation")
+
+  const tabs = [
+    { label: "예약", value: "reservation" },
+    { label: "회원권", value: "membership" },
+  ]
+
+  const handleTabChange = (newValue: string) => {
+    setActiveTab(newValue)
+  }
 
   return (
     <>
@@ -61,6 +73,15 @@ const Home = () => {
           value={value}
           onChange={(e: any) => setValue(e.target.value)}
           onClear={(e: any) => setValue("")}
+        />
+      </div>
+      <div className="p-4">
+        {"Tab: "}
+        <Tabs
+          type="1depth" // 원하는 탭 타입 설정
+          tabs={tabs}
+          activeTab={activeTab}
+          onChange={handleTabChange}
         />
       </div>
     </>
