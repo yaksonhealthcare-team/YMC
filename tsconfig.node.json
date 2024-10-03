@@ -1,4 +1,5 @@
 {
+  "extends": "./tsconfig.json", // 기본 설정을 상속
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
