@@ -5,6 +5,7 @@ import Store from "../pages/store/Store.tsx"
 import Reservation from "../pages/reservation/Reservation.tsx"
 import MyPage from "../pages/myPage/MyPage.tsx"
 import { Link } from "@mui/material"
+import Logout from "../pages/logout/Logout.tsx"
 
 const routeConfig = [
   //홈
@@ -29,6 +30,10 @@ const routeConfig = [
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/logout",
+    element: <Logout />,
   },
   {
     path: "/signup",

@@ -6,6 +6,7 @@ import SearchField from "@components/SearchField"
 import Tabs from "@components/Tabs"
 import { useEffect, useState } from "react"
 import { useLayout } from "../../layout/LayoutContext.tsx"
+import { useNavigate } from "react-router-dom"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -19,6 +20,8 @@ const Home = () => {
     })
     setNavigation({ display: true })
   }, [])
+
+  const navigate = useNavigate()
 
   const [value, setValue] = useState("")
 
@@ -94,6 +97,15 @@ const Home = () => {
           activeTab={activeTab}
           onChange={handleTabChange}
         />
+      </div>
+      <div className="p-4">
+        <Button
+          variantType="primary"
+          sizeType="s"
+          onClick={() => navigate("logout")}
+        >
+          로그아웃
+        </Button>
       </div>
     </>
   )
