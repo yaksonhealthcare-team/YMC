@@ -1,9 +1,7 @@
 import { createContext, useContext, useState } from "react"
 import PageContainer from "@components/PageContainer.tsx"
-
-import { useNavigate } from "react-router-dom"
-
 import { Typography } from "@mui/material"
+import { useNavigate } from "react-router-dom"
 
 type NavigationConfig = {
   display?: boolean
