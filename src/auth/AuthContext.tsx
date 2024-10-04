@@ -4,7 +4,7 @@ import { User } from "../types/User.ts"
 
 type AuthContextType = {
   user: User | null
-  login: (userData: User) => void
+  login: (userData: { username: string }) => void
   logout: () => void
   isLoading: boolean
 } | null
