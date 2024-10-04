@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext } from "react"
 import PageContainer from "@components/PageContainer.tsx"
-import { IconButton, Link, Typography } from "@mui/material"
+import { Typography } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 
 type NavigationConfig = {
@@ -22,9 +22,9 @@ interface LayoutContextValue {
 }
 
 const LayoutContext = createContext<LayoutContextValue | null>({
-  navigation: { display: true },
+  navigation: { display: false },
   setNavigation: () => {},
-  header: { display: true },
+  header: { display: false },
   setHeader: () => {},
 })
 
@@ -125,7 +125,7 @@ const NavButton = ({ activeIcon, inactiveIcon, title, link }) => {
   )
 }
 
-export const useLayoutContext = () => {
+export const useLayout = () => {
   const context = useContext(LayoutContext)
   if (!context) {
     throw new Error("useLayoutContext must be used within a LayoutProvider")

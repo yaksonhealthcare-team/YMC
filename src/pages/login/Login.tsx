@@ -1,15 +1,26 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../auth/AuthContext"
 import Logo from "@components/Logo.tsx"
 import Button from "@components/Button.tsx"
 import { Typography } from "@mui/material"
+import { useLayout } from "../../layout/LayoutContext.tsx"
 
 const Login = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const { login } = useAuth()
+  const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    setHeader({
+      display: false,
+    })
+    setNavigation({
+      display: false,
+    })
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault()

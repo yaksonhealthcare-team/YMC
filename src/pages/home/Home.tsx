@@ -5,10 +5,10 @@ import TextArea from "@components/TextArea"
 import SearchField from "@components/SearchField"
 import Tabs from "@components/Tabs"
 import { useEffect, useState } from "react"
-import { useLayoutContext } from "../../layout/LayoutContext.tsx"
+import { useLayout } from "../../layout/LayoutContext.tsx"
 
 const Home = () => {
-  const { setHeader } = useLayoutContext()
+  const { setHeader, setNavigation } = useLayout()
 
   useEffect(() => {
     setHeader({
@@ -17,6 +17,7 @@ const Home = () => {
       right: <div>Header Right</div>,
       left: <div>Header Left</div>,
     })
+    setNavigation({ display: true })
   }, [])
 
   const [value, setValue] = useState("")
