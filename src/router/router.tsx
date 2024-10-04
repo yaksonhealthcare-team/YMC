@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import ProtectedRoute from "./Protectedroute.tsx"
 import { AuthProvider } from "../auth/AuthContext.tsx"
 import { LayoutProvider } from "../layout/LayoutContext.tsx"
