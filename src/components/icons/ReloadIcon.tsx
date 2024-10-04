@@ -1,6 +1,6 @@
 import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon"
 
-export default function BellIcon(props: SvgIconProps) {
+export default function ReloadIcon(props: SvgIconProps) {
   return (
     <SvgIcon {...props}>
       <svg
