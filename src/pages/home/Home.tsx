@@ -70,7 +70,7 @@ const Home = () => {
           placeholder="도로명, 건물명, 지번으로 검색하세요."
           value={value}
           onChange={(e: any) => setValue(e.target.value)}
-          onClear={(e: any) => setValue("")}
+          onClear={() => setValue("")}
         />
       </div>
       <div className="p-4">
