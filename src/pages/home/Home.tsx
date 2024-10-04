@@ -4,9 +4,21 @@ import TextField from "@components/TextField"
 import TextArea from "@components/TextArea"
 import SearchField from "@components/SearchField"
 import Tabs from "@components/Tabs"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useLayoutContext } from "../../layout/LayoutContext.tsx"
 
 const Home = () => {
+  const { setHeader } = useLayoutContext()
+
+  useEffect(() => {
+    setHeader({
+      display: true,
+      title: "Home",
+      right: <div>Header Right</div>,
+      left: <div>Header Left</div>,
+    })
+  }, [])
+
   const [value, setValue] = useState("")
 
   const [activeTab, setActiveTab] = useState("reservation")
