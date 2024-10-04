@@ -6,7 +6,7 @@ import routeConfig from "./routeConfig.tsx"
 
 const createRoutes = () => {
   return createBrowserRouter(
-    routeConfig.map(({ path, element, auth, children }) => ({
+    routeConfig.map(({ path, element, auth }) => ({
       path,
       element: auth ? (
         <LayoutProvider>
@@ -15,7 +15,6 @@ const createRoutes = () => {
       ) : (
         <LayoutProvider>{element}</LayoutProvider>
       ),
-      children,
     })),
   )
 }
