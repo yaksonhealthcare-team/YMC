@@ -2,7 +2,6 @@ import React, { createContext, useState, useContext } from "react"
 import PageContainer from "@components/PageContainer.tsx"
 import { Typography } from "@mui/material"
 import { useNavigate } from "react-router-dom"
-import { AppBar, Link } from "@mui/material"
 
 type NavigationConfig = {
   display?: boolean
@@ -11,7 +10,6 @@ type NavigationConfig = {
 type HeaderConfig = {
   display?: boolean
   title?: string | React.ReactNode
-  backButton?: boolean
   left?: React.ReactNode
   right?: React.ReactNode
 }

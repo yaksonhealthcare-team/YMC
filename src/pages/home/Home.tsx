@@ -11,17 +11,11 @@ import { useNavigate } from "react-router-dom"
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
 
+  const navigate = useNavigate()
+
   useEffect(() => {
-    setHeader({
-      display: true,
-      title: "Home",
-      right: <div>Header Right</div>,
-      left: <div>Header Left</div>,
-    })
     setNavigation({ display: true })
   }, [])
-
-  const navigate = useNavigate()
 
   const [value, setValue] = useState("")
 
