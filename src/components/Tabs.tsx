@@ -17,7 +17,7 @@ interface CustomTabsProps {
 const CustomTabs = (props: CustomTabsProps) => {
   const { type, tabs, onChange, activeTab } = props
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     onChange(newValue)
   }
 
