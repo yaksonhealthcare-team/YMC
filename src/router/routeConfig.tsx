@@ -25,6 +25,7 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/notification",
     element: <div>Notification</div>,
+
     auth: true,
   },
   //브랜드관
