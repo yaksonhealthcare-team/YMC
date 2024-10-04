@@ -1,29 +1,26 @@
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
-import Home from "../pages/home/Home.tsx"
 import ProtectedRoute from "./Protectedroute.tsx"
-import Login from "../pages/login/Login.tsx"
 import { AuthProvider } from "../auth/AuthContext.tsx"
 import { LayoutProvider } from "../layout/LayoutContext.tsx"
+import routeConfig from "./routeConfig.tsx"
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: (
-      <ProtectedRoute>
-        <Home />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-])
+const createRoutes = () => {
+  return createBrowserRouter(
+    routeConfig.map(({ path, element, auth }) => ({
+      path,
+      element: auth ? (
+        <LayoutProvider>
+          <ProtectedRoute>{element}</ProtectedRoute>
+        </LayoutProvider>
+      ) : (
+        <LayoutProvider>{element}</LayoutProvider>
+      ),
+    })),
+  )
+}
 
 export const AppRouter = () => (
   <AuthProvider>
-    <LayoutProvider>
-      <RouterProvider router={router} />
-    </LayoutProvider>
+    <RouterProvider router={createRoutes()} />
   </AuthProvider>
 )
