@@ -1,7 +1,9 @@
 import { createContext, useContext, useState } from "react"
 import PageContainer from "@components/PageContainer.tsx"
-import { Typography } from "@mui/material"
+
 import { useNavigate } from "react-router-dom"
+
+import { Typography } from "@mui/material"
 
 type NavigationConfig = {
   display?: boolean
@@ -9,9 +11,7 @@ type NavigationConfig = {
 
 type HeaderConfig = {
   display?: boolean
-
   title?: string | React.ReactNode
-
   left?: React.ReactNode
   right?: React.ReactNode
 }
