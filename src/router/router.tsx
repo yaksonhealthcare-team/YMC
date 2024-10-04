@@ -1,9 +1,9 @@
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
 import Home from "../pages/home/Home.tsx"
 import ProtectedRoute from "./Protectedroute.tsx"
-import PageContainer from "@components/PageContainer.tsx"
 import Login from "../pages/login/Login.tsx"
 import { AuthProvider } from "../auth/AuthContext.tsx"
+import { LayoutProvider } from "../layout/LayoutContext.tsx"
 
 const router = createBrowserRouter([
   {
@@ -22,8 +22,8 @@ const router = createBrowserRouter([
 
 export const AppRouter = () => (
   <AuthProvider>
-    <PageContainer>
+    <LayoutProvider>
       <RouterProvider router={router} />
-    </PageContainer>
+    </LayoutProvider>
   </AuthProvider>
 )
