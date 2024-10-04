@@ -33,7 +33,7 @@ const Login = () => {
         <Logo text size={191} />
       </div>
 
-      <Button onClick={() => navigate("/")} variant="outlined">
+      <Button onClick={handleSubmit} variant="outlined">
         임시로그인 (홈으로 이동)
       </Button>
       <div className={"flex justify-center"}>
