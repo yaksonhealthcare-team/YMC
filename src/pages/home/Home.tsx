@@ -14,6 +14,12 @@ const Home = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
+    setHeader({
+      display: true,
+      title: "Home",
+      right: <div>Header Right</div>,
+      left: <div>Header Left</div>,
+    })
     setNavigation({ display: true })
   }, [])
 
