@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext } from "react"
 import PageContainer from "@components/PageContainer.tsx"
 import { IconButton, Link, Typography } from "@mui/material"
+import { useNavigate } from "react-router-dom"
 
 type NavigationConfig = {
   display?: boolean
@@ -63,23 +64,64 @@ export const LayoutProvider = ({ children }) => {
         {children}
         {navigation.display && (
           <div className={"h-[82px]"}>
-            <div className="flex justify-center space-x-4 fixed bottom-0 w-full bg-black max-w-[500px] min-w-[375px]  h-[82px]">
-              <Link to="/" activeClassName="font-bold">
-                Home
-              </Link>
-
-              <Link to="/reports" activeClassName="font-bold">
-                Reports
-              </Link>
-
-              <Link to="/settings" activeClassName="font-bold">
-                Settings
-              </Link>
+            <div className="flex justify-around space-x-4 fixed bottom-0 w-full max-w-[500px] min-w-[375px]  h-[82px]">
+              <NavButton
+                activeIcon={"assets/navIcon/home_active.png"}
+                inactiveIcon={"assets/navIcon/home_inactive.png"}
+                title={"홈"}
+                link={"/"}
+              />
+              <NavButton
+                activeIcon={"assets/navIcon/purchase_active.png"}
+                inactiveIcon={"assets/navIcon/purchase_inactive.png"}
+                title={"회원권 구매"}
+                link={"/purchase"}
+              />
+              <NavButton
+                activeIcon={"assets/navIcon/store_active.png"}
+                inactiveIcon={"assets/navIcon/store_inactive.png"}
+                title={"스토어"}
+                link={"/store"}
+              />
+              <NavButton
+                activeIcon={"assets/navIcon/reservation_active.png"}
+                inactiveIcon={"assets/navIcon/reservation_inactive.png"}
+                title={"예약/회원권"}
+                link={"/reservation"}
+              />
+              <NavButton
+                activeIcon={"assets/navIcon/mypage_active.png"}
+                inactiveIcon={"assets/navIcon/mypage_incative.png"}
+                title={"마이페이지"}
+                link={"/mypage"}
+              />
             </div>
           </div>
         )}
       </PageContainer>
     </LayoutContext.Provider>
+  )
+}
+
+const NavButton = ({ activeIcon, inactiveIcon, title, link }) => {
+  const path = window.location.pathname
+  const isActive = path === link
+  const navigate = useNavigate()
+
+  return (
+    <div
+      className={"p-3 flex flex-col gap-1 items-center cursor-pointer"}
+      onClick={() => navigate(link)}
+      style={{ color: isActive ? "#F37165" : "#BDBDBD" }}
+    >
+      <img src={isActive ? activeIcon : inactiveIcon} width={32} />
+      <Typography
+        variant={"body1"}
+        className={isActive ? "text-[#F37165]" : "text-[#BDBDBD]"}
+      >
+        {title}
+      </Typography>
+    </div>
   )
 }
 
