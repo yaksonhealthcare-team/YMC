@@ -22,6 +22,12 @@ const theme = createTheme({
     secondary: {
       main: "#FEF2F1", // Secondary 색상 설정
     },
+    success: {
+      main: "#0A84FF",
+    },
+    error: {
+      main: "#FF453A",
+    },
   },
   typography: {
     fontFamily: "Pretendard, sans-serif", // Pretendard 폰트 설정

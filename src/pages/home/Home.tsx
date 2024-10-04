@@ -1,53 +1,86 @@
-import { Button } from "@mui/material"
-import ReloadIcon from "@components/icons/Reload"
-import CustomButton from "@components/CustomButton"
+import ReloadIcon from "@components/icons/ReloadIcon"
+import Button from "@components/Button"
+import TextField from "@components/TextField"
+import TextArea from "@components/TextArea"
+import SearchField from "@components/SearchField"
+import Tabs from "@components/Tabs"
+import { useState } from "react"
 
 const Home = () => {
+  const [value, setValue] = useState("")
+
+  const [activeTab, setActiveTab] = useState("reservation")
+
+  const tabs = [
+    { label: "예약", value: "reservation" },
+    { label: "회원권", value: "membership" },
+  ]
+
+  const handleTabChange = (newValue: string) => {
+    setActiveTab(newValue)
+  }
+
   return (
     <>
       <div className="p-4">
-        <Button variant="contained" color="secondary">
-          MUI 버튼
+        {"Buttons: "}
+        <Button variantType="primary" sizeType="xs" iconLeft={<ReloadIcon />}>
+          Button
+        </Button>
+        <Button variantType="secondary" sizeType="xs" iconLeft={<ReloadIcon />}>
+          Button
+        </Button>
+        <Button variantType="line" sizeType="xs" iconRight={<ReloadIcon />}>
+          Button
+        </Button>
+        <Button variantType="gray" sizeType="xs" iconRight={<ReloadIcon />}>
+          Button
+        </Button>
+        <Button variantType="text" sizeType="xs" iconRight={<ReloadIcon />}>
+          Button
         </Button>
       </div>
-
       <div className="p-4">
-        {"Buttons: "}
-        <CustomButton
-          variantType="primary"
-          sizeType="xs"
-          iconLeft={<ReloadIcon />}
-        >
-          Button
-        </CustomButton>
-        <CustomButton
-          variantType="secondary"
-          sizeType="xs"
-          iconLeft={<ReloadIcon />}
-        >
-          Button
-        </CustomButton>
-        <CustomButton
-          variantType="line"
-          sizeType="xs"
+        {"TextFields: "}
+        <TextField
+          placeholder="Enter your name"
+          label="Label goes here"
+          helperText="Hint message goes here"
+          value={value}
+          state="default"
           iconRight={<ReloadIcon />}
-        >
-          Button
-        </CustomButton>
-        <CustomButton
-          variantType="gray"
-          sizeType="xs"
-          iconRight={<ReloadIcon />}
-        >
-          Button
-        </CustomButton>
-        <CustomButton
-          variantType="text"
-          sizeType="xs"
-          iconRight={<ReloadIcon />}
-        >
-          Button
-        </CustomButton>
+          button
+          onChange={(e: any) => setValue(e.target.value)}
+        />
+      </div>
+      <div className="p-4">
+        {"TextArea: "}
+        <TextArea
+          placeholder="Enter your name"
+          label="Label goes here"
+          helperText="Hint message goes here"
+          maxLength={100}
+          value={value}
+          onChange={(e: any) => setValue(e.target.value)}
+        />
+      </div>
+      <div className="p-4">
+        {"SearchField: "}
+        <SearchField
+          placeholder="도로명, 건물명, 지번으로 검색하세요."
+          value={value}
+          onChange={(e: any) => setValue(e.target.value)}
+          onClear={() => setValue("")}
+        />
+      </div>
+      <div className="p-4">
+        {"Tab: "}
+        <Tabs
+          type="1depth" // 원하는 탭 타입 설정
+          tabs={tabs}
+          activeTab={activeTab}
+          onChange={handleTabChange}
+        />
       </div>
     </>
   )
