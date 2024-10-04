@@ -23,6 +23,8 @@ const Home = () => {
     setNavigation({ display: true })
   }, [])
 
+  const navigate = useNavigate()
+
   const [value, setValue] = useState("")
 
   const [activeTab, setActiveTab] = useState("reservation")

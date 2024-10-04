@@ -1,5 +1,5 @@
 import Logo from "@components/Logo.tsx"
-import { useEffect } from "react"
+import React, { useEffect } from "react"
 import { Typography } from "@mui/material"
 import { useAuth } from "../../auth/AuthContext.tsx"
 import { useNavigate } from "react-router-dom"
