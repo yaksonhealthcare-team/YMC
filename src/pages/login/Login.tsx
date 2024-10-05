@@ -1,6 +1,6 @@
 import { MouseEventHandler, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { useAuth } from "../../auth/AuthContext"
+import { useAuth } from "../../contexts/AuthContext"
 import Logo from "@components/Logo.tsx"
 import Button from "@components/Button.tsx"
 import { Typography } from "@mui/material"

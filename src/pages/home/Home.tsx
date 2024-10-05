@@ -5,11 +5,13 @@ import TextArea from "@components/TextArea"
 import SearchField from "@components/SearchField"
 import Tabs from "@components/Tabs"
 import { ChangeEvent, useEffect, useState } from "react"
-import { useLayout } from "../../layout/LayoutContext.tsx"
+import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useNavigate } from "react-router-dom"
+import { useOverlay } from "../../contexts/ModalContext.tsx"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
+  const { openMessageBox, openBottomSheet, showAlert } = useOverlay()
 
   const navigate = useNavigate()
   useEffect(() => {
@@ -22,8 +24,6 @@ const Home = () => {
 
     setNavigation({ display: true })
   }, [])
-
-  const navigate = useNavigate()
 
   const [value, setValue] = useState("")
 
@@ -113,6 +113,26 @@ const Home = () => {
           onClick={() => navigate("logout")}
         >
           로그아웃
+        </Button>
+      </div>
+      <div className="p-4 flex gap-2">
+        <Button
+          variant="contained"
+          onClick={() => openMessageBox("이것은 메시지박스입니다.")}
+        >
+          메시지박스 열기
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => openBottomSheet(<div>바텀시트 내용</div>)}
+        >
+          바텀시트 열기
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => showAlert("주의하세요!", { title: "경고" })}
+        >
+          알럿 보여주기
         </Button>
       </div>
     </>

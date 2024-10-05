@@ -1,9 +1,9 @@
 import Logo from "@components/Logo.tsx"
 import React, { useEffect } from "react"
 import { Typography } from "@mui/material"
-import { useAuth } from "../../auth/AuthContext.tsx"
+import { useAuth } from "../../contexts/AuthContext.tsx"
 import { useNavigate } from "react-router-dom"
-import { useLayout } from "../../layout/LayoutContext.tsx"
+import { useLayout } from "../../contexts/LayoutContext.tsx"
 
 const Logout = () => {
   const { logout } = useAuth()

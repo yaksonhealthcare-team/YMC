@@ -1,5 +1,6 @@
 import { AppRouter } from "./router/router.tsx"
 import { ThemeProvider, createTheme } from "@mui/material/styles"
+import { OverlayProvider } from "./contexts/ModalContext.tsx"
 
 const theme = createTheme({
   // MUI 테마 설정
@@ -35,7 +36,9 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <AppRouter />
+      <OverlayProvider>
+        <AppRouter />
+      </OverlayProvider>
     </ThemeProvider>
   )
 }
