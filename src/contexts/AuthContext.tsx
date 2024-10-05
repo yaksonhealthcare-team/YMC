@@ -83,7 +83,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem("userToken")
   }
 
-  const value = { user, login, logout, isLoading }
+  const value = { user, login, logout, isLoading } as AuthContextType
 
   if (isLoading) {
     return <SplashScreen />

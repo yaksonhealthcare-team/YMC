@@ -5,11 +5,9 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  Slide,
   Snackbar,
   Divider,
 } from "@mui/material"
-import { TransitionProps } from "@mui/material/transitions"
 
 /**
  * 오버레이 타입을 정의하는 열거형
@@ -36,10 +34,13 @@ interface OverlayState {
 interface OverlayContextValue {
   overlayState: OverlayState
   closeOverlay: () => void
-  openMessageBox: (message: string, options?: Record<string, unknown>) => void
+  openMessageBox: (
+    message: string,
+    options?: Record<string, unknown> | undefined,
+  ) => void
   openBottomSheet: (
     content: ReactNode,
-    options?: Record<string, unknown>,
+    options?: Record<string, unknown> | undefined,
   ) => void
   showAlert: (message: string, options?: Record<string, unknown>) => void
 }
@@ -53,13 +54,6 @@ const OverlayContext = createContext<OverlayContextValue | undefined>(undefined)
 interface OverlayProviderProps {
   children: ReactNode
 }
-
-// Slide transition for BottomSheet
-const Transition = React.forwardRef<HTMLDivElement, TransitionProps>(
-  (props, ref) => {
-    return <Slide direction="up" ref={ref} {...props} />
-  },
-)
 
 interface BottomSheetButton {
   text: string
@@ -174,7 +168,7 @@ const OverlayContainer: React.FC = () => {
           className="z-50"
         >
           <DialogTitle id="message-box-title">
-            {options.title || "메시지"}
+            {(options.title as React.ReactNode) || "메시지"}
           </DialogTitle>
           <DialogContent>
             <p id="message-box-description" className="text-gray-700">
@@ -193,7 +187,6 @@ const OverlayContainer: React.FC = () => {
         <Dialog
           open={isOpen}
           onClose={closeOverlay}
-          TransitionComponent={Transition}
           keepMounted
           fullWidth
           maxWidth="sm"
@@ -207,22 +200,23 @@ const OverlayContainer: React.FC = () => {
               borderTopRightRadius: 16,
               maxHeight: "80vh",
               overflowY: "auto",
+              width: "100%",
             },
           }}
         >
           <DialogContent className={"p-0"}>
             <div className="p-3 flex flex-col items-center">
-              {options.title && (
+              {(options?.title as string) && (
                 <h2 className="text-xl font-bold mb-4 text-center">
-                  {options.title}
+                  {options?.title as string}
                 </h2>
               )}
               <div className="text-center mb-6">{content}</div>
             </div>
             <Divider className={"border-[#F8F8F8"} />
-            {(options as BottomSheetOptions).buttons && (
+            {(options as BottomSheetOptions)?.buttons && (
               <div className="w-full flex flex-col space-y-2 p-3 mb-7">
-                {(options as BottomSheetOptions).buttons.map(
+                {(options as BottomSheetOptions)?.buttons?.map(
                   (button, index) => (
                     <Button
                       key={index}
