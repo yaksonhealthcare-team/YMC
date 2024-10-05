@@ -117,14 +117,18 @@ const NavButton = ({ activeIcon, inactiveIcon, title, link }) => {
 
   return (
     <div
-      className={"p-3 flex flex-col gap-1 items-center cursor-pointer"}
+      className={"p-3 w-full flex flex-col gap-1 items-center cursor-pointer"}
       onClick={() => navigate(link)}
       style={{ color: isActive ? "#F37165" : "#BDBDBD" }}
     >
       <img src={isActive ? activeIcon : inactiveIcon} width={32} />
       <Typography
-        variant={"body1"}
-        className={isActive ? "text-[#F37165]" : "text-[#BDBDBD]"}
+        variant={"body2"}
+        className={
+          isActive
+            ? "text-[#F37165] text-[12px] truncate"
+            : "text-[#BDBDBD] text-[12px] truncate"
+        }
       >
         {title}
       </Typography>
