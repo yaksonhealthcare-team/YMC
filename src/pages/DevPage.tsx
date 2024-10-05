@@ -1,29 +1,27 @@
-import ReloadIcon from "@components/icons/ReloadIcon"
-import Button from "@components/Button"
-import TextField from "@components/TextField"
-import TextArea from "@components/TextArea"
-import SearchField from "@components/SearchField"
-import Tabs from "@components/Tabs"
-import { ChangeEvent, useEffect, useState } from "react"
-import { useLayout } from "../../contexts/LayoutContext.tsx"
+import { useLayout } from "../layout/LayoutContext.tsx"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useOverlay } from "../../contexts/ModalContext.tsx"
+import Button from "@components/Button.tsx"
+import ReloadIcon from "@components/icons/ReloadIcon.tsx"
+import TextField from "@components/TextField.tsx"
+import TextArea from "@components/TextArea.tsx"
+import SearchField from "@components/SearchField.tsx"
+import Tabs from "@components/Tabs.tsx"
 
-const Home = () => {
+const DevPage = () => {
   const { setHeader, setNavigation } = useLayout()
-  const { openMessageBox, openBottomSheet, showAlert } = useOverlay()
 
-  const navigate = useNavigate()
   useEffect(() => {
     setHeader({
       display: true,
       title: "Home",
       right: <div>Header Right</div>,
-      left: <div>Header Left</div>,
+      left: <div onClick={() => navigate(-1)}>{"<"} Back</div>,
     })
-
     setNavigation({ display: true })
   }, [])
+
+  const navigate = useNavigate()
 
   const [value, setValue] = useState("")
 
@@ -68,9 +66,7 @@ const Home = () => {
           state="default"
           iconRight={<ReloadIcon />}
           button
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setValue(e.target.value)
-          }
+          onChange={(e: any) => setValue(e.target.value)}
         />
       </div>
       <div className="p-4">
@@ -81,9 +77,7 @@ const Home = () => {
           helperText="Hint message goes here"
           maxLength={100}
           value={value}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setValue(e.target.value)
-          }
+          onChange={(e: any) => setValue(e.target.value)}
         />
       </div>
       <div className="p-4">
@@ -91,9 +85,7 @@ const Home = () => {
         <SearchField
           placeholder="도로명, 건물명, 지번으로 검색하세요."
           value={value}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setValue(e.target.value)
-          }
+          onChange={(e: any) => setValue(e.target.value)}
           onClear={() => setValue("")}
         />
       </div>
@@ -115,51 +107,8 @@ const Home = () => {
           로그아웃
         </Button>
       </div>
-      <div className="p-4 flex gap-2">
-        <Button
-          variant="contained"
-          onClick={() => openMessageBox("이것은 메시지박스입니다.")}
-        >
-          메시지박스 열기
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() =>
-            openBottomSheet(
-              "지점 및 회원권 이동은 현재 이용 지점에 유선으로 문의하여 주세요.",
-              {
-                title: "이용 지점 변경 안내",
-                buttons: [
-                  {
-                    text: "예약하기",
-                    onClick: () => console.log("예약하기 클릭"),
-                    variant: "contained",
-                  },
-                ],
-              },
-            )
-          }
-        >
-          바텀시트 열기
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() => showAlert("주의하세요!", { title: "경고" })}
-        >
-          알럿 보여주기
-        </Button>
-      </div>
-      <div>
-        <h1>Home</h1>
-        <button
-          className="fixed bottom-28 right-6 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200"
-          onClick={() => navigate("/dev")}
-        >
-          dev
-        </button>
-      </div>
     </>
   )
 }
 
-export default Home
+export default DevPage
