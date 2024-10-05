@@ -7,6 +7,7 @@ import {
   Button,
   Slide,
   Snackbar,
+  Divider,
 } from "@mui/material"
 import { TransitionProps } from "@mui/material/transitions"
 
@@ -60,6 +61,17 @@ const Transition = React.forwardRef<HTMLDivElement, TransitionProps>(
   },
 )
 
+interface BottomSheetButton {
+  text: string
+  onClick: () => void
+  variant?: "text" | "outlined" | "contained"
+}
+
+interface BottomSheetOptions extends Record<string, unknown> {
+  title?: string
+  buttons?: BottomSheetButton[]
+}
+
 /**
  * 오버레이 프로바이더 컴포넌트
  *
@@ -97,7 +109,7 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
 
   const openBottomSheet = (
     content: ReactNode,
-    options: Record<string, unknown> = {},
+    options: BottomSheetOptions = {},
   ) => {
     openOverlay(OverlayTypes.BOTTOM_SHEET, content, options)
   }
@@ -193,15 +205,42 @@ const OverlayContainer: React.FC = () => {
               margin: 0,
               borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
+              maxHeight: "80vh",
+              overflowY: "auto",
             },
           }}
         >
-          <DialogContent className="p-4">{content}</DialogContent>
-          <DialogActions>
-            <Button onClick={closeOverlay} color="primary">
-              닫기
-            </Button>
-          </DialogActions>
+          <DialogContent className={"p-0"}>
+            <div className="p-3 flex flex-col items-center">
+              {options.title && (
+                <h2 className="text-xl font-bold mb-4 text-center">
+                  {options.title}
+                </h2>
+              )}
+              <div className="text-center mb-6">{content}</div>
+            </div>
+            <Divider className={"border-[#F8F8F8"} />
+            {(options as BottomSheetOptions).buttons && (
+              <div className="w-full flex flex-col space-y-2 p-3 mb-7">
+                {(options as BottomSheetOptions).buttons.map(
+                  (button, index) => (
+                    <Button
+                      key={index}
+                      onClick={() => {
+                        button.onClick()
+                        closeOverlay()
+                      }}
+                      variant={button.variant || "contained"}
+                      fullWidth
+                      className="py-3"
+                    >
+                      {button.text}
+                    </Button>
+                  ),
+                )}
+              </div>
+            )}
+          </DialogContent>
         </Dialog>
       )
     case OverlayTypes.ALERT:

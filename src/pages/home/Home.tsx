@@ -124,7 +124,21 @@ const Home = () => {
         </Button>
         <Button
           variant="contained"
-          onClick={() => openBottomSheet(<div>바텀시트 내용</div>)}
+          onClick={() =>
+            openBottomSheet(
+              "지점 및 회원권 이동은 현재 이용 지점에 유선으로 문의하여 주세요.",
+              {
+                title: "이용 지점 변경 안내",
+                buttons: [
+                  {
+                    text: "예약하기",
+                    onClick: () => console.log("예약하기 클릭"),
+                    variant: "contained",
+                  },
+                ],
+              },
+            )
+          }
         >
           바텀시트 열기
         </Button>
