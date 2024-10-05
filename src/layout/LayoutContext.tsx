@@ -48,7 +48,7 @@ export const LayoutProvider = ({ children }) => {
     >
       <PageContainer>
         {header.display && (
-          <div className={"h-12"}>
+          <div className={"z-10"}>
             <div className="fixed space-x-4 w-full h-12 max-w-[500px] min-w-[375px] flex items-center py-3 px-5">
               <div className={"flex justify-start w-1/3"}>{header.left}</div>
 
@@ -58,13 +58,20 @@ export const LayoutProvider = ({ children }) => {
 
               <div className={"flex justify-end w-1/3"}>{header.right}</div>
             </div>
+            <div className={"h-12"} />
           </div>
         )}
 
         {children}
         {navigation.display && (
-          <div className={"h-[82px]"}>
-            <div className="flex justify-around space-x-4 fixed bottom-0 w-full max-w-[500px] min-w-[375px]  h-[82px]">
+          <div>
+            <div className={"h-[82px]"} />
+            <div
+              className="flex justify-around space-x-4 fixed bottom-0 w-full max-w-[500px] min-w-[375px] h-[82px] z-10 bg-white"
+              style={{
+                boxShadow: "0px -2px 16px 0px #2E2B2914",
+              }}
+            >
               <NavButton
                 activeIcon={"assets/navIcon/home_active.png"}
                 inactiveIcon={"assets/navIcon/home_inactive.png"}
