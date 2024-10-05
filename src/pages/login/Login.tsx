@@ -40,7 +40,7 @@ const Login = () => {
         "flex flex-col h-full w-full justify-between items-center bg-[#F8F5F2] p-14"
       }
     >
-      <div className={"p-48"}>
+      <div className={"py-48"}>
         <Logo text size={191} />
       </div>
 
