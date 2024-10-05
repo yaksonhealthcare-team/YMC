@@ -1,13 +1,10 @@
-import ReloadIcon from "@components/icons/ReloadIcon"
-import Button from "@components/Button"
-import TextField from "@components/TextField"
-import TextArea from "@components/TextArea"
-import SearchField from "@components/SearchField"
-import Tabs from "@components/Tabs"
-import { ChangeEvent, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useNavigate } from "react-router-dom"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
+import { Container, Typography } from "@mui/material"
+import DynamicCustomSVGComponent from "./_fragments/DynamicCustomSVGComponent.tsx"
+import Logo from "@components/Logo.tsx"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -16,10 +13,7 @@ const Home = () => {
   const navigate = useNavigate()
   useEffect(() => {
     setHeader({
-      display: true,
-      title: "Home",
-      right: <div>Header Right</div>,
-      left: <div>Header Left</div>,
+      display: false,
     })
 
     setNavigation({ display: true })
@@ -39,126 +33,55 @@ const Home = () => {
   }
 
   return (
-    <>
-      <div className="p-4">
-        {"Buttons: "}
-        <Button variantType="primary" sizeType="xs" iconLeft={<ReloadIcon />}>
-          Button
-        </Button>
-        <Button variantType="secondary" sizeType="xs" iconLeft={<ReloadIcon />}>
-          Button
-        </Button>
-        <Button variantType="line" sizeType="xs" iconRight={<ReloadIcon />}>
-          Button
-        </Button>
-        <Button variantType="gray" sizeType="xs" iconRight={<ReloadIcon />}>
-          Button
-        </Button>
-        <Button variantType="text" sizeType="xs" iconRight={<ReloadIcon />}>
-          Button
-        </Button>
-      </div>
-      <div className="p-4">
-        {"TextFields: "}
-        <TextField
-          placeholder="Enter your name"
-          label="Label goes here"
-          helperText="Hint message goes here"
-          value={value}
-          state="default"
-          iconRight={<ReloadIcon />}
-          button
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setValue(e.target.value)
-          }
-        />
-      </div>
-      <div className="p-4">
-        {"TextArea: "}
-        <TextArea
-          placeholder="Enter your name"
-          label="Label goes here"
-          helperText="Hint message goes here"
-          maxLength={100}
-          value={value}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setValue(e.target.value)
-          }
-        />
-      </div>
-      <div className="p-4">
-        {"SearchField: "}
-        <SearchField
-          placeholder="도로명, 건물명, 지번으로 검색하세요."
-          value={value}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setValue(e.target.value)
-          }
-          onClear={() => setValue("")}
-        />
-      </div>
-      <div className="p-4">
-        {"Tab: "}
-        <Tabs
-          type="1depth" // 원하는 탭 타입 설정
-          tabs={tabs}
-          activeTab={activeTab}
-          onChange={handleTabChange}
-        />
-      </div>
-      <div className="p-4">
-        <Button
-          variantType="primary"
-          sizeType="s"
-          onClick={() => navigate("logout")}
-        >
-          로그아웃
-        </Button>
-      </div>
-      <div className="p-4 flex gap-2">
-        <Button
-          variant="contained"
-          onClick={() => openMessageBox("이것은 메시지박스입니다.")}
-        >
-          메시지박스 열기
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() =>
-            openBottomSheet(
-              "지점 및 회원권 이동은 현재 이용 지점에 유선으로 문의하여 주세요.",
-              {
-                title: "이용 지점 변경 안내",
-                buttons: [
-                  {
-                    text: "예약하기",
-                    onClick: () => console.log("예약하기 클릭"),
-                    variant: "contained",
-                  },
-                ],
-              },
-            )
-          }
-        >
-          바텀시트 열기
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() => showAlert("주의하세요!", { title: "경고" })}
-        >
-          알럿 보여주기
-        </Button>
-      </div>
-      <div>
-        <h1>Home</h1>
-        <button
-          className="fixed bottom-28 right-6 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200"
-          onClick={() => navigate("/dev")}
-        >
-          dev
-        </button>
-      </div>
-    </>
+    <Container className={"w-full h-full bg-[#F8F5F2] py-4"}>
+      <DynamicCustomSVGComponent
+        header={
+          <div className={"space-y-2"}>
+            <Logo text size={136} />
+            <Typography className="text-sm text-gray-500">
+              [공지] 9월 1일 회원권 변경사항 안내드립니다.
+            </Typography>
+          </div>
+        }
+        content={
+          <div>
+            <div className="flex justify-between items-center bg-primary-300 rounded-2xl p-4">
+              <div className="flex gap-2 flex-col text-white">
+                <Typography className={"font-b"}>
+                  <span className={"text-18px"}>김민정님</span> 반갑습니다.
+                </Typography>
+                <Typography className="font-m text-14px space-x-2">
+                  <span>SILVER</span> <span>10,000 P</span>
+                </Typography>
+              </div>
+              <div className="rounded-full bg-white text-primary-300 py-2.5 px-5">
+                예약하기
+              </div>
+            </div>
+            {/* 배너영역*/}
+            <div className="mt-4">
+              <img
+                src="/assets/home_banner.png"
+                alt="배너영역"
+                className="w-full h-36 object-cover rounded-2xl"
+              />
+            </div>
+          </div>
+        }
+      />
+
+      <button
+        className="fixed top-4 right-4 w-10 h-10 bg-primary-300 text-white rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200"
+        onClick={() => navigate("/dev")}
+      ></button>
+
+      <button
+        className="fixed bottom-28 right-6 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200"
+        onClick={() => navigate("/dev")}
+      >
+        dev
+      </button>
+    </Container>
   )
 }
 
