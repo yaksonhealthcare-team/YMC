@@ -6,8 +6,16 @@ import Reservation from "../pages/reservation/Reservation.tsx"
 import MyPage from "../pages/myPage/MyPage.tsx"
 import { Link } from "@mui/material"
 import Logout from "../pages/logout/Logout.tsx"
+import { ReactNode } from "react"
 
-const routeConfig = [
+interface RouteConfig {
+  path: string
+  element: ReactNode
+  auth?: boolean
+  children?: RouteConfig[]
+}
+
+const routeConfig: RouteConfig[] = [
   //홈
   {
     path: "/",
@@ -18,7 +26,7 @@ const routeConfig = [
   {
     path: "/notification",
     element: <div>Notification</div>,
-    auto: true,
+    auth: true,
   },
   //브랜드관
   {
