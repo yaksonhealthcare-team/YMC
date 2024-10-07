@@ -1,6 +1,7 @@
 import React from "react"
 import { TextField, InputAdornment } from "@mui/material"
 import Button from "@components/Button"
+import { COLORS } from "@constants/ColorConstants"
 
 interface CustomTextFieldProps {
   placeholder?: string
@@ -28,7 +29,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
   onChange,
 }) => {
   // disabled 시, 아이콘 색상 변경을 위한 설정
-  const iconColor = disabled ? "#DDDDDD" : "black"
+  const iconColor = disabled ? COLORS.DISABLED_TEXT : "black"
 
   // 좌측 아이콘 색상 적용
   const modifiedIconLeft =
@@ -76,44 +77,44 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
               "& fieldset": {
                 borderColor:
                   state === "error"
-                    ? "#FF453A"
+                    ? COLORS.ERROR
                     : state === "success"
-                      ? "#0A84FF"
-                      : "#ECECEC",
+                      ? COLORS.SUCCESS
+                      : COLORS.BORDER,
               },
               "&:hover fieldset": {
                 borderColor:
                   state === "error"
-                    ? "#FF453A"
+                    ? COLORS.ERROR
                     : state === "success"
-                      ? "#0A84FF"
-                      : "#ECECEC",
+                      ? COLORS.SUCCESS
+                      : COLORS.BORDER,
               },
               "&.Mui-focused fieldset": {
                 borderWidth: 1,
                 borderColor:
                   state === "error"
-                    ? "#FF453A"
+                    ? COLORS.ERROR
                     : state === "success"
-                      ? "#0A84FF"
-                      : "#757575",
+                      ? COLORS.SUCCESS
+                      : COLORS.FOCUSED_BORDER,
               },
               "&.Mui-disabled fieldset": {
                 borderColor: "white",
-                backgroundColor: "#F8F8F8",
+                backgroundColor: COLORS.DISABLED_BG,
               },
               "& input::placeholder": {
-                color: "#BDBDBD",
+                color: COLORS.PLACEHOLDER,
                 opacity: 1,
               },
               "& input.Mui-disabled": {
                 zIndex: 1,
-                WebkitTextFillColor: "#DDDDDD",
+                WebkitTextFillColor: COLORS.DISABLED_TEXT,
               },
             },
             "& .MuiInputLabel-root": {
               fontSize: "12px",
-              color: "#6B7280",
+              color: COLORS.LABEL,
             },
           }}
         />

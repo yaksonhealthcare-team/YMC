@@ -2,6 +2,7 @@ import React from "react"
 import { TextField, InputAdornment } from "@mui/material"
 import SearchIcon from "@components/icons/SearchIcon"
 import XCircleIcon from "@components/icons/XCircleIcon"
+import { COLORS } from "@constants/ColorConstants"
 
 interface SearchFieldProps {
   placeholder?: string
@@ -43,20 +44,20 @@ const SearchField = (props: SearchFieldProps) => {
         sx={{
           "& .MuiOutlinedInput-root": {
             paddingX: 2,
-            borderColor: "#ECECEC",
+            borderColor: COLORS.BORDER,
             borderRadius: "12px",
             "& fieldset": {
-              borderColor: "#ECECEC",
+              borderColor: COLORS.BORDER,
             },
             "&:hover fieldset": {
-              borderColor: "#ECECEC",
+              borderColor: COLORS.BORDER,
             },
             "&.Mui-focused fieldset": {
               borderWidth: 1,
-              borderColor: "#757575",
+              borderColor: COLORS.FOCUSED_BORDER,
             },
             "& input::placeholder": {
-              color: "#BDBDBD",
+              color: COLORS.PLACEHOLDER,
               opacity: 1,
             },
           },
