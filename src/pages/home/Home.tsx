@@ -5,6 +5,7 @@ import { useOverlay } from "../../contexts/ModalContext.tsx"
 import { Container, Typography } from "@mui/material"
 import DynamicHomeHeaderBackground from "./_fragments/DynamicHomeHeaderBackground.tsx"
 import Logo from "@components/Logo.tsx"
+import PageContainer from "@components/PageContainer.tsx"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -33,7 +34,7 @@ const Home = () => {
   }
 
   return (
-    <Container className={"w-full h-full bg-[#F8F5F2] py-4"}>
+    <Container className={"relative w-full h-full bg-[#F8F5F2] py-4"}>
       <DynamicHomeHeaderBackground
         header={
           <div className={"space-y-2"}>
@@ -68,15 +69,16 @@ const Home = () => {
             </div>
           </div>
         }
+        buttonArea={
+          <button
+            className="w-full h-full bg-primary-300 text-white rounded-full shadow-lg"
+            onClick={() => navigate("/dev")}
+          ></button>
+        }
       />
 
       <button
-        className="fixed top-4 right-4 w-10 h-10 bg-primary-300 text-white rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200"
-        onClick={() => navigate("/dev")}
-      ></button>
-
-      <button
-        className="fixed bottom-28 right-6 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200"
+        className="absolute bottom-4 right-6 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200"
         onClick={() => navigate("/dev")}
       >
         dev
