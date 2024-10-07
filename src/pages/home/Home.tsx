@@ -3,7 +3,7 @@ import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useNavigate } from "react-router-dom"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
 import { Container, Typography } from "@mui/material"
-import DynamicCustomSVGComponent from "./_fragments/DynamicCustomSVGComponent.tsx"
+import DynamicHomeHeaderBackground from "./_fragments/DynamicHomeHeaderBackground.tsx"
 import Logo from "@components/Logo.tsx"
 
 const Home = () => {
@@ -34,7 +34,7 @@ const Home = () => {
 
   return (
     <Container className={"w-full h-full bg-[#F8F5F2] py-4"}>
-      <DynamicCustomSVGComponent
+      <DynamicHomeHeaderBackground
         header={
           <div className={"space-y-2"}>
             <Logo text size={136} />
@@ -63,7 +63,7 @@ const Home = () => {
               <img
                 src="/assets/home_banner.png"
                 alt="배너영역"
-                className="w-full h-36 object-cover rounded-2xl"
+                className="w-full h-12 object-cover rounded-2xl"
               />
             </div>
           </div>
