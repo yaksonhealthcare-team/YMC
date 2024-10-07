@@ -1,9 +1,9 @@
 import ReloadIcon from "@components/icons/ReloadIcon"
-import Button from "@components/Button"
+import { Button } from "@components/Button"
 import TextField from "@components/TextField"
-import TextArea from "@components/TextArea"
-import SearchField from "@components/SearchField"
-import Tabs from "@components/Tabs"
+import { TextArea } from "@components/TextArea"
+import { SearchField } from "@components/SearchField"
+import { CustomTabs as Tabs } from "@components/Tabs"
 import { useState } from "react"
 
 const Home = () => {

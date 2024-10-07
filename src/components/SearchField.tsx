@@ -12,7 +12,7 @@ interface SearchFieldProps {
   onClear?: () => void
 }
 
-const SearchField = (props: SearchFieldProps) => {
+export const SearchField = (props: SearchFieldProps) => {
   const { placeholder, value, onChange, onClear } = props
 
   return (
@@ -66,5 +66,3 @@ const SearchField = (props: SearchFieldProps) => {
     </div>
   )
 }
-
-export default SearchField

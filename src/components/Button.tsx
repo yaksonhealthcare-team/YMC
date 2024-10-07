@@ -31,7 +31,7 @@ interface CustomButtonProps extends ButtonProps {
   iconRight?: React.ReactNode // 우측 아이콘 설정
 }
 
-const Button: React.FC<CustomButtonProps> = ({
+export const Button: React.FC<CustomButtonProps> = ({
   variantType = "primary",
   sizeType = "m", // 기본값을 md로 설정
   iconLeft,
@@ -81,5 +81,3 @@ const Button: React.FC<CustomButtonProps> = ({
     </CustomButton>
   )
 }
-
-export default Button

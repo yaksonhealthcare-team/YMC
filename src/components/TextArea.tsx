@@ -13,7 +13,7 @@ interface TextAreaProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const TextArea = (props: TextAreaProps) => {
+export const TextArea = (props: TextAreaProps) => {
   const { placeholder, label, helperText, maxLength = 100, disabled } = props
   const [value, setValue] = useState("")
 
@@ -93,5 +93,3 @@ const TextArea = (props: TextAreaProps) => {
     </div>
   )
 }
-
-export default TextArea

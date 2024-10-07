@@ -1,6 +1,6 @@
 import React from "react"
 import { TextField, InputAdornment } from "@mui/material"
-import Button from "@components/Button"
+import { Button } from "@components/Button"
 import { COLORS } from "@constants/ColorConstants"
 
 interface CustomTextFieldProps {

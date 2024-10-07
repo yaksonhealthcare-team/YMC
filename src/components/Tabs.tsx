@@ -14,7 +14,7 @@ interface CustomTabsProps {
   activeTab: string // 현재 활성화된 탭
 }
 
-const CustomTabs = (props: CustomTabsProps) => {
+export const CustomTabs = (props: CustomTabsProps) => {
   const { type, tabs, onChange, activeTab } = props
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
@@ -89,5 +89,3 @@ const CustomTabs = (props: CustomTabsProps) => {
     </div>
   )
 }
-
-export default CustomTabs
