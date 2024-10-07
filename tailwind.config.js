@@ -44,7 +44,7 @@ export default {
           700: "#212121",
         },
         primary: {
-          main: "#F37165",
+          DEFAULT: "#F37165",
           50: "#FEF1F0",
           100: "#FDEAE8",
           200: "#FBD3CF",
@@ -55,6 +55,18 @@ export default {
           700: "#92443D",
           800: "#6D332D",
           900: "#552823",
+        },
+        error: {
+          DEFAULT: "#FF453A",
+        },
+        success: {
+          DEFAULT: "#0A84FF",
+        },
+        possible: {
+          DEFAULT: "#01BA77",
+        },
+        skyblue: {
+          DEFAULT: "#4CB0B0",
         },
       },
     },
