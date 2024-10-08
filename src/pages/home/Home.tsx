@@ -5,6 +5,7 @@ import { TextArea } from "@components/TextArea"
 import { SearchField } from "@components/SearchField"
 import { CustomTabs as Tabs } from "@components/Tabs"
 import { useState } from "react"
+import { Filter } from "@components/Filter"
 
 const Home = () => {
   const [value, setValue] = useState("")
@@ -82,6 +83,14 @@ const Home = () => {
           activeTab={activeTab}
           onChange={handleTabChange}
         />
+      </div>
+      <div className="p-4">
+        {"Filters: "}
+        <Filter label="브랜드" type="default" state="default" />
+        <Filter label="브랜드" type="arrow" state="default" />
+        <Filter label="브랜드" type="default" state="active" />
+        <Filter label="브랜드" type="arrow" state="active" />
+        <Filter label="브랜드" type="reload" />
       </div>
     </>
   )
