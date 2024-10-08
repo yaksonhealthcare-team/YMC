@@ -1,15 +1,26 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../auth/AuthContext"
 import Logo from "@components/Logo.tsx"
 import Button from "@components/Button.tsx"
 import { Typography } from "@mui/material"
+import { useLayout } from "../../layout/LayoutContext.tsx"
 
 const Login = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const { login } = useAuth()
+  const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    setHeader({
+      display: false,
+    })
+    setNavigation({
+      display: false,
+    })
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -29,7 +40,7 @@ const Login = () => {
         "flex flex-col h-full w-full justify-between items-center bg-[#F8F5F2] p-14"
       }
     >
-      <div className={"p-48"}>
+      <div className={"py-48"}>
         <Logo text size={191} />
       </div>
 
