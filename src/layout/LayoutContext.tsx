@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from "react"
+import React, { createContext, useContext, useState } from "react"
 import PageContainer from "@components/PageContainer.tsx"
 import { Typography } from "@mui/material"
 import { useNavigate } from "react-router-dom"
@@ -28,7 +28,11 @@ const LayoutContext = createContext<LayoutContextValue | null>({
   setHeader: () => {},
 })
 
-export const LayoutProvider = ({ children }) => {
+interface LayoutProviderProps {
+  children: React.ReactNode
+}
+
+export const LayoutProvider = ({ children }: LayoutProviderProps) => {
   const [navigation, setNavigation] = useState<NavigationConfig>({
     display: true,
   })
@@ -110,7 +114,19 @@ export const LayoutProvider = ({ children }) => {
   )
 }
 
-const NavButton = ({ activeIcon, inactiveIcon, title, link }) => {
+interface NavButtonProps {
+  activeIcon: string
+  inactiveIcon: string
+  title: string
+  link: string
+}
+
+const NavButton = ({
+  activeIcon,
+  inactiveIcon,
+  title,
+  link,
+}: NavButtonProps) => {
   const path = window.location.pathname
   const isActive = path === link
   const navigate = useNavigate()

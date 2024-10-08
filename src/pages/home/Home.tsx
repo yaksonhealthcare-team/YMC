@@ -4,7 +4,7 @@ import TextField from "@components/TextField"
 import TextArea from "@components/TextArea"
 import SearchField from "@components/SearchField"
 import Tabs from "@components/Tabs"
-import { useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import { useLayout } from "../../layout/LayoutContext.tsx"
 import { useNavigate } from "react-router-dom"
 
@@ -22,8 +22,6 @@ const Home = () => {
     })
     setNavigation({ display: true })
   }, [])
-
-  const navigate = useNavigate()
 
   const [value, setValue] = useState("")
 
@@ -68,7 +66,9 @@ const Home = () => {
           state="default"
           iconRight={<ReloadIcon />}
           button
-          onChange={(e: any) => setValue(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setValue(e.target.value)
+          }
         />
       </div>
       <div className="p-4">
@@ -79,7 +79,9 @@ const Home = () => {
           helperText="Hint message goes here"
           maxLength={100}
           value={value}
-          onChange={(e: any) => setValue(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setValue(e.target.value)
+          }
         />
       </div>
       <div className="p-4">
@@ -87,7 +89,9 @@ const Home = () => {
         <SearchField
           placeholder="도로명, 건물명, 지번으로 검색하세요."
           value={value}
-          onChange={(e: any) => setValue(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setValue(e.target.value)
+          }
           onClear={() => setValue("")}
         />
       </div>

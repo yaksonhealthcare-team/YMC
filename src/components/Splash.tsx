@@ -1,7 +1,5 @@
 import React from "react"
 import Logo from "@components/Logo.tsx"
-import Button from "@components/Button.tsx"
-import { Typography } from "@mui/material"
 import PageContainer from "@components/PageContainer.tsx"
 
 const SplashScreen: React.FC = () => {

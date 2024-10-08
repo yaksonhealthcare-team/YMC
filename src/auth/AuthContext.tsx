@@ -1,10 +1,10 @@
-import React, { createContext, useState, useContext, useEffect } from "react"
+import React, { createContext, useContext, useEffect, useState } from "react"
 import SplashScreen from "@components/Splash.tsx"
 import { User } from "../types/User.ts"
 
 type AuthContextType = {
   user: User | null
-  login: (userData: { username: string }) => void
+  login: (userData: User) => void
   logout: () => void
   isLoading: boolean
 } | null
@@ -55,7 +55,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         try {
           const { isValid, user } = await validateUserSession(storedToken)
           if (isValid && user) {
-            setUser(user)
+            setUser(user || null)
           } else {
             // 세션이 유효하지 않으면 로컬 스토리지를 정리합니다
             localStorage.removeItem("userToken")

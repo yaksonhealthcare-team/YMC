@@ -1,4 +1,10 @@
-const Logo = ({ symbol, text, size = 174 }) => {
+interface LogoProps {
+  symbol?: boolean
+  text?: boolean
+  size?: number
+}
+
+const Logo = ({ symbol = false, text = false, size = 174 }: LogoProps) => {
   if (symbol && text) {
     return <LogoWithSymbol size={size} />
   } else if (!symbol && text) {
@@ -10,7 +16,7 @@ const Logo = ({ symbol, text, size = 174 }) => {
   }
 }
 
-const LogoWithSymbol = ({ size }) => {
+const LogoWithSymbol = ({ size = 42 }: LogoProps) => {
   const aspectRatio = 174 / 42
   const width = size
   const height = size / aspectRatio
@@ -79,7 +85,7 @@ const LogoWithSymbol = ({ size }) => {
   )
 }
 
-const LogoOnlyText = ({ size }) => {
+const LogoOnlyText = ({ size = 42 }: LogoProps) => {
   const aspectRatio = 131 / 16
   const width = size
   const height = size / aspectRatio
@@ -131,7 +137,7 @@ const LogoOnlyText = ({ size }) => {
   )
 }
 
-const LogoOnlySymbol = ({ size }) => {
+const LogoOnlySymbol = ({ size = 42 }: LogoProps) => {
   const aspectRatio = 28 / 42
   const width = size
   const height = size / aspectRatio

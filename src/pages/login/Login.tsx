@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react"
+import { MouseEventHandler, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../auth/AuthContext"
 import Logo from "@components/Logo.tsx"
 import Button from "@components/Button.tsx"
 import { Typography } from "@mui/material"
 import { useLayout } from "../../layout/LayoutContext.tsx"
+import { User } from "../../types/User.ts"
 
 const Login = () => {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
   const { login } = useAuth()
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
@@ -22,11 +21,15 @@ const Login = () => {
     })
   }, [])
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit: MouseEventHandler<HTMLButtonElement> = (event) => {
+    event.preventDefault()
     // TODO: 여기에 실제 인증 로직을 구현합니다
     // 예를 들어, API 호출을 통한 인증 등
-    login({ username }) // 성공 시 사용자 정보를 저장
+    login({
+      username: "임시사용자",
+      email: "user@example.com",
+      password: "password",
+    } as unknown as User) // 성공 시 사용자 정보를 저장
     navigate("/") // 홈 페이지로 리다이렉트
   }
 
