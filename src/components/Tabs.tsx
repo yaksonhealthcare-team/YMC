@@ -14,7 +14,7 @@ interface CustomTabsProps {
   activeTab: string // 현재 활성화된 탭
 }
 
-const CustomTabs = (props: CustomTabsProps) => {
+export const CustomTabs = (props: CustomTabsProps) => {
   const { type, tabs, onChange, activeTab } = props
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
@@ -27,7 +27,7 @@ const CustomTabs = (props: CustomTabsProps) => {
       case "1depth":
         return clsx(
           "font-sb text-16px px-[12px] py-[14px] min-w-0",
-          isActive ? "text-primay-main" : "text-gray-700",
+          isActive ? "text-primay" : "text-gray-700",
         )
       case "2depth":
         return clsx(
@@ -56,7 +56,7 @@ const CustomTabs = (props: CustomTabsProps) => {
       case "1depth":
         return {}
       default:
-        return { borderBottom: "2px solid #000000" } // 검정색 밑줄
+        return { borderBottom: "2px solid black" } // 검정색 밑줄
     }
   }
 
@@ -89,5 +89,3 @@ const CustomTabs = (props: CustomTabsProps) => {
     </div>
   )
 }
-
-export default CustomTabs

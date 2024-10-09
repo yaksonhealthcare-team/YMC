@@ -31,7 +31,7 @@ interface CustomButtonProps extends ButtonProps {
   iconRight?: React.ReactNode // 우측 아이콘 설정
 }
 
-const Button: React.FC<CustomButtonProps> = ({
+export const Button: React.FC<CustomButtonProps> = ({
   variantType = "primary",
   sizeType = "m", // 기본값을 md로 설정
   iconLeft,
@@ -41,12 +41,12 @@ const Button: React.FC<CustomButtonProps> = ({
 }) => {
   const variantClasses = {
     primary:
-      "bg-primary-main text-white hover:bg-primary-400 active:bg-primary-500 disabled:bg-[#DCDCDC] disabled:text-gray-400",
+      "bg-primary text-white hover:bg-primary-400 active:bg-primary-500 disabled:bg-[#DCDCDC] disabled:text-gray-400",
     secondary:
       "bg-[#FEF2F1] text-primary-400 hover:bg-primary-100 active:bg-primary-200 disabled:bg-grey-50 disabled:text-gray-300",
-    line: "border border-solid border-primary-main bg-white text-primary-400 hover:bg-[#FEF2F1] active:bg-primary-100 disabled:bg-white disabled:text-gray-300 disabled:border disabled:border-solid disabled:border-gray-300",
+    line: "border border-solid border-primary bg-white text-primary-400 hover:bg-[#FEF2F1] active:bg-primary-100 disabled:bg-white disabled:text-gray-300 disabled:border disabled:border-solid disabled:border-gray-300",
     gray: "bg-gray-100 text-black hover:bg-gray-50 active:bg-gray-200 disabled:bg-grey-50 disabled:text-gray-300",
-    text: "bg-transparent text-primary-main hover:underline active:text-primary-400 active:bg-white",
+    text: "bg-transparent text-primary hover:underline active:text-primary-400 active:bg-white",
   }
 
   const sizeClasses = {
@@ -81,5 +81,3 @@ const Button: React.FC<CustomButtonProps> = ({
     </CustomButton>
   )
 }
-
-export default Button

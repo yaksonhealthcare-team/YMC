@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { TextField } from "@mui/material"
 import clsx from "clsx"
+import { COLORS } from "@constants/ColorConstants"
 
 interface TextAreaProps {
   placeholder?: string
@@ -12,7 +13,7 @@ interface TextAreaProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const TextArea = (props: TextAreaProps) => {
+export const TextArea = (props: TextAreaProps) => {
   const { placeholder, label, helperText, maxLength = 100, disabled } = props
   const [value, setValue] = useState("")
 
@@ -39,31 +40,31 @@ const TextArea = (props: TextAreaProps) => {
           "& .MuiOutlinedInput-root": {
             borderRadius: "12px",
             "& fieldset": {
-              borderColor: isError ? "#FF453A" : "#ECECEC",
+              borderColor: isError ? COLORS.ERROR : COLORS.BORDER,
             },
             "&:hover fieldset": {
-              borderColor: isError ? "#FF453A" : "#ECECEC",
+              borderColor: isError ? COLORS.ERROR : COLORS.BORDER,
             },
             "&.Mui-focused fieldset": {
               borderWidth: 1,
-              borderColor: isError ? "#FF453A" : "#757575",
+              borderColor: isError ? COLORS.ERROR : COLORS.FOCUSED_BORDER,
             },
             "&.Mui-disabled fieldset": {
-              borderColor: "#ECECEC",
-              backgroundColor: "#F8F8F8",
+              borderColor: COLORS.DISABLED_BORDER,
+              backgroundColor: COLORS.DISABLED_BG,
             },
             "& textarea::placeholder": {
-              color: "#BDBDBD",
+              color: COLORS.PLACEHOLDER,
               opacity: 1,
             },
             "& textarea.Mui-disabled": {
               zIndex: 1,
-              WebkitTextFillColor: "#DDDDDD",
+              WebkitTextFillColor: COLORS.DISABLED_TEXT,
             },
           },
           "& .MuiInputLabel-root": {
             fontSize: "12px",
-            color: "#6B7280",
+            color: COLORS.LABEL,
           },
         }}
       />
@@ -74,7 +75,7 @@ const TextArea = (props: TextAreaProps) => {
           <span
             className={clsx(
               "font-m text-12px",
-              isError ? "text-[#FF453A]" : "text-gray-400",
+              isError ? "text-error" : "text-gray-400",
             )}
           >
             {helperText}
@@ -83,7 +84,7 @@ const TextArea = (props: TextAreaProps) => {
         <span
           className={clsx(
             "font-m text-12px",
-            isError ? "text-[#FF453A]" : "text-gray-400",
+            isError ? "text-error" : "text-gray-400",
           )}
         >
           {value.length} / {maxLength}
@@ -92,5 +93,3 @@ const TextArea = (props: TextAreaProps) => {
     </div>
   )
 }
-
-export default TextArea
