@@ -1,10 +1,10 @@
 import { MouseEventHandler, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { useAuth } from "../../auth/AuthContext"
+import { useAuth } from "../../contexts/AuthContext"
 import Logo from "@components/Logo.tsx"
 import Button from "@components/Button.tsx"
 import { Typography } from "@mui/material"
-import { useLayout } from "../../layout/LayoutContext.tsx"
+import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { User } from "../../types/User.ts"
 
 const Login = () => {
@@ -47,7 +47,7 @@ const Login = () => {
         <Logo text size={191} />
       </div>
 
-      <Button onClick={handleSubmit} variant="outlined">
+      <Button onClick={(event) => handleSubmit(event)} variant="outlined">
         임시로그인 (홈으로 이동)
       </Button>
       <div className={"flex justify-center"}>

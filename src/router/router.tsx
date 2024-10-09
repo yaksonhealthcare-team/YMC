@@ -1,7 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import ProtectedRoute from "./Protectedroute.tsx"
-import { AuthProvider } from "../auth/AuthContext.tsx"
-import { LayoutProvider } from "../layout/LayoutContext.tsx"
+import ProtectedRoute from "./ProtectedRoute.tsx"
+import { AuthProvider } from "../contexts/AuthContext.tsx"
+import { LayoutProvider } from "../contexts/LayoutContext.tsx"
+
 import routeConfig from "./routeConfig.tsx"
 
 const createRoutes = () => {

@@ -4,7 +4,7 @@ import { User } from "../types/User.ts"
 
 type AuthContextType = {
   user: User | null
-  login: (userData: User) => void
+  login: (userData: { username: string }) => void
   logout: () => void
   isLoading: boolean
 } | null
@@ -83,7 +83,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem("userToken")
   }
 
-  const value = { user, login, logout, isLoading }
+  const value = { user, login, logout, isLoading } as AuthContextType
 
   if (isLoading) {
     return <SplashScreen />
