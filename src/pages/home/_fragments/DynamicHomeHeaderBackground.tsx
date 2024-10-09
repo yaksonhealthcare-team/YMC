@@ -7,6 +7,7 @@ const DynamicHomeHeaderBackground = ({
 }: {
   header: ReactNode
   content: ReactNode
+  buttonArea: ReactNode
 }) => {
   return (
     <div
@@ -36,15 +37,23 @@ const DynamicHomeHeaderBackground = ({
   )
 }
 
-const DynamicSquareContainer = ({ children, className = "" }) => {
-  const containerRef = useRef(null)
+interface DynamicSquareContainerProps {
+  children: ReactNode
+  className?: string
+}
+
+const DynamicSquareContainer = ({
+  children,
+  className = "",
+}: DynamicSquareContainerProps) => {
+  const containerRef = useRef<HTMLDivElement | null>(null)
   const [size, setSize] = useState(0)
 
   useEffect(() => {
     const updateSize = () => {
       if (containerRef.current) {
-        const width = containerRef.current.offsetWidth
-        setSize(width)
+        const width = containerRef.current?.offsetWidth
+        setSize(width || 0)
       }
     }
 

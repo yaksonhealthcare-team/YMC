@@ -1,4 +1,4 @@
-import { useLayout } from "../layout/LayoutContext.tsx"
+import { useLayout } from "../contexts/LayoutContext.tsx"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Button from "@components/Button.tsx"

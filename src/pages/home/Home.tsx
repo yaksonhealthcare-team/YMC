@@ -1,15 +1,12 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useNavigate } from "react-router-dom"
-import { useOverlay } from "../../contexts/ModalContext.tsx"
 import { Container, Typography } from "@mui/material"
 import DynamicHomeHeaderBackground from "./_fragments/DynamicHomeHeaderBackground.tsx"
 import Logo from "@components/Logo.tsx"
-import PageContainer from "@components/PageContainer.tsx"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
-  const { openMessageBox, openBottomSheet, showAlert } = useOverlay()
 
   const navigate = useNavigate()
   useEffect(() => {
@@ -19,19 +16,6 @@ const Home = () => {
 
     setNavigation({ display: true })
   }, [])
-
-  const [value, setValue] = useState("")
-
-  const [activeTab, setActiveTab] = useState("reservation")
-
-  const tabs = [
-    { label: "예약", value: "reservation" },
-    { label: "회원권", value: "membership" },
-  ]
-
-  const handleTabChange = (newValue: string) => {
-    setActiveTab(newValue)
-  }
 
   return (
     <Container className={"relative w-full h-full bg-[#F8F5F2] py-4"}>
