@@ -1,98 +1,74 @@
-import ReloadIcon from "@components/icons/ReloadIcon"
-import { Button } from "@components/Button"
-import TextField from "@components/TextField"
-import { TextArea } from "@components/TextArea"
-import { SearchField } from "@components/SearchField"
-import { CustomTabs as Tabs } from "@components/Tabs"
-import { useState } from "react"
-import { Filter } from "@components/Filter"
+import { useEffect } from "react"
+import { useLayout } from "../../contexts/LayoutContext.tsx"
+import { useNavigate } from "react-router-dom"
+import { Container, Typography } from "@mui/material"
+import DynamicHomeHeaderBackground from "./_fragments/DynamicHomeHeaderBackground.tsx"
+import Logo from "@components/Logo.tsx"
+
 
 const Home = () => {
-  const [value, setValue] = useState("")
+  const { setHeader, setNavigation } = useLayout()
 
-  const [activeTab, setActiveTab] = useState("reservation")
+  const navigate = useNavigate()
+  useEffect(() => {
+    setHeader({
+      display: false,
+    })
 
-  const tabs = [
-    { label: "예약", value: "reservation" },
-    { label: "회원권", value: "membership" },
-  ]
-
-  const handleTabChange = (newValue: string) => {
-    setActiveTab(newValue)
-  }
+    setNavigation({ display: true })
+  }, [])
 
   return (
-    <>
-      <div className="p-4">
-        {"Buttons: "}
-        <Button variantType="primary" sizeType="xs" iconLeft={<ReloadIcon />}>
-          Button
-        </Button>
-        <Button variantType="secondary" sizeType="xs" iconLeft={<ReloadIcon />}>
-          Button
-        </Button>
-        <Button variantType="line" sizeType="xs" iconRight={<ReloadIcon />}>
-          Button
-        </Button>
-        <Button variantType="gray" sizeType="xs" iconRight={<ReloadIcon />}>
-          Button
-        </Button>
-        <Button variantType="text" sizeType="xs" iconRight={<ReloadIcon />}>
-          Button
-        </Button>
-      </div>
-      <div className="p-4">
-        {"TextFields: "}
-        <TextField
-          disabled
-          placeholder="Enter your name"
-          label="Label goes here"
-          helperText="Hint message goes here"
-          value={value}
-          state="default"
-          iconRight={<ReloadIcon />}
-          button
-          onChange={(e: any) => setValue(e.target.value)}
-        />
-      </div>
-      <div className="p-4">
-        {"TextArea: "}
-        <TextArea
-          placeholder="Enter your name"
-          label="Label goes here"
-          helperText="Hint message goes here"
-          maxLength={100}
-          value={value}
-          onChange={(e: any) => setValue(e.target.value)}
-        />
-      </div>
-      <div className="p-4">
-        {"SearchField: "}
-        <SearchField
-          placeholder="도로명, 건물명, 지번으로 검색하세요."
-          value={value}
-          onChange={(e: any) => setValue(e.target.value)}
-          onClear={() => setValue("")}
-        />
-      </div>
-      <div className="p-4">
-        {"Tab: "}
-        <Tabs
-          type="1depth" // 원하는 탭 타입 설정
-          tabs={tabs}
-          activeTab={activeTab}
-          onChange={handleTabChange}
-        />
-      </div>
-      <div className="p-4">
-        {"Filters: "}
-        <Filter label="브랜드" type="default" state="default" />
-        <Filter label="브랜드" type="arrow" state="default" />
-        <Filter label="브랜드" type="default" state="active" />
-        <Filter label="브랜드" type="arrow" state="active" />
-        <Filter label="브랜드" type="reload" />
-      </div>
-    </>
+    <Container className={"relative w-full h-full bg-[#F8F5F2] py-4"}>
+      <DynamicHomeHeaderBackground
+        header={
+          <div className={"space-y-2"}>
+            <Logo text size={136} />
+            <Typography className="text-sm text-gray-500">
+              [공지] 9월 1일 회원권 변경사항 안내드립니다.
+            </Typography>
+          </div>
+        }
+        content={
+          <div>
+            <div className="flex justify-between items-center bg-primary-300 rounded-2xl p-4">
+              <div className="flex gap-2 flex-col text-white">
+                <Typography className={"font-b"}>
+                  <span className={"text-18px"}>김민정님</span> 반갑습니다.
+                </Typography>
+                <Typography className="font-m text-14px space-x-2">
+                  <span>SILVER</span> <span>10,000 P</span>
+                </Typography>
+              </div>
+              <div className="rounded-full bg-white text-primary-300 py-2.5 px-5">
+                예약하기
+              </div>
+            </div>
+            {/* 배너영역*/}
+            <div className="mt-4">
+              <img
+                src="/assets/home_banner.png"
+                alt="배너영역"
+                className="w-full h-12 object-cover rounded-2xl"
+              />
+            </div>
+          </div>
+        }
+        buttonArea={
+          <button
+            className="w-full h-full bg-primary-300 text-white rounded-full shadow-lg"
+            onClick={() => navigate("/dev")}
+          ></button>
+        }
+      />
+
+      <button
+        className="absolute bottom-4 right-6 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200"
+        onClick={() => navigate("/dev")}
+      >
+        dev
+      </button>
+    </Container>
   )
 }
 

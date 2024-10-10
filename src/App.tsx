@@ -1,7 +1,6 @@
-import { RouterProvider } from "react-router-dom"
-import { router } from "./router"
+import { AppRouter } from "./router/router.tsx"
 import { ThemeProvider, createTheme } from "@mui/material/styles"
-import PageContainer from "./components/PageContainer"
+import { OverlayProvider } from "./contexts/ModalContext.tsx"
 
 const theme = createTheme({
   // MUI 테마 설정
@@ -37,9 +36,9 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <PageContainer>
-        <RouterProvider router={router} />
-      </PageContainer>
+      <OverlayProvider>
+        <AppRouter />
+      </OverlayProvider>
     </ThemeProvider>
   )
 }
