@@ -1,3 +1,5 @@
+import { blue } from "@mui/material/colors"
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -67,6 +69,14 @@ export default {
         },
         skyblue: {
           DEFAULT: "#4CB0B0",
+        },
+        tag: {
+          green: "#01BA77",
+          greenBg: "#E6F8F1",
+          blue: "#0A84FF",
+          blueBg: "#F5FAFF",
+          red: "#F37165",
+          redBg: "#FEF2F1",
         },
       },
     },
