@@ -1,12 +1,13 @@
 import { useLayout } from "../contexts/LayoutContext.tsx"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import Button from "@components/Button.tsx"
+import { Button } from "@components/Button.tsx"
 import ReloadIcon from "@components/icons/ReloadIcon.tsx"
 import TextField from "@components/TextField.tsx"
-import TextArea from "@components/TextArea.tsx"
-import SearchField from "@components/SearchField.tsx"
-import Tabs from "@components/Tabs.tsx"
+import { TextArea } from "@components/TextArea.tsx"
+import { SearchField } from "@components/SearchField.tsx"
+import { CustomTabs as Tabs } from "@components/Tabs.tsx"
+import { Tag } from "@components/Tag.tsx"
 
 const DevPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -97,6 +98,16 @@ const DevPage = () => {
           activeTab={activeTab}
           onChange={handleTabChange}
         />
+      </div>
+      <div className="p-4">
+        {"Tag: "}
+        <Tag type="used" title="사용완료" />
+        <Tag type="unused" title="사용가능" />
+        <Tag type="rect" title="전체지점" />
+        <Tag type="round" title="전체지점" />
+        <Tag type="green" title="Free" />
+        <Tag type="blue" title="사용" />
+        <Tag type="red" title="적립" />
       </div>
       <div className="p-4">
         <Button
