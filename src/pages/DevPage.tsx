@@ -8,6 +8,8 @@ import { TextArea } from "@components/TextArea.tsx"
 import { SearchField } from "@components/SearchField.tsx"
 import { CustomTabs as Tabs } from "@components/Tabs.tsx"
 import { Tag } from "@components/Tag.tsx"
+import { FloatingButton } from "@components/FloatingButton.tsx"
+import { SearchFloatingButton } from "@components/SearchFloatingButton.tsx"
 
 const DevPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -108,6 +110,60 @@ const DevPage = () => {
         <Tag type="green" title="Free" />
         <Tag type="blue" title="사용" />
         <Tag type="red" title="적립" />
+      </div>
+      <div className="p-4">
+        {"FloatingButton: "}
+        <div className="flex">
+          <FloatingButton
+            type="location"
+            onClick={() => {
+              alert("FloatingButton Clicked")
+            }}
+          />
+          <FloatingButton
+            type="top"
+            onClick={() => {
+              alert("FloatingButton Clicked")
+            }}
+          />
+          <FloatingButton
+            type="search"
+            onClick={() => {
+              alert("FloatingButton Clicked")
+            }}
+          />
+          <FloatingButton
+            type="reserve"
+            onClick={() => {
+              alert("FloatingButton Clicked")
+            }}
+          />
+          <FloatingButton
+            type="purchase"
+            onClick={() => {
+              alert("FloatingButton Clicked")
+            }}
+          />
+        </div>
+      </div>
+      <div className="p-4">
+        {"SearchFloatingButton: "}
+        <div className="flex">
+          <SearchFloatingButton
+            type="list"
+            title="목록보기"
+            onClick={() => {
+              alert("FloatingButton Clicked")
+            }}
+          />
+          <SearchFloatingButton
+            type="search"
+            title="지도보기"
+            onClick={() => {
+              alert("FloatingButton Clicked")
+            }}
+          />
+        </div>
       </div>
       <div className="p-4">
         <Button
