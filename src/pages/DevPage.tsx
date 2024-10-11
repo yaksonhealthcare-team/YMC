@@ -166,11 +166,12 @@ const DevPage = () => {
           />
         </div>
       </div>
-      <div className="p-4 bg-black text-white flex flex-col gap-2">
+      <div className="p-4 bg-black text-white flex flex-col gap-2 items-center">
         {"Dividers: "}
         <Divider type="m" />
         <Divider type="s_100" />
         <Divider type="s_200" />
+        <Divider type="r" />
       </div>
       <div className="p-4">
         <Button
