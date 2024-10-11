@@ -10,6 +10,7 @@ import { CustomTabs as Tabs } from "@components/Tabs.tsx"
 import { Tag } from "@components/Tag.tsx"
 import { FloatingButton } from "@components/FloatingButton.tsx"
 import { SearchFloatingButton } from "@components/SearchFloatingButton.tsx"
+import { Divider } from "@components/Divider.tsx"
 
 const DevPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -164,6 +165,12 @@ const DevPage = () => {
             }}
           />
         </div>
+      </div>
+      <div className="p-4 bg-black text-white flex flex-col gap-2">
+        {"Dividers: "}
+        <Divider type="m" />
+        <Divider type="s_100" />
+        <Divider type="s_200" />
       </div>
       <div className="p-4">
         <Button
