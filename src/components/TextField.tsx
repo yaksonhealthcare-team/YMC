@@ -34,7 +34,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
   // 좌측 아이콘 색상 적용
   const modifiedIconLeft =
     iconLeft &&
-    React.cloneElement(iconRight as React.ReactElement<any>, {
+    React.cloneElement(iconLeft as React.ReactElement<any>, {
       color: iconColor, // 색상을 전달
     })
 

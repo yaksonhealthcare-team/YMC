@@ -5,6 +5,7 @@ import { Container, Typography } from "@mui/material"
 import DynamicHomeHeaderBackground from "./_fragments/DynamicHomeHeaderBackground.tsx"
 import Logo from "@components/Logo.tsx"
 
+
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
 
