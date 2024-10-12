@@ -3,7 +3,7 @@ import CaretDownIcon from "@assets/icons/CaretDown.svg?react"
 import ReloadIcon from "@components/icons/ReloadIcon"
 
 type FilterProps = {
-  label: string
+  label?: string
   type?: "default" | "arrow" | "reload"
   state?: "default" | "active"
   onClick?: () => void
