@@ -1,12 +1,12 @@
 import { useLayout } from "../contexts/LayoutContext.tsx"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import Button from "@components/Button.tsx"
+import { Button } from "@components/Button.tsx"
 import ReloadIcon from "@components/icons/ReloadIcon.tsx"
 import TextField from "@components/TextField.tsx"
-import TextArea from "@components/TextArea.tsx"
-import SearchField from "@components/SearchField.tsx"
-import Tabs from "@components/Tabs.tsx"
+import { TextArea } from "@components/TextArea.tsx"
+import { SearchField } from "@components/SearchField.tsx"
+import { CustomTabs as Tabs } from "@components/Tabs.tsx"
 
 const DevPage = () => {
   const { setHeader, setNavigation } = useLayout()
