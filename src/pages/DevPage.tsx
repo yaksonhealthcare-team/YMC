@@ -7,10 +7,11 @@ import TextField from "@components/TextField.tsx"
 import { TextArea } from "@components/TextArea.tsx"
 import { SearchField } from "@components/SearchField.tsx"
 import { CustomTabs as Tabs } from "@components/Tabs.tsx"
+import { Filter } from "@components/Filter.tsx"
 import { Tag } from "@components/Tag.tsx"
 import { FloatingButton } from "@components/FloatingButton.tsx"
 import { SearchFloatingButton } from "@components/SearchFloatingButton.tsx"
-import { Filter } from "@components/Filter.tsx"
+import { Divider } from "@components/Divider.tsx"
 
 const DevPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -172,6 +173,15 @@ const DevPage = () => {
               alert("FloatingButton Clicked")
             }}
           />
+        </div>
+      </div>
+      <div className="p-4 border-t">
+        {"Dividers: "}
+        <div className="p-4 bg-black text-white flex flex-col gap-2 items-center">
+          <Divider type="m" />
+          <Divider type="s_100" />
+          <Divider type="s_200" />
+          <Divider type="r" />
         </div>
       </div>
       <div className="p-4 border-t">
