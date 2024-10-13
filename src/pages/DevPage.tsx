@@ -7,6 +7,8 @@ import TextField from "@components/TextField.tsx"
 import { TextArea } from "@components/TextArea.tsx"
 import { SearchField } from "@components/SearchField.tsx"
 import { CustomTabs as Tabs } from "@components/Tabs.tsx"
+import { Tag } from "@components/Tag.tsx"
+import { Filter } from "@components/Filter.tsx"
 
 const DevPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -38,7 +40,7 @@ const DevPage = () => {
 
   return (
     <>
-      <div className="p-4">
+      <div className="p-4 border-t-2">
         {"Buttons: "}
         <Button variantType="primary" sizeType="xs" iconLeft={<ReloadIcon />}>
           Button
@@ -56,7 +58,7 @@ const DevPage = () => {
           Button
         </Button>
       </div>
-      <div className="p-4">
+      <div className="p-4 border-t-2">
         {"TextFields: "}
         <TextField
           placeholder="Enter your name"
@@ -69,7 +71,7 @@ const DevPage = () => {
           onChange={(e: any) => setValue(e.target.value)}
         />
       </div>
-      <div className="p-4">
+      <div className="p-4 border-t-2">
         {"TextArea: "}
         <TextArea
           placeholder="Enter your name"
@@ -80,7 +82,7 @@ const DevPage = () => {
           onChange={(e: any) => setValue(e.target.value)}
         />
       </div>
-      <div className="p-4">
+      <div className="p-4 border-t-2">
         {"SearchField: "}
         <SearchField
           placeholder="도로명, 건물명, 지번으로 검색하세요."
@@ -89,7 +91,7 @@ const DevPage = () => {
           onClear={() => setValue("")}
         />
       </div>
-      <div className="p-4">
+      <div className="p-4 border-t-2">
         {"Tab: "}
         <Tabs
           type="1depth" // 원하는 탭 타입 설정
@@ -98,7 +100,25 @@ const DevPage = () => {
           onChange={handleTabChange}
         />
       </div>
-      <div className="p-4">
+      <div className="p-4 border-t-2">
+        {"Filters: "}
+        <Filter type="default" state="default" label="브랜드" />
+        <Filter type="arrow" state="default" label="브랜드" />
+        <Filter type="default" state="active" label="브랜드" />
+        <Filter type="arrow" state="active" label="브랜드" />
+        <Filter type="reload" />
+      </div>
+      <div className="p-4 border-t-2">
+        {"Tags: "}
+        <Tag type="used" title="사용완료" />
+        <Tag type="unused" title="사용가능" />
+        <Tag type="rect" title="전체지점" />
+        <Tag type="round" title="전체지점" />
+        <Tag type="green" title="Free" />
+        <Tag type="blue" title="사용" />
+        <Tag type="red" title="적립" />
+      </div>
+      <div className="p-4 border-t-2">
         <Button
           variantType="primary"
           sizeType="s"
