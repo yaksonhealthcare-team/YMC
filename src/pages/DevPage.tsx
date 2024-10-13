@@ -8,6 +8,8 @@ import { TextArea } from "@components/TextArea.tsx"
 import { SearchField } from "@components/SearchField.tsx"
 import { CustomTabs as Tabs } from "@components/Tabs.tsx"
 import { Tag } from "@components/Tag.tsx"
+import { FloatingButton } from "@components/FloatingButton.tsx"
+import { SearchFloatingButton } from "@components/SearchFloatingButton.tsx"
 import { Filter } from "@components/Filter.tsx"
 
 const DevPage = () => {
@@ -40,7 +42,7 @@ const DevPage = () => {
 
   return (
     <>
-      <div className="p-4 border-t-2">
+      <div className="p-4 border-t">
         {"Buttons: "}
         <Button variantType="primary" sizeType="xs" iconLeft={<ReloadIcon />}>
           Button
@@ -58,7 +60,7 @@ const DevPage = () => {
           Button
         </Button>
       </div>
-      <div className="p-4 border-t-2">
+      <div className="p-4 border-t">
         {"TextFields: "}
         <TextField
           placeholder="Enter your name"
@@ -71,7 +73,7 @@ const DevPage = () => {
           onChange={(e: any) => setValue(e.target.value)}
         />
       </div>
-      <div className="p-4 border-t-2">
+      <div className="p-4 border-t">
         {"TextArea: "}
         <TextArea
           placeholder="Enter your name"
@@ -82,7 +84,7 @@ const DevPage = () => {
           onChange={(e: any) => setValue(e.target.value)}
         />
       </div>
-      <div className="p-4 border-t-2">
+      <div className="p-4 border-t">
         {"SearchField: "}
         <SearchField
           placeholder="도로명, 건물명, 지번으로 검색하세요."
@@ -91,7 +93,7 @@ const DevPage = () => {
           onClear={() => setValue("")}
         />
       </div>
-      <div className="p-4 border-t-2">
+      <div className="p-4 border-t">
         {"Tab: "}
         <Tabs
           type="1depth" // 원하는 탭 타입 설정
@@ -100,7 +102,7 @@ const DevPage = () => {
           onChange={handleTabChange}
         />
       </div>
-      <div className="p-4 border-t-2">
+      <div className="p-4 border-t">
         {"Filters: "}
         <Filter type="default" state="default" label="브랜드" />
         <Filter type="arrow" state="default" label="브랜드" />
@@ -108,7 +110,7 @@ const DevPage = () => {
         <Filter type="arrow" state="active" label="브랜드" />
         <Filter type="reload" />
       </div>
-      <div className="p-4 border-t-2">
+      <div className="p-4 border-t">
         {"Tags: "}
         <Tag type="used" title="사용완료" />
         <Tag type="unused" title="사용가능" />
@@ -118,7 +120,61 @@ const DevPage = () => {
         <Tag type="blue" title="사용" />
         <Tag type="red" title="적립" />
       </div>
-      <div className="p-4 border-t-2">
+      <div className="p-4 border-t">
+        {"FloatingButton: "}
+        <div className="flex">
+          <FloatingButton
+            type="location"
+            onClick={() => {
+              alert("FloatingButton Clicked")
+            }}
+          />
+          <FloatingButton
+            type="top"
+            onClick={() => {
+              alert("FloatingButton Clicked")
+            }}
+          />
+          <FloatingButton
+            type="search"
+            onClick={() => {
+              alert("FloatingButton Clicked")
+            }}
+          />
+          <FloatingButton
+            type="reserve"
+            onClick={() => {
+              alert("FloatingButton Clicked")
+            }}
+          />
+          <FloatingButton
+            type="purchase"
+            onClick={() => {
+              alert("FloatingButton Clicked")
+            }}
+          />
+        </div>
+      </div>
+      <div className="p-4 border-t">
+        {"SearchFloatingButton: "}
+        <div className="flex">
+          <SearchFloatingButton
+            type="list"
+            title="목록보기"
+            onClick={() => {
+              alert("FloatingButton Clicked")
+            }}
+          />
+          <SearchFloatingButton
+            type="search"
+            title="지도보기"
+            onClick={() => {
+              alert("FloatingButton Clicked")
+            }}
+          />
+        </div>
+      </div>
+      <div className="p-4 border-t">
         <Button
           variantType="primary"
           sizeType="s"

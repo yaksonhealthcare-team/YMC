@@ -79,6 +79,9 @@ export default {
           redBg: "#FEF2F1",
         },
       },
+      boxShadow: {
+        "floatingButton": "0px 2px 8px 0px #2E2B294D",
+      },
     },
   },
   plugins: [],
