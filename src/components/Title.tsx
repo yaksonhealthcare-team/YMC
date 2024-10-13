@@ -11,17 +11,9 @@ interface TitleProps {
 export const Title = (props: TitleProps) => {
   const { type = "default", title, count, onClick } = props
 
-  const buttonStyles = {
-    default: ``,
-    arrow: ``,
-  }
-
   return (
     <>
-      <div
-        onClick={onClick}
-        className={clsx(`flex justify-between`, buttonStyles[type])}
-      >
+      <div onClick={onClick} className={clsx(`flex justify-between`)}>
         <div>
           <span className="font-b text-18px text-gray-700">{title}</span>
           {count && (
