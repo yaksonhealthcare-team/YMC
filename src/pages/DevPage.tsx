@@ -12,6 +12,7 @@ import { Tag } from "@components/Tag.tsx"
 import { FloatingButton } from "@components/FloatingButton.tsx"
 import { SearchFloatingButton } from "@components/SearchFloatingButton.tsx"
 import { Divider } from "@components/Divider.tsx"
+import { Title } from "@components/Title.tsx"
 
 const DevPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -183,6 +184,18 @@ const DevPage = () => {
           <Divider type="s_200" />
           <Divider type="r" />
         </div>
+      </div>
+      <div className="p-4 border-t">
+        {"Title: "}
+        <Title
+          type="arrow"
+          title="예정된 예약"
+          count={3}
+          onClick={() => {
+            alert("button clicked")
+          }}
+        />
+        <Title title="예정된 예약" />
       </div>
       <div className="p-4 border-t">
         <Button
