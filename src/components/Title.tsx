@@ -1,7 +1,7 @@
 import clsx from "clsx"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 
-interface TitleProps {
+interface TitleProps extends React.HTMLAttributes<HTMLDivElement> {
   type?: "arrow"
   title: string
   count?: number
@@ -9,11 +9,14 @@ interface TitleProps {
 }
 
 export const Title = (props: TitleProps) => {
-  const { type = "default", title, count, onClick } = props
+  const { type = "default", title, count, onClick, className } = props
 
   return (
     <>
-      <div onClick={onClick} className={clsx(`flex justify-between`)}>
+      <div
+        onClick={onClick}
+        className={clsx(`flex justify-between`, className)}
+      >
         <div>
           <span className="font-b text-18px text-gray-700">{title}</span>
           {count && (
