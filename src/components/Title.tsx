@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import CaretRightIcon from "@assets/icons/CaretRight.svg?react"
+import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 
 interface TitleProps {
   type?: "arrow"
