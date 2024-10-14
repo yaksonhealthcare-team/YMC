@@ -13,6 +13,8 @@ import { FloatingButton } from "@components/FloatingButton.tsx"
 import { SearchFloatingButton } from "@components/SearchFloatingButton.tsx"
 import { Divider } from "@components/Divider.tsx"
 import { Title } from "@components/Title.tsx"
+import { Header } from "@components/Header.tsx"
+import ShareIcon from "@assets/icons/ShareIcon.svg?react"
 
 const DevPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -196,6 +198,41 @@ const DevPage = () => {
           }}
         />
         <Title title="예정된 예약" />
+      </div>
+      <div className="p-4 border-t bg-gray-200">
+        {"Header: "}
+        <Header
+          type="location"
+          title="서울 강남구 테헤란로78길 14-10"
+          onClickLocation={() => {
+            alert("Location Clicked")
+          }}
+          onClickLeft={() => {
+            alert("Left Icon Clicked")
+          }}
+          onClickRight={() => {
+            alert("Right Icon Clicked")
+          }}
+        />
+        <Header type="back_w" />
+        <Header type="back_b" />
+        <Header type="back_title" title="Title" />
+        <Header
+          type="back_title_icon"
+          iconRight={<ShareIcon />}
+          title="Title"
+        />
+        <Header
+          type="two_icon"
+          iconLeft={<ShareIcon />}
+          iconRight={<ShareIcon />}
+        />
+        <Header type="back_title_text" title="Title" textRight="저장" />
+        <Header
+          type="title_right_icon"
+          title="Title"
+          iconRight={<ShareIcon />}
+        />
       </div>
       <div className="p-4 border-t">
         <Button

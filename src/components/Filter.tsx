@@ -1,5 +1,5 @@
 import { Button } from "@mui/material"
-import CaretDownIcon from "@assets/icons/CaretDown.svg?react"
+import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import ReloadIcon from "@components/icons/ReloadIcon"
 
 type FilterProps = {
