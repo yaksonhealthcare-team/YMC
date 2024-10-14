@@ -16,6 +16,7 @@ import { Title } from "@components/Title.tsx"
 import { Header } from "@components/Header.tsx"
 import ShareIcon from "@assets/icons/ShareIcon.svg?react"
 import { Indicator } from "@components/Indicator.tsx"
+import { Notice } from "@components/Notice.tsx"
 
 const DevPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -248,6 +249,15 @@ const DevPage = () => {
           total={totalSlides}
           current={currentSlide}
           onChange={handleSlideChange}
+        />
+      </div>
+      <div className="p-4 border-t">
+        {"Notice: "}
+        <Notice
+          title="9월 1일 회원권 변경사항 안내드립니다."
+          onClick={() => {
+            alert("Button Clicked")
+          }}
         />
       </div>
       <div className="p-4 border-t">
