@@ -15,6 +15,7 @@ import { Divider } from "@components/Divider.tsx"
 import { Title } from "@components/Title.tsx"
 import { Header } from "@components/Header.tsx"
 import ShareIcon from "@assets/icons/ShareIcon.svg?react"
+import { Indicator } from "@components/Indicator.tsx"
 
 const DevPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -42,6 +43,13 @@ const DevPage = () => {
 
   const handleTabChange = (newValue: string) => {
     setActiveTab(newValue)
+  }
+
+  // Indicator
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const totalSlides = 3 // 총 슬라이드 수 (예시로 3개 설정)
+  const handleSlideChange = (index: number) => {
+    setCurrentSlide(index)
   }
 
   return (
@@ -232,6 +240,14 @@ const DevPage = () => {
           type="title_right_icon"
           title="Title"
           iconRight={<ShareIcon />}
+        />
+      </div>
+      <div className="p-4 border-t">
+        {"Indicator: "}
+        <Indicator
+          total={totalSlides}
+          current={currentSlide}
+          onChange={handleSlideChange}
         />
       </div>
       <div className="p-4 border-t">
