@@ -4,7 +4,11 @@ import { useNavigate } from "react-router-dom"
 import { Container, Typography } from "@mui/material"
 import DynamicHomeHeaderBackground from "./_fragments/DynamicHomeHeaderBackground.tsx"
 import Logo from "@components/Logo.tsx"
-
+import NotiIcon from "@assets/icons/NotiIcon.svg?react"
+import { Title } from "@components/Title.tsx"
+import { ReserveCard } from "@components/ReserveCard.tsx"
+import { Swiper, SwiperSlide } from "swiper/react"
+import "swiper/swiper-bundle.css"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -17,6 +21,44 @@ const Home = () => {
 
     setNavigation({ display: true })
   }, [])
+
+  const reserveCardsData: Array<{
+    type: "pre" | "ing" | "post"
+    store: string
+    title: string
+    count: number
+    date: string
+    time: string
+    dDay?: number
+  }> = [
+    {
+      type: "pre",
+      store: "약손명가 강남구청역점",
+      title: "전신관리 120분",
+      count: 3,
+      date: "7월 12일 (토)",
+      time: "오전 11:00",
+      dDay: 8,
+    },
+    {
+      type: "ing",
+      store: "약손명가 강남구청역점",
+      title: "전신관리 120분",
+      count: 2,
+      date: "7월 12일 (토)",
+      time: "오전 11:00",
+      dDay: 0,
+    },
+    {
+      type: "post",
+      store: "약손명가 강남구청역점",
+      title: "전신관리 120분",
+      count: 1,
+      date: "7월 12일 (토)",
+      time: "오전 11:00",
+    },
+    // 추가 ReserveCar
+  ]
 
   return (
     <Container className={"relative w-full h-full bg-[#F8F5F2] py-4"}>
@@ -56,11 +98,34 @@ const Home = () => {
         }
         buttonArea={
           <button
-            className="w-full h-full bg-primary-300 text-white rounded-full shadow-lg"
+            className="w-full h-full bg-primary-300 text-white rounded-full shadow-lg flex justify-center items-center"
             onClick={() => navigate("/dev")}
-          ></button>
+          >
+            <NotiIcon className="text-white" />
+          </button>
         }
       />
+
+      <Title
+        className="mt-6"
+        type="arrow"
+        title="예정된 예약"
+        count={4}
+        onClick={() => {
+          alert("button clicked")
+        }}
+      />
+      <Swiper
+        spaceBetween={10}
+        slidesPerView={1}
+        style={{ overflow: "visible" }}
+      >
+        {reserveCardsData.map((data, index) => (
+          <SwiperSlide key={index}>
+            <ReserveCard {...data} className="mt-2" />
+          </SwiperSlide>
+        ))}
+      </Swiper>
 
       <button
         className="absolute bottom-4 right-6 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200"
