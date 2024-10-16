@@ -7,6 +7,7 @@ import Logo from "@components/Logo.tsx"
 import NotiIcon from "@assets/icons/NotiIcon.svg?react"
 import { Title } from "@components/Title.tsx"
 import { ReserveCard } from "@components/ReserveCard.tsx"
+import { MembershipCard } from "@components/MembershipCard.tsx"
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/swiper-bundle.css"
 
@@ -22,6 +23,7 @@ const Home = () => {
     setNavigation({ display: true })
   }, [])
 
+  // 예약
   const reserveCardsData: Array<{
     type: "pre" | "ing" | "post"
     store: string
@@ -57,7 +59,33 @@ const Home = () => {
       date: "7월 12일 (토)",
       time: "오전 11:00",
     },
-    // 추가 ReserveCar
+  ]
+
+  // 회원권
+  const membershipCardsData: Array<{
+    type: "default" | "reserve" | "used"
+    title: string
+    count: string
+    date: string
+  }> = [
+    {
+      type: "reserve",
+      title: "K-BEAUTY 연예인관리",
+      count: "4회 / 20",
+      date: "2024.04.01 - 2024.12.31",
+    },
+    {
+      type: "used",
+      title: "K-BEAUTY 연예인관리",
+      count: "4회 / 20",
+      date: "2024.04.01 - 2024.12.31",
+    },
+    {
+      type: "default",
+      title: "K-BEAUTY 연예인관리",
+      count: "4회 / 20",
+      date: "2024.04.01 - 2024.12.31",
+    },
   ]
 
   return (
@@ -110,7 +138,7 @@ const Home = () => {
         className="mt-6"
         type="arrow"
         title="예정된 예약"
-        count={4}
+        count="4건"
         onClick={() => {
           alert("button clicked")
         }}
@@ -123,6 +151,27 @@ const Home = () => {
         {reserveCardsData.map((data, index) => (
           <SwiperSlide key={index}>
             <ReserveCard {...data} className="mt-2" />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+
+      <Title
+        className="mt-6"
+        type="arrow"
+        title="보유 회원권"
+        count="3개"
+        onClick={() => {
+          alert("button clicked")
+        }}
+      />
+      <Swiper
+        spaceBetween={10}
+        slidesPerView={1}
+        style={{ overflow: "visible" }}
+      >
+        {membershipCardsData.map((data, index) => (
+          <SwiperSlide key={index}>
+            <MembershipCard {...data} className="mt-2" />
           </SwiperSlide>
         ))}
       </Swiper>

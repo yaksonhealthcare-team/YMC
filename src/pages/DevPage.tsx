@@ -217,7 +217,7 @@ const DevPage = () => {
         <Title
           type="arrow"
           title="예정된 예약"
-          count={3}
+          count="3건"
           onClick={() => {
             alert("button clicked")
           }}
