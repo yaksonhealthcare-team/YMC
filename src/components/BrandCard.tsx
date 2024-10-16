@@ -10,7 +10,7 @@ export const BrandCard = (props: BrandCardProps) => {
   return (
     <>
       <button onClick={onClick} className="flex flex-col items-center gap-2">
-        <div className="flex items-center w-[84px] h-[84px] px-[7px] py-[28px] bg-white rounded-full">
+        <div className="flex items-center w-[84px] h-[84px] px-[7px] py-[28px] bg-white rounded-full border border-gray-100">
           <img src={brandSrc} alt={name || "Brand image"}></img>
         </div>
         <span className="font-m text-12px text-gray-600"> {name} </span>
