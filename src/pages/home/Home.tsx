@@ -2,7 +2,7 @@ import "swiper/swiper-bundle.css"
 import { useEffect } from "react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useNavigate } from "react-router-dom"
-import { Container, Typography } from "@mui/material"
+import { Button, Container, Fab, Typography } from "@mui/material"
 import DynamicHomeHeaderBackground from "./_fragments/DynamicHomeHeaderBackground.tsx"
 import Logo from "@components/Logo.tsx"
 import NotiIcon from "@assets/icons/NotiIcon.svg?react"
@@ -11,6 +11,8 @@ import { ReserveCard } from "@components/ReserveCard.tsx"
 import { MembershipCard } from "@components/MembershipCard.tsx"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { BrandCard } from "@components/BrandCard.tsx"
+import { FloatingButton } from "@components/FloatingButton.tsx"
+import { EmptyCard } from "@components/EmptyCard.tsx"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -76,8 +78,14 @@ const Home = () => {
       <EventSection />
       <BusinessInfo />
 
+      <FloatingButton
+        type="search"
+        onClick={() => {
+          alert("FloatingButton Clicked")
+        }}
+      />
       <button
-        className="absolute bottom-4 right-6 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200 z-10"
+        className="absolute bottom-4 right-20 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200 z-10"
         onClick={() => navigate("/dev")}
       >
         dev
@@ -130,23 +138,31 @@ const ReserveCardSection = () => {
       <Title
         type="arrow"
         title="예정된 예약"
-        count="4건"
+        count={`${reserveCardsData.length}건`}
         onClick={() => {
           alert("button clicked")
         }}
       />
-      <Swiper
-        spaceBetween={10}
-        slidesPerView={1}
-        style={{ overflow: "visible" }}
-        className="mt-2"
-      >
-        {reserveCardsData.map((data, index) => (
-          <SwiperSlide key={index} className="mr-2">
-            <ReserveCard {...data} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      {reserveCardsData.length > 0 ? (
+        <Swiper
+          spaceBetween={10}
+          slidesPerView={1}
+          style={{ overflow: "visible" }}
+          className="mt-2"
+        >
+          {reserveCardsData.map((data, index) => (
+            <SwiperSlide key={index} className="mr-2">
+              <ReserveCard {...data} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      ) : (
+        <EmptyCard
+          title={`예정된 예약이 없어요.
+나만을 위한 힐링을 시작해보세요!`}
+          button="예약하러 가기"
+        />
+      )}
     </div>
   )
 }
@@ -189,18 +205,26 @@ const MembershipCardSection = () => {
           alert("button clicked")
         }}
       />
-      <Swiper
-        spaceBetween={10}
-        slidesPerView={1}
-        style={{ overflow: "visible" }}
-        className="mt-2"
-      >
-        {membershipCardsData.map((data, index) => (
-          <SwiperSlide key={index} className="mr-2">
-            <MembershipCard {...data} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      {membershipCardsData.length > 0 ? (
+        <Swiper
+          spaceBetween={10}
+          slidesPerView={1}
+          style={{ overflow: "visible" }}
+          className="mt-2"
+        >
+          {membershipCardsData.map((data, index) => (
+            <SwiperSlide key={index} className="mr-2">
+              <MembershipCard {...data} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      ) : (
+        <EmptyCard
+          title={`사용 가능한 회원권이 없어요.
+회원권 구매 후 예약이 가능해요.`}
+          button="회원권 구매하기"
+        />
+      )}
     </div>
   )
 }

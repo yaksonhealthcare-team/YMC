@@ -40,7 +40,7 @@ export const FloatingButton = (props: FloatingButtonProps) => {
       <button
         onClick={onClick}
         className={clsx(
-          `shadow-floatingButton rounded-full flex items-center justify-center`,
+          `absolute z-10 bottom-4 right-5 shadow-floatingButton rounded-full flex items-center justify-center`,
           buttonStyles[type],
         )}
       >
