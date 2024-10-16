@@ -1,3 +1,4 @@
+import "swiper/swiper-bundle.css"
 import { useEffect } from "react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useNavigate } from "react-router-dom"
@@ -9,7 +10,7 @@ import { Title } from "@components/Title.tsx"
 import { ReserveCard } from "@components/ReserveCard.tsx"
 import { MembershipCard } from "@components/MembershipCard.tsx"
 import { Swiper, SwiperSlide } from "swiper/react"
-import "swiper/swiper-bundle.css"
+import { BrandCard } from "@components/BrandCard.tsx"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -23,73 +24,8 @@ const Home = () => {
     setNavigation({ display: true })
   }, [])
 
-  // 예약
-  const reserveCardsData: Array<{
-    type: "pre" | "ing" | "post"
-    store: string
-    title: string
-    count: number
-    date: string
-    time: string
-    dDay?: number
-  }> = [
-    {
-      type: "pre",
-      store: "약손명가 강남구청역점",
-      title: "전신관리 120분",
-      count: 3,
-      date: "7월 12일 (토)",
-      time: "오전 11:00",
-      dDay: 8,
-    },
-    {
-      type: "ing",
-      store: "약손명가 강남구청역점",
-      title: "전신관리 120분",
-      count: 2,
-      date: "7월 12일 (토)",
-      time: "오전 11:00",
-      dDay: 0,
-    },
-    {
-      type: "post",
-      store: "약손명가 강남구청역점",
-      title: "전신관리 120분",
-      count: 1,
-      date: "7월 12일 (토)",
-      time: "오전 11:00",
-    },
-  ]
-
-  // 회원권
-  const membershipCardsData: Array<{
-    type: "default" | "reserve" | "used"
-    title: string
-    count: string
-    date: string
-  }> = [
-    {
-      type: "reserve",
-      title: "K-BEAUTY 연예인관리",
-      count: "4회 / 20",
-      date: "2024.04.01 - 2024.12.31",
-    },
-    {
-      type: "used",
-      title: "K-BEAUTY 연예인관리",
-      count: "4회 / 20",
-      date: "2024.04.01 - 2024.12.31",
-    },
-    {
-      type: "default",
-      title: "K-BEAUTY 연예인관리",
-      count: "4회 / 20",
-      date: "2024.04.01 - 2024.12.31",
-    },
-  ]
-
   return (
-    <Container className={"relative w-full h-full bg-[#F8F5F2] py-4"}>
+    <Container className={"relative w-full bg-[#F8F5F2] py-4"}>
       <DynamicHomeHeaderBackground
         header={
           <div className={"space-y-2"}>
@@ -134,8 +70,63 @@ const Home = () => {
         }
       />
 
+      <ReserveCardSection />
+      <MembershipCardSection />
+      <BrandSection />
+      <EventSection />
+
+      <button
+        className="absolute bottom-4 right-6 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200 z-10"
+        onClick={() => navigate("/dev")}
+      >
+        dev
+      </button>
+    </Container>
+  )
+}
+
+const ReserveCardSection = () => {
+  // 예약
+  const reserveCardsData: Array<{
+    type: "pre" | "ing" | "post"
+    store: string
+    title: string
+    count: number
+    date: string
+    time: string
+    dDay?: number
+  }> = [
+    {
+      type: "pre",
+      store: "약손명가 강남구청역점",
+      title: "전신관리 120분",
+      count: 3,
+      date: "7월 12일 (토)",
+      time: "오전 11:00",
+      dDay: 8,
+    },
+    {
+      type: "ing",
+      store: "약손명가 강남구청역점",
+      title: "전신관리 120분",
+      count: 2,
+      date: "7월 12일 (토)",
+      time: "오전 11:00",
+      dDay: 0,
+    },
+    {
+      type: "post",
+      store: "약손명가 강남구청역점",
+      title: "전신관리 120분",
+      count: 1,
+      date: "7월 12일 (토)",
+      time: "오전 11:00",
+    },
+  ]
+
+  return (
+    <div className="mt-6">
       <Title
-        className="mt-6"
         type="arrow"
         title="예정된 예약"
         count="4건"
@@ -147,16 +138,49 @@ const Home = () => {
         spaceBetween={10}
         slidesPerView={1}
         style={{ overflow: "visible" }}
+        className="mt-2"
       >
         {reserveCardsData.map((data, index) => (
-          <SwiperSlide key={index}>
-            <ReserveCard {...data} className="mt-2" />
+          <SwiperSlide key={index} className="mr-2">
+            <ReserveCard {...data} />
           </SwiperSlide>
         ))}
       </Swiper>
+    </div>
+  )
+}
 
+const MembershipCardSection = () => {
+  // 회원권
+  const membershipCardsData: Array<{
+    type: "default" | "reserve" | "used"
+    title: string
+    count: string
+    date: string
+  }> = [
+    {
+      type: "reserve",
+      title: "K-BEAUTY 연예인관리",
+      count: "4회 / 20",
+      date: "2024.04.01 - 2024.12.31",
+    },
+    {
+      type: "used",
+      title: "K-BEAUTY 연예인관리",
+      count: "4회 / 20",
+      date: "2024.04.01 - 2024.12.31",
+    },
+    {
+      type: "default",
+      title: "K-BEAUTY 연예인관리",
+      count: "4회 / 20",
+      date: "2024.04.01 - 2024.12.31",
+    },
+  ]
+
+  return (
+    <div className="mt-6">
       <Title
-        className="mt-6"
         type="arrow"
         title="보유 회원권"
         count="3개"
@@ -168,21 +192,95 @@ const Home = () => {
         spaceBetween={10}
         slidesPerView={1}
         style={{ overflow: "visible" }}
+        className="mt-2"
       >
         {membershipCardsData.map((data, index) => (
-          <SwiperSlide key={index}>
-            <MembershipCard {...data} className="mt-2" />
+          <SwiperSlide key={index} className="mr-2">
+            <MembershipCard {...data} />
           </SwiperSlide>
         ))}
       </Swiper>
+    </div>
+  )
+}
 
-      <button
-        className="absolute bottom-4 right-6 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200"
-        onClick={() => navigate("/dev")}
+const BrandSection = () => {
+  return (
+    <div className="mt-6">
+      <Title title="브랜드 관" />
+      <div className="mt-2 flex gap-4">
+        <BrandCard
+          brandSrc="/assets/home_logo_therapist.png"
+          name="약손명가"
+          onClick={() => {
+            alert("clicked")
+          }}
+        />
+        <BrandCard
+          brandSrc="/assets/home_logo_dalia.png"
+          name="달리아 스파"
+          onClick={() => {
+            alert("clicked")
+          }}
+        />
+        <BrandCard
+          brandSrc="/assets/home_logo_diet.png"
+          name="여리한 다이어트"
+          onClick={() => {
+            alert("clicked")
+          }}
+        />
+      </div>
+    </div>
+  )
+}
+
+const EventSection = () => {
+  const EventCardsData: Array<{
+    imageSrc: string
+    title: string
+    date: string
+  }> = [
+    {
+      imageSrc: "/assets/home_event.png",
+      title: "애정에 애정을 더하며☘️",
+      date: "2024.08.12",
+    },
+    {
+      imageSrc: "/assets/home_event.png",
+      title: "장마 맞이 시원한 할인!",
+      date: "2024.08.12",
+    },
+  ]
+  return (
+    <div className="mt-6">
+      <Title title="이벤트 프로모션" />
+      <Swiper
+        spaceBetween={10}
+        slidesPerView={1.1}
+        style={{ overflow: "visible" }}
+        className="mt-2"
       >
-        dev
-      </button>
-    </Container>
+        {EventCardsData.map((data, index) => (
+          <SwiperSlide key={index} className="mr-3">
+            <div className="flex flex-col gap-4 bg-white pb-4 rounded-[20px]">
+              <div
+                style={{ backgroundImage: `url(${data.imageSrc})` }}
+                className="w-full h-[190px] bg-cover bg-center rounded-t-[20px]"
+              ></div>
+              <div className="flex flex-col px-5 gap-1.5">
+                <span className="font-b text-16px text-gray-700">
+                  {data.title}
+                </span>
+                <span className="font-r text-12px text-gray-600">
+                  {data.date}
+                </span>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
   )
 }
 
