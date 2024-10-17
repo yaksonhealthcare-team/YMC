@@ -93,7 +93,9 @@ const DevPage = () => {
           state="default"
           iconRight={<ReloadIcon />}
           button
-          onChange={(e: any) => setValue(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setValue(e.target.value)
+          }
         />
       </div>
       <div className="p-4 border-t">
@@ -104,7 +106,9 @@ const DevPage = () => {
           helperText="Hint message goes here"
           maxLength={100}
           value={value}
-          onChange={(e: any) => setValue(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setValue(e.target.value)
+          }
         />
       </div>
       <div className="p-4 border-t">
@@ -112,7 +116,9 @@ const DevPage = () => {
         <SearchField
           placeholder="도로명, 건물명, 지번으로 검색하세요."
           value={value}
-          onChange={(e: any) => setValue(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setValue(e.target.value)
+          }
           onClear={() => setValue("")}
         />
       </div>
@@ -211,7 +217,7 @@ const DevPage = () => {
         <Title
           type="arrow"
           title="예정된 예약"
-          count={3}
+          count="3건"
           onClick={() => {
             alert("button clicked")
           }}
