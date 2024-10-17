@@ -27,7 +27,7 @@ const Home = () => {
   }, [])
 
   return (
-    <Container className={"relative w-full bg-[#F8F5F2] py-4"}>
+    <Container className={"relative w-full bg-[#F8F5F2] py-4   overflow-x-hidden"}>
       <DynamicHomeHeaderBackground
         header={
           <div className={"space-y-2"}>
