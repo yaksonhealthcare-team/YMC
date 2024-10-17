@@ -1,0 +1,76 @@
+import { useLayout } from "../../contexts/LayoutContext.tsx"
+import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
+import SettingIcon from "@assets/icons/SettingIcon.svg?react"
+import { Filter } from "@components/Filter.tsx"
+import { NotiCard } from "@components/NotiCard.tsx"
+import { Container } from "@mui/material"
+
+export const Notification = () => {
+  const { setHeader, setNavigation } = useLayout()
+
+  useEffect(() => {
+    setHeader({
+      display: true,
+      title: "알림",
+      right: (
+        <div>
+          <SettingIcon className="w-6 h-6" />
+        </div>
+      ),
+      left: (
+        <div onClick={() => navigate(-1)}>
+          <CaretLeftIcon className="w-5 h-5" />
+        </div>
+      ),
+    })
+    setNavigation({ display: true })
+  }, [])
+
+  const navigate = useNavigate()
+
+  const reserveCardsData: Array<{
+    read?: boolean
+    store: string
+    title: string
+    date: string
+    time: string
+    reserveTitle: string
+    reserveDate: string
+    onClick?: () => void
+  }> = [
+    {
+      store: "약손명가 강남구청역점",
+      title: "전신관리 120분",
+      date: "7월 12일 (토)",
+      time: "오전 11:00",
+      reserveTitle: "예약완료",
+      reserveDate: "07. 12 오전 10:12",
+    },
+    {
+      read: true,
+      store: "약손명가 강남구청역점",
+      title: "전신관리 120분",
+      date: "7월 12일 (토)",
+      time: "오전 11:00",
+      reserveTitle: "예약취소",
+      reserveDate: "07. 12 오전 10:12",
+    },
+  ]
+
+  return (
+    <Container className={"relative w-full bg-[#F8F5F2] py-4 h-full"}>
+      <div className="py-4 px-5 flex gap-2 justify-center">
+        <Filter type="default" state="active" label="전체" />
+        <Filter type="default" state="default" label="예약" />
+        <Filter type="default" state="default" label="회원권" />
+        <Filter type="default" state="default" label="포인트" />
+        <Filter type="default" state="default" label="공지" />
+      </div>
+      {reserveCardsData.map((data) => (
+        <NotiCard {...data} className="mt-4" />
+      ))}
+    </Container>
+  )
+}

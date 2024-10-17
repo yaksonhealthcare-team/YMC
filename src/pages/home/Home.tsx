@@ -65,7 +65,7 @@ const Home = () => {
         buttonArea={
           <button
             className="w-full h-full bg-primary-300 text-white rounded-full shadow-lg flex justify-center items-center"
-            onClick={() => navigate("/dev")}
+            onClick={() => navigate("/notification")}
           >
             <NotiIcon className="text-white" />
           </button>

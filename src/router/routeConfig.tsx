@@ -8,6 +8,7 @@ import MyPage from "../pages/myPage/MyPage.tsx"
 import Logout from "../pages/logout/Logout.tsx"
 import { ReactNode } from "react"
 import Dev from "../pages/DevPage.tsx"
+import { Notification } from "../pages/home/Notification.tsx"
 
 interface RouteConfig {
   path: string
@@ -30,8 +31,7 @@ const routeConfig: RouteConfig[] = [
   //알림
   {
     path: "/notification",
-    element: <div>Notification</div>,
-
+    element: <Notification />,
     auth: true,
   },
   //브랜드관
