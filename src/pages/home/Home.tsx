@@ -29,7 +29,7 @@ const Home = () => {
   return (
     <>
       <Container
-        className={"relative w-full bg-[#F8F5F2] py-4   overflow-x-hidden"}
+        className={"relative w-full bg-system-bg py-4   overflow-x-hidden"}
       >
         <DynamicHomeHeaderBackground
           header={

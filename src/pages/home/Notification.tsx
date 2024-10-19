@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import SettingIcon from "@assets/icons/SettingIcon.svg?react"
 import { Filter } from "@components/Filter.tsx"
-import { NotiCard } from "@components/NotiCard.tsx"
+import { NotificationCard } from "@components/NotificationCard.tsx"
 import { Container } from "@mui/material"
 
 const filters = [
@@ -73,7 +73,7 @@ export const Notification = () => {
   }
 
   return (
-    <Container className={"relative w-full bg-[#F8F5F2] py-4 h-full"}>
+    <Container className={"relative w-full bg-system-bg py-4 h-full"}>
       <div className="py-4 px-5 flex gap-2 justify-center">
         {filters.map((filter) => (
           <Filter
@@ -86,7 +86,7 @@ export const Notification = () => {
         ))}
       </div>
       {reserveCardsData.map((data) => (
-        <NotiCard {...data} className="mt-4" />
+        <NotificationCard {...data} className="mt-4" />
       ))}
     </Container>
   )

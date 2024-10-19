@@ -29,7 +29,7 @@ const Logout = () => {
   return (
     <div
       className={
-        "flex flex-col h-full w-full justify-center items-center bg-[#F8F5F2] p-14"
+        "flex flex-col h-full w-full justify-center items-center bg-system-bg p-14"
       }
     >
       <div className={"py-48"}>

@@ -53,7 +53,7 @@ export const LayoutProvider = ({ children }: LayoutProviderProps) => {
       <PageContainer>
         {header.display && (
           <div className={"z-10"}>
-            <div className="fixed space-x-4 w-full h-12 max-w-[500px] min-w-[375px] flex items-center py-3 px-5 bg-[#F8F5F2]">
+            <div className="fixed space-x-4 w-full h-12 max-w-[500px] min-w-[375px] flex items-center py-3 px-5 bg-system-bg">
               <div className={"flex justify-start w-1/3"}>{header.left}</div>
 
               <Typography

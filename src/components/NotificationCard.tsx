@@ -1,7 +1,7 @@
 import clsx from "clsx"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 
-interface NotiCardProps extends React.HTMLAttributes<HTMLDivElement> {
+interface NotificationCardProps extends React.HTMLAttributes<HTMLDivElement> {
   read?: boolean
   store: string
   title: string
@@ -12,7 +12,7 @@ interface NotiCardProps extends React.HTMLAttributes<HTMLDivElement> {
   onClick?: () => void
 }
 
-export const NotiCard = (props: NotiCardProps) => {
+export const NotificationCard = (props: NotificationCardProps) => {
   const {
     read,
     store,
