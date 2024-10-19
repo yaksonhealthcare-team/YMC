@@ -8,6 +8,7 @@ import MyPage from "../pages/myPage/MyPage.tsx"
 import Logout from "../pages/logout/Logout.tsx"
 import { ReactNode } from "react"
 import Dev from "../pages/DevPage.tsx"
+import Branch from "../pages/branch/Branch.tsx"
 
 interface RouteConfig {
   path: string
@@ -80,7 +81,7 @@ const routeConfig: RouteConfig[] = [
   },
   {
     path: "/branch",
-    element: <div>Branch</div>,
+    element: <Branch />,
     auth: true,
   },
   {
