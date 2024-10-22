@@ -29,7 +29,7 @@ const Home = () => {
   return (
     <>
       <Container
-        className={"relative w-full bg-[#F8F5F2] py-4   overflow-x-hidden"}
+        className={"relative w-full bg-system-bg py-4   overflow-x-hidden"}
       >
         <DynamicHomeHeaderBackground
           header={
@@ -68,7 +68,7 @@ const Home = () => {
           buttonArea={
             <button
               className="w-full h-full bg-primary-300 text-white rounded-full shadow-lg flex justify-center items-center"
-              onClick={() => navigate("/dev")}
+              onClick={() => navigate("/notification")}
             >
               <NotiIcon className="text-white" />
             </button>

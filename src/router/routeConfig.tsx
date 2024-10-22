@@ -9,6 +9,7 @@ import Logout from "../pages/logout/Logout.tsx"
 import { ReactNode } from "react"
 import Dev from "../pages/DevPage.tsx"
 import Branch from "../pages/branch/Branch.tsx"
+import { Notification } from "../pages/home/Notification.tsx"
 
 interface RouteConfig {
   path: string
@@ -31,8 +32,7 @@ const routeConfig: RouteConfig[] = [
   //알림
   {
     path: "/notification",
-    element: <div>Notification</div>,
-
+    element: <Notification />,
     auth: true,
   },
   //브랜드관

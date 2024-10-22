@@ -48,17 +48,23 @@ export const Header = (props: HeaderProps) => {
 
   const modifiedIconLeft =
     iconLeft &&
-    React.cloneElement(iconRight as React.ReactElement<any>, {
-      width: "24px",
-      height: "24px",
-    })
+    React.cloneElement(
+      iconRight as React.ReactElement<React.SVGProps<SVGSVGElement>>,
+      {
+        width: "24px",
+        height: "24px",
+      },
+    )
 
   const modifiedIconRight =
     iconRight &&
-    React.cloneElement(iconRight as React.ReactElement<any>, {
-      width: "24px",
-      height: "24px",
-    })
+    React.cloneElement(
+      iconRight as React.ReactElement<React.SVGProps<SVGSVGElement>>,
+      {
+        width: "24px",
+        height: "24px",
+      },
+    )
 
   return (
     <>
