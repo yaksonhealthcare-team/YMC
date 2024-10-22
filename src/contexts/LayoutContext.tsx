@@ -7,12 +7,21 @@ type NavigationConfig = {
   display?: boolean
 }
 
-type HeaderConfig = {
+type BaseHeaderConfig = {
   display?: boolean
+}
+
+type DetailedHeaderConfig = BaseHeaderConfig & {
   title?: string | React.ReactNode
   left?: React.ReactNode
   right?: React.ReactNode
 }
+
+type FullHeaderConfig = BaseHeaderConfig & {
+  component?: React.ReactNode
+}
+
+type HeaderConfig = DetailedHeaderConfig | FullHeaderConfig
 
 interface LayoutContextValue {
   navigation: NavigationConfig
@@ -41,6 +50,37 @@ export const LayoutProvider = ({ children }: LayoutProviderProps) => {
     title: "THERAPIST",
   })
 
+  const renderHeader = () => {
+    if (!header.display) return null
+
+    if ("component" in header && header.component) {
+      return (
+        <>
+          <div className="fixed w-full max-w-[500px] min-w-[375px] z-10 bg-white">
+            {header.component}
+          </div>
+          <div className="h-12" />
+        </>
+      )
+    }
+
+    const headerConfig = header as DetailedHeaderConfig
+    return (
+      <div className={"z-10"}>
+        <div className="fixed space-x-4 w-full h-12 max-w-[500px] min-w-[375px] flex items-center py-3 px-5 bg-white">
+          <div className={"flex justify-start w-1/3"}>{headerConfig.left}</div>
+
+          <Typography variant="h6" className={"w-1/3 flex justify-center"}>
+            {headerConfig.title}
+          </Typography>
+
+          <div className={"flex justify-end w-1/3"}>{headerConfig.right}</div>
+        </div>
+        <div className={"h-12"} />
+      </div>
+    )
+  }
+
   return (
     <LayoutContext.Provider
       value={{
@@ -51,21 +91,7 @@ export const LayoutProvider = ({ children }: LayoutProviderProps) => {
       }}
     >
       <PageContainer>
-        {header.display && (
-          <div className={"z-10"}>
-            <div className="fixed space-x-4 w-full h-12 max-w-[500px] min-w-[375px] flex items-center py-3 px-5 bg-white">
-              <div className={"flex justify-start w-1/3"}>{header.left}</div>
-
-              <Typography variant="h6" className={"w-1/3 flex justify-center"}>
-                {header.title}
-              </Typography>
-
-              <div className={"flex justify-end w-1/3"}>{header.right}</div>
-            </div>
-            <div className={"h-12"} />
-          </div>
-        )}
-
+        {header.display && renderHeader()}
         {children}
         {navigation.display && (
           <div>
