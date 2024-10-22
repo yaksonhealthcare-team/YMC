@@ -78,6 +78,9 @@ export default {
           red: "#F37165",
           redBg: "#FEF2F1",
         },
+        system: {
+          bg: "#F8F5F2",
+        },
       },
       boxShadow: {
         "floatingButton": "0px 2px 8px 0px #2E2B294D",
