@@ -4,6 +4,8 @@ import { Header } from "@components/Header.tsx"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
 import BranchFilterBottomSheet, { FilterItem } from "./_fragments/BranchFilterBottomSheet.tsx"
 import BranchFilterSection from "./_fragments/BranchFilterSection.tsx"
+import BranchFilterList from "./_fragments/BranchFilterList.tsx"
+import { MockBranches } from "../../types/Branch.ts"
 
 const Branch = () => {
   const { setHeader } = useLayout()
@@ -24,7 +26,7 @@ const Branch = () => {
   }, [])
 
   return (
-    <div className={"flex flex-col"}>
+    <div>
       <BranchFilterSection
         currentFilter={selectedFilter}
         onInitialize={() => setSelectedFilter({ brand: null, category: null })}
@@ -40,6 +42,7 @@ const Branch = () => {
           )
         }}
       />
+      <BranchFilterList branches={MockBranches} />
     </div>
   )
 }
