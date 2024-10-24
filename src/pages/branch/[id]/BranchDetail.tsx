@@ -4,12 +4,12 @@ import { ReactNode, useEffect } from "react"
 import DynamicHomeHeaderBackground from "../../home/_fragments/DynamicHomeHeaderBackground.tsx"
 import { MockBranch } from "../../../types/Branch.ts"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
-import MembershipIcon from "@assets/icons/MembershipIcon.svg?react"
 import PinIcon from "@assets/icons/PinIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
 import ShareIcon from "@assets/icons/ShareIcon.svg?react"
 import StaffSection from "./_fragments/StaffSection.tsx"
 import DirectorCard from "./_fragments/DirectorCard.tsx"
+import MembershipAvailableBanner from "./_fragments/MembershipAvailableBanner.tsx"
 
 
 const BranchDetail = () => {
@@ -25,7 +25,7 @@ const BranchDetail = () => {
 
   return (
     <div className={"bg-system-bg w-full h-full"}>
-      <div className={"p-5"}>
+      <div className={"flex flex-col gap-3 p-5"}>
         <DynamicHomeHeaderBackground
           header={(
             <>
@@ -42,7 +42,7 @@ const BranchDetail = () => {
             </>
           )}
           content={(
-            <div className={"flex flex-col gap-4"}>
+            <div className={"flex flex-col gap-4 -mb-4"}>
               <div className={"w-full h-[1px] bg-gray-200 rounded-sm"} />
               <StaffSection directorCount={1} staffCount={branch.staffs.length} />
               <DirectorCard
@@ -52,11 +52,22 @@ const BranchDetail = () => {
               />
             </div>
           )}
-          buttonArea={<ShareIcon />}
+          buttonArea={(
+            <button
+              className={"flex w-10 h-10 rounded-full bg-primary justify-center items-center text-white shadow-md"}
+              onClick={() => alert(`share branch ${id}`)}
+            >
+              <ShareIcon className={"w-6 h-6"} />
+            </button>
+          )}
         />
+        {branch.availableMembershipCount > 0 && (
+          <MembershipAvailableBanner
+            availableMembershipCount={branch.availableMembershipCount}
+            onClick={() => alert(`Available membership count: ${branch.availableMembershipCount}`)}
+          />
+        )}
       </div>
-      <MembershipIcon />
-      <p>{id}</p>
     </div>
   )
 }
@@ -64,7 +75,7 @@ const BranchDetail = () => {
 const IconLabel = ({ icon, label }: { icon: ReactNode, label: string }) => (
   <div className={"flex flex-row gap-0.5 items-center"}>
     {icon}
-    <p className={"font-sb text-14px text-gray-500"}>{label}</p>
+    <p className={"font-m text-14px text-gray-500"}>{label}</p>
   </div>
 )
 
