@@ -59,7 +59,7 @@ export const LayoutProvider = ({ children }: LayoutProviderProps) => {
           <div className="fixed w-full max-w-[500px] min-w-[375px] z-10 bg-white">
             {header.component}
           </div>
-          <div className="h-12" />
+          <div className="min-h-12" />
         </>
       )
     }
