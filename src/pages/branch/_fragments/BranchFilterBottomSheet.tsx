@@ -5,8 +5,8 @@ import { useState } from "react"
 import { Button } from "@components/Button.tsx"
 import ReloadIcon from "@components/icons/ReloadIcon.tsx"
 
-type FilterItem = {
-  id: string
+export type FilterItem = {
+  code: string
   title: string
 }
 
@@ -91,7 +91,7 @@ const BranchFilterBottomSheetWrap = ({
         />
         {items.map((item) => (
           <Filter
-            key={item.id} type={"default"} state={item.id === selectedItem?.id ? "active" : "default"}
+            key={item.code} type={"default"} state={item.code === selectedItem?.code ? "active" : "default"}
             label={item.title}
             onClick={() => onSelect(item)}
           />
