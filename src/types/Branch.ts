@@ -1,0 +1,146 @@
+type Branch = {
+  id: string,
+  name: string,
+  brand: string,
+  images: string[],
+  location: {
+    address: string,
+    latitude: number,
+    longitude: number,
+    distance?: string,
+  },
+  phoneNumber: string,
+  operatingHours: {
+    regular: string,
+    holiday: string,
+  },
+  director: Profile,
+  staffs: Profile[],
+  directions: {
+    bus: {
+      routes: string[],
+    },
+    subway: {
+      description: string,
+    },
+    car: {
+      description: string,
+    },
+  },
+  notices?: string[],
+  favoriteCount: number,
+  availableMembershipCount: number,
+  isBookmarked?: boolean,
+  programs?: {
+    name: string,
+    duration: string,
+    price: number,
+    discount?: number,
+    scope: "all" | "branch_only",
+  }[],
+}
+
+type Profile = {
+  name: string,
+  profileImageUrl?: string,
+  description?: string,
+}
+
+export const MockBranch = (id: string): Branch => ({
+  id: id,
+  name: `약손명가 ${id}점`,
+  brand: "약손명가",
+  images: [
+    "https://picsum.photos/id/100/300/200",
+    "https://picsum.photos/id/101/300/200",
+    "https://picsum.photos/id/102/300/200",
+    "https://picsum.photos/id/103/300/200",
+  ],
+  location: {
+    address: "서울시 강남구 논현로 22길 1 sk허브빌딩 206호",
+    latitude: 30,
+    longitude: 30,
+    distance: "500m",
+  },
+  phoneNumber: "02-123-4556",
+  operatingHours: {
+    regular: "평일 10:00 ~ 21:00\n토요일 09:00 ~ 17:30",
+    holiday: "일요일 정기휴무 (매주 일요일)",
+  },
+  director: {
+    name: "정연희 원장",
+    profileImageUrl: undefined,
+    description: "프로필 내용 노출",
+  },
+  staffs: [
+    {
+      name: "정인희 부원장",
+      profileImageUrl: undefined,
+      description: "프로필 내용 노출",
+    },
+    {
+      name: "김민지 매니저",
+      profileImageUrl: undefined,
+      description: "프로필 내용 노출",
+    },
+    {
+      name: "박수영 테라피스트",
+      profileImageUrl: undefined,
+      description: "프로필 내용 노출",
+    },
+    {
+      name: "이주화 테라피스트",
+      profileImageUrl: undefined,
+      description: "프로필 내용 노출",
+    },
+  ],
+  directions: {
+    bus: {
+      routes: ["401", "640", "3414", "41", "3011", "4431"],
+    },
+    subway: {
+      description: "7호선 2번출구 바로 앞 SK허브빌딩 2층 또는 지하철역에 연결된 SK허브빌딩 지하1층 이용",
+    },
+    car: {
+      description: "강남구청역 사거리에서 선을ㅇ역 방향 첫 번째 골목에 SK허브빌딩 주차장 입구",
+    },
+  },
+  notices: [],
+  favoriteCount: 24,
+  availableMembershipCount: 1,
+  isBookmarked: false,
+  programs: [
+    {
+      name: "작은 얼굴 관리 (80분)",
+      duration: "120분 소요",
+      price: 200000,
+      scope: "all",
+    },
+    {
+      name: "작은 얼굴 관리 (80분)",
+      duration: "120분 소요",
+      price: 200000,
+      scope: "branch_only",
+    },
+    {
+      name: "경락 관리 (80분)",
+      duration: "120분 소요",
+      price: 240000,
+      discount: 0.2,
+      scope: "all",
+    },
+    {
+      name: "경락 관리 (80분)",
+      duration: "120분 소요",
+      price: 200000,
+      discount: 0.3,
+      scope: "all",
+    },
+    {
+      name: "작은 얼굴 관리 (80분)",
+      duration: "120분 소요",
+      price: 200000,
+      scope: "all",
+    },
+  ],
+})
