@@ -10,6 +10,7 @@ import { ReactNode } from "react"
 import Dev from "../pages/DevPage.tsx"
 import Branch from "../pages/branch/Branch.tsx"
 import { Notification } from "../pages/home/Notification.tsx"
+import BranchDetail from "../pages/branch/[id]/BranchDetail.tsx"
 
 interface RouteConfig {
   path: string
@@ -80,11 +81,6 @@ const routeConfig: RouteConfig[] = [
     auth: true,
   },
   {
-    path: "/branch",
-    element: <Branch />,
-    auth: true,
-  },
-  {
     path: "/point",
     element: <div>Point</div>,
     auth: true,
@@ -129,13 +125,11 @@ const routeConfig: RouteConfig[] = [
   //지점 찾기, 지점 상세보기
   {
     path: "/branch",
-    element: <div>Branch</div>,
-    children: [
-      {
-        path: "/branch/:id",
-        element: <div>Branch Detail</div>,
-      },
-    ],
+    element: <Branch />,
+  },
+  {
+    path: "/branch/:id",
+    element: <BranchDetail />,
   },
 ]
 
