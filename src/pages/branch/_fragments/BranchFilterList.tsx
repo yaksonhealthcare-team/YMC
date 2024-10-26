@@ -2,12 +2,15 @@ import { Branch } from "../../../types/Branch.ts"
 import BranchPlaceholderImage from "@assets/images/BranchPlaceholderImage.png"
 import HeartDisabledIcon from "@assets/icons/HeartDisabledIcon.svg?react"
 import HeartEnabledIcon from "@assets/icons/HeartEnabledIcon.svg?react"
+import { useNavigate } from "react-router-dom"
 
 interface BranchFilterListProps {
   branches: Branch[],
 }
 
 const BranchFilterList = ({ branches }: BranchFilterListProps) => {
+  const navigate = useNavigate()
+
   return (
     <div className={"px-5 mt-4 overflow-hidden"}>
       <p className={"font-m text-14px"}>
@@ -17,9 +20,14 @@ const BranchFilterList = ({ branches }: BranchFilterListProps) => {
       </p>
       <ul className={"divide-y"}>
         {branches.map((branch) => (
-          <BranchFilterListItem key={branch.id} branch={branch} onClickFavorite={() => {
-            console.log("TOGGLE FAVORITE")
-          }} />
+          <BranchFilterListItem
+            key={branch.id}
+            branch={branch}
+            onClick={(branch) => navigate(`/branch/${branch.id}`)}
+            onClickFavorite={() => {
+              console.log("TOGGLE FAVORITE")
+            }}
+          />
         ))}
       </ul>
     </div>
@@ -28,12 +36,14 @@ const BranchFilterList = ({ branches }: BranchFilterListProps) => {
 
 const BranchFilterListItem = ({
   branch,
+  onClick,
   onClickFavorite,
 }: {
   branch: Branch,
-  onClickFavorite: (branch: Branch) => void
+  onClick: (branch: Branch) => void,
+  onClickFavorite: (branch: Branch) => void,
 }) => (
-  <li>
+  <li onClick={() => onClick(branch)}>
     <div className={"w-full py-4 gap-4 flex items-stretch"}>
       <img
         className={"border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"}
