@@ -1,3 +1,5 @@
+import BranchPlaceholderImage from "@assets/images/BranchPlaceholderImage.png"
+
 const DirectorCard = ({
   name,
   profileImageUrl,
@@ -19,11 +21,12 @@ const DirectorCard = ({
   </div>
 )
 
-// TODO: Change to placeholder image after PR #27 merged
 const PlaceholderProfileImage = () => (
-  <div className={"w-20 h-20 rounded-full bg-gray-500 content-center"}>
-    <p className={"text-sm text-center text-white"}>{"Placeholder"}</p>
-  </div>
+  <img
+    className={"rounded-full h-20 aspect-square object-cover"}
+    src={BranchPlaceholderImage}
+    alt={"지점 사진"}
+  />
 )
 
 export default DirectorCard
