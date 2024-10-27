@@ -8,8 +8,8 @@ const TherapistList = ({ therapists }: {
   }[]
 }) => (
   <div className={"flex flex-col items-stretch gap-4 p-5"}>
-    {therapists.map((therapist) => (
-      <ProfileCard type={"default"} {...therapist} />
+    {therapists.map((therapist, index) => (
+      <ProfileCard key={index} type={"default"} {...therapist} />
     ))}
   </div>
 )
