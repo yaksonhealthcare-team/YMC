@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { useLayout } from "../../../contexts/LayoutContext.tsx"
-import { ReactNode, useEffect } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import DynamicHomeHeaderBackground from "../../home/_fragments/DynamicHomeHeaderBackground.tsx"
 import { MockBranch } from "../../../types/Branch.ts"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
@@ -8,21 +8,45 @@ import PinIcon from "@assets/icons/PinIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
 import ShareIcon from "@assets/icons/ShareIcon.svg?react"
 import StaffSection from "./_fragments/StaffSection.tsx"
-import DirectorCard from "./_fragments/DirectorCard.tsx"
 import MembershipAvailableBanner from "./_fragments/MembershipAvailableBanner.tsx"
+import { CustomTabs as Tabs } from "@components/Tabs.tsx"
+import TherapistList from "./_fragments/TherapistList.tsx"
+import ProgramList from "./_fragments/ProgramList.tsx"
+import BranchInformation from "./_fragments/BranchInformation.tsx"
 import ProfileCard from "@components/ProfileCard.tsx"
 
+const branchDetailTabs = ["therapists", "programs", "information"] as const
+type BranchDetailTab = typeof branchDetailTabs[number]
+
+const BranchDetailTabs: Record<BranchDetailTab, string> = {
+  "therapists": "테라피스트",
+  "programs": "관리프로그램",
+  "information": "기본정보",
+}
 
 const BranchDetail = () => {
   const { id } = useParams()
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const branch = MockBranch(id || "1")
+  const [selectedTab, setSelectedTab] = useState<string>("therapists")
 
   useEffect(() => {
     setHeader({ display: false })
     setNavigation({ display: false })
   }, [])
+
+  const renderTab = () => {
+    switch (selectedTab) {
+      case "therapists":
+        return <TherapistList therapists={branch.staffs} />
+      case "programs":
+        return <ProgramList />
+      case "information":
+      default:
+        return <BranchInformation />
+    }
+  }
 
   return (
     <div className={"bg-system-bg w-full h-full"}>
@@ -65,6 +89,16 @@ const BranchDetail = () => {
           />
         )}
       </div>
+      <Tabs
+        type={"fit"}
+        tabs={Object.entries(BranchDetailTabs).map(([value, label]) => ({
+          value: value,
+          label: label,
+        }))}
+        onChange={setSelectedTab}
+        activeTab={selectedTab}
+      />
+      {renderTab()}
     </div>
   )
 }
