@@ -50,66 +50,65 @@ const BranchDetail = () => {
   }
 
   return (
-    <div className={"flex-grow w-full bg-system-bg"}>
-      <div className={"relative"}>
-        <div className={"flex flex-col gap-3 p-5"}>
-          <DynamicHomeHeaderBackground
-            header={(
-              <>
-                <div className={"flex flex-row items-center gap-2"}>
-                  <div onClick={() => navigate(-1)}>
-                    <CaretLeftIcon className="w-5 h-5" />
-                  </div>
-                  <p className={"font-b text-20px"}>{branch.name}</p>
+    <div className={"relative flex-grow w-full bg-system-bg"}>
+      <div className={"flex flex-col gap-3 p-5"}>
+        <DynamicHomeHeaderBackground
+          header={(
+            <>
+              <div className={"flex flex-row items-center gap-2"}>
+                <div onClick={() => navigate(-1)}>
+                  <CaretLeftIcon className="w-5 h-5" />
                 </div>
-                <div className={"flex flex-row items-center gap-1 mt-1.5"}>
-                  <IconLabel icon={<StoreIcon />} label={branch.brand} />
-                  {branch.location.distance && <IconLabel icon={<PinIcon />} label={branch.location.distance} />}
-                </div>
-              </>
-            )}
-            content={(
-              <div className={"flex flex-col gap-4 -mb-4"}>
-                <div className={"w-full h-[1px] bg-gray-200 rounded-sm"} />
-                <StaffSection directorCount={1} staffCount={branch.staffs.length} />
-                <ProfileCard type={"primary"} {...branch.director} />
+                <p className={"font-b text-20px"}>{branch.name}</p>
               </div>
-            )}
-            buttonArea={(
-              <button
-                className={"flex w-10 h-10 rounded-full bg-primary justify-center items-center text-white shadow-md"}
-                onClick={() => alert(`share branch ${id}`)}
-              >
-                <ShareIcon className={"w-6 h-6"} />
-              </button>
-            )}
-          />
-          {branch.availableMembershipCount > 0 && (
-            <MembershipAvailableBanner
-              availableMembershipCount={branch.availableMembershipCount}
-              onClick={() => alert(`Available membership count: ${branch.availableMembershipCount}`)}
-            />
+              <div className={"flex flex-row items-center gap-1 mt-1.5"}>
+                <IconLabel icon={<StoreIcon />} label={branch.brand} />
+                {branch.location.distance && <IconLabel icon={<PinIcon />} label={branch.location.distance} />}
+              </div>
+            </>
           )}
-        </div>
-        <Tabs
-          type={"fit"}
-          tabs={Object.entries(BranchDetailTabs).map(([value, label]) => ({
-            value: value,
-            label: label,
-          }))}
-          onChange={setSelectedTab}
-          activeTab={selectedTab}
+          content={(
+            <div className={"flex flex-col gap-4 -mb-4"}>
+              <div className={"w-full h-[1px] bg-gray-200 rounded-sm"} />
+              <StaffSection directorCount={1} staffCount={branch.staffs.length} />
+              <ProfileCard type={"primary"} {...branch.director} />
+            </div>
+          )}
+          buttonArea={(
+            <button
+              className={"flex w-10 h-10 rounded-full bg-primary justify-center items-center text-white shadow-md"}
+              onClick={() => alert(`share branch ${id}`)}
+            >
+              <ShareIcon className={"w-6 h-6"} />
+            </button>
+          )}
         />
-        {renderTab()}
-        <div className={"h-20"} />
-        <div className={"fixed bottom-0 bg-system-bg w-full border-t border-gray-100 py-3 px-5"}>
-          <BranchDetailBottomActionBar
-            isBookmarked={branch.isBookmarked || false}
-            bookmarkCount={branch.favoriteCount}
-            onBookmark={() => {}}
-            onClickReservation={() => {}}
+        {branch.availableMembershipCount > 0 && (
+          <MembershipAvailableBanner
+            availableMembershipCount={branch.availableMembershipCount}
+            onClick={() => alert(`Available membership count: ${branch.availableMembershipCount}`)}
           />
-        </div>
+        )}
+      </div>
+      <Tabs
+        type={"fit"}
+        tabs={Object.entries(BranchDetailTabs).map(([value, label]) => ({
+          value: value,
+          label: label,
+        }))}
+        onChange={setSelectedTab}
+        activeTab={selectedTab}
+      />
+      {renderTab()}
+      <div className={"h-20"} />
+      <div
+        className={"fixed left-1/2 -translate-x-1/2 min-w-[375px] max-w-[500px] w-full bottom-0 bg-system-bg border-t border-gray-100 py-3 px-5"}>
+        <BranchDetailBottomActionBar
+          isBookmarked={branch.isBookmarked || false}
+          bookmarkCount={branch.favoriteCount}
+          onBookmark={() => {}}
+          onClickReservation={() => {}}
+        />
       </div>
     </div>
   )
