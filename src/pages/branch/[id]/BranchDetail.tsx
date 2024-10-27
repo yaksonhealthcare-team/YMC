@@ -10,6 +10,7 @@ import ShareIcon from "@assets/icons/ShareIcon.svg?react"
 import StaffSection from "./_fragments/StaffSection.tsx"
 import DirectorCard from "./_fragments/DirectorCard.tsx"
 import MembershipAvailableBanner from "./_fragments/MembershipAvailableBanner.tsx"
+import ProfileCard from "@components/ProfileCard.tsx"
 
 
 const BranchDetail = () => {
@@ -45,11 +46,7 @@ const BranchDetail = () => {
             <div className={"flex flex-col gap-4 -mb-4"}>
               <div className={"w-full h-[1px] bg-gray-200 rounded-sm"} />
               <StaffSection directorCount={1} staffCount={branch.staffs.length} />
-              <DirectorCard
-                name={branch.director.name}
-                profileImageUrl={branch.director.profileImageUrl}
-                description={branch.director.description}
-              />
+              <ProfileCard type={"primary"} {...branch.director} />
             </div>
           )}
           buttonArea={(
