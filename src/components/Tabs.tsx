@@ -1,5 +1,5 @@
 import React from "react"
-import { Tabs, Tab } from "@mui/material"
+import { Tab, Tabs } from "@mui/material"
 import clsx from "clsx"
 
 interface TabItem {
@@ -8,7 +8,7 @@ interface TabItem {
 }
 
 interface CustomTabsProps {
-  type: "1depth" | "2depth" | "3depth" | "scroll" // 탭 타입
+  type: "1depth" | "2depth" | "3depth" | "scroll" | "fit" // 탭 타입
   tabs: TabItem[] // 동적으로 받을 탭 데이터
   onChange: (value: string) => void // 탭 변경 시 호출할 함수
   activeTab: string // 현재 활성화된 탭
@@ -44,6 +44,11 @@ export const CustomTabs = (props: CustomTabsProps) => {
           "font-sb text-14px",
           isActive ? "text-gray-700" : "text-gray-400 border-gray-200",
           "whitespace-nowrap",
+        )
+      case "fit":
+        return clsx(
+          `font-sb text-14px w-1/${tabs.length}`,
+          isActive ? "text-gray-700" : "text-gray-400 border-gray-200",
         )
       default:
         return ""

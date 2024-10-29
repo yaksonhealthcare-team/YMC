@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { useLayout } from "../../../contexts/LayoutContext.tsx"
-import { ReactNode, useEffect } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import DynamicHomeHeaderBackground from "../../home/_fragments/DynamicHomeHeaderBackground.tsx"
 import { MockBranch } from "../../../types/Branch.ts"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
@@ -8,23 +8,49 @@ import PinIcon from "@assets/icons/PinIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
 import ShareIcon from "@assets/icons/ShareIcon.svg?react"
 import StaffSection from "./_fragments/StaffSection.tsx"
-import DirectorCard from "./_fragments/DirectorCard.tsx"
 import MembershipAvailableBanner from "./_fragments/MembershipAvailableBanner.tsx"
+import { CustomTabs as Tabs } from "@components/Tabs.tsx"
+import TherapistList from "./_fragments/TherapistList.tsx"
+import ProgramList from "./_fragments/ProgramList.tsx"
+import BranchInformation from "./_fragments/BranchInformation.tsx"
+import ProfileCard from "@components/ProfileCard.tsx"
+import BranchDetailBottomActionBar from "./_fragments/BranchDetailBottomActionBar.tsx"
 
+const branchDetailTabs = ["therapists", "programs", "information"] as const
+type BranchDetailTab = typeof branchDetailTabs[number]
+
+const BranchDetailTabs: Record<BranchDetailTab, string> = {
+  "therapists": "테라피스트",
+  "programs": "관리프로그램",
+  "information": "기본정보",
+}
 
 const BranchDetail = () => {
   const { id } = useParams()
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const branch = MockBranch(id || "1")
+  const [selectedTab, setSelectedTab] = useState<string>("therapists")
 
   useEffect(() => {
     setHeader({ display: false })
     setNavigation({ display: false })
   }, [])
 
+  const renderTab = () => {
+    switch (selectedTab) {
+      case "therapists":
+        return <TherapistList therapists={branch.staffs} />
+      case "programs":
+        return <ProgramList />
+      case "information":
+      default:
+        return <BranchInformation />
+    }
+  }
+
   return (
-    <div className={"bg-system-bg w-full h-full"}>
+    <div className={"relative flex-grow w-full bg-system-bg"}>
       <div className={"flex flex-col gap-3 p-5"}>
         <DynamicHomeHeaderBackground
           header={(
@@ -45,11 +71,7 @@ const BranchDetail = () => {
             <div className={"flex flex-col gap-4 -mb-4"}>
               <div className={"w-full h-[1px] bg-gray-200 rounded-sm"} />
               <StaffSection directorCount={1} staffCount={branch.staffs.length} />
-              <DirectorCard
-                name={branch.director.name}
-                profileImageUrl={branch.director.profileImageUrl}
-                description={branch.director.description}
-              />
+              <ProfileCard type={"primary"} {...branch.director} />
             </div>
           )}
           buttonArea={(
@@ -67,6 +89,26 @@ const BranchDetail = () => {
             onClick={() => alert(`Available membership count: ${branch.availableMembershipCount}`)}
           />
         )}
+      </div>
+      <Tabs
+        type={"fit"}
+        tabs={Object.entries(BranchDetailTabs).map(([value, label]) => ({
+          value: value,
+          label: label,
+        }))}
+        onChange={setSelectedTab}
+        activeTab={selectedTab}
+      />
+      {renderTab()}
+      <div className={"h-20"} />
+      <div
+        className={"fixed left-1/2 -translate-x-1/2 min-w-[375px] max-w-[500px] w-full bottom-0 bg-system-bg border-t border-gray-100 py-3 px-5"}>
+        <BranchDetailBottomActionBar
+          isBookmarked={branch.isBookmarked || false}
+          bookmarkCount={branch.favoriteCount}
+          onBookmark={() => {}}
+          onClickReservation={() => {}}
+        />
       </div>
     </div>
   )
