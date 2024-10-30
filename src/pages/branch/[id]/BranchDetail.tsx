@@ -50,7 +50,7 @@ const BranchDetail = () => {
   }
 
   return (
-    <div className={"relative flex-grow w-full bg-system-bg"}>
+    <div className={"relative flex-grow w-full bg-system-bg overflow-x-hidden"}>
       <div className={"flex flex-col gap-3 p-5"}>
         <DynamicHomeHeaderBackground
           header={(
