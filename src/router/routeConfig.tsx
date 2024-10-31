@@ -20,6 +20,7 @@ import NoticePage from "../pages/notice/NoticePage.tsx"
 import SettingsPage from "../pages/settings/SettingsPage.tsx"
 import PointPage from "../pages/point/PointPage.tsx"
 import EventDetailPage from "../pages/event/EventDetailPage.tsx"
+import NoticeDetailPage from "../pages/notice/NoticeDetail.tsx"
 
 interface RouteConfig {
   path: string
@@ -130,6 +131,10 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/notice",
     element: <NoticePage />,
+  },
+  {
+    path: "/notice/:id",
+    element: <NoticeDetailPage />,
   },
   {
     path: "/settings",
