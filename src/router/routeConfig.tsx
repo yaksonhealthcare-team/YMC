@@ -11,6 +11,14 @@ import Dev from "../pages/DevPage.tsx"
 import Branch from "../pages/branch/Branch.tsx"
 import { Notification } from "../pages/home/Notification.tsx"
 import BranchDetail from "../pages/branch/[id]/BranchDetail.tsx"
+import FavoritePage from "../pages/favorite/FavoritePage.tsx"
+import PaymentPage from "../pages/payment/PaymentPage.tsx"
+import ReviewPage from "../pages/revivew/ReviewPage.tsx"
+import InquiryPage from "../pages/inquiry/InquiryPage.tsx"
+import EventPage from "../pages/event/EventPage.tsx"
+import NoticePage from "../pages/notice/NoticePage.tsx"
+import SettingsPage from "../pages/settings/SettingsPage.tsx"
+import PointPage from "../pages/point/PointPage.tsx"
 
 interface RouteConfig {
   path: string
@@ -73,7 +81,7 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/mypage",
     element: <MyPage />,
-    auth: false,
+    auth: true,
   },
   {
     path: "/myinfo",
@@ -82,7 +90,7 @@ const routeConfig: RouteConfig[] = [
   },
   {
     path: "/point",
-    element: <div>Point</div>,
+    element: <PointPage />,
     auth: true,
   },
   {
@@ -91,31 +99,36 @@ const routeConfig: RouteConfig[] = [
     auth: true,
   },
   {
+    path: "/inquiry",
+    element: <InquiryPage />,
+    auth: true,
+  },
+  {
     path: "/favorite",
-    element: <div>Favorite</div>,
+    element: <FavoritePage />,
     auth: true,
   },
   {
     path: "/payment",
-    element: <div>Payment</div>,
+    element: <PaymentPage />,
     auth: true,
   },
   {
     path: "/review",
-    element: <div>Review</div>,
+    element: <ReviewPage />,
     auth: true,
   },
   {
     path: "/event",
-    element: <div>Event</div>,
+    element: <EventPage />,
   },
   {
     path: "/notice",
-    element: <div>Notice</div>,
+    element: <NoticePage />,
   },
   {
-    path: "/notification",
-    element: <div>Notification</div>,
+    path: "/settings",
+    element: <SettingsPage />,
     auth: true,
   },
   {

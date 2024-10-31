@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import PageContainer from "@components/PageContainer"
 import { Notice } from "@components/Notice"
 import { Button } from "@components/Button"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
@@ -18,17 +17,17 @@ const MyPage = () => {
   }, [navigate])
 
   const menuItems = [
-    { id: "favorite", title: "즐겨찾는 지점", path: "/mypage/favorite" },
-    { id: "payment", title: "결제 내역", path: "/mypage/payment" },
-    { id: "review", title: "작성한 만족도", path: "/mypage/review" },
-    { id: "inquiry", title: "1:1 문의", path: "/mypage/inquiry" },
-    { id: "event", title: "이벤트", path: "/mypage/event" },
-    { id: "notice", title: "공지사항", path: "/mypage/notice" },
-    { id: "notification", title: "알림설정", path: "/mypage/notification" },
+    { id: "favorite", title: "즐겨찾는 지점", path: "/favorite" },
+    { id: "payment", title: "결제 내역", path: "/payment" },
+    { id: "review", title: "작성한 만족도", path: "/review" },
+    { id: "inquiry", title: "1:1 문의", path: "/inquiry" },
+    { id: "event", title: "이벤트", path: "/event" },
+    { id: "notice", title: "공지사항", path: "/notice" },
+    { id: "settings", title: "알림설정", path: "/settings" },
   ]
 
   return (
-    <PageContainer>
+    <>
       <div className="min-h-screen bg-[#F8F5F2]">
         {/* Notice */}
         <div className="px-5 py-2 m-5 rounded-[20px] bg-white">
@@ -69,7 +68,10 @@ const MyPage = () => {
 
           {/* Points & Membership */}
           <div className="flex gap-2">
-            <div className="w-[101px] h-24 bg-white rounded-2xl border border-gray-100 flex flex-col items-center justify-center">
+            <div
+              className="w-[101px] h-24 bg-white rounded-2xl border border-gray-100 flex flex-col items-center justify-center"
+              onClick={() => navigate("/questionnaire")}
+            >
               <div className="w-6 h-6 mb-2">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path d="M4 6h16v12H4V6z" stroke="#757575" strokeWidth="2" />
@@ -78,7 +80,10 @@ const MyPage = () => {
               <span className="font-m text-14px text-gray-500">내 문진</span>
             </div>
             <div className="flex-1 p-3 bg-white rounded-2xl border border-gray-100">
-              <div className="flex justify-between items-center mb-3">
+              <div
+                className="flex justify-between items-center mb-3"
+                onClick={() => navigate("/point")}
+              >
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 rounded-full border-[1.5px] border-gray-500" />
                   <span className="font-m text-14px text-gray-500">포인트</span>
@@ -112,7 +117,7 @@ const MyPage = () => {
           <Button
             variantType="primary"
             sizeType="m"
-            onClick={() => navigate("/mypage/profile")}
+            onClick={() => navigate("/profile")}
             className="w-full"
           >
             프로필 수정
@@ -147,7 +152,7 @@ const MyPage = () => {
           </div>
         </div>
       </div>
-    </PageContainer>
+    </>
   )
 }
 
