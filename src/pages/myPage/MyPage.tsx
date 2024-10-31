@@ -120,7 +120,7 @@ const MyPage = () => {
 
           {/* Menu List */}
           <div className="bg-white rounded-[20px] border border-gray-100">
-            {menuItems.map((item, index) => (
+            {menuItems.map((item) => (
               <div
                 key={item.id}
                 onClick={() => navigate(item.path)}
