@@ -12,10 +12,7 @@ interface FavoriteFilterItem {
 const FavoritePage: React.FC = () => {
   const { setHeader, setNavigation } = useLayout()
   const [favoriteBranches, setFavoriteBranches] = useState<Branch[]>([])
-  const [filterItems, setFilterItems] = useState<FavoriteFilterItem[]>([])
-  const [selectedFilters, setSelectedFilters] = useState<FavoriteFilterItem[]>(
-    [],
-  )
+  const [_, setFilterItems] = useState<FavoriteFilterItem[]>([])
 
   useEffect(() => {
     setHeader({
@@ -36,25 +33,25 @@ const FavoritePage: React.FC = () => {
     setFilterItems(initialFilterItems)
   }, [setHeader, setNavigation])
 
-  const handleFilterToggle = (filterItem: FavoriteFilterItem) => {
-    if (selectedFilters.some((f) => f.value === filterItem.value)) {
-      setSelectedFilters(
-        selectedFilters.filter((f) => f.value !== filterItem.value),
-      )
-    } else {
-      setSelectedFilters([...selectedFilters, filterItem])
-    }
-  }
+  // const handleFilterToggle = (filterItem: FavoriteFilterItem) => {
+  //   if (selectedFilters.some((f) => f.value === filterItem.value)) {
+  //     setSelectedFilters(
+  //       selectedFilters.filter((f) => f.value !== filterItem.value),
+  //     )
+  //   } else {
+  //     setSelectedFilters([...selectedFilters, filterItem])
+  //   }
+  // }
+  //
+  // const handleFilterReset = () => {
+  //   setSelectedFilters([])
+  // }
 
-  const handleFilterReset = () => {
-    setSelectedFilters([])
-  }
-
-  function handleBranchClick(branch) {
+  function handleBranchClick(branch: Branch) {
     console.log("Branch clicked", branch)
   }
 
-  function handleToggleFavorite(branch) {
+  function handleToggleFavorite(branch: Branch) {
     console.log("TOGGLE FAVORITE", branch)
   }
 

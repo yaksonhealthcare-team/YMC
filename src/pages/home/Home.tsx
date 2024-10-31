@@ -265,7 +265,6 @@ const BrandSection = () => {
 }
 
 const EventSection = () => {
-  const navigate = useNavigate()
   const EventCardsData: Array<{
     imageSrc: string
     title: string
@@ -295,7 +294,7 @@ const EventSection = () => {
           <SwiperSlide key={index} className="mr-3">
             <div
               className="flex flex-col gap-4 bg-white pb-4 rounded-[20px] border border-gray-100"
-              onClick={() => navigate(`/event/${data.id}`)}
+              // onClick={() => navigate(`/event/${data.id}`)}
             >
               <div
                 style={{ backgroundImage: `url(${data.imageSrc})` }}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 
@@ -11,7 +11,7 @@ interface Notice {
 }
 
 const NoticeDetailPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>()
+  // const { id } = useParams<{ id: string }>()
   const { setHeader, setNavigation } = useLayout()
   const [notice, setNotice] = useState<Notice | null>(null)
 

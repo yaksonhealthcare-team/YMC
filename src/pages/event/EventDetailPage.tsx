@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 
@@ -13,7 +13,7 @@ interface Event {
 }
 
 function EventDetailPage() {
-  const { id } = useParams<{ id: string }>()
+  // const { id } = useParams<{ id: string }>()
   const { setHeader, setNavigation } = useLayout()
   const [event, setEvent] = useState<Event | null>(null)
 
