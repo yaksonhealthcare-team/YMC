@@ -67,14 +67,18 @@ export const LayoutProvider = ({ children }: LayoutProviderProps) => {
     const headerConfig = header as DetailedHeaderConfig
     return (
       <div className={"z-10"}>
-        <div className={
-          "fixed space-x-4 w-full h-12 max-w-[500px] min-w-[375px] flex items-center py-3 px-5 bg-system-bg"
-        }>
+        <div
+          className={
+            "fixed space-x-4 w-full h-12 max-w-[500px] min-w-[375px] flex items-center py-3 px-5 bg-system-bg"
+          }
+        >
           <div className={"flex justify-start w-1/3"}>{headerConfig.left}</div>
 
           <Typography
             variant="h6"
-            className={"w-1/3 flex justify-center font-sb text-16px text-gray-700"}
+            className={
+              "w-1/3 flex justify-center font-sb text-16px text-gray-700"
+            }
           >
             {headerConfig.title}
           </Typography>

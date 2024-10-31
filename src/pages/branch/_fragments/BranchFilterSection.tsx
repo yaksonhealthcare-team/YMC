@@ -6,9 +6,9 @@ const BranchFilterSection = ({
   onClick,
   onInitialize: performInitialize,
 }: {
-  currentFilter: { brand: FilterItem | null, category: FilterItem | null },
-  onClick: () => void,
-  onInitialize: () => void,
+  currentFilter: { brand: FilterItem | null; category: FilterItem | null }
+  onClick: () => void
+  onInitialize: () => void
 }) => {
   return (
     <div className={"flex overflow-x-auto px-5 py-2 "}>

@@ -1,4 +1,10 @@
-const StaffSection = ({ directorCount, staffCount }: { directorCount: number, staffCount: number }) => (
+const StaffSection = ({
+  directorCount,
+  staffCount,
+}: {
+  directorCount: number
+  staffCount: number
+}) => (
   <div className={"flex flex-col items-start gap-2"}>
     <p className={"font-b text-16px"}>{"소속 관리사"}</p>
     <div className={"flex items-center gap-1 font-m text-14px text-gray-500"}>
