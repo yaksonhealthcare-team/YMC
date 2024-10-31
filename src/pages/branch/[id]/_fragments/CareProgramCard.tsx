@@ -13,7 +13,7 @@ const CareProgramCard = ({ program }: CareProgramCardProps) => {
         <Tag type={"rect"} title={program.branchScope} />
         {program.duration && (
           <div className={"flex gap-1 items-center"}>
-            <ClockIcon />
+            <ClockIcon className={"text-primary"} />
             <p className={"font-r text-sm text-gray-500"}>{program.duration}</p>
           </div>
         )}
