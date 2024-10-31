@@ -34,7 +34,7 @@ const BranchFilterList = ({ branches }: BranchFilterListProps) => {
   )
 }
 
-const BranchFilterListItem = ({
+export const BranchFilterListItem = ({
   branch,
   onClick,
   onClickFavorite,
@@ -43,7 +43,7 @@ const BranchFilterListItem = ({
   onClick: (branch: Branch) => void
   onClickFavorite: (branch: Branch) => void
 }) => (
-  <li onClick={() => onClick(branch)}>
+  <li onClick={() => onClick(branch)} className={"cursor-pointer w-full flex"}>
     <div className={"w-full py-4 gap-4 flex items-stretch"}>
       <img
         className={
