@@ -17,7 +17,7 @@ import ProfileCard from "@components/ProfileCard.tsx"
 import BranchDetailBottomActionBar from "./_fragments/BranchDetailBottomActionBar.tsx"
 
 const branchDetailTabs = ["therapists", "programs", "information"] as const
-type BranchDetailTab = typeof branchDetailTabs[number]
+type BranchDetailTab = (typeof branchDetailTabs)[number]
 
 const BranchDetailTabs: Record<BranchDetailTab, string> = {
   "therapists": "테라피스트",
@@ -53,7 +53,7 @@ const BranchDetail = () => {
     <div className={"relative flex-grow w-full bg-system-bg overflow-x-hidden"}>
       <div className={"flex flex-col gap-3 p-5"}>
         <DynamicHomeHeaderBackground
-          header={(
+          header={
             <>
               <div className={"flex flex-row items-center gap-2"}>
                 <div onClick={() => navigate(-1)}>
@@ -63,30 +63,44 @@ const BranchDetail = () => {
               </div>
               <div className={"flex flex-row items-center gap-1 mt-1.5"}>
                 <IconLabel icon={<StoreIcon />} label={branch.brand} />
-                {branch.location.distance && <IconLabel icon={<PinIcon />} label={branch.location.distance} />}
+                {branch.location.distance && (
+                  <IconLabel
+                    icon={<PinIcon />}
+                    label={branch.location.distance}
+                  />
+                )}
               </div>
             </>
-          )}
-          content={(
+          }
+          content={
             <div className={"flex flex-col gap-4 -mb-4"}>
               <div className={"w-full h-[1px] bg-gray-200 rounded-sm"} />
-              <StaffSection directorCount={1} staffCount={branch.staffs.length} />
+              <StaffSection
+                directorCount={1}
+                staffCount={branch.staffs.length}
+              />
               <ProfileCard type={"primary"} {...branch.director} />
             </div>
-          )}
-          buttonArea={(
+          }
+          buttonArea={
             <button
-              className={"flex w-10 h-10 rounded-full bg-primary justify-center items-center text-white shadow-md"}
+              className={
+                "flex w-10 h-10 rounded-full bg-primary justify-center items-center text-white shadow-md"
+              }
               onClick={() => alert(`share branch ${id}`)}
             >
               <ShareIcon className={"w-6 h-6"} />
             </button>
-          )}
+          }
         />
         {branch.availableMembershipCount > 0 && (
           <MembershipAvailableBanner
             availableMembershipCount={branch.availableMembershipCount}
-            onClick={() => alert(`Available membership count: ${branch.availableMembershipCount}`)}
+            onClick={() =>
+              alert(
+                `Available membership count: ${branch.availableMembershipCount}`,
+              )
+            }
           />
         )}
       </div>
@@ -102,7 +116,10 @@ const BranchDetail = () => {
       {renderTab()}
       <div className={"h-20"} />
       <div
-        className={"fixed left-1/2 -translate-x-1/2 min-w-[375px] max-w-[500px] w-full bottom-0 bg-system-bg border-t border-gray-100 py-3 px-5"}>
+        className={
+          "fixed left-1/2 -translate-x-1/2 min-w-[375px] max-w-[500px] w-full bottom-0 bg-system-bg border-t border-gray-100 py-3 px-5"
+        }
+      >
         <BranchDetailBottomActionBar
           isBookmarked={branch.isBookmarked || false}
           bookmarkCount={branch.favoriteCount}
@@ -114,7 +131,7 @@ const BranchDetail = () => {
   )
 }
 
-const IconLabel = ({ icon, label }: { icon: ReactNode, label: string }) => (
+const IconLabel = ({ icon, label }: { icon: ReactNode; label: string }) => (
   <div className={"flex flex-row gap-0.5 items-center"}>
     {icon}
     <p className={"font-m text-14px text-gray-500"}>{label}</p>

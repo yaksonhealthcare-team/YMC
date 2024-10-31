@@ -1,49 +1,49 @@
 type BranchDetail = {
-  id: string,
-  name: string,
-  brand: string,
-  images: string[],
+  id: string
+  name: string
+  brand: string
+  images: string[]
   location: {
-    address: string,
-    latitude: number,
-    longitude: number,
-    distance?: string,
-  },
-  phoneNumber: string,
+    address: string
+    latitude: number
+    longitude: number
+    distance?: string
+  }
+  phoneNumber: string
   operatingHours: {
-    regular: string,
-    holiday: string,
-  },
-  director: Profile,
-  staffs: Profile[],
+    regular: string
+    holiday: string
+  }
+  director: Profile
+  staffs: Profile[]
   directions: {
     bus: {
-      routes: string[],
-    },
+      routes: string[]
+    }
     subway: {
-      description: string,
-    },
+      description: string
+    }
     car: {
-      description: string,
-    },
-  },
-  notices?: string[],
-  favoriteCount: number,
-  availableMembershipCount: number,
-  isBookmarked?: boolean,
+      description: string
+    }
+  }
+  notices?: string[]
+  favoriteCount: number
+  availableMembershipCount: number
+  isBookmarked?: boolean
   programs?: {
-    name: string,
-    duration: string,
-    price: number,
-    discount?: number,
-    scope: "all" | "branch_only",
-  }[],
+    name: string
+    duration: string
+    price: number
+    discount?: number
+    scope: "all" | "branch_only"
+  }[]
 }
 
 type Profile = {
-  name: string,
-  profileImageUrl?: string,
-  description?: string,
+  name: string
+  profileImageUrl?: string
+  description?: string
 }
 
 export const MockBranch = (id: string): BranchDetail => ({
@@ -99,10 +99,12 @@ export const MockBranch = (id: string): BranchDetail => ({
       routes: ["401", "640", "3414", "41", "3011", "4431"],
     },
     subway: {
-      description: "7호선 2번출구 바로 앞 SK허브빌딩 2층 또는 지하철역에 연결된 SK허브빌딩 지하1층 이용",
+      description:
+        "7호선 2번출구 바로 앞 SK허브빌딩 2층 또는 지하철역에 연결된 SK허브빌딩 지하1층 이용",
     },
     car: {
-      description: "강남구청역 사거리에서 선을ㅇ역 방향 첫 번째 골목에 SK허브빌딩 주차장 입구",
+      description:
+        "강남구청역 사거리에서 선을ㅇ역 방향 첫 번째 골목에 SK허브빌딩 주차장 입구",
     },
   },
   notices: [],
@@ -146,14 +148,14 @@ export const MockBranch = (id: string): BranchDetail => ({
 })
 
 type Branch = {
-  id: string,
-  name: string,
-  address: string,
-  latitude: number,
-  longitude: number,
-  canBookToday: boolean,
-  distanceInMeters: number | null,
-  isFavorite: boolean,
+  id: string
+  name: string
+  address: string
+  latitude: number
+  longitude: number
+  canBookToday: boolean
+  distanceInMeters: number | null
+  isFavorite: boolean
 }
 
 export const MockBranches: Branch[] = Array.from({ length: 12 }, (_, i) => ({

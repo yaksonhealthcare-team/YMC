@@ -13,8 +13,14 @@ export type FilterItem = {
 interface BranchFilterBottomSheetProps {
   brands: FilterItem[]
   categories: FilterItem[]
-  currentFilter: { brand: FilterItem | null, category: FilterItem | null },
-  onApply: ({ brand, category }: { brand: FilterItem | null, category: FilterItem | null }) => void
+  currentFilter: { brand: FilterItem | null; category: FilterItem | null }
+  onApply: ({
+    brand,
+    category,
+  }: {
+    brand: FilterItem | null
+    category: FilterItem | null
+  }) => void
   onClose: () => void
 }
 
@@ -25,19 +31,26 @@ const BranchFilterBottomSheet = ({
   onApply: performApply,
   onClose: performClose,
 }: BranchFilterBottomSheetProps) => {
-  const [filter, setFilter] = useState<{ brand: FilterItem | null, category: FilterItem | null }>(currentFilter)
+  const [filter, setFilter] = useState<{
+    brand: FilterItem | null
+    category: FilterItem | null
+  }>(currentFilter)
 
   return (
     <div className={"flex flex-col w-screen items-center gap-5 px-5"}>
       <BranchFilterBottomSheetHeader onClose={performClose} />
       <BranchFilterDivider />
       <BranchFilterBottomSheetWrap
-        label={"브랜드 별"} items={brands} selectedItem={filter.brand}
+        label={"브랜드 별"}
+        items={brands}
+        selectedItem={filter.brand}
         onSelect={(brand) => setFilter({ ...filter, brand: brand })}
       />
       <BranchFilterDivider />
       <BranchFilterBottomSheetWrap
-        label={"카테고리 별"} items={categories} selectedItem={filter.category}
+        label={"카테고리 별"}
+        items={categories}
+        selectedItem={filter.category}
         onSelect={(category) => setFilter({ ...filter, category: category })}
       />
       <div className={"h-20"} />
@@ -52,7 +65,11 @@ const BranchFilterBottomSheet = ({
   )
 }
 
-const BranchFilterBottomSheetHeader = ({ onClose }: { onClose: () => void }) => (
+const BranchFilterBottomSheetHeader = ({
+  onClose,
+}: {
+  onClose: () => void
+}) => (
   <>
     <Divider type="r" />
     <div className={"w-full"}>
@@ -76,22 +93,26 @@ const BranchFilterBottomSheetWrap = ({
   selectedItem,
   onSelect,
 }: {
-  label: string,
-  items: FilterItem[],
-  selectedItem: FilterItem | null,
-  onSelect: (item: FilterItem | null) => void,
+  label: string
+  items: FilterItem[]
+  selectedItem: FilterItem | null
+  onSelect: (item: FilterItem | null) => void
 }) => {
   return (
     <div className={"flex flex-col w-full items-start gap-3"}>
       <p className={"text-start font-sb text-16px"}>{label}</p>
       <div className={"flex flex-wrap gap-2"}>
         <Filter
-          type={"default"} state={!selectedItem ? "active" : "default"} label={"전체"}
+          type={"default"}
+          state={!selectedItem ? "active" : "default"}
+          label={"전체"}
           onClick={() => onSelect(null)}
         />
         {items.map((item) => (
           <Filter
-            key={item.code} type={"default"} state={item.code === selectedItem?.code ? "active" : "default"}
+            key={item.code}
+            type={"default"}
+            state={item.code === selectedItem?.code ? "active" : "default"}
             label={item.title}
             onClick={() => onSelect(item)}
           />
@@ -104,15 +125,27 @@ const BranchFilterBottomSheetWrap = ({
 const BranchFilterBottomSheetFooter = ({
   onInitialize,
   onApply,
-}: { onInitialize: () => void, onApply: () => void }) => {
+}: {
+  onInitialize: () => void
+  onApply: () => void
+}) => {
   return (
     <div className={"w-full flex justify-around gap-2"}>
       <Button
-        className={"w-1/2 rounded-xl"} variantType={"line"} iconLeft={<ReloadIcon htmlColor={"#F37165"} />}
-        onClick={onInitialize}>
+        className={"w-1/2 rounded-xl"}
+        variantType={"line"}
+        iconLeft={<ReloadIcon htmlColor={"#F37165"} />}
+        onClick={onInitialize}
+      >
         {"초기화"}
       </Button>
-      <Button className={"w-1/2 rounded-xl"} variantType={"primary"} onClick={onApply}>{"적용하기"}</Button>
+      <Button
+        className={"w-1/2 rounded-xl"}
+        variantType={"primary"}
+        onClick={onApply}
+      >
+        {"적용하기"}
+      </Button>
     </div>
   )
 }

@@ -2,7 +2,9 @@ import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useEffect, useState } from "react"
 import { Header } from "@components/Header.tsx"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
-import BranchFilterBottomSheet, { FilterItem } from "./_fragments/BranchFilterBottomSheet.tsx"
+import BranchFilterBottomSheet, {
+  FilterItem,
+} from "./_fragments/BranchFilterBottomSheet.tsx"
 import BranchFilterSection from "./_fragments/BranchFilterSection.tsx"
 import BranchFilterList from "./_fragments/BranchFilterList.tsx"
 import { MockBranches } from "../../types/Branch.ts"
@@ -11,8 +13,8 @@ const Branch = () => {
   const { setHeader } = useLayout()
   const { openBottomSheet, closeOverlay } = useOverlay()
   const [selectedFilter, setSelectedFilter] = useState<{
-    brand: FilterItem | null,
-    category: FilterItem | null,
+    brand: FilterItem | null
+    category: FilterItem | null
   }>({
     brand: null,
     category: null,
@@ -68,8 +70,8 @@ const BranchHeader = () => {
 export default Branch
 
 const MockFilters: {
-  brands: FilterItem[],
-  categories: FilterItem[],
+  brands: FilterItem[]
+  categories: FilterItem[]
 } = {
   brands: [
     { code: "1", title: "약손명가" },
