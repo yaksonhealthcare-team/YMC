@@ -8,8 +8,8 @@ interface ProfileCardProps {
 }
 
 interface ProfileImageProps {
-  profileImageUrl?: string,
-  className?: string,
+  profileImageUrl?: string
+  className?: string
 }
 
 const STYLE_VARIANTS = {
@@ -25,7 +25,10 @@ const STYLE_VARIANTS = {
   },
 }
 
-const ProfileImage = ({ profileImageUrl, className = "" }: ProfileImageProps) => (
+const ProfileImage = ({
+  profileImageUrl,
+  className = "",
+}: ProfileImageProps) => (
   <img
     className={`rounded-full h-20 aspect-square object-cover ${className}`}
     src={profileImageUrl || BranchPlaceholderImage}

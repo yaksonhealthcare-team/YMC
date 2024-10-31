@@ -1,10 +1,12 @@
 import ProfileCard from "@components/ProfileCard.tsx"
 
-const TherapistList = ({ therapists }: {
+const TherapistList = ({
+  therapists,
+}: {
   therapists: {
-    name: string,
-    profileImageUrl?: string,
-    description?: string,
+    name: string
+    profileImageUrl?: string
+    description?: string
   }[]
 }) => (
   <div className={"flex flex-col items-stretch gap-4 p-5"}>
@@ -13,6 +15,5 @@ const TherapistList = ({ therapists }: {
     ))}
   </div>
 )
-
 
 export default TherapistList
