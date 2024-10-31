@@ -1,4 +1,5 @@
 import React from "react"
+import { useNavigate } from "react-router-dom"
 
 interface Event {
   id: string
@@ -10,8 +11,12 @@ interface Event {
 }
 
 const EventItem: React.FC<{ event: Event }> = ({ event }) => {
+  const navigate = useNavigate()
   return (
-    <div className="bg-white px-5 py-4 flex items-center gap-4">
+    <div
+      className="bg-white px-5 py-4 flex items-center gap-4"
+      onClick={() => navigate(`/event/${event.id}`)}
+    >
       <img
         src={event.imageUrl}
         alt={event.title}
