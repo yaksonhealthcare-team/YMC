@@ -28,6 +28,7 @@ type BranchDetail = {
   staffs: Profile[]
   directions: {
     bus: {
+      description: string
       routes: string[]
     }
     subway: {
@@ -116,6 +117,7 @@ export const MockBranch = (id: string): BranchDetail => ({
   ],
   directions: {
     bus: {
+      description: "강남구청역 하차 후 바로 보이는 SK허브빌딩 2층 (미스터피자옆)",
       routes: ["401", "640", "3414", "41", "3011", "4431"],
     },
     subway: {
