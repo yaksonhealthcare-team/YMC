@@ -29,7 +29,7 @@ interface Product {
   isAllBranch: boolean
 }
 
-const PurchasePage = () => {
+const MembershipPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
 
@@ -58,7 +58,7 @@ const PurchasePage = () => {
         <Button
           variantType="primary"
           sizeType="l"
-          onClick={() => navigate("/purchase/checkout")}
+          onClick={() => navigate("/membership/checkout")}
         >
           예약하기
         </Button>
@@ -155,7 +155,7 @@ const ProductList = () => {
           <div
             key={product.id}
             className="w-full p-5 bg-white rounded-[20px] shadow-card border border-gray-100 cursor-pointer"
-            onClick={() => navigate(`/purchase/${product.id}`)}
+            onClick={() => navigate(`/membership/${product.id}`)}
           >
             <div className="flex justify-between items-start mb-3">
               <Tag type="rect" title="전지점" />
@@ -198,4 +198,4 @@ const ProductList = () => {
   )
 }
 
-export default PurchasePage
+export default MembershipPage

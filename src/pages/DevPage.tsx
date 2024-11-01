@@ -177,7 +177,7 @@ const DevPage = () => {
             }}
           />
           <FloatingButton
-            type="purchase"
+            type="membership"
             onClick={() => {
               alert("FloatingButton Clicked")
             }}

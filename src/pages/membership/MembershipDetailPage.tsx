@@ -4,9 +4,9 @@ import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useNavigate } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
-import PurchaseDetailBottomSheetContent from "./_fragments/PurchaseDetailBottomSheetContent.tsx"
+import MembershipDetailBottomSheetContent from "./_fragments/MembershipDetailBottomSheetContent.tsx"
 
-const PurchaseDetailPage = () => {
+const MembershipDetailPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const { openBottomSheet } = useOverlay()
 
@@ -27,10 +27,10 @@ const PurchaseDetailPage = () => {
   }, [])
 
   const handleOnSubmit = () => {
-    openBottomSheet(<PurchaseDetailBottomSheetContent />)
+    openBottomSheet(<MembershipDetailBottomSheetContent />)
   }
 
-  const PurchaseInfo = () => (
+  const MembershipInfo = () => (
     <div className="flex flex-col px-5 py-6 gap-4">
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1">
@@ -61,7 +61,7 @@ const PurchaseDetailPage = () => {
     </div>
   )
 
-  const PurchaseDetail = () => (
+  const MembershipDetail = () => (
     <div className="flex flex-col px-5 py-6 gap-4">
       <h2 className="text-gray-800 font-b text-16px">상세정보</h2>
       <div className="flex flex-col gap-3">
@@ -117,11 +117,11 @@ const PurchaseDetailPage = () => {
         />
       </div>
 
-      <PurchaseInfo />
+      <MembershipInfo />
 
       <div className="w-full h-2 bg-gray-50" />
 
-      <PurchaseDetail />
+      <MembershipDetail />
 
       {/* Bottom Fixed Button */}
 
@@ -141,4 +141,4 @@ const PurchaseDetailPage = () => {
   )
 }
 
-export default PurchaseDetailPage
+export default MembershipDetailPage

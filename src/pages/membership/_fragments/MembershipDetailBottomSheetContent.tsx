@@ -4,7 +4,7 @@ import { Number } from "@components/Number"
 import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import { useState } from "react"
 
-const PurchaseDetailBottomSheetContent = () => {
+const MembershipDetailBottomSheetContent = () => {
   const [count30, setCount30] = useState(1)
   const [count10, setCount10] = useState(2)
 
@@ -111,4 +111,4 @@ const PurchaseDetailBottomSheetContent = () => {
   )
 }
 
-export default PurchaseDetailBottomSheetContent
+export default MembershipDetailBottomSheetContent
