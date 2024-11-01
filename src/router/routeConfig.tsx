@@ -21,6 +21,7 @@ import SettingsPage from "../pages/settings/SettingsPage.tsx"
 import PointPage from "../pages/point/PointPage.tsx"
 import EventDetailPage from "../pages/event/EventDetailPage.tsx"
 import NoticeDetailPage from "../pages/notice/NoticeDetail.tsx"
+import PurchaseDetailPage from "../pages/purchase/PurchaseDetailPage.tsx"
 
 interface RouteConfig {
   path: string
@@ -76,6 +77,11 @@ const routeConfig: RouteConfig[] = [
 
   //구매, 스토어, 예약
   { path: "/purchase", element: <Purchase />, auth: true },
+  {
+    path: "/purchase/:id",
+    element: <PurchaseDetailPage />,
+    auth: true,
+  },
   { path: "/store", element: <Store />, auth: false },
   { path: "/reservation", element: <Reservation />, auth: true },
 
