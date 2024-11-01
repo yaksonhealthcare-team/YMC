@@ -2,15 +2,13 @@ import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useEffect, useState } from "react"
 import { Header } from "@components/Header.tsx"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
-import BranchFilterBottomSheet, {
-  FilterItem,
-} from "./_fragments/BranchFilterBottomSheet.tsx"
+import BranchFilterBottomSheet, { FilterItem } from "./_fragments/BranchFilterBottomSheet.tsx"
 import BranchFilterSection from "./_fragments/BranchFilterSection.tsx"
 import BranchFilterList from "./_fragments/BranchFilterList.tsx"
 import { MockBranches } from "../../types/Branch.ts"
 
 const Branch = () => {
-  const { setHeader } = useLayout()
+  const { setHeader, setNavigation } = useLayout()
   const { openBottomSheet, closeOverlay } = useOverlay()
   const [selectedFilter, setSelectedFilter] = useState<{
     brand: FilterItem | null
@@ -24,6 +22,9 @@ const Branch = () => {
     setHeader({
       component: <BranchHeader />,
       display: true,
+    })
+    setNavigation({
+      display: false,
     })
   }, [])
 
