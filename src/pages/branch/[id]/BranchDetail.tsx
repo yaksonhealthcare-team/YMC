@@ -45,7 +45,7 @@ const BranchDetail = () => {
         return <ProgramList />
       case "information":
       default:
-        return <BranchInformation />
+        return <BranchInformation branch={branch} />
     }
   }
 
@@ -65,7 +65,7 @@ const BranchDetail = () => {
                 <IconLabel icon={<StoreIcon />} label={branch.brand} />
                 {branch.location.distance && (
                   <IconLabel
-                    icon={<PinIcon />}
+                    icon={<PinIcon className={"text-gray-500"} />}
                     label={branch.location.distance}
                   />
                 )}

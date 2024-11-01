@@ -11,13 +11,24 @@ type BranchDetail = {
   }
   phoneNumber: string
   operatingHours: {
-    regular: string
-    holiday: string
+    weekday: {
+      start: string;
+      end: string;
+    },
+    saturday: {
+      start: string;
+      end: string;
+    },
+    holiday: {
+      start: string,
+      end: string;
+    }
   }
   director: Profile
   staffs: Profile[]
   directions: {
     bus: {
+      description: string
       routes: string[]
     }
     subway: {
@@ -64,8 +75,18 @@ export const MockBranch = (id: string): BranchDetail => ({
   },
   phoneNumber: "02-123-4556",
   operatingHours: {
-    regular: "평일 10:00 ~ 21:00\n토요일 09:00 ~ 17:30",
-    holiday: "일요일 정기휴무 (매주 일요일)",
+    weekday: {
+      start: "10:00",
+      end: "21:00",
+    },
+    saturday: {
+      start: "09:00",
+      end: "17:30",
+    },
+    holiday: {
+      start: "",
+      end: "",
+    },
   },
   director: {
     name: "정연희 원장",
@@ -96,6 +117,7 @@ export const MockBranch = (id: string): BranchDetail => ({
   ],
   directions: {
     bus: {
+      description: "강남구청역 하차 후 바로 보이는 SK허브빌딩 2층 (미스터피자옆)",
       routes: ["401", "640", "3414", "41", "3011", "4431"],
     },
     subway: {
