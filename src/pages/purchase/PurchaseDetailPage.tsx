@@ -3,9 +3,12 @@ import { Button } from "@components/Button"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useNavigate } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
+import { useOverlay } from "../../contexts/ModalContext.tsx"
+import PurchaseDetailBottomSheetContent from "./_fragments/PurchaseDetailBottomSheetContent.tsx"
 
 const PurchaseDetailPage = () => {
   const { setHeader, setNavigation } = useLayout()
+  const { openBottomSheet } = useOverlay()
 
   const navigate = useNavigate()
 
@@ -22,6 +25,10 @@ const PurchaseDetailPage = () => {
     })
     setNavigation({ display: false })
   }, [])
+
+  const handleOnSubmit = () => {
+    openBottomSheet(<PurchaseDetailBottomSheetContent />)
+  }
 
   const PurchaseInfo = () => (
     <div className="flex flex-col px-5 py-6 gap-4">
@@ -120,12 +127,14 @@ const PurchaseDetailPage = () => {
 
       <div className="fixed bottom-0 left-0 right-0 h-[94px] bg-white border-t border-gray-50">
         <div className="px-5 pt-3">
-          <Button variantType="primary" sizeType="l" className="w-full">
+          <Button
+            onClick={handleOnSubmit}
+            variantType="primary"
+            sizeType="l"
+            className="w-full"
+          >
             구매하기
           </Button>
-        </div>
-        <div className="h-[30px] flex justify-center items-center">
-          <div className="w-[130px] h-[5px] bg-gray-900 rounded-[2px]" />
         </div>
       </div>
     </div>
