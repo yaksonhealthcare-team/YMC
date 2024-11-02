@@ -118,10 +118,10 @@ export const LayoutProvider = ({ children }: LayoutProviderProps) => {
                 link={"/"}
               />
               <NavButton
-                activeIcon={"assets/navIcon/purchase_active.png"}
-                inactiveIcon={"assets/navIcon/purchase_inactive.png"}
+                activeIcon={"assets/navIcon/membership_active.png"}
+                inactiveIcon={"assets/navIcon/membership_inactive.png"}
                 title={"회원권 구매"}
-                link={"/purchase"}
+                link={"/membership"}
               />
               <NavButton
                 activeIcon={"assets/navIcon/store_active.png"}

@@ -1,6 +1,6 @@
 import clsx from "clsx"
 
-type ButtonType = "location" | "top" | "search" | "reserve" | "purchase"
+type ButtonType = "location" | "top" | "search" | "reserve" | "membership"
 
 interface FloatingButtonProps {
   type: ButtonType
@@ -15,7 +15,7 @@ export const FloatingButton = (props: FloatingButtonProps) => {
     top: `w-9 h-9`,
     search: `w-14 h-14`,
     reserve: `w-14 h-14 bg-primary-500`,
-    purchase: `w-14 h-14 bg-primary-500`,
+    membership: `w-14 h-14 bg-primary-500`,
   }
 
   const getIconByType = (type: ButtonType) => {
@@ -28,8 +28,8 @@ export const FloatingButton = (props: FloatingButtonProps) => {
         return <img src="/assets/floatingIcons/search.png" />
       case "reserve":
         return <img src="/assets/floatingIcons/reserve.png" />
-      case "purchase":
-        return <img src="/assets/floatingIcons/purchase.png" />
+      case "membership":
+        return <img src="/assets/floatingIcons/membership.png" />
       default:
         return null
     }
