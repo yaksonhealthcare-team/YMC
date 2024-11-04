@@ -6,10 +6,14 @@ import BranchFilterBottomSheet, { FilterItem } from "./_fragments/BranchFilterBo
 import BranchFilterSection from "./_fragments/BranchFilterSection.tsx"
 import BranchFilterList from "./_fragments/BranchFilterList.tsx"
 import { MockBranches } from "../../types/Branch.ts"
+import { SearchFloatingButton } from "@components/SearchFloatingButton.tsx"
+import { useLocation, useNavigate } from "react-router-dom"
+import BranchMapSection from "./_fragments/BranchMapSection.tsx"
 
 const Branch = () => {
   const { setHeader, setNavigation } = useLayout()
   const { openBottomSheet, closeOverlay } = useOverlay()
+  const [screen, setScreen] = useState<"list" | "map">("list")
   const [selectedFilter, setSelectedFilter] = useState<{
     brand: FilterItem | null
     category: FilterItem | null
@@ -18,9 +22,43 @@ const Branch = () => {
     category: null,
   })
 
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const handleNavigateToBack = () => {
+    if (location.state?.from === "/") {
+      navigate(-1)
+    } else {
+      navigate("/")
+    }
+  }
+
   useEffect(() => {
     setHeader({
-      component: <BranchHeader />,
+      component: (
+        <div>
+          <BranchHeader
+            onBack={handleNavigateToBack}
+            onClickLocation={() => {}}
+            onSearch={() => {}}
+          />
+          <BranchFilterSection
+            currentFilter={selectedFilter}
+            onInitialize={() => setSelectedFilter({ brand: null, category: null })}
+            onClick={() => {
+              openBottomSheet(
+                <BranchFilterBottomSheet
+                  onClose={closeOverlay}
+                  brands={MockFilters.brands}
+                  categories={MockFilters.categories}
+                  currentFilter={selectedFilter}
+                  onApply={setSelectedFilter}
+                />,
+              )
+            }}
+          />
+        </div>
+      ),
       display: true,
     })
     setNavigation({
@@ -28,42 +66,47 @@ const Branch = () => {
     })
   }, [])
 
+  const renderScreen = () => {
+    switch (screen) {
+      case "list":
+        return <BranchFilterList branches={MockBranches} />
+      case "map":
+        return <BranchMapSection />
+    }
+  }
+
   return (
-    <div>
-      <BranchFilterSection
-        currentFilter={selectedFilter}
-        onInitialize={() => setSelectedFilter({ brand: null, category: null })}
-        onClick={() => {
-          openBottomSheet(
-            <BranchFilterBottomSheet
-              onClose={closeOverlay}
-              brands={MockFilters.brands}
-              categories={MockFilters.categories}
-              currentFilter={selectedFilter}
-              onApply={setSelectedFilter}
-            />,
-          )
-        }}
-      />
-      <BranchFilterList branches={MockBranches} />
+    <div className={"relative pt-12"}>
+      {renderScreen()}
+      <div className={"fixed bottom-10 left-1/2 -translate-x-1/2"}>
+        <SearchFloatingButton
+          type={screen === "list" ? "search" : "list"}
+          title={screen === "list" ? "지도보기" : "목록보기"}
+          onClick={() => {
+            if (screen === "list") {
+              setScreen("map")
+            } else {
+              setScreen("list")
+            }
+          }}
+        />
+      </div>
     </div>
   )
 }
 
-const BranchHeader = () => {
+const BranchHeader = ({ onBack, onSearch, onClickLocation }: {
+  onBack: () => void,
+  onSearch: () => void,
+  onClickLocation: () => void,
+}) => {
   return (
     <Header
       type="location"
       title="서울 강남구 테헤란로78길 14-10"
-      onClickLocation={() => {
-        alert("Location Clicked")
-      }}
-      onClickLeft={() => {
-        alert("Left Icon Clicked")
-      }}
-      onClickRight={() => {
-        alert("Right Icon Clicked")
-      }}
+      onClickLocation={onClickLocation}
+      onClickLeft={onBack}
+      onClickRight={onSearch}
     />
   )
 }
