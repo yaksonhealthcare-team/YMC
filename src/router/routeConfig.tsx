@@ -21,6 +21,7 @@ import SettingsPage from "../pages/settings/SettingsPage.tsx"
 import PointPage from "../pages/point/PointPage.tsx"
 import EventDetailPage from "../pages/event/EventDetailPage.tsx"
 import NoticeDetailPage from "../pages/notice/NoticeDetail.tsx"
+import LocationSettings from "../pages/branch/_fragments/LocationSettings.tsx"
 
 interface RouteConfig {
   path: string
@@ -149,6 +150,10 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/branch",
     element: <Branch />,
+  },
+  {
+    path: "/branch/location",
+    element: <LocationSettings />,
   },
   {
     path: "/branch/:id",
