@@ -33,13 +33,17 @@ const Branch = () => {
     }
   }
 
+  const handleNavigateToLocationSettings = () => {
+    navigate("/branch/location")
+  }
+
   useEffect(() => {
     setHeader({
       component: (
         <div>
           <BranchHeader
             onBack={handleNavigateToBack}
-            onClickLocation={() => {}}
+            onClickLocation={handleNavigateToLocationSettings}
             onSearch={() => {}}
           />
           <BranchFilterSection
