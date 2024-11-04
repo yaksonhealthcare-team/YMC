@@ -1,7 +1,7 @@
 import Home from "../pages/home/Home.tsx"
 import Login from "../pages/login/Login.tsx"
 
-import Purchase from "../pages/purchase/Purchase.tsx"
+import Membership from "../pages/membership/Membership.tsx"
 import Store from "../pages/store/Store.tsx"
 import Reservation from "../pages/reservation/Reservation.tsx"
 import MyPage from "../pages/myPage/MyPage.tsx"
@@ -22,6 +22,7 @@ import PointPage from "../pages/point/PointPage.tsx"
 import EventDetailPage from "../pages/event/EventDetailPage.tsx"
 import NoticeDetailPage from "../pages/notice/NoticeDetail.tsx"
 import LocationSettings from "../pages/branch/_fragments/LocationSettings.tsx"
+import MembershipDetailPage from "../pages/membership/MembershipDetailPage.tsx"
 
 interface RouteConfig {
   path: string
@@ -76,7 +77,12 @@ const routeConfig: RouteConfig[] = [
   },
 
   //구매, 스토어, 예약
-  { path: "/purchase", element: <Purchase />, auth: true },
+  { path: "/membership", element: <Membership />, auth: true },
+  {
+    path: "/membership/:id",
+    element: <MembershipDetailPage />,
+    auth: true,
+  },
   { path: "/store", element: <Store />, auth: false },
   { path: "/reservation", element: <Reservation />, auth: true },
 
