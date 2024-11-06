@@ -1,26 +1,21 @@
-import React from "react"
-import { TextField, InputAdornment } from "@mui/material"
+import { InputAdornment, TextField, TextFieldProps } from "@mui/material"
 import SearchIcon from "@components/icons/SearchIcon"
 import XCircleIcon from "@components/icons/XCircleIcon"
 import { COLORS } from "@constants/ColorConstants"
 
-interface SearchFieldProps {
+type SearchFieldProps = TextFieldProps & {
   placeholder?: string
   value: string
   disabled?: boolean
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   onClear?: () => void
 }
 
-export const SearchField = (props: SearchFieldProps) => {
-  const { placeholder, value, onChange, onClear } = props
-
+export const SearchField = ({ placeholder, value, onClear, ...props }: SearchFieldProps) => {
   return (
     <div className="flex items-center">
       <TextField
         placeholder={placeholder}
         value={value}
-        onChange={onChange}
         variant="outlined"
         fullWidth
         InputProps={{
@@ -29,7 +24,7 @@ export const SearchField = (props: SearchFieldProps) => {
               {<SearchIcon className="w-6 h-6" />}
             </InputAdornment>
           ),
-          endAdornment: (
+          endAdornment: onClear && (
             <InputAdornment position="end">
               {
                 <XCircleIcon
@@ -62,6 +57,7 @@ export const SearchField = (props: SearchFieldProps) => {
             },
           },
         }}
+        {...props}
       />
     </div>
   )

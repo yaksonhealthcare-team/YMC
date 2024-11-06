@@ -90,7 +90,7 @@ const Home = () => {
         <FloatingButton
           type="search"
           onClick={() => {
-            alert("FloatingButton Clicked")
+            navigate("/branch")
           }}
         />
       </Container>
