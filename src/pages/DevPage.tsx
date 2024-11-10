@@ -288,7 +288,7 @@ const DevPage = () => {
         <Button
           variantType="primary"
           sizeType="s"
-          onClick={() => navigate("logout")}
+          onClick={() => navigate("/logout")}
         >
           로그아웃
         </Button>
