@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from "react"
 import PageContainer from "@components/PageContainer.tsx"
 import { Typography } from "@mui/material"
 import { useNavigate } from "react-router-dom"
+import CaretLeftIcon from "../assets/icons/CaretLeftIcon.svg?react"
 
 type NavigationConfig = {
   display?: boolean
@@ -9,11 +10,12 @@ type NavigationConfig = {
 
 type BaseHeaderConfig = {
   display?: boolean
+  backgroundColor?: string
 }
 
 type DetailedHeaderConfig = BaseHeaderConfig & {
   title?: string | React.ReactNode
-  left?: React.ReactNode
+  left?: "back" | React.ReactNode
   right?: React.ReactNode
 }
 
@@ -41,7 +43,7 @@ interface LayoutProviderProps {
   children: React.ReactNode
 }
 
-export const LayoutProvider = ({ children }: LayoutProviderProps) => {
+const LayoutProvider = ({ children }: LayoutProviderProps) => {
   const [navigation, setNavigation] = useState<NavigationConfig>({
     display: true,
   })
@@ -56,7 +58,7 @@ export const LayoutProvider = ({ children }: LayoutProviderProps) => {
     if ("component" in header && header.component) {
       return (
         <>
-          <div className="fixed w-full max-w-[500px] min-w-[375px] z-10 bg-white">
+          <div className={"fixed w-full max-w-[500px] min-w-[375px] z-10"}>
             {header.component}
           </div>
           <div className="min-h-12" />
@@ -68,11 +70,19 @@ export const LayoutProvider = ({ children }: LayoutProviderProps) => {
     return (
       <div className={"z-10"}>
         <div
-          className={
-            "fixed space-x-4 w-full h-12 max-w-[500px] min-w-[375px] flex items-center py-3 px-5 bg-system-bg"
-          }
+          className={`fixed space-x-4 w-full h-12 max-w-[500px] min-w-[375px] flex items-center py-3 px-5 ${
+            header.backgroundColor ? header.backgroundColor : "bg-system-bg"
+          }`}
         >
-          <div className={"flex justify-start w-1/3"}>{headerConfig.left}</div>
+          <div className={"flex justify-start w-1/3"}>
+            {headerConfig.left === "back" ? (
+              <button onClick={() => window.history.back()}>
+                <CaretLeftIcon />
+              </button>
+            ) : (
+              headerConfig.left
+            )}
+          </div>
 
           <Typography
             variant="h6"
@@ -137,7 +147,7 @@ export const LayoutProvider = ({ children }: LayoutProviderProps) => {
               />
               <NavButton
                 activeIcon={"assets/navIcon/mypage_active.png"}
-                inactiveIcon={"assets/navIcon/mypage_incative.png"}
+                inactiveIcon={"assets/navIcon/mypage_inactive.png"}
                 title={"마이페이지"}
                 link={"/mypage"}
               />
@@ -187,10 +197,12 @@ const NavButton = ({
   )
 }
 
-export const useLayout = () => {
+const useLayout = () => {
   const context = useContext(LayoutContext)
   if (!context) {
     throw new Error("useLayoutContext must be used within a LayoutProvider")
   }
   return context
 }
+
+export { LayoutProvider, useLayout }
