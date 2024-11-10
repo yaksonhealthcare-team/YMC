@@ -23,6 +23,7 @@ import EventDetailPage from "../pages/event/EventDetailPage.tsx"
 import NoticeDetailPage from "../pages/notice/NoticeDetail.tsx"
 import LocationSettings from "../pages/branch/_fragments/LocationSettings.tsx"
 import MembershipDetailPage from "../pages/membership/MembershipDetailPage.tsx"
+import EmailLogin from "../pages/login/EmailLogin.tsx"
 
 interface RouteConfig {
   path: string
@@ -58,6 +59,10 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/login/email",
+    element: <EmailLogin />,
   },
   {
     path: "/logout",
