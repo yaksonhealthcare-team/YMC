@@ -24,6 +24,11 @@ import NoticeDetailPage from "../pages/notice/NoticeDetail.tsx"
 import LocationSettings from "../pages/branch/_fragments/LocationSettings.tsx"
 import MembershipDetailPage from "../pages/membership/MembershipDetailPage.tsx"
 import EmailLogin from "../pages/login/EmailLogin.tsx"
+import { Navigate } from "react-router-dom"
+import TermsAgreement from "../pages/signup/TermsAgreement.tsx"
+import EmailPassword from "../pages/signup/EmailPassword.tsx"
+import ProfileSetup from "../pages/signup/ProfileSetup.tsx"
+import SignupComplete from "../pages/signup/SignupComplete.tsx"
 
 interface RouteConfig {
   path: string
@@ -55,7 +60,7 @@ const routeConfig: RouteConfig[] = [
     element: <div>Brand</div>,
   },
 
-  //로그인, 회원가입, 비밀번호 찾기, 이메일 찾기
+  //로그인, 로그아웃
   {
     path: "/login",
     element: <Login />,
@@ -68,10 +73,34 @@ const routeConfig: RouteConfig[] = [
     path: "/logout",
     element: <Logout />,
   },
+
+  // 회원가입
   {
     path: "/signup",
-    element: <div>Signup</div>,
+    element: <Navigate to="/signup/terms" />,
   },
+  {
+    path: "/signup/terms",
+    element: <TermsAgreement />,
+  },
+  {
+    path: "/signup/email",
+    element: <EmailPassword />,
+  },
+  {
+    path: "/signup/profile",
+    element: <ProfileSetup />,
+  },
+  {
+    path: "/signup/complete",
+    element: <SignupComplete />,
+  },
+  {
+    path: "/signup/branch",
+    element: <div>Set Branch</div>,
+  },
+
+  // 비밀번호 찾기, 이메일 찾기
   {
     path: "/reset-password",
     element: <div>Reset Password</div>,
@@ -79,6 +108,17 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/find-email",
     element: <div>Find Email</div>,
+  },
+
+  // 문진작성
+  {
+    path: "/questionnaire/general",
+    element: <div>Questionnaire-일반문진</div>,
+  },
+  {
+    path: "/questionnaire/reservation",
+    element: <div>Questionnaire-예약문진</div>,
+    auth: true,
   },
 
   //구매, 스토어, 예약
@@ -107,11 +147,7 @@ const routeConfig: RouteConfig[] = [
     element: <PointPage />,
     auth: true,
   },
-  {
-    path: "/questionnaire",
-    element: <div>Questionnaire</div>,
-    auth: true,
-  },
+
   {
     path: "/inquiry",
     element: <InquiryPage />,
