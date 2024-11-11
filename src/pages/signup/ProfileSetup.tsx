@@ -141,7 +141,6 @@ export const ProfileSetup = () => {
               value={form.postcode}
               onChange={(e) => setForm({ ...form, postcode: e.target.value })}
               placeholder="우편번호"
-              className="flex-1"
             />
             <Button
               variantType="primary"
