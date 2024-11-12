@@ -2,6 +2,8 @@ import { useEffect } from "react"
 import { useLayout } from "contexts/LayoutContext"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { useNavigate } from "react-router-dom"
+import ReservationSummary from "./_fragments/ReservationSummary"
+
 const ReservationDetailPage = () => {
   const { setHeader, setNavigation } = useLayout()
 
@@ -23,6 +25,7 @@ const ReservationDetailPage = () => {
 
   return (
     <div className="flex flex-col px-5 py-6 gap-4 bg-white">
+      <ReservationSummary />
     </div>
   )
 }
