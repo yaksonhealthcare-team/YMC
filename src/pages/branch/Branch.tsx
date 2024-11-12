@@ -80,7 +80,7 @@ const Branch = () => {
   }
 
   return (
-    <div className={"relative pt-12"}>
+    <div className={"relative flex flex-col flex-1 pt-12"}>
       {renderScreen()}
       <div className={"fixed bottom-10 left-1/2 -translate-x-1/2"}>
         <SearchFloatingButton

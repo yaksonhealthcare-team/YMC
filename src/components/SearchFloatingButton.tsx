@@ -32,7 +32,7 @@ export const SearchFloatingButton = (props: SearchFloatingButtonProps) => {
       <button
         onClick={onClick}
         className={clsx(
-          `shadow-floatingButton rounded-full flex items-center justify-center`,
+          `shadow-floatingButton rounded-full flex items-center justify-center bg-white`,
           buttonStyles[type],
         )}
       >
