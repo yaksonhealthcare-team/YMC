@@ -29,6 +29,7 @@ import TermsAgreement from "../pages/signup/TermsAgreement.tsx"
 import EmailPassword from "../pages/signup/EmailPassword.tsx"
 import ProfileSetup from "../pages/signup/ProfileSetup.tsx"
 import SignupComplete from "../pages/signup/SignupComplete.tsx"
+import ReservationDetailPage from "pages/reservation/ReservationDetailPage.tsx"
 
 interface RouteConfig {
   path: string
@@ -130,6 +131,11 @@ const routeConfig: RouteConfig[] = [
   },
   { path: "/store", element: <Store />, auth: false },
   { path: "/reservation", element: <Reservation />, auth: true },
+  {
+    path: "/reservation/:id",
+    element: <ReservationDetailPage />,
+    auth: true,
+  },
 
   //마이페이지
   {
