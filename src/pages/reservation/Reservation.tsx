@@ -40,8 +40,7 @@ const Reservation = () => {
 
   useEffect(() => {
     setHeader({
-      display: true,
-      title: "예약/회원권",
+      display: false,
     })
     setNavigation({ display: true })
   }, [setHeader, setNavigation])
