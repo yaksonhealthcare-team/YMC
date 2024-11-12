@@ -37,11 +37,11 @@ export const ReserveCard = (props: ReserveCardProps) => {
           </div>
           <div className="mt-3 flex items-center">
             <CalendarIcon className="w-3.5 h-3.5 text-gray-300" />
-            <span className="font-r text-12px text-gray-700 ml-1.5">
+            <span className="font-r text-12px text-gray-500 ml-1.5">
               {date}
             </span>
-            <span className="text-12px text-gray-200 mx-1.5">|</span>
-            <span className="font-r text-12px text-gray-700">{time}</span>
+            <span className="text-12px text-gray-500 mx-1.5">|</span>
+            <span className="font-r text-12px text-gray-500">{time}</span>
           </div>
         </div>
         <div className="flex flex-col justify-between items-end">
