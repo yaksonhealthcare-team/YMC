@@ -1,22 +1,21 @@
 import ReserveTag from "@components/ReserveTag"
-import { useState } from "react"
 import { ReservationStatus, reservationStatusLabel } from "types/Reservation"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import { Divider } from "@mui/material"
 
-const ReservationSummary = () => {
-  const [reserveStatus, setReserveStatus] = useState<ReservationStatus>(
-    ReservationStatus.COMPLETED,
-  )
+interface ReservationSummaryProps {
+  reservationStatus: ReservationStatus
+}
 
+const ReservationSummary = ({ reservationStatus }: ReservationSummaryProps) => {
   return (
     <div className="p-[20px] rounded-[20px] shadow-card bg-white">
       <div className="flex gap-[8px] items-center">
         <p className="text-[18px] font-b text-gray-700">
-          {reservationStatusLabel[reserveStatus]}
+          {reservationStatusLabel[reservationStatus]}
         </p>
         <ReserveTag
-          status={reserveStatus}
+          status={reservationStatus}
           reservationDate={new Date("2022-12-25")}
         />
       </div>
