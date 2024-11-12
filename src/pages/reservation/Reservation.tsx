@@ -122,7 +122,7 @@ const Reservation = () => {
                   (activeTab === "reservation"
                     ? reservationFilter
                     : membershipFilter)
-                    ? "text-primary !bg-tag-redBg !border-primary-300"
+                    ? "!text-primary-300 !bg-tag-redBg !border-primary-300"
                     : "!text-gray-500 !border-gray-200 !font-normal"
                 }`}
           >
