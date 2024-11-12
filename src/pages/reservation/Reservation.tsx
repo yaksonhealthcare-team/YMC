@@ -109,28 +109,21 @@ const Reservation = () => {
         ).map((filter) => (
           <Button
             key={filter.id}
-            variantType={
-              filter.id ===
-              (activeTab === "reservation"
-                ? reservationFilter
-                : membershipFilter)
-                ? "secondary"
-                : "line"
-            }
+            variantType={"line"}
             sizeType="s"
             onClick={() =>
               activeTab === "reservation"
                 ? setReservationFilter(filter.id)
                 : setMembershipFilter(filter.id)
             }
-            className={`whitespace-nowrap px-3 py-1 !h-8 !rounded-full
+            className={`whitespace-nowrap !min-w-fit !px-[12px] !h-8 !rounded-full
                 ${
                   filter.id ===
                   (activeTab === "reservation"
                     ? reservationFilter
                     : membershipFilter)
-                    ? "text-primary bg-[#FEF2F1] border-primary"
-                    : "text-gray-500 border-gray-200"
+                    ? "text-primary !bg-tag-redBg !border-primary-300"
+                    : "!text-gray-500 !border-gray-200 !font-normal"
                 }`}
           >
             {filter.title}
