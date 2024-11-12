@@ -10,7 +10,7 @@ const ReservationSummary = () => {
   )
 
   return (
-    <div className="p-[20px] rounded-[20px] shadow-card">
+    <div className="p-[20px] rounded-[20px] shadow-card bg-white">
       <div className="flex gap-[8px] items-center">
         <p className="text-[18px] font-b text-gray-700">
           {reservationStatusLabel[reserveStatus]}
