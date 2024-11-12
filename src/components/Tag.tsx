@@ -1,8 +1,17 @@
 import clsx from "clsx"
 import { COLORS } from "@constants/ColorConstants"
 
+export type TagType =
+  | "used"
+  | "unused"
+  | "rect"
+  | "round"
+  | "green"
+  | "blue"
+  | "red"
+
 interface TagProps {
-  type: "used" | "unused" | "rect" | "round" | "green" | "blue" | "red"
+  type: TagType
   title: string
   className?: string
 }
