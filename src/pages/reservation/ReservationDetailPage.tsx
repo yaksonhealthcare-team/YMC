@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom"
 import ReservationSummary from "./_fragments/ReservationSummary"
 import { Button } from "@components/Button"
 import Location from "./_fragments/Location"
-
-
+import { Divider } from "@mui/material"
+import MembershipUsage from "./_fragments/MembershipUsage"
 
 const ReservationDetailPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -33,6 +33,8 @@ const ReservationDetailPage = () => {
         예약 문진 확인하기
       </Button>
       <Location />
+      <Divider className="my-[24px] border-gray-100" />
+      <MembershipUsage />
     </div>
   )
 }
