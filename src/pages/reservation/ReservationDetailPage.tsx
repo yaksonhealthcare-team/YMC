@@ -4,6 +4,9 @@ import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { useNavigate } from "react-router-dom"
 import ReservationSummary from "./_fragments/ReservationSummary"
 import { Button } from "@components/Button"
+import Location from "./_fragments/Location"
+
+
 
 const ReservationDetailPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -29,6 +32,7 @@ const ReservationDetailPage = () => {
       <Button variantType="gray" sizeType="s" className="w-full mt-[24px]">
         예약 문진 확인하기
       </Button>
+      <Location />
     </div>
   )
 }
