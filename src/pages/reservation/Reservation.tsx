@@ -92,7 +92,7 @@ const Reservation = () => {
       {/* Main Tabs */}
       <div className="px-5">
         <CustomTabs
-          type="2depth"
+          type="1depth"
           tabs={mainTabs}
           onChange={(value) =>
             setActiveTab(value as "reservation" | "membership")
