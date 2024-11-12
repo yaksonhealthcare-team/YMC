@@ -1,78 +1,68 @@
 import React from "react"
-import { TextField, InputAdornment } from "@mui/material"
+import { InputAdornment, TextField } from "@mui/material"
 import { Button } from "@components/Button"
 import { COLORS } from "@constants/ColorConstants"
 
 interface CustomTextFieldProps {
+  name?: string
+  type?: string
+  value?: string
   placeholder?: string
+  disabled?: boolean
   label?: string
-  value: string
-  state?: "default" | "error" | "success"
   helperText?: string
+  state?: "default" | "error" | "success"
   iconLeft?: React.ReactNode
   iconRight?: React.ReactNode
   button?: React.ReactNode
-  disabled?: boolean
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const CustomTextField: React.FC<CustomTextFieldProps> = ({
-  placeholder,
-  label,
-  value,
-  state = "default",
-  helperText,
-  iconLeft,
-  iconRight,
-  button,
-  disabled,
-  onChange,
-}) => {
-  // disabled 시, 아이콘 색상 변경을 위한 설정
-  const iconColor = disabled ? COLORS.DISABLED_TEXT : "black"
-
-  // 좌측 아이콘 색상 적용
-  const modifiedIconLeft =
-    iconLeft &&
-    React.cloneElement(iconLeft as React.ReactElement<any>, {
-      color: iconColor, // 색상을 전달
-    })
-
-  // 우측 아이콘 색상 적용
-  const modifiedIconRight =
-    iconRight &&
-    React.cloneElement(iconRight as React.ReactElement<any>, {
-      color: iconColor, // 색상을 전달
-    })
+const CustomTextField = React.forwardRef<
+  HTMLInputElement,
+  CustomTextFieldProps
+>((props, ref) => {
+  const {
+    name,
+    type = "text",
+    value,
+    placeholder,
+    disabled,
+    label,
+    helperText,
+    state = "default",
+    iconLeft,
+    iconRight,
+    button,
+    onChange,
+  } = props
 
   return (
     <div>
       {label && <p className="font-m text-14px text-gray-700 mb-2">{label}</p>}
       <div className="flex items-center">
         <TextField
-          disabled={disabled}
-          placeholder={placeholder}
+          name={name}
+          type={type}
           value={value}
+          placeholder={placeholder}
+          disabled={disabled}
           onChange={onChange}
           variant="outlined"
           fullWidth
           InputProps={{
-            startAdornment: modifiedIconLeft && (
-              <InputAdornment position="start" sx={{ zIndex: 1 }}>
-                {modifiedIconLeft}
-              </InputAdornment>
+            startAdornment: iconLeft && (
+              <InputAdornment position="start">{iconLeft}</InputAdornment>
             ),
-            endAdornment: modifiedIconRight && (
-              <InputAdornment position="end" sx={{ zIndex: 1 }}>
-                {modifiedIconRight}
-              </InputAdornment>
+            endAdornment: iconRight && (
+              <InputAdornment position="end">{iconRight}</InputAdornment>
             ),
           }}
           sx={{
             width: "auto",
             flex: 1,
             "& .MuiOutlinedInput-root": {
-              borderColor: state === "default" ? "#ECECEC" : undefined,
+              borderColor: state === "default" ? COLORS.BORDER : undefined,
               borderRadius: "12px",
               "& fieldset": {
                 borderColor:
@@ -117,6 +107,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
               color: COLORS.LABEL,
             },
           }}
+          ref={ref}
         />
         {button && <Button disabled={disabled} className="ml-1" />}
       </div>
@@ -125,6 +116,8 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
       )}
     </div>
   )
-}
+})
+
+CustomTextField.displayName = "CustomTextField"
 
 export default CustomTextField

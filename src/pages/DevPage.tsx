@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Button } from "@components/Button.tsx"
 import ReloadIcon from "@components/icons/ReloadIcon.tsx"
-import TextField from "@components/TextField.tsx"
+import TextField from "@components/CustomTextField.tsx"
 import { TextArea } from "@components/TextArea.tsx"
 import { SearchField } from "@components/SearchField.tsx"
 import { CustomTabs as Tabs } from "@components/Tabs.tsx"
@@ -288,7 +288,7 @@ const DevPage = () => {
         <Button
           variantType="primary"
           sizeType="s"
-          onClick={() => navigate("logout")}
+          onClick={() => navigate("/logout")}
         >
           로그아웃
         </Button>
