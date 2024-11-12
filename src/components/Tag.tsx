@@ -4,10 +4,11 @@ import { COLORS } from "@constants/ColorConstants"
 interface TagProps {
   type: "used" | "unused" | "rect" | "round" | "green" | "blue" | "red"
   title: string
+  className?: string
 }
 
 export const Tag = (props: TagProps) => {
-  const { type, title } = props
+  const { type, title, className } = props
 
   const tagStyles = {
     used: `rounded text-gray-400 bg-gray-100`,
@@ -22,8 +23,9 @@ export const Tag = (props: TagProps) => {
   return (
     <span
       className={clsx(
-        "border border-transparent px-[6px] py-[2px] font-m text-12px h-[22px] flex items-center !leading-none",
+        "border border-transparent px-[6px] py-[2px] font-m text-12px h-[22px] flex items-center justify-center !leading-none",
         tagStyles[type],
+        className,
       )}
     >
       {title}
