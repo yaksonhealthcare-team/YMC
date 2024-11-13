@@ -1,11 +1,19 @@
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
+import { useNavigate } from "react-router-dom"
 
 const MembershipUsage = () => {
+  const navigate = useNavigate()
+
   return (
     <div className="flex flex-col gap-[16px] mt-[40px]">
       <div className="flex justify-between">
         <p className="font-b">회원권 사용 현황 길</p>
-        <div className="flex items-center cursor-pointer" onClick={() => {}}>
+        <div
+          className="flex items-center cursor-pointer"
+          onClick={() => {
+            navigate("/member-history/membership")
+          }}
+        >
           <span className="font-r text-12px text-gray-500">사용내역보기 </span>
           <CaretRightIcon className="w-3 h-3" />
         </div>
