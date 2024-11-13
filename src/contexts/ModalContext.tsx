@@ -1,5 +1,13 @@
 import React, { createContext, ReactNode, useContext, useState } from "react"
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Snackbar } from "@mui/material"
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Snackbar,
+} from "@mui/material"
 
 /**
  * 오버레이 타입을 정의하는 열거형
@@ -203,7 +211,7 @@ const OverlayContainer: React.FC = () => {
                   {options?.title as string}
                 </h2>
               )}
-              <div className="text-center mb-6">{content}</div>
+              <div className="w-full text-center mb-6">{content}</div>
             </div>
             <Divider className={"border-[#F8F8F8"} />
             {(options as BottomSheetOptions)?.buttons && (

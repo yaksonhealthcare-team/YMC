@@ -106,9 +106,9 @@ const DevPage = () => {
           helperText="Hint message goes here"
           maxLength={100}
           value={value}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             setValue(e.target.value)
-          }
+          }}
         />
       </div>
       <div className="p-4 border-t">

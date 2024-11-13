@@ -37,7 +37,7 @@ const BranchFilterBottomSheet = ({
   }>(currentFilter)
 
   return (
-    <div className={"flex flex-col w-screen items-center gap-5 px-5"}>
+    <div className={"flex flex-col items-center gap-5 px-5"}>
       <BranchFilterBottomSheetHeader onClose={performClose} />
       <BranchFilterDivider />
       <BranchFilterBottomSheetWrap
