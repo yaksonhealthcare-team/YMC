@@ -1,6 +1,19 @@
 export interface User {
-  id: string
   username: string
   email: string
-  //TODO:  필요한 다른 사용자 정보 필드를 추가하세요
+  level?: string
+  phone: string
+  postalCode: string
+  address: {
+    road: string
+    detail: string
+  }
+  marketingAgreed: boolean
+  point: number
+  profileURL?: string
+  thirdPartyType: string
+  brands: {
+    brandCode: string
+    brandName: string
+  }[]
 }

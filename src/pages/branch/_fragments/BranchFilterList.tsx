@@ -71,7 +71,7 @@ export const BranchFilterListItem = ({
           {branch.distanceInMeters && (
             <p
               className={"font-r text-12px text-gray-400"}
-            >{`${branch.distanceInMeters}m`}</p>
+            >{branch.distanceInMeters}</p>
           )}
         </div>
         <p className={"font-r text-14px"}>{branch.address}</p>

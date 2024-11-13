@@ -5,10 +5,11 @@ import { useOverlay } from "../../contexts/ModalContext.tsx"
 import BranchFilterBottomSheet, { FilterItem } from "./_fragments/BranchFilterBottomSheet.tsx"
 import BranchFilterSection from "./_fragments/BranchFilterSection.tsx"
 import BranchFilterList from "./_fragments/BranchFilterList.tsx"
-import { MockBranches } from "../../types/Branch.ts"
 import { SearchFloatingButton } from "@components/SearchFloatingButton.tsx"
 import { useLocation, useNavigate } from "react-router-dom"
 import BranchMapSection from "./_fragments/BranchMapSection.tsx"
+import { useBranches } from "../../queries/useBranchQueries.tsx"
+import { INITIAL_CENTER } from "@constants/LocationConstants.ts"
 
 const Branch = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -20,6 +21,13 @@ const Branch = () => {
   }>({
     brand: null,
     category: null,
+  })
+
+  const { data: branches } = useBranches({
+    page: 1,
+    latitude: INITIAL_CENTER.lat,
+    longitude: INITIAL_CENTER.lng,
+    brandCode: "001",
   })
 
   const navigate = useNavigate()
@@ -73,14 +81,14 @@ const Branch = () => {
   const renderScreen = () => {
     switch (screen) {
       case "list":
-        return <BranchFilterList branches={MockBranches} />
+        return <BranchFilterList branches={branches || []} />
       case "map":
-        return <BranchMapSection />
+        return <BranchMapSection branches={branches || []} />
     }
   }
 
   return (
-    <div className={"relative pt-12"}>
+    <div className={"relative flex flex-col flex-1 pt-12"}>
       {renderScreen()}
       <div className={"fixed bottom-10 left-1/2 -translate-x-1/2"}>
         <SearchFloatingButton
