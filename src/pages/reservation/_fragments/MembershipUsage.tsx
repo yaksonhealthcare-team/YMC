@@ -7,7 +7,7 @@ const MembershipUsage = () => {
   return (
     <div className="flex flex-col gap-[16px] mt-[40px]">
       <div className="flex justify-between">
-        <p className="font-b">회원권 사용 현황 길</p>
+        <p className="font-b">회원권 사용 현황</p>
         <div
           className="flex items-center cursor-pointer"
           onClick={() => {
