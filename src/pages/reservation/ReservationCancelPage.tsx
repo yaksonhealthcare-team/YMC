@@ -50,7 +50,7 @@ const ReservationCancelPage = () => {
       // await cancelReservation(id, cancelReason)
 
       showAlert("예약이 취소되었습니다")
-      navigate(-1)
+      navigate("/reservation/0")
     } catch (error) {
       showAlert("예약 취소에 실패했습니다")
     } finally {
@@ -75,7 +75,6 @@ const ReservationCancelPage = () => {
 
   return (
     <div className="w-full flex flex-col pb-[120px]">
-      {/* 예약 정보 카드 */}
       <div className="w-full px-[20px] pt-[16px] pb-[24px] flex flex-col gap-5">
         <h2 className="font-b text-18px text-gray-700">
           {reservation.branchName}
@@ -84,7 +83,6 @@ const ReservationCancelPage = () => {
         <Divider className="my-[24px] border-gray-100" />
 
         <div className="flex flex-col gap-4">
-          {/* 관리 프로그램 */}
           <div className="flex flex-col gap-1.5">
             <span className="font-sb text-14px text-gray-500">
               관리 프로그램
@@ -94,7 +92,6 @@ const ReservationCancelPage = () => {
             </span>
           </div>
 
-          {/* 소요시간 */}
           <div className="flex flex-col gap-1.5">
             <span className="font-sb text-14px text-gray-500">소요시간</span>
             <span className="font-r text-14px text-gray-700">
@@ -102,7 +99,6 @@ const ReservationCancelPage = () => {
             </span>
           </div>
 
-          {/* 추가관리 */}
           <div className="flex flex-col gap-1.5">
             <span className="font-sb text-14px text-gray-500">추가관리</span>
             <span className="font-r text-14px text-gray-700">
@@ -113,7 +109,6 @@ const ReservationCancelPage = () => {
             </span>
           </div>
 
-          {/* 요청사항 */}
           {reservation.request && (
             <div className="flex flex-col gap-1.5">
               <span className="font-sb text-14px text-gray-500">요청사항</span>
@@ -127,7 +122,6 @@ const ReservationCancelPage = () => {
 
       <Divider className="my-[24px] border-gray-50 border-b-[8px]" />
 
-      {/* 취소 사유 입력 */}
       <div className="flex flex-col gap-3 px-[20px] py-[24px]">
         <h3 className="font-sb text-16px text-gray-700">취소 사유</h3>
         <TextArea
@@ -139,7 +133,6 @@ const ReservationCancelPage = () => {
         />
       </div>
 
-      {/* 안내 문구 */}
       <div className="flex gap-1 px-[20px] pb-[40px]">
         <span className="text-gray-500">*</span>
         <p className="font-r text-14px text-gray-500">
@@ -148,7 +141,6 @@ const ReservationCancelPage = () => {
         </p>
       </div>
 
-      {/* 하단 버튼 영역 */}
       <FixedButtonContainer className="!bg-white">
         <Button
           variantType="primary"
