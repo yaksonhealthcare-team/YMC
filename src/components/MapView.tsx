@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from "react"
 import CrosshairIcon from "@assets/icons/CrosshairIcon.svg?react"
 import { Branch } from "../types/Branch.ts"
 
-const CITY_HALL = { lat: 37.5666805, lng: 126.9784147 }
+const INITIAL_CENTER = { lat: 37.523040, lng: 127.028841 }
 
 interface MapViewProps {
   initialCenter?: {
@@ -15,7 +15,7 @@ interface MapViewProps {
 }
 
 const MapView = ({
-  initialCenter = CITY_HALL,
+  initialCenter = INITIAL_CENTER,
   initialZoom = 14,
   branches = [],
   onSelectBranch,
