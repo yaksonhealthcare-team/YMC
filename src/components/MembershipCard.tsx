@@ -2,22 +2,40 @@ import clsx from "clsx"
 import { Button } from "@components/Button.tsx"
 import { Tag } from "@components/Tag"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
+import MembershipTag from "./MembershipTag"
+import { MembershipStatus } from "types/Membership"
+import { useNavigate } from "react-router-dom"
 
-interface MembershipProps extends React.HTMLAttributes<HTMLDivElement> {
-  type: "default" | "reserve" | "used"
+interface MembershipProps {
+  id: number
   title: string
   count: string
   date: string
-  onClick?: () => void
+  status: MembershipStatus
+  isAllBranch?: boolean
+  showReserveButton?: boolean
+  showHistoryButton?: boolean
+  className?: string
 }
 
 export const MembershipCard = (props: MembershipProps) => {
-  const { type, title, count, date, onClick, className } = props
+  const {
+    id,
+    title,
+    count,
+    date,
+    status,
+    isAllBranch = true,
+    showReserveButton = false,
+    showHistoryButton = true,
+    className,
+  } = props
+
+  const navigate = useNavigate()
 
   return (
     <>
       <div
-        onClick={onClick}
         className={clsx(
           `flex justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px]`,
           className,
@@ -25,12 +43,8 @@ export const MembershipCard = (props: MembershipProps) => {
       >
         <div className="flex flex-col gap-1.5">
           <div className="flex gap-1.5">
-            {type === "used" ? (
-              <Tag type="used" title="사용완료" />
-            ) : (
-              <Tag type="unused" title="사용가능" />
-            )}
-            <Tag type="rect" title="전지점" />
+            <MembershipTag status={status} />
+            {isAllBranch && <Tag type="rect" title="전지점" />}
           </div>
           <span className="font-b text-16px text-gray-700">{title}</span>
           <div className="flex items-center">
@@ -40,11 +54,16 @@ export const MembershipCard = (props: MembershipProps) => {
           </div>
         </div>
         <div className="flex flex-col justify-between items-end">
-          <div className="flex items-center">
-            <span className="font-r text-12px text-gray-500"> 이용내역 </span>
-            <CaretRightIcon className="w-3 h-3" />
-          </div>
-          {type === "reserve" && (
+          {showHistoryButton && (
+            <div
+              className="flex items-center cursor-pointer"
+              onClick={() => navigate(`/membership/usage/${id}`)}
+            >
+              <span className="font-r text-12px text-gray-500"> 이용내역 </span>
+              <CaretRightIcon className="w-3 h-3" />
+            </div>
+          )}
+          {showReserveButton && status === MembershipStatus.AVAILABLE && (
             <Button variantType="primary" sizeType="xs">
               예약하기
             </Button>

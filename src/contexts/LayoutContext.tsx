@@ -116,38 +116,38 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
           <div>
             <div className={"h-[82px]"} />
             <div
-              className="flex justify-around space-x-4 fixed bottom-0 w-full max-w-[500px] min-w-[375px] h-[82px] z-10 bg-white"
+              className="flex fixed bottom-0 w-full max-w-[500px] min-w-[375px] h-[82px] z-10 bg-white"
               style={{
                 boxShadow: "0px -2px 16px 0px #2E2B2914",
               }}
             >
               <NavButton
-                activeIcon={"assets/navIcon/home_active.png"}
-                inactiveIcon={"assets/navIcon/home_inactive.png"}
+                activeIcon={"/assets/navIcon/home_active.png"}
+                inactiveIcon={"/assets/navIcon/home_inactive.png"}
                 title={"홈"}
                 link={"/"}
               />
               <NavButton
-                activeIcon={"assets/navIcon/membership_active.png"}
-                inactiveIcon={"assets/navIcon/membership_inactive.png"}
+                activeIcon={"/assets/navIcon/membership_active.png"}
+                inactiveIcon={"/assets/navIcon/membership_inactive.png"}
                 title={"회원권 구매"}
                 link={"/membership"}
               />
               <NavButton
-                activeIcon={"assets/navIcon/store_active.png"}
-                inactiveIcon={"assets/navIcon/store_inactive.png"}
+                activeIcon={"/assets/navIcon/store_active.png"}
+                inactiveIcon={"/assets/navIcon/store_inactive.png"}
                 title={"스토어"}
                 link={"/store"}
               />
               <NavButton
-                activeIcon={"assets/navIcon/reservation_active.png"}
-                inactiveIcon={"assets/navIcon/reservation_inactive.png"}
+                activeIcon={"/assets/navIcon/reservation_active.png"}
+                inactiveIcon={"/assets/navIcon/reservation_inactive.png"}
                 title={"예약/회원권"}
-                link={"/reservation"}
+                link={"/member-history"}
               />
               <NavButton
-                activeIcon={"assets/navIcon/mypage_active.png"}
-                inactiveIcon={"assets/navIcon/mypage_inactive.png"}
+                activeIcon={"/assets/navIcon/mypage_active.png"}
+                inactiveIcon={"/assets/navIcon/mypage_inactive.png"}
                 title={"마이페이지"}
                 link={"/mypage"}
               />
@@ -178,7 +178,9 @@ const NavButton = ({
 
   return (
     <div
-      className={"p-3 w-full flex flex-col gap-1 items-center cursor-pointer"}
+      className={
+        "p-3 w-[calc(100%/5)] flex flex-col gap-1 items-center cursor-pointer shrink-0"
+      }
       onClick={() => navigate(link)}
       style={{ color: isActive ? "#F37165" : "#BDBDBD" }}
     >

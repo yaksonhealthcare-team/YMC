@@ -1,13 +1,23 @@
 import clsx from "clsx"
 import { COLORS } from "@constants/ColorConstants"
 
+export type TagType =
+  | "used"
+  | "unused"
+  | "rect"
+  | "round"
+  | "green"
+  | "blue"
+  | "red"
+
 interface TagProps {
-  type: "used" | "unused" | "rect" | "round" | "green" | "blue" | "red"
+  type: TagType
   title: string
+  className?: string
 }
 
 export const Tag = (props: TagProps) => {
-  const { type, title } = props
+  const { type, title, className } = props
 
   const tagStyles = {
     used: `rounded text-gray-400 bg-gray-100`,
@@ -22,8 +32,9 @@ export const Tag = (props: TagProps) => {
   return (
     <span
       className={clsx(
-        "border border-transparent px-1.5 py-0.5 font-m text-12px",
+        "border border-transparent px-[6px] py-[2px] font-m text-12px h-[22px] flex items-center justify-center !leading-none",
         tagStyles[type],
+        className,
       )}
     >
       {title}
