@@ -48,7 +48,6 @@ const MapView = ({
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            console.log(position)
             resolve({
               lat: position.coords.latitude,
               lng: position.coords.longitude,

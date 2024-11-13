@@ -2,7 +2,9 @@ import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useEffect, useState } from "react"
 import { Header } from "@components/Header.tsx"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
-import BranchFilterBottomSheet, { FilterItem } from "./_fragments/BranchFilterBottomSheet.tsx"
+import BranchFilterBottomSheet, {
+  FilterItem,
+} from "./_fragments/BranchFilterBottomSheet.tsx"
 import BranchFilterSection from "./_fragments/BranchFilterSection.tsx"
 import BranchFilterList from "./_fragments/BranchFilterList.tsx"
 import { SearchFloatingButton } from "@components/SearchFloatingButton.tsx"
@@ -10,12 +12,12 @@ import { useLocation, useNavigate } from "react-router-dom"
 import BranchMapSection from "./_fragments/BranchMapSection.tsx"
 import { useBranches } from "../../queries/useBranchQueries.tsx"
 import { INITIAL_CENTER } from "@constants/LocationConstants.ts"
-import useGeolocation from "../../hooks/useGeolocation.tsx"
+import BranchMapBottomSheet from "./_fragments/BranchMapBottomSheet.tsx"
 
 const Branch = () => {
   const { setHeader, setNavigation } = useLayout()
   const { openBottomSheet, closeOverlay } = useOverlay()
-  const { location: coordinate, error: geolocationError, loading: geolocationLoading } = useGeolocation()
+  // const { location: coordinate, error: geolocationError, loading: geolocationLoading } = useGeolocation()
   const [screen, setScreen] = useState<"list" | "map">("list")
   const [selectedFilter, setSelectedFilter] = useState<{
     brand: FilterItem | null
@@ -27,8 +29,10 @@ const Branch = () => {
 
   const { data: branches, isLoading: isLoadingBranches } = useBranches({
     page: 1,
-    latitude: (geolocationError || !coordinate.latitude) ? INITIAL_CENTER.lat : coordinate.latitude,
-    longitude: (geolocationError || !coordinate.longitude) ? INITIAL_CENTER.lng : coordinate.longitude,
+    // latitude: (geolocationError || !coordinate.latitude) ? INITIAL_CENTER.lat : coordinate.latitude,
+    // longitude: (geolocationError || !coordinate.longitude) ? INITIAL_CENTER.lng : coordinate.longitude,
+    latitude: INITIAL_CENTER.lat,
+    longitude: INITIAL_CENTER.lng,
     brandCode: "001",
   })
 
@@ -58,7 +62,9 @@ const Branch = () => {
           />
           <BranchFilterSection
             currentFilter={selectedFilter}
-            onInitialize={() => setSelectedFilter({ brand: null, category: null })}
+            onInitialize={() =>
+              setSelectedFilter({ brand: null, category: null })
+            }
             onClick={() => {
               openBottomSheet(
                 <BranchFilterBottomSheet
@@ -81,15 +87,22 @@ const Branch = () => {
   }, [])
 
   const renderScreen = () => {
-    if (geolocationLoading || isLoadingBranches) {
-      return <></>
-    }
+    // if (geolocationLoading || isLoadingBranches) {
+    //   return <></>
+    // }
 
     switch (screen) {
       case "list":
         return <BranchFilterList branches={branches || []} />
       case "map":
-        return <BranchMapSection branches={branches || []} />
+        return (
+          <BranchMapSection
+            branches={branches || []}
+            onSelectBranch={(branch) => {
+              openBottomSheet(<BranchMapBottomSheet branch={branch} />)
+            }}
+          />
+        )
     }
   }
 
@@ -113,10 +126,14 @@ const Branch = () => {
   )
 }
 
-const BranchHeader = ({ onBack, onSearch, onClickLocation }: {
-  onBack: () => void,
-  onSearch: () => void,
-  onClickLocation: () => void,
+const BranchHeader = ({
+  onBack,
+  onSearch,
+  onClickLocation,
+}: {
+  onBack: () => void
+  onSearch: () => void
+  onClickLocation: () => void
 }) => {
   return (
     <Header
