@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import { TextField } from "@mui/material"
 import clsx from "clsx"
 import { COLORS } from "@constants/ColorConstants"
@@ -8,18 +8,21 @@ interface TextAreaProps {
   label?: string
   helperText?: string
   maxLength?: number
-  value?: string
+  value: string
   disabled?: boolean
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void // 타입 수정
 }
 
 export const TextArea = (props: TextAreaProps) => {
-  const { placeholder, label, helperText, maxLength = 100, disabled } = props
-  const [value, setValue] = useState("")
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value)
-  }
+  const {
+    placeholder,
+    label,
+    helperText,
+    maxLength = 100,
+    disabled,
+    value,
+    onChange,
+  } = props
 
   const isError = value.length > maxLength
 
@@ -34,7 +37,7 @@ export const TextArea = (props: TextAreaProps) => {
         variant="outlined"
         fullWidth
         value={value}
-        onChange={handleChange}
+        onChange={onChange} // 내부 state 제거하고 props로 받은 handler 사용
         error={isError}
         sx={{
           "& .MuiOutlinedInput-root": {
