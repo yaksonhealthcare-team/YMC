@@ -1,6 +1,8 @@
 import { AppRouter } from "./router/router.tsx"
-import { ThemeProvider, createTheme } from "@mui/material/styles"
+import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { OverlayProvider } from "./contexts/ModalContext.tsx"
+import { QueryClientProvider } from "@tanstack/react-query"
+import { queryClient } from "./queries/clients.ts"
 
 const theme = createTheme({
   // MUI 테마 설정
@@ -37,7 +39,9 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <OverlayProvider>
-        <AppRouter />
+        <QueryClientProvider client={queryClient}>
+          <AppRouter />
+        </QueryClientProvider>
       </OverlayProvider>
     </ThemeProvider>
   )
