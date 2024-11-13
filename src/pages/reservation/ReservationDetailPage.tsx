@@ -12,11 +12,14 @@ import FixedButtonContainer from "@components/FixedButtonContainer"
 
 const ReservationDetailPage = () => {
   const { setHeader, setNavigation } = useLayout()
-  const [reservationStatus, setReservationStatus] = useState<ReservationStatus>(
-    ReservationStatus.UPCOMING,
-  )
+  const [reservationStatus, setReservationStatus] =
+    useState<ReservationStatus>()
 
   const navigate = useNavigate()
+
+  useEffect(() => {
+    setReservationStatus(ReservationStatus.UPCOMING)
+  }, [])
 
   const renderButton = () => {
     switch (reservationStatus) {
@@ -96,7 +99,9 @@ const ReservationDetailPage = () => {
 
   return (
     <div className="flex-1 px-[20px] pt-[16px] pb-[150px] bg-system-bg">
-      <ReservationSummary reservationStatus={reservationStatus} />
+      {reservationStatus && (
+        <ReservationSummary reservationStatus={reservationStatus} />
+      )}
       <Button variantType="gray" sizeType="s" className="w-full mt-[24px]">
         예약 문진 확인하기
       </Button>

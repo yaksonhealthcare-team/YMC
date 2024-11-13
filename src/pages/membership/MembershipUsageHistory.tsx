@@ -72,7 +72,7 @@ const ReservationThumbnail = ({
 
 const MembershipUsageHistory = () => {
   const { setHeader, setNavigation } = useLayout()
-  const { id } = useParams<{ id: string }>()
+  //   const { id } = useParams<{ id: string }>()
   const [memberShipDetail, setMemberShipDetail] = useState<MembershipDetail>()
 
   const navigate = useNavigate()

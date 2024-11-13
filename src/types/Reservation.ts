@@ -21,7 +21,6 @@ export type ReservationItem = {
   title: string
   count: number
   date: Date
-  time: string
   dDay?: number
 }
 

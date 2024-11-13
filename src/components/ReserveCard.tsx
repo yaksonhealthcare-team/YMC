@@ -13,12 +13,11 @@ interface ReserveCardProps {
   title: string
   count: number
   date: Date
-  time: string
   className?: string
 }
 
 export const ReserveCard = (props: ReserveCardProps) => {
-  const { id, status, store, title, count, date, time, className } = props
+  const { id, status, store, title, count, date, className } = props
 
   const navigate = useNavigate()
 

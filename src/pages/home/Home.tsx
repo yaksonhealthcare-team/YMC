@@ -101,8 +101,6 @@ const Home = () => {
 }
 
 const ReserveCardSection = () => {
-  const navigate = useNavigate()
-
   // 예약
   const reserveCardsData: ReservationItem[] = [
     {
@@ -111,7 +109,6 @@ const ReserveCardSection = () => {
       title: "전신관리 90분",
       count: 2,
       date: new Date(),
-      time: "오전 10:00",
       status: ReservationStatus.IN_PROGRESS,
     },
     {
@@ -120,7 +117,6 @@ const ReserveCardSection = () => {
       title: "전신관리 120분",
       count: 3,
       date: new Date(),
-      time: "오전 11:00",
       dDay: 8,
       status: ReservationStatus.UPCOMING,
     },
@@ -130,7 +126,6 @@ const ReserveCardSection = () => {
       title: "얼굴관리 60분",
       count: 1,
       date: new Date(),
-      time: "오후 2:00",
       status: ReservationStatus.COMPLETED,
     },
     {
@@ -139,7 +134,6 @@ const ReserveCardSection = () => {
       title: "전신관리 90분",
       count: 2,
       date: new Date(),
-      time: "오전 10:00",
       status: ReservationStatus.CANCELLED,
     },
   ]
@@ -170,7 +164,6 @@ const ReserveCardSection = () => {
                 title={data.title}
                 count={data.count}
                 date={data.date}
-                time={data.time}
               />
             </SwiperSlide>
           ))}

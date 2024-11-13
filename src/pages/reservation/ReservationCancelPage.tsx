@@ -24,14 +24,7 @@ const ReservationCancelPage = () => {
   const { showAlert, openBottomSheet } = useOverlay()
   const [cancelReason, setCancelReason] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [reservation, setReservation] = useState<ReservationDetail>({
-    branchName: "약손명가 강남구청역점",
-    programName: "K-beauty 연예인 관리 A 코스",
-    duration: "120분",
-    additionalServices: ["얼굴 집중 케어", "콜라겐 집중 관리", "붓기 관리"],
-    totalPrice: 100000,
-    request: "한달 전 턱 보톡스를 맞았어요! 참고 부탁드립니다 :-)",
-  })
+  const [reservation, setReservation] = useState<ReservationDetail>()
 
   useEffect(() => {
     setHeader({
@@ -73,11 +66,22 @@ const ReservationCancelPage = () => {
     setCancelReason(e.target.value)
   }
 
+  useEffect(() => {
+    setReservation({
+      branchName: "약손명가 강남구청역점",
+      programName: "K-beauty 연예인 관리 A 코스",
+      duration: "120분",
+      additionalServices: ["얼굴 집중 케어", "콜라겐 집중 관리", "붓기 관리"],
+      totalPrice: 100000,
+      request: "한달 전 턱 보톡스를 맞았어요! 참고 부탁드립니다 :-)",
+    })
+  }, [])
+
   return (
     <div className="w-full flex flex-col pb-[120px]">
       <div className="w-full px-[20px] pt-[16px] pb-[24px] flex flex-col gap-5">
         <h2 className="font-b text-18px text-gray-700">
-          {reservation.branchName}
+          {reservation?.branchName}
         </h2>
 
         <Divider className="my-[24px] border-gray-100" />
@@ -88,32 +92,32 @@ const ReservationCancelPage = () => {
               관리 프로그램
             </span>
             <span className="font-r text-14px text-gray-700">
-              {reservation.programName}
+              {reservation?.programName}
             </span>
           </div>
 
           <div className="flex flex-col gap-1.5">
             <span className="font-sb text-14px text-gray-500">소요시간</span>
             <span className="font-r text-14px text-gray-700">
-              {reservation.duration}
+              {reservation?.duration}
             </span>
           </div>
 
           <div className="flex flex-col gap-1.5">
             <span className="font-sb text-14px text-gray-500">추가관리</span>
             <span className="font-r text-14px text-gray-700">
-              {reservation.additionalServices.join(" / ")}
+              {reservation?.additionalServices.join(" / ")}
             </span>
             <span className="font-sb text-14px text-gray-700">
-              총 {reservation.totalPrice.toLocaleString()}원
+              총 {reservation?.totalPrice.toLocaleString()}원
             </span>
           </div>
 
-          {reservation.request && (
+          {reservation?.request && (
             <div className="flex flex-col gap-1.5">
               <span className="font-sb text-14px text-gray-500">요청사항</span>
               <span className="font-r text-14px text-gray-700">
-                {reservation.request}
+                {reservation?.request}
               </span>
             </div>
           )}
