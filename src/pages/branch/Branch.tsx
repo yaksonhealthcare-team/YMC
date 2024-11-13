@@ -83,7 +83,7 @@ const Branch = () => {
       case "list":
         return <BranchFilterList branches={branches || []} />
       case "map":
-        return <BranchMapSection />
+        return <BranchMapSection branches={branches || []} />
     }
   }
 
