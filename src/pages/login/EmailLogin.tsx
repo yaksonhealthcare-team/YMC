@@ -7,6 +7,7 @@ import { useOverlay } from "../../contexts/ModalContext"
 import { useLayout } from "../../contexts/LayoutContext"
 import EyeIcon from "../../assets/icons/EyeIcon.svg?react"
 import EyeSlashIcon from "../../assets/icons/EyeSlashIcon.svg?react"
+import { fetchUser, loginWithEmail } from "../../apis/auth.apis.ts"
 
 interface LoginForm {
   email: string
@@ -52,11 +53,13 @@ const EmailLogin = () => {
     }
 
     try {
-      // TODO: API 연동
+      const { accessToken } = await loginWithEmail({ username: formData.email, password: formData.password })
+      const user = await fetchUser(accessToken)
+
       login({
-        username: "임시사용자",
-        email: formData.email,
-      } as any)
+        user: user,
+        token: accessToken,
+      })
       navigate("/")
     } catch (error) {
       showAlert("로그인에 실패했습니다")
