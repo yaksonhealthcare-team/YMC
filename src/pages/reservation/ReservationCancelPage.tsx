@@ -4,8 +4,9 @@ import { useLayout } from "../../contexts/LayoutContext"
 import { useOverlay } from "../../contexts/ModalContext"
 import { TextArea } from "@components/TextArea"
 import { Button } from "@components/Button"
-import { Divider } from "@components/Divider"
 import FixedButtonContainer from "@components/FixedButtonContainer"
+import ReservationCancelBottomSheetContent from "./_fragments/ReservationCancelBottomSheetContent"
+import { Divider } from "@mui/material"
 
 interface ReservationDetail {
   branchName: string
@@ -20,7 +21,7 @@ const ReservationCancelPage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
-  const { showAlert, openMessageBox } = useOverlay()
+  const { showAlert, openBottomSheet } = useOverlay()
   const [cancelReason, setCancelReason] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [reservation, setReservation] = useState<ReservationDetail>({
@@ -42,28 +43,6 @@ const ReservationCancelPage = () => {
     setNavigation({ display: false })
   }, [id])
 
-  const handleCancel = async () => {
-    if (cancelReason.length < 5) {
-      showAlert("취소 사유를 5자 이상 입력해주세요.")
-      return
-    }
-
-    openMessageBox("예약을 취소하시겠습니까?", {
-      buttons: [
-        {
-          text: "취소",
-          onClick: () => {},
-          variant: "text",
-        },
-        {
-          text: "확인",
-          onClick: handleConfirmCancel,
-          variant: "contained",
-        },
-      ],
-    })
-  }
-
   const handleConfirmCancel = async () => {
     try {
       setIsLoading(true)
@@ -79,21 +58,30 @@ const ReservationCancelPage = () => {
     }
   }
 
+  const handleCancel = async () => {
+    if (cancelReason.length < 5) {
+      showAlert("취소 사유를 5자 이상 입력해주세요.")
+      return
+    }
+
+    openBottomSheet(
+      <ReservationCancelBottomSheetContent onConfirm={handleConfirmCancel} />,
+    )
+  }
+
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCancelReason(e.target.value)
   }
 
   return (
-    <div className="flex flex-col pb-[120px]">
+    <div className="w-full flex flex-col pb-[120px]">
       {/* 예약 정보 카드 */}
-      <div className="px-[20px] pt-[16px] pb-[24px] flex flex-col gap-5">
-        <div className="flex flex-col gap-3">
-          <h2 className="font-b text-18px text-gray-700">
-            {reservation.branchName}
-          </h2>
-        </div>
+      <div className="w-full px-[20px] pt-[16px] pb-[24px] flex flex-col gap-5">
+        <h2 className="font-b text-18px text-gray-700">
+          {reservation.branchName}
+        </h2>
 
-        <Divider type="s_100" />
+        <Divider className="my-[24px] border-gray-100" />
 
         <div className="flex flex-col gap-4">
           {/* 관리 프로그램 */}
@@ -137,7 +125,7 @@ const ReservationCancelPage = () => {
         </div>
       </div>
 
-      <Divider type="m" />
+      <Divider className="my-[24px] border-gray-50 border-b-[8px]" />
 
       {/* 취소 사유 입력 */}
       <div className="flex flex-col gap-3 px-[20px] py-[24px]">
