@@ -83,7 +83,7 @@ const ReservationDetailPage = () => {
   }, [])
 
   return (
-    <div className="flex-1 px-[20px] pt-[16px] pb-[104px] bg-system-bg">
+    <div className="flex-1 px-[20px] pt-[16px] pb-[150px] bg-system-bg">
       <ReservationSummary reservationStatus={reservationStatus} />
       <Button variantType="gray" sizeType="s" className="w-full mt-[24px]">
         예약 문진 확인하기
