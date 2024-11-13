@@ -56,7 +56,7 @@ export const MembershipCard = (props: MembershipProps) => {
         <div className="flex flex-col justify-between items-end">
           {showHistoryButton && (
             <div
-              className="flex items-center"
+              className="flex items-center cursor-pointer"
               onClick={() => navigate(`/membership/usage/${id}`)}
             >
               <span className="font-r text-12px text-gray-500"> 이용내역 </span>
