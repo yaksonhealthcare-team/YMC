@@ -1,6 +1,6 @@
 import { useLayout } from "contexts/LayoutContext"
 import { useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { MembershipCard } from "@components/MembershipCard"
