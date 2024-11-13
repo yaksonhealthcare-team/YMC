@@ -3,11 +3,11 @@ import CurrentLocationPin from "@assets/icons/pin/CurrentLocationPin.svg?url"
 import DaliaActiveBookmarkPin from "@assets/icons/pin/DaliaActiveBookmarkPin.svg?url"
 import DaliaActivePin from "@assets/icons/pin/DaliaActivePin.svg?url"
 import DaliaBookmarkPin from "@assets/icons/pin/DaliaBookmarkPin.svg?url"
-import DaliaPin from "@assets/icons/pin/DaliaPin.svg?react"
+import DaliaPin from "@assets/icons/pin/DaliaPin.svg?url"
 import DietActiveBookmarkPin from "@assets/icons/pin/DietActiveBookmarkPin.svg?url"
 import DietActivePin from "@assets/icons/pin/DietActivePin.svg?url"
 import DietBookmarkPin from "@assets/icons/pin/DietBookmarkPin.svg?url"
-import DietPin from "@assets/icons/pin/DietPin.svg?react"
+import DietPin from "@assets/icons/pin/DietPin.svg?url"
 import LocationSelectorPin from "@assets/icons/pin/LocationSelectorPin.svg?url"
 import TherapistActiveBookmarkPin from "@assets/icons/pin/TherapistActiveBookmarkPin.svg?url"
 import TherapistActivePin from "@assets/icons/pin/TherapistActivePin.svg?url"
@@ -23,14 +23,19 @@ interface NaverMapIcon {
 }
 
 export const createMarkerIcon = (branch: Branch | null, state: MarkerState): NaverMapIcon => {
-  if (state === "current-location" || state === "location-selector") {
-    const icon = state === "current-location" ? CurrentLocationPin : LocationSelectorPin
-    const size = state === "current-location" ? 24 : 32
-
+  if (state === "current-location") {
     return {
-      url: icon,
-      size: new window.naver.maps.Size(size, size),
-      anchor: new window.naver.maps.Point(size / 2, size / 2),
+      url: CurrentLocationPin,
+      size: new window.naver.maps.Size(34, 34),
+      anchor: new window.naver.maps.Point(17, 17),
+    }
+  }
+
+  if (state === "location-selector") {
+    return {
+      url: LocationSelectorPin,
+      size: new window.naver.maps.Size(48, 54),
+      anchor: new window.naver.maps.Point(24, 54),
     }
   }
 

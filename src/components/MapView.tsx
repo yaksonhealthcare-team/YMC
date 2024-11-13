@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import CrosshairIcon from "@assets/icons/CrosshairIcon.svg?react"
 import { Branch } from "../types/Branch.ts"
 import { INITIAL_CENTER } from "@constants/LocationConstants.ts"
 import { createMarkerIcon } from "../utils/createMarkerIcon.ts"
 
 interface MapViewProps {
-  initialCenter?: {
+  defaultCenter?: {
     lat: number;
     lng: number;
   };
@@ -15,7 +15,7 @@ interface MapViewProps {
 }
 
 const MapView = ({
-  initialCenter = INITIAL_CENTER,
+  defaultCenter = INITIAL_CENTER,
   initialZoom = 14,
   branches = [],
   onSelectBranch,
@@ -24,6 +24,8 @@ const MapView = ({
   const mapInstance = useRef<naver.maps.Map | null>(null)
   const markerInstances = useRef<naver.maps.Marker[]>([])
   const currentLocationMarker = useRef<naver.maps.Marker | null>(null)
+  const [initialCenter, setInitialCenter] = useState(defaultCenter)
+  const [isInitialized, setIsInitialized] = useState(false)
 
   const updateCurrentLocationMarker = useCallback((latitude: number, longitude: number) => {
     if (!mapInstance.current) return
@@ -46,6 +48,7 @@ const MapView = ({
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
+            console.log(position)
             resolve({
               lat: position.coords.latitude,
               lng: position.coords.longitude,
@@ -79,6 +82,24 @@ const MapView = ({
   }, [getCurrentLocation])
 
   useEffect(() => {
+    if (isInitialized) return
+
+    getCurrentLocation()
+      .then(position => {
+        setInitialCenter(position)
+      })
+      .catch(() => {
+        setInitialCenter(defaultCenter)
+      })
+      .finally(() => {
+        setIsInitialized(true)
+      })
+  }, [defaultCenter, isInitialized])
+
+  // 지도 초기화
+  useEffect(() => {
+    if (!isInitialized) return
+
     const initializeMap = () => {
       if (!mapRef.current) return
 
@@ -87,14 +108,17 @@ const MapView = ({
           initialCenter.lat,
           initialCenter.lng,
         ),
-        initialZoom: 1,
       }
 
       mapInstance.current = new window.naver.maps.Map(mapRef.current, mapOptions)
+
+      updateCurrentLocationMarker(initialCenter.lat, initialCenter.lng)
       markerInstances.current.forEach(marker => marker.setMap(null))
       markerInstances.current = []
 
       branches.forEach(branch => {
+        const markerIcon = createMarkerIcon(branch, "default")
+
         const marker = new window.naver.maps.Marker({
           position: new window.naver.maps.LatLng(
             branch.latitude,
@@ -102,6 +126,7 @@ const MapView = ({
           ),
           map: mapInstance.current ?? undefined,
           title: branch.name,
+          icon: markerIcon,
         })
 
         if (onSelectBranch) {
@@ -115,16 +140,19 @@ const MapView = ({
     }
 
     const script = document.createElement("script")
-    script.src = `https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${import.meta.env.VITE_NAVER_MAP_CLIENT_ID}`
+    script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${import.meta.env.VITE_NAVER_MAP_CLIENT_ID}`
     script.async = true
     script.onload = initializeMap
     document.head.appendChild(script)
 
     return () => {
       markerInstances.current.forEach(marker => marker.setMap(null))
+      if (currentLocationMarker.current) {
+        currentLocationMarker.current.setMap(null)
+      }
       document.head.removeChild(script)
     }
-  }, [initialCenter, initialZoom, branches, onSelectBranch])
+  }, [initialCenter, initialZoom, branches, onSelectBranch, isInitialized])
 
   return (
     <div className="relative flex-1">

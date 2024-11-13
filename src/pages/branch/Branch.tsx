@@ -10,10 +10,12 @@ import { useLocation, useNavigate } from "react-router-dom"
 import BranchMapSection from "./_fragments/BranchMapSection.tsx"
 import { useBranches } from "../../queries/useBranchQueries.tsx"
 import { INITIAL_CENTER } from "@constants/LocationConstants.ts"
+import useGeolocation from "../../hooks/useGeolocation.tsx"
 
 const Branch = () => {
   const { setHeader, setNavigation } = useLayout()
   const { openBottomSheet, closeOverlay } = useOverlay()
+  const { location: coordinate, error: geolocationError, loading: geolocationLoading } = useGeolocation()
   const [screen, setScreen] = useState<"list" | "map">("list")
   const [selectedFilter, setSelectedFilter] = useState<{
     brand: FilterItem | null
@@ -23,10 +25,10 @@ const Branch = () => {
     category: null,
   })
 
-  const { data: branches } = useBranches({
+  const { data: branches, isLoading: isLoadingBranches } = useBranches({
     page: 1,
-    latitude: INITIAL_CENTER.lat,
-    longitude: INITIAL_CENTER.lng,
+    latitude: (geolocationError || !coordinate.latitude) ? INITIAL_CENTER.lat : coordinate.latitude,
+    longitude: (geolocationError || !coordinate.longitude) ? INITIAL_CENTER.lng : coordinate.longitude,
     brandCode: "001",
   })
 
@@ -79,6 +81,10 @@ const Branch = () => {
   }, [])
 
   const renderScreen = () => {
+    if (geolocationLoading || isLoadingBranches) {
+      return <></>
+    }
+
     switch (screen) {
       case "list":
         return <BranchFilterList branches={branches || []} />
