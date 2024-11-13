@@ -122,32 +122,32 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
               }}
             >
               <NavButton
-                activeIcon={"assets/navIcon/home_active.png"}
-                inactiveIcon={"assets/navIcon/home_inactive.png"}
+                activeIcon={"/assets/navIcon/home_active.png"}
+                inactiveIcon={"/assets/navIcon/home_inactive.png"}
                 title={"홈"}
                 link={"/"}
               />
               <NavButton
-                activeIcon={"assets/navIcon/membership_active.png"}
-                inactiveIcon={"assets/navIcon/membership_inactive.png"}
+                activeIcon={"/assets/navIcon/membership_active.png"}
+                inactiveIcon={"/assets/navIcon/membership_inactive.png"}
                 title={"회원권 구매"}
                 link={"/membership"}
               />
               <NavButton
-                activeIcon={"assets/navIcon/store_active.png"}
-                inactiveIcon={"assets/navIcon/store_inactive.png"}
+                activeIcon={"/assets/navIcon/store_active.png"}
+                inactiveIcon={"/assets/navIcon/store_inactive.png"}
                 title={"스토어"}
                 link={"/store"}
               />
               <NavButton
-                activeIcon={"assets/navIcon/reservation_active.png"}
-                inactiveIcon={"assets/navIcon/reservation_inactive.png"}
+                activeIcon={"/assets/navIcon/reservation_active.png"}
+                inactiveIcon={"/assets/navIcon/reservation_inactive.png"}
                 title={"예약/회원권"}
                 link={"/member-history"}
               />
               <NavButton
-                activeIcon={"assets/navIcon/mypage_active.png"}
-                inactiveIcon={"assets/navIcon/mypage_inactive.png"}
+                activeIcon={"/assets/navIcon/mypage_active.png"}
+                inactiveIcon={"/assets/navIcon/mypage_inactive.png"}
                 title={"마이페이지"}
                 link={"/mypage"}
               />
