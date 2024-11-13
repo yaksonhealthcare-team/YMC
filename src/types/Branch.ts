@@ -178,6 +178,7 @@ type Branch = {
   canBookToday: boolean
   distanceInMeters: string | null
   isFavorite: boolean
+  brand: "therapist" | "dalia" | "diet"
 }
 
 export const MockBranches: Branch[] = Array.from({ length: 12 }, (_, i) => ({
@@ -189,6 +190,7 @@ export const MockBranches: Branch[] = Array.from({ length: 12 }, (_, i) => ({
   canBookToday: Math.random() > 0.5,
   distanceInMeters: "0.5m",
   isFavorite: Math.random() > 0.5,
+  brand: "therapist",
 }))
 
 export type { Branch, BranchDetail }

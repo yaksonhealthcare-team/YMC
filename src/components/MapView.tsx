@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from "react"
 import CrosshairIcon from "@assets/icons/CrosshairIcon.svg?react"
 import { Branch } from "../types/Branch.ts"
 import { INITIAL_CENTER } from "@constants/LocationConstants.ts"
+import { createMarkerIcon } from "../utils/createMarkerIcon.ts"
 
 interface MapViewProps {
   initialCenter?: {
@@ -22,28 +23,60 @@ const MapView = ({
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstance = useRef<naver.maps.Map | null>(null)
   const markerInstances = useRef<naver.maps.Marker[]>([])
+  const currentLocationMarker = useRef<naver.maps.Marker | null>(null)
 
-  // 현재 위치로 이동하는 함수
-  const moveToCurrentLocation = useCallback(() => {
+  const updateCurrentLocationMarker = useCallback((latitude: number, longitude: number) => {
     if (!mapInstance.current) return
 
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords
-          const location = new window.naver.maps.LatLng(latitude, longitude)
-          mapInstance.current?.setCenter(location)
-          mapInstance.current?.setZoom(15)
-        },
-        (error) => {
-          console.error("위치 정보를 가져올 수 없습니다:", error)
-          alert("현재 위치를 가져올 수 없습니다.")
-        },
-      )
+    const position = new window.naver.maps.LatLng(latitude, longitude)
+
+    if (currentLocationMarker.current) {
+      currentLocationMarker.current.setPosition(position)
     } else {
-      alert("이 브라우저에서는 위치 정보를 사용할 수 없습니다.")
+      currentLocationMarker.current = new window.naver.maps.Marker({
+        position,
+        map: mapInstance.current,
+        icon: createMarkerIcon(null, "current-location"),
+      })
     }
   }, [])
+
+  const getCurrentLocation = useCallback((): Promise<{ lat: number, lng: number }> => {
+    return new Promise((resolve, reject) => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            resolve({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            })
+          },
+          (error) => {
+            console.warn("위치 정보를 가져올 수 없습니다:", error)
+            reject(error)
+          },
+          { timeout: 5000 },
+        )
+      } else {
+        reject(new Error("Geolocation is not supported"))
+      }
+    })
+  }, [])
+
+  const moveToCurrentLocation = useCallback(async () => {
+    if (!mapInstance.current) return
+
+    try {
+      const { lat, lng } = await getCurrentLocation()
+      const location = new window.naver.maps.LatLng(lat, lng)
+      mapInstance.current.setCenter(location)
+      mapInstance.current.setZoom(15)
+      updateCurrentLocationMarker(lat, lng)
+    } catch (error) {
+      console.warn("현재 위치로 이동할 수 없습니다:", error)
+      alert("현재 위치를 가져올 수 없습니다.")
+    }
+  }, [getCurrentLocation])
 
   useEffect(() => {
     const initializeMap = () => {
@@ -58,12 +91,9 @@ const MapView = ({
       }
 
       mapInstance.current = new window.naver.maps.Map(mapRef.current, mapOptions)
-
-      // 기존 마커들 제거
       markerInstances.current.forEach(marker => marker.setMap(null))
       markerInstances.current = []
 
-      // 마커 생성 및 클릭 이벤트 추가
       branches.forEach(branch => {
         const marker = new window.naver.maps.Marker({
           position: new window.naver.maps.LatLng(
