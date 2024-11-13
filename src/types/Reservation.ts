@@ -15,6 +15,7 @@ export const reservationStatusLabel: Record<ReservationStatus, string> = {
 }
 
 export type ReservationItem = {
+  id: number
   status: ReservationStatus
   store: string
   title: string

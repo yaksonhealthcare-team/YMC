@@ -39,6 +39,7 @@ const mainTabs = [
 // 샘플 데이터
 const sampleReservations: ReservationItem[] = [
   {
+    id: 0,
     store: "약손명가 강남점",
     title: "전신관리 90분",
     count: 2,
@@ -47,6 +48,7 @@ const sampleReservations: ReservationItem[] = [
     status: ReservationStatus.IN_PROGRESS,
   },
   {
+    id: 1,
     store: "약손명가 강남구청역점",
     title: "전신관리 120분",
     count: 3,
@@ -56,6 +58,7 @@ const sampleReservations: ReservationItem[] = [
     status: ReservationStatus.UPCOMING,
   },
   {
+    id: 2,
     store: "약손명가 서초점",
     title: "얼굴관리 60분",
     count: 1,
@@ -64,6 +67,7 @@ const sampleReservations: ReservationItem[] = [
     status: ReservationStatus.COMPLETED,
   },
   {
+    id: 3,
     store: "약손명가 강남점",
     title: "전신관리 90분",
     count: 2,
@@ -75,6 +79,7 @@ const sampleReservations: ReservationItem[] = [
 
 const sampleMemberships: MembershipItem[] = [
   {
+    id: 0,
     status: MembershipStatus.AVAILABLE,
     title: "K-BEAUTY 연예인관리",
     count: "4회 / 20",
@@ -82,6 +87,7 @@ const sampleMemberships: MembershipItem[] = [
     endAt: "2024.12.31",
   },
   {
+    id: 1,
     status: MembershipStatus.COMPLETED,
     title: "바디케어 프로그램",
     count: "0회 / 10",
@@ -89,6 +95,7 @@ const sampleMemberships: MembershipItem[] = [
     endAt: "2024.03.31",
   },
   {
+    id: 2,
     status: MembershipStatus.EXPIRED,
     title: "럭셔리 스파",
     count: "2회 / 5",
@@ -194,13 +201,13 @@ const MemberHistory = () => {
             {filteredReservations.map((item, index) => (
               <ReserveCard
                 key={index}
+                id={item.id}
                 status={item.status}
                 store={item.store}
                 title={item.title}
                 count={item.count}
                 date={item.date}
                 time={item.time}
-                onClick={() => navigate(`/reservation/${index}`)}
               />
             ))}
           </div>
@@ -208,12 +215,12 @@ const MemberHistory = () => {
           <div className="space-y-3">
             {filteredMemberships.map((item, index) => (
               <MembershipCard
+                id={item.id}
                 key={index}
                 status={item.status}
                 title={item.title}
                 count={item.count}
                 date={`${item.startAt} - ${item.endAt}`}
-                onClick={() => navigate(`/membership/${index}`)}
                 showReserveButton={item.status === MembershipStatus.AVAILABLE}
               />
             ))}

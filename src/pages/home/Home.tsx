@@ -13,6 +13,8 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import { BrandCard } from "@components/BrandCard.tsx"
 import { FloatingButton } from "@components/FloatingButton.tsx"
 import { EmptyCard } from "@components/EmptyCard.tsx"
+import { MembershipItem, MembershipStatus } from "types/Membership.ts"
+import { ReservationItem, ReservationStatus } from "types/Reservation.ts"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -99,41 +101,46 @@ const Home = () => {
 }
 
 const ReserveCardSection = () => {
+  const navigate = useNavigate()
+
   // 예약
-  const reserveCardsData: Array<{
-    type: "pre" | "ing" | "post"
-    store: string
-    title: string
-    count: number
-    date: string
-    time: string
-    dDay?: number
-  }> = [
+  const reserveCardsData: ReservationItem[] = [
     {
-      type: "pre",
+      id: 0,
+      store: "약손명가 강남점",
+      title: "전신관리 90분",
+      count: 2,
+      date: "2024.07.05",
+      time: "오전 10:00",
+      status: ReservationStatus.IN_PROGRESS,
+    },
+    {
+      id: 1,
       store: "약손명가 강남구청역점",
       title: "전신관리 120분",
       count: 3,
-      date: "7월 12일 (토)",
+      date: "2024.07.12",
       time: "오전 11:00",
       dDay: 8,
+      status: ReservationStatus.UPCOMING,
     },
     {
-      type: "ing",
-      store: "약손명가 강남구청역점",
-      title: "전신관리 120분",
-      count: 2,
-      date: "7월 12일 (토)",
-      time: "오전 11:00",
-      dDay: 0,
-    },
-    {
-      type: "post",
-      store: "약손명가 강남구청역점",
-      title: "전신관리 120분",
+      id: 2,
+      store: "약손명가 서초점",
+      title: "얼굴관리 60분",
       count: 1,
-      date: "7월 12일 (토)",
-      time: "오전 11:00",
+      date: "2024.07.01",
+      time: "오후 2:00",
+      status: ReservationStatus.COMPLETED,
+    },
+    {
+      id: 3,
+      store: "약손명가 강남점",
+      title: "전신관리 90분",
+      count: 2,
+      date: "2024.07.05",
+      time: "오전 10:00",
+      status: ReservationStatus.CANCELLED,
     },
   ]
 
@@ -156,7 +163,15 @@ const ReserveCardSection = () => {
         >
           {reserveCardsData.map((data, index) => (
             <SwiperSlide key={index} className="mr-2">
-              <ReserveCard {...data} />
+              <ReserveCard
+                id={data.id}
+                status={data.status}
+                store={data.store}
+                title={data.title}
+                count={data.count}
+                date={data.date}
+                time={data.time}
+              />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -173,29 +188,33 @@ const ReserveCardSection = () => {
 
 const MembershipCardSection = () => {
   // 회원권
-  const membershipCardsData: Array<{
-    type: "default" | "reserve" | "used"
-    title: string
-    count: string
-    date: string
-  }> = [
+  const membershipCardsData: MembershipItem[] = [
     {
-      type: "reserve",
+      id: 0,
+      status: MembershipStatus.AVAILABLE,
       title: "K-BEAUTY 연예인관리",
       count: "4회 / 20",
-      date: "2024.04.01 - 2024.12.31",
+      startAt: "2024.04.01",
+      endAt: "2024.12.31",
+      isAllBranch: true,
     },
     {
-      type: "used",
-      title: "K-BEAUTY 연예인관리",
-      count: "4회 / 20",
-      date: "2024.04.01 - 2024.12.31",
+      id: 1,
+      status: MembershipStatus.COMPLETED,
+      title: "바디케어 프로그램",
+      count: "0회 / 10",
+      startAt: "2024.01.01",
+      endAt: "2024.03.31",
+      isAllBranch: false,
     },
     {
-      type: "default",
-      title: "K-BEAUTY 연예인관리",
-      count: "4회 / 20",
-      date: "2024.04.01 - 2024.12.31",
+      id: 2,
+      status: MembershipStatus.EXPIRED,
+      title: "럭셔리 스파",
+      count: "2회 / 5",
+      startAt: "2024.12.01",
+      endAt: "2024.02.29",
+      isAllBranch: true,
     },
   ]
 
@@ -218,7 +237,15 @@ const MembershipCardSection = () => {
         >
           {membershipCardsData.map((data, index) => (
             <SwiperSlide key={index} className="mr-2">
-              <MembershipCard {...data} />
+              <MembershipCard
+                id={data.id}
+                title={data.title}
+                count={data.count}
+                date={`${data.startAt} - ${data.endAt}`}
+                status={data.status}
+                isAllBranch={true}
+                showReserveButton={true}
+              />
             </SwiperSlide>
           ))}
         </Swiper>

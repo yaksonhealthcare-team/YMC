@@ -4,19 +4,23 @@ import { ReservationStatus } from "types/Reservation"
 import ReserveTag from "./ReserveTag"
 import { Button } from "./Button"
 import { ReactNode } from "react"
+import { useNavigate } from "react-router-dom"
 
-interface ReserveCardProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ReserveCardProps {
+  id: number
   status: ReservationStatus
   store: string
   title: string
   count: number
   date: string
   time: string
-  onClick?: () => void
+  className?: string
 }
 
 export const ReserveCard = (props: ReserveCardProps) => {
-  const { status, store, title, count, date, time, onClick, className } = props
+  const { id, status, store, title, count, date, time, className } = props
+
+  const navigate = useNavigate()
 
   const getButton = (): ReactNode => {
     switch (status) {
@@ -42,11 +46,11 @@ export const ReserveCard = (props: ReserveCardProps) => {
   return (
     <>
       <div
-        onClick={onClick}
         className={clsx(
           `flex justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px]`,
           className,
         )}
+        onClick={() => navigate(`/reservation/${id}`)}
       >
         <div>
           <span className="font-b text-16px text-gray-700">{store}</span>

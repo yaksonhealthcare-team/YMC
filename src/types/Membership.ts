@@ -11,11 +11,13 @@ export const membershipStatusLabel: Record<MembershipStatus, string> = {
 }
 
 export type MembershipItem = {
+  id: number
   title: string
   count: string
   startAt: string
   endAt: string
   status: MembershipStatus
+  isAllBranch?: boolean
 }
 
 export type MembershipFilterId = "all" | MembershipStatus

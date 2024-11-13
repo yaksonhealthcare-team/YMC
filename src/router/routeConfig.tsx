@@ -31,6 +31,7 @@ import SignupComplete from "../pages/signup/SignupComplete.tsx"
 import ReservationDetailPage from "pages/reservation/ReservationDetailPage.tsx"
 import MemberHistory from "../pages/memberHistory/MemberHistory.tsx"
 import ReservationCancelPage from "pages/reservation/ReservationCancelPage.tsx"
+import MembershipUsageHistory from "pages/membership/MembershipUsageHistory.tsx"
 
 interface RouteConfig {
   path: string
@@ -128,6 +129,11 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/membership/:id",
     element: <MembershipDetailPage />,
+    auth: true,
+  },
+  {
+    path: "/membership/usage/:id",
+    element: <MembershipUsageHistory />,
     auth: true,
   },
   { path: "/store", element: <Store />, auth: false },
