@@ -6,48 +6,95 @@ import { Button } from "@components/Button"
 import { ReserveCard } from "@components/ReserveCard"
 import { MembershipCard } from "@components/MembershipCard"
 import { SearchFloatingButton } from "@components/SearchFloatingButton"
-
-type ReservationStatus = "pre" | "ing" | "post"
-type MembershipStatus = "default" | "reserve" | "used"
-
-// Extending the exact prop types from ReserveCard component
-type ReservationItem = {
-  type: ReservationStatus
-  store: string
-  title: string
-  count: number
-  date: string
-  time: string
-  dDay?: number
-}
-
-// Extending the exact prop types from MembershipCard component
-type MembershipItem = {
-  type: MembershipStatus
-  title: string
-  count: string
-  date: string
-}
+import {
+  membershipFilters,
+  MembershipItem,
+  MembershipStatus,
+} from "types/Membership"
+import {
+  reservationFilters,
+  ReservationItem,
+  ReservationStatus,
+} from "types/Reservation"
 
 type MemberHistoryTab = "reservation" | "membership"
+
+interface FilterItem {
+  id: string
+  title: string
+}
+
+const defaultFilter: FilterItem = {
+  id: "all",
+  title: "전체",
+}
+
+export type FilterItems = FilterItem[]
 
 const mainTabs = [
   { label: "예약", value: "reservation" },
   { label: "회원권", value: "membership" },
 ]
 
-const reservationFilterItems = [
-  { id: "all", title: "전체" },
-  { id: "upcoming", title: "방문예정" },
-  { id: "completed", title: "방문완료" },
-  { id: "canceled", title: "예약취소" },
+// 샘플 데이터
+const sampleReservations: ReservationItem[] = [
+  {
+    store: "약손명가 강남점",
+    title: "전신관리 90분",
+    count: 2,
+    date: "2024.07.05",
+    time: "오전 10:00",
+    status: ReservationStatus.IN_PROGRESS,
+  },
+  {
+    store: "약손명가 강남구청역점",
+    title: "전신관리 120분",
+    count: 3,
+    date: "2024.07.12",
+    time: "오전 11:00",
+    dDay: 8,
+    status: ReservationStatus.UPCOMING,
+  },
+  {
+    store: "약손명가 서초점",
+    title: "얼굴관리 60분",
+    count: 1,
+    date: "2024.07.01",
+    time: "오후 2:00",
+    status: ReservationStatus.COMPLETED,
+  },
+  {
+    store: "약손명가 강남점",
+    title: "전신관리 90분",
+    count: 2,
+    date: "2024.07.05",
+    time: "오전 10:00",
+    status: ReservationStatus.CANCELLED,
+  },
 ]
 
-const membershipFilterItems = [
-  { id: "all", title: "전체" },
-  { id: "available", title: "사용가능" },
-  { id: "completed", title: "사용완료" },
-  { id: "expired", title: "만료됨" },
+const sampleMemberships: MembershipItem[] = [
+  {
+    status: MembershipStatus.AVAILABLE,
+    title: "K-BEAUTY 연예인관리",
+    count: "4회 / 20",
+    startAt: "2024.04.01",
+    endAt: "2024.12.31",
+  },
+  {
+    status: MembershipStatus.COMPLETED,
+    title: "바디케어 프로그램",
+    count: "0회 / 10",
+    startAt: "2024.01.01",
+    endAt: "2024.03.31",
+  },
+  {
+    status: MembershipStatus.EXPIRED,
+    title: "럭셔리 스파",
+    count: "2회 / 5",
+    startAt: "2024.12.01",
+    endAt: "2024.02.29",
+  },
 ]
 
 const MemberHistory = () => {
@@ -55,8 +102,14 @@ const MemberHistory = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const activeTab = tab || "reservation"
-  const [reservationFilter, setReservationFilter] = useState("all")
-  const [membershipFilter, setMembershipFilter] = useState("all")
+  const [reservationFilter, setReservationFilter] =
+    useState<FilterItem>(defaultFilter)
+  const [membershipFilter, setMembershipFilter] =
+    useState<FilterItem>(defaultFilter)
+  const [filteredReservations, setFilteredReservations] =
+    useState(sampleReservations)
+  const [filteredMemberships, setFilteredMemberships] =
+    useState(sampleMemberships)
 
   useEffect(() => {
     setHeader({
@@ -65,36 +118,34 @@ const MemberHistory = () => {
     setNavigation({ display: true })
   }, [setHeader, setNavigation])
 
+  useEffect(() => {
+    if (reservationFilter.id === "all") {
+      setFilteredReservations(sampleReservations)
+    } else {
+      setFilteredReservations(
+        sampleReservations.filter(
+          (item) => item.status === reservationFilter.id,
+        ),
+      )
+    }
+  }, [reservationFilter])
+
+  useEffect(() => {
+    if (membershipFilter.id === "all") {
+      setFilteredMemberships(sampleMemberships)
+    } else {
+      setFilteredMemberships(
+        sampleMemberships.filter((item) => item.status === membershipFilter.id),
+      )
+    }
+  }, [membershipFilter])
+
   const handleOnChangeTab = (value: MemberHistoryTab) => {
     navigate(`/member-history/${value}`)
   }
 
-  const reservations: ReservationItem[] = [
-    {
-      type: "pre",
-      store: "약손명가 강남구청역점",
-      title: "전신관리 120분",
-      count: 3,
-      date: "7월 12일 (토)",
-      time: "오전 11:00",
-      dDay: 8,
-    },
-    // ... more reservations
-  ]
-
-  const memberships: MembershipItem[] = [
-    {
-      type: "default",
-      title: "K-BEAUTY 연예인관리",
-      count: "4회 / 20",
-      date: "2024.04.01 - 2024.12.31",
-    },
-    // ... more memberships
-  ]
-
   return (
     <div className="flex flex-col min-h-screen bg-[#F8F5F2]">
-      {/* Main Tabs */}
       <div className="px-5">
         <CustomTabs
           type="1depth"
@@ -104,71 +155,72 @@ const MemberHistory = () => {
         />
       </div>
 
-      {/* Filters */}
-      <div className="px-5 py-4 flex gap-2 overflow-x-auto no-scrollbar">
+      <div className="px-5 py-4 flex justify-center gap-2 overflow-x-auto no-scrollbar">
         {(activeTab === "reservation"
-          ? reservationFilterItems
-          : membershipFilterItems
-        ).map((filter) => (
-          <Button
-            key={filter.id}
-            variantType={"line"}
-            sizeType="s"
-            onClick={() =>
-              activeTab === "reservation"
-                ? setReservationFilter(filter.id)
-                : setMembershipFilter(filter.id)
-            }
-            className={`whitespace-nowrap !min-w-fit !px-[12px] !h-8 !rounded-full
-                ${
-                  filter.id ===
-                  (activeTab === "reservation"
-                    ? reservationFilter
-                    : membershipFilter)
-                    ? "!text-primary-300 !bg-tag-redBg !border-primary-300"
-                    : "!text-gray-500 !border-gray-200 !font-normal"
-                }`}
-          >
-            {filter.title}
-          </Button>
-        ))}
+          ? reservationFilters
+          : membershipFilters
+        ).map((filter) => {
+          const isSelected =
+            filter.id ===
+            (activeTab === "reservation"
+              ? reservationFilter.id
+              : membershipFilter.id)
+
+          return (
+            <Button
+              key={filter.id}
+              variantType="line"
+              sizeType="xs"
+              onClick={() =>
+                activeTab === "reservation"
+                  ? setReservationFilter(filter)
+                  : setMembershipFilter(filter)
+              }
+              className={`min-w-0 whitespace-nowrap rounded-full h-[8px] ${
+                isSelected
+                  ? "bg-primary-50 text-primary border-primary"
+                  : "!bg-white !text-gray-500 !border-gray-200"
+              }`}
+            >
+              {filter.title}
+            </Button>
+          )
+        })}
       </div>
 
-      {/* Content */}
-      <div className="flex-1 px-5 space-y-3 pb-32">
+      <div className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto">
         {activeTab === "reservation" ? (
           <div className="space-y-3">
-            {reservations.map((item, index) => (
+            {filteredReservations.map((item, index) => (
               <ReserveCard
                 key={index}
-                type={item.type}
+                status={item.status}
                 store={item.store}
                 title={item.title}
                 count={item.count}
                 date={item.date}
                 time={item.time}
-                dDay={item.dDay}
                 onClick={() => navigate(`/reservation/${index}`)}
               />
             ))}
           </div>
         ) : (
           <div className="space-y-3">
-            {memberships.map((item, index) => (
+            {filteredMemberships.map((item, index) => (
               <MembershipCard
                 key={index}
-                type={item.type}
+                status={item.status}
                 title={item.title}
                 count={item.count}
-                date={item.date}
+                date={`${item.startAt} - ${item.endAt}`}
                 onClick={() => navigate(`/membership/${index}`)}
+                showReserveButton={item.status === MembershipStatus.AVAILABLE}
               />
             ))}
           </div>
         )}
       </div>
 
-      {/* Floating Action Button */}
       <SearchFloatingButton
         type={activeTab === "reservation" ? "list" : "search"}
         title={activeTab === "reservation" ? "예약내역" : "지점검색"}

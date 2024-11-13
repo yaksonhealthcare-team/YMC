@@ -13,3 +13,31 @@ export const reservationStatusLabel: Record<ReservationStatus, string> = {
   [ReservationStatus.COMPLETED]: "방문완료",
   [ReservationStatus.COUNSELING_CONFIRMED]: "방문예정",
 }
+
+export type ReservationItem = {
+  status: ReservationStatus
+  store: string
+  title: string
+  count: number
+  date: string
+  time: string
+  dDay?: number
+}
+
+export type ReservationFilterId = "all" | ReservationStatus
+
+export const reservationFilters = [
+  { id: "all", title: "전체" },
+  {
+    id: ReservationStatus.UPCOMING,
+    title: reservationStatusLabel[ReservationStatus.UPCOMING],
+  },
+  {
+    id: ReservationStatus.COMPLETED,
+    title: reservationStatusLabel[ReservationStatus.COMPLETED],
+  },
+  {
+    id: ReservationStatus.CANCELLED,
+    title: reservationStatusLabel[ReservationStatus.CANCELLED],
+  },
+] as const

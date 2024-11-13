@@ -1,22 +1,43 @@
 import clsx from "clsx"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
-import { Button } from "@components/Button.tsx"
-import { Chip } from "@components/Chip"
+import { ReservationStatus } from "types/Reservation"
+import ReserveTag from "./ReserveTag"
+import { Button } from "./Button"
+import { ReactNode } from "react"
 
 interface ReserveCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  type: "pre" | "ing" | "post"
+  status: ReservationStatus
   store: string
   title: string
   count: number
   date: string
   time: string
-  dDay?: number
   onClick?: () => void
 }
 
 export const ReserveCard = (props: ReserveCardProps) => {
-  const { type, store, title, count, date, time, dDay, onClick, className } =
-    props
+  const { status, store, title, count, date, time, onClick, className } = props
+
+  const getButton = (): ReactNode => {
+    switch (status) {
+      case ReservationStatus.UPCOMING:
+        return null
+      case ReservationStatus.IN_PROGRESS:
+        return (
+          <Button variantType="primary" sizeType="xs">
+            방문완료
+          </Button>
+        )
+      case ReservationStatus.COMPLETED:
+        return (
+          <Button variantType="primary" sizeType="xs">
+            만족도 작성
+          </Button>
+        )
+      default:
+        return null
+    }
+  }
 
   return (
     <>
@@ -45,23 +66,8 @@ export const ReserveCard = (props: ReserveCardProps) => {
           </div>
         </div>
         <div className="flex flex-col justify-between items-end">
-          {type === "pre" && <Chip type="default" title={`D-${dDay}`} />}
-          {type === "ing" && (
-            <>
-              <Chip type="default" title={`D-day`} />
-              <Button variantType="primary" sizeType="xs">
-                방문완료
-              </Button>
-            </>
-          )}
-          {type === "post" && (
-            <>
-              <Chip type="finish" title="방문완료" />
-              <Button variantType="primary" sizeType="xs">
-                만족도 작성
-              </Button>
-            </>
-          )}
+          <ReserveTag status={status} reservationDate={new Date(date)} />
+          {getButton()}
         </div>
       </div>
     </>

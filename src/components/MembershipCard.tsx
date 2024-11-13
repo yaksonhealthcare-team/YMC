@@ -2,17 +2,30 @@ import clsx from "clsx"
 import { Button } from "@components/Button.tsx"
 import { Tag } from "@components/Tag"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
+import MembershipTag from "./MembershipTag"
+import { MembershipStatus } from "types/Membership"
 
 interface MembershipProps extends React.HTMLAttributes<HTMLDivElement> {
-  type: "default" | "reserve" | "used"
   title: string
   count: string
   date: string
+  status: MembershipStatus
+  isAllBranch?: boolean
+  showReserveButton?: boolean
   onClick?: () => void
 }
 
 export const MembershipCard = (props: MembershipProps) => {
-  const { type, title, count, date, onClick, className } = props
+  const {
+    title,
+    count,
+    date,
+    status,
+    isAllBranch = true,
+    showReserveButton = false,
+    onClick,
+    className,
+  } = props
 
   return (
     <>
@@ -25,12 +38,8 @@ export const MembershipCard = (props: MembershipProps) => {
       >
         <div className="flex flex-col gap-1.5">
           <div className="flex gap-1.5">
-            {type === "used" ? (
-              <Tag type="used" title="사용완료" />
-            ) : (
-              <Tag type="unused" title="사용가능" />
-            )}
-            <Tag type="rect" title="전지점" />
+            <MembershipTag status={status} />
+            {isAllBranch && <Tag type="rect" title="전지점" />}
           </div>
           <span className="font-b text-16px text-gray-700">{title}</span>
           <div className="flex items-center">
@@ -44,7 +53,7 @@ export const MembershipCard = (props: MembershipProps) => {
             <span className="font-r text-12px text-gray-500"> 이용내역 </span>
             <CaretRightIcon className="w-3 h-3" />
           </div>
-          {type === "reserve" && (
+          {showReserveButton && status === MembershipStatus.AVAILABLE && (
             <Button variantType="primary" sizeType="xs">
               예약하기
             </Button>
