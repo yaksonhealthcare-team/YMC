@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useRef } from "react"
 import CrosshairIcon from "@assets/icons/CrosshairIcon.svg?react"
 import { Branch } from "../types/Branch.ts"
-
-const INITIAL_CENTER = { lat: 37.523040, lng: 127.028841 }
+import { INITIAL_CENTER } from "@constants/LocationConstants.ts"
 
 interface MapViewProps {
   initialCenter?: {

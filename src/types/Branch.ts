@@ -176,7 +176,7 @@ type Branch = {
   latitude: number
   longitude: number
   canBookToday: boolean
-  distanceInMeters: number | null
+  distanceInMeters: string | null
   isFavorite: boolean
 }
 
@@ -187,7 +187,7 @@ export const MockBranches: Branch[] = Array.from({ length: 12 }, (_, i) => ({
   latitude: 37.523040 + (0.001 * i),
   longitude: 127.028841 + (0.001 * i),
   canBookToday: Math.random() > 0.5,
-  distanceInMeters: 500,
+  distanceInMeters: "0.5m",
   isFavorite: Math.random() > 0.5,
 }))
 
