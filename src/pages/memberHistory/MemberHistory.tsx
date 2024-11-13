@@ -5,7 +5,6 @@ import { CustomTabs } from "@components/Tabs"
 import { Button } from "@components/Button"
 import { ReserveCard } from "@components/ReserveCard"
 import { MembershipCard } from "@components/MembershipCard"
-import { SearchFloatingButton } from "@components/SearchFloatingButton"
 import {
   membershipFilters,
   MembershipItem,
@@ -152,7 +151,7 @@ const MemberHistory = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8F5F2]">
+    <div className="flex flex-col bg-system-bg min-h-[calc(100vh-82px)]">
       <div className="px-5">
         <CustomTabs
           type="1depth"
@@ -162,7 +161,7 @@ const MemberHistory = () => {
         />
       </div>
 
-      <div className="px-5 py-4 flex justify-center gap-2 overflow-x-auto no-scrollbar">
+      <div className="px-5 py-4 flex justify-center gap-2">
         {(activeTab === "reservation"
           ? reservationFilters
           : membershipFilters
