@@ -3,7 +3,6 @@ import Login from "../pages/login/Login.tsx"
 
 import Membership from "../pages/membership/Membership.tsx"
 import Store from "../pages/store/Store.tsx"
-import Reservation from "../pages/reservation/Reservation.tsx"
 import MyPage from "../pages/myPage/MyPage.tsx"
 import Logout from "../pages/logout/Logout.tsx"
 import { ReactNode } from "react"
@@ -30,6 +29,7 @@ import EmailPassword from "../pages/signup/EmailPassword.tsx"
 import ProfileSetup from "../pages/signup/ProfileSetup.tsx"
 import SignupComplete from "../pages/signup/SignupComplete.tsx"
 import ReservationDetailPage from "pages/reservation/ReservationDetailPage.tsx"
+import MemberHistory from "../pages/memberHistory/MemberHistory.tsx"
 
 interface RouteConfig {
   path: string
@@ -130,7 +130,7 @@ const routeConfig: RouteConfig[] = [
     auth: true,
   },
   { path: "/store", element: <Store />, auth: false },
-  { path: "/reservation", element: <Reservation />, auth: true },
+  { path: "/member-history/:tab?", element: <MemberHistory />, auth: true },
   {
     path: "/reservation/:id",
     element: <ReservationDetailPage />,

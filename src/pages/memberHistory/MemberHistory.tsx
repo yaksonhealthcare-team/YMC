@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext"
 import { CustomTabs } from "@components/Tabs"
 import { Button } from "@components/Button"
@@ -29,12 +29,32 @@ type MembershipItem = {
   date: string
 }
 
-const Reservation = () => {
+type MemberHistoryTab = "reservation" | "membership"
+
+const mainTabs = [
+  { label: "예약", value: "reservation" },
+  { label: "회원권", value: "membership" },
+]
+
+const reservationFilterItems = [
+  { id: "all", title: "전체" },
+  { id: "upcoming", title: "방문예정" },
+  { id: "completed", title: "방문완료" },
+  { id: "canceled", title: "예약취소" },
+]
+
+const membershipFilterItems = [
+  { id: "all", title: "전체" },
+  { id: "available", title: "사용가능" },
+  { id: "completed", title: "사용완료" },
+  { id: "expired", title: "만료됨" },
+]
+
+const MemberHistory = () => {
+  const { tab } = useParams<{ tab: MemberHistoryTab }>()
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
-  const [activeTab, setActiveTab] = useState<"reservation" | "membership">(
-    "reservation",
-  )
+  const activeTab = tab || "reservation"
   const [reservationFilter, setReservationFilter] = useState("all")
   const [membershipFilter, setMembershipFilter] = useState("all")
 
@@ -45,24 +65,9 @@ const Reservation = () => {
     setNavigation({ display: true })
   }, [setHeader, setNavigation])
 
-  const mainTabs = [
-    { label: "예약", value: "reservation" },
-    { label: "회원권", value: "membership" },
-  ]
-
-  const reservationFilterItems = [
-    { id: "all", title: "전체" },
-    { id: "upcoming", title: "방문예정" },
-    { id: "completed", title: "방문완료" },
-    { id: "canceled", title: "예약취소" },
-  ]
-
-  const membershipFilterItems = [
-    { id: "all", title: "전체" },
-    { id: "available", title: "사용가능" },
-    { id: "completed", title: "사용완료" },
-    { id: "expired", title: "만료됨" },
-  ]
+  const handleOnChangeTab = (value: MemberHistoryTab) => {
+    navigate(`/member-history/${value}`)
+  }
 
   const reservations: ReservationItem[] = [
     {
@@ -94,9 +99,7 @@ const Reservation = () => {
         <CustomTabs
           type="1depth"
           tabs={mainTabs}
-          onChange={(value) =>
-            setActiveTab(value as "reservation" | "membership")
-          }
+          onChange={(value) => handleOnChangeTab(value as MemberHistoryTab)}
           activeTab={activeTab}
         />
       </div>
@@ -177,4 +180,4 @@ const Reservation = () => {
   )
 }
 
-export default Reservation
+export default MemberHistory

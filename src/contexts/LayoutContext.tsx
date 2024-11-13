@@ -143,7 +143,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
                 activeIcon={"assets/navIcon/reservation_active.png"}
                 inactiveIcon={"assets/navIcon/reservation_inactive.png"}
                 title={"예약/회원권"}
-                link={"/reservation"}
+                link={"/member-history"}
               />
               <NavButton
                 activeIcon={"assets/navIcon/mypage_active.png"}
