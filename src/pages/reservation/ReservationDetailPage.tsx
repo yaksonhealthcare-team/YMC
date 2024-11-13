@@ -10,64 +10,76 @@ import MembershipUsage from "./_fragments/MembershipUsage"
 import { ReservationStatus } from "types/Reservation"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 
-const renderButton = (reservationStatus: ReservationStatus) => {
-  switch (reservationStatus) {
-    case ReservationStatus.UPCOMING:
-      return (
-        <Button className="w-full rounded-xl" onClick={() => {}}>
-          예약 취소하기
-        </Button>
-      )
-
-    case ReservationStatus.CANCELLED:
-      return (
-        <Button className="w-full rounded-xl" onClick={() => {}}>
-          다시 예약하기
-        </Button>
-      )
-
-    case ReservationStatus.IN_PROGRESS:
-      return (
-        <Button className="w-full rounded-xl" onClick={() => {}}>
-          방문 완료하기
-        </Button>
-      )
-
-    case ReservationStatus.COMPLETED:
-      return (
-        <div className="flex gap-[8px] ">
-          <Button
-            className="flex-1 rounded-xl"
-            variantType="line"
-            onClick={() => {}}
-          >
-            만족도 작성
-          </Button>
-          <Button className="flex-1 rounded-xl" onClick={() => {}}>
-            다시 예약하기
-          </Button>
-        </div>
-      )
-
-    case ReservationStatus.COUNSELING_CONFIRMED:
-      return (
-        <Button className="w-full rounded-xl" onClick={() => {}}>
-          예약 취소하기
-        </Button>
-      )
-
-    default:
-      return null
-  }
-}
-
 const ReservationDetailPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const [reservationStatus, setReservationStatus] = useState<ReservationStatus>(
-    ReservationStatus.COUNSELING_CONFIRMED,
+    ReservationStatus.UPCOMING,
   )
 
   const navigate = useNavigate()
+
+  const renderButton = () => {
+    switch (reservationStatus) {
+      case ReservationStatus.UPCOMING:
+        return (
+          <Button
+            className="w-full rounded-xl"
+            onClick={() => {
+              // TODO: pass the correct reservation id
+              navigate("/reservation/0/cancel")
+            }}
+          >
+            예약 취소하기
+          </Button>
+        )
+
+      case ReservationStatus.CANCELLED:
+        return (
+          <Button className="w-full rounded-xl" onClick={() => {}}>
+            다시 예약하기
+          </Button>
+        )
+
+      case ReservationStatus.IN_PROGRESS:
+        return (
+          <Button className="w-full rounded-xl" onClick={() => {}}>
+            방문 완료하기
+          </Button>
+        )
+
+      case ReservationStatus.COMPLETED:
+        return (
+          <div className="flex gap-[8px] ">
+            <Button
+              className="flex-1 rounded-xl"
+              variantType="line"
+              onClick={() => {}}
+            >
+              만족도 작성
+            </Button>
+            <Button className="flex-1 rounded-xl" onClick={() => {}}>
+              다시 예약하기
+            </Button>
+          </div>
+        )
+
+      case ReservationStatus.COUNSELING_CONFIRMED:
+        return (
+          <Button
+            className="w-full rounded-xl"
+            onClick={() => {
+              // TODO: pass the correct reservation id
+              navigate("/reservation/0/cancel")
+            }}
+          >
+            예약 취소하기
+          </Button>
+        )
+
+      default:
+        return null
+    }
+  }
 
   useEffect(() => {
     setHeader({
@@ -91,9 +103,7 @@ const ReservationDetailPage = () => {
       <Location />
       <Divider className="my-[24px] border-gray-100" />
       <MembershipUsage />
-      <FixedButtonContainer>
-        {renderButton(reservationStatus)}
-      </FixedButtonContainer>
+      <FixedButtonContainer>{renderButton()}</FixedButtonContainer>
     </div>
   )
 }
