@@ -227,14 +227,6 @@ const MemberHistory = () => {
           </div>
         )}
       </div>
-
-      <SearchFloatingButton
-        type={activeTab === "reservation" ? "list" : "search"}
-        title={activeTab === "reservation" ? "예약내역" : "지점검색"}
-        onClick={() => {
-          /* handle click */
-        }}
-      />
     </div>
   )
 }
