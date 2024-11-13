@@ -1,10 +1,10 @@
 import clsx from "clsx"
-import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import { ReservationStatus } from "types/Reservation"
 import ReserveTag from "./ReserveTag"
 import { Button } from "./Button"
 import { ReactNode } from "react"
 import { useNavigate } from "react-router-dom"
+import DateAndTime from "./DateAndTime"
 
 interface ReserveCardProps {
   id: number
@@ -12,7 +12,7 @@ interface ReserveCardProps {
   store: string
   title: string
   count: number
-  date: string
+  date: Date
   time: string
   className?: string
 }
@@ -60,14 +60,7 @@ export const ReserveCard = (props: ReserveCardProps) => {
               {count}회차
             </span>
           </div>
-          <div className="mt-3 flex items-center">
-            <CalendarIcon className="w-3.5 h-3.5 text-gray-300" />
-            <span className="font-r text-12px text-gray-500 ml-1.5">
-              {date}
-            </span>
-            <span className="text-12px text-gray-500 mx-1.5">|</span>
-            <span className="font-r text-12px text-gray-500">{time}</span>
-          </div>
+          <DateAndTime date={date} className="mt-3" />
         </div>
         <div className="flex flex-col justify-between items-end">
           <ReserveTag status={status} reservationDate={new Date(date)} />

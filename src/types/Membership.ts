@@ -37,3 +37,13 @@ export const membershipFilters = [
     title: membershipStatusLabel[MembershipStatus.EXPIRED],
   },
 ] as const
+
+export interface MebershipHistory {
+  id: number
+  store: string
+  date: Date
+}
+
+export interface MembershipDetail extends MembershipItem {
+  history: MebershipHistory[]
+}

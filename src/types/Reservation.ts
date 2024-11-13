@@ -20,7 +20,7 @@ export type ReservationItem = {
   store: string
   title: string
   count: number
-  date: string
+  date: Date
   time: string
   dDay?: number
 }

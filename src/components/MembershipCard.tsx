@@ -14,6 +14,7 @@ interface MembershipProps {
   status: MembershipStatus
   isAllBranch?: boolean
   showReserveButton?: boolean
+  showHistoryButton?: boolean
   className?: string
 }
 
@@ -26,6 +27,7 @@ export const MembershipCard = (props: MembershipProps) => {
     status,
     isAllBranch = true,
     showReserveButton = false,
+    showHistoryButton = true,
     className,
   } = props
 
@@ -52,13 +54,15 @@ export const MembershipCard = (props: MembershipProps) => {
           </div>
         </div>
         <div className="flex flex-col justify-between items-end">
-          <div
-            className="flex items-center"
-            onClick={() => navigate(`/membership/usage/${id}`)}
-          >
-            <span className="font-r text-12px text-gray-500"> 이용내역 </span>
-            <CaretRightIcon className="w-3 h-3" />
-          </div>
+          {showHistoryButton && (
+            <div
+              className="flex items-center"
+              onClick={() => navigate(`/membership/usage/${id}`)}
+            >
+              <span className="font-r text-12px text-gray-500"> 이용내역 </span>
+              <CaretRightIcon className="w-3 h-3" />
+            </div>
+          )}
           {showReserveButton && status === MembershipStatus.AVAILABLE && (
             <Button variantType="primary" sizeType="xs">
               예약하기
