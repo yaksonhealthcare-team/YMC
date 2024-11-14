@@ -33,29 +33,29 @@ export const Button = React.forwardRef<HTMLButtonElement, CustomButtonProps>(
   ) => {
     const variantClasses = {
       primary:
-        "bg-primary text-white hover:bg-primary-400 active:bg-primary-500 disabled:bg-[#DCDCDC] disabled:text-gray-400 ",
+        "bg-primary text-white hover:bg-primary-400 active:bg-primary-500 disabled:bg-[#DCDCDC] disabled:text-gray-400",
       secondary:
-        "bg-[#FEF2F1] text-primary-400 hover:bg-primary-100 active:bg-primary-200 disabled:bg-grey-50 disabled:text-gray-300 ",
-      line: "border border-solid border-primary bg-white text-primary-400 hover:bg-[#FEF2F1] active:bg-primary-100 disabled:bg-white disabled:text-gray-300 disabled:border disabled:border-solid disabled:border-gray-300 ",
-      gray: "bg-gray-100 text-black hover:bg-gray-50 active:bg-gray-200 disabled:bg-grey-50 disabled:text-gray-300 ",
-      text: "bg-transparent text-primary hover:underline active:text-primary-400 active:bg-white ",
+        "bg-[#FEF2F1] text-primary-400 hover:bg-primary-100 active:bg-primary-200 disabled:bg-grey-50 disabled:text-gray-300",
+      line: "border border-solid border-primary bg-white text-primary-400 hover:bg-[#FEF2F1] active:bg-primary-100 disabled:bg-white disabled:text-gray-300 disabled:border disabled:border-solid disabled:border-gray-300",
+      gray: "bg-gray-100 text-black hover:bg-gray-50 active:bg-gray-200 disabled:bg-grey-50 disabled:text-gray-300",
+      text: "bg-transparent text-primary hover:underline active:text-primary-400 active:bg-white",
     }
 
     const sizeClasses = {
-      xs: "px-[8.5px] py-3 font-sb text-12px ",
-      s: "px-[9.5px] py-3 font-sb text-14px ",
-      m: "px-3 py-4 font-sb text-16px ",
-      l: "px-[14.px] py-5 font-b text-16px ",
+      xs: "px-[8.5px] py-3 font-sb text-12px",
+      s: "px-[9.5px] py-3 font-sb text-14px",
+      m: "px-3 py-4 font-sb text-16px",
+      l: "px-[14.px] py-5 font-b text-16px",
     }
 
     const iconSize = {
-      xs: "w-4 h-4 ",
-      s: "w-4 h-4 ",
-      m: "w-5 h-5 ",
-      l: "w-5 h-5 ",
+      xs: "w-4 h-4",
+      s: "w-4 h-4",
+      m: "w-5 h-5",
+      l: "w-5 h-5",
     }
 
-    const baseClasses = `${variantClasses[variantType]} ${className}`
+    const baseClasses = className || variantClasses[variantType]
 
     return (
       <CustomButton
