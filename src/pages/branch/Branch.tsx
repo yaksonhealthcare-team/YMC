@@ -2,19 +2,25 @@ import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useEffect, useState } from "react"
 import { Header } from "@components/Header.tsx"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
-import BranchFilterBottomSheet, { FilterItem } from "./_fragments/BranchFilterBottomSheet.tsx"
+import BranchFilterBottomSheet, {
+  FilterItem,
+} from "./_fragments/BranchFilterBottomSheet.tsx"
 import BranchFilterSection from "./_fragments/BranchFilterSection.tsx"
-import BranchFilterList from "./_fragments/BranchFilterList.tsx"
+import BranchFilterList, {
+  BranchFilterListItem,
+} from "./_fragments/BranchFilterList.tsx"
 import { SearchFloatingButton } from "@components/SearchFloatingButton.tsx"
 import { useLocation, useNavigate } from "react-router-dom"
 import BranchMapSection from "./_fragments/BranchMapSection.tsx"
 import { useBranches } from "../../queries/useBranchQueries.tsx"
 import { INITIAL_CENTER } from "@constants/LocationConstants.ts"
+import { Branch as BranchType } from "../../types/Branch.ts"
 
 const Branch = () => {
   const { setHeader, setNavigation } = useLayout()
   const { openBottomSheet, closeOverlay } = useOverlay()
   const [screen, setScreen] = useState<"list" | "map">("list")
+  const [selectedBranch, setSelectedBranch] = useState<BranchType | null>(null)
   const [selectedFilter, setSelectedFilter] = useState<{
     brand: FilterItem | null
     category: FilterItem | null
@@ -56,7 +62,9 @@ const Branch = () => {
           />
           <BranchFilterSection
             currentFilter={selectedFilter}
-            onInitialize={() => setSelectedFilter({ brand: null, category: null })}
+            onInitialize={() =>
+              setSelectedFilter({ brand: null, category: null })
+            }
             onClick={() => {
               openBottomSheet(
                 <BranchFilterBottomSheet
@@ -83,14 +91,21 @@ const Branch = () => {
       case "list":
         return <BranchFilterList branches={branches || []} />
       case "map":
-        return <BranchMapSection branches={branches || []} />
+        return (
+          <BranchMapSection
+            branches={branches || []}
+            onSelectBranch={setSelectedBranch}
+          />
+        )
     }
   }
 
   return (
     <div className={"relative flex flex-col flex-1 pt-12"}>
       {renderScreen()}
-      <div className={"fixed bottom-10 left-1/2 -translate-x-1/2"}>
+      <div
+        className={`fixed bottom-10 left-1/2 -translate-x-1/2 ${selectedBranch ? "transition-transform -translate-y-32 duration-300" : "transition-transform translate-y-0 duration-300"}`}
+      >
         <SearchFloatingButton
           type={screen === "list" ? "search" : "list"}
           title={screen === "list" ? "지도보기" : "목록보기"}
@@ -98,19 +113,41 @@ const Branch = () => {
             if (screen === "list") {
               setScreen("map")
             } else {
+              setSelectedBranch(null)
               setScreen("list")
             }
           }}
         />
       </div>
+      {screen === "map" && (
+        <div
+          className={`absolute w-full bottom-0 left-0 rounded-t-2xl bg-white z-[300] max-h-40 px-5 py-3 ${selectedBranch ? "transition-transform translate-y-0 duration-300 opacity-100" : "transition-transform opacity-0 translate-y-40 duration-300"}`}
+        >
+          {selectedBranch && (
+            <BranchFilterListItem
+              branch={selectedBranch}
+              onClick={() => {
+                navigate(`/branch/${selectedBranch.id}`)
+              }}
+              onClickFavorite={() => {
+                console.log("FAVORITE")
+              }}
+            />
+          )}
+        </div>
+      )}
     </div>
   )
 }
 
-const BranchHeader = ({ onBack, onSearch, onClickLocation }: {
-  onBack: () => void,
-  onSearch: () => void,
-  onClickLocation: () => void,
+const BranchHeader = ({
+  onBack,
+  onSearch,
+  onClickLocation,
+}: {
+  onBack: () => void
+  onSearch: () => void
+  onClickLocation: () => void
 }) => {
   return (
     <Header

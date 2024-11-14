@@ -7,17 +7,38 @@ import { ReactNode, useState } from "react"
 import { copyToClipboard } from "../../../../utils/copyUtils.ts"
 import { Tag } from "@components/Tag.tsx"
 import BranchImageCarousel from "./BranchImageCarousel.tsx"
+import MapView from "@components/MapView.tsx"
 
-const IconSection = ({ icon, children }: { icon: ReactNode, children: ReactNode }) => (
+const IconSection = ({
+  icon,
+  children,
+}: {
+  icon: ReactNode
+  children: ReactNode
+}) => (
   <div className={"flex items-start gap-2 font-r text-14px w-full"}>
     <div className={"h-5 content-center"}>{icon}</div>
     {children}
   </div>
 )
 
-const LabelSection = ({ label, type, children }: { label: string, type: "heading" | "title", children: ReactNode }) => (
-  <div className={`flex flex-col items-start ${type === "heading" ? "gap-4" : "gap-3"} text-r text-14px`}>
-    <p className={`${type === "heading" ? "font-b text-16px" : "font-sb text-14px"}`}>{label}</p>
+const LabelSection = ({
+  label,
+  type,
+  children,
+}: {
+  label: string
+  type: "heading" | "title"
+  children: ReactNode
+}) => (
+  <div
+    className={`flex flex-col items-start ${type === "heading" ? "gap-4" : "gap-3"} text-r text-14px`}
+  >
+    <p
+      className={`${type === "heading" ? "font-b text-16px" : "font-sb text-14px"}`}
+    >
+      {label}
+    </p>
     {children}
   </div>
 )
@@ -27,13 +48,24 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
 
   const { weekday, saturday, holiday } = branch.operatingHours
 
-  const renderOperatingHours = ({ label, start, end }: { label: string, start: string, end: string }) => (
-    <p>{`${label} ${(start === "" || end === "") ? "정기휴무" : `${start} - ${end}`}`}</p>
-  )
+  const renderOperatingHours = ({
+    label,
+    start,
+    end,
+  }: {
+    label: string
+    start: string
+    end: string
+  }) => <p>{`${label} ${start} - ${end}`}</p>
 
   return (
     <>
-      {openImageModal && <BranchImageCarousel images={branch.images} onClose={() => setOpenImageModal(false)} />}
+      {openImageModal && (
+        <BranchImageCarousel
+          images={branch.images}
+          onClose={() => setOpenImageModal(false)}
+        />
+      )}
       <div className={"flex flex-col p-5 gap-6"}>
         <div className={"flex flex-col gap-4"}>
           <div className={"flex flex-col gap-3"}>
@@ -51,16 +83,32 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
               <p>{branch.phoneNumber}</p>
             </IconSection>
           </div>
-          <button className={"relative"} onClick={() => setOpenImageModal(true)}>
-            <img className={"rounded-3xl w-full h-[100px] object-cover"} src={branch.images[0]} alt={"image"} />
-            <CopyIcon className={"absolute top-2 right-3 text-white"} />
-          </button>
+          {branch.images.length > 0 && branch.images[0] !== "" && (
+            <button
+              className={"relative"}
+              onClick={() => setOpenImageModal(true)}
+            >
+              <img
+                className={"rounded-3xl w-full h-[100px] object-cover"}
+                src={branch.images[0]}
+                alt={"image"}
+              />
+              <CopyIcon className={"absolute top-2 right-3 text-white"} />
+            </button>
+          )}
         </div>
         <div className={"h-[1px] w-full bg-gray-200"} />
         <div className={"flex flex-col gap-6"}>
           <LabelSection label={"오시는 길"} type={"heading"}>
-            <div className={"bg-gray-200 w-full h-48"}>
-              지도 표시
+            <div className={"w-full h-48 flex"}>
+              <MapView
+                defaultCenter={{
+                  lat: branch.location.latitude,
+                  lng: branch.location.longitude,
+                }}
+                preventUpdateToCurrentLocation
+                showCurrentLocationButton={false}
+              />
             </div>
             <IconSection icon={<PinIcon />}>
               <div className={"flex w-full justify-between"}>
@@ -78,7 +126,9 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
             <div className={"flex flex-col gap-2"}>
               <p>{branch.directions.bus.description}</p>
               <div className={"flex flex-wrap gap-1"}>
-                {branch.directions.bus.routes.map((route, index) => <Tag key={index} type={"rect"} title={route} />)}
+                {branch.directions.bus.routes.map((route, index) => (
+                  <Tag key={index} type={"rect"} title={route} />
+                ))}
               </div>
             </div>
           </LabelSection>
