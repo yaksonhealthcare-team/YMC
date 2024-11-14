@@ -1,48 +1,50 @@
 declare namespace naver {
   namespace maps {
     class Map {
-      constructor(element: HTMLElement, options?: MapOptions);
+      constructor(element: HTMLElement, options?: MapOptions)
 
-      setCenter(location: LatLng): void;
+      setCenter(location: LatLng): void
 
-      setZoom(level: number, animate?: boolean): void;
+      setZoom(level: number, animate?: boolean): void
 
-      addClickListener(target: Marker, listener: EventListener): void;
+      addClickListener(target: Marker, listener: EventListener): void
     }
 
     class LatLng {
-      constructor(lat: number, lng: number);
+      constructor(lat: number, lng: number)
 
-      lat(): number;
+      lat(): number
 
-      lng(): number;
+      lng(): number
     }
 
     class Marker {
-      constructor(options: MarkerOptions);
+      constructor(options: MarkerOptions)
 
-      setMap(map: Map | null): void;
+      setMap(map: Map | null): void
 
-      setPosition(position: LatLng): void;
+      setIcon(icon: string | ImageIcon): void
+
+      setPosition(position: LatLng): void
     }
 
     interface MapOptions {
-      center?: LatLng;
-      zoom?: number;
-      minZoom?: number;
-      maxZoom?: number;
-      zoomControl?: boolean;
+      center?: LatLng
+      zoom?: number
+      minZoom?: number
+      maxZoom?: number
+      zoomControl?: boolean
       zoomControlOptions?: {
-        position: Position;
-      };
+        position: Position
+      }
     }
 
     interface MarkerOptions {
-      position: LatLng;
-      map?: Map;
-      title?: string;
-      icon?: string | ImageIcon;
-      animation?: Animation;
+      position: LatLng
+      map?: Map
+      title?: string
+      icon?: string | ImageIcon
+      animation?: Animation
     }
 
     enum Position {
@@ -53,25 +55,25 @@ declare namespace naver {
       BOTTOM_LEFT = "BOTTOM_LEFT",
       BOTTOM_RIGHT = "BOTTOM_RIGHT",
       LEFT = "LEFT",
-      RIGHT = "RIGHT"
+      RIGHT = "RIGHT",
     }
 
     interface ImageIcon {
-      url: string;
-      size?: Size;
-      origin?: Point;
-      anchor?: Point;
+      url: string
+      size?: Size
+      origin?: Point
+      anchor?: Point
     }
 
     class Size {
-      constructor(width: number, height: number);
+      constructor(width: number, height: number)
 
       width: number
       height: number
     }
 
     class Point {
-      constructor(x: number, y: number);
+      constructor(x: number, y: number)
 
       x: number
       y: number
@@ -79,43 +81,43 @@ declare namespace naver {
 
     enum Animation {
       BOUNCE = 1,
-      DROP = 2
+      DROP = 2,
     }
 
     namespace Event {
       import Marker = naver.maps.Marker
-      type EventType = "click";
+      type EventType = "click"
 
       interface EventListener {
-        (): void;
+        (): void
       }
 
       function addListener(
         target: Map | Marker | InfoWindow,
         eventName: EventType,
         listener: EventListener,
-      ): void;
+      ): void
 
       function removeListener(
         target: Map | Marker | InfoWindow,
         eventName: EventType,
         listener: EventListener,
-      ): void;
+      ): void
 
       function clearListeners(
         target: Map | Marker | InfoWindow,
         eventName?: EventType,
-      ): void;
+      ): void
     }
   }
 }
 
 declare global {
   interface Window {
-    naver: typeof naver;
+    naver: typeof naver
   }
 }
 
 declare module "naver-maps" {
-  export = naver;
+  export = naver
 }

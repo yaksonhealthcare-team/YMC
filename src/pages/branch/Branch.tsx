@@ -6,19 +6,21 @@ import BranchFilterBottomSheet, {
   FilterItem,
 } from "./_fragments/BranchFilterBottomSheet.tsx"
 import BranchFilterSection from "./_fragments/BranchFilterSection.tsx"
-import BranchFilterList from "./_fragments/BranchFilterList.tsx"
+import BranchFilterList, {
+  BranchFilterListItem,
+} from "./_fragments/BranchFilterList.tsx"
 import { SearchFloatingButton } from "@components/SearchFloatingButton.tsx"
 import { useLocation, useNavigate } from "react-router-dom"
 import BranchMapSection from "./_fragments/BranchMapSection.tsx"
 import { useBranches } from "../../queries/useBranchQueries.tsx"
 import { INITIAL_CENTER } from "@constants/LocationConstants.ts"
-import BranchMapBottomSheet from "./_fragments/BranchMapBottomSheet.tsx"
+import { Branch as BranchType } from "../../types/Branch.ts"
 
 const Branch = () => {
   const { setHeader, setNavigation } = useLayout()
   const { openBottomSheet, closeOverlay } = useOverlay()
-  // const { location: coordinate, error: geolocationError, loading: geolocationLoading } = useGeolocation()
   const [screen, setScreen] = useState<"list" | "map">("list")
+  const [selectedBranch, setSelectedBranch] = useState<BranchType | null>(null)
   const [selectedFilter, setSelectedFilter] = useState<{
     brand: FilterItem | null
     category: FilterItem | null
@@ -27,10 +29,8 @@ const Branch = () => {
     category: null,
   })
 
-  const { data: branches, isLoading: isLoadingBranches } = useBranches({
+  const { data: branches } = useBranches({
     page: 1,
-    // latitude: (geolocationError || !coordinate.latitude) ? INITIAL_CENTER.lat : coordinate.latitude,
-    // longitude: (geolocationError || !coordinate.longitude) ? INITIAL_CENTER.lng : coordinate.longitude,
     latitude: INITIAL_CENTER.lat,
     longitude: INITIAL_CENTER.lng,
     brandCode: "001",
@@ -87,10 +87,6 @@ const Branch = () => {
   }, [])
 
   const renderScreen = () => {
-    // if (geolocationLoading || isLoadingBranches) {
-    //   return <></>
-    // }
-
     switch (screen) {
       case "list":
         return <BranchFilterList branches={branches || []} />
@@ -98,9 +94,7 @@ const Branch = () => {
         return (
           <BranchMapSection
             branches={branches || []}
-            onSelectBranch={(branch) => {
-              openBottomSheet(<BranchMapBottomSheet branch={branch} />)
-            }}
+            onSelectBranch={setSelectedBranch}
           />
         )
     }
@@ -109,7 +103,9 @@ const Branch = () => {
   return (
     <div className={"relative flex flex-col flex-1 pt-12"}>
       {renderScreen()}
-      <div className={"fixed bottom-10 left-1/2 -translate-x-1/2"}>
+      <div
+        className={`fixed bottom-10 left-1/2 -translate-x-1/2 ${selectedBranch ? "transition-transform -translate-y-32 duration-300" : "transition-transform translate-y-0 duration-300"}`}
+      >
         <SearchFloatingButton
           type={screen === "list" ? "search" : "list"}
           title={screen === "list" ? "지도보기" : "목록보기"}
@@ -117,11 +113,29 @@ const Branch = () => {
             if (screen === "list") {
               setScreen("map")
             } else {
+              setSelectedBranch(null)
               setScreen("list")
             }
           }}
         />
       </div>
+      {screen === "map" && (
+        <div
+          className={`absolute w-full bottom-0 left-0 rounded-t-2xl bg-white z-[300] max-h-40 px-5 py-3 ${selectedBranch ? "transition-transform translate-y-0 duration-300 opacity-100" : "transition-transform opacity-0 translate-y-40 duration-300"}`}
+        >
+          {selectedBranch && (
+            <BranchFilterListItem
+              branch={selectedBranch}
+              onClick={() => {
+                navigate(`/branch/${selectedBranch.id}`)
+              }}
+              onClickFavorite={() => {
+                console.log("FAVORITE")
+              }}
+            />
+          )}
+        </div>
+      )}
     </div>
   )
 }

@@ -6,12 +6,14 @@ import { createMarkerIcon } from "../utils/createMarkerIcon.ts"
 
 interface MapViewProps {
   defaultCenter?: {
-    lat: number;
-    lng: number;
-  };
-  initialZoom?: number;
-  branches: Branch[];
-  onSelectBranch?: (branch: Branch) => void;
+    lat: number
+    lng: number
+  }
+  initialZoom?: number
+  branches?: Branch[]
+  onSelectBranch?: (branch: Branch | null) => void
+  preventUpdateToCurrentLocation?: boolean
+  showCurrentLocationButton?: boolean
 }
 
 const MapView = ({
@@ -19,31 +21,46 @@ const MapView = ({
   initialZoom = 14,
   branches = [],
   onSelectBranch,
+  preventUpdateToCurrentLocation = false,
+  showCurrentLocationButton = true,
 }: MapViewProps) => {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstance = useRef<naver.maps.Map | null>(null)
-  const markerInstances = useRef<naver.maps.Marker[]>([])
+  const markerInstances = useRef<
+    Array<{
+      marker: naver.maps.Marker
+      branch: Branch
+    }>
+  >([])
   const currentLocationMarker = useRef<naver.maps.Marker | null>(null)
+  const selectedMarker = useRef<naver.maps.Marker | null>(null)
   const [initialCenter, setInitialCenter] = useState(defaultCenter)
   const [isInitialized, setIsInitialized] = useState(false)
+  const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
 
-  const updateCurrentLocationMarker = useCallback((latitude: number, longitude: number) => {
-    if (!mapInstance.current) return
+  const updateCurrentLocationMarker = useCallback(
+    (latitude: number, longitude: number) => {
+      if (!mapInstance.current) return
 
-    const position = new window.naver.maps.LatLng(latitude, longitude)
+      if (currentLocationMarker.current) {
+        currentLocationMarker.current.setMap(null)
+      }
 
-    if (currentLocationMarker.current) {
-      currentLocationMarker.current.setPosition(position)
-    } else {
+      const position = new window.naver.maps.LatLng(latitude, longitude)
+
       currentLocationMarker.current = new window.naver.maps.Marker({
         position,
         map: mapInstance.current,
         icon: createMarkerIcon(null, "current-location"),
       })
-    }
-  }, [])
+    },
+    [],
+  )
 
-  const getCurrentLocation = useCallback((): Promise<{ lat: number, lng: number }> => {
+  const getCurrentLocation = useCallback((): Promise<{
+    lat: number
+    lng: number
+  }> => {
     return new Promise((resolve, reject) => {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
@@ -78,14 +95,15 @@ const MapView = ({
       console.warn("현재 위치로 이동할 수 없습니다:", error)
       alert("현재 위치를 가져올 수 없습니다.")
     }
-  }, [getCurrentLocation])
+  }, [getCurrentLocation, updateCurrentLocationMarker])
 
   useEffect(() => {
-    if (isInitialized) return
+    if (isInitialized || preventUpdateToCurrentLocation) return
 
     getCurrentLocation()
-      .then(position => {
+      .then((position) => {
         setInitialCenter(position)
+        updateCurrentLocationMarker(position.lat, position.lng)
       })
       .catch(() => {
         setInitialCenter(defaultCenter)
@@ -93,12 +111,15 @@ const MapView = ({
       .finally(() => {
         setIsInitialized(true)
       })
-  }, [defaultCenter, isInitialized])
+  }, [
+    defaultCenter,
+    getCurrentLocation,
+    isInitialized,
+    preventUpdateToCurrentLocation,
+    updateCurrentLocationMarker,
+  ])
 
-  // 지도 초기화
   useEffect(() => {
-    if (!isInitialized) return
-
     const initializeMap = () => {
       if (!mapRef.current) return
 
@@ -107,15 +128,19 @@ const MapView = ({
           initialCenter.lat,
           initialCenter.lng,
         ),
+        zoom: initialZoom,
       }
 
-      mapInstance.current = new window.naver.maps.Map(mapRef.current, mapOptions)
+      mapInstance.current = new window.naver.maps.Map(
+        mapRef.current,
+        mapOptions,
+      )
 
-      updateCurrentLocationMarker(initialCenter.lat, initialCenter.lng)
-      markerInstances.current.forEach(marker => marker.setMap(null))
+      // 기존 마커들 제거
+      markerInstances.current.forEach(({ marker }) => marker.setMap(null))
       markerInstances.current = []
 
-      branches.forEach(branch => {
+      branches.forEach((branch) => {
         const markerIcon = createMarkerIcon(branch, "default")
 
         const marker = new window.naver.maps.Marker({
@@ -131,10 +156,16 @@ const MapView = ({
         if (onSelectBranch) {
           window.naver.maps.Event.addListener(marker, "click", () => {
             onSelectBranch(branch)
+            setSelectedBranch(branch)
           })
         }
 
-        markerInstances.current.push(marker)
+        markerInstances.current.push({ marker, branch })
+      })
+
+      window.naver.maps.Event.addListener(mapInstance.current, "click", () => {
+        onSelectBranch?.(null)
+        setSelectedBranch(null)
       })
     }
 
@@ -145,26 +176,57 @@ const MapView = ({
     document.head.appendChild(script)
 
     return () => {
-      markerInstances.current.forEach(marker => marker.setMap(null))
+      markerInstances.current.forEach(({ marker }) => marker.setMap(null))
       if (currentLocationMarker.current) {
         currentLocationMarker.current.setMap(null)
       }
       document.head.removeChild(script)
     }
-  }, [initialCenter, initialZoom, branches, onSelectBranch, isInitialized])
+  }, [initialCenter, initialZoom, branches, isInitialized, onSelectBranch])
+
+  useEffect(() => {
+    if (!markerInstances.current.length) return
+
+    // 이전에 선택된 마커가 있다면 원래 아이콘으로 되돌리기
+    if (selectedMarker.current) {
+      const prevMarkerInfo = markerInstances.current.find(
+        ({ marker }) => marker === selectedMarker.current,
+      )
+
+      if (prevMarkerInfo) {
+        const defaultIcon = createMarkerIcon(prevMarkerInfo.branch, "default")
+        prevMarkerInfo.marker.setIcon(defaultIcon)
+      }
+    }
+
+    // 새로 선택된 마커의 아이콘 변경
+    if (selectedBranch) {
+      const newMarkerInfo = markerInstances.current.find(
+        ({ branch }) => branch.id === selectedBranch.id,
+      )
+
+      if (newMarkerInfo) {
+        const selectedIcon = createMarkerIcon(selectedBranch, "active")
+        newMarkerInfo.marker.setIcon(selectedIcon)
+        selectedMarker.current = newMarkerInfo.marker
+      }
+    } else {
+      selectedMarker.current = null
+    }
+  }, [selectedBranch])
 
   return (
     <div className="relative flex-1">
-      <div
-        className={"w-full h-full"}
-        ref={mapRef}
-      />
-      <button
-        onClick={moveToCurrentLocation}
-        className="absolute bottom-4 right-4 bg-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-50 flex items-center gap-2 z-30"
-      >
-        <CrosshairIcon />
-      </button>
+      <div className="w-full h-full" ref={mapRef} />
+      {showCurrentLocationButton && (
+        <button
+          onClick={moveToCurrentLocation}
+          className={`absolute bottom-10 right-4 bg-white p-2 rounded-full shadow-floatingButton hover:bg-gray-50 flex items-center gap-2 
+            ${selectedBranch ? "transition-transform -translate-y-32 duration-300" : "transition-transform translate-y-0 duration-300"}`}
+        >
+          <CrosshairIcon />
+        </button>
+      )}
     </div>
   )
 }

@@ -14,15 +14,24 @@ import TherapistActivePin from "@assets/icons/pin/TherapistActivePin.svg?url"
 import TherapistBookmarkPin from "@assets/icons/pin/TherapistBookmarkPin.svg?url"
 import TherapistPin from "@assets/icons/pin/TherapistPin.svg?url"
 
-type MarkerState = "current-location" | "default" | "active" | "bookmark" | "active-bookmark" | "location-selector";
+type MarkerState =
+  | "current-location"
+  | "default"
+  | "active"
+  | "bookmark"
+  | "active-bookmark"
+  | "location-selector"
 
 interface NaverMapIcon {
-  url: string;
-  size: naver.maps.Size;
-  anchor: naver.maps.Point;
+  url: string
+  size: naver.maps.Size
+  anchor: naver.maps.Point
 }
 
-export const createMarkerIcon = (branch: Branch | null, state: MarkerState): NaverMapIcon => {
+export const createMarkerIcon = (
+  branch: Branch | null,
+  state: MarkerState,
+): NaverMapIcon => {
   if (state === "current-location") {
     return {
       url: CurrentLocationPin,
@@ -64,15 +73,18 @@ export const createMarkerIcon = (branch: Branch | null, state: MarkerState): Nav
     },
   }
 
-  const icon = iconMap[branch.brand]?.[state] || iconMap[branch.brand]?.["default"]
+  const icon =
+    iconMap[branch.brand]?.[state] || iconMap[branch.brand]?.["default"]
 
   if (!icon) {
-    throw new Error(`No icon found for branch type ${branch.brand} and state ${state}`)
+    throw new Error(
+      `No icon found for branch type ${branch.brand} and state ${state}`,
+    )
   }
 
   return {
     url: icon,
-    size: new window.naver.maps.Size(32, 32),
-    anchor: new window.naver.maps.Point(16, 32),
+    size: new window.naver.maps.Size(48, 52),
+    anchor: new window.naver.maps.Point(24, 52),
   }
 }

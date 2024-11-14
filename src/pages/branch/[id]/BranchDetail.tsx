@@ -2,7 +2,6 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useLayout } from "../../../contexts/LayoutContext.tsx"
 import { ReactNode, useEffect, useState } from "react"
 import DynamicHomeHeaderBackground from "../../home/_fragments/DynamicHomeHeaderBackground.tsx"
-import { MockBranch } from "../../../types/Branch.ts"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import PinIcon from "@assets/icons/PinIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
@@ -15,6 +14,8 @@ import ProgramList from "./_fragments/ProgramList.tsx"
 import BranchInformation from "./_fragments/BranchInformation.tsx"
 import ProfileCard from "@components/ProfileCard.tsx"
 import BranchDetailBottomActionBar from "./_fragments/BranchDetailBottomActionBar.tsx"
+import { useBranch } from "../../../queries/useBranchQueries.tsx"
+import { INITIAL_CENTER } from "@constants/LocationConstants.ts"
 
 const branchDetailTabs = ["therapists", "programs", "information"] as const
 type BranchDetailTab = (typeof branchDetailTabs)[number]
@@ -29,13 +30,21 @@ const BranchDetail = () => {
   const { id } = useParams()
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const branch = MockBranch(id || "1")
   const [selectedTab, setSelectedTab] = useState<string>("therapists")
+  // TODO: INITIAL_CENTER에 현재위치 반영하기
+  const { data: branch, isLoading } = useBranch(id!, {
+    latitude: INITIAL_CENTER.lat,
+    longitude: INITIAL_CENTER.lng,
+  })
 
   useEffect(() => {
     setHeader({ display: false })
     setNavigation({ display: false })
   }, [])
+
+  if (!branch || isLoading) {
+    return <></>
+  }
 
   const renderTab = () => {
     switch (selectedTab) {
@@ -73,14 +82,21 @@ const BranchDetail = () => {
             </>
           }
           content={
-            <div className={"flex flex-col gap-4 -mb-4"}>
-              <div className={"w-full h-[1px] bg-gray-200 rounded-sm"} />
-              <StaffSection
-                directorCount={1}
-                staffCount={branch.staffs.length}
-              />
-              <ProfileCard type={"primary"} {...branch.director} />
-            </div>
+            (branch.staffs.length > 0 || branch.director) && (
+              <div className={"flex flex-col gap-4 -mb-4"}>
+                <div className={"w-full h-[1px] bg-gray-200 rounded-sm"} />
+
+                {branch.staffs.length > 0 && (
+                  <StaffSection
+                    directorCount={1}
+                    staffCount={branch.staffs.length}
+                  />
+                )}
+                {branch.director && (
+                  <ProfileCard type={"primary"} {...branch.director} />
+                )}
+              </div>
+            )
           }
           buttonArea={
             <button

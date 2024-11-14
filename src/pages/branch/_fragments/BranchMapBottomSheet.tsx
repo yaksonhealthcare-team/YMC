@@ -1,18 +1,17 @@
 import { Branch } from "../../../types/Branch.ts"
 import { BranchFilterListItem } from "./BranchFilterList.tsx"
-import { useNavigate } from "react-router-dom"
 
 interface BranchMapBottomSheetProps {
   branch: Branch
 }
 
 const BranchMapBottomSheet = ({ branch }: BranchMapBottomSheetProps) => {
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   return (
-    <div className={"flex flex-col w-screen items-center gap-5 px-5"}>
+    <div className={"flex flex-col items-stretch gap-5 px-5 bg-white"}>
       <BranchFilterListItem
         branch={branch}
-        onClick={(branch) => navigate(`/branch/${branch.id}`)}
+        onClick={(branch) => console.log(branch)}
         onClickFavorite={() => {
           console.log("TOGGLE FAVORITE")
         }}
