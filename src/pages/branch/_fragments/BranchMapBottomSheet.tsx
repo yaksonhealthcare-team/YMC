@@ -6,7 +6,6 @@ interface BranchMapBottomSheetProps {
 }
 
 const BranchMapBottomSheet = ({ branch }: BranchMapBottomSheetProps) => {
-  // const navigate = useNavigate()
   return (
     <div className={"flex flex-col items-stretch gap-5 px-5 bg-white"}>
       <BranchFilterListItem
