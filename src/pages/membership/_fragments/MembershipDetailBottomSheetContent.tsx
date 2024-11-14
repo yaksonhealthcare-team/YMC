@@ -1,5 +1,5 @@
 import { Button } from "@components/Button"
-import { Divider } from "@components/Divider"
+import { Divider } from "@mui/material"
 import { Number } from "@components/Number"
 import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import { useState } from "react"
@@ -50,7 +50,7 @@ const MembershipDetailBottomSheetContent = () => {
             </div>
           </div>
 
-          <Divider type="s_100" />
+          <Divider className={"border-gray-200"} />
 
           {/* 10회 옵션 */}
           <div className="flex flex-col gap-4">

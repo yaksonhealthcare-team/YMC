@@ -1,6 +1,15 @@
 import clsx from "clsx"
 import { COLORS } from "@constants/ColorConstants"
 
+export type TagType =
+  | "used"
+  | "unused"
+  | "rect"
+  | "round"
+  | "green"
+  | "blue"
+  | "red"
+
 const TAG_VARIANTS = {
   used: "rounded text-gray-400 bg-gray-100",
   unused: `rounded text-primary bg-[${COLORS.SECONDARY}]`,
