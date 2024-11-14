@@ -11,7 +11,6 @@ import { Filter } from "@components/Filter.tsx"
 import { Tag } from "@components/Tag.tsx"
 import { FloatingButton } from "@components/FloatingButton.tsx"
 import { SearchFloatingButton } from "@components/SearchFloatingButton.tsx"
-import { Divider } from "@components/Divider.tsx"
 import { Title } from "@components/Title.tsx"
 import { Header } from "@components/Header.tsx"
 import ShareIcon from "@assets/icons/ShareIcon.svg?react"
@@ -203,15 +202,7 @@ const DevPage = () => {
           />
         </div>
       </div>
-      <div className="p-4 border-t">
-        {"Dividers: "}
-        <div className="p-4 bg-black text-white flex flex-col gap-2 items-center">
-          <Divider type="m" />
-          <Divider type="s_100" />
-          <Divider type="s_200" />
-          <Divider type="r" />
-        </div>
-      </div>
+
       <div className="p-4 border-t">
         {"Title: "}
         <Title
