@@ -1,125 +1,120 @@
+import { cloneElement, type ReactElement, type SVGProps } from "react"
 import clsx from "clsx"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import SearchIcon from "@components/icons/SearchIcon"
 import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
-import React from "react"
+
+const HEADER_STYLES = {
+  location: "py-3 px-5 bg-white",
+  back_w: "py-3.5 px-5",
+  back_b: "py-3.5 px-5",
+  back_title: "py-3 px-5",
+  back_title_icon: "py-3 px-5",
+  two_icon: "py-3 px-5",
+  back_title_text: "py-3 px-5",
+  title_right_icon: "py-3 px-5",
+} as const
+
+const TITLE_STYLES = {
+  location: "text-14px",
+  default: "text-16px",
+} as const
+
+const ICON_DIMENSIONS = {
+  width: "24px",
+  height: "24px",
+} as const
 
 interface HeaderProps {
-  type:
-    | "location"
-    | "back_w"
-    | "back_b"
-    | "back_title"
-    | "back_title_icon"
-    | "two_icon"
-    | "back_title_text"
-    | "title_right_icon"
+  type: keyof typeof HEADER_STYLES
   title?: string
   textRight?: string
-  iconLeft?: React.ReactNode
-  iconRight?: React.ReactNode
+  iconLeft?: ReactElement<SVGProps<SVGSVGElement>>
+  iconRight?: ReactElement<SVGProps<SVGSVGElement>>
   onClickLeft?: () => void
   onClickRight?: () => void
   onClickLocation?: () => void
 }
 
-export const Header = (props: HeaderProps) => {
-  const {
-    type,
-    title,
-    textRight,
-    onClickLeft,
-    onClickRight,
-    onClickLocation,
-    iconLeft,
-    iconRight,
-  } = props
+const LeftSection = ({ type, iconLeft, onClickLeft }: HeaderProps) => (
+  <button onClick={onClickLeft}>
+    {type === "two_icon" ? (
+      cloneElement(iconLeft!, ICON_DIMENSIONS)
+    ) : type === "title_right_icon" ? (
+      <div className="w-5 h-5" />
+    ) : (
+      <CaretLeftIcon
+        className={clsx(
+          "w-5 h-5",
+          type === "back_w" ? "text-white" : "text-gray-700",
+        )}
+      />
+    )}
+  </button>
+)
 
-  const divStyles = {
-    location: `py-3 px-5 bg-white`,
-    back_w: `py-3.5 px-5`,
-    back_b: `py-3.5 px-5`,
-    back_title: `py-3 px-5`,
-    back_title_icon: `py-3 px-5`,
-    two_icon: `py-3 px-5`,
-    back_title_text: `py-3 px-5`,
-    title_right_icon: `py-3 px-5`,
+const TitleSection = ({ type, title, onClickLocation }: HeaderProps) => (
+  <div className="flex justify-center gap-2">
+    <span
+      className={clsx(
+        "font-sb text-gray-700",
+        type === "location" ? TITLE_STYLES.location : TITLE_STYLES.default,
+      )}
+    >
+      {title}
+    </span>
+    {type === "location" && (
+      <button onClick={onClickLocation}>
+        <CaretDownIcon className="w-4 h-4" />
+      </button>
+    )}
+  </div>
+)
+
+const RightSection = ({
+  type,
+  iconRight,
+  textRight,
+  onClickRight,
+}: HeaderProps) => {
+  if (["back_w", "back_b", "back_title"].includes(type)) {
+    return <div className="w-5 h-5" />
   }
 
-  const modifiedIconLeft =
-    iconLeft &&
-    React.cloneElement(
-      iconRight as React.ReactElement<React.SVGProps<SVGSVGElement>>,
-      {
-        width: "24px",
-        height: "24px",
-      },
+  if (type === "location") {
+    return (
+      <button onClick={onClickRight}>
+        <SearchIcon className="w-6 h-6" />
+      </button>
     )
+  }
 
-  const modifiedIconRight =
-    iconRight &&
-    React.cloneElement(
-      iconRight as React.ReactElement<React.SVGProps<SVGSVGElement>>,
-      {
-        width: "24px",
-        height: "24px",
-      },
+  if (type === "back_title_text") {
+    return (
+      <button onClick={onClickRight}>
+        <span className="font-m text-16px text-gray-500">{textRight}</span>
+      </button>
     )
+  }
 
   return (
-    <>
-      <div
-        className={clsx(
-          `flex justify-between items-center h-[48px]`,
-          divStyles[type],
-        )}
-      >
-        {/* 왼쪽 아이콘 */}
-        <button onClick={onClickLeft}>
-          {type === "two_icon" ? (
-            <>{modifiedIconLeft}</>
-          ) : type === "title_right_icon" ? (
-            <div className="w-5 h-5"></div>
-          ) : (
-            <CaretLeftIcon
-              className={clsx(
-                "w-5 h-5",
-                type === "back_w" ? "text-white" : "text-gray-700",
-              )}
-            />
-          )}
-        </button>
-        {/* 가운데 타이틀 */}
-        <div className="flex justify-center gap-2">
-          <span
-            className={clsx(
-              "font-sb text-gray-700",
-              type === "location" ? "text-14px" : "text-16px",
-            )}
-          >
-            {title}
-          </span>
-          {type === "location" && (
-            <button onClick={onClickLocation}>
-              <CaretDownIcon className="w-4 h-4" />
-            </button>
-          )}
-        </div>
-        {/* 오른쪽 아이콘 */}
-        {type === "back_w" || type === "back_b" || type === "back_title" ? (
-          <div className="w-5 h-5"></div>
-        ) : type === "location" ? (
-          <button onClick={onClickRight}>
-            <SearchIcon className="w-6 h-6" />
-          </button>
-        ) : type === "back_title_text" ? (
-          <button onClick={onClickRight}>
-            <span className="font-m text-16px text-gray-500">{textRight}</span>
-          </button>
-        ) : (
-          <button onClick={onClickRight}>{modifiedIconRight}</button>
-        )}
-      </div>
-    </>
+    <button onClick={onClickRight}>
+      {cloneElement(iconRight!, ICON_DIMENSIONS)}
+    </button>
   )
 }
+
+export const Header = (props: HeaderProps) => (
+  <div
+    className={clsx(
+      "flex justify-between items-center h-[48px]",
+      HEADER_STYLES[props.type],
+    )}
+  >
+    <LeftSection {...props} />
+    <TitleSection {...props} />
+    <RightSection {...props} />
+  </div>
+)
+
+Header.displayName = "Header"
