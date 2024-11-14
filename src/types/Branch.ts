@@ -12,19 +12,19 @@ type BranchDetail = {
   phoneNumber: string
   operatingHours: {
     weekday: {
-      start: string;
-      end: string;
-    },
+      start: string
+      end: string
+    }
     saturday: {
-      start: string;
-      end: string;
-    },
+      start: string
+      end: string
+    }
     holiday: {
-      start: string,
-      end: string;
+      start: string
+      end: string
     }
   }
-  director: Profile
+  director?: Profile
   staffs: Profile[]
   directions: {
     bus: {
@@ -117,7 +117,8 @@ export const MockBranch = (id: string): BranchDetail => ({
   ],
   directions: {
     bus: {
-      description: "강남구청역 하차 후 바로 보이는 SK허브빌딩 2층 (미스터피자옆)",
+      description:
+        "강남구청역 하차 후 바로 보이는 SK허브빌딩 2층 (미스터피자옆)",
       routes: ["401", "640", "3414", "41", "3011", "4431"],
     },
     subway: {
@@ -178,18 +179,19 @@ type Branch = {
   canBookToday: boolean
   distanceInMeters: string | null
   isFavorite: boolean
+  brand: "therapist" | "dalia" | "diet"
 }
 
 export const MockBranches: Branch[] = Array.from({ length: 12 }, (_, i) => ({
   id: `${i}`,
   name: `약손명가 ${i}호점`,
   address: "서울시 강남구 강남대로 24길 38 sk허브빌딩 A동 206호",
-  latitude: 37.523040 + (0.001 * i),
-  longitude: 127.028841 + (0.001 * i),
+  latitude: 37.52304 + 0.001 * i,
+  longitude: 127.028841 + 0.001 * i,
   canBookToday: Math.random() > 0.5,
   distanceInMeters: "0.5m",
   isFavorite: Math.random() > 0.5,
+  brand: "therapist",
 }))
 
 export type { Branch, BranchDetail }
-
