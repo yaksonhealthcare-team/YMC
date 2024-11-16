@@ -3,7 +3,7 @@ import { useLayout } from "../../../contexts/LayoutContext.tsx"
 import CloseIcon from "@assets/icons/CloseIcon.svg?react"
 import CrosshairIcon from "@assets/icons/CrosshairIcon.svg?react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { SearchField } from "@components/SearchField.tsx" // 이 부분 수정
+import { SearchField } from "@components/SearchField.tsx"
 import SavedLocationList from "./SavedLocationList.tsx"
 import LocationSearchResultList from "./LocationSearchResultList.tsx"
 import LocationSearchPlaceholder from "./LocationSearchPlaceholder.tsx"
