@@ -1,6 +1,7 @@
 import React from "react"
 import { Button as MUIButton, ButtonProps } from "@mui/material"
 import { styled } from "@mui/material/styles"
+import clsx from "clsx"
 
 const StyledButton = styled(MUIButton)({
   textTransform: "none",
@@ -37,6 +38,7 @@ interface CustomButtonProps extends ButtonProps {
   sizeType?: keyof typeof SIZE_STYLES
   iconLeft?: React.ReactNode
   iconRight?: React.ReactNode
+  fullCustom?: boolean // 완전한 커스텀 스타일을 위한 prop 추가
 }
 
 export const Button = ({
@@ -46,18 +48,31 @@ export const Button = ({
   iconRight,
   children = "Button",
   className = "",
+  fullCustom = false, // 기본값은 false
   ...props
 }: CustomButtonProps) => (
   <StyledButton
     {...props}
-    className={`rounded-lg ${className || VARIANT_STYLES[variantType]} ${SIZE_STYLES[sizeType]}`}
+    className={clsx(
+      "rounded-lg",
+      !fullCustom && [VARIANT_STYLES[variantType], SIZE_STYLES[sizeType]],
+      className,
+    )}
   >
     {iconLeft && (
-      <span className={`${ICON_SIZES[sizeType]} flex mr-1.5`}>{iconLeft}</span>
+      <span
+        className={clsx("flex mr-1.5", !fullCustom && ICON_SIZES[sizeType])}
+      >
+        {iconLeft}
+      </span>
     )}
     {children}
     {iconRight && (
-      <span className={`${ICON_SIZES[sizeType]} flex ml-1.5`}>{iconRight}</span>
+      <span
+        className={clsx("flex ml-1.5", !fullCustom && ICON_SIZES[sizeType])}
+      >
+        {iconRight}
+      </span>
     )}
   </StyledButton>
 )

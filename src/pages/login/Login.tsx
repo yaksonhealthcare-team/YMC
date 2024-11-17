@@ -34,8 +34,9 @@ const Login = () => {
         {/* 카카오 로그인 */}
         <Button
           onClick={() => handleSocialLogin("카카오")}
+          fullCustom
           sizeType="l"
-          className="bg-[#FEE500] border-[#FEE500] text-[#262626] font-b flex items-center"
+          className="bg-[#FEE500] border-[#FEE500] text-[#262626] font-b flex items-center px-3 py-4"
         >
           <KakaoIcon className="w-6 h-6" />
           <span className="flex-1 text-center">카카오톡으로 로그인</span>
@@ -44,8 +45,9 @@ const Login = () => {
         {/* 네이버 로그인 */}
         <Button
           onClick={() => handleSocialLogin("네이버")}
+          fullCustom
           sizeType="l"
-          className="bg-[#03C75A] border-[#03C75A] text-white font-b flex items-center"
+          className="bg-[#03C75A] border-[#03C75A] text-white font-b flex items-center px-3 py-4"
         >
           <NaverIcon className="w-6 h-6 text-white" />
           <span className="flex-1 text-center">네이버로 로그인</span>
@@ -55,8 +57,9 @@ const Login = () => {
         {/* 애플 로그인 */}
         <Button
           onClick={() => handleSocialLogin("애플")}
+          fullCustom
           sizeType="l"
-          className="bg-[#000000] border-black text-white font-b flex items-center"
+          className="bg-[#000000] border-black text-white font-b flex items-center px-3 py-4"
         >
           <AppleIcon className="w-6 h-6 text-white" />
           <span className="flex-1 text-center">Apple로 로그인</span>
