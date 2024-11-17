@@ -1,32 +1,36 @@
 import { Button } from "@mui/material"
+import clsx from "clsx"
 import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import ReloadIcon from "@components/icons/ReloadIcon"
 
-type FilterProps = {
+const FILTER_STYLES = {
+  default: "border border-gray-200 font-r text-14px text-gray-500",
+  active: "border border-primary font-sb text-14px text-primary",
+} as const
+
+const BUTTON_BASE_STYLES = "rounded-full px-3 py-1 min-w-0 h-8"
+
+interface FilterProps {
   label?: string
   type?: "default" | "arrow" | "reload"
-  state?: "default" | "active"
+  state?: keyof typeof FILTER_STYLES
   onClick?: () => void
 }
 
-export const Filter = (props: FilterProps) => {
-  const { label, type = "default", state = "default", onClick } = props
+export const Filter = ({
+  label,
+  type = "default",
+  state = "default",
+  onClick,
+}: FilterProps) => (
+  <Button
+    variant="outlined"
+    className={clsx(FILTER_STYLES[state], BUTTON_BASE_STYLES)}
+    onClick={onClick}
+    endIcon={type === "arrow" ? <CaretDownIcon /> : undefined}
+  >
+    {type === "reload" ? <ReloadIcon /> : label}
+  </Button>
+)
 
-  const stateClasses = {
-    default: "border border-gray-200 font-r text-14px text-gray-500",
-    active: "border border-primary font-sb text-14px text-primary",
-  }
-
-  return (
-    <>
-      <Button
-        variant="outlined"
-        className={`${stateClasses[state]} rounded-full px-3 py-1 min-w-0 h-8`}
-        onClick={onClick}
-        endIcon={type === "arrow" && <CaretDownIcon />}
-      >
-        {type === "reload" ? <ReloadIcon /> : label}
-      </Button>
-    </>
-  )
-}
+Filter.displayName = "Filter"

@@ -1,4 +1,4 @@
-import { Divider } from "@components/Divider.tsx"
+import { Divider } from "@mui/material"
 import CloseIcon from "@assets/icons/CloseIcon.svg?react"
 import { Filter } from "@components/Filter.tsx"
 import { useState } from "react"
@@ -71,7 +71,15 @@ const BranchFilterBottomSheetHeader = ({
   onClose: () => void
 }) => (
   <>
-    <Divider type="r" />
+    <Divider
+      sx={{
+        width: "52px",
+        height: "1.5px",
+        borderRadius: "100px",
+        bgcolor: "gray.200",
+        margin: "0 auto",
+      }}
+    />
     <div className={"w-full"}>
       <div className={"flex justify-between"}>
         <p className={"font-sb text-18px"}>{"지점 필터"}</p>

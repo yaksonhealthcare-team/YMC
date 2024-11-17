@@ -9,7 +9,11 @@ import LocationSearchResultList from "./LocationSearchResultList.tsx"
 import LocationSearchPlaceholder from "./LocationSearchPlaceholder.tsx"
 import { Location } from "../../../types/Location.ts"
 
-const LocationSettingsHeader = ({ onClickBack }: { onClickBack: () => void }) => (
+const LocationSettingsHeader = ({
+  onClickBack,
+}: {
+  onClickBack: () => void
+}) => (
   <div className={"flex justify-between items-center bg-white px-5 py-4 h-12"}>
     <button onClick={onClickBack}>
       <CloseIcon className={"w-5 h-5"} />
@@ -19,26 +23,27 @@ const LocationSettingsHeader = ({ onClickBack }: { onClickBack: () => void }) =>
   </div>
 )
 
-const LocationSettingsSearchBar = ({ text, setText, onClickCurrentLocation, onFocus, onBlur }: {
-  text: string,
-  setText: (text: string) => void,
-  onClickCurrentLocation: () => void,
-  onFocus: () => void,
-  onBlur: () => void,
+const LocationSettingsSearchBar = ({
+  text,
+  setText,
+  onClickCurrentLocation,
+}: {
+  text: string
+  setText: (text: string) => void
+  onClickCurrentLocation: () => void
 }) => {
   return (
     <div className={"flex flex-col gap-6 px-5"}>
       <SearchField
         placeholder="도로명, 건물명, 지번으로 검색하세요."
         value={text}
-        onChange={(e) =>
-          setText(e.target.value)
-        }
+        onChange={(e) => setText(e.target.value)}
         onClear={text.length > 0 ? () => setText("") : undefined}
-        onFocus={onFocus}
-        onBlur={onBlur}
       />
-      <button className={"flex justify-center items-center gap-2"} onClick={onClickCurrentLocation}>
+      <button
+        className={"flex justify-center items-center gap-2"}
+        onClick={onClickCurrentLocation}
+      >
         <CrosshairIcon className={"text-primary"} />
         <p>{"현재 위치로 주소 설정"}</p>
       </button>
@@ -51,7 +56,7 @@ const LocationSettings = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const [address, setAddress] = useState("")
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditing] = useState(false)
 
   const handleCloseButtonClicked = () => {
     if (location.state?.from === "/branch") {
@@ -64,29 +69,37 @@ const LocationSettings = () => {
   useEffect(() => {
     setHeader({
       display: true,
-      component: <LocationSettingsHeader onClickBack={handleCloseButtonClicked} />,
+      component: (
+        <LocationSettingsHeader onClickBack={handleCloseButtonClicked} />
+      ),
     })
     setNavigation({ display: false })
   }, [])
 
   const renderContent = () => {
     if (address.length > 0) {
-      return <LocationSearchResultList
-        locations={locations.filter((location) => location.title.includes(address))}
-        onClick={() => {}}
-      />
+      return (
+        <LocationSearchResultList
+          locations={locations.filter((location) =>
+            location.title.includes(address),
+          )}
+          onClick={() => {}}
+        />
+      )
     }
     return isEditing ? <LocationSearchPlaceholder /> : <SavedLocationList />
   }
 
   return (
-    <div className={"flex flex-col items-stretch mt-5 w-full h-full overflow-hidden"}>
+    <div
+      className={
+        "flex flex-col items-stretch mt-5 w-full h-full overflow-hidden"
+      }
+    >
       <LocationSettingsSearchBar
         text={address}
         setText={setAddress}
         onClickCurrentLocation={() => {}}
-        onFocus={() => setIsEditing(true)}
-        onBlur={() => setIsEditing(false)}
       />
       <div className={"w-full h-2 bg-gray-50 mt-6"} />
       {renderContent()}
