@@ -15,6 +15,7 @@ import {
   ReservationItem,
   ReservationStatus,
 } from "types/Reservation"
+import clsx from "clsx"
 
 type MemberHistoryTab = "reservation" | "membership"
 
@@ -51,8 +52,7 @@ const sampleReservations: ReservationItem[] = [
     title: "전신관리 120분",
     count: 3,
     date: new Date(),
-    dDay: 8,
-    status: ReservationStatus.UPCOMING,
+    status: ReservationStatus.COMPLETED,
   },
   {
     id: 2,
@@ -168,21 +168,23 @@ const MemberHistory = () => {
               ? reservationFilter.id
               : membershipFilter.id)
 
+          console.log("isSelected", isSelected)
+
           return (
             <Button
               key={filter.id}
-              variantType="line"
-              sizeType="xs"
+              fullCustom
+              className={clsx(
+                "min-w-0 whitespace-nowrap px-[12px] py-[5px] text-12px font-sb !rounded-2xl",
+                isSelected
+                  ? "bg-primary-50 text-primary border border-solid border-primary"
+                  : "bg-white text-gray-500 border border-solid border-gray-200",
+              )}
               onClick={() =>
                 activeTab === "reservation"
                   ? setReservationFilter(filter)
                   : setMembershipFilter(filter)
               }
-              className={`min-w-0 whitespace-nowrap rounded-full h-[8px] ${
-                isSelected
-                  ? "bg-primary-50 text-primary border-primary"
-                  : "!bg-white !text-gray-500 !border-gray-200"
-              }`}
             >
               {filter.title}
             </Button>
