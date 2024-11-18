@@ -1,9 +1,5 @@
 import { RadioCard } from "@components/RadioCard"
-import {
-  MembershipItem,
-  MembershipStatus,
-  membershipStatusLabel,
-} from "../../../types/Membership"
+import { MembershipItem } from "../../../types/Membership"
 import { Tag } from "@components/Tag"
 
 interface MembershipRadioCardProps {
@@ -17,17 +13,6 @@ export const MembershipRadioCard = ({
   checked,
   value,
 }: MembershipRadioCardProps) => {
-  const getStatusTagType = (status: MembershipStatus) => {
-    switch (status) {
-      case MembershipStatus.AVAILABLE:
-        return "unused" as const
-      case MembershipStatus.COMPLETED:
-        return "used" as const
-      case MembershipStatus.EXPIRED:
-        return "used" as const
-    }
-  }
-
   return (
     <RadioCard
       checked={checked}
@@ -36,15 +21,16 @@ export const MembershipRadioCard = ({
     >
       <div className="w-[206px] flex-col justify-start items-start gap-4">
         <div className="self-stretch flex-col justify-start items-start gap-3">
-          <div className="flex gap-1.5">
-            <Tag
-              type={getStatusTagType(membership.status)}
-              title={membershipStatusLabel[membership.status]}
-            />
-            {membership.isAllBranch && <Tag type="rect" title="전지점" />}
-          </div>
+          {(membership.isAllBranch || membership.isReady) && (
+            <div className="flex gap-1.5 mb-[12px]">
+              {membership.isAllBranch && <Tag type="rect" title="전지점" />}
+              {membership.isReady && (
+                <Tag type="red" title="준비중" className="rounded-[0.25rem]" />
+              )}
+            </div>
+          )}
 
-          <div className="self-stretch h-[50px] flex-col justify-start items-start gap-2 mt-[12px]">
+          <div className="self-stretch h-[50px] flex-col justify-start items-start gap-2">
             <h3 className="text-gray-700 text-16px font-sb">
               {membership.title}
             </h3>

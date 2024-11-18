@@ -24,7 +24,7 @@ export const RadioCard = ({
       )}
     >
       <div className="flex-1">{children}</div>
-      <div className="relative">
+      <div className="relative h-full">
         <Radio
           checked={checked}
           value={value}

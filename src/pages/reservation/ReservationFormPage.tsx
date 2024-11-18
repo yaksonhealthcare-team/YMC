@@ -1,19 +1,51 @@
 import { useLayout } from "contexts/LayoutContext"
-import { ChangeEvent, FormEvent, ReactNode, useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { RadioCard } from "@components/RadioCard"
 import { MembershipRadioCard } from "./_fragments/MembershipRadioCard"
-import { MembershipStatus } from "types/Membership"
+import { MembershipItem, MembershipStatus } from "types/Membership"
 import { RadioGroup } from "@mui/material"
+import { Swiper, SwiperSlide } from "swiper/react"
 
 interface FormDataType {
   item: number
 }
 
+const example_items: MembershipItem[] = [
+  {
+    id: 1,
+    status: MembershipStatus.AVAILABLE,
+    title: "K-BEAUTY 연예인관리",
+    count: "4회 / 20",
+    startAt: "2024.04.01",
+    endAt: "2024.12.31",
+    isAllBranch: true,
+    isReady: true,
+  },
+  {
+    id: 2,
+    status: MembershipStatus.COMPLETED,
+    title: "바디케어 프로그램",
+    count: "0회 / 10",
+    startAt: "2024.01.01",
+    endAt: "2024.03.31",
+    isReady: true,
+  },
+  {
+    id: 3,
+    status: MembershipStatus.EXPIRED,
+    title: "럭셔리 스파",
+    count: "2회 / 5",
+    startAt: "2024.12.01",
+    endAt: "2024.02.29",
+  },
+]
+
 const ReservationFormPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
+  const [itemOptions, setItemOptions] = useState(example_items)
   const [data, setData] = useState<FormDataType>({
     item: 0,
   })
@@ -34,6 +66,9 @@ const ReservationFormPage = () => {
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
+
+    // TODO: Get item options from API
+    setItemOptions(example_items)
   }, [])
 
   return (
@@ -53,19 +88,22 @@ const ReservationFormPage = () => {
             </div>
           </div>
         </RadioCard>
-        <MembershipRadioCard
-          membership={{
-            id: 0,
-            status: MembershipStatus.AVAILABLE,
-            title: "K-BEAUTY 연예인관리",
-            count: "4회 / 20",
-            startAt: "2024.04.01",
-            endAt: "2024.12.31",
-            isAllBranch: true,
-          }}
-          checked={data.item === 1}
-          value={1}
-        />
+        <Swiper
+          spaceBetween={10}
+          slidesPerView={1}
+          style={{ overflow: "visible" }}
+          className="w-full"
+        >
+          {itemOptions.map((item) => (
+            <SwiperSlide key={item.id} className="mr-2">
+              <MembershipRadioCard
+                membership={item}
+                checked={data.item === item.id}
+                value={item.id}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </RadioGroup>
     </div>
   )
