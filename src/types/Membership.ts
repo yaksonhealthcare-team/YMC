@@ -18,6 +18,7 @@ export type MembershipItem = {
   endAt: string
   status: MembershipStatus
   isAllBranch?: boolean
+  isReady?: boolean
 }
 
 export type MembershipFilterId = "all" | MembershipStatus
