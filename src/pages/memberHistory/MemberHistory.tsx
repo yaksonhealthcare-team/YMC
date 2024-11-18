@@ -16,6 +16,7 @@ import {
   ReservationStatus,
 } from "types/Reservation"
 import clsx from "clsx"
+import ReservationIcon from "@assets/icons/ReservationIcon.png"
 
 type MemberHistoryTab = "reservation" | "membership"
 
@@ -146,6 +147,14 @@ const MemberHistory = () => {
     navigate(`/member-history/${value}`)
   }
 
+  const handleOnClickFloatingButton = () => {
+    if (activeTab === "reservation") {
+      navigate("/reservation/form")
+    } else {
+      navigate("/membership")
+    }
+  }
+
   return (
     <div className="flex flex-col bg-system-bg min-h-[calc(100vh-82px)]">
       <div className="px-5">
@@ -223,6 +232,12 @@ const MemberHistory = () => {
           </div>
         )}
       </div>
+      <button
+        className="fixed bottom-[98px] right-5 w-14 h-14 bg-primary-300 text-white rounded-full shadow-lg hover:bg-primary-400 focus:outline-none focus:bg-primary-500 focus:ring-opacity-50 transition-colors duration-200 z-10"
+        onClick={handleOnClickFloatingButton}
+      >
+        <img src={ReservationIcon} alt="예약하기" className="w-8 h-8 mx-auto" />
+      </button>
     </div>
   )
 }

@@ -32,6 +32,7 @@ import ReservationDetailPage from "pages/reservation/ReservationDetailPage.tsx"
 import MemberHistory from "../pages/memberHistory/MemberHistory.tsx"
 import ReservationCancelPage from "pages/reservation/ReservationCancelPage.tsx"
 import MembershipUsageHistory from "pages/membership/MembershipUsageHistory.tsx"
+import ReservationFormPage from "pages/reservation/ReservationFormPage.tsx"
 
 interface RouteConfig {
   path: string
@@ -146,6 +147,11 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/reservation/:id/cancel",
     element: <ReservationCancelPage />,
+    auth: true,
+  },
+  {
+    path: "/reservation/form",
+    element: <ReservationFormPage />,
     auth: true,
   },
 
