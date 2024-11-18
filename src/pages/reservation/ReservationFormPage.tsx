@@ -5,8 +5,10 @@ import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { RadioCard } from "@components/RadioCard"
 import { MembershipRadioCard } from "./_fragments/MembershipRadioCard"
 import { MembershipItem, MembershipStatus } from "types/Membership"
-import { RadioGroup } from "@mui/material"
+import { Box, RadioGroup } from "@mui/material"
 import { Swiper, SwiperSlide } from "swiper/react"
+import "swiper/css/pagination"
+import { Pagination } from "swiper/modules"
 
 interface FormDataType {
   item: number
@@ -34,6 +36,14 @@ const example_items: MembershipItem[] = [
   },
   {
     id: 3,
+    status: MembershipStatus.EXPIRED,
+    title: "럭셔리 스파",
+    count: "2회 / 5",
+    startAt: "2024.12.01",
+    endAt: "2024.02.29",
+  },
+  {
+    id: 4,
     status: MembershipStatus.EXPIRED,
     title: "럭셔리 스파",
     count: "2회 / 5",
@@ -88,22 +98,53 @@ const ReservationFormPage = () => {
             </div>
           </div>
         </RadioCard>
-        <Swiper
-          spaceBetween={10}
-          slidesPerView={1}
-          style={{ overflow: "visible" }}
+        <Box
           className="w-full"
+          sx={(theme) => ({
+            "& .swiper-pagination": {
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "5px",
+              position: "relative",
+              bottom: "0",
+              marginTop: "12px",
+            },
+            "& .swiper-pagination-bullet": {
+              width: "6px",
+              height: "6px",
+              borderRadius: "9999px",
+              cursor: "pointer",
+              backgroundColor: "white",
+              border: `1px solid ${theme.palette.grey[200]}`,
+              opacity: 1,
+              margin: "0 !important",
+            },
+            "& .swiper-pagination-bullet-active": {
+              backgroundColor: theme.palette.primary.main,
+              border: "none",
+            },
+          })}
         >
-          {itemOptions.map((item) => (
-            <SwiperSlide key={item.id} className="mr-2">
-              <MembershipRadioCard
-                membership={item}
-                checked={data.item === item.id}
-                value={item.id}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+          <Swiper
+            modules={[Pagination]}
+            spaceBetween={10}
+            slidesPerView={1}
+            style={{ overflow: "visible" }}
+            className="w-full"
+            pagination={{ clickable: true }}
+          >
+            {itemOptions.map((item) => (
+              <SwiperSlide key={item.id} className="mr-2">
+                <MembershipRadioCard
+                  membership={item}
+                  checked={data.item === item.id}
+                  value={item.id}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </Box>
       </RadioGroup>
     </div>
   )
