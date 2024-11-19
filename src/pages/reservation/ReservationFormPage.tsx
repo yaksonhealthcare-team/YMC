@@ -16,12 +16,15 @@ import CustomInputButton from "@components/CustomInputButton"
 import { useOverlay } from "contexts/ModalContext"
 import DateAndTimeBottomSheet from "./_fragments/DateAndTimeBottomSheet"
 import { Dayjs } from "dayjs"
+import CustomTextField from "@components/CustomTextField"
+import FixedButtonContainer from "@components/FixedButtonContainer"
 
 interface FormDataType {
   item: undefined | number
   branch: undefined | number
   date: null | Dayjs
   time: null | string
+  request: string
 }
 
 const example_items: MembershipItem[] = [
@@ -75,7 +78,9 @@ const ReservationFormPage = () => {
     branch: undefined,
     date: null,
     time: null,
+    request: "",
   })
+  const [price, setPrice] = useState(10000)
 
   const handleOnChangeItem = (event: ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, item: parseInt(event.target.value) })
@@ -246,8 +251,58 @@ const ReservationFormPage = () => {
             }
             onClick={handleOpenCalendar}
           />
+          <CustomTextField
+            name="request"
+            label="요청사항"
+            placeholder="요청사항을 입력해주세요."
+            value={data.request}
+            onChange={(event) => {
+              setData((prev) => ({
+                ...prev,
+                request: event.target.value,
+              }))
+            }}
+          />
+          <p className="text-gray-500 text-sm">
+            * 예약 당일 취소, 노쇼의 경우 예약시 차감된 회원권 횟수가 반환되지
+            않습니다.
+          </p>
         </div>
       </section>
+      <section className="px-5 py-6 ">
+        <p className="font-m text-14px mb-2 text-gray-700">결제 금액</p>
+        <div className="flex flex-col gap-3 mt-4">
+          <div className="flex justify-between">
+            <p className="text-gray-400 text-sm font-medium">
+              추가 관리 항목명
+            </p>
+            <p className="text-base font-medium">100,000원</p>
+          </div>
+          <div className="flex justify-between">
+            <p className="text-gray-400 text-sm font-medium">
+              추가 관리 항목명
+            </p>
+            <p className="text-base font-medium">100,000원</p>
+          </div>
+        </div>
+        <div className="w-full h-px bg-gray-100 my-4" />
+        <div className="flex justify-between text-gray-700">
+          <p>최종 결제 금액</p>
+          <p className="text-xl font-bold">0원</p>
+        </div>
+      </section>
+      <FixedButtonContainer className="bg-white">
+        <Button
+          variantType="primary"
+          sizeType="l"
+          onClick={() => {}}
+          className="w-full"
+        >
+          {data.item === 0
+            ? "예약하기"
+            : `${price.toLocaleString()}원 결제하기`}
+        </Button>
+      </FixedButtonContainer>
     </div>
   )
 }
