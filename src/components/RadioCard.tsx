@@ -20,7 +20,7 @@ export const RadioCard = ({
   return (
     <label
       className={clsx(
-        "w-full h-14 p-5 bg-white rounded-xl border justify-between items-center inline-flex cursor-pointer",
+        "w-full p-5 bg-white rounded-xl border justify-between items-center inline-flex cursor-pointer",
         checked ? "border-primary" : "border-gray-100",
         className,
       )}

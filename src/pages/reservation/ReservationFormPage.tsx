@@ -2,6 +2,7 @@ import { useLayout } from "contexts/LayoutContext"
 import { ChangeEvent, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
+import CaretRigthIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { RadioCard } from "@components/RadioCard"
 import { MembershipRadioCard } from "./_fragments/MembershipRadioCard"
 import { MembershipItem, MembershipStatus } from "types/Membership"
@@ -9,6 +10,7 @@ import { Box, RadioGroup } from "@mui/material"
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css/pagination"
 import { Pagination } from "swiper/modules"
+import { Button } from "@components/Button"
 
 interface FormDataType {
   item: number
@@ -55,7 +57,8 @@ const example_items: MembershipItem[] = [
 const ReservationFormPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const [consultationNum, setConsultationNum] = useState(2)
+  const [consultationSlot, setConsultationSlot] = useState(1)
+  const [hasMembership, setHasMembership] = useState(false)
   const [itemOptions, setItemOptions] = useState(example_items)
   const [data, setData] = useState<FormDataType>({
     item: 0,
@@ -93,18 +96,18 @@ const ReservationFormPage = () => {
           <RadioCard
             checked={data.item === 0}
             value={0}
-            disabled={consultationNum >= 2}
+            disabled={consultationSlot >= 2}
           >
             <div className="justify-start items-center gap-2 flex">
               <div className="text-gray-700 text-16px font-sb">상담 예약</div>
-              {consultationNum < 2 && (
+              {consultationSlot < 2 && (
                 <div className="px-2 py-0.5 bg-tag-greenBg rounded-[999px] justify-center items-center flex">
                   <div className="text-center text-tag-green text-12px font-m">
-                    {consultationNum === 0 ? "Free" : "1/2"}
+                    {consultationSlot === 0 ? "Free" : "1/2"}
                   </div>
                 </div>
               )}
-              {consultationNum >= 2 && (
+              {consultationSlot >= 2 && (
                 <div className="px-2 h-4 bg-tag-redBg rounded-[999px] justify-center items-center flex">
                   <div className="text-center text-tag-red text-12px font-m">
                     0/2
@@ -113,53 +116,65 @@ const ReservationFormPage = () => {
               )}
             </div>
           </RadioCard>
-          <Box
-            className="w-full"
-            sx={(theme) => ({
-              "& .swiper-pagination": {
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "5px",
-                position: "relative",
-                bottom: "0",
-                marginTop: "12px",
-              },
-              "& .swiper-pagination-bullet": {
-                width: "6px",
-                height: "6px",
-                borderRadius: "9999px",
-                cursor: "pointer",
-                backgroundColor: "white",
-                border: `1px solid ${theme.palette.grey[200]}`,
-                opacity: 1,
-                margin: "0 !important",
-              },
-              "& .swiper-pagination-bullet-active": {
-                backgroundColor: theme.palette.primary.main,
-                border: "none",
-              },
-            })}
-          >
-            <Swiper
-              modules={[Pagination]}
-              spaceBetween={10}
-              slidesPerView={1}
-              style={{ overflow: "visible" }}
+          {hasMembership ? (
+            <Box
               className="w-full"
-              pagination={{ clickable: true }}
+              sx={(theme) => ({
+                "& .swiper-pagination": {
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "5px",
+                  position: "relative",
+                  bottom: "0",
+                  marginTop: "12px",
+                },
+                "& .swiper-pagination-bullet": {
+                  width: "6px",
+                  height: "6px",
+                  borderRadius: "9999px",
+                  cursor: "pointer",
+                  backgroundColor: "white",
+                  border: `1px solid ${theme.palette.grey[200]}`,
+                  opacity: 1,
+                  margin: "0 !important",
+                },
+                "& .swiper-pagination-bullet-active": {
+                  backgroundColor: theme.palette.primary.main,
+                  border: "none",
+                },
+              })}
             >
-              {itemOptions.map((item) => (
-                <SwiperSlide key={item.id} className="mr-2">
-                  <MembershipRadioCard
-                    membership={item}
-                    checked={data.item === item.id}
-                    value={item.id}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </Box>
+              <Swiper
+                modules={[Pagination]}
+                spaceBetween={10}
+                slidesPerView={1}
+                style={{ overflow: "visible" }}
+                className="w-full"
+                pagination={{ clickable: true }}
+              >
+                {itemOptions.map((item) => (
+                  <SwiperSlide key={item.id} className="mr-2">
+                    <MembershipRadioCard
+                      membership={item}
+                      checked={data.item === item.id}
+                      value={item.id}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </Box>
+          ) : (
+            <Button
+              variantType="primary"
+              className="bg-tag-redBg !text-tag-red justify-between items-center hover:bg-red-100"
+              iconRight={<CaretRigthIcon className="w-5 h-5" />}
+              onClick={() => navigate("/membership")}
+            >
+              회원권 구매하기
+            </Button>
+          )}
+
           <p className="text-gray-500 text-sm">
             * 상담 예약은 월간 2회까지 이용 가능합니다.
           </p>
