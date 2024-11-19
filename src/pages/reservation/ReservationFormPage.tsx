@@ -82,70 +82,75 @@ const ReservationFormPage = () => {
   }, [])
 
   return (
-    <div className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto">
-      <RadioGroup
-        className="flex flex-col space-y-4"
-        value={data.item}
-        onChange={handleOnChangeItem}
-      >
-        <RadioCard checked={data.item === 0} value={0}>
-          <div className="justify-start items-center gap-2 flex">
-            <div className="text-gray-700 text-16px font-sb">상담 예약</div>
-            <div className="px-2 py-0.5 bg-tag-greenBg rounded-[999px] justify-center items-center gap-1 flex">
-              <div className="text-center text-tag-green text-12px font-m leading-[17.76px]">
-                Free
+    <div className="flex-1space-y-3 pb-32 overflow-y-auto">
+      <section className="px-5 pt-2 pb-6 border-b-8 border-[#f7f7f7]">
+        <RadioGroup
+          className="flex flex-col space-y-4"
+          value={data.item}
+          onChange={handleOnChangeItem}
+        >
+          <RadioCard checked={data.item === 0} value={0}>
+            <div className="justify-start items-center gap-2 flex">
+              <div className="text-gray-700 text-16px font-sb">상담 예약</div>
+              <div className="px-2 py-0.5 bg-tag-greenBg rounded-[999px] justify-center items-center gap-1 flex">
+                <div className="text-center text-tag-green text-12px font-m leading-[17.76px]">
+                  Free
+                </div>
               </div>
             </div>
-          </div>
-        </RadioCard>
-        <Box
-          className="w-full"
-          sx={(theme) => ({
-            "& .swiper-pagination": {
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "5px",
-              position: "relative",
-              bottom: "0",
-              marginTop: "12px",
-            },
-            "& .swiper-pagination-bullet": {
-              width: "6px",
-              height: "6px",
-              borderRadius: "9999px",
-              cursor: "pointer",
-              backgroundColor: "white",
-              border: `1px solid ${theme.palette.grey[200]}`,
-              opacity: 1,
-              margin: "0 !important",
-            },
-            "& .swiper-pagination-bullet-active": {
-              backgroundColor: theme.palette.primary.main,
-              border: "none",
-            },
-          })}
-        >
-          <Swiper
-            modules={[Pagination]}
-            spaceBetween={10}
-            slidesPerView={1}
-            style={{ overflow: "visible" }}
+          </RadioCard>
+          <Box
             className="w-full"
-            pagination={{ clickable: true }}
+            sx={(theme) => ({
+              "& .swiper-pagination": {
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "5px",
+                position: "relative",
+                bottom: "0",
+                marginTop: "12px",
+              },
+              "& .swiper-pagination-bullet": {
+                width: "6px",
+                height: "6px",
+                borderRadius: "9999px",
+                cursor: "pointer",
+                backgroundColor: "white",
+                border: `1px solid ${theme.palette.grey[200]}`,
+                opacity: 1,
+                margin: "0 !important",
+              },
+              "& .swiper-pagination-bullet-active": {
+                backgroundColor: theme.palette.primary.main,
+                border: "none",
+              },
+            })}
           >
-            {itemOptions.map((item) => (
-              <SwiperSlide key={item.id} className="mr-2">
-                <MembershipRadioCard
-                  membership={item}
-                  checked={data.item === item.id}
-                  value={item.id}
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </Box>
-      </RadioGroup>
+            <Swiper
+              modules={[Pagination]}
+              spaceBetween={10}
+              slidesPerView={1}
+              style={{ overflow: "visible" }}
+              className="w-full"
+              pagination={{ clickable: true }}
+            >
+              {itemOptions.map((item) => (
+                <SwiperSlide key={item.id} className="mr-2">
+                  <MembershipRadioCard
+                    membership={item}
+                    checked={data.item === item.id}
+                    value={item.id}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </Box>
+          <p className="text-gray-500 text-sm">
+            * 상담 예약은 월간 2회까지 이용 가능합니다.
+          </p>
+        </RadioGroup>
+      </section>
     </div>
   )
 }
