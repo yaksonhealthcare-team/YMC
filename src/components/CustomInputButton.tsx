@@ -1,80 +1,41 @@
-import { forwardRef, type ReactNode } from "react"
-import { TextField, InputAdornment } from "@mui/material"
-import { COLORS } from "@constants/ColorConstants"
+import clsx from "clsx"
 
 interface CustomInputButtonProps {
   label?: string
   value?: string
   placeholder?: string
-  disabled?: boolean
-  iconLeft?: ReactNode
-  iconRight?: ReactNode
+  iconRight?: React.ReactNode
   onClick?: () => void
   className?: string
 }
 
-const CustomInputButton = forwardRef<HTMLDivElement, CustomInputButtonProps>(
-  (
-    {
-      label,
-      value,
-      placeholder,
-      disabled,
-      iconLeft,
-      iconRight,
-      onClick,
-      className,
-    },
-    ref,
-  ) => (
-    <div ref={ref}>
+const CustomInputButton = ({
+  label,
+  value,
+  placeholder,
+  iconRight,
+  onClick,
+  className,
+}: CustomInputButtonProps) => {
+  return (
+    <div>
       {label && <p className="font-m text-14px text-gray-700 mb-2">{label}</p>}
-      <div
-        onClick={!disabled ? onClick : undefined}
-        className={`cursor-pointer ${disabled ? "opacity-50" : ""}`}
+      <button
+        type="button"
+        onClick={onClick}
+        className={clsx(
+          "w-full bg-white border border-gray-200 rounded-lg p-3",
+          "flex items-center justify-between cursor-pointer",
+          className,
+        )}
       >
-        <div className="absolute inset-0 z-10" />
-        <TextField
-          value={value}
-          placeholder={placeholder}
-          disabled={true}
-          variant="outlined"
-          fullWidth
-          InputProps={{
-            readOnly: true,
-            startAdornment: iconLeft && (
-              <InputAdornment position="start">{iconLeft}</InputAdornment>
-            ),
-            endAdornment: iconRight && (
-              <InputAdornment position="end">{iconRight}</InputAdornment>
-            ),
-          }}
-          sx={{
-            width: "100%",
-            flex: 1,
-            "& .MuiOutlinedInput-root": {
-              borderRadius: "12px",
-              cursor: "pointer",
-              backgroundColor: disabled ? COLORS.DISABLED_BG : "white",
-              "& fieldset": {
-                borderColor: `${COLORS.BORDER} !important`,
-              },
-              "& input": {
-                cursor: "pointer",
-              },
-              "& input::placeholder": {
-                color: COLORS.PLACEHOLDER,
-                opacity: 1,
-              },
-            },
-          }}
-          className={className}
-        />
-      </div>
+        <span className="flex-1 text-left text-gray-700">
+          {value || <span className="text-gray-400">{placeholder}</span>}
+        </span>
+        {iconRight && <span>{iconRight}</span>}
+      </button>
     </div>
-  ),
-)
-
-CustomInputButton.displayName = "CustomInputButton"
+  )
+}
 
 export default CustomInputButton
