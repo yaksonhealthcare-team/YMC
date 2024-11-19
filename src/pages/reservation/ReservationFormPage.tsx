@@ -271,7 +271,9 @@ const ReservationFormPage = () => {
           <p className="text-gray-700 text-base font-sb mb-3">예약 문진</p>
           <button
             type="button"
-            onClick={() => {}}
+            onClick={() => {
+              // TODO: navigate to view reservation questionnaire page
+            }}
             className="w-full bg-white border !border-gray-200 rounded-xl h-[61px] px-5 flex items-center justify-between cursor-pointer"
           >
             <span className="text-gray-700 text-sm font-bold leading-tight">
@@ -292,6 +294,9 @@ const ReservationFormPage = () => {
           variantType="gray"
           size="small"
           className="w-full text-sm h-[40px] flex items-center justify-center mt-3"
+          onClick={() => {
+            // TODO: navigate to make reservation questionnaire page
+          }}
         >
           새로 작성하기
         </Button>
@@ -400,8 +405,12 @@ const ReservationFormPage = () => {
         <Button
           variantType="primary"
           sizeType="l"
-          onClick={() => {}}
+          onClick={() => {
+            // TODO: handle reservation
+          }}
           className="w-full"
+          //   TODO: handle disaabled conditions
+          //   disabled={!data.item || !data.branch || !data.date || !data.time}
         >
           {data.item === 0
             ? "예약하기"
