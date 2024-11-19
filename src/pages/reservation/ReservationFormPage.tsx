@@ -109,10 +109,10 @@ const ReservationFormPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const theme = useTheme()
-  const [consultationSlot, setConsultationSlot] = useState(1)
-  const [hasMembership, setHasMembership] = useState(true)
+  const [consultationSlot, _setConsultationSlot] = useState(1)
+  const [hasMembership, _setHasMembership] = useState(true)
   const [itemOptions, setItemOptions] = useState(example_items)
-  const [additionalServiceOptions, setAdditionalServiceOptions] = useState(
+  const [additionalServiceOptions, _setAdditionalServiceOptions] = useState(
     example_additional_services,
   )
   const [data, setData] = useState<FormDataType>({
