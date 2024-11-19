@@ -59,6 +59,7 @@ interface BottomSheetButton {
   text: string
   onClick: () => void
   variant?: "text" | "outlined" | "contained"
+  height?: "default" | "large"
 }
 
 interface BottomSheetOptions extends Record<string, unknown> {
@@ -198,7 +199,10 @@ const OverlayContainer: React.FC = () => {
               margin: 0,
               borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
-              maxHeight: "80vh",
+              maxHeight:
+                (options as BottomSheetOptions)?.height === "large"
+                  ? "90vh"
+                  : "80vh",
               overflowY: "auto",
               width: "100%",
             },
