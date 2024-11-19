@@ -20,8 +20,8 @@ import { Dayjs } from "dayjs"
 interface FormDataType {
   item: undefined | number
   branch: undefined | number
-  date: undefined | Dayjs
-  time: undefined | Dayjs
+  date: null | Dayjs
+  time: null | string
 }
 
 const example_items: MembershipItem[] = [
@@ -73,8 +73,8 @@ const ReservationFormPage = () => {
   const [data, setData] = useState<FormDataType>({
     item: undefined,
     branch: undefined,
-    date: undefined,
-    time: undefined,
+    date: null,
+    time: null,
   })
 
   const handleOnChangeItem = (event: ChangeEvent<HTMLInputElement>) => {
@@ -82,7 +82,23 @@ const ReservationFormPage = () => {
   }
 
   const handleOpenCalendar = () => {
-    openBottomSheet(<DateAndTimeBottomSheet onClose={closeOverlay} />)
+    openBottomSheet(
+      <DateAndTimeBottomSheet
+        onClose={closeOverlay}
+        date={data.date}
+        time={data.time}
+        onSelect={(date, time) => {
+          setData((prev) => ({
+            ...prev,
+            date,
+            time,
+          }))
+        }}
+      />,
+      {
+        height: "large",
+      },
+    )
   }
 
   useEffect(() => {

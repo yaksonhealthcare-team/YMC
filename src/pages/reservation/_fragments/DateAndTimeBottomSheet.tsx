@@ -13,27 +13,69 @@ import dayjs, { Dayjs } from "dayjs"
 import "dayjs/locale/ko"
 import CaretRigthIcon from "@assets/icons/CaretRightIcon.svg?react"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
+import clsx from "clsx"
+import { Button } from "@components/Button"
 
 interface DateAndTimeBottomSheetProps {
   onClose: () => void
+  date: Dayjs | null
+  time: string | null
+  onSelect: (date: Dayjs | null, time: string | null) => void
 }
 
-const DateAndTimeBottomSheet = ({ onClose }: DateAndTimeBottomSheetProps) => {
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null)
-  const [selectedTime, setSelectedTime] = useState<string | null>(null)
+const DateAndTimeBottomSheet = ({
+  onClose,
+  date: initialDate,
+  time: initialTime,
+  onSelect,
+}: DateAndTimeBottomSheetProps) => {
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(initialDate)
+  const [selectedTime, setSelectedTime] = useState<string | null>(initialTime)
 
-  const handleDateChange = (date: Dayjs | null) => {
+  const handleDateSelect = (date: Dayjs | null) => {
     setSelectedDate(date)
   }
 
-  const handleTimeSelect = (time: string) => {
+  const handleTimeSelect = (time: string | null) => {
     setSelectedTime(time)
   }
 
+  const handleComplete = () => {
+    onClose()
+    onSelect(selectedDate, selectedTime)
+  }
+
   return (
-    <div className={"flex flex-col items-center gap-5 px-5"}>
+    <div className={"flex flex-col items-center gap-5 px-5 pb-[100px]"}>
       <DateAndTimeBottomSheetHeader onClose={onClose} />
-      <DatePickerSection date={selectedDate} handleDate={setSelectedDate} />
+      <DatePickerSection
+        date={selectedDate}
+        handleDateSelect={handleDateSelect}
+      />
+      <div className="w-full h-px bg-gray-100" />
+      {selectedDate ? (
+        <TimePickerSection
+          selectedTime={selectedTime}
+          handleTimeSelect={handleTimeSelect}
+        />
+      ) : (
+        <div className="w-full p-4 bg-[#f7f7f7] rounded-lg">
+          <div className="text-center text-[#212121] text-sm">
+            날짜를 먼저 선택해 주세요.
+          </div>
+        </div>
+      )}
+      <div className="w-full absolute bottom-0 px-[20px] pt-[12px] pb-[40px] bg-white border-t border-[#f7f7f7]">
+        <Button
+          variantType="primary"
+          sizeType="l"
+          disabled={!selectedDate || !selectedTime}
+          onClick={handleComplete}
+          className="w-full"
+        >
+          선택완료
+        </Button>
+      </div>
     </div>
   )
 }
@@ -63,6 +105,7 @@ const DateAndTimeBottomSheetHeader = ({ onClose }: { onClose: () => void }) => (
 const StyledDateCalendar = styled(DateCalendar)<DateCalendarProps<Dayjs>>(
   ({ theme }) => ({
     maxWidth: "355px",
+    height: "auto",
     // 전체 달력 레이아웃
     "& .MuiPickersCalendarHeader-root": {
       position: "relative",
@@ -145,10 +188,13 @@ const StyledDateCalendar = styled(DateCalendar)<DateCalendarProps<Dayjs>>(
 
 interface DatePickerSectionProps {
   date: Dayjs | null
-  handleDate: (date: Dayjs | null) => void
+  handleDateSelect: (date: Dayjs | null) => void
 }
 
-const DatePickerSection = ({ date, handleDate }: DatePickerSectionProps) => {
+const DatePickerSection = ({
+  date,
+  handleDateSelect,
+}: DatePickerSectionProps) => {
   const isDateDisabled = (date: Dayjs) => {
     const today = dayjs()
     return (
@@ -160,7 +206,7 @@ const DatePickerSection = ({ date, handleDate }: DatePickerSectionProps) => {
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
       <StyledDateCalendar
         value={date}
-        onChange={handleDate}
+        onChange={handleDateSelect}
         defaultValue={dayjs()}
         shouldDisableDate={isDateDisabled}
         views={["day"]}
@@ -213,6 +259,62 @@ const CalendarHeader = (props: PickersCalendarHeaderProps<Dayjs>) => {
       >
         <CaretRigthIcon className="w-4 h-4" />
       </button>
+    </div>
+  )
+}
+
+interface TimeSlot {
+  time: string
+  disabled?: boolean
+}
+
+const timeSlots: TimeSlot[] = [
+  { time: "오전 10:00", disabled: true },
+  { time: "오전 10:30", disabled: true },
+  { time: "오전 11:00" },
+  { time: "오전 11:30" },
+  { time: "오후 12:00" },
+  { time: "오후 12:30" },
+  { time: "오후 1:00" },
+  { time: "오후 1:30" },
+  { time: "오후 2:00" },
+  { time: "오후 2:30" },
+  { time: "오후 3:00" },
+  { time: "오후 3:30" },
+  { time: "오후 4:00", disabled: true },
+  { time: "오후 4:30", disabled: true },
+  { time: "오후 5:00" },
+]
+
+interface TimePickerSectionProps {
+  selectedTime: string | null
+  handleTimeSelect: (time: string | null) => void
+}
+
+const TimePickerSection = ({
+  selectedTime,
+  handleTimeSelect,
+}: TimePickerSectionProps) => {
+  return (
+    <div className="w-full grid grid-cols-4 gap-[9px]">
+      {timeSlots.map((slot) => (
+        <Button
+          key={slot.time}
+          fullCustom
+          disabled={slot.disabled}
+          onClick={() => handleTimeSelect(slot.time)}
+          className={clsx(
+            "h-10 px-2.5 rounded-lg text-sm font-normal flex justify-center items-center whitespace-nowrap",
+            selectedTime === slot.time
+              ? "!bg-primary-300 !text-white !border-none hover:!bg-primary-300"
+              : "!bg-white !border !border-solid !border-gray-200 hover:!bg-[#f7f7f7]",
+            "!text-gray-700",
+            "disabled:!bg-gray-50 disabled:!text-gray-300 disabled:!border-gray-200",
+          )}
+        >
+          {slot.time}
+        </Button>
+      ))}
     </div>
   )
 }
