@@ -3,17 +3,25 @@ import { ChangeEvent, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import CaretRigthIcon from "@assets/icons/CaretRightIcon.svg?react"
+import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import { RadioCard } from "@components/RadioCard"
 import { MembershipRadioCard } from "./_fragments/MembershipRadioCard"
 import { MembershipItem, MembershipStatus } from "types/Membership"
-import { Box, RadioGroup } from "@mui/material"
+import { Box, RadioGroup, useTheme } from "@mui/material"
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css/pagination"
 import { Pagination } from "swiper/modules"
 import { Button } from "@components/Button"
+import CustomInputButton from "@components/CustomInputButton"
+import { useOverlay } from "contexts/ModalContext"
+import DateAndTimeBottomSheet from "./_fragments/DateAndTimeBottomSheet"
+import { Dayjs } from "dayjs"
 
 interface FormDataType {
-  item: number
+  item: undefined | number
+  branch: undefined | number
+  date: undefined | Dayjs
+  time: undefined | Dayjs
 }
 
 const example_items: MembershipItem[] = [
@@ -55,17 +63,26 @@ const example_items: MembershipItem[] = [
 ]
 
 const ReservationFormPage = () => {
+  const { openBottomSheet, closeOverlay } = useOverlay()
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
+  const theme = useTheme()
   const [consultationSlot, setConsultationSlot] = useState(1)
-  const [hasMembership, setHasMembership] = useState(false)
+  const [hasMembership, setHasMembership] = useState(true)
   const [itemOptions, setItemOptions] = useState(example_items)
   const [data, setData] = useState<FormDataType>({
-    item: 0,
+    item: undefined,
+    branch: undefined,
+    date: undefined,
+    time: undefined,
   })
 
   const handleOnChangeItem = (event: ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, item: parseInt(event.target.value) })
+  }
+
+  const handleOpenCalendar = () => {
+    openBottomSheet(<DateAndTimeBottomSheet onClose={closeOverlay} />)
   }
 
   useEffect(() => {
@@ -185,6 +202,31 @@ const ReservationFormPage = () => {
             )}
           </div>
         </RadioGroup>
+      </section>
+      <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
+        <div>
+          <CustomInputButton
+            label="지점 선택"
+            value={data.branch ? String(data.branch) : ""}
+            placeholder="지점을 선택해주세요."
+            iconRight={<CaretRigthIcon className="w-4 h-4 border-gray-300" />}
+            onClick={() => {
+              //   TODO: navigate to branch selection page
+            }}
+          />
+          <CustomInputButton
+            label="예약 일시"
+            value={data.branch ? String(data.branch) : ""}
+            placeholder="예약 날짜를 선택해주세요."
+            iconRight={
+              <CalendarIcon
+                className="w-6 h-6"
+                color={theme.palette.grey[300]}
+              />
+            }
+            onClick={handleOpenCalendar}
+          />
+        </div>
       </section>
     </div>
   )
