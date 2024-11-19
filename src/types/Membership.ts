@@ -48,3 +48,11 @@ export interface MebershipHistory {
 export interface MembershipDetail extends MembershipItem {
   history: MebershipHistory[]
 }
+
+export interface AdditionalService {
+  id: number
+  title: string
+  duration: number
+  price: number
+  selected?: boolean
+}
