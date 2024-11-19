@@ -55,6 +55,7 @@ const example_items: MembershipItem[] = [
 const ReservationFormPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
+  const [consultationNum, setConsultationNum] = useState(2)
   const [itemOptions, setItemOptions] = useState(example_items)
   const [data, setData] = useState<FormDataType>({
     item: 0,
@@ -89,14 +90,27 @@ const ReservationFormPage = () => {
           value={data.item}
           onChange={handleOnChangeItem}
         >
-          <RadioCard checked={data.item === 0} value={0}>
+          <RadioCard
+            checked={data.item === 0}
+            value={0}
+            disabled={consultationNum >= 2}
+          >
             <div className="justify-start items-center gap-2 flex">
               <div className="text-gray-700 text-16px font-sb">상담 예약</div>
-              <div className="px-2 py-0.5 bg-tag-greenBg rounded-[999px] justify-center items-center gap-1 flex">
-                <div className="text-center text-tag-green text-12px font-m leading-[17.76px]">
-                  Free
+              {consultationNum < 2 && (
+                <div className="px-2 py-0.5 bg-tag-greenBg rounded-[999px] justify-center items-center flex">
+                  <div className="text-center text-tag-green text-12px font-m">
+                    {consultationNum === 0 ? "Free" : "1/2"}
+                  </div>
                 </div>
-              </div>
+              )}
+              {consultationNum >= 2 && (
+                <div className="px-2 h-4 bg-tag-redBg rounded-[999px] justify-center items-center flex">
+                  <div className="text-center text-tag-red text-12px font-m">
+                    0/2
+                  </div>
+                </div>
+              )}
             </div>
           </RadioCard>
           <Box
