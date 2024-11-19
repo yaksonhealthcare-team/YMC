@@ -23,7 +23,7 @@ const example_items: MembershipItem[] = [
     startAt: "2024.04.01",
     endAt: "2024.12.31",
     isAllBranch: true,
-    isReady: true,
+    isReady: false,
   },
   {
     id: 2,

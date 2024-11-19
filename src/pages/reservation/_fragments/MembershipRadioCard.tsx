@@ -18,6 +18,7 @@ export const MembershipRadioCard = ({
       checked={checked}
       value={value}
       className="!h-[124px] items-start"
+      disabled={membership.isReady}
     >
       <div className="w-[206px] flex-col justify-start items-start gap-4">
         <div className="self-stretch flex-col justify-start items-start gap-3">
