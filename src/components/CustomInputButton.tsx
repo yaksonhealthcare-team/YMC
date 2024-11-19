@@ -24,8 +24,7 @@ const CustomInputButton = ({
         type="button"
         onClick={onClick}
         className={clsx(
-          "w-full bg-white border border-gray-200 rounded-lg p-3",
-          "flex items-center justify-between cursor-pointer",
+          "w-full bg-white border !border-gray-100 rounded-xl h-[56px] px-[14px] flex items-center justify-between cursor-pointer",
           className,
         )}
       >
