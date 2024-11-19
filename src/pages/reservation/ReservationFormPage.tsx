@@ -174,10 +174,16 @@ const ReservationFormPage = () => {
               회원권 구매하기
             </Button>
           )}
-
-          <p className="text-gray-500 text-sm">
-            * 상담 예약은 월간 2회까지 이용 가능합니다.
-          </p>
+          <div>
+            <p className="text-gray-500 text-sm">
+              * 상담 예약은 월간 2회까지 이용 가능합니다.
+            </p>
+            {!hasMembership && (
+              <p className="text-gray-500 text-sm mt-1">
+                * 관리 프로그램은 회원권 구매 후 예약이 가능합니다.
+              </p>
+            )}
+          </div>
         </RadioGroup>
       </section>
     </div>
