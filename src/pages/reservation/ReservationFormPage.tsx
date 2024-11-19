@@ -225,12 +225,42 @@ const ReservationFormPage = () => {
         </RadioGroup>
       </section>
       <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
+        <div>
+          <p className="text-gray-700 text-base font-sb mb-3">예약 문진</p>
+          <button
+            type="button"
+            onClick={() => {}}
+            className="w-full bg-white border !border-gray-200 rounded-xl h-[61px] px-5 flex items-center justify-between cursor-pointer"
+          >
+            <span className="text-gray-700 text-sm font-bold leading-tight">
+              예약문진 (등록완료)
+            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-gray-200 text-sm font-normal leading-tight">
+                2024.12.12 작성
+              </span>
+              <CaretRigthIcon
+                className="w-4 h-4"
+                color={theme.palette.grey[300]}
+              />
+            </div>
+          </button>
+        </div>
+        <Button
+          variantType="gray"
+          size="small"
+          className="w-full text-sm h-[40px] flex items-center justify-center mt-3"
+        >
+          새로 작성하기
+        </Button>
+      </section>
+      <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
         <div className="flex flex-col gap-6">
           <CustomInputButton
             label="지점 선택"
             value={data.branch ? String(data.branch) : ""}
             placeholder="지점을 선택해주세요."
-            iconRight={<CaretRigthIcon className="w-4 h-4 border-gray-300" />}
+            iconRight={<CaretRigthIcon className="w-4 h-4" />}
             onClick={() => {
               //   TODO: navigate to branch selection page
             }}
