@@ -119,7 +119,7 @@ const ReservationFormPage = () => {
   }, [])
 
   return (
-    <div className="flex-1space-y-3 pb-32 overflow-y-auto">
+    <div className="flex-1space-y-3 pb-32 overflow-y-auto overflow-x-hidden">
       <section className="px-5 pt-2 pb-6 border-b-8 border-[#f7f7f7]">
         <RadioGroup
           className="flex flex-col space-y-4"
@@ -220,7 +220,7 @@ const ReservationFormPage = () => {
         </RadioGroup>
       </section>
       <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
-        <div>
+        <div className="flex flex-col gap-6">
           <CustomInputButton
             label="지점 선택"
             value={data.branch ? String(data.branch) : ""}
@@ -232,7 +232,11 @@ const ReservationFormPage = () => {
           />
           <CustomInputButton
             label="예약 일시"
-            value={data.branch ? String(data.branch) : ""}
+            value={
+              data.date && data.time
+                ? `${data.date.format("YYYY.MM.DD")} ${data.time}`
+                : ""
+            }
             placeholder="예약 날짜를 선택해주세요."
             iconRight={
               <CalendarIcon
