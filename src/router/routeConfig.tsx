@@ -34,6 +34,7 @@ import ReservationCancelPage from "pages/reservation/ReservationCancelPage.tsx"
 import MembershipUsageHistory from "pages/membership/MembershipUsageHistory.tsx"
 import ReservationFormPage from "pages/reservation/ReservationFormPage.tsx"
 import BranchSearch from "../pages/branch/search/BranchSearch.tsx"
+import EditProfile from "../pages/editProfile/EditProfile.tsx"
 
 interface RouteConfig {
   path: string
@@ -217,6 +218,10 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/terms",
     element: <div>Terms</div>,
+  },
+  {
+    path: "/profile",
+    element: <EditProfile />,
   },
   //지점 찾기, 지점 상세보기
   {
