@@ -50,7 +50,10 @@ const MyPage = () => {
         </div>
 
         {/* Info Cards */}
-        <div className="px-5 space-y-5">
+        <div
+          className="px-5 space-y-5"
+          onClick={() => navigate("/mypage/active-branch")}
+        >
           {/* Branch Info */}
           <div className="p-5 bg-white rounded-2xl border border-gray-100">
             <div className="flex justify-between items-center">
