@@ -65,8 +65,8 @@ const ActiveBranch = () => {
   return (
     <div className={"w-full h-full p-5"}>
       <ul className={"space-y-3"}>
-        {branches.map((branch) => (
-          <li className={"p-5 rounded-2xl border border-gray-100"}>
+        {branches.map((branch, index) => (
+          <li key={index} className={"p-5 rounded-2xl border border-gray-100"}>
             <BranchCard name={branch.name} address={branch.address} />
           </li>
         ))}
