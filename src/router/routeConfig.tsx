@@ -33,6 +33,7 @@ import MemberHistory from "../pages/memberHistory/MemberHistory.tsx"
 import ReservationCancelPage from "pages/reservation/ReservationCancelPage.tsx"
 import MembershipUsageHistory from "pages/membership/MembershipUsageHistory.tsx"
 import ReservationFormPage from "pages/reservation/ReservationFormPage.tsx"
+import BranchSearch from "../pages/branch/search/BranchSearch.tsx"
 
 interface RouteConfig {
   path: string
@@ -225,6 +226,10 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/branch/location",
     element: <LocationSettings />,
+  },
+  {
+    path: "/branch/search",
+    element: <BranchSearch />,
   },
   {
     path: "/branch/:id",

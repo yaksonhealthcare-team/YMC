@@ -71,7 +71,10 @@ const BranchDetail = () => {
                 <p className={"font-b text-20px"}>{branch.name}</p>
               </div>
               <div className={"flex flex-row items-center gap-1 mt-1.5"}>
-                <IconLabel icon={<StoreIcon />} label={branch.brand} />
+                <IconLabel
+                  icon={<StoreIcon className={"text-gray-500"} />}
+                  label={branch.brand}
+                />
                 {branch.location.distance && (
                   <IconLabel
                     icon={<PinIcon className={"text-gray-500"} />}
