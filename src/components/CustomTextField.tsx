@@ -28,6 +28,9 @@ const TEXT_FIELD_STYLES = {
         borderColor: (state: keyof typeof STATE_COLORS) =>
           state === "default" ? COLORS.FOCUSED_BORDER : STATE_COLORS[state],
       },
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderWidth: 1,
+      },
       "&.Mui-disabled fieldset": {
         borderColor: "white",
         backgroundColor: COLORS.DISABLED_BG,

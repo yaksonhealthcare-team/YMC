@@ -18,6 +18,7 @@ export type MembershipItem = {
   endAt: string
   status: MembershipStatus
   isAllBranch?: boolean
+  isReady?: boolean
 }
 
 export type MembershipFilterId = "all" | MembershipStatus
@@ -46,4 +47,12 @@ export interface MebershipHistory {
 
 export interface MembershipDetail extends MembershipItem {
   history: MebershipHistory[]
+}
+
+export interface AdditionalService {
+  id: number
+  title: string
+  duration: number
+  price: number
+  selected?: boolean
 }
