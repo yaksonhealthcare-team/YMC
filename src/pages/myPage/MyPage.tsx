@@ -70,7 +70,7 @@ const MyPage = () => {
           <div className="flex gap-2">
             <div
               className="w-[101px] h-24 bg-white rounded-2xl border border-gray-100 flex flex-col items-center justify-center"
-              onClick={() => navigate("/questionnaire")}
+              onClick={() => navigate("/mypage/questionnaire")}
             >
               <div className="w-6 h-6 mb-2">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">

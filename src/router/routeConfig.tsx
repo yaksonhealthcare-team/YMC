@@ -34,6 +34,7 @@ import ReservationCancelPage from "pages/reservation/ReservationCancelPage.tsx"
 import MembershipUsageHistory from "pages/membership/MembershipUsageHistory.tsx"
 import ReservationFormPage from "pages/reservation/ReservationFormPage.tsx"
 import BranchSearch from "../pages/branch/search/BranchSearch.tsx"
+import Questionnaire from "../pages/myPage/questionnaire/Questionnaire.tsx"
 
 interface RouteConfig {
   path: string
@@ -172,7 +173,11 @@ const routeConfig: RouteConfig[] = [
     element: <PointPage />,
     auth: true,
   },
-
+  {
+    path: "/mypage/questionnaire",
+    element: <Questionnaire />,
+    auth: true,
+  },
   {
     path: "/inquiry",
     element: <InquiryPage />,
