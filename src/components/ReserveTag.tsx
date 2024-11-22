@@ -23,6 +23,10 @@ const TAG_VARIANTS = {
     type: "red",
     title: (date: Date) => `D${calculateDday(date)}`,
   },
+  [ReservationStatus.COUNSELING_CANCELED]: {
+    type: "used",
+    title: "예약취소",
+  },
 } as const
 
 interface ReserveTagProps {

@@ -14,10 +14,13 @@ const ReservationSummary = ({ reservationStatus }: ReservationSummaryProps) => {
         <p className="text-[18px] font-b text-gray-700">
           {reservationStatusLabel[reservationStatus]}
         </p>
-        <ReserveTag
-          status={reservationStatus}
-          reservationDate={new Date("2022-12-25")}
-        />
+        {reservationStatus !== ReservationStatus.COUNSELING_CANCELED &&
+          reservationStatus !== ReservationStatus.CANCELED && (
+            <ReserveTag
+              status={reservationStatus}
+              reservationDate={new Date("2022-12-25")}
+            />
+          )}
       </div>
       <div className="mt-3 flex items-center">
         <CalendarIcon className="w-3.5 h-3.5 text-gray-500" />

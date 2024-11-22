@@ -9,17 +9,37 @@ import { Divider } from "@mui/material"
 import MembershipUsage from "./_fragments/MembershipUsage"
 import { ReservationStatus } from "types/Reservation"
 import FixedButtonContainer from "@components/FixedButtonContainer"
+import { useOverlay } from "contexts/ModalContext"
+import CounselingCancelBottomSheetContent from "./_fragments/CounselingCancelBottomSheetContent"
+import CancelConfirmBottomSheetContent from "./_fragments/CancelConfirmBottomSheetContent"
 
 const ReservationDetailPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const [reservationStatus, setReservationStatus] =
     useState<ReservationStatus>()
+  const { closeOverlay, openBottomSheet } = useOverlay()
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    setReservationStatus(ReservationStatus.UPCOMING)
+    setReservationStatus(ReservationStatus.CANCELED)
   }, [])
+
+  const handleCancel = async () => {
+    openBottomSheet(
+      <CounselingCancelBottomSheetContent
+        onConfirm={handleConfirmCancel}
+        onCancel={closeOverlay}
+      />,
+    )
+  }
+
+  const handleConfirmCancel = async () => {
+    // TODO: Call Cancel API
+    openBottomSheet(
+      <CancelConfirmBottomSheetContent onConfirm={closeOverlay} />,
+    )
+  }
 
   const renderButton = () => {
     switch (reservationStatus) {
@@ -76,16 +96,13 @@ const ReservationDetailPage = () => {
 
       case ReservationStatus.COUNSELING_CONFIRMED:
         return (
-          <Button
-            className="w-full rounded-xl"
-            onClick={() => {
-              // TODO: pass the correct reservation id
-              navigate("/reservation/0/cancel")
-            }}
-          >
+          <Button className="w-full rounded-xl" onClick={handleCancel}>
             예약 취소하기
           </Button>
         )
+
+      case ReservationStatus.COUNSELING_CANCELED:
+        return null
 
       default:
         return null

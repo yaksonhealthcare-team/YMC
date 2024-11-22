@@ -4,6 +4,7 @@ export enum ReservationStatus {
   IN_PROGRESS = "IN_PROGRESS", // 방문시간 진행중
   COMPLETED = "COMPLETED", // 방문완료
   COUNSELING_CONFIRMED = "COUNSELING_CONFIRMED", // 상담예약 확정
+  COUNSELING_CANCELED = "COUNSELING_CANCELED", // 상담예약 취소
 }
 
 export const reservationStatusLabel: Record<ReservationStatus, string> = {
@@ -12,6 +13,7 @@ export const reservationStatusLabel: Record<ReservationStatus, string> = {
   [ReservationStatus.IN_PROGRESS]: "방문예정",
   [ReservationStatus.COMPLETED]: "방문완료",
   [ReservationStatus.COUNSELING_CONFIRMED]: "방문예정",
+  [ReservationStatus.COUNSELING_CANCELED]: "예약취소",
 }
 
 export type ReservationItem = {
@@ -37,7 +39,7 @@ export const reservationFilters = [
     title: reservationStatusLabel[ReservationStatus.COMPLETED],
   },
   {
-    id: ReservationStatus.CANCELLED,
-    title: reservationStatusLabel[ReservationStatus.CANCELLED],
+    id: ReservationStatus.CANCELED,
+    title: reservationStatusLabel[ReservationStatus.CANCELED],
   },
 ] as const
