@@ -34,7 +34,7 @@ import ReservationCancelPage from "pages/reservation/ReservationCancelPage.tsx"
 import MembershipUsageHistory from "pages/membership/MembershipUsageHistory.tsx"
 import ReservationFormPage from "pages/reservation/ReservationFormPage.tsx"
 import BranchSearch from "../pages/branch/search/BranchSearch.tsx"
-import ReviewFormPage from "pages/revivew/ReviewFormPage.tsx"
+import ReviewFormPage from "pages/review/ReviewFormPage.tsx"
 
 interface RouteConfig {
   path: string
