@@ -36,7 +36,7 @@ const ReservationDetailPage = () => {
           </Button>
         )
 
-      case ReservationStatus.CANCELLED:
+      case ReservationStatus.CANCELED:
         return (
           <Button className="w-full rounded-xl" onClick={() => {}}>
             다시 예약하기

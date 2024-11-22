@@ -7,7 +7,7 @@ const TAG_VARIANTS = {
     type: "red",
     title: (date: Date) => `D${calculateDday(date)}`,
   },
-  [ReservationStatus.CANCELLED]: {
+  [ReservationStatus.CANCELED]: {
     type: "used",
     title: "예약취소",
   },
