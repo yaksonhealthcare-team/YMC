@@ -56,11 +56,19 @@ const ReservationDetailPage = () => {
             <Button
               className="flex-1 rounded-xl"
               variantType="line"
-              onClick={() => {}}
+              onClick={() => {
+                navigate("/review/form")
+              }}
             >
               만족도 작성
             </Button>
-            <Button className="flex-1 rounded-xl" onClick={() => {}}>
+            <Button
+              className="flex-1 rounded-xl"
+              onClick={() => {
+                // TODO: pass the correct reservation id and branch id
+                navigate("/reservation/form")
+              }}
+            >
               다시 예약하기
             </Button>
           </div>
