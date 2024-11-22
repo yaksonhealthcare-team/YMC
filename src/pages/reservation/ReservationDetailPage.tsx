@@ -22,7 +22,7 @@ const ReservationDetailPage = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    setReservationStatus(ReservationStatus.CANCELED)
+    setReservationStatus(ReservationStatus.COMPLETED)
   }, [])
 
   const handleCancel = async () => {
@@ -82,6 +82,16 @@ const ReservationDetailPage = () => {
             >
               만족도 작성
             </Button>
+            {/* TODO: Show view buttom if review is already written */}
+            {/* <Button
+              className="flex-1 rounded-xl"
+              variantType="line"
+              onClick={() => {
+                navigate("/review/0")
+              }}
+            >
+              만족도 보기
+            </Button> */}
             <Button
               className="flex-1 rounded-xl"
               onClick={() => {

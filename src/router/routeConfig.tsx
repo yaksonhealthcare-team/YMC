@@ -35,6 +35,7 @@ import MembershipUsageHistory from "pages/membership/MembershipUsageHistory.tsx"
 import ReservationFormPage from "pages/reservation/ReservationFormPage.tsx"
 import BranchSearch from "../pages/branch/search/BranchSearch.tsx"
 import ReviewFormPage from "pages/review/ReviewFormPage.tsx"
+import ReviewDetailPage from "pages/review/ReviewDetailPage.tsx"
 
 interface RouteConfig {
   path: string
@@ -197,6 +198,11 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/review/form",
     element: <ReviewFormPage />,
+    auth: true,
+  },
+  {
+    path: "/review/:id",
+    element: <ReviewDetailPage />,
     auth: true,
   },
   {
