@@ -1,5 +1,5 @@
 import { useLayout } from "contexts/LayoutContext"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import PlusIcon from "@assets/icons/PlusIcon.svg?react"
 import { useNavigate } from "react-router-dom"
@@ -7,6 +7,7 @@ import { Button } from "@components/Button"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import { TextArea } from "@components/TextArea"
 import FixedButtonContainer from "@components/FixedButtonContainer"
+import XCircleIcon from "@components/icons/XCircleIcon"
 
 interface ReviewSection {
   rs_idx: string
@@ -15,7 +16,13 @@ interface ReviewSection {
 
 interface ReviewRating {
   rs_idx: string
-  rating: "disappointed" | "normal" | "great" | ""
+  rs_grade: "L" | "M" | "H" | ""
+}
+
+interface UploadedImage {
+  id: string
+  file: File
+  preview: string
 }
 
 interface ReviewApiResponse {
@@ -26,21 +33,19 @@ interface ReviewApiResponse {
 }
 
 const RATING_OPTIONS = [
-  { label: "아쉬워요", value: "disappointed" },
-  { label: "보통이에요", value: "normal" },
-  { label: "최고예요!", value: "great" },
+  { label: "아쉬워요", value: "L" },
+  { label: "보통이에요", value: "M" },
+  { label: "최고예요!", value: "H" },
 ] as const
 
 const ReviewFormPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
 
-  // API로부터 받아온 리뷰 섹션 목록
   const [reviewSections, setReviewSections] = useState<ReviewSection[]>([])
-  // 각 섹션별 평가 상태
   const [ratings, setRatings] = useState<ReviewRating[]>([])
   const [review, setReview] = useState("")
-  const [images, setImages] = useState<string[]>([])
+  const [images, setImages] = useState<UploadedImage[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -56,10 +61,8 @@ const ReviewFormPage = () => {
     })
     setNavigation({ display: false })
 
-    // API 데이터 fetch 모의 구현
     const fetchReviewSections = async () => {
       try {
-        // TODO: 실제 API 호출로 대체
         const mockResponse: ReviewApiResponse = {
           resultCode: "00",
           resultMessage: "SUCCESS",
@@ -78,11 +81,10 @@ const ReviewFormPage = () => {
 
         if (mockResponse.resultCode === "00") {
           setReviewSections(mockResponse.body)
-          // 초기 ratings 상태 설정
           setRatings(
             mockResponse.body.map((section) => ({
               rs_idx: section.rs_idx,
-              rating: "",
+              rs_grade: "",
             })),
           )
         }
@@ -94,17 +96,70 @@ const ReviewFormPage = () => {
     }
 
     fetchReviewSections()
+
+    return () => {
+      images.forEach((image) => URL.revokeObjectURL(image.preview))
+    }
   }, [])
 
-  const isFormValid = ratings.every((rating) => rating.rating !== "")
+  const handleImageUpload = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = e.target.files
+      if (!files) return
+
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png"]
+      const maxSize = 5 * 1024 * 1024 // 5MB
+
+      const validFiles = Array.from(files).filter((file) => {
+        if (!allowedTypes.includes(file.type)) {
+          alert("JPG, JPEG, PNG 파일만 업로드 가능합니다.")
+          return false
+        }
+        if (file.size > maxSize) {
+          alert("5MB 이하의 파일만 업로드 가능합니다.")
+          return false
+        }
+        return true
+      })
+
+      if (images.length + validFiles.length > 8) {
+        alert("최대 8개까지 업로드 가능합니다.")
+        return
+      }
+
+      validFiles.forEach((file) => {
+        const reader = new FileReader()
+        reader.onload = () => {
+          setImages((prev) => [
+            ...prev,
+            {
+              id: crypto.randomUUID(),
+              file,
+              preview: reader.result as string,
+            },
+          ])
+        }
+        reader.readAsDataURL(file)
+      })
+
+      e.target.value = ""
+    },
+    [images],
+  )
+
+  const handleImageDelete = useCallback((id: string) => {
+    setImages((prev) => prev.filter((image) => image.id !== id))
+  }, [])
+
+  const isFormValid = ratings.every((rating) => rating.rs_grade !== "")
 
   const handleRatingChange = (
     rs_idx: string,
-    newRating: ReviewRating["rating"],
+    newGrade: ReviewRating["rs_grade"],
   ) => {
     setRatings((prev) =>
       prev.map((rating) =>
-        rating.rs_idx === rs_idx ? { ...rating, rating: newRating } : rating,
+        rating.rs_idx === rs_idx ? { ...rating, rs_grade: newGrade } : rating,
       ),
     )
   }
@@ -113,15 +168,25 @@ const ReviewFormPage = () => {
     if (!isFormValid) return
 
     try {
-      // TODO: 실제 API 전송 구현
-      const reviewData = {
-        ratings,
-        review,
-        images,
-      }
-      console.log("Submitting review:", reviewData)
-      // const response = await api.submitReview(reviewData)
-      // if (response.success) navigate("/review/complete")
+      const formData = new FormData()
+
+      formData.append("r_idx", "5453207")
+
+      const reviewData = ratings
+      formData.append("review", JSON.stringify(reviewData))
+
+      formData.append("review_memo", review)
+
+      images.forEach((image) => {
+        formData.append("upload", image.file)
+      })
+
+      console.log("Submitting review:", {
+        r_idx: "5453207",
+        review: reviewData,
+        review_memo: review,
+        upload: images.map((img) => img.file.name),
+      })
     } catch (error) {
       console.error("Failed to submit review:", error)
     }
@@ -149,7 +214,7 @@ const ReviewFormPage = () => {
               key={option.value}
               onClick={() => handleRatingChange(section.rs_idx, option.value)}
               className={`flex-1 h-10 rounded-lg flex items-center justify-center ${
-                rating.rating === option.value
+                rating.rs_grade === option.value
                   ? "bg-primary text-white font-medium"
                   : "bg-white border border-gray-100 text-gray-700"
               }`}
@@ -172,7 +237,6 @@ const ReviewFormPage = () => {
 
   return (
     <div className="flex flex-col pb-[94px]">
-      {/* 방문 정보 */}
       <div className="px-5 pt-4">
         <div className="flex flex-col gap-5 bg-white rounded-[20px]">
           <div className="flex flex-col gap-2">
@@ -218,22 +282,41 @@ const ReviewFormPage = () => {
           <div className="text-gray-700 text-base font-semibold">
             사진을 올려서 테라피 히스토리를 관리하세요. (선택)
           </div>
-          <div className="flex gap-2">
-            <button className="w-20 h-20 border border-gray-200 rounded-lg flex flex-col items-center justify-center">
+
+          <div className="flex gap-2 overflow-x-auto no-scrollbar touch-pan-x">
+            <label className="shrink-0 w-20 h-20 border border-gray-200 rounded-lg flex flex-col items-center justify-center cursor-pointer">
+              <input
+                type="file"
+                accept="image/jpeg,image/jpg,image/png"
+                onChange={handleImageUpload}
+                multiple
+                className="hidden"
+              />
               <PlusIcon className="w-6 h-6 text-gray-400" />
               <span className="text-gray-400 text-xs font-medium mt-1">
                 {images.length} / 8
               </span>
-            </button>
-            {images.map((image, index) => (
+            </label>
+            {images.map((image) => (
               <div
-                key={index}
-                className="w-20 h-20 border border-gray-100 rounded-lg"
+                key={image.id}
+                className="relative w-20 h-20 border border-gray-100 rounded-lg shrink-0"
               >
-                <img src={image} alt={`업로드 이미지 ${index + 1}`} />
+                <img
+                  src={image.preview}
+                  alt="업로드 이미지"
+                  className="w-full h-full object-cover rounded-lg"
+                />
+                <button
+                  onClick={() => handleImageDelete(image.id)}
+                  className="absolute top-[5px] right-[5px] w-4 h-4 bg-gray-700 rounded-full flex items-center justify-center"
+                >
+                  <XCircleIcon className="w-4 h-4" circleColor="#212121" />
+                </button>
               </div>
             ))}
           </div>
+
           <div className="flex items-start gap-1 text-gray-500 text-sm">
             <span>*</span>
             <span>5Mb 이하의 jpg, jpeg, png 파일만 등록 가능합니다.</span>

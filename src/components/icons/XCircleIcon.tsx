@@ -1,6 +1,13 @@
 import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon"
 
-export default function XCircleIcon(props: SvgIconProps) {
+interface XCircleIconProps extends SvgIconProps {
+  circleColor?: string
+}
+
+export default function XCircleIcon({
+  circleColor = "#BDBDBD",
+  ...props
+}: XCircleIconProps) {
   return (
     <SvgIcon {...props}>
       <svg
@@ -12,7 +19,7 @@ export default function XCircleIcon(props: SvgIconProps) {
       >
         <path
           d="M2.66675 16.0003C2.66675 8.63653 8.63629 2.66699 16.0001 2.66699C23.3639 2.66699 29.3334 8.63653 29.3334 16.0003C29.3334 23.3641 23.3639 29.3337 16.0001 29.3337C8.63629 29.3337 2.66675 23.3641 2.66675 16.0003Z"
-          fill="#BDBDBD"
+          fill={circleColor}
         />
         <path
           fillRule="evenodd"
