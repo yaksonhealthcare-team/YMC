@@ -36,6 +36,8 @@ import ReservationFormPage from "pages/reservation/ReservationFormPage.tsx"
 import BranchSearch from "../pages/branch/search/BranchSearch.tsx"
 import ResetPassword from "../pages/editProfile/ResetPassword.tsx"
 import ResetPasswordComplete from "../pages/editProfile/ResetPasswordComplete.tsx"
+import ActiveBranch from "../pages/myPage/activeBranch/ActiveBranch.tsx"
+import EditProfile from "../pages/editProfile/EditProfile.tsx"
 
 interface RouteConfig {
   path: string
@@ -165,6 +167,11 @@ const routeConfig: RouteConfig[] = [
     auth: true,
   },
   {
+    path: "/mypage/active-branch",
+    element: <ActiveBranch />,
+    auth: true,
+  },
+  {
     path: "/myinfo",
     element: <div>My Info</div>,
     auth: true,
@@ -222,7 +229,7 @@ const routeConfig: RouteConfig[] = [
   },
   {
     path: "/profile",
-    element: <div>Profile</div>,
+    element: <EditProfile />,
   },
   {
     path: "/profile/reset-password",
