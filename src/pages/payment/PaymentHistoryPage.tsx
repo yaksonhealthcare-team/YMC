@@ -50,11 +50,13 @@ const PaymentHistoryPage = () => {
             </li>
           )),
         )}
-        <li ref={observerTarget} className={"h-4"} />
+        <div ref={observerTarget} className={"h-4 bg-[#F7F8Fb]"} />
+        {isFetchingNextPage && (
+          <div className={"text-center text-gray-500 py-4 bg-[#F7F8Fb]"}>
+            로딩 중...
+          </div>
+        )}
       </ul>
-      {isFetchingNextPage && (
-        <p className={"text-center text-gray-500 py-4"}>로딩 중...</p>
-      )}
     </div>
   )
 }
