@@ -61,7 +61,9 @@ const ResetPassword = () => {
               </button>
             }
           />
-          <span className="text-12px text-[#0A84FF] ml-2">
+          <span
+            className={`text-12px ${form.password.length === 0 ? "text-gray-400" : "text-success"} ml-2`}
+          >
             영문, 숫자, 특수문자 중 2종류 이상을 조합하여 최소 10자리 이상
           </span>
         </div>
