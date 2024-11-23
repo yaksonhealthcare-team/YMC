@@ -2,20 +2,29 @@ import { useUserQuestionnaireResult } from "../../../queries/useQuestionnaireQue
 import { useLayout } from "../../../contexts/LayoutContext.tsx"
 import { useEffect } from "react"
 import { Button } from "@components/Button.tsx"
+import QuestionnaireHistoryNotExist from "./_fragments/QuestionnaireHistoryNotExist.tsx"
+import { useNavigate } from "react-router-dom"
 
 const Questionnaire = () => {
-  const { data: questionnaire } = useUserQuestionnaireResult()
+  const { data: questionnaire, isError } = useUserQuestionnaireResult()
   const { setHeader, setNavigation } = useLayout()
+  const navigate = useNavigate()
+
+  const isQuestionnaireExists = questionnaire && questionnaire.length > 0
 
   useEffect(() => {
     setHeader({
       left: "back",
       title: "공통 문진 보기",
-      display: true,
+      display: isQuestionnaireExists,
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
   }, [])
+
+  if (!isQuestionnaireExists || isError) {
+    return <QuestionnaireHistoryNotExist />
+  }
 
   return (
     <div
@@ -45,7 +54,11 @@ const Questionnaire = () => {
         </ul>
       </div>
       <div className={"px-5 pb-6 py-3 border-t border-gray-100"}>
-        <Button className={"w-full"} variantType={"primary"}>
+        <Button
+          className={"w-full"}
+          variantType={"primary"}
+          onClick={() => navigate("/questionnaire/general")}
+        >
           {"수정하기"}
         </Button>
       </div>
