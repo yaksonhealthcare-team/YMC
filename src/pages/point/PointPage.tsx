@@ -50,6 +50,7 @@ const PointPage = () => {
               <div className={"flex gap-4"}>
                 <div className={"flex-shrink"}>
                   <Tag
+                    className={"text-nowrap"}
                     type={history.pointType === "사용" ? "blue" : "red"}
                     title={history.pointType}
                   />
