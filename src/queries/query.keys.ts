@@ -11,6 +11,7 @@ export const queryKeys = {
   },
   questionnaires: {
     all: ["questionnaires"] as const,
-    userResult: () => [...queryKeys.questionnaires.all, "user_result"] as const,
+    userResult: (type: "general" | "reservation") =>
+      [...queryKeys.questionnaires.all, "user_result", type] as const,
   },
 } as const
