@@ -14,9 +14,7 @@ const MyPage = () => {
   const { openBottomSheet, closeOverlay } = useOverlay()
 
   useEffect(() => {
-    setHeader({
-      display: false,
-    })
+    setHeader({ display: false })
     setNavigation({ display: true })
   }, [navigate])
 
@@ -27,7 +25,14 @@ const MyPage = () => {
           {"보고 싶은 문진 종류를 선택해주세요."}
         </p>
         <div className={"mt-10 border-t border-gray-50 flex gap-2 pt-3 px-5"}>
-          <Button className={"w-full"} variantType={"line"}>
+          <Button
+            className={"w-full"}
+            variantType={"line"}
+            onClick={() => {
+              closeOverlay()
+              navigate("/mypage/questionnaire/reservation")
+            }}
+          >
             {"예약 문진 보기"}
           </Button>
           <Button
@@ -35,7 +40,7 @@ const MyPage = () => {
             variantType={"primary"}
             onClick={() => {
               closeOverlay()
-              navigate("/mypage/questionnaire")
+              navigate("/mypage/questionnaire/general")
             }}
           >
             {"공통 문진 보기"}

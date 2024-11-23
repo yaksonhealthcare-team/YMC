@@ -2,7 +2,11 @@ import { useNavigate } from "react-router-dom"
 import DocumentEditIcon from "@assets/icons/DocumentEditIcon.svg?react"
 import { Button } from "@components/Button.tsx"
 
-const QuestionnaireHistoryNotExist = () => {
+const QuestionnaireHistoryNotExist = ({
+  onStartQuestionnaire,
+}: {
+  onStartQuestionnaire: () => void
+}) => {
   const navigate = useNavigate()
 
   return (
@@ -26,10 +30,7 @@ const QuestionnaireHistoryNotExist = () => {
         <Button variantType={"text"} onClick={() => navigate(-1)}>
           {"나중에 등록할래요"}
         </Button>
-        <Button
-          variantType={"primary"}
-          onClick={() => navigate("/questionnaire/general")}
-        >
+        <Button variantType={"primary"} onClick={onStartQuestionnaire}>
           {"문진 작성 시작하기"}
         </Button>
       </div>
