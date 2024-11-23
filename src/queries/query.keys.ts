@@ -9,4 +9,8 @@ export const queryKeys = {
     detail: (id: string, coords: Coordinate) =>
       [...queryKeys.branches.all, id, coords] as const,
   },
+  questionnaires: {
+    all: ["questionnaires"] as const,
+    userResult: () => [...queryKeys.questionnaires.all, "user_result"] as const,
+  },
 } as const
