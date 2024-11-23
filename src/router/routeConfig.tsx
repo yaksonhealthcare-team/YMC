@@ -34,6 +34,7 @@ import ReservationCancelPage from "pages/reservation/ReservationCancelPage.tsx"
 import MembershipUsageHistory from "pages/membership/MembershipUsageHistory.tsx"
 import ReservationFormPage from "pages/reservation/ReservationFormPage.tsx"
 import BranchSearch from "../pages/branch/search/BranchSearch.tsx"
+import ActiveBranch from "../pages/myPage/activeBranch/ActiveBranch.tsx"
 import EditProfile from "../pages/editProfile/EditProfile.tsx"
 
 interface RouteConfig {
@@ -161,6 +162,11 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/mypage",
     element: <MyPage />,
+    auth: true,
+  },
+  {
+    path: "/mypage/active-branch",
+    element: <ActiveBranch />,
     auth: true,
   },
   {

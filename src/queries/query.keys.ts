@@ -1,5 +1,6 @@
 import { BranchFilters } from "./types/branch.types.ts"
 import { Coordinate } from "../types/Coordinate.ts"
+import { PointFilters } from "./types/point.types.ts"
 
 export const queryKeys = {
   branches: {
@@ -8,5 +9,10 @@ export const queryKeys = {
       [...queryKeys.branches.all, filters] as const,
     detail: (id: string, coords: Coordinate) =>
       [...queryKeys.branches.all, id, coords] as const,
+  },
+  points: {
+    all: ["points"] as const,
+    list: (filters: PointFilters) =>
+      [...queryKeys.points.all, { ...filters, infinite: true }] as const,
   },
 } as const
