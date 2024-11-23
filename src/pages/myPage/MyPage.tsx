@@ -1,20 +1,49 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { Notice } from "@components/Notice"
 import { Button } from "@components/Button"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
+import { useAuth } from "../../contexts/AuthContext.tsx"
+import { useOverlay } from "../../contexts/ModalContext.tsx"
 
 const MyPage = () => {
+  const { user } = useAuth()
   const navigate = useNavigate()
-  const [userName] = useState("김민정")
   const { setHeader, setNavigation } = useLayout()
+  const { openBottomSheet, closeOverlay } = useOverlay()
+
   useEffect(() => {
     setHeader({
       display: false,
     })
     setNavigation({ display: true })
   }, [navigate])
+
+  const handleOpenQuestionnaire = () => {
+    openBottomSheet(
+      <div className={"flex flex-col"}>
+        <p className={"mx-5 mt-5 font-sb text-18px"}>
+          {"보고 싶은 문진 종류를 선택해주세요."}
+        </p>
+        <div className={"mt-10 border-t border-gray-50 flex gap-2 pt-3 px-5"}>
+          <Button className={"w-full"} variantType={"line"}>
+            {"예약 문진 보기"}
+          </Button>
+          <Button
+            className={"w-full"}
+            variantType={"primary"}
+            onClick={() => {
+              closeOverlay()
+              navigate("/mypage/questionnaire")
+            }}
+          >
+            {"공통 문진 보기"}
+          </Button>
+        </div>
+      </div>,
+    )
+  }
 
   const menuItems = [
     { id: "favorite", title: "즐겨찾는 지점", path: "/favorite" },
@@ -46,7 +75,9 @@ const MyPage = () => {
               className="w-full h-full object-cover"
             />
           </div>
-          <span className="font-b text-[20px] text-gray-900">{userName}님</span>
+          <span className="font-b text-[20px] text-gray-900">
+            {user?.username ?? ""}님
+          </span>
         </div>
 
         {/* Info Cards */}
@@ -70,7 +101,7 @@ const MyPage = () => {
           <div className="flex gap-2">
             <div
               className="w-[101px] h-24 bg-white rounded-2xl border border-gray-100 flex flex-col items-center justify-center"
-              onClick={() => navigate("/mypage/questionnaire")}
+              onClick={handleOpenQuestionnaire}
             >
               <div className="w-6 h-6 mb-2">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -90,7 +121,7 @@ const MyPage = () => {
                 </div>
                 <div className="flex items-center">
                   <span className="font-sb text-16px text-gray-900">
-                    2,000P
+                    {`${user?.point ?? 0}P`}
                   </span>
                   <CaretRightIcon className="w-3 h-3 ml-1.5" />
                 </div>
@@ -105,7 +136,7 @@ const MyPage = () => {
                 </div>
                 <div className="flex items-center">
                   <span className="font-sb text-16px text-gray-900">
-                    SILVER
+                    {user?.level ?? ""}
                   </span>
                   <CaretRightIcon className="w-3 h-3 ml-1.5" />
                 </div>
