@@ -34,6 +34,8 @@ import ReservationCancelPage from "pages/reservation/ReservationCancelPage.tsx"
 import MembershipUsageHistory from "pages/membership/MembershipUsageHistory.tsx"
 import ReservationFormPage from "pages/reservation/ReservationFormPage.tsx"
 import BranchSearch from "../pages/branch/search/BranchSearch.tsx"
+import ActiveBranch from "../pages/myPage/activeBranch/ActiveBranch.tsx"
+import EditProfile from "../pages/editProfile/EditProfile.tsx"
 import GeneralQuestionnaireHistory from "../pages/myPage/questionnaire/GeneralQuestionnaireHistory.tsx"
 import ReservationQuestionnaireHistory from "../pages/myPage/questionnaire/ReservationQuestionnaireHistory.tsx"
 
@@ -165,6 +167,11 @@ const routeConfig: RouteConfig[] = [
     auth: true,
   },
   {
+    path: "/mypage/active-branch",
+    element: <ActiveBranch />,
+    auth: true,
+  },
+  {
     path: "/myinfo",
     element: <div>My Info</div>,
     auth: true,
@@ -228,6 +235,10 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/terms",
     element: <div>Terms</div>,
+  },
+  {
+    path: "/profile",
+    element: <EditProfile />,
   },
   //지점 찾기, 지점 상세보기
   {

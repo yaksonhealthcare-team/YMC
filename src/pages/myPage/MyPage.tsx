@@ -88,7 +88,10 @@ const MyPage = () => {
         {/* Info Cards */}
         <div className="px-5 space-y-5">
           {/* Branch Info */}
-          <div className="p-5 bg-white rounded-2xl border border-gray-100">
+          <div
+            className="p-5 bg-white rounded-2xl border border-gray-100"
+            onClick={() => navigate("/mypage/active-branch")}
+          >
             <div className="flex justify-between items-center">
               <span className="font-m text-14px text-gray-500">
                 이용 중인 지점

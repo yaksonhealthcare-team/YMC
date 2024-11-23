@@ -3,6 +3,7 @@ import { User } from "../../User.ts"
 
 export class UserMapper {
   static toEntity(dto: UserResponseDTO): User {
+    console.log(dto)
     return {
       username: dto.name,
       email: dto.email,
