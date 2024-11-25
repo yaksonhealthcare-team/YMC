@@ -83,7 +83,7 @@ const PaymentHistoryCard = ({ payment }: { payment: PaymentHistory }) => {
     <div className={"flex flex-col gap-4"}>
       <div className={"flex justify-between items-center"}>
         <div className={"flex gap-2 items-center"}>
-          <p className={"font-sb"}>{format(payment.paid_at, "yyyy.MM.dd")}</p>
+          <p className={"font-sb"}>{format(payment.paidAt, "yyyy.MM.dd")}</p>
           <span
             className={
               "font-m text-12px text-gray-500 bg-gray-50 rounded py-0.5 px-1.5"

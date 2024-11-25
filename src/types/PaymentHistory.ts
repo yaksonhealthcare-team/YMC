@@ -1,7 +1,7 @@
 type PaymentHistory = {
   id: string
   index: string
-  paid_at: Date
+  paidAt: Date
   type: string
   status: string
   pointStatus: "ready" | "done"
