@@ -15,6 +15,11 @@ export const queryKeys = {
     list: (filters: PointFilters) =>
       [...queryKeys.points.all, { ...filters, infinite: true }] as const,
   },
+  payments: {
+    all: ["payments"] as const,
+    histories: ({ page }: { page: number }) =>
+      [...queryKeys.payments.all, { page: page, infinite: true }] as const,
+  },
   questionnaires: {
     all: ["questionnaires"] as const,
     userResult: (type: "general" | "reservation") =>

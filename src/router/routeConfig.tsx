@@ -11,7 +11,7 @@ import Branch from "../pages/branch/Branch.tsx"
 import { Notification } from "../pages/home/Notification.tsx"
 import BranchDetail from "../pages/branch/[id]/BranchDetail.tsx"
 import FavoritePage from "../pages/favorite/FavoritePage.tsx"
-import PaymentPage from "../pages/payment/PaymentPage.tsx"
+import PaymentHistoryPage from "../pages/payment/PaymentHistoryPage.tsx"
 import ReviewPage from "../pages/review/ReviewPage.tsx"
 import InquiryPage from "../pages/inquiry/InquiryPage.tsx"
 import EventPage from "../pages/event/EventPage.tsx"
@@ -207,7 +207,7 @@ const routeConfig: RouteConfig[] = [
   },
   {
     path: "/payment",
-    element: <PaymentPage />,
+    element: <PaymentHistoryPage />,
     auth: true,
   },
   {
