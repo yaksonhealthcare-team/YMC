@@ -38,6 +38,8 @@ import ReviewFormPage from "pages/review/ReviewFormPage.tsx"
 import ReviewDetailPage from "pages/review/ReviewDetailPage.tsx"
 import ActiveBranch from "../pages/myPage/activeBranch/ActiveBranch.tsx"
 import EditProfile from "../pages/editProfile/EditProfile.tsx"
+import ReservationQuestionnaire from "pages/questionnaire/ReservationQuestionnaire.tsx"
+import GeneralQuestionnaire from "pages/questionnaire/GeneralQuestionnaire.tsx"
 
 interface RouteConfig {
   path: string
@@ -122,11 +124,11 @@ const routeConfig: RouteConfig[] = [
   // 문진작성
   {
     path: "/questionnaire/general",
-    element: <div>Questionnaire-일반문진</div>,
+    element: <GeneralQuestionnaire />,
   },
   {
     path: "/questionnaire/reservation",
-    element: <div>Questionnaire-예약문진</div>,
+    element: <ReservationQuestionnaire />,
     auth: true,
   },
 
