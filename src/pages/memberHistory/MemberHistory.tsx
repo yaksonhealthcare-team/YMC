@@ -69,7 +69,7 @@ const sampleReservations: ReservationItem[] = [
     title: "전신관리 90분",
     count: 2,
     date: new Date(),
-    status: ReservationStatus.CANCELLED,
+    status: ReservationStatus.CANCELED,
   },
 ]
 
