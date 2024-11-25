@@ -12,7 +12,7 @@ import { Notification } from "../pages/home/Notification.tsx"
 import BranchDetail from "../pages/branch/[id]/BranchDetail.tsx"
 import FavoritePage from "../pages/favorite/FavoritePage.tsx"
 import PaymentPage from "../pages/payment/PaymentPage.tsx"
-import ReviewPage from "../pages/revivew/ReviewPage.tsx"
+import ReviewPage from "../pages/review/ReviewPage.tsx"
 import InquiryPage from "../pages/inquiry/InquiryPage.tsx"
 import EventPage from "../pages/event/EventPage.tsx"
 import NoticePage from "../pages/notice/NoticePage.tsx"
@@ -36,6 +36,8 @@ import ReservationFormPage from "pages/reservation/ReservationFormPage.tsx"
 import BranchSearch from "../pages/branch/search/BranchSearch.tsx"
 import ResetPassword from "../pages/editProfile/ResetPassword.tsx"
 import ResetPasswordComplete from "../pages/editProfile/ResetPasswordComplete.tsx"
+import ReviewFormPage from "pages/review/ReviewFormPage.tsx"
+import ReviewDetailPage from "pages/review/ReviewDetailPage.tsx"
 import ActiveBranch from "../pages/myPage/activeBranch/ActiveBranch.tsx"
 import EditProfile from "../pages/editProfile/EditProfile.tsx"
 
@@ -200,6 +202,16 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/review",
     element: <ReviewPage />,
+    auth: true,
+  },
+  {
+    path: "/review/form",
+    element: <ReviewFormPage />,
+    auth: true,
+  },
+  {
+    path: "/review/:id",
+    element: <ReviewDetailPage />,
     auth: true,
   },
   {
