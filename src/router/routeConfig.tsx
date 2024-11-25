@@ -34,6 +34,8 @@ import ReservationCancelPage from "pages/reservation/ReservationCancelPage.tsx"
 import MembershipUsageHistory from "pages/membership/MembershipUsageHistory.tsx"
 import ReservationFormPage from "pages/reservation/ReservationFormPage.tsx"
 import BranchSearch from "../pages/branch/search/BranchSearch.tsx"
+import ResetPassword from "../pages/editProfile/ResetPassword.tsx"
+import ResetPasswordComplete from "../pages/editProfile/ResetPasswordComplete.tsx"
 import ReviewFormPage from "pages/review/ReviewFormPage.tsx"
 import ReviewDetailPage from "pages/review/ReviewDetailPage.tsx"
 import ActiveBranch from "../pages/myPage/activeBranch/ActiveBranch.tsx"
@@ -240,6 +242,14 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/profile",
     element: <EditProfile />,
+  },
+  {
+    path: "/profile/reset-password",
+    element: <ResetPassword />,
+  },
+  {
+    path: "/profile/reset-password/complete",
+    element: <ResetPasswordComplete />,
   },
   //지점 찾기, 지점 상세보기
   {

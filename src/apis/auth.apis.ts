@@ -4,8 +4,14 @@ import { HTTPResponse } from "../types/dtos/HTTPResponse.ts"
 import { User } from "../types/User.ts"
 import { UserMapper } from "../types/dtos/mapper/UserMapper.ts"
 
-export const loginWithEmail = async ({ username, password }: { username: string, password: string }): Promise<{
-  refreshToken: string,
+export const loginWithEmail = async ({
+  username,
+  password,
+}: {
+  username: string
+  password: string
+}): Promise<{
+  refreshToken: string
   accessToken: string
 }> => {
   const { data } = await axiosClient.post("/auth/signin/email", {
@@ -23,10 +29,22 @@ export const loginWithEmail = async ({ username, password }: { username: string,
 }
 
 export const fetchUser = async (token: string): Promise<User> => {
-  const { data: { body: response } } = await axiosClient.get<HTTPResponse<UserResponseDTO[]>>("/auth/me", {
+  const {
+    data: { body: response },
+  } = await axiosClient.get<HTTPResponse<UserResponseDTO[]>>("/auth/me", {
     headers: {
       Authorization: token,
     },
   })
   return UserMapper.toEntity(response[0])
+}
+
+export const resetPassword = async (
+  email: string,
+  password: string,
+): Promise<void> => {
+  await axiosClient.put("/auth/reset_password", {
+    email: email,
+    password: password,
+  })
 }
