@@ -40,6 +40,8 @@ import ReviewFormPage from "pages/review/ReviewFormPage.tsx"
 import ReviewDetailPage from "pages/review/ReviewDetailPage.tsx"
 import ActiveBranch from "../pages/myPage/activeBranch/ActiveBranch.tsx"
 import EditProfile from "../pages/editProfile/EditProfile.tsx"
+import GeneralQuestionnaireHistory from "../pages/myPage/questionnaire/GeneralQuestionnaireHistory.tsx"
+import ReservationQuestionnaireHistory from "../pages/myPage/questionnaire/ReservationQuestionnaireHistory.tsx"
 
 interface RouteConfig {
   path: string
@@ -183,7 +185,16 @@ const routeConfig: RouteConfig[] = [
     element: <PointPage />,
     auth: true,
   },
-
+  {
+    path: "/mypage/questionnaire/general",
+    element: <GeneralQuestionnaireHistory />,
+    auth: true,
+  },
+  {
+    path: "/mypage/questionnaire/reservation",
+    element: <ReservationQuestionnaireHistory />,
+    auth: true,
+  },
   {
     path: "/inquiry",
     element: <InquiryPage />,
