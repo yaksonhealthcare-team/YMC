@@ -41,7 +41,7 @@ const COUNTER_TEXT_STYLES = {
   error: "text-error",
 } as const
 
-interface TextAreaProps {
+interface TextAreaProps extends React.HTMLAttributes<HTMLTextAreaElement> {
   placeholder?: string
   label?: string
   helperText?: string
