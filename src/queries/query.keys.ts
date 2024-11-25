@@ -15,4 +15,8 @@ export const queryKeys = {
     list: (filters: PointFilters) =>
       [...queryKeys.points.all, { ...filters, infinite: true }] as const,
   },
+  questionnaire: {
+    common: ["questionnaire", "common"] as const,
+    reservation: ["questionnaire", "reservation"] as const,
+  },
 } as const
