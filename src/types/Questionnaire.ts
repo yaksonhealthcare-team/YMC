@@ -1,3 +1,5 @@
+import { OptionValue } from "queries/types/questionnaire.types"
+
 export interface QuestionOption {
   csso_idx: string
   option_type: string
@@ -13,3 +15,5 @@ export interface Question {
   answer_type: "S" | "M" | "T"
   options: QuestionOption[]
 }
+
+export type QuestionValue = string | OptionValue[]

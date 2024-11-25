@@ -3,5 +3,12 @@ export interface OptionValue {
 }
 
 export interface QuestionnaireFormValues {
-  [key: string]: string | OptionValue[] // "1_text": string | "1_option": OptionValue[]
+  [key: `${string}_${"text" | "option"}`]: string | OptionValue[]
 }
+
+export type QuestionValue = string | OptionValue[] | undefined
+
+export type QuestionFieldName = `${string}_${"text" | "option"}`
+
+export interface QuestionnaireFormValues
+  extends Record<QuestionFieldName, string | OptionValue[]> {}
