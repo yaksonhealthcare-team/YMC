@@ -55,12 +55,12 @@ export const TextArea = ({
   placeholder,
   label,
   helperText,
-  maxLength = 100,
+  maxLength,
   value = "",
   disabled,
   onChange,
 }: TextAreaProps) => {
-  const isError = value.length > maxLength
+  const isError = maxLength && value.length > maxLength
   const textStyle = isError
     ? COUNTER_TEXT_STYLES.error
     : COUNTER_TEXT_STYLES.normal
@@ -77,7 +77,7 @@ export const TextArea = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        error={isError}
+        error={isError || false}
         variant="outlined"
         sx={{
           ...TEXT_FIELD_STYLES.base,
@@ -108,9 +108,11 @@ export const TextArea = ({
             {helperText}
           </span>
         )}
-        <span className={clsx("font-m text-12px", textStyle)}>
-          {value.length} / {maxLength}
-        </span>
+        {maxLength && (
+          <span className={clsx("font-m text-12px", textStyle)}>
+            {value.length} / {maxLength}
+          </span>
+        )}
       </div>
     </div>
   )
