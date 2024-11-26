@@ -64,6 +64,7 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
       display: true,
       title: "문진작성",
       left: "back",
+      backgroundColor: "white",
     })
     setNavigation({ display: false })
   }, [setHeader, setNavigation])
