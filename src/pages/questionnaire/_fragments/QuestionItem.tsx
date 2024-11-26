@@ -66,10 +66,14 @@ export const QuestionItem = ({
     }
 
     // option_type이 "2"인 경우 주관식 답변 유효성 검사
-    const selectedOption = question.options.find((option) =>
-      isOptionSelected(option.csso_idx),
+    const hasSelectedSubjectiveOption = question.options.some(
+      (option) =>
+        option.option_type === "2" &&
+        (formik.values[fieldName] as OptionValue[])?.some(
+          (value) => value.csso_idx === option.csso_idx,
+        ),
     )
-    if (selectedOption?.option_type === "2") {
+    if (hasSelectedSubjectiveOption) {
       const textFieldValue = formik.values[`${fieldName}_text`] as string
       if (!textFieldValue || textFieldValue.trim().length === 0) {
         return false
