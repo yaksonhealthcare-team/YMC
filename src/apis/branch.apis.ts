@@ -13,6 +13,7 @@ export const fetchBranches = async (
       nowlat: filters.latitude,
       nowlon: filters.longitude,
       brand_code: filters.brandCode,
+      csbc_idx: filters.category,
       search: filters.search,
     },
   })
