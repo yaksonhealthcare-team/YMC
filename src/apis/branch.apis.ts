@@ -12,6 +12,8 @@ export const fetchBranches = async (
       page: filters.page,
       nowlat: filters.latitude,
       nowlon: filters.longitude,
+      brand_code: filters.brandCode,
+      search: filters.search,
     },
   })
   return BranchMapper.toEntities(data.body)

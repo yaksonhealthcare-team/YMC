@@ -13,7 +13,7 @@ export interface User {
   profileURL?: string
   thirdPartyType: string
   brands: {
-    brandCode: string
     brandName: string
+    address: string
   }[]
 }

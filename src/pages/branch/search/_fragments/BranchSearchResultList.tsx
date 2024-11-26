@@ -1,28 +1,42 @@
 import BranchCard from "@components/BranchCard.tsx"
 import { useNavigate } from "react-router-dom"
+import useDebounce from "../../../../hooks/useDebounce.tsx"
+import { useBranches } from "../../../../queries/useBranchQueries.tsx"
+import useGeolocation from "../../../../hooks/useGeolocation.tsx"
+import { DEFAULT_COORDINATE } from "../../../../types/Coordinate.ts"
 
 interface BranchSearchResultListProps {
   query: string
 }
 
-// TODO: API 확인 후 추가 구현 예정입니다. (branches API에서 search 파라미터 요청 시 오류)
 const BranchSearchResultList = ({ query }: BranchSearchResultListProps) => {
   const navigate = useNavigate()
+  const debouncedQuery = useDebounce(query, 300)
+  const { location } = useGeolocation()
+
+  const { data: branches, isLoading } = useBranches({
+    page: 1,
+    latitude: location.latitude ?? DEFAULT_COORDINATE.latitude!,
+    longitude: location.longitude ?? DEFAULT_COORDINATE.longitude!,
+    brandCode: "",
+    search: debouncedQuery,
+  })
+
+  if (!isLoading && branches?.length === 0) {
+    return <p className={"self-center mt-40"}>{"검색 결과가 없습니다."}</p>
+  }
 
   return (
     <ul className={"divide-y divide-gray-100 px-5 overflow-y-scroll"}>
-      {Array.from({ length: 20 }, (_, index) => (
+      {(branches || []).map((branch, index) => (
         <li
           key={index}
           className={"py-4"}
           onClick={() => {
-            navigate(`/branch/${index}`)
+            navigate(`/branch/${branch.id}`)
           }}
         >
-          <BranchCard
-            name={`약손명가 ${query}점`}
-            address={"서울특별시 강남구 테헤란로78길 14-10"}
-          />
+          <BranchCard name={branch.name} address={branch.address} />
         </li>
       ))}
     </ul>
