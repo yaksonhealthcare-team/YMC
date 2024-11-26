@@ -38,8 +38,7 @@ import ReviewFormPage from "pages/review/ReviewFormPage.tsx"
 import ReviewDetailPage from "pages/review/ReviewDetailPage.tsx"
 import ActiveBranch from "../pages/myPage/activeBranch/ActiveBranch.tsx"
 import EditProfile from "../pages/editProfile/EditProfile.tsx"
-import ReservationQuestionnaire from "pages/questionnaire/ReservationQuestionnaire.tsx"
-import GeneralQuestionnaire from "pages/questionnaire/GeneralQuestionnaire.tsx"
+import Questionnaire from "pages/questionnaire/Questionnaire.tsx"
 
 interface RouteConfig {
   path: string
@@ -123,13 +122,12 @@ const routeConfig: RouteConfig[] = [
 
   // 문진작성
   {
-    path: "/questionnaire/general",
-    element: <GeneralQuestionnaire />,
+    path: "/questionnaire/common",
+    element: <Questionnaire type="common" />,
   },
   {
     path: "/questionnaire/reservation",
-    element: <ReservationQuestionnaire />,
-    auth: true,
+    element: <Questionnaire type="reservation" />,
   },
 
   //구매, 스토어, 예약

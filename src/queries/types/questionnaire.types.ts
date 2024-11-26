@@ -12,3 +12,5 @@ export type QuestionFieldName = `${string}_${"text" | "option"}`
 
 export interface QuestionnaireFormValues
   extends Record<QuestionFieldName, string | OptionValue[]> {}
+
+export type QuestionnaireType = "common" | "reservation"

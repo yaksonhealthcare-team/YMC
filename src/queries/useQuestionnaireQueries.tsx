@@ -7,30 +7,25 @@ import {
   submitReservationQuestionnaire,
 } from "../apis/questionnaire.apis"
 import { Question } from "../types/Questionnaire"
-import { QuestionnaireFormValues } from "./types/questionnaire.types"
+import {
+  QuestionnaireFormValues,
+  QuestionnaireType,
+} from "./types/questionnaire.types"
 
-// 공통 문진 조회
-export const useCommonQuestionnaire = () =>
+export const useQuestionnaire = (type: QuestionnaireType) =>
   useQuery<Question[], Error>({
-    queryKey: queryKeys.questionnaire.common,
-    queryFn: fetchCommonQuestionnaire,
+    queryKey: queryKeys.questionnaire[type],
+    queryFn:
+      type === "common"
+        ? fetchCommonQuestionnaire
+        : fetchReservationQuestionnaire,
+    enabled: !!type,
   })
 
-// 예약 문진 조회
-export const useReservationQuestionnaire = () =>
-  useQuery<Question[], Error>({
-    queryKey: queryKeys.questionnaire.reservation,
-    queryFn: fetchReservationQuestionnaire,
-  })
-
-// 공통 문진 제출
-export const useSubmitCommonQuestionnaire = () =>
+export const useSubmitQuestionnaire = (type: QuestionnaireType) =>
   useMutation<void, Error, QuestionnaireFormValues>({
-    mutationFn: submitCommonQuestionnaire,
-  })
-
-// 예약 문진 제출
-export const useSubmitReservationQuestionnaire = () =>
-  useMutation<void, Error, QuestionnaireFormValues>({
-    mutationFn: submitReservationQuestionnaire,
+    mutationFn:
+      type === "common"
+        ? submitCommonQuestionnaire
+        : submitReservationQuestionnaire,
   })

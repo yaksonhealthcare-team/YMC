@@ -1,21 +1,19 @@
 import { useEffect, useState } from "react"
 import { useFormik } from "formik"
-import { useNavigate } from "react-router-dom"
-
+import { useNavigate, useParams } from "react-router-dom"
 import { Button } from "@components/Button"
 import { QuestionItem } from "./_fragments/QuestionItem"
-
 import { Question } from "types/Questionnaire"
 import {
   QuestionnaireFormValues,
   QuestionFieldName,
+  QuestionnaireType,
 } from "queries/types/questionnaire.types"
-
 import { useLayout } from "contexts/LayoutContext"
 import { useOverlay } from "contexts/ModalContext"
 import {
-  useReservationQuestionnaire,
-  useSubmitReservationQuestionnaire,
+  useQuestionnaire,
+  useSubmitQuestionnaire,
 } from "queries/useQuestionnaireQueries"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 
@@ -25,12 +23,13 @@ const getFieldName = (question: Question): QuestionFieldName => {
   }` as QuestionFieldName
 }
 
-const ReservationQuestionnaire = () => {
+const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { showAlert } = useOverlay()
-  const { data: questions, isLoading } = useReservationQuestionnaire()
-  const submitMutation = useSubmitReservationQuestionnaire()
+  const { data: questions, isLoading } = useQuestionnaire(type)
+  const submitMutation = useSubmitQuestionnaire(type)
+
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isCurrentValid, setIsCurrentValid] = useState(false)
 
@@ -125,4 +124,4 @@ const ReservationQuestionnaire = () => {
   )
 }
 
-export default ReservationQuestionnaire
+export default Questionnaire
