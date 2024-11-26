@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 import { Button } from "@components/Button"
 import { QuestionItem } from "./_fragments/QuestionItem"
 
-import { Question, QuestionValue } from "types/Questionnaire"
+import { Question } from "types/Questionnaire"
 import {
   QuestionnaireFormValues,
   QuestionFieldName,
@@ -18,10 +18,6 @@ import {
   useSubmitCommonQuestionnaire,
 } from "queries/useQuestionnaireQueries"
 import FixedButtonContainer from "@components/FixedButtonContainer"
-
-interface ValidationErrors {
-  [key: QuestionFieldName]: string
-}
 
 const getFieldName = (question: Question): QuestionFieldName => {
   return `${question.cssq_idx}_${
@@ -66,9 +62,6 @@ const GeneralQuestionnaire = () => {
 
   const handleNext = () => {
     if (!questions) return
-
-    const currentQuestion = questions[currentIndex]
-    const fieldName = getFieldName(currentQuestion)
 
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prev) => prev + 1)

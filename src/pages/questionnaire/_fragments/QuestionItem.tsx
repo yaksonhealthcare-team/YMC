@@ -154,7 +154,6 @@ export const QuestionItem = ({
               <img
                 className="max-w-[100%] max-h-[100%] object-contain"
                 src={option.option_image_url || "https://placehold.co/600x400"}
-                // TODO : 에러 대응
                 alt={option.option_text}
               />
             </div>
@@ -378,5 +377,3 @@ export const QuestionItem = ({
     </div>
   )
 }
-
-// TODO: option.option_type === "2"인 경우 주관식 답변 입력이 완료되지 않으면 '다음' 버튼이 비활성화되고, 100자를 초과하면 경고 메시지가 표시
