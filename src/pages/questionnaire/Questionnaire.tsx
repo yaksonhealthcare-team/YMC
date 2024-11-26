@@ -22,6 +22,25 @@ const getFieldName = (question: Question): QuestionFieldName => {
     question.options.length > 0 ? "option" : "text"
   }` as QuestionFieldName
 }
+/**
+ * 문진 페이지
+ *
+ * 페이지 진입 시 state로 returnPath와 returnText를 전달해야 합니다.
+ * 전달된 정보는 문진 완료 후 이동할 페이지와 버튼 텍스트를 결정하는데 사용됩니다.
+ *
+ * @example
+ * // 마이페이지에서 접근 시
+ * navigate("/questionnaire/reservation", {
+ *   state: {
+ *     returnPath: "/mypage",
+ *     returnText: "마이페이지로"
+ *   }
+ * })
+ *
+ * // state를 전달하지 않을 경우 기본값:
+ * // returnPath: "/"
+ * // returnText: "메인 홈으로"
+ */
 
 const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
   const navigate = useNavigate()
