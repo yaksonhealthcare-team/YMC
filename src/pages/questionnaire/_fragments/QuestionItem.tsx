@@ -138,6 +138,8 @@ export const QuestionItem = ({
     onTextChange: (value: string) => void,
     totalOptionCount?: number,
   ) => {
+    const inputType = question.answer_type === "M" ? "checkbox" : "radio"
+
     if (hasOptionImage) {
       // 이미지가 있는 경우 2열 혹은 3열 정사각형으로 보여주기
       return (
@@ -162,7 +164,7 @@ export const QuestionItem = ({
               />
             </div>
             <input
-              type="radio"
+              type={inputType}
               id={`option-${option.csso_idx}`}
               checked={checked}
               onChange={(e) => onChange(option.csso_idx, e.target.checked)}
@@ -201,7 +203,7 @@ export const QuestionItem = ({
           >
             <FilledCheckIcon className="w-5 h-5" isActive={checked} />
             <input
-              type="radio"
+              type={inputType}
               id={`option-${option.csso_idx}`}
               checked={checked}
               onChange={(e) => onChange(option.csso_idx, e.target.checked)}
