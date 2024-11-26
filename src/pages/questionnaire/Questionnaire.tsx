@@ -142,7 +142,7 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
           variantType="primary"
           sizeType="l"
           onClick={handleNext}
-          // disabled={!isCurrentValid}
+          disabled={!isCurrentValid}
         >
           {isLastQuestion ? "완료" : "다음"}
         </Button>
