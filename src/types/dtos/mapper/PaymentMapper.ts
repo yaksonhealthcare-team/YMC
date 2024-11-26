@@ -6,7 +6,7 @@ export class PaymentMapper {
     return {
       id: dto.orderid,
       index: dto.p_idx,
-      paid_at: new Date(dto.pay_date),
+      paidAt: new Date(dto.pay_date),
       type: dto.pay_gubun,
       status: dto.pay_status,
       pointStatus: dto.point_status === "Y" ? "done" : "ready",
