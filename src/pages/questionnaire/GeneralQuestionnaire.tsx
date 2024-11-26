@@ -41,7 +41,7 @@ const GeneralQuestionnaire = () => {
   useEffect(() => {
     setHeader({
       display: true,
-      title: "공통 문진",
+      title: "문진작성",
       left: "back",
     })
     setNavigation({ display: false })
