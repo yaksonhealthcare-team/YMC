@@ -29,7 +29,12 @@ const Branch = () => {
     category: null,
   })
 
-  const { data: branches } = useBranches({
+  const {
+    data: branches,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useBranches({
     page: 1,
     latitude: INITIAL_CENTER.lat,
     longitude: INITIAL_CENTER.lng,
@@ -93,11 +98,20 @@ const Branch = () => {
   const renderScreen = () => {
     switch (screen) {
       case "list":
-        return <BranchFilterList branches={branches || []} />
+        return (
+          <BranchFilterList
+            branches={branches?.pages.flatMap((page) => page) || []}
+            onIntersect={() => {
+              if (hasNextPage && !isFetchingNextPage) {
+                fetchNextPage()
+              }
+            }}
+          />
+        )
       case "map":
         return (
           <BranchMapSection
-            branches={branches || []}
+            branches={branches?.pages.flatMap((page) => page) || []}
             onSelectBranch={setSelectedBranch}
           />
         )

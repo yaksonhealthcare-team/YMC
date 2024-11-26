@@ -3,13 +3,16 @@ import BranchPlaceholderImage from "@assets/images/BranchPlaceholderImage.png"
 import HeartDisabledIcon from "@assets/icons/HeartDisabledIcon.svg?react"
 import HeartEnabledIcon from "@assets/icons/HeartEnabledIcon.svg?react"
 import { useNavigate } from "react-router-dom"
+import useIntersection from "../../../hooks/useIntersection.tsx"
 
 interface BranchFilterListProps {
   branches: Branch[]
+  onIntersect: () => void
 }
 
-const BranchFilterList = ({ branches }: BranchFilterListProps) => {
+const BranchFilterList = ({ branches, onIntersect }: BranchFilterListProps) => {
   const navigate = useNavigate()
+  const { observerTarget } = useIntersection({ onIntersect })
 
   return (
     <div className={"px-5 mt-4 overflow-hidden"}>
@@ -29,6 +32,7 @@ const BranchFilterList = ({ branches }: BranchFilterListProps) => {
             }}
           />
         ))}
+        <div ref={observerTarget} className={"h-4"} />
       </ul>
     </div>
   )
