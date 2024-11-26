@@ -22,6 +22,8 @@ export const queryKeys = {
   },
   questionnaires: {
     all: ["questionnaires"] as const,
+    questions: (type: "common" | "reservation") =>
+      [...queryKeys.questionnaires.all, "questions", type] as const,
     userResult: (type: "general" | "reservation") =>
       [...queryKeys.questionnaires.all, "user_result", type] as const,
   },

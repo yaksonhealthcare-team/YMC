@@ -40,6 +40,8 @@ import ReviewFormPage from "pages/review/ReviewFormPage.tsx"
 import ReviewDetailPage from "pages/review/ReviewDetailPage.tsx"
 import ActiveBranch from "../pages/myPage/activeBranch/ActiveBranch.tsx"
 import EditProfile from "../pages/editProfile/EditProfile.tsx"
+import Questionnaire from "pages/questionnaire/Questionnaire.tsx"
+import QuestionnaireComplete from "pages/questionnaire/QusetionnaireComplete.tsx"
 import GeneralQuestionnaireHistory from "../pages/myPage/questionnaire/GeneralQuestionnaireHistory.tsx"
 import ReservationQuestionnaireHistory from "../pages/myPage/questionnaire/ReservationQuestionnaireHistory.tsx"
 
@@ -125,12 +127,16 @@ const routeConfig: RouteConfig[] = [
 
   // 문진작성
   {
-    path: "/questionnaire/general",
-    element: <div>Questionnaire-일반문진</div>,
+    path: "/questionnaire/common",
+    element: <Questionnaire type="common" />,
   },
   {
     path: "/questionnaire/reservation",
-    element: <div>Questionnaire-예약문진</div>,
+    element: <Questionnaire type="reservation" />,
+  },
+  {
+    path: "/questionnaire/complete",
+    element: <QuestionnaireComplete />,
     auth: true,
   },
 

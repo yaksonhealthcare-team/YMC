@@ -24,7 +24,14 @@ const GeneralQuestionnaireHistory = () => {
   if ((questionnaire?.length || 0) === 0) {
     return (
       <QuestionnaireHistoryNotExist
-        onStartQuestionnaire={() => navigate("/questionnaire/general")}
+        onStartQuestionnaire={() =>
+          navigate("/questionnaire/common", {
+            state: {
+              returnPath: "/mypage",
+              returnText: "마이페이지로",
+            },
+          })
+        }
       />
     )
   }
@@ -40,7 +47,14 @@ const GeneralQuestionnaireHistory = () => {
         <Button
           className={"w-full"}
           variantType={"primary"}
-          onClick={() => navigate("/questionnaire/general")}
+          onClick={() =>
+            navigate("/questionnaire/common", {
+              state: {
+                returnPath: "/mypage",
+                returnText: "마이페이지로",
+              },
+            })
+          }
         >
           {"수정하기"}
         </Button>

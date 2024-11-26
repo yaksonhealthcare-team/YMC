@@ -24,7 +24,14 @@ const ReservationQuestionnaireHistory = () => {
   if ((questionnaire?.length || 0) === 0) {
     return (
       <QuestionnaireHistoryNotExist
-        onStartQuestionnaire={() => navigate("/questionnaire/reservation")}
+        onStartQuestionnaire={() =>
+          navigate("/questionnaire/reservation", {
+            state: {
+              returnPath: "/mypage",
+              returnText: "마이페이지로",
+            },
+          })
+        }
       />
     )
   }
@@ -40,7 +47,14 @@ const ReservationQuestionnaireHistory = () => {
         <Button
           className={"w-full"}
           variantType={"primary"}
-          onClick={() => navigate("/questionnaire/general")}
+          onClick={() =>
+            navigate("/questionnaire/reservation", {
+              state: {
+                returnPath: "/mypage",
+                returnText: "마이페이지로",
+              },
+            })
+          }
         >
           {"수정하기"}
         </Button>
