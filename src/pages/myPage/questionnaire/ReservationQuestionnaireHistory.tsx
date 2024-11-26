@@ -24,7 +24,14 @@ const ReservationQuestionnaireHistory = () => {
   if ((questionnaire?.length || 0) === 0) {
     return (
       <QuestionnaireHistoryNotExist
-        onStartQuestionnaire={() => navigate("/questionnaire/reservation")}
+        onStartQuestionnaire={() =>
+          navigate("/questionnaire/reservation", {
+            state: {
+              returnPath: "/mypage",
+              returnText: "마이페이지로",
+            },
+          })
+        }
       />
     )
   }
