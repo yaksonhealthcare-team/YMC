@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useFormik } from "formik"
-import { useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { Button } from "@components/Button"
 import { QuestionItem } from "./_fragments/QuestionItem"
 import { Question } from "types/Questionnaire"
@@ -25,6 +25,7 @@ const getFieldName = (question: Question): QuestionFieldName => {
 
 const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { setHeader, setNavigation } = useLayout()
   const { showAlert } = useOverlay()
   const { data: questions, isLoading } = useQuestionnaire(type)
@@ -32,6 +33,8 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isCurrentValid, setIsCurrentValid] = useState(false)
+
+  const { returnPath = "/", returnText = "메인 홈으로" } = location.state || {}
 
   const handleValidationChange = (isValid: boolean) => {
     setIsCurrentValid(isValid)
@@ -51,8 +54,12 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
     onSubmit: async (values) => {
       try {
         await submitMutation.mutateAsync(values)
-        showAlert("문진이 완료되었습니다")
-        navigate("/")
+        navigate("/questionnaire/complete", {
+          state: {
+            returnPath,
+            returnText,
+          },
+        })
       } catch (error) {
         showAlert("문진 제출에 실패했습니다")
       }
