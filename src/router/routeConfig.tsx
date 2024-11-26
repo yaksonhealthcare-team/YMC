@@ -11,7 +11,7 @@ import Branch from "../pages/branch/Branch.tsx"
 import { Notification } from "../pages/home/Notification.tsx"
 import BranchDetail from "../pages/branch/[id]/BranchDetail.tsx"
 import FavoritePage from "../pages/favorite/FavoritePage.tsx"
-import PaymentPage from "../pages/payment/PaymentPage.tsx"
+import PaymentHistoryPage from "../pages/payment/PaymentHistoryPage.tsx"
 import ReviewPage from "../pages/review/ReviewPage.tsx"
 import InquiryPage from "../pages/inquiry/InquiryPage.tsx"
 import EventPage from "../pages/event/EventPage.tsx"
@@ -34,12 +34,16 @@ import ReservationCancelPage from "pages/reservation/ReservationCancelPage.tsx"
 import MembershipUsageHistory from "pages/membership/MembershipUsageHistory.tsx"
 import ReservationFormPage from "pages/reservation/ReservationFormPage.tsx"
 import BranchSearch from "../pages/branch/search/BranchSearch.tsx"
+import ResetPassword from "../pages/editProfile/ResetPassword.tsx"
+import ResetPasswordComplete from "../pages/editProfile/ResetPasswordComplete.tsx"
 import ReviewFormPage from "pages/review/ReviewFormPage.tsx"
 import ReviewDetailPage from "pages/review/ReviewDetailPage.tsx"
 import ActiveBranch from "../pages/myPage/activeBranch/ActiveBranch.tsx"
 import EditProfile from "../pages/editProfile/EditProfile.tsx"
 import Questionnaire from "pages/questionnaire/Questionnaire.tsx"
 import QuestionnaireComplete from "pages/questionnaire/QusetionnaireComplete.tsx"
+import GeneralQuestionnaireHistory from "../pages/myPage/questionnaire/GeneralQuestionnaireHistory.tsx"
+import ReservationQuestionnaireHistory from "../pages/myPage/questionnaire/ReservationQuestionnaireHistory.tsx"
 
 interface RouteConfig {
   path: string
@@ -187,7 +191,16 @@ const routeConfig: RouteConfig[] = [
     element: <PointPage />,
     auth: true,
   },
-
+  {
+    path: "/mypage/questionnaire/general",
+    element: <GeneralQuestionnaireHistory />,
+    auth: true,
+  },
+  {
+    path: "/mypage/questionnaire/reservation",
+    element: <ReservationQuestionnaireHistory />,
+    auth: true,
+  },
   {
     path: "/inquiry",
     element: <InquiryPage />,
@@ -200,7 +213,7 @@ const routeConfig: RouteConfig[] = [
   },
   {
     path: "/payment",
-    element: <PaymentPage />,
+    element: <PaymentHistoryPage />,
     auth: true,
   },
   {
@@ -246,6 +259,14 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/profile",
     element: <EditProfile />,
+  },
+  {
+    path: "/profile/reset-password",
+    element: <ResetPassword />,
+  },
+  {
+    path: "/profile/reset-password/complete",
+    element: <ResetPasswordComplete />,
   },
   //지점 찾기, 지점 상세보기
   {

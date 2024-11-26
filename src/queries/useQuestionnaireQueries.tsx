@@ -1,20 +1,23 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { queryKeys } from "./query.keys"
-import {
-  fetchCommonQuestionnaire,
-  fetchReservationQuestionnaire,
-  submitCommonQuestionnaire,
-  submitReservationQuestionnaire,
-} from "../apis/questionnaire.apis"
 import { Question } from "../types/Questionnaire"
 import {
   QuestionnaireFormValues,
   QuestionnaireType,
 } from "./types/questionnaire.types"
+import {
+  fetchUserGeneralQuestionnaireResult,
+  fetchUserReservationQuestionnaireResult,
+  fetchCommonQuestionnaire,
+  fetchReservationQuestionnaire,
+  submitCommonQuestionnaire,
+  submitReservationQuestionnaire,
+} from "apis/questionnaire.api"
 
+// 문진 질문 목록 조회
 export const useQuestionnaire = (type: QuestionnaireType) =>
   useQuery<Question[], Error>({
-    queryKey: queryKeys.questionnaire[type],
+    queryKey: queryKeys.questionnaires.questions(type),
     queryFn:
       type === "common"
         ? fetchCommonQuestionnaire
@@ -22,10 +25,25 @@ export const useQuestionnaire = (type: QuestionnaireType) =>
     enabled: !!type,
   })
 
+// 문진 제출
 export const useSubmitQuestionnaire = (type: QuestionnaireType) =>
   useMutation<void, Error, QuestionnaireFormValues>({
     mutationFn:
       type === "common"
         ? submitCommonQuestionnaire
         : submitReservationQuestionnaire,
+  })
+
+// 사용자 일반 문진 결과 조회
+export const useUserGeneralQuestionnaireResult = () =>
+  useQuery({
+    queryKey: queryKeys.questionnaires.userResult("general"),
+    queryFn: fetchUserGeneralQuestionnaireResult,
+  })
+
+// 사용자 예약 문진 결과 조회
+export const useUserReservationQuestionnaireResult = () =>
+  useQuery({
+    queryKey: queryKeys.questionnaires.userResult("reservation"),
+    queryFn: fetchUserReservationQuestionnaireResult,
   })

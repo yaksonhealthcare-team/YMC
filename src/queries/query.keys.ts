@@ -15,8 +15,16 @@ export const queryKeys = {
     list: (filters: PointFilters) =>
       [...queryKeys.points.all, { ...filters, infinite: true }] as const,
   },
-  questionnaire: {
-    common: ["questionnaire", "common"] as const,
-    reservation: ["questionnaire", "reservation"] as const,
+  payments: {
+    all: ["payments"] as const,
+    histories: ({ page }: { page: number }) =>
+      [...queryKeys.payments.all, { page: page, infinite: true }] as const,
+  },
+  questionnaires: {
+    all: ["questionnaires"] as const,
+    questions: (type: "common" | "reservation") =>
+      [...queryKeys.questionnaires.all, "questions", type] as const,
+    userResult: (type: "general" | "reservation") =>
+      [...queryKeys.questionnaires.all, "user_result", type] as const,
   },
 } as const
