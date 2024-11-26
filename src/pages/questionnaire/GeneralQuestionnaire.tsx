@@ -29,24 +29,6 @@ const getFieldName = (question: Question): QuestionFieldName => {
   }` as QuestionFieldName
 }
 
-const validateQuestion = (
-  question: Question,
-  value: QuestionValue | undefined,
-): string | undefined => {
-  // 필수 응답 체크
-  //   TODO: 개발 후 주석 해제
-  //   if (!value) return "필수 응답입니다"
-
-  // 다중 선택 최소 선택 개수 검사
-  if (question.answer_type === "M" && Array.isArray(value)) {
-    if (value.length === 0) {
-      return "최소 1개 이상 선택해주세요"
-    }
-  }
-
-  return undefined
-}
-
 const GeneralQuestionnaire = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
@@ -71,19 +53,6 @@ const GeneralQuestionnaire = () => {
 
   const formik = useFormik<QuestionnaireFormValues>({
     initialValues: {} as QuestionnaireFormValues,
-    validate: (values): ValidationErrors => {
-      const errors: Partial<ValidationErrors> = {}
-
-      questions?.forEach((question) => {
-        const fieldName = getFieldName(question)
-        const error = validateQuestion(question, values[fieldName])
-        if (error) {
-          errors[fieldName] = error
-        }
-      })
-
-      return errors as ValidationErrors
-    },
     onSubmit: async (values) => {
       try {
         await submitMutation.mutateAsync(values)
@@ -100,14 +69,6 @@ const GeneralQuestionnaire = () => {
 
     const currentQuestion = questions[currentIndex]
     const fieldName = getFieldName(currentQuestion)
-
-    const error = validateQuestion(currentQuestion, formik.values[fieldName])
-
-    if (error) {
-      formik.setFieldError(fieldName, error)
-      showAlert(error)
-      return
-    }
 
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prev) => prev + 1)
@@ -162,8 +123,7 @@ const GeneralQuestionnaire = () => {
           variantType="primary"
           sizeType="l"
           onClick={handleNext}
-          //   TODO: 개발 후 주석 해제
-          //   disabled={!isCurrentValid}
+          disabled={!isCurrentValid}
         >
           {isLastQuestion ? "완료" : "다음"}
         </Button>

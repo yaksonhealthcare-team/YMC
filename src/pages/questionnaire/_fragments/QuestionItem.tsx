@@ -26,6 +26,11 @@ export const QuestionItem = ({
   fieldName,
   onValidationChange,
 }: QuestionItemProps) => {
+  const isOptionSelected = (optionIdx: string): boolean => {
+    const values = (formik.values[fieldName] || []) as OptionValue[]
+    return values.some((v) => v.csso_idx === optionIdx)
+  }
+
   const checkValidation = () => {
     const currentValue = formik.values[fieldName]
 
@@ -58,6 +63,20 @@ export const QuestionItem = ({
       if (date.getMonth() !== monthNum - 1) return false
 
       return true
+    }
+
+    // option_type이 "2"인 경우 주관식 답변 유효성 검사
+    const selectedOption = question.options.find((option) =>
+      isOptionSelected(option.csso_idx),
+    )
+    if (selectedOption?.option_type === "2") {
+      const textFieldValue = formik.values[`${fieldName}_text`] as string
+      if (!textFieldValue || textFieldValue.trim().length === 0) {
+        return false
+      }
+      if (textFieldValue.length > 100) {
+        return false
+      }
     }
 
     switch (question.answer_type) {
@@ -105,11 +124,6 @@ export const QuestionItem = ({
     }
 
     formik.setFieldValue(fieldName, newValues)
-  }
-
-  const isOptionSelected = (optionIdx: string): boolean => {
-    const values = (formik.values[fieldName] || []) as OptionValue[]
-    return values.some((v) => v.csso_idx === optionIdx)
   }
 
   const renderOptionItem = (
@@ -353,7 +367,7 @@ export const QuestionItem = ({
   useEffect(() => {
     const isValid = checkValidation()
     onValidationChange(isValid)
-  }, [formik.values[fieldName]])
+  }, [formik.values[fieldName], formik.values[`${fieldName}_text`]])
 
   return (
     <div className="mb-8">
