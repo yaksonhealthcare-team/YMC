@@ -47,7 +47,14 @@ const ReservationQuestionnaireHistory = () => {
         <Button
           className={"w-full"}
           variantType={"primary"}
-          onClick={() => navigate("/questionnaire/general")}
+          onClick={() =>
+            navigate("/questionnaire/reservation", {
+              state: {
+                returnPath: "/mypage",
+                returnText: "마이페이지로",
+              },
+            })
+          }
         >
           {"수정하기"}
         </Button>
