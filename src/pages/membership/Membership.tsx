@@ -77,7 +77,7 @@ const BrandSection = () => {
   ]
 
   return (
-    <div className="border-b border-gray-200">
+    <div className="border-b border-gray-200 flex px-5">
       <CustomTabs
         type="2depth"
         tabs={brands.map((brand) => ({
