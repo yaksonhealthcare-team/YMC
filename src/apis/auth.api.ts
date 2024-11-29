@@ -1,8 +1,7 @@
 import { axiosClient } from "../queries/clients.ts"
-import { UserResponseDTO } from "../types/dtos/UserDTO.ts"
-import { HTTPResponse } from "../types/dtos/HTTPResponse.ts"
-import { User } from "../types/User.ts"
-import { UserMapper } from "../types/dtos/mapper/UserMapper.ts"
+import { HTTPResponse } from "../types/HTTPResponse.ts"
+import { User, UserResponse } from "../types/User.ts"
+import { UserMapper } from "../mappers/UserMapper.ts"
 
 export const loginWithEmail = async ({
   username,
@@ -31,7 +30,7 @@ export const loginWithEmail = async ({
 export const fetchUser = async (token: string): Promise<User> => {
   const {
     data: { body: response },
-  } = await axiosClient.get<HTTPResponse<UserResponseDTO[]>>("/auth/me", {
+  } = await axiosClient.get<HTTPResponse<UserResponse[]>>("/auth/me", {
     headers: {
       Authorization: token,
     },

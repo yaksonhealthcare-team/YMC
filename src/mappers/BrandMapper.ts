@@ -1,8 +1,7 @@
-import { BrandDTO } from "../BrandDTO.ts"
-import { Brand } from "../../Brand.ts"
+import { Brand, BrandResponse } from "../types/Brand.ts"
 
 export class BrandMapper {
-  static toEntity(dto: BrandDTO): Brand {
+  static toEntity(dto: BrandResponse): Brand {
     return {
       code: dto.brand_code,
       name: dto.brand_name,
@@ -10,7 +9,7 @@ export class BrandMapper {
     }
   }
 
-  static toEntities(dtos: BrandDTO[]): Brand[] {
+  static toEntities(dtos: BrandResponse[]): Brand[] {
     return dtos.map(this.toEntity)
   }
 }

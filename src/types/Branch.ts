@@ -1,4 +1,16 @@
-type BranchDetail = {
+export interface Branch {
+  id: string
+  name: string
+  address: string
+  latitude: number
+  longitude: number
+  canBookToday: boolean
+  distanceInMeters: string | null
+  isFavorite: boolean
+  brand: "therapist" | "dalia" | "diet"
+}
+
+export interface BranchDetail {
   id: string
   name: string
   brand: string
@@ -51,147 +63,81 @@ type BranchDetail = {
   }[]
 }
 
-type Profile = {
+export interface Profile {
   name: string
   profileImageUrl?: string
   description?: string
 }
 
-export const MockBranch = (id: string): BranchDetail => ({
-  id: id,
-  name: `약손명가 ${id}점`,
-  brand: "약손명가",
-  images: [
-    "https://picsum.photos/id/100/300/200",
-    "https://picsum.photos/id/101/300/200",
-    "https://picsum.photos/id/102/300/200",
-    "https://picsum.photos/id/103/300/200",
-  ],
-  location: {
-    address: "서울시 강남구 논현로 22길 1 sk허브빌딩 206호",
-    latitude: 30,
-    longitude: 30,
-    distance: "500m",
-  },
-  phoneNumber: "02-123-4556",
-  operatingHours: {
-    weekday: {
-      start: "10:00",
-      end: "21:00",
-    },
-    saturday: {
-      start: "09:00",
-      end: "17:30",
-    },
-    holiday: {
-      start: "",
-      end: "",
-    },
-  },
-  director: {
-    name: "정연희 원장",
-    profileImageUrl: undefined,
-    description: "프로필 내용 노출",
-  },
-  staffs: [
-    {
-      name: "정인희 부원장",
-      profileImageUrl: undefined,
-      description: "프로필 내용 노출",
-    },
-    {
-      name: "김민지 매니저",
-      profileImageUrl: undefined,
-      description: "프로필 내용 노출",
-    },
-    {
-      name: "박수영 테라피스트",
-      profileImageUrl: undefined,
-      description: "프로필 내용 노출",
-    },
-    {
-      name: "이주화 테라피스트",
-      profileImageUrl: undefined,
-      description: "프로필 내용 노출",
-    },
-  ],
-  directions: {
-    bus: {
-      description:
-        "강남구청역 하차 후 바로 보이는 SK허브빌딩 2층 (미스터피자옆)",
-      routes: ["401", "640", "3414", "41", "3011", "4431"],
-    },
-    subway: {
-      description:
-        "7호선 2번출구 바로 앞 SK허브빌딩 2층 또는 지하철역에 연결된 SK허브빌딩 지하1층 이용",
-    },
-    car: {
-      description:
-        "강남구청역 사거리에서 선을ㅇ역 방향 첫 번째 골목에 SK허브빌딩 주차장 입구",
-    },
-  },
-  notices: [],
-  favoriteCount: 24,
-  availableMembershipCount: 1,
-  isBookmarked: false,
-  programs: [
-    {
-      name: "작은 얼굴 관리 (80분)",
-      duration: "120분 소요",
-      price: 200000,
-      scope: "all",
-    },
-    {
-      name: "작은 얼굴 관리 (80분)",
-      duration: "120분 소요",
-      price: 200000,
-      scope: "branch_only",
-    },
-    {
-      name: "경락 관리 (80분)",
-      duration: "120분 소요",
-      price: 240000,
-      discount: 0.2,
-      scope: "all",
-    },
-    {
-      name: "경락 관리 (80분)",
-      duration: "120분 소요",
-      price: 200000,
-      discount: 0.3,
-      scope: "all",
-    },
-    {
-      name: "작은 얼굴 관리 (80분)",
-      duration: "120분 소요",
-      price: 200000,
-      scope: "all",
-    },
-  ],
-})
-
-type Branch = {
-  id: string
-  name: string
-  address: string
+export interface BranchFilters {
+  page?: number
   latitude: number
   longitude: number
-  canBookToday: boolean
-  distanceInMeters: string | null
-  isFavorite: boolean
-  brand: "therapist" | "dalia" | "diet"
+  brandCode?: string
+  category?: string
+  search?: string
 }
 
-export const MockBranches: Branch[] = Array.from({ length: 12 }, (_, i) => ({
-  id: `${i}`,
-  name: `약손명가 ${i}호점`,
-  address: "서울시 강남구 강남대로 24길 38 sk허브빌딩 A동 206호",
-  latitude: 37.52304 + 0.001 * i,
-  longitude: 127.028841 + 0.001 * i,
-  canBookToday: Math.random() > 0.5,
-  distanceInMeters: "0.5m",
-  isFavorite: Math.random() > 0.5,
-  brand: "therapist",
-}))
+export interface BranchResponse {
+  current_addr: string
+  result: {
+    b_idx: string
+    b_name: string
+    b_addr: string
+    b_lat: string
+    b_lon: string
+    reserve: string
+    distance: string
+    b_bookmark: string
+  }[]
+}
 
-export type { Branch, BranchDetail }
+export interface BranchDetailResponse {
+  b_idx: string
+  img_lists: string[]
+  brand_name: string
+  b_name: string
+  location: {
+    b_biz_stime: string
+    distance: string
+    b_addr: string
+    b_lat: string
+    b_lon: string
+  }
+  b_tel: string
+  b_notice: string
+  staff: {
+    bs_name_ko: string
+    bs_image: string
+    profile: string
+    bs_grade: string
+  }[]
+  bs_name_ko: string
+  bs_image: string
+  biz_time: {
+    b_biz_stime: string
+    b_biz_etime: string
+    saturday: {
+      b_sat_stime: string
+      b_sat_etime: string
+    }
+    sunday: {
+      b_mon_stime: string
+      b_mon_etime: string
+    }
+    holiday: {
+      b_hol_stime: string
+      b_hol_etime: string
+    }
+  }
+  directions: {
+    bus: {
+      b_bus_doc: string
+      b_bus_list: string
+    }
+    b_subway: string
+    b_car: string
+  }
+  b_bookmarks_count: string
+  membership_count: string
+}

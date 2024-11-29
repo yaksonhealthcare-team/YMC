@@ -1,8 +1,7 @@
-import { UserResponseDTO } from "../UserDTO.ts"
-import { User } from "../../User.ts"
+import { User, UserResponse } from "../types/User.ts"
 
 export class UserMapper {
-  static toEntity(dto: UserResponseDTO): User {
+  static toEntity(dto: UserResponse): User {
     return {
       username: dto.name,
       email: dto.email,

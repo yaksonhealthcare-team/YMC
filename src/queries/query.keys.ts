@@ -1,6 +1,6 @@
-import { BranchFilters } from "./types/branch.types.ts"
+import { BranchFilters } from "types/Branch.ts"
 import { Coordinate } from "../types/Coordinate.ts"
-import { PointFilters } from "./types/point.types.ts"
+import { PointFilters } from "types/Point.ts"
 
 export const queryKeys = {
   branches: {

@@ -1,5 +1,4 @@
-import { PointHistoryDTO } from "../PointDTO.ts"
-import { PointHistory } from "../../Point.ts"
+import { PointHistory, PointHistoryResponse } from "types/Point"
 
 export class PointMapper {
   static toHistoryTitle(doc: string) {
@@ -13,7 +12,7 @@ export class PointMapper {
     }
   }
 
-  static toHistoryEntities(dtos: PointHistoryDTO[]): PointHistory[] {
+  static toHistoryEntities(dtos: PointHistoryResponse[]): PointHistory[] {
     return dtos.map((dto) => ({
       pointType: dto.point_type,
       title: this.toHistoryTitle(dto.doc),

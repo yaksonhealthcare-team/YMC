@@ -1,8 +1,7 @@
-import { PaymentHistoryDTO } from "../PaymentDTO.ts"
-import { PaymentHistory } from "../../PaymentHistory.ts"
+import { PaymentHistory, PaymentHistoryResponse } from "../types/Payment.ts"
 
 export class PaymentMapper {
-  static toHistoryEntity(dto: PaymentHistoryDTO): PaymentHistory {
+  static toHistoryEntity(dto: PaymentHistoryResponse): PaymentHistory {
     return {
       id: dto.orderid,
       index: dto.p_idx,
@@ -23,7 +22,7 @@ export class PaymentMapper {
     }
   }
 
-  static toHistoryEntities(dtos: PaymentHistoryDTO[]): PaymentHistory[] {
+  static toHistoryEntities(dtos: PaymentHistoryResponse[]): PaymentHistory[] {
     return dtos.map((dto) => this.toHistoryEntity(dto))
   }
 }
