@@ -15,6 +15,7 @@ import BranchMapSection from "./_fragments/BranchMapSection.tsx"
 import { useBranches } from "../../queries/useBranchQueries.tsx"
 import { INITIAL_CENTER } from "@constants/LocationConstants.ts"
 import { Branch as BranchType } from "../../types/Branch.ts"
+import { useBrands } from "../../queries/useBrandQueries.tsx"
 
 const Branch = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -29,11 +30,20 @@ const Branch = () => {
     category: null,
   })
 
-  const { data: branches } = useBranches({
-    page: 1,
+  const { data: brands } = useBrands()
+  // TODO: Category API 추가되면 여기에 useCategory로 추가하기 (+ useEffect dependencies)
+
+  const {
+    data: branches,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useBranches({
     latitude: INITIAL_CENTER.lat,
     longitude: INITIAL_CENTER.lng,
-    brandCode: "001",
+    brandCode: selectedFilter.brand?.code,
+    category: selectedFilter.category?.code,
   })
 
   const navigate = useNavigate()
@@ -45,6 +55,19 @@ const Branch = () => {
     } else {
       navigate("/")
     }
+  }
+
+  const handleFilterChange = (newFilter: {
+    brand: FilterItem | null
+    category: FilterItem | null
+  }) => {
+    setSelectedFilter(newFilter)
+    refetch()
+  }
+
+  const handleFilterReset = () => {
+    setSelectedFilter({ brand: null, category: null })
+    refetch()
   }
 
   const handleNavigateToLocationSettings = () => {
@@ -66,17 +89,18 @@ const Branch = () => {
           />
           <BranchFilterSection
             currentFilter={selectedFilter}
-            onInitialize={() =>
-              setSelectedFilter({ brand: null, category: null })
-            }
+            onInitialize={handleFilterReset}
             onClick={() => {
               openBottomSheet(
                 <BranchFilterBottomSheet
                   onClose={closeOverlay}
-                  brands={MockFilters.brands}
+                  brands={(brands || []).map((brand) => ({
+                    title: brand.name,
+                    code: brand.code,
+                  }))}
                   categories={MockFilters.categories}
                   currentFilter={selectedFilter}
-                  onApply={setSelectedFilter}
+                  onApply={handleFilterChange}
                 />,
               )
             }}
@@ -88,16 +112,25 @@ const Branch = () => {
     setNavigation({
       display: false,
     })
-  }, [])
+  }, [selectedFilter, brands])
 
   const renderScreen = () => {
     switch (screen) {
       case "list":
-        return <BranchFilterList branches={branches || []} />
+        return (
+          <BranchFilterList
+            branches={branches?.pages.flatMap((page) => page) || []}
+            onIntersect={() => {
+              if (hasNextPage && !isFetchingNextPage) {
+                fetchNextPage()
+              }
+            }}
+          />
+        )
       case "map":
         return (
           <BranchMapSection
-            branches={branches || []}
+            branches={branches?.pages.flatMap((page) => page) || []}
             onSelectBranch={setSelectedBranch}
           />
         )
@@ -167,14 +200,8 @@ const BranchHeader = ({
 export default Branch
 
 const MockFilters: {
-  brands: FilterItem[]
   categories: FilterItem[]
 } = {
-  brands: [
-    { code: "1", title: "약손명가" },
-    { code: "2", title: "달리아 스파" },
-    { code: "3", title: "여리한 다이어트" },
-  ],
   categories: [
     { code: "1", title: "애스테틱" },
     { code: "2", title: "스파" },

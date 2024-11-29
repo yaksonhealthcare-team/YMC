@@ -3,7 +3,6 @@ import { User } from "../../User.ts"
 
 export class UserMapper {
   static toEntity(dto: UserResponseDTO): User {
-    console.log(dto)
     return {
       username: dto.name,
       email: dto.email,
@@ -18,7 +17,10 @@ export class UserMapper {
       point: dto.point,
       profileURL: dto.profileURL,
       thirdPartyType: dto.thirdPartyType,
-      brands: dto.brands,
+      brands: dto.brands.map((brand) => ({
+        brandName: brand.b_name,
+        address: brand.addr,
+      })),
     }
   }
 }

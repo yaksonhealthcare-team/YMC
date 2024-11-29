@@ -116,9 +116,9 @@ const BranchFilterBottomSheetWrap = ({
           label={"전체"}
           onClick={() => onSelect(null)}
         />
-        {items.map((item) => (
+        {items.map((item, index) => (
           <Filter
-            key={item.code}
+            key={index}
             type={"default"}
             state={item.code === selectedItem?.code ? "active" : "default"}
             label={item.title}

@@ -3,13 +3,23 @@ import BranchPlaceholderImage from "@assets/images/BranchPlaceholderImage.png"
 import HeartDisabledIcon from "@assets/icons/HeartDisabledIcon.svg?react"
 import HeartEnabledIcon from "@assets/icons/HeartEnabledIcon.svg?react"
 import { useNavigate } from "react-router-dom"
+import useIntersection from "../../../hooks/useIntersection.tsx"
+import {
+  useBranchBookmarkMutation,
+  useBranchUnbookmarkMutation,
+} from "../../../queries/useBranchQueries.tsx"
 
 interface BranchFilterListProps {
   branches: Branch[]
+  onIntersect: () => void
 }
 
-const BranchFilterList = ({ branches }: BranchFilterListProps) => {
+const BranchFilterList = ({ branches, onIntersect }: BranchFilterListProps) => {
   const navigate = useNavigate()
+  const { observerTarget } = useIntersection({ onIntersect })
+
+  const { mutate: addBookmark } = useBranchBookmarkMutation()
+  const { mutate: removeBookmark } = useBranchUnbookmarkMutation()
 
   return (
     <div className={"px-5 mt-4 overflow-hidden"}>
@@ -25,10 +35,15 @@ const BranchFilterList = ({ branches }: BranchFilterListProps) => {
             branch={branch}
             onClick={(branch) => navigate(`/branch/${branch.id}`)}
             onClickFavorite={() => {
-              console.log("TOGGLE FAVORITE")
+              if (branch.isFavorite) {
+                removeBookmark(branch.id)
+              } else {
+                addBookmark(branch.id)
+              }
             }}
           />
         ))}
+        <div ref={observerTarget} className={"h-4"} />
       </ul>
     </div>
   )
@@ -55,7 +70,12 @@ export const BranchFilterListItem = ({
       <div className={"w-full flex flex-col"}>
         <div className={"flex justify-between mt-0.5"}>
           <p className={"font-b text-16px"}>{branch.name}</p>
-          <button onClick={() => onClickFavorite(branch)}>
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              onClickFavorite(branch)
+            }}
+          >
             {branch.isFavorite ? <HeartEnabledIcon /> : <HeartDisabledIcon />}
           </button>
         </div>

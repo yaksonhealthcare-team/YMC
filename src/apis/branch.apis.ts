@@ -12,6 +12,9 @@ export const fetchBranches = async (
       page: filters.page,
       nowlat: filters.latitude,
       nowlon: filters.longitude,
+      brand_code: filters.brandCode,
+      csbc_idx: filters.category,
+      search: filters.search,
     },
   })
   return BranchMapper.toEntities(data.body)
@@ -29,4 +32,16 @@ export const fetchBranch = async (
     },
   })
   return BranchMapper.toDetailEntity(data.body[0])
+}
+
+export const bookmarkBranch = async (id: string): Promise<void> => {
+  await axiosClient.post("/bookmarks/bookmarks", { b_idx: id })
+}
+
+export const unbookmarkBranch = async (id: string): Promise<void> => {
+  await axiosClient.delete("/bookmarks/bookmarks", {
+    params: {
+      b_idx: id,
+    },
+  })
 }
