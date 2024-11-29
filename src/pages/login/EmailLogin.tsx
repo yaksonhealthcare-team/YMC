@@ -7,7 +7,7 @@ import { useOverlay } from "../../contexts/ModalContext"
 import { useLayout } from "../../contexts/LayoutContext"
 import EyeIcon from "../../assets/icons/EyeIcon.svg?react"
 import EyeSlashIcon from "../../assets/icons/EyeSlashIcon.svg?react"
-import { fetchUser, loginWithEmail } from "../../apis/auth.apis.ts"
+import { fetchUser, loginWithEmail } from "../../apis/auth.api.ts"
 
 interface LoginForm {
   email: string
@@ -53,7 +53,10 @@ const EmailLogin = () => {
     }
 
     try {
-      const { accessToken } = await loginWithEmail({ username: formData.email, password: formData.password })
+      const { accessToken } = await loginWithEmail({
+        username: formData.email,
+        password: formData.password,
+      })
       const user = await fetchUser(accessToken)
 
       login({

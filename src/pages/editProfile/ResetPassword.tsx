@@ -7,7 +7,7 @@ import EyeIcon from "../../assets/icons/EyeIcon.svg?react"
 import EyeSlashIcon from "../../assets/icons/EyeSlashIcon.svg?react"
 import { Button } from "@components/Button.tsx"
 import { useAuth } from "../../contexts/AuthContext.tsx"
-import { resetPassword } from "../../apis/auth.apis.ts"
+import { resetPassword } from "../../apis/auth.api.ts"
 import validatePassword from "../../utils/passwordValidator.ts"
 
 const ResetPassword = () => {

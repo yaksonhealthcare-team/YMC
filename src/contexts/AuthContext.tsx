@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from "react"
 import SplashScreen from "@components/Splash.tsx"
 import { User } from "../types/User.ts"
-import { fetchUser } from "../apis/auth.apis.ts"
+import { fetchUser } from "../apis/auth.api.ts"
 
 type AuthContextType = {
   user: User | null
-  login: (userData: { user: User, token: string }) => void
+  login: (userData: { user: User; token: string }) => void
   logout: () => void
   isLoading: boolean
 } | null
@@ -52,7 +52,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     loadUser()
   }, [])
 
-  const login = ({ user, token }: { user: User, token: string }) => {
+  const login = ({ user, token }: { user: User; token: string }) => {
     setUser(user)
     localStorage.setItem("accessToken", `Bearer ${token}`)
   }
