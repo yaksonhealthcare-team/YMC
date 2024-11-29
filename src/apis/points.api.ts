@@ -1,7 +1,7 @@
+import { PointHistoryResponse } from "types/Point.ts"
 import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/dtos/HTTPResponse.ts"
-import { PointHistoryDTO } from "../types/dtos/PointDTO.ts"
-import { PointMapper } from "../types/dtos/mapper/PointMapper.ts"
+import { PointMapper } from "mappers/PointMapper.ts"
 
 /**
  *
@@ -18,7 +18,7 @@ export const fetchPointHistories = async ({
   sort: "C" | "D"
 }) => {
   const { data } = await axiosClient.get<
-    HTTPResponse<{ total_point: string; result: PointHistoryDTO[] }>
+    HTTPResponse<{ total_point: string; result: PointHistoryResponse[] }>
   >("/points/history", {
     params: {
       page: page,
