@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { queryKeys } from "./query.keys"
-import { Question } from "../types/Questionnaire"
 import {
+  Question,
   QuestionnaireFormValues,
   QuestionnaireType,
-} from "./types/questionnaire.types"
+} from "../types/Questionnaire"
 import {
   fetchUserGeneralQuestionnaireResult,
   fetchUserReservationQuestionnaireResult,

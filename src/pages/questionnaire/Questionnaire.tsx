@@ -3,12 +3,8 @@ import { useFormik } from "formik"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Button } from "@components/Button"
 import { QuestionItem } from "./_fragments/QuestionItem"
-import { Question } from "types/Questionnaire"
-import {
-  QuestionnaireFormValues,
-  QuestionFieldName,
-  QuestionnaireType,
-} from "queries/types/questionnaire.types"
+import { Question, QuestionFieldName, QuestionnaireFormValues, QuestionnaireType } from "types/Questionnaire"
+
 import { useLayout } from "contexts/LayoutContext"
 import { useOverlay } from "contexts/ModalContext"
 import {

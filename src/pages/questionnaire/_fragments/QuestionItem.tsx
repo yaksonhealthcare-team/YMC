@@ -1,11 +1,12 @@
 import { FormikProps } from "formik"
 import { RadioGroup, TextField } from "@mui/material"
-import { Question, QuestionOption } from "types/Questionnaire"
 import {
-  QuestionnaireFormValues,
-  QuestionFieldName,
   OptionValue,
-} from "queries/types/questionnaire.types"
+  Question,
+  QuestionFieldName,
+  QuestionnaireFormValues,
+  QuestionOption,
+} from "types/Questionnaire"
 import { COLORS } from "@constants/ColorConstants"
 import { BirthDateInput } from "./BirthDateInput"
 import { useEffect } from "react"
