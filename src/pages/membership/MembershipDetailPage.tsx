@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
 import MembershipDetailBottomSheetContent from "./_fragments/MembershipDetailBottomSheetContent.tsx"
+import ClockIcon from "@assets/icons/ClockIcon.svg?react"
+import StoreIcon from "@assets/icons/StoreIcon.svg?react"
+import NoteIcon from "@assets/icons/NoteIcon.svg?react"
 
 const MembershipDetailPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -22,6 +25,7 @@ const MembershipDetailPage = () => {
         </div>
       ),
       right: <>{/* TODO: 장바구니 아이콘 추가*/}</>,
+      backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
   }, [])
@@ -66,35 +70,17 @@ const MembershipDetailPage = () => {
       <h2 className="text-gray-800 font-b text-16px">상세정보</h2>
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2">
-          <div className="w-3.5 h-3.5">
-            <img
-              src="/assets/icons/branch.svg"
-              alt="지점"
-              className="w-full h-full"
-            />
-          </div>
+          <StoreIcon className="text-primary" />
           <span className="text-gray-800 font-m text-14px">
             전지점 사용가능
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3.5 h-3.5">
-            <img
-              src="/assets/icons/time.svg"
-              alt="시간"
-              className="w-full h-full"
-            />
-          </div>
+          <ClockIcon className="text-primary" />
           <span className="text-gray-800 font-m text-14px">120분 소요</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3.5 h-3.5">
-            <img
-              src="/assets/icons/course.svg"
-              alt="코스"
-              className="w-full h-full"
-            />
-          </div>
+          <NoteIcon className="text-primary" />
           <span className="text-gray-800 font-m text-14px">관리 코스</span>
         </div>
         <p className="text-gray-900 font-r text-14px leading-[24px]">
