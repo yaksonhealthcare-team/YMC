@@ -1,6 +1,6 @@
 import { PointHistoryResponse } from "types/Point.ts"
 import { axiosClient } from "../queries/clients.ts"
-import { HTTPResponse } from "../types/dtos/HTTPResponse.ts"
+import { HTTPResponse } from "../types/HTTPResponse.ts"
 import { PointMapper } from "mappers/PointMapper.ts"
 
 /**

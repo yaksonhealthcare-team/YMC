@@ -1,9 +1,11 @@
-import { QuestionnaireResult } from "../../Questionnaire.ts"
-import { QuestionnaireResultDTO } from "../QuestionnaireDTO.ts"
+import {
+  QuestionnaireResult,
+  QuestionnaireResultResponse,
+} from "../types/Questionnaire.ts"
 
 export class QuestionnaireMapper {
   static toQuestionnaireAnswerType(
-    dto: QuestionnaireResultDTO["answer_type"],
+    dto: QuestionnaireResultResponse["answer_type"],
   ): QuestionnaireResult["answerType"] {
     switch (dto) {
       case "S":
@@ -16,7 +18,7 @@ export class QuestionnaireMapper {
   }
 
   static toQuestionnaireResultEntity(
-    dto: QuestionnaireResultDTO,
+    dto: QuestionnaireResultResponse,
   ): QuestionnaireResult {
     return {
       index: Number(dto.cssq_idx),
@@ -31,7 +33,7 @@ export class QuestionnaireMapper {
   }
 
   static toQuestionnaireResultEntities(
-    dtos: QuestionnaireResultDTO[],
+    dtos: QuestionnaireResultResponse[],
   ): QuestionnaireResult[] {
     return dtos.map((dto) => this.toQuestionnaireResultEntity(dto))
   }

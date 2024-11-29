@@ -1,4 +1,19 @@
-import { OptionValue } from "queries/types/questionnaire.types"
+export interface OptionValue {
+  csso_idx: string
+}
+
+export interface QuestionnaireFormValues {
+  [key: `${string}_${"text" | "option"}`]: string | OptionValue[]
+}
+
+export type QuestionValue = string | OptionValue[] | undefined
+
+export type QuestionFieldName = `${string}_${"text" | "option"}`
+
+export interface QuestionnaireFormValues
+  extends Record<QuestionFieldName, string | OptionValue[]> {}
+
+export type QuestionnaireType = "common" | "reservation"
 
 export interface QuestionOption {
   csso_idx: string
@@ -16,8 +31,7 @@ export interface Question {
   options: QuestionOption[]
 }
 
-export type QuestionValue = string | OptionValue[]
-type QuestionnaireResult = {
+export interface QuestionnaireResult {
   index: number
   question: string
   answerType: "single_choice" | "multiple_choice" | "text"
@@ -28,4 +42,13 @@ type QuestionnaireResult = {
   }[]
 }
 
-export type { QuestionnaireResult }
+export interface QuestionnaireResultResponse {
+  cssq_idx: string
+  question_text: string
+  answer_type: "S" | "M" | "T"
+  options: {
+    csso_idx: string
+    option_text: string
+    answer_text: string
+  }[]
+}
