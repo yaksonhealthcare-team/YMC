@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-
 import { CustomTabs } from "@components/Tabs"
 import { Button } from "@components/Button"
 import { Tag } from "@components/Tag"
-import { Title } from "@components/Title"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
+import ClockIcon from "@assets/icons/ClockIcon.svg?react"
 
 interface Brand {
   label: string
@@ -43,7 +42,7 @@ const MembershipPage = () => {
   }, [setHeader, setNavigation, navigate])
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8F5F2]">
+    <div className="flex-1 flex-col h-auto bg-[#F8F5F2]">
       <div className="w-full px-4 py-2.5 bg-[#92443D] text-center">
         <span className="font-m text-14px text-white">
           이용하고 싶은 회원권을 담아주세요.
@@ -53,16 +52,6 @@ const MembershipPage = () => {
       <BrandSection />
       <CategorySection />
       <ProductList />
-
-      <div className="fixed bottom-[82px] left-0 right-0 max-w-[500px] mx-auto p-5 bg-white border-t border-gray-100">
-        <Button
-          variantType="primary"
-          sizeType="l"
-          onClick={() => navigate("/membership/checkout")}
-        >
-          예약하기
-        </Button>
-      </div>
     </div>
   )
 }
@@ -103,7 +92,7 @@ const CategorySection = () => {
   ]
 
   return (
-    <div className="flex gap-2 overflow-x-auto px-5 py-4 no-scrollbar">
+    <div className="flex items-center gap-2 overflow-x-auto px-5 h-[100px] scrollbar-hide">
       {categories.map((category) => (
         <div key={category.id} className="flex-shrink-0">
           <Button
@@ -112,7 +101,8 @@ const CategorySection = () => {
             }
             sizeType="s"
             onClick={() => setSelectedCategory(category.name)}
-            className="!w-[68px] !h-[68px] !rounded-full !p-0"
+            className="w-[68px] aspect-square text-xs whitespace-nowrap"
+            sx={{ borderRadius: "50% !important" }}
           >
             {category.name}
           </Button>
@@ -148,9 +138,8 @@ const ProductList = () => {
   ]
 
   return (
-    <div className="flex-1 px-5">
-      <Title title="전체 상품" />
-      <div className="flex flex-col gap-4 mt-2 pb-32">
+    <div className="flex-1 px-5 ">
+      <div className="flex flex-col gap-4 pb-32">
         {products.map((product) => (
           <div
             key={product.id}
@@ -160,6 +149,7 @@ const ProductList = () => {
             <div className="flex justify-between items-start mb-3">
               <Tag type="rect" title="전지점" />
               <div className="flex items-center gap-1">
+                <ClockIcon className="text-primary" />
                 <span className="font-r text-14px text-gray-500">
                   {product.time} 소요
                 </span>
@@ -179,16 +169,19 @@ const ProductList = () => {
                   {product.originalPrice.toLocaleString()}
                 </span>
               )}
-              <div className="flex items-center gap-2">
+              <div className="w-full flex items-center justify-between gap-2">
                 {product.discountRate && (
                   <span className="font-b text-16px text-primary">
                     {product.discountRate}%
                   </span>
                 )}
-                <span className="font-b text-16px text-gray-900">
-                  {(product.discountPrice || product.price).toLocaleString()}원
-                </span>
-                <span className="font-r text-12px text-gray-900">부터~</span>
+                <div className="flex-1 text-right">
+                  <span className="font-b text-16px text-gray-900 mr-[5px]">
+                    {(product.discountPrice || product.price).toLocaleString()}
+                    원
+                  </span>
+                  <span className="font-r text-12px text-gray-900">부터~</span>
+                </div>
               </div>
             </div>
           </div>
