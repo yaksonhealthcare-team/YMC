@@ -1,5 +1,4 @@
-import { BranchDetailDTO, BranchDTO } from "../BranchDTO.ts"
-import { Branch, BranchDetail } from "../../Branch.ts"
+import { Branch, BranchDetail, BranchDetailResponse, BranchResponse } from "types/Branch"
 
 export class BranchMapper {
   private static toBrand(name: string): "therapist" | "dalia" | "diet" {
@@ -27,7 +26,7 @@ export class BranchMapper {
     }
   }
 
-  static toEntities(dto: BranchDTO): Branch[] {
+  static toEntities(dto: BranchResponse): Branch[] {
     return dto.result.map((item) => ({
       id: item.b_idx,
       name: item.b_name,
@@ -41,7 +40,7 @@ export class BranchMapper {
     }))
   }
 
-  static toDetailEntity(dto: BranchDetailDTO): BranchDetail {
+  static toDetailEntity(dto: BranchDetailResponse): BranchDetail {
     const staffs = dto.staff.map(this.toProfile)
     console.log(1)
     const directorDTO = dto.staff.find(

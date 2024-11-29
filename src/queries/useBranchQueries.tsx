@@ -1,14 +1,14 @@
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query"
-import { BranchFilters } from "./types/branch.types.ts"
 import { queryKeys } from "./query.keys.ts"
 import {
   bookmarkBranch,
   fetchBranch,
   fetchBranches,
   unbookmarkBranch,
-} from "../apis/branch.apis.ts"
+} from "../apis/branch.api.ts"
 import { Coordinate } from "../types/Coordinate.ts"
 import { queryClient } from "./clients.ts"
+import { BranchFilters } from "types/Branch.ts"
 
 export const useBranches = (filters: BranchFilters) =>
   useInfiniteQuery({

@@ -1,8 +1,7 @@
-import { Branch, BranchDetail } from "../types/Branch.ts"
+import { Branch, BranchDetail, BranchFilters } from "../types/Branch.ts"
 import { axiosClient } from "../queries/clients.ts"
-import { BranchFilters } from "../queries/types/branch.types.ts"
-import { BranchMapper } from "../types/dtos/mapper/BranchMapper.ts"
 import { Coordinate } from "../types/Coordinate.ts"
+import { BranchMapper } from "mappers/BranchMapper.ts"
 
 export const fetchBranches = async (
   filters: BranchFilters,
