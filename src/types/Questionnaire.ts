@@ -1,19 +1,10 @@
-export interface OptionValue {
-  csso_idx: string
+export interface Question {
+  cssq_idx: string
+  question_text: string
+  contents_type: string
+  answer_type: "S" | "M" | "T"
+  options: QuestionOption[]
 }
-
-export interface QuestionnaireFormValues {
-  [key: `${string}_${"text" | "option"}`]: string | OptionValue[]
-}
-
-export type QuestionValue = string | OptionValue[] | undefined
-
-export type QuestionFieldName = `${string}_${"text" | "option"}`
-
-export interface QuestionnaireFormValues
-  extends Record<QuestionFieldName, string | OptionValue[]> {}
-
-export type QuestionnaireType = "common" | "reservation"
 
 export interface QuestionOption {
   csso_idx: string
@@ -23,13 +14,7 @@ export interface QuestionOption {
   next_cssq_idx: string
 }
 
-export interface Question {
-  cssq_idx: string
-  question_text: string
-  contents_type: string
-  answer_type: "S" | "M" | "T"
-  options: QuestionOption[]
-}
+export type QuestionnaireType = "common" | "reservation"
 
 export interface QuestionnaireResult {
   index: number
@@ -52,3 +37,18 @@ export interface QuestionnaireResultResponse {
     answer_text: string
   }[]
 }
+
+export interface OptionValue {
+  csso_idx: string
+}
+
+export interface QuestionnaireFormValues {
+  [key: `${string}_${"text" | "option"}`]: string | OptionValue[]
+}
+
+export type QuestionValue = string | OptionValue[] | undefined
+
+export type QuestionFieldName = `${string}_${"text" | "option"}`
+
+export interface QuestionnaireFormValues
+  extends Record<QuestionFieldName, string | OptionValue[]> {}
