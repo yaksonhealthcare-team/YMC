@@ -1,9 +1,9 @@
-import { PaymentHistoryDTO } from "../types/dtos/PaymentDTO.ts"
-import { PaymentMapper } from "../types/dtos/mapper/PaymentMapper.ts"
+import { PaymentHistoryResponse } from "types/Payment.ts"
+import { PaymentMapper } from "../mappers/PaymentMapper.ts"
 
 export const fetchPayments = async ({ page }: { page: number }) => {
   console.log(page)
-  const data: { body: PaymentHistoryDTO[] } = {
+  const data: { body: PaymentHistoryResponse[] } = {
     body: [
       {
         orderid: "241125135444424",

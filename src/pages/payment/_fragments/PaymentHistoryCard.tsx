@@ -1,7 +1,4 @@
-import {
-  PaymentHistory,
-  PaymentHistoryItem,
-} from "../../../types/PaymentHistory.ts"
+import { PaymentHistory, PaymentHistoryItem } from "../../../types/Payment.ts"
 import { format } from "date-fns"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
