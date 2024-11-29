@@ -1,7 +1,11 @@
-type Brand = {
+export interface Brand {
   code: string
   name: string
   imageUrl?: string
 }
 
-export type { Brand }
+export interface BrandResponse {
+  brand_code: string
+  brand_name: string
+  brand_pic?: string
+}
