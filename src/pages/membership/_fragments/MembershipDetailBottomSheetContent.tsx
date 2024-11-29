@@ -3,6 +3,7 @@ import { Divider } from "@mui/material"
 import { Number } from "@components/Number"
 import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import { useState } from "react"
+import XCircleIcon from "@components/icons/XCircleIcon.tsx"
 
 const MembershipDetailBottomSheetContent = () => {
   const [count30, setCount30] = useState(1)
@@ -27,8 +28,7 @@ const MembershipDetailBottomSheetContent = () => {
           <div className="flex flex-col gap-4">
             <div className="flex justify-between items-center">
               <span className="font-m text-16px text-gray-900">30회</span>
-              {/* 체크박스로 변경 필요 */}
-              <div className="w-5 h-5 rounded-sm bg-gray-300" />
+              <XCircleIcon className="w-5" />
             </div>
             <div className="flex justify-between items-center">
               <Number
@@ -50,33 +50,7 @@ const MembershipDetailBottomSheetContent = () => {
             </div>
           </div>
 
-          <Divider className={"border-gray-200"} />
-
-          {/* 10회 옵션 */}
-          <div className="flex flex-col gap-4">
-            <div className="flex justify-between items-center">
-              <span className="font-m text-16px text-gray-900">10회</span>
-              <div className="w-5 h-5 rounded-sm bg-gray-300" />
-            </div>
-            <div className="flex justify-between items-center">
-              <Number
-                count={count10}
-                onClickMinus={() => setCount10((prev) => Math.max(0, prev - 1))}
-                onClickPlus={() => setCount10((prev) => prev + 1)}
-              />
-              <div className="flex items-center gap-2">
-                <div className="flex items-baseline gap-0.5">
-                  <span className="font-sb text-16px text-gray-900">
-                    1,032,000
-                  </span>
-                  <span className="font-r text-14px text-gray-900">원</span>
-                </div>
-                <span className="font-r text-14px text-gray-400 line-through">
-                  240,000원
-                </span>
-              </div>
-            </div>
-          </div>
+          {/* <Divider className={"border-gray-200"} /> */}
         </div>
       </div>
 
