@@ -45,7 +45,7 @@ export const fetchNotices = async (page: number): Promise<Notice[]> => {
 }
 
 export const fetchNotice = async (id: string): Promise<NoticeDetail> => {
-  const { data } = await axiosClient.get<HTTPResponse<NoticeDetail>>(
+  const { data } = await axiosClient.get<HTTPResponse<NoticeDetail[]>>(
     "/contents/detail/",
     {
       params: {
@@ -55,5 +55,5 @@ export const fetchNotice = async (id: string): Promise<NoticeDetail> => {
     },
   )
 
-  return data.body
+  return data.body[0]
 }
