@@ -1,26 +1,21 @@
 import React from "react"
 import { useNavigate } from "react-router-dom"
-
-interface Event {
-  id: string
-  title: string
-  startDate: string
-  endDate: string
-  isEnded: boolean
-  imageUrl: string
-}
+import { Event } from "../../../types/Content"
 
 const EventItem: React.FC<{ event: Event }> = ({ event }) => {
   const navigate = useNavigate()
   return (
     <div
-      className="bg-white px-5 py-4 flex items-center gap-4"
-      onClick={() => navigate(`/event/${event.id}`)}
+      className="bg-white py-4 flex items-start gap-4"
+      onClick={() => navigate(`/event/${event.code}`)}
     >
       <img
-        src={event.imageUrl}
+        src={
+          // TODO: Replace to API response's url after API fixed
+          "/assets/home_event.png"
+        }
         alt={event.title}
-        className="w-[88px] h-[88px] rounded-lg border border-gray-100"
+        className="w-[88px] h-[88px] rounded-lg border border-gray-100 object-cover"
       />
       <div className="flex-1 flex flex-col">
         <div className="flex-1 flex flex-col justify-between">
@@ -29,14 +24,14 @@ const EventItem: React.FC<{ event: Event }> = ({ event }) => {
               {event.title}
             </div>
           </div>
-          <div className="flex items-center justify-between mt-2">
-            {event.isEnded && (
+          <div className="flex items-center mt-2 gap-2">
+            {event.status === "END" && (
               <div className="px-2 py-1 bg-gray-100 rounded-md text-gray-500 text-12px font-medium">
                 종료
               </div>
             )}
             <div className="text-gray-500 text-12px">
-              {event.startDate} ~ {event.endDate}
+              {event.sdate} ~ {event.edate}
             </div>
           </div>
         </div>
