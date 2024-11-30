@@ -102,7 +102,7 @@ const ResetPassword = ({changePasswordHandler}: props) => {
           disabled={
             !form.password ||
             form.password !== form.passwordConfirm ||
-            !validatePassword(form.password)
+            validatePassword(form.password)
           }
           onClick={handleChangePassword}
         >
