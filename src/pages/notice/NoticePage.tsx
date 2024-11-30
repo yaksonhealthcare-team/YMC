@@ -1,68 +1,65 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { useNavigate } from "react-router-dom"
-import PageContainer from "@components/PageContainer.tsx"
-
-interface Notice {
-  id: string
-  title: string
-  date: string
-}
+import { useNotices } from "../../queries/useContentQueries.tsx"
+import useIntersection from "../../hooks/useIntersection.tsx"
 
 const NoticePage: React.FC = () => {
   const { setHeader, setNavigation } = useLayout()
-  const [notices, setNotices] = useState<Notice[]>([])
-
   const navigate = useNavigate()
+
+  const {
+    data: pages,
+    isFetching,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useNotices()
+  const { observerTarget } = useIntersection({
+    onIntersect: () => {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage()
+      }
+    },
+  })
+
+  const notices = (pages?.pages || []).flatMap((page) => page)
 
   useEffect(() => {
     setHeader({
       display: true,
       title: "공지사항",
-      left: (
-        <div onClick={() => navigate(-1)}>
-          <CaretLeftIcon className="w-5 h-5" />
-        </div>
-      ),
+      left: "back",
+      backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
-
-    // 공지사항 데이터 가져오는 로직 추가
-    const mockNotices: Notice[] = [
-      {
-        id: "1",
-        title: "한줄 공지 제목입니다.",
-        date: "2024.08.24",
-      },
-      {
-        id: "2",
-        title:
-          "두줄 공지 제목입니다. 두줄 공지 제목입니다. 두줄 공지 제목입니다.",
-        date: "2024.08.24",
-      },
-      // 더 많은 공지사항 데이터
-    ]
-    setNotices(mockNotices)
   }, [setHeader, setNavigation])
 
+  if (isFetching) {
+    return <div className={"w-full text-center mt-20"}>로딩중...</div>
+  }
+
+  if (notices.length === 0) {
+    return (
+      <div className={"w-full text-center mt-20"}>공지사항이 없습니다.</div>
+    )
+  }
+
   return (
-    <PageContainer>
-      <div className="space-y-4">
-        {notices.map((notice) => (
-          <div
-            key={notice.id}
-            className="bg-white px-5 py-4 flex flex-col gap-2"
-            onClick={() => navigate(`/notice/${notice.id}`)}
-          >
-            <div className="font-bold text-16px text-gray-900">
-              {notice.title}
-            </div>
-            <div className="text-12px text-gray-400">{notice.date}</div>
+    <ul className={"divide-y divide-gray-100 px-5"}>
+      {notices.map((notice) => (
+        <li
+          key={notice.code}
+          onClick={() => navigate(`/notice/${notice.code}`)}
+        >
+          <div className={"flex flex-col gap-2 py-5"}>
+            <p className={"font-semibold"}>{notice.title}</p>
+            <p className={"text-12 text-gray-400"}>{notice.regDate}</p>
           </div>
-        ))}
-      </div>
-    </PageContainer>
+        </li>
+      ))}
+      <div className={"h-1"} ref={observerTarget} />
+    </ul>
   )
 }
 
