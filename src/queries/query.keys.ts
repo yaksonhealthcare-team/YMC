@@ -1,6 +1,7 @@
 import { BranchFilters } from "types/Branch.ts"
 import { Coordinate } from "../types/Coordinate.ts"
 import { PointFilters } from "types/Point.ts"
+import { EventStatus } from "../types/Content.ts"
 
 export const queryKeys = {
   branches: {
@@ -29,5 +30,17 @@ export const queryKeys = {
   },
   brands: {
     all: ["brands"] as const,
+  },
+  events: {
+    all: ["events"] as const,
+    list: ({ page, status }: { page: number; status: EventStatus }) =>
+      [...queryKeys.events.all, { page, status, infinite: true }] as const,
+    detail: (id: string) => [...queryKeys.events.all, id] as const,
+  },
+  notices: {
+    all: ["notices"] as const,
+    list: ({ page }: { page: number }) =>
+      [...queryKeys.notices.all, { page, infinite: true }] as const,
+    detail: (id: string) => [...queryKeys.notices.all, id] as const,
   },
 } as const
