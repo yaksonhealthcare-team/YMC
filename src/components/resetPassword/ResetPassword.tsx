@@ -3,14 +3,16 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import CustomTextField from "@components/CustomTextField.tsx"
-import EyeIcon from "../../assets/icons/EyeIcon.svg?react"
-import EyeSlashIcon from "../../assets/icons/EyeSlashIcon.svg?react"
+import EyeIcon from "@assets/icons/EyeIcon.svg?react"
+import EyeSlashIcon from "@assets/icons/EyeSlashIcon.svg?react"
 import { Button } from "@components/Button.tsx"
-import { useAuth } from "../../contexts/AuthContext.tsx"
-import { resetPassword } from "../../apis/auth.api.ts"
 import validatePassword from "../../utils/passwordValidator.ts"
 
-const ResetPassword = () => {
+interface props {
+  changePasswordHandler: (password: string) => void
+}
+
+const ResetPassword = ({changePasswordHandler}: props) => {
   const [form, setForm] = useState({
     password: "",
     passwordConfirm: "",
@@ -18,7 +20,6 @@ const ResetPassword = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
 
-  const { user } = useAuth()
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
 
@@ -27,14 +28,8 @@ const ResetPassword = () => {
     setNavigation({ display: false })
   }, [])
 
-  const handleChangePassword = async () => {
-    if (!user) return
-    try {
-      await resetPassword(user.email, form.password)
-      navigate("/profile/reset-password/complete")
-    } catch (error) {
-      console.error(error)
-    }
+  const handleChangePassword = () => {
+     changePasswordHandler(form.password)
   }
 
   return (
