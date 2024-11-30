@@ -42,7 +42,7 @@ const EventPage: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col bg-white overflow-hidden">
-      <div className="flex justify-center space-x-4 px-5">
+      <div className="flex justify-center space-x-4 px-5 pt-4">
         <div
           className={`flex-1 pb-3 text-center ${selectedTab === "ALL" ? "border-b-2 border-primary text-primary" : "text-gray-700"}`}
           onClick={() => handleTabClick("ALL")}
