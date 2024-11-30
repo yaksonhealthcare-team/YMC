@@ -131,7 +131,7 @@ const EmailLogin = () => {
       {/* 이메일/비밀번호 찾기 */}
       <div className="flex justify-end mt-10">
         <button
-          onClick={() => navigate("/find-credentials")}
+          onClick={() => navigate("/find-account")}
           className="font-m text-16px text-[#757575]"
         >
           이메일 / 비밀번호 찾기
