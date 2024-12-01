@@ -228,6 +228,7 @@ const ReviewFormPage = () => {
     )
   }
 
+  // TODO: Add loading indicator
   if (isLoading) {
     return <SplashScreen />
   }

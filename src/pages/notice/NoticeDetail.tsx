@@ -46,6 +46,7 @@ const NoticeDetailPage: React.FC = () => {
     setNotice(mockNotice)
   }, [setHeader, setNavigation])
 
+  // TODO: Add loading indicator
   if (!notice) {
     return <SplashScreen />
   }

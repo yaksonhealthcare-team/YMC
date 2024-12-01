@@ -104,6 +104,7 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
     }
   }
 
+  // TODO: Add loading indicator
   if (isLoading || !questions) {
     return <SplashScreen />
   }
