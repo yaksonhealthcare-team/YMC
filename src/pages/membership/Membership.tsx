@@ -7,11 +7,8 @@ import { useLayout } from "../../contexts/LayoutContext.tsx"
 import ClockIcon from "@assets/icons/ClockIcon.svg?react"
 import { useBrands } from "queries/useBrandQueries.tsx"
 import { Brand } from "types/Brand.ts"
-
-interface Category {
-  id: number
-  name: string
-}
+import { useServiceCategories } from "queries/useMembershipQuires.tsx"
+import { ServiceCategory } from "types/Membership.ts"
 
 interface Product {
   id: number
@@ -29,15 +26,29 @@ const MembershipPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const [selectedBrandCode, setSelectedBrandCode] = useState<string>("")
+  const [selectedCategoryCode, setSelectedCategoryCode] = useState<string>("")
   const { data: brands } = useBrands()
+  const { data: serviceCategories } = useServiceCategories(selectedBrandCode)
 
   const handleSelectedBrand = (value: string) => {
     setSelectedBrandCode(value)
   }
 
+  const handleSelectedCategory = (value: string) => {
+    setSelectedCategoryCode(value)
+  }
+
   useEffect(() => {
     if (brands && brands.length > 0 && !selectedBrandCode) {
       setSelectedBrandCode(brands[0].code)
+    }
+
+    if (
+      serviceCategories &&
+      serviceCategories.length > 0 &&
+      !selectedCategoryCode
+    ) {
+      setSelectedCategoryCode(serviceCategories[0].serviceCategoryCode)
     }
   }, [brands, selectedBrandCode])
 
@@ -63,7 +74,11 @@ const MembershipPage = () => {
         selectedBrandCode={selectedBrandCode}
         handleSelectedBrand={handleSelectedBrand}
       />
-      <CategorySection />
+      <CategorySection
+        categories={serviceCategories}
+        selectedCategoryCode={selectedCategoryCode}
+        handleSelectedCategory={handleSelectedCategory}
+      />
       <ProductList />
     </div>
   )
@@ -97,31 +112,33 @@ const BrandSection = ({
   )
 }
 
-const CategorySection = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("얼굴테라피")
+interface CategorySectionProps {
+  categories?: ServiceCategory[]
+  selectedCategoryCode: string
+  handleSelectedCategory: (value: string) => void
+}
 
-  const categories: Category[] = [
-    { id: 1, name: "얼굴테라피" },
-    { id: 2, name: "바디테라피" },
-    { id: 3, name: "바디라인" },
-    { id: 4, name: "체형테라피" },
-    { id: 5, name: "스페셜테라피" },
-  ]
-
+const CategorySection = ({
+  categories,
+  selectedCategoryCode,
+  handleSelectedCategory,
+}: CategorySectionProps) => {
   return (
     <div className="flex items-center gap-2 overflow-x-auto px-5 h-[100px] scrollbar-hide">
-      {categories.map((category) => (
-        <div key={category.id} className="flex-shrink-0">
+      {categories?.map((category) => (
+        <div key={category.serviceCategoryCode} className="flex-shrink-0">
           <Button
             variantType={
-              category.name === selectedCategory ? "primary" : "gray"
+              category.serviceCategoryCode === selectedCategoryCode
+                ? "primary"
+                : "gray"
             }
             sizeType="s"
-            onClick={() => setSelectedCategory(category.name)}
+            onClick={() => handleSelectedCategory(category.serviceCategoryCode)}
             className="w-[68px] aspect-square text-xs whitespace-nowrap"
             sx={{ borderRadius: "50% !important" }}
           >
-            {category.name}
+            {category.serviceCategoryName}
           </Button>
         </div>
       ))}
