@@ -39,6 +39,7 @@ const MembershipPage = () => {
 
   const handleSelectedBrand = (value: string) => {
     setSelectedBrandCode(value)
+    setSelectedCategoryCode("")
   }
 
   const handleSelectedCategory = (value: string) => {
@@ -58,6 +59,12 @@ const MembershipPage = () => {
       setSelectedCategoryCode(serviceCategories[0].serviceCategoryCode)
     }
   }, [brands, selectedBrandCode])
+
+  useEffect(() => {
+    if (serviceCategories && serviceCategories.length > 0) {
+      setSelectedCategoryCode(serviceCategories[0].serviceCategoryCode)
+    }
+  }, [selectedBrandCode, serviceCategories])
 
   useEffect(() => {
     setHeader({
