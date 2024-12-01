@@ -82,7 +82,7 @@ const MembershipPage = () => {
   return (
     <div className="flex-1 flex-col h-auto bg-[#F8F5F2]">
       <div className="w-full px-4 py-2.5 bg-[#92443D] text-center">
-        <span className="font-m text-14px text-white">
+        <span className="text-14px text-white">
           이용하고 싶은 회원권을 담아주세요.
         </span>
       </div>
