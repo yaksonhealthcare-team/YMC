@@ -1,5 +1,4 @@
 import { Button } from "@components/Button"
-import { Divider } from "@mui/material"
 import { Number } from "@components/Number"
 import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import { useState } from "react"
@@ -7,7 +6,7 @@ import XCircleIcon from "@components/icons/XCircleIcon.tsx"
 
 const MembershipDetailBottomSheetContent = () => {
   const [count30, setCount30] = useState(1)
-  const [count10, setCount10] = useState(2)
+  const [count10, _setCount10] = useState(2)
 
   return (
     <>
