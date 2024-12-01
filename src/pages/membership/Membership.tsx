@@ -5,11 +5,8 @@ import { Button } from "@components/Button"
 import { Tag } from "@components/Tag"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import ClockIcon from "@assets/icons/ClockIcon.svg?react"
-
-interface Brand {
-  label: string
-  value: string
-}
+import { useBrands } from "queries/useBrandQueries.tsx"
+import { Brand } from "types/Brand.ts"
 
 interface Category {
   id: number
@@ -31,6 +28,18 @@ interface Product {
 const MembershipPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
+  const [selectedBrandCode, setSelectedBrandCode] = useState<string>("")
+  const { data: brands } = useBrands()
+
+  const handleSelectedBrand = (value: string) => {
+    setSelectedBrandCode(value)
+  }
+
+  useEffect(() => {
+    if (brands && brands.length > 0 && !selectedBrandCode) {
+      setSelectedBrandCode(brands[0].code)
+    }
+  }, [brands, selectedBrandCode])
 
   useEffect(() => {
     setHeader({
@@ -49,33 +58,41 @@ const MembershipPage = () => {
         </span>
       </div>
 
-      <BrandSection />
+      <BrandSection
+        brands={brands}
+        selectedBrandCode={selectedBrandCode}
+        handleSelectedBrand={handleSelectedBrand}
+      />
       <CategorySection />
       <ProductList />
     </div>
   )
 }
 
-const BrandSection = () => {
-  const [selectedBrand, setSelectedBrand] = useState<string>("약손명가")
+interface BrandSectionProps {
+  brands: Brand[] | undefined
+  selectedBrandCode: string
+  handleSelectedBrand: (value: string) => void
+}
 
-  const brands: Brand[] = [
-    { label: "약손명가", value: "약손명가" },
-    { label: "달리아스파", value: "달리아스파" },
-    { label: "여리한다이어트", value: "여리한다이어트" },
-  ]
-
+const BrandSection = ({
+  brands,
+  selectedBrandCode,
+  handleSelectedBrand,
+}: BrandSectionProps) => {
   return (
-    <div className="border-b border-gray-200 flex px-5">
-      <CustomTabs
-        type="2depth"
-        tabs={brands.map((brand) => ({
-          label: brand.label,
-          value: brand.value,
-        }))}
-        onChange={(value) => setSelectedBrand(value)}
-        activeTab={selectedBrand}
-      />
+    <div className="flex ">
+      {brands && brands.length > 0 && (
+        <CustomTabs
+          type="scroll"
+          tabs={brands.map((brand) => ({
+            label: brand.name,
+            value: brand.code,
+          }))}
+          onChange={handleSelectedBrand}
+          activeTab={selectedBrandCode}
+        />
+      )}
     </div>
   )
 }
