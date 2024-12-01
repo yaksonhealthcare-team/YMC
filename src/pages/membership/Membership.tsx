@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { CustomTabs } from "@components/Tabs"
 import { Button } from "@components/Button"
@@ -146,10 +146,34 @@ const CategorySection = ({
   selectedCategoryCode,
   handleSelectedCategory,
 }: CategorySectionProps) => {
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const selectedButtonRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (selectedButtonRef.current) {
+      selectedButtonRef.current.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      })
+    }
+  }, [selectedCategoryCode])
+
   return (
-    <div className="flex items-center gap-2 overflow-x-auto px-5 h-[100px] scrollbar-hide">
+    <div
+      ref={scrollContainerRef}
+      className="flex items-center gap-2 overflow-x-auto px-5 h-[100px] scrollbar-hide"
+    >
       {categories?.map((category) => (
-        <div key={category.serviceCategoryCode} className="flex-shrink-0">
+        <div
+          ref={
+            category.serviceCategoryCode === selectedCategoryCode
+              ? selectedButtonRef
+              : null
+          }
+          key={category.serviceCategoryCode}
+          className="flex-shrink-0"
+        >
           <Button
             variantType={
               category.serviceCategoryCode === selectedCategoryCode
