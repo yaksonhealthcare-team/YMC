@@ -19,28 +19,17 @@ import {
 import useIntersection from "hooks/useIntersection.tsx"
 import SplashScreen from "@components/Splash.tsx"
 
-interface Product {
-  id: number
-  brand: string
-  title: string
-  time: string
-  price: number
-  originalPrice?: number
-  discountPrice?: number
-  discountRate?: number
-  isAllBranch: boolean
-}
-
 const MembershipPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const [selectedBrandCode, setSelectedBrandCode] = useState<string>("")
   const [selectedCategoryCode, setSelectedCategoryCode] = useState<string>("")
-  const { data: brands } = useBrands()
-  const { data: serviceCategories } = useServiceCategories(selectedBrandCode)
+  const { data: brands, isLoading: isBrandsLoading } = useBrands()
+  const { data: serviceCategories, isLoading: isCategoriesLoading } =
+    useServiceCategories(selectedBrandCode)
   const {
     data: memberships,
-    isLoading,
+    isLoading: isMembershipsLoading,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
@@ -79,7 +68,7 @@ const MembershipPage = () => {
     setNavigation({ display: true })
   }, [setHeader, setNavigation, navigate])
 
-  if (isLoading) {
+  if (isBrandsLoading || isCategoriesLoading || isMembershipsLoading) {
     return <SplashScreen />
   }
 
