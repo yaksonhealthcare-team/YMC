@@ -1,6 +1,6 @@
 type EventStatus = "ALL" | "ING" | "END" | "TBD"
 
-type Event = {
+export interface Event {
   code: string
   gubun: string
   title: string
@@ -9,7 +9,7 @@ type Event = {
   status: EventStatus
 }
 
-type EventDetail = {
+export interface EventDetail {
   code: string
   gubun: string
   title: string
@@ -19,14 +19,14 @@ type EventDetail = {
   files: string | null
 }
 
-type Notice = {
+export interface Notice {
   code: string
   gubun: string
   title: string
   regDate: string
 }
 
-type NoticeDetail = {
+export interface NoticeDetail {
   code: string
   gubun: string
   title: string
@@ -34,5 +34,3 @@ type NoticeDetail = {
   contents: string
   files: string | null
 }
-
-export type { EventStatus, Event, EventDetail, Notice, NoticeDetail }
