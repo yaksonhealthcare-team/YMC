@@ -32,13 +32,12 @@ export const queryKeys = {
   },
   memberships: {
     all: ["memberships"] as const,
-    serviceCategories: {
-      all: (brandCode: string) =>
-        [
-          ...queryKeys.memberships.all,
-          "service_categories",
-          brandCode,
-        ] as const,
-    },
+    list: (brandCode: string, scCode: string) =>
+      [...queryKeys.memberships.all, "list", brandCode, scCode] as const,
+    serviceCategories: (brandCode: string) => [
+      ...queryKeys.memberships.all,
+      "service_categories",
+      brandCode,
+    ],
   },
 } as const

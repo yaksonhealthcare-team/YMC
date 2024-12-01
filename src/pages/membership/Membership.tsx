@@ -7,8 +7,17 @@ import { useLayout } from "../../contexts/LayoutContext.tsx"
 import ClockIcon from "@assets/icons/ClockIcon.svg?react"
 import { useBrands } from "queries/useBrandQueries.tsx"
 import { Brand } from "types/Brand.ts"
-import { useServiceCategories } from "queries/useMembershipQuires.tsx"
-import { ServiceCategory } from "types/Membership.ts"
+import {
+  useMemberships,
+  useServiceCategories,
+} from "queries/useMembershipQuires.tsx"
+import {
+  Membership,
+  MembershipOption,
+  ServiceCategory,
+} from "types/Membership.ts"
+import useIntersection from "hooks/useIntersection.tsx"
+import SplashScreen from "@components/Splash.tsx"
 
 interface Product {
   id: number
@@ -29,6 +38,15 @@ const MembershipPage = () => {
   const [selectedCategoryCode, setSelectedCategoryCode] = useState<string>("")
   const { data: brands } = useBrands()
   const { data: serviceCategories } = useServiceCategories(selectedBrandCode)
+  const {
+    data: memberships,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useMemberships(selectedBrandCode, selectedCategoryCode)
+
+  const flattenedMemberships = memberships?.pages.flatMap((page) => page) || []
 
   const handleSelectedBrand = (value: string) => {
     setSelectedBrandCode(value)
@@ -61,6 +79,10 @@ const MembershipPage = () => {
     setNavigation({ display: true })
   }, [setHeader, setNavigation, navigate])
 
+  if (isLoading) {
+    return <SplashScreen />
+  }
+
   return (
     <div className="flex-1 flex-col h-auto bg-[#F8F5F2]">
       <div className="w-full px-4 py-2.5 bg-[#92443D] text-center">
@@ -79,7 +101,12 @@ const MembershipPage = () => {
         selectedCategoryCode={selectedCategoryCode}
         handleSelectedCategory={handleSelectedCategory}
       />
-      <ProductList />
+      <ProductList
+        memberships={flattenedMemberships}
+        hasNextPage={hasNextPage}
+        fetchNextPage={fetchNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+      />
     </div>
   )
 }
@@ -146,81 +173,96 @@ const CategorySection = ({
   )
 }
 
-const ProductList = () => {
+interface ProductListProps {
+  memberships: Membership[]
+  hasNextPage?: boolean
+  fetchNextPage: () => void
+  isFetchingNextPage: boolean
+}
+
+const ProductList = ({
+  memberships,
+  hasNextPage,
+  fetchNextPage,
+  isFetchingNextPage,
+}: ProductListProps) => {
   const navigate = useNavigate()
 
-  const products: Product[] = [
-    {
-      id: 1,
-      brand: "약손명가",
-      title: "K-BEAUTY 연예인관리",
-      time: "120분",
-      price: 200000,
-      isAllBranch: true,
+  const { observerTarget } = useIntersection({
+    onIntersect: () => {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage()
+      }
     },
-    {
-      id: 2,
-      brand: "약손명가",
-      title: "작은 얼굴 관리 (80분)",
-      time: "120분",
-      price: 200000,
-      originalPrice: 240000,
-      discountPrice: 200000,
-      discountRate: 20,
-      isAllBranch: true,
-    },
-  ]
+  })
+
+  const getLowestOptionPrice = (options: MembershipOption[]) => {
+    if (!options || options.length === 0) return null
+
+    return options.reduce((lowest, current) => {
+      const lowestCount = parseInt(lowest.subscriptionCount)
+      const currentCount = parseInt(current.subscriptionCount)
+      return lowestCount < currentCount ? lowest : current
+    })
+  }
 
   return (
     <div className="flex-1 px-5 ">
       <div className="flex flex-col gap-4 pb-32">
-        {products.map((product) => (
+        {memberships?.map((membership) => (
           <div
-            key={product.id}
+            key={membership.serviceIndex}
             className="w-full p-5 bg-white rounded-[20px] shadow-card border border-gray-100 cursor-pointer"
-            onClick={() => navigate(`/membership/${product.id}`)}
+            onClick={() => navigate(`/membership/${membership.serviceIndex}`)}
           >
             <div className="flex justify-between items-start mb-3">
               <Tag type="rect" title="전지점" />
               <div className="flex items-center gap-1">
                 <ClockIcon className="text-primary" />
                 <span className="font-r text-14px text-gray-500">
-                  {product.time} 소요
+                  {membership.serviceTime} 소요
                 </span>
               </div>
             </div>
 
             <div className="mb-3">
               <p className="font-r text-14px text-gray-900 mb-1">
-                {product.brand}
+                {membership.brandName}
               </p>
-              <p className="font-sb text-16px text-gray-900">{product.title}</p>
+              <p className="font-sb text-16px text-gray-900">
+                {membership.serviceName}
+              </p>
             </div>
 
             <div className="flex flex-col items-end">
-              {product.originalPrice && (
-                <span className="font-r text-14px text-gray-300 line-through">
-                  {product.originalPrice.toLocaleString()}
-                </span>
-              )}
-              <div className="w-full flex items-center justify-between gap-2">
-                {product.discountRate && (
-                  <span className="font-b text-16px text-primary">
-                    {product.discountRate}%
-                  </span>
-                )}
-                <div className="flex-1 text-right">
-                  <span className="font-b text-16px text-gray-900 mr-[5px]">
-                    {(product.discountPrice || product.price).toLocaleString()}
-                    원
-                  </span>
-                  <span className="font-r text-12px text-gray-900">부터~</span>
-                </div>
-              </div>
+              {(() => {
+                const lowestOption = getLowestOptionPrice(membership.options)
+                if (!lowestOption) return null
+
+                return (
+                  <div className="w-full flex items-center justify-end gap-2">
+                    {lowestOption.subscriptionOriginalPrice && (
+                      <span className="font-r text-14px text-gray-300 line-through">
+                        {lowestOption.subscriptionOriginalPrice}원
+                      </span>
+                    )}
+                    <span className="font-b text-16px text-gray-900 mr-[5px]">
+                      {lowestOption.subscriptionPrice}원
+                    </span>
+                    <span className="font-r text-12px text-gray-900">
+                      부터~
+                    </span>
+                  </div>
+                )
+              })()}
             </div>
           </div>
         ))}
       </div>
+      <div ref={observerTarget} className={"h-4"} />
+      {isFetchingNextPage && (
+        <p className="text-center text-gray-500 py-4">로딩 중...</p>
+      )}
     </div>
   )
 }

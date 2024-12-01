@@ -72,3 +72,35 @@ export interface ServiceCategoryResponse {
   sc_name: string
   sc_pic: string
 }
+
+export interface MembershipOption {
+  subscriptionIndex: string
+  subscriptionCount: string
+  subscriptionOriginalPrice: string
+  subscriptionPrice: string
+}
+
+export interface Membership {
+  serviceIndex: string
+  serviceName: string
+  brandName: string
+  serviceTime: string
+  serviceType: string
+  options: MembershipOption[]
+}
+
+interface MembershipOptionResponse {
+  ss_idx: string
+  ss_count: string
+  original_price: string
+  ss_price: string
+}
+
+export interface MembershipResponse {
+  s_idx: string
+  s_name: string
+  brand_name: string
+  s_time: string
+  options: MembershipOptionResponse[]
+  s_type: string
+}
