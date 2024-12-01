@@ -34,8 +34,7 @@ import ReservationCancelPage from "pages/reservation/ReservationCancelPage.tsx"
 import MembershipUsageHistory from "pages/membership/MembershipUsageHistory.tsx"
 import ReservationFormPage from "pages/reservation/ReservationFormPage.tsx"
 import BranchSearch from "../pages/branch/search/BranchSearch.tsx"
-import ResetPassword from "../pages/editProfile/ResetPassword.tsx"
-import ResetPasswordComplete from "../pages/editProfile/ResetPasswordComplete.tsx"
+import ResetPasswordComplete from "@components/resetPassword/ResetPasswordComplete.tsx"
 import ReviewFormPage from "pages/review/ReviewFormPage.tsx"
 import ReviewDetailPage from "pages/review/ReviewDetailPage.tsx"
 import ActiveBranch from "../pages/myPage/activeBranch/ActiveBranch.tsx"
@@ -44,6 +43,10 @@ import Questionnaire from "pages/questionnaire/Questionnaire.tsx"
 import QuestionnaireComplete from "pages/questionnaire/QusetionnaireComplete.tsx"
 import GeneralQuestionnaireHistory from "../pages/myPage/questionnaire/GeneralQuestionnaireHistory.tsx"
 import ReservationQuestionnaireHistory from "../pages/myPage/questionnaire/ReservationQuestionnaireHistory.tsx"
+import FindAccount from "../pages/findAccount/FindAccount.tsx"
+import FindEmail from "../pages/findAccount/FindEmail.tsx"
+import ProfileResetPassword from "../pages/editProfile/ProfileResetPassword.tsx"
+import FindAccountResetPassword from "../pages/findAccount/FindAccountResetPassword.tsx"
 
 interface RouteConfig {
   path: string
@@ -117,14 +120,21 @@ const routeConfig: RouteConfig[] = [
 
   // 비밀번호 찾기, 이메일 찾기
   {
-    path: "/reset-password",
-    element: <div>Reset Password</div>,
+    path: "/find-account",
+    element: <FindAccount />,
   },
   {
-    path: "/find-email",
-    element: <div>Find Email</div>,
+    path: "/find-account/find-email",
+    element: <FindEmail />,
   },
-
+  {
+    path: "/find-account/reset-password",
+    element: <FindAccountResetPassword />,
+  },
+  {
+    path: "/find-account/reset-password/complete",
+    element: <ResetPasswordComplete />,
+  },
   // 문진작성
   {
     path: "/questionnaire/common",
@@ -262,7 +272,7 @@ const routeConfig: RouteConfig[] = [
   },
   {
     path: "/profile/reset-password",
-    element: <ResetPassword />,
+    element: <ProfileResetPassword />,
   },
   {
     path: "/profile/reset-password/complete",
