@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
+import SplashScreen from "@components/Splash.tsx"
 
 interface Notice {
   id: string
@@ -46,7 +47,7 @@ const NoticeDetailPage: React.FC = () => {
   }, [setHeader, setNavigation])
 
   if (!notice) {
-    return <div>Loading...</div>
+    return <SplashScreen />
   }
 
   return (

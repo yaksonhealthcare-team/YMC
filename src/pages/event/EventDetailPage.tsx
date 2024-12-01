@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
+import SplashScreen from "@components/Splash"
 
 interface Event {
   id: string
@@ -51,7 +52,7 @@ function EventDetailPage() {
   }, [setHeader, setNavigation])
 
   if (!event) {
-    return <div>Loading...</div>
+    return <SplashScreen />
   }
 
   return (
