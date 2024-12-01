@@ -30,4 +30,15 @@ export const queryKeys = {
   brands: {
     all: ["brands"] as const,
   },
+  memberships: {
+    all: ["memberships"] as const,
+    serviceCategories: {
+      all: (brandCode: string) =>
+        [
+          ...queryKeys.memberships.all,
+          "service_categories",
+          brandCode,
+        ] as const,
+    },
+  },
 } as const

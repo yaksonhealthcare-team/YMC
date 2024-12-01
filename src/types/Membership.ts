@@ -56,3 +56,19 @@ export interface AdditionalService {
   price: number
   selected?: boolean
 }
+
+export interface ServiceCategory {
+  brandCode: string
+  serviceCategoryName: string
+  serviceCategoryImageUrl?: string
+  serviceCategoryCode: string
+  priorirty: string
+}
+
+export interface ServiceCategoryResponse {
+  brand_code: string
+  sc_code: string
+  prior: string
+  sc_name: string
+  sc_pic: string
+}
