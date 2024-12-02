@@ -1,10 +1,12 @@
 import {
+  MembershipDetailMapper,
   MembershipMapper,
   ServiceCategoryMapper,
 } from "mappers/MembershipMapper"
 import { axiosClient } from "queries/clients"
 import { HTTPResponse } from "types/HTTPResponse"
 import {
+  MembershipDetail,
   MembershipDetailResponse,
   ServiceCategoryResponse,
 } from "types/Membership"
@@ -33,14 +35,13 @@ export const fetchMemberships = async (
 
 export const fetchMembershipDetail = async (
   s_idx: string,
-): Promise<MembershipDetailResponse> => {
-  const response = await axiosClient.get<MembershipDetailResponse>(
-    `/memberships/detail`,
-    {
-      params: {
-        s_idx,
-      },
+): Promise<MembershipDetail> => {
+  const { data } = await axiosClient.get<
+    HTTPResponse<MembershipDetailResponse>
+  >(`/memberships/detail`, {
+    params: {
+      s_idx,
     },
-  )
-  return response.data
+  })
+  return MembershipDetailMapper.toEntity(data.body)
 }

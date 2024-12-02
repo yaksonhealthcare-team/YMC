@@ -32,10 +32,7 @@ export const useMemberships = (brandCode: string, scCode: string) => {
 export const useMembershipDetail = (serviceIndex: string) => {
   return useQuery({
     queryKey: queryKeys.memberships.detail(serviceIndex),
-    queryFn: async () => {
-      const response = await fetchMembershipDetail(serviceIndex)
-      return MembershipDetailMapper.toEntity(response)
-    },
+    queryFn: async () => fetchMembershipDetail(serviceIndex),
     enabled: !!serviceIndex,
   })
 }
