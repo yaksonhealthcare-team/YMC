@@ -11,6 +11,9 @@ import NoteIcon from "@assets/icons/NoteIcon.svg?react"
 import { useMembershipDetail } from "queries/useMembershipQueries.tsx"
 import calculateDiscountRate from "utils/calculateDiscountRate.ts"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
+import { Swiper, SwiperSlide } from "swiper/react"
+import "swiper/swiper-bundle.css"
+import MembershipPlaceholderImage from "@assets/images/MembershipPlaceholderImage.jpg"
 
 const MembershipDetailPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -152,13 +155,27 @@ const MembershipDetailPage = () => {
 
   return (
     <div className="pb-[94px]">
-      <div className="w-full h-[280px] bg-gray-200">
-        <img
-          src="https://via.placeholder.com/375x280"
-          alt="회원권 이미지"
-          className="w-full h-full object-cover"
-        />
-      </div>
+      <Swiper className="w-full h-[280px]">
+        {membership.pictures.length > 0 ? (
+          membership.pictures.map((imageUrl, index) => (
+            <SwiperSlide key={index}>
+              <img
+                src={imageUrl || MembershipPlaceholderImage}
+                alt={`${membership.serviceName} 이미지 ${index + 1}`}
+                className="w-full h-full object-cover"
+              />
+            </SwiperSlide>
+          ))
+        ) : (
+          <SwiperSlide>
+            <img
+              src={MembershipPlaceholderImage}
+              alt={`${membership.serviceName} 기본 이미지`}
+              className="w-full h-full object-cover"
+            />
+          </SwiperSlide>
+        )}
+      </Swiper>
 
       <MembershipInfo />
 
