@@ -1,11 +1,11 @@
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useCallback, useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { usePointHistories } from "../../queries/usePointQueries.tsx"
 import { Tag } from "@components/Tag.tsx"
+import useIntersection from "../../hooks/useIntersection.tsx"
 
 const PointPage = () => {
   const { setHeader, setNavigation } = useLayout()
-  const observerTarget = useRef(null)
 
   const {
     data: histories,
@@ -24,20 +24,13 @@ const PointPage = () => {
     setNavigation({ display: false })
   }, [])
 
-  const onIntersect = useCallback(
-    ([entry]: IntersectionObserverEntry[]) => {
-      if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+  const { observerTarget } = useIntersection({
+    onIntersect: () => {
+      if (hasNextPage && !isFetchingNextPage) {
         fetchNextPage()
       }
     },
-    [fetchNextPage, hasNextPage, isFetchingNextPage],
-  )
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(onIntersect, { threshold: 0.1 })
-    if (observerTarget.current) observer.observe(observerTarget.current)
-    return () => observer.disconnect()
-  }, [onIntersect])
+  })
 
   if (!histories) return <></>
 
