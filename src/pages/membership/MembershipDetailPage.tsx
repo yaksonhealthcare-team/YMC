@@ -1,19 +1,33 @@
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { Button } from "@components/Button"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
 import MembershipDetailBottomSheetContent from "./_fragments/MembershipDetailBottomSheetContent.tsx"
 import ClockIcon from "@assets/icons/ClockIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
 import NoteIcon from "@assets/icons/NoteIcon.svg?react"
+import { useMembershipDetail } from "queries/useMembershipQueries.tsx"
+import calculateDiscountRate from "utils/calculateDiscountRate.ts"
+import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 
 const MembershipDetailPage = () => {
+  const { id } = useParams<{ id: string }>()
   const { setHeader, setNavigation } = useLayout()
   const { openBottomSheet } = useOverlay()
-
   const navigate = useNavigate()
+
+  const { data: membership, isLoading } = useMembershipDetail(id || "")
+  const sortedOptions = useMemo(
+    () =>
+      membership?.options.sort(
+        (a, b) => Number(a.subscriptionIndex) - Number(b.subscriptionIndex),
+      ),
+    [membership?.options],
+  )
+
+  const firstOption = sortedOptions?.[0]
 
   useEffect(() => {
     setHeader({
@@ -34,64 +48,107 @@ const MembershipDetailPage = () => {
     openBottomSheet(<MembershipDetailBottomSheetContent />)
   }
 
+  if (isLoading || !membership) return <div>Loading...</div>
+
   const MembershipInfo = () => (
     <div className="flex flex-col px-5 py-6 gap-4">
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1">
-          <span className="text-primary font-sb text-14px">약손명가</span>
+          <span className="text-primary font-sb text-14px">
+            {membership.brandName}
+          </span>
           <h1 className="text-gray-900 font-sb text-16px">
-            K-BEAUTY 연예인관리
+            {membership.serviceName}
           </h1>
         </div>
-        <div className="flex items-end gap-2">
-          <span className="text-primary font-b text-18px">20%</span>
-          <div className="flex items-baseline gap-1">
-            <span className="text-gray-900 font-b text-18px">200,000원</span>
-            <span className="text-gray-900 font-r text-12px">부터~</span>
+        {firstOption && (
+          <div className="flex items-end gap-2">
+            {membership.options[0].subscriptionOriginalPrice && (
+              <span className="text-primary font-b text-18px">
+                {calculateDiscountRate(
+                  membership.options[0].subscriptionPrice,
+                  membership.options[0].subscriptionOriginalPrice,
+                )}
+                %
+              </span>
+            )}
+            <div className="flex items-baseline gap-1">
+              <span className="text-gray-900 font-b text-18px">
+                {membership.options[0].subscriptionPrice}원
+              </span>
+              <span className="text-gray-900 font-r text-12px">부터~</span>
+            </div>
+            {membership.options[0].subscriptionOriginalPrice && (
+              <span className="text-gray-400 font-r text-14px line-through">
+                {membership.options[0].subscriptionOriginalPrice}원
+              </span>
+            )}
           </div>
-          <span className="text-gray-400 font-r text-14px line-through">
-            240,000
-          </span>
-        </div>
+        )}
       </div>
       <div className="h-px bg-gray-100" />
       <p className="text-gray-900 font-r text-14px leading-[24px]">
-        회원권 설명입니다. 약손명가를 다니는 많은 연예인들이 받는 관리로 자신감
-        있는 모습으로 변하고 싶거나 부드러운 인상으로 사진이 잘 나오기를
-        바라시는 분들을 위해 만든 프로그램입니다. 새로 개발한 에너지 세럼을 바른
-        후 약손테라피 관리를 통해 최고의 시너지 효과를 볼 수 있도록 관리해
-        드립니다.
+        {membership.serviceContent}
       </p>
     </div>
   )
 
-  const MembershipDetail = () => (
-    <div className="flex flex-col px-5 py-6 gap-4">
-      <h2 className="text-gray-800 font-b text-16px">상세정보</h2>
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-2">
-          <StoreIcon className="text-primary" />
-          <span className="text-gray-800 font-m text-14px">
-            전지점 사용가능
-          </span>
+  const MembershipDetail = () => {
+    const sortedCourses = useMemo(
+      () =>
+        membership?.courses.sort(
+          (a, b) => Number(a.priority) - Number(b.priority),
+        ),
+      [membership?.courses],
+    )
+
+    return (
+      <div className="flex flex-col px-5 py-6 gap-4">
+        <h2 className="text-gray-800 font-b text-16px">상세정보</h2>
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-2">
+            <StoreIcon className="text-primary" />
+            <span className="text-gray-800 font-m text-14px">
+              {membership.serviceType}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <ClockIcon className="text-primary" />
+            <span className="text-gray-800 font-m text-14px">
+              {membership.serviceTime}분 소요
+            </span>
+          </div>
+          {sortedCourses.length > 0 && (
+            <>
+              <div className="flex items-center gap-2">
+                <NoteIcon className="text-primary " />
+                <span className="text-gray-800 font-m text-14px">
+                  관리 코스
+                </span>
+              </div>
+              <div className="inline">
+                {sortedCourses.map((course) => (
+                  <>
+                    <p
+                      key={course.serviceCourseIndex}
+                      className="inline font-r text-14px whitespace-nowrap"
+                    >
+                      {course.serviceCourseName} ({course.serviceCourseMinutes}
+                      분)
+                    </p>
+                    {sortedCourses.indexOf(course) !==
+                      sortedCourses.length - 1 && (
+                      <CaretRightIcon className="w-4 h-4 inline text-gray-400 mx-1.5" />
+                    )}
+                  </>
+                ))}
+              </div>
+            </>
+          )}
         </div>
-        <div className="flex items-center gap-2">
-          <ClockIcon className="text-primary" />
-          <span className="text-gray-800 font-m text-14px">120분 소요</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <NoteIcon className="text-primary" />
-          <span className="text-gray-800 font-m text-14px">관리 코스</span>
-        </div>
-        <p className="text-gray-900 font-r text-14px leading-[24px]">
-          관리코스 설명이 노출되는 곳입니다. 관리코스 설명이 노출되는
-          곳입니다.관리코스 설명이 노출되는 곳입니다.관리코스 설명이 노출되는
-          곳입니다.관리코스 설명이 노출되는 곳입니다.관리코스 설명이 노출되는
-          곳입니다.관리코스 설명이 노출되는 곳입니다.
-        </p>
       </div>
-    </div>
-  )
+    )
+  }
 
   return (
     <div className="pb-[94px]">
