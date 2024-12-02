@@ -6,7 +6,6 @@ import {
   fetchServiceCategories,
 } from "apis/membership.api"
 import { ServiceCategory } from "types/Membership"
-import { MembershipDetailMapper } from "mappers/MembershipMapper"
 
 export const useServiceCategories = (brandCode: string) => {
   return useQuery<ServiceCategory[]>({
