@@ -295,7 +295,7 @@ const ReservationFormPage = () => {
           size="small"
           className="w-full text-sm h-[40px] flex items-center justify-center mt-3"
           onClick={() => {
-            // TODO: navigate to make reservation questionnaire page
+            navigate("/questionnaire/reservation")
           }}
         >
           새로 작성하기

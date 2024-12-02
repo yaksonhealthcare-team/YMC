@@ -55,16 +55,22 @@ const Home = () => {
                     <span>SILVER</span> <span>10,000 P</span>
                   </Typography>
                 </div>
-                <div className="rounded-full bg-white text-primary-300 py-2.5 px-5">
+                {/* TODO: 예약 필요 정보와 함께 이동 필요 */}
+                <div
+                  className="rounded-full bg-white text-primary-300 py-2.5 px-5 cursor-pointer"
+                  onClick={() => navigate("/reservation/form")}
+                >
                   예약하기
                 </div>
               </div>
               {/* 배너영역*/}
               <div className="mt-4">
+                {/* TODO: 실 데이터 연동, 사이즈에 관계없이 동일하게 보이도록 레이아웃 조정 필요 */}
                 <img
                   src="/assets/home_banner.png"
                   alt="배너영역"
-                  className="w-full h-12 object-cover rounded-2xl"
+                  className="w-full h-[144px] object-cover rounded-2xl "
+                  onClick={() => navigate("/membership")}
                 />
               </div>
             </div>
@@ -103,6 +109,7 @@ const Home = () => {
 }
 
 const ReserveCardSection = () => {
+  const navigate = useNavigate()
   // 예약
   const reserveCardsData: ReservationItem[] = [
     {
@@ -146,9 +153,7 @@ const ReserveCardSection = () => {
         type="arrow"
         title="예정된 예약"
         count={`${reserveCardsData.length}건`}
-        onClick={() => {
-          alert("button clicked")
-        }}
+        onClick={() => navigate("/member-history")}
       />
       {reserveCardsData.length > 0 ? (
         <Swiper
@@ -182,6 +187,8 @@ const ReserveCardSection = () => {
 }
 
 const MembershipCardSection = () => {
+  const navigate = useNavigate()
+
   // 회원권
   const membershipCardsData: MembershipItem[] = [
     {
@@ -219,9 +226,7 @@ const MembershipCardSection = () => {
         type="arrow"
         title="보유 회원권"
         count="3개"
-        onClick={() => {
-          alert("button clicked")
-        }}
+        onClick={() => navigate(`/member-history/membership`)}
       />
       {membershipCardsData.length > 0 ? (
         <Swiper
@@ -287,20 +292,25 @@ const BrandSection = () => {
 }
 
 const EventSection = () => {
+  const navigate = useNavigate()
+
   const EventCardsData: Array<{
     imageSrc: string
     title: string
     date: string
+    id: number
   }> = [
     {
       imageSrc: "/assets/home_event.png",
       title: "애정에 애정을 더하며☘️",
       date: "2024.08.12",
+      id: 1,
     },
     {
       imageSrc: "/assets/home_event.png",
       title: "장마 맞이 시원한 할인!",
       date: "2024.08.12",
+      id: 2,
     },
   ]
   return (
@@ -316,7 +326,9 @@ const EventSection = () => {
           <SwiperSlide key={index} className="mr-3">
             <div
               className="flex flex-col gap-4 bg-white pb-4 rounded-[20px] border border-gray-100"
+              // TODO: 실제 이벤트 아이디를 이용해 이벤트 상세 페이지로 이동
               // onClick={() => navigate(`/event/${data.id}`)}
+              onClick={() => navigate(`/event/${data.id}`)}
             >
               <div
                 style={{ backgroundImage: `url(${data.imageSrc})` }}
