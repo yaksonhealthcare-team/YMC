@@ -184,8 +184,11 @@ const CategorySection = ({
             }
             sizeType="s"
             onClick={() => handleSelectedCategory(category.serviceCategoryCode)}
-            className="w-[68px] aspect-square text-xs whitespace-nowrap"
-            sx={{ borderRadius: "50% !important" }}
+            className="w-[68px] h-[68px] text-xs"
+            sx={{
+              borderRadius: "50% !important",
+              padding: "4px !important",
+            }}
           >
             {category.serviceCategoryName}
           </Button>
