@@ -53,7 +53,11 @@ const Home = () => {
                     <span>SILVER</span> <span>10,000 P</span>
                   </Typography>
                 </div>
-                <div className="rounded-full bg-white text-primary-300 py-2.5 px-5">
+                {/* TODO: 예약 필요 정보와 함께 이동 필요 */}
+                <div
+                  className="rounded-full bg-white text-primary-300 py-2.5 px-5 cursor-pointer"
+                  onClick={() => navigate("/reservation/form")}
+                >
                   예약하기
                 </div>
               </div>

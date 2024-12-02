@@ -80,8 +80,13 @@ export const MembershipCard = ({
             <CaretRightIcon className={STYLES.actions.historyIcon} />
           </div>
         )}
+        {/* TODO: 예약 필요 정보와 함께 이동 필요 */}
         {showReservationButton && (
-          <Button variantType="primary" sizeType="xs">
+          <Button
+            variantType="primary"
+            sizeType="xs"
+            onClick={() => navigate("/reservation/form")}
+          >
             예약하기
           </Button>
         )}
