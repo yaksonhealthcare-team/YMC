@@ -4,7 +4,10 @@ import {
 } from "mappers/MembershipMapper"
 import { axiosClient } from "queries/clients"
 import { HTTPResponse } from "types/HTTPResponse"
-import { ServiceCategoryResponse } from "types/Membership"
+import {
+  MembershipDetailResponse,
+  ServiceCategoryResponse,
+} from "types/Membership"
 
 export const fetchServiceCategories = async (brandCode: string) => {
   const { data } = await axiosClient.get<
@@ -26,4 +29,18 @@ export const fetchMemberships = async (
     },
   })
   return MembershipMapper.toEntities(data.body)
+}
+
+export const fetchMembershipDetail = async (
+  s_idx: string,
+): Promise<MembershipDetailResponse> => {
+  const response = await axiosClient.get<MembershipDetailResponse>(
+    `/memberships/detail`,
+    {
+      params: {
+        s_idx,
+      },
+    },
+  )
+  return response.data
 }
