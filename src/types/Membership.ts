@@ -45,7 +45,7 @@ export interface MebershipHistory {
   date: Date
 }
 
-export interface MembershipDetail extends MembershipItem {
+export interface MembershipDetailHistory extends MembershipItem {
   history: MebershipHistory[]
 }
 

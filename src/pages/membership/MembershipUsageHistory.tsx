@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { MembershipCard } from "@components/MembershipCard"
-import { MembershipDetail, MembershipStatus } from "types/Membership"
+import { MembershipDetailHistory, MembershipStatus } from "types/Membership"
 import DateAndTime from "@components/DateAndTime"
 
 const sampleMembershipDetail = {
@@ -73,7 +73,8 @@ const ReservationThumbnail = ({
 const MembershipUsageHistory = () => {
   const { setHeader, setNavigation } = useLayout()
   //   const { id } = useParams<{ id: string }>()
-  const [memberShipDetail, setMemberShipDetail] = useState<MembershipDetail>()
+  const [memberShipDetail, setMemberShipDetail] =
+    useState<MembershipDetailHistory>()
 
   const navigate = useNavigate()
 
