@@ -63,10 +63,12 @@ const Home = () => {
               </div>
               {/* 배너영역*/}
               <div className="mt-4">
+                {/* TODO: 실 데이터 연동, 사이즈에 관계없이 동일하게 보이도록 레이아웃 조정 필요 */}
                 <img
                   src="/assets/home_banner.png"
                   alt="배너영역"
-                  className="w-full h-12 object-cover rounded-2xl"
+                  className="w-full h-[144px] object-cover rounded-2xl "
+                  onClick={() => navigate("/membership")}
                 />
               </div>
             </div>
