@@ -291,20 +291,25 @@ const BrandSection = () => {
 }
 
 const EventSection = () => {
+  const navigate = useNavigate()
+
   const EventCardsData: Array<{
     imageSrc: string
     title: string
     date: string
+    id: number
   }> = [
     {
       imageSrc: "/assets/home_event.png",
       title: "애정에 애정을 더하며☘️",
       date: "2024.08.12",
+      id: 1,
     },
     {
       imageSrc: "/assets/home_event.png",
       title: "장마 맞이 시원한 할인!",
       date: "2024.08.12",
+      id: 2,
     },
   ]
   return (
@@ -320,7 +325,9 @@ const EventSection = () => {
           <SwiperSlide key={index} className="mr-3">
             <div
               className="flex flex-col gap-4 bg-white pb-4 rounded-[20px] border border-gray-100"
+              // TODO: 실제 이벤트 아이디를 이용해 이벤트 상세 페이지로 이동
               // onClick={() => navigate(`/event/${data.id}`)}
+              onClick={() => navigate(`/event/${data.id}`)}
             >
               <div
                 style={{ backgroundImage: `url(${data.imageSrc})` }}
