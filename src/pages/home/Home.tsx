@@ -107,6 +107,7 @@ const Home = () => {
 }
 
 const ReserveCardSection = () => {
+  const navigate = useNavigate()
   // 예약
   const reserveCardsData: ReservationItem[] = [
     {
@@ -150,9 +151,7 @@ const ReserveCardSection = () => {
         type="arrow"
         title="예정된 예약"
         count={`${reserveCardsData.length}건`}
-        onClick={() => {
-          alert("button clicked")
-        }}
+        onClick={() => navigate("/member-history")}
       />
       {reserveCardsData.length > 0 ? (
         <Swiper
@@ -186,6 +185,8 @@ const ReserveCardSection = () => {
 }
 
 const MembershipCardSection = () => {
+  const navigate = useNavigate()
+
   // 회원권
   const membershipCardsData: MembershipItem[] = [
     {
@@ -223,9 +224,7 @@ const MembershipCardSection = () => {
         type="arrow"
         title="보유 회원권"
         count="3개"
-        onClick={() => {
-          alert("button clicked")
-        }}
+        onClick={() => navigate(`/member-history/membership`)}
       />
       {membershipCardsData.length > 0 ? (
         <Swiper
