@@ -1,4 +1,4 @@
-type EventStatus = "ALL" | "ING" | "END" | "TBD"
+export type EventStatus = "ALL" | "ING" | "END" | "TBD"
 
 export interface Event {
   code: string
