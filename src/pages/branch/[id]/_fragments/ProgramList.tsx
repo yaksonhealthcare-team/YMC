@@ -1,7 +1,7 @@
 import { CareProgramTab } from "./CareProgramTab.tsx"
 import { MembershipProgram } from "../../../../types/MembershipProgram.ts"
 import CareProgramCard from "./CareProgramCard.tsx"
-import { useServiceCategories } from "queries/useMembershipQuires.tsx"
+import { useServiceCategories } from "queries/useMembershipQueries.tsx"
 
 interface ProgramListProps {
   brandCode: string

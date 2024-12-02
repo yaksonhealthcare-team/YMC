@@ -10,7 +10,7 @@ import { Brand } from "types/Brand.ts"
 import {
   useMemberships,
   useServiceCategories,
-} from "queries/useMembershipQuires.tsx"
+} from "queries/useMembershipQueries.tsx"
 import {
   Membership,
   MembershipOption,
