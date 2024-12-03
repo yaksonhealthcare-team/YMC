@@ -45,7 +45,7 @@ export interface MebershipHistory {
   date: Date
 }
 
-export interface MembershipDetail extends MembershipItem {
+export interface MembershipDetailHistory extends MembershipItem {
   history: MebershipHistory[]
 }
 
@@ -89,7 +89,7 @@ export interface Membership {
   options: MembershipOption[]
 }
 
-interface MembershipOptionResponse {
+export interface MembershipOptionResponse {
   ss_idx: string
   ss_count: string
   original_price: string
@@ -103,4 +103,40 @@ export interface MembershipResponse {
   s_time: string
   options: MembershipOptionResponse[]
   s_type: string
+}
+
+export interface ServiceCourse {
+  serviceCourseIndex: string
+  serviceCourseName: string
+  serviceCourseMinutes: string
+  priority: string
+}
+
+export interface MembershipDetail {
+  serviceName: string
+  brandName: string
+  serviceContent: string
+  serviceTime: string
+  serviceType: string
+  courses: ServiceCourse[]
+  pictures: string[]
+  options: MembershipOption[]
+}
+
+export interface ServiceCourseResponse {
+  sc_idx: string
+  sc_name: string
+  sc_min: string
+  prior: string
+}
+
+export interface MembershipDetailResponse {
+  s_name: string
+  brand_name: string | null
+  s_content: string | null
+  s_time: string
+  s_type: string
+  courses: ServiceCourseResponse[]
+  pictures: string[]
+  options: MembershipOptionResponse[]
 }
