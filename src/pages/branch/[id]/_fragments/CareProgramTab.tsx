@@ -1,37 +1,64 @@
-import { MembershipCategory } from "../../../../types/MembershipCategory.ts"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { ServiceCategory } from "types/Membership"
 
-const CareProgramTabItem = ({ program, isSelected, onSelect }: {
-  program: MembershipCategory,
-  isSelected: boolean,
-  onSelect: (program: MembershipCategory) => void,
+const CareProgramTabItem = ({
+  program,
+  isSelected,
+  onSelect,
+}: {
+  program: ServiceCategory
+  isSelected: boolean
+  onSelect: (program: ServiceCategory) => void
 }) => {
   const renderBackground = () => {
     if (isSelected) {
       return <div className={"w-[68px] h-[68px] rounded-full bg-primary"} />
     }
-    return program.pictureUrl ?
-      <img src={program.pictureUrl} alt={"배경"} className={"w-[68px] h-[68px] rounded-full"} /> :
+    return program.serviceCategoryImageUrl ? (
+      <img
+        src={program.serviceCategoryImageUrl}
+        alt={"배경"}
+        className={"w-[68px] h-[68px] rounded-full"}
+      />
+    ) : (
       <div className={"w-[68px] h-[68px] rounded-full bg-gray-600"} />
+    )
   }
 
   return (
-    <li className={"relative w-[68px] h-[68px] rounded-full cursor-pointer"} onClick={() => onSelect(program)}>
+    <li
+      className={"relative w-[68px] h-[68px] rounded-full cursor-pointer"}
+      onClick={() => onSelect(program)}
+    >
       {renderBackground()}
-      <div className={"absolute w-[68px] z-10 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2"}>
-        <p className={"text-xs font-medium text-white text-center"}>{program.name}</p>
+      <div
+        className={
+          "absolute w-[68px] z-10 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2"
+        }
+      >
+        <p className={"text-xs font-medium text-white text-center"}>
+          {program.serviceCategoryName}
+        </p>
       </div>
     </li>
   )
 }
 
-
 interface CareProgramTabProps {
-  programs: MembershipCategory[];
+  programs?: ServiceCategory[]
 }
 
-const CareProgramTab = ({ programs }: CareProgramTabProps) => {
-  const [selectedProgram, setSelectedProgram] = useState<MembershipCategory>(programs[0])
+const CareProgramTab = ({ programs = [] }: CareProgramTabProps) => {
+  const [selectedProgram, setSelectedProgram] =
+    useState<ServiceCategory | null>(null)
+
+  useEffect(() => {
+    if (programs.length > 0 && !selectedProgram) {
+      setSelectedProgram(programs[0])
+    }
+  }, [programs])
+
+  if (programs.length === 0) return null
 
   return (
     <ul
@@ -41,11 +68,13 @@ const CareProgramTab = ({ programs }: CareProgramTabProps) => {
         scrollbarWidth: "none",
       }}
     >
-      {programs.map((program) => (
+      {programs?.map((program) => (
         <CareProgramTabItem
-          key={program.code}
+          key={program.serviceCategoryCode}
           program={program}
-          isSelected={selectedProgram.code === program.code}
+          isSelected={
+            selectedProgram?.serviceCategoryCode === program.serviceCategoryCode
+          }
           onSelect={setSelectedProgram}
         />
       ))}

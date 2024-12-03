@@ -8,6 +8,7 @@ import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import { TextArea } from "@components/TextArea"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 import XCircleIcon from "@components/icons/XCircleIcon"
+import SplashScreen from "@components/Splash"
 
 interface ReviewSection {
   rs_idx: string
@@ -227,12 +228,9 @@ const ReviewFormPage = () => {
     )
   }
 
+  // TODO: Add loading indicator
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        Loading...
-      </div>
-    )
+    return <SplashScreen />
   }
 
   return (

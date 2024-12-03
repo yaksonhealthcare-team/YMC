@@ -4,6 +4,7 @@ import { useLayout } from "../../contexts/LayoutContext"
 import { useEvent } from "../../queries/useContentQueries.tsx"
 import { EventDetail } from "../../types/Content"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
+import SplashScreen from "@components/Splash"
 
 function EventDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -21,7 +22,7 @@ function EventDetailPage() {
   }, [setHeader, setNavigation])
 
   if (!event || isLoading) {
-    return <div>Loading...</div>
+    return <SplashScreen />
   }
 
   return (

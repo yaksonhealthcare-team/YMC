@@ -4,6 +4,7 @@ import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useNotice } from "../../queries/useContentQueries.tsx"
 import { NoticeDetail as Notice } from "../../types/Content.ts"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
+import SplashScreen from "@components/Splash.tsx"
 
 const NoticeDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -19,8 +20,9 @@ const NoticeDetailPage: React.FC = () => {
     setNavigation({ display: false })
   }, [setHeader, setNavigation])
 
+  // TODO: Add loading indicator
   if (!notice) {
-    return <div>Loading...</div>
+    return <SplashScreen />
   }
 
   return (

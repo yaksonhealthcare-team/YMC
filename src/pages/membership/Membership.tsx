@@ -1,37 +1,70 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
-
 import { CustomTabs } from "@components/Tabs"
 import { Button } from "@components/Button"
 import { Tag } from "@components/Tag"
-import { Title } from "@components/Title"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-
-interface Brand {
-  label: string
-  value: string
-}
-
-interface Category {
-  id: number
-  name: string
-}
-
-interface Product {
-  id: number
-  brand: string
-  title: string
-  time: string
-  price: number
-  originalPrice?: number
-  discountPrice?: number
-  discountRate?: number
-  isAllBranch: boolean
-}
+import ClockIcon from "@assets/icons/ClockIcon.svg?react"
+import { useBrands } from "queries/useBrandQueries.tsx"
+import { Brand } from "types/Brand.ts"
+import {
+  useMemberships,
+  useServiceCategories,
+} from "queries/useMembershipQueries.tsx"
+import {
+  Membership,
+  MembershipOption,
+  ServiceCategory,
+} from "types/Membership.ts"
+import useIntersection from "hooks/useIntersection.tsx"
+import SplashScreen from "@components/Splash.tsx"
 
 const MembershipPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
+  const [selectedBrandCode, setSelectedBrandCode] = useState<string>("")
+  const [selectedCategoryCode, setSelectedCategoryCode] = useState<string>("")
+  const { data: brands, isLoading: isBrandsLoading } = useBrands()
+  const { data: serviceCategories, isLoading: isCategoriesLoading } =
+    useServiceCategories(selectedBrandCode)
+  const {
+    data: memberships,
+    isLoading: isMembershipsLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useMemberships(selectedBrandCode, selectedCategoryCode)
+
+  const flattenedMemberships = memberships?.pages.flatMap((page) => page) || []
+
+  const handleSelectedBrand = (value: string) => {
+    setSelectedBrandCode(value)
+    setSelectedCategoryCode("")
+  }
+
+  const handleSelectedCategory = (value: string) => {
+    setSelectedCategoryCode(value)
+  }
+
+  useEffect(() => {
+    if (brands && brands.length > 0 && !selectedBrandCode) {
+      setSelectedBrandCode(brands[0].code)
+    }
+
+    if (
+      serviceCategories &&
+      serviceCategories.length > 0 &&
+      !selectedCategoryCode
+    ) {
+      setSelectedCategoryCode(serviceCategories[0].serviceCategoryCode)
+    }
+  }, [brands, selectedBrandCode])
+
+  useEffect(() => {
+    if (serviceCategories && serviceCategories.length > 0) {
+      setSelectedCategoryCode(serviceCategories[0].serviceCategoryCode)
+    }
+  }, [selectedBrandCode, serviceCategories])
 
   useEffect(() => {
     setHeader({
@@ -42,79 +75,122 @@ const MembershipPage = () => {
     setNavigation({ display: true })
   }, [setHeader, setNavigation, navigate])
 
+  // TODO: Add loading indicator
+  if (isBrandsLoading || isCategoriesLoading) {
+    return <SplashScreen />
+  }
+
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8F5F2]">
+    <div className="flex-1 flex-col h-auto bg-[#F8F5F2]">
       <div className="w-full px-4 py-2.5 bg-[#92443D] text-center">
-        <span className="font-m text-14px text-white">
+        <span className="text-14px text-white">
           이용하고 싶은 회원권을 담아주세요.
         </span>
       </div>
 
-      <BrandSection />
-      <CategorySection />
-      <ProductList />
-
-      <div className="fixed bottom-[82px] left-0 right-0 max-w-[500px] mx-auto p-5 bg-white border-t border-gray-100">
-        <Button
-          variantType="primary"
-          sizeType="l"
-          onClick={() => navigate("/membership/checkout")}
-        >
-          예약하기
-        </Button>
-      </div>
-    </div>
-  )
-}
-
-const BrandSection = () => {
-  const [selectedBrand, setSelectedBrand] = useState<string>("약손명가")
-
-  const brands: Brand[] = [
-    { label: "약손명가", value: "약손명가" },
-    { label: "달리아스파", value: "달리아스파" },
-    { label: "여리한다이어트", value: "여리한다이어트" },
-  ]
-
-  return (
-    <div className="border-b border-gray-200">
-      <CustomTabs
-        type="2depth"
-        tabs={brands.map((brand) => ({
-          label: brand.label,
-          value: brand.value,
-        }))}
-        onChange={(value) => setSelectedBrand(value)}
-        activeTab={selectedBrand}
+      <BrandSection
+        brands={brands}
+        selectedBrandCode={selectedBrandCode}
+        handleSelectedBrand={handleSelectedBrand}
+      />
+      <CategorySection
+        categories={serviceCategories}
+        selectedCategoryCode={selectedCategoryCode}
+        handleSelectedCategory={handleSelectedCategory}
+      />
+      <ProductList
+        memberships={flattenedMemberships}
+        hasNextPage={hasNextPage}
+        fetchNextPage={fetchNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        isLoading={isMembershipsLoading}
       />
     </div>
   )
 }
 
-const CategorySection = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("얼굴테라피")
+interface BrandSectionProps {
+  brands: Brand[] | undefined
+  selectedBrandCode: string
+  handleSelectedBrand: (value: string) => void
+}
 
-  const categories: Category[] = [
-    { id: 1, name: "얼굴테라피" },
-    { id: 2, name: "바디테라피" },
-    { id: 3, name: "바디라인" },
-    { id: 4, name: "체형테라피" },
-    { id: 5, name: "스페셜테라피" },
-  ]
+const BrandSection = ({
+  brands,
+  selectedBrandCode,
+  handleSelectedBrand,
+}: BrandSectionProps) => {
+  return (
+    <div className="flex ">
+      {brands && brands.length > 0 && (
+        <CustomTabs
+          type="scroll"
+          tabs={brands.map((brand) => ({
+            label: brand.name,
+            value: brand.code,
+          }))}
+          onChange={handleSelectedBrand}
+          activeTab={selectedBrandCode}
+        />
+      )}
+    </div>
+  )
+}
+
+interface CategorySectionProps {
+  categories?: ServiceCategory[]
+  selectedCategoryCode: string
+  handleSelectedCategory: (value: string) => void
+}
+
+const CategorySection = ({
+  categories,
+  selectedCategoryCode,
+  handleSelectedCategory,
+}: CategorySectionProps) => {
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const selectedButtonRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (selectedButtonRef.current) {
+      selectedButtonRef.current.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      })
+    }
+  }, [selectedCategoryCode])
 
   return (
-    <div className="flex gap-2 overflow-x-auto px-5 py-4 no-scrollbar">
-      {categories.map((category) => (
-        <div key={category.id} className="flex-shrink-0">
+    <div
+      ref={scrollContainerRef}
+      className="flex items-center gap-2 overflow-x-auto px-5 h-[100px] scrollbar-hide"
+    >
+      {categories?.map((category) => (
+        <div
+          ref={
+            category.serviceCategoryCode === selectedCategoryCode
+              ? selectedButtonRef
+              : null
+          }
+          key={category.serviceCategoryCode}
+          className="flex-shrink-0"
+        >
           <Button
             variantType={
-              category.name === selectedCategory ? "primary" : "gray"
+              category.serviceCategoryCode === selectedCategoryCode
+                ? "primary"
+                : "gray"
             }
             sizeType="s"
-            onClick={() => setSelectedCategory(category.name)}
-            className="!w-[68px] !h-[68px] !rounded-full !p-0"
+            onClick={() => handleSelectedCategory(category.serviceCategoryCode)}
+            className="w-[68px] h-[68px] text-xs"
+            sx={{
+              borderRadius: "50% !important",
+              padding: "4px !important",
+            }}
           >
-            {category.name}
+            {category.serviceCategoryName}
           </Button>
         </div>
       ))}
@@ -122,79 +198,110 @@ const CategorySection = () => {
   )
 }
 
-const ProductList = () => {
+interface ProductListProps {
+  memberships: Membership[]
+  hasNextPage?: boolean
+  fetchNextPage: () => void
+  isFetchingNextPage: boolean
+  isLoading: boolean
+}
+
+const ProductList = ({
+  memberships,
+  hasNextPage,
+  fetchNextPage,
+  isFetchingNextPage,
+  isLoading,
+}: ProductListProps) => {
   const navigate = useNavigate()
 
-  const products: Product[] = [
-    {
-      id: 1,
-      brand: "약손명가",
-      title: "K-BEAUTY 연예인관리",
-      time: "120분",
-      price: 200000,
-      isAllBranch: true,
+  const { observerTarget } = useIntersection({
+    onIntersect: () => {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage()
+      }
     },
-    {
-      id: 2,
-      brand: "약손명가",
-      title: "작은 얼굴 관리 (80분)",
-      time: "120분",
-      price: 200000,
-      originalPrice: 240000,
-      discountPrice: 200000,
-      discountRate: 20,
-      isAllBranch: true,
-    },
-  ]
+  })
+
+  const getLowestOptionPrice = (options: MembershipOption[]) => {
+    if (!options || options.length === 0) return null
+
+    return options.reduce((lowest, current) => {
+      const lowestCount = parseInt(lowest.subscriptionCount)
+      const currentCount = parseInt(current.subscriptionCount)
+      return lowestCount < currentCount ? lowest : current
+    })
+  }
 
   return (
-    <div className="flex-1 px-5">
-      <Title title="전체 상품" />
-      <div className="flex flex-col gap-4 mt-2 pb-32">
-        {products.map((product) => (
-          <div
-            key={product.id}
-            className="w-full p-5 bg-white rounded-[20px] shadow-card border border-gray-100 cursor-pointer"
-            onClick={() => navigate(`/membership/${product.id}`)}
-          >
-            <div className="flex justify-between items-start mb-3">
-              <Tag type="rect" title="전지점" />
-              <div className="flex items-center gap-1">
-                <span className="font-r text-14px text-gray-500">
-                  {product.time} 소요
-                </span>
-              </div>
-            </div>
+    <>
+      {/* TODO: Add loading indicator */}
+      {isLoading ? (
+        <></>
+      ) : (
+        <div className="flex-1 px-5 ">
+          <div className="flex flex-col gap-4 pb-32">
+            {memberships?.map((membership) => (
+              <div
+                key={membership.serviceIndex}
+                className="w-full p-5 bg-white rounded-[20px] shadow-card border border-gray-100 cursor-pointer"
+                onClick={() =>
+                  navigate(`/membership/${membership.serviceIndex}`)
+                }
+              >
+                <div className="flex justify-between items-start mb-3">
+                  <Tag type="rect" title="전지점" />
+                  <div className="flex items-center gap-1">
+                    <ClockIcon className="text-primary" />
+                    <span className="font-r text-14px text-gray-500">
+                      {membership.serviceTime} 소요
+                    </span>
+                  </div>
+                </div>
 
-            <div className="mb-3">
-              <p className="font-r text-14px text-gray-900 mb-1">
-                {product.brand}
-              </p>
-              <p className="font-sb text-16px text-gray-900">{product.title}</p>
-            </div>
+                <div className="mb-3">
+                  <p className="font-r text-14px text-gray-900 mb-1">
+                    {membership.brandName}
+                  </p>
+                  <p className="font-sb text-16px text-gray-900">
+                    {membership.serviceName}
+                  </p>
+                </div>
 
-            <div className="flex flex-col items-end">
-              {product.originalPrice && (
-                <span className="font-r text-14px text-gray-300 line-through">
-                  {product.originalPrice.toLocaleString()}
-                </span>
-              )}
-              <div className="flex items-center gap-2">
-                {product.discountRate && (
-                  <span className="font-b text-16px text-primary">
-                    {product.discountRate}%
-                  </span>
-                )}
-                <span className="font-b text-16px text-gray-900">
-                  {(product.discountPrice || product.price).toLocaleString()}원
-                </span>
-                <span className="font-r text-12px text-gray-900">부터~</span>
+                <div className="flex flex-col items-end">
+                  {(() => {
+                    const lowestOption = getLowestOptionPrice(
+                      membership.options,
+                    )
+                    if (!lowestOption) return null
+
+                    return (
+                      <div className="w-full flex items-center justify-end gap-2">
+                        {lowestOption.subscriptionOriginalPrice && (
+                          <span className="font-r text-14px text-gray-300 line-through">
+                            {lowestOption.subscriptionOriginalPrice}원
+                          </span>
+                        )}
+                        <span className="font-b text-16px text-gray-900 mr-[5px]">
+                          {lowestOption.subscriptionPrice}원
+                        </span>
+                        <span className="font-r text-12px text-gray-900">
+                          부터~
+                        </span>
+                      </div>
+                    )
+                  })()}
+                </div>
               </div>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </div>
+          <div ref={observerTarget} className={"h-4"} />
+          {isFetchingNextPage && (
+            <p className="text-center text-gray-500 py-4">로딩 중...</p>
+          )}
+        </div>
+      )}
+    </>
   )
 }
 

@@ -3,7 +3,12 @@ import { useFormik } from "formik"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Button } from "@components/Button"
 import { QuestionItem } from "./_fragments/QuestionItem"
-import { Question, QuestionFieldName, QuestionnaireFormValues, QuestionnaireType } from "types/Questionnaire"
+import {
+  Question,
+  QuestionFieldName,
+  QuestionnaireFormValues,
+  QuestionnaireType,
+} from "types/Questionnaire"
 
 import { useLayout } from "contexts/LayoutContext"
 import { useOverlay } from "contexts/ModalContext"
@@ -12,6 +17,7 @@ import {
   useSubmitQuestionnaire,
 } from "queries/useQuestionnaireQueries"
 import FixedButtonContainer from "@components/FixedButtonContainer"
+import SplashScreen from "@components/Splash"
 
 const getFieldName = (question: Question): QuestionFieldName => {
   return `${question.cssq_idx}_${
@@ -98,10 +104,9 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
     }
   }
 
+  // TODO: Add loading indicator
   if (isLoading || !questions) {
-    return (
-      <div className="flex justify-center items-center h-screen">로딩중...</div>
-    )
+    return <SplashScreen />
   }
 
   const currentQuestion = questions[currentIndex]

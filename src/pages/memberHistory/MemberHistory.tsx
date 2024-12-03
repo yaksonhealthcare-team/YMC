@@ -201,7 +201,7 @@ const MemberHistory = () => {
         })}
       </div>
 
-      <div className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto">
+      <div className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto scrollbar-hide">
         {activeTab === "reservation" ? (
           <div className="space-y-3">
             {filteredReservations.map((item, index) => (

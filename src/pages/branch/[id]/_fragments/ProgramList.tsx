@@ -1,12 +1,18 @@
-import { mockMembershipCategories } from "../../../../types/MembershipCategory.ts"
 import { CareProgramTab } from "./CareProgramTab.tsx"
 import { MembershipProgram } from "../../../../types/MembershipProgram.ts"
 import CareProgramCard from "./CareProgramCard.tsx"
+import { useServiceCategories } from "queries/useMembershipQueries.tsx"
 
-const ProgramList = () => {
+interface ProgramListProps {
+  brandCode: string
+}
+
+const ProgramList = ({ brandCode }: ProgramListProps) => {
+  const { data: serviceCategories } = useServiceCategories(brandCode)
+
   return (
     <div className={"w-full"}>
-      <CareProgramTab programs={mockMembershipCategories} />
+      <CareProgramTab programs={serviceCategories} />
       <ul className={"flex flex-col px-5 py-6 gap-5"}>
         {mockPrograms.map((program) => (
           <li key={program.id}>

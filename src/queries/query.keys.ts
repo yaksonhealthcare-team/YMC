@@ -31,6 +31,18 @@ export const queryKeys = {
   brands: {
     all: ["brands"] as const,
   },
+  memberships: {
+    all: ["memberships"] as const,
+    list: (brandCode: string, scCode: string) =>
+      [...queryKeys.memberships.all, "list", brandCode, scCode] as const,
+    detail: (serviceIndex: string) =>
+      [...queryKeys.memberships.all, "detail", serviceIndex] as const,
+    serviceCategories: (brandCode: string) => [
+      ...queryKeys.memberships.all,
+      "service_categories",
+      brandCode,
+    ],
+  },
   events: {
     all: ["events"] as const,
     list: ({ page, status }: { page: number; status: EventStatus }) =>
