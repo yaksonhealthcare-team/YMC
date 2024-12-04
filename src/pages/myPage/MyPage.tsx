@@ -181,7 +181,12 @@ const MyPage = () => {
           {/* Footer */}
           <div className="flex flex-col items-center gap-4 mt-8 mb-20">
             <div className="flex items-center gap-3">
-              <span className="font-sb text-14px text-gray-400">이용약관</span>
+              <span
+                onClick={() => navigate("/terms")}
+                className="font-sb text-14px text-gray-400"
+              >
+                이용약관
+              </span>
               <div className="w-[1px] h-3.5 bg-gray-200" />
               <span
                 onClick={() => navigate("/logout")}

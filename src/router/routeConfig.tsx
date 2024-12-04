@@ -47,6 +47,11 @@ import FindAccount from "../pages/findAccount/FindAccount.tsx"
 import FindEmail from "../pages/findAccount/FindEmail.tsx"
 import ProfileResetPassword from "../pages/editProfile/ProfileResetPassword.tsx"
 import FindAccountResetPassword from "../pages/findAccount/FindAccountResetPassword.tsx"
+import TermsPage from "../pages/terms/TermsPage.tsx"
+import ServiceTermsPage from "../pages/terms/ServiceTermsPage.tsx"
+import PrivacyTermsPage from "../pages/terms/PrivacyTermsPage.tsx"
+import LocationTermsPage from "../pages/terms/LocationTermsPage.tsx"
+import MarketingTermsPage from "../pages/terms/MarketingTermsPage.tsx"
 
 interface RouteConfig {
   path: string
@@ -264,7 +269,23 @@ const routeConfig: RouteConfig[] = [
   },
   {
     path: "/terms",
-    element: <div>Terms</div>,
+    element: <TermsPage />,
+  },
+  {
+    path: "/terms/service",
+    element: <ServiceTermsPage />,
+  },
+  {
+    path: "/terms/privacy",
+    element: <PrivacyTermsPage />,
+  },
+  {
+    path: "/terms/location",
+    element: <LocationTermsPage />,
+  },
+  {
+    path: "/terms/marketing",
+    element: <MarketingTermsPage />,
   },
   {
     path: "/profile",
