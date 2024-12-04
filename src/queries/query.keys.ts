@@ -55,4 +55,9 @@ export const queryKeys = {
       [...queryKeys.notices.all, { page, infinite: true }] as const,
     detail: (id: string) => [...queryKeys.notices.all, id] as const,
   },
+  reviews: {
+    all: ["reviews"] as const,
+    list: ({ page }: { page: number }) =>
+      [...queryKeys.reviews.all, { page, infinite: true }] as const,
+  },
 } as const
