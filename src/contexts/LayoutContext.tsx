@@ -70,30 +70,30 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
     return (
       <div className={"z-10"}>
         <div
-          className={`fixed space-x-4 w-full h-12 max-w-[500px] min-w-[375px] flex items-center py-3 px-5 ${
+          className={`fixed w-full h-12 max-w-[500px] min-w-[375px] py-3 px-5 ${
             header.backgroundColor ? header.backgroundColor : "bg-system-bg"
           }`}
         >
-          <div className={"flex justify-start w-1/3"}>
-            {headerConfig.left === "back" ? (
-              <button onClick={() => window.history.back()}>
-                <CaretLeftIcon />
-              </button>
-            ) : (
-              headerConfig.left
-            )}
+          <div className="flex justify-between items-center">
+            <div className="shrink-0 min-w-20">
+              {headerConfig.left === "back" ? (
+                <button onClick={() => window.history.back()}>
+                  <CaretLeftIcon />
+                </button>
+              ) : (
+                headerConfig.left
+              )}
+            </div>
+
+            <Typography
+              variant="h6"
+              className="flex-1 text-center mx-4 font-sb text-16px text-gray-700"
+            >
+              {headerConfig.title}
+            </Typography>
+
+            <div className="shrink-0 min-w-20">{headerConfig.right}</div>
           </div>
-
-          <Typography
-            variant="h6"
-            className={
-              "w-1/3 flex justify-center font-sb text-16px text-gray-700"
-            }
-          >
-            {headerConfig.title}
-          </Typography>
-
-          <div className={"flex justify-end w-1/3"}>{headerConfig.right}</div>
         </div>
         <div className={"h-12"} />
       </div>

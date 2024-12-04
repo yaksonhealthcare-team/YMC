@@ -111,9 +111,17 @@ export const Header = (props: HeaderProps) => (
       HEADER_STYLES[props.type],
     )}
   >
-    <LeftSection {...props} />
-    <TitleSection {...props} />
-    <RightSection {...props} />
+    <div className="shrink-0 min-w-20">
+      <LeftSection {...props} />
+    </div>
+
+    <div className="flex-1 mx-4">
+      <TitleSection {...props} />
+    </div>
+
+    <div className="shrink-0 min-w-20">
+      <RightSection {...props} />
+    </div>
   </div>
 )
 
