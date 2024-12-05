@@ -1,4 +1,9 @@
-import { User, UserResponse } from "../types/User.ts"
+import {
+  User,
+  UserResponse,
+  UserSignup,
+  UserSignupRequest,
+} from "../types/User.ts"
 
 export class UserMapper {
   static toEntity(dto: UserResponse): User {
@@ -20,6 +25,18 @@ export class UserMapper {
         brandName: brand.b_name,
         address: brand.addr,
       })),
+    }
+  }
+}
+
+export class UserSignupRequestMapper {
+  static fromUserSignup(dto: UserSignup): UserSignupRequest {
+    return {
+      ...dto,
+      token_version_id: dto.tokenVersionId,
+      enc_data: dto.encData,
+      integrity_value: dto.integrityValue,
+      marketing_yn: dto.marketingYn,
     }
   }
 }

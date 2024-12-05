@@ -35,3 +35,39 @@ export interface UserResponse {
     addr: string
   }[]
 }
+
+export interface UserSignup {
+  name: string
+  mobileno: string
+  birthdate: string
+  gender: string
+  di: string
+  tokenVersionId: string
+  encData: string
+  integrityValue: string
+  email: string
+  password: string
+  addr1: string
+  addr2: string
+  fileToUpload: File | null
+  recom: string
+  marketingYn: boolean
+}
+
+export interface UserSignupRequest {
+  name: string
+  mobileno: string
+  birthdate: string
+  gender: string
+  di: string
+  token_version_id: string
+  enc_data: string
+  integrity_value: string
+  email: string
+  password: string
+  addr1: string
+  addr2: string
+  fileToUpload: File | null
+  recom: string
+  marketing_yn: boolean
+}

@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext"
 import { Button } from "@components/Button"
 import { Checkbox } from "@mui/material"
+import CheckCircleFillRed from "@assets/icons/CheckCircleFillRed.svg?react"
+import CheckCircleFillGray from "@assets/icons/CheckCircleFillGray.svg?react"
+import { useSignup } from "../../contexts/SignupContext.tsx"
 
 export const TermsAgreement = () => {
   const navigate = useNavigate()
@@ -14,6 +17,8 @@ export const TermsAgreement = () => {
     location: false,
     marketing: false,
   })
+
+  const { setSignupData } = useSignup()
 
   useEffect(() => {
     setHeader({
@@ -42,6 +47,15 @@ export const TermsAgreement = () => {
     })
   }
 
+  const handleNavigate = () => {
+    setSignupData((prev) => ({
+      ...prev,
+      marketingYn: agreements.marketing,
+    }))
+
+    navigate("/signup/email")
+  }
+
   return (
     <div className="flex flex-col px-5 pt-5 pb-7 gap-10">
       <h1 className="text-[20px] font-bold leading-[30px] text-[#212121]">
@@ -52,8 +66,14 @@ export const TermsAgreement = () => {
 
       <div className="flex flex-col gap-6">
         {/* 전체 동의 */}
-        <div className="p-4 flex items-center gap-3 bg-[rgba(243,113,101,0.1)] border border-primary rounded-xl">
-          <Checkbox checked={agreements.all} onChange={handleAllCheck} />
+        <div className="h-[52px] px-4 flex items-center gap-3 bg-[rgba(243,113,101,0.1)] border border-primary rounded-xl">
+          <Checkbox
+            className="p-0 w-auto h-auto"
+            checked={agreements.all}
+            onChange={handleAllCheck}
+            checkedIcon={<CheckCircleFillRed />}
+            icon={<CheckCircleFillGray />}
+          />
           <span className="font-semibold text-14px text-primary">
             전체약관 동의
           </span>
@@ -96,7 +116,7 @@ export const TermsAgreement = () => {
         disabled={
           !agreements.terms || !agreements.privacy || !agreements.location
         }
-        onClick={() => navigate("/signup/email")}
+        onClick={handleNavigate}
       >
         다음
       </Button>
@@ -119,7 +139,13 @@ const AgreementItem = ({
 }: AgreementItemProps) => {
   return (
     <div className="flex items-center gap-3">
-      <Checkbox checked={checked} onChange={onChange} />
+      <Checkbox
+        className="p-0 w-auto h-auto"
+        checked={checked}
+        onChange={onChange}
+        checkedIcon={<CheckCircleFillRed />}
+        icon={<CheckCircleFillGray />}
+      />
       <span className="text-14px text-[#212121]">{title}</span>
       <button onClick={onDetail} className="text-primary text-14px underline">
         상세보기
