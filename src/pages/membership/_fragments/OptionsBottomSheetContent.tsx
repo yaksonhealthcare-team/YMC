@@ -56,10 +56,15 @@ const OptionsBottomSheetContent = ({
   }
 
   const handleCountChange = (optionIndex: string, newCount: number) => {
+    if (newCount <= 0) {
+      handleRemoveOption(optionIndex)
+      return
+    }
+
     setSelectedOptions((prev) =>
       prev.map((item) =>
         item.option.subscriptionIndex === optionIndex
-          ? { ...item, count: Math.max(0, newCount) }
+          ? { ...item, count: newCount }
           : item,
       ),
     )
