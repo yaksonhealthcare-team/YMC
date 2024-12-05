@@ -119,7 +119,7 @@ export const Header = (props: HeaderProps) => (
       <TitleSection {...props} />
     </div>
 
-    <div className="shrink-0 min-w-20">
+    <div className="shrink-0 min-w-20 flex justify-end">
       <RightSection {...props} />
     </div>
   </div>

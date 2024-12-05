@@ -92,7 +92,9 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
               {headerConfig.title}
             </Typography>
 
-            <div className="shrink-0 min-w-20">{headerConfig.right}</div>
+            <div className="shrink-0 min-w-20 flex justify-end">
+              {headerConfig.right}
+            </div>
           </div>
         </div>
         <div className={"h-12"} />
