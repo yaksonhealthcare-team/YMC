@@ -2,23 +2,19 @@ import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
-import CustomTextField from "@components/CustomTextField.tsx"
-import EyeIcon from "@assets/icons/EyeIcon.svg?react"
-import EyeSlashIcon from "@assets/icons/EyeSlashIcon.svg?react"
 import { Button } from "@components/Button.tsx"
 import validatePassword from "../../utils/passwordValidator.ts"
+import PasswordCustomInput from "@components/input/PasswordCustomInput.tsx"
 
 interface props {
-  changePasswordHandler: (password: string) => void
+  requestPasswordChange: (password: string) => void
 }
 
-const ResetPassword = ({changePasswordHandler}: props) => {
+const ResetPassword = ({ requestPasswordChange }: props) => {
   const [form, setForm] = useState({
     password: "",
     passwordConfirm: "",
   })
-  const [showPassword, setShowPassword] = useState(false)
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
 
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
@@ -28,8 +24,16 @@ const ResetPassword = ({changePasswordHandler}: props) => {
     setNavigation({ display: false })
   }, [])
 
-  const handleChangePassword = () => {
-     changePasswordHandler(form.password)
+  const submitPasswordChange = () => {
+    requestPasswordChange(form.password)
+  }
+
+  const handlePasswordChange = (value: string) => {
+    setForm((prev) => ({ ...prev, password: value }))
+  }
+
+  const handlePasswordConfirmChange = (value: string) => {
+    setForm((prev) => ({ ...prev, passwordConfirm: value }))
   }
 
   return (
@@ -43,58 +47,14 @@ const ResetPassword = ({changePasswordHandler}: props) => {
           <br />
           {"재설정해주세요"}
         </p>
-        <div className="flex flex-col gap-1 mt-10">
-          <CustomTextField
-            label="비밀번호"
-            type={showPassword ? "text" : "password"}
-            value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-            placeholder="비밀번호 입력"
-            iconRight={
-              <button onClick={() => setShowPassword(!showPassword)}>
-                {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
-              </button>
-            }
+
+        <div className="mt-10">
+          <PasswordCustomInput
+            onPasswordChange={handlePasswordChange}
+            onPasswordConfirmChange={handlePasswordConfirmChange}
           />
-          <span
-            className={`text-12px ${form.password.length === 0 ? "text-gray-400" : "text-success"} ml-2`}
-          >
-            영문, 숫자, 특수문자 중 2종류 이상을 조합하여 최소 10자리 이상
-          </span>
         </div>
-        <div className="flex flex-col gap-1 mt-6">
-          <CustomTextField
-            label="비밀번호 재확인"
-            type={showPasswordConfirm ? "text" : "password"}
-            value={form.passwordConfirm}
-            onChange={(e) =>
-              setForm({ ...form, passwordConfirm: e.target.value })
-            }
-            placeholder="비밀번호 재입력"
-            iconRight={
-              <button
-                onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
-              >
-                {showPasswordConfirm ? <EyeIcon /> : <EyeSlashIcon />}
-              </button>
-            }
-          />
-          {form.password && form.passwordConfirm && (
-            <span
-              className="text-12px ml-2"
-              style={{
-                color:
-                  form.password === form.passwordConfirm
-                    ? "#0A84FF"
-                    : "#FF453A",
-              }}
-            >
-              {form.password === form.passwordConfirm
-                ? "비밀번호가 일치합니다"
-                : "비밀번호가 일치하지 않습니다"}
-            </span>
-          )}
-        </div>
+
         <Button
           className={"mt-10"}
           variantType="primary"
@@ -102,9 +62,9 @@ const ResetPassword = ({changePasswordHandler}: props) => {
           disabled={
             !form.password ||
             form.password !== form.passwordConfirm ||
-            validatePassword(form.password)
+            !validatePassword(form.password)
           }
-          onClick={handleChangePassword}
+          onClick={submitPasswordChange}
         >
           변경하기
         </Button>
