@@ -26,20 +26,6 @@ const createRoutes = () => {
       }
     }),
   )
-
-  // return createBrowserRouter(
-  //   routeConfig.map(({ path, element, auth, children }) => ({
-  //     path,
-  //     element: auth ? (
-  //       <LayoutProvider>
-  //         <ProtectedRoute>{element}</ProtectedRoute>
-  //       </LayoutProvider>
-  //     ) : (
-  //       <LayoutProvider>{element}</LayoutProvider>
-  //     ),
-  //     children,
-  //   })),
-  // )
 }
 
 export const AppRouter = () => (
