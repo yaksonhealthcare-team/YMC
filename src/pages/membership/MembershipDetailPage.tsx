@@ -4,7 +4,7 @@ import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useNavigate, useParams } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
-import MembershipDetailBottomSheetContent from "./_fragments/MembershipDetailBottomSheetContent.tsx"
+import OptionsBottomSheetContent from "./_fragments/OptionsBottomSheetContent.tsx"
 import ClockIcon from "@assets/icons/ClockIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
 import NoteIcon from "@assets/icons/NoteIcon.svg?react"
@@ -48,7 +48,7 @@ const MembershipDetailPage = () => {
   }, [])
 
   const handleOnSubmit = () => {
-    openBottomSheet(<MembershipDetailBottomSheetContent />)
+    openBottomSheet(<OptionsBottomSheetContent options={sortedOptions || []} />)
   }
 
   if (isLoading || !membership) return <div>Loading...</div>
