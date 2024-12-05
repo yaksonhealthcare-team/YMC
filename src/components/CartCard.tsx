@@ -1,4 +1,3 @@
-import React from "react"
 import { Number } from "@components/Number"
 import ClockIcon from "@assets/icons/ClockIcon.svg?react"
 
