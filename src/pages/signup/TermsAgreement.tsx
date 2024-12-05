@@ -47,7 +47,7 @@ export const TermsAgreement = () => {
     })
   }
 
-  const handleNavigate = () => {
+  const handleNavigateToNext = () => {
     setSignupData((prev) => ({
       ...prev,
       marketingYn: agreements.marketing,
@@ -116,7 +116,7 @@ export const TermsAgreement = () => {
         disabled={
           !agreements.terms || !agreements.privacy || !agreements.location
         }
-        onClick={handleNavigate}
+        onClick={handleNavigateToNext}
       >
         다음
       </Button>
