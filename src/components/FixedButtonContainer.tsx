@@ -1,18 +1,25 @@
 import { ReactNode } from "react"
+import clsx from "clsx"
+
+interface FixedButtonContainerProps {
+  className?: string
+  children: ReactNode
+}
 
 const FixedButtonContainer = ({
   className,
   children,
-}: {
-  className?: string
-  children: ReactNode
-}) => {
+}: FixedButtonContainerProps) => {
   return (
     <div
-      className={
-        "px-[20px] pt-[12px] pb-[30px] fixed bottom-0 left-[50%] translate-x-[-50%] w-full max-w-[500px] min-w-[375px] bg-system-bg border-t-[1px] border-t-gray-100 " +
-        className
-      }
+      className={clsx(
+        "fixed bottom-0 left-1/2 -translate-x-1/2",
+        "w-full max-w-[500px] min-w-[375px]",
+        "px-5 pt-3 pb-[30px]",
+        "bg-system-bg",
+        "border-t border-gray-100",
+        className,
+      )}
     >
       {children}
     </div>
