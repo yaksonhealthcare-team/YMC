@@ -3,14 +3,15 @@ import CustomTextField from "@components/CustomTextField.tsx"
 import { useNavigate } from "react-router-dom"
 import { Button } from "@components/Button.tsx"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-// import { useSignup } from "../../contexts/SignupContext.tsx"
+import { useSignup } from "../../contexts/SignupContext.tsx"
 import PasswordCustomInput from "@components/input/PasswordCustomInput.tsx"
 import validatePassword from "../../utils/passwordValidator.ts"
 import validateEmail from "../../utils/emailValidator.ts"
 
 export const EmailPassword = () => {
   const { setHeader, setNavigation } = useLayout()
-  // const { signupData, setSignupData } = useSignup()
+  const navigate = useNavigate()
+  const { setSignupData } = useSignup()
 
   useEffect(() => {
     setHeader({
@@ -51,11 +52,16 @@ export const EmailPassword = () => {
     }
   }, [form])
 
-  useEffect(() => {
-    console.log(isValidationNextButton)
-  }, [isValidationNextButton])
+  const handleNavigateToNext = () => {
+    setSignupData((prev) => ({
+      ...prev,
+      email: form.email,
+      password: form.password,
+    }))
 
-  const navigate = useNavigate()
+    navigate("/signup/profile")
+  }
+
   return (
     <div className="flex flex-col px-5 pt-5 pb-7 gap-10">
       <h1 className="text-[20px] font-bold leading-[30px] text-[#212121]">
@@ -82,7 +88,7 @@ export const EmailPassword = () => {
         variantType="primary"
         sizeType="l"
         disabled={!isValidationNextButton}
-        onClick={() => navigate("/signup/profile")}
+        onClick={handleNavigateToNext}
       >
         다음
       </Button>
