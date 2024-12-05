@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from "react"
 import { fetchCartCount } from "../../apis/cart.api.ts"
+import { useNavigate } from "react-router-dom"
 
 const CartIcon = () => {
   const [count, setCount] = useState(0)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchCartCount().then((data) => setCount(data))
   }, [])
 
+  const moveToCartPage = () => {
+    navigate("/cart")
+  }
+
   return (
-    <div className="relative inline-block">
+    <div className="relative inline-block" onClick={moveToCartPage}>
       <svg
         width="24"
         height="24"
