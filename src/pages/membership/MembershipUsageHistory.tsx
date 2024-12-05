@@ -6,6 +6,7 @@ import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { MembershipCard } from "@components/MembershipCard"
 import { MembershipDetailHistory, MembershipStatus } from "types/Membership"
 import DateAndTime from "@components/DateAndTime"
+import CartIcon from "@components/icons/CartIcon.tsx"
 
 const sampleMembershipDetail = {
   id: 0,
@@ -87,7 +88,7 @@ const MembershipUsageHistory = () => {
           <CaretLeftIcon className="w-5 h-5" />
         </div>
       ),
-      right: <>{/* TODO: 장바구니 아이콘 추가*/}</>,
+      right: <CartIcon />,
     })
     setNavigation({ display: true })
 
