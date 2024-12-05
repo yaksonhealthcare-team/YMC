@@ -5,6 +5,7 @@ import { Button } from "@components/Button"
 import { Checkbox } from "@mui/material"
 import CheckCircleFillRed from "@assets/icons/CheckCircleFillRed.svg?react"
 import CheckCircleFillGray from "@assets/icons/CheckCircleFillGray.svg?react"
+import { useSignup } from "../../contexts/SignupContext.tsx"
 
 export const TermsAgreement = () => {
   const navigate = useNavigate()
@@ -16,6 +17,8 @@ export const TermsAgreement = () => {
     location: false,
     marketing: false,
   })
+
+  const { setSignupData } = useSignup()
 
   useEffect(() => {
     setHeader({
@@ -42,6 +45,15 @@ export const TermsAgreement = () => {
       ...agreements,
       [key]: !agreements[key],
     })
+  }
+
+  const handleNavigate = () => {
+    setSignupData((prev) => ({
+      ...prev,
+      marketingYn: agreements.marketing,
+    }))
+
+    navigate("/signup/email")
   }
 
   return (
@@ -104,7 +116,7 @@ export const TermsAgreement = () => {
         disabled={
           !agreements.terms || !agreements.privacy || !agreements.location
         }
-        onClick={() => navigate("/signup/email")}
+        onClick={handleNavigate}
       >
         다음
       </Button>
