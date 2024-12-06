@@ -1,15 +1,18 @@
 import { Button } from "@components/Button.tsx"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import CustomTextField from "@components/CustomTextField.tsx"
 import { BrandCard } from "@components/BrandCard.tsx"
 import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useSignup } from "../../contexts/SignupContext.tsx"
+import PostcodeModal from "@components/modal/PostcodeModal.tsx"
+import { Address } from "react-daum-postcode/lib/loadPostcode"
 
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const { signupData, setSignupData } = useSignup()
+  const [isPostcodeOpen, setIsPostcodeOpen] = useState(false)
 
   useEffect(() => {
     setHeader({
@@ -28,6 +31,15 @@ export const ProfileSetup = () => {
         profileImage: file,
       }))
     }
+  }
+
+  const handleCompletePostcode = (address: Address) => {
+    setSignupData({
+      ...signupData,
+      postCode: address.zonecode,
+      address1: address.address,
+    })
+    setIsPostcodeOpen(false)
   }
 
   return (
@@ -162,9 +174,7 @@ export const ProfileSetup = () => {
             <Button
               variantType="primary"
               sizeType="s"
-              onClick={() => {
-                /* TODO: 우편번호 검색 */
-              }}
+              onClick={() => setIsPostcodeOpen(true)}
             >
               우편번호 검색
             </Button>
@@ -184,6 +194,13 @@ export const ProfileSetup = () => {
             placeholder="상세주소"
           />
         </div>
+
+        {isPostcodeOpen && (
+          <PostcodeModal
+            setIsPostcodeOpen={setIsPostcodeOpen}
+            handleCompletePostcode={handleCompletePostcode}
+          />
+        )}
 
         {/* 브랜드 선택 */}
         <div className="flex flex-col gap-2">
