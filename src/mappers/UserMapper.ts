@@ -33,6 +33,11 @@ export class UserSignupRequestMapper {
   static fromUserSignup(dto: UserSignup): UserSignupRequest {
     return {
       ...dto,
+      mobileno: dto.mobileNumber,
+      birthdate: dto.birthDate,
+      addr1: dto.address1,
+      addr2: dto.address2,
+      fileToUpload: dto.profileImage,
       token_version_id: dto.tokenVersionId,
       enc_data: dto.encData,
       integrity_value: dto.integrityValue,
