@@ -28,7 +28,7 @@ export const EmailPassword = () => {
     passwordConfirm: "",
   })
 
-  const [isValidationNextButton, setIsValidationNextButton] = useState(false)
+  const [isFormValid, setIsFormValid] = useState(false)
 
   const handlePasswordChange = (value: string) => {
     setForm((prev) => ({ ...prev, password: value }))
@@ -40,16 +40,26 @@ export const EmailPassword = () => {
 
   useEffect(() => {
     if (!form.email || !form.password || !form.passwordConfirm) {
-      setIsValidationNextButton(false)
-    } else if (!validateEmail(form.email)) {
-      setIsValidationNextButton(false)
-    } else if (form.password !== form.passwordConfirm) {
-      setIsValidationNextButton(false)
-    } else if (!validatePassword(form.password)) {
-      setIsValidationNextButton(false)
-    } else {
-      setIsValidationNextButton(true)
+      setIsFormValid(false)
+      return
     }
+
+    if (!validateEmail(form.email)) {
+      setIsFormValid(false)
+      return
+    }
+
+    if (form.password !== form.passwordConfirm) {
+      setIsFormValid(false)
+      return
+    }
+
+    if (!validatePassword(form.password)) {
+      setIsFormValid(false)
+      return
+    }
+
+    setIsFormValid(true)
   }, [form])
 
   const handleNavigateToNext = () => {
@@ -87,7 +97,7 @@ export const EmailPassword = () => {
       <Button
         variantType="primary"
         sizeType="l"
-        disabled={!isValidationNextButton}
+        disabled={!isFormValid}
         onClick={handleNavigateToNext}
       >
         다음
