@@ -3,9 +3,8 @@ import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext"
 import { Button } from "@components/Button"
 import { Checkbox } from "@mui/material"
-import CheckCircleFillRed from "@assets/icons/CheckCircleFillRed.svg?react"
-import CheckCircleFillGray from "@assets/icons/CheckCircleFillGray.svg?react"
 import { useSignup } from "../../contexts/SignupContext.tsx"
+import CheckFillCircleIcon from "@components/icons/CheckFillCircleIcon.tsx"
 
 export const TermsAgreement = () => {
   const navigate = useNavigate()
@@ -47,7 +46,7 @@ export const TermsAgreement = () => {
     })
   }
 
-  const handleNavigate = () => {
+  const handleNavigateToNext = () => {
     setSignupData((prev) => ({
       ...prev,
       marketingYn: agreements.marketing,
@@ -71,8 +70,8 @@ export const TermsAgreement = () => {
             className="p-0 w-auto h-auto"
             checked={agreements.all}
             onChange={handleAllCheck}
-            checkedIcon={<CheckCircleFillRed />}
-            icon={<CheckCircleFillGray />}
+            checkedIcon={<CheckFillCircleIcon />}
+            icon={<CheckFillCircleIcon color="#DDDDDD" />}
           />
           <span className="font-semibold text-14px text-primary">
             전체약관 동의
@@ -116,7 +115,7 @@ export const TermsAgreement = () => {
         disabled={
           !agreements.terms || !agreements.privacy || !agreements.location
         }
-        onClick={handleNavigate}
+        onClick={handleNavigateToNext}
       >
         다음
       </Button>
@@ -143,8 +142,8 @@ const AgreementItem = ({
         className="p-0 w-auto h-auto"
         checked={checked}
         onChange={onChange}
-        checkedIcon={<CheckCircleFillRed />}
-        icon={<CheckCircleFillGray />}
+        checkedIcon={<CheckFillCircleIcon />}
+        icon={<CheckFillCircleIcon color="#DDDDDD" />}
       />
       <span className="text-14px text-[#212121]">{title}</span>
       <button onClick={onDetail} className="text-primary text-14px underline">
