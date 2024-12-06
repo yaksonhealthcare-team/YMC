@@ -46,7 +46,7 @@ const PasswordCustomInput = ({
           }
         />
         <span
-          className={`text-12px ${isValidationPassword ? "text-success" : "text-error"} ml-2`}
+          className={`text-12px ${password.length === 0 ? "text-gray-400" : isValidationPassword ? "text-success" : "text-error"} ml-2`}
         >
           영문, 숫자, 특수문자 중 2종류 이상을 조합하여 최소 10자리 이상
         </span>
