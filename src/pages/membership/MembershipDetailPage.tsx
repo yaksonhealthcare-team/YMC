@@ -14,6 +14,7 @@ import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/swiper-bundle.css"
 import MembershipPlaceholderImage from "@assets/images/MembershipPlaceholderImage.jpg"
+import CartIcon from "@components/icons/CartIcon.tsx"
 
 const MembershipDetailPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -41,7 +42,7 @@ const MembershipDetailPage = () => {
           <CaretLeftIcon className="w-5 h-5" />
         </div>
       ),
-      right: <>{/* TODO: 장바구니 아이콘 추가*/}</>,
+      right: <CartIcon />,
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })

@@ -47,6 +47,7 @@ import FindAccount from "../pages/findAccount/FindAccount.tsx"
 import FindEmail from "../pages/findAccount/FindEmail.tsx"
 import ProfileResetPassword from "../pages/editProfile/ProfileResetPassword.tsx"
 import FindAccountResetPassword from "../pages/findAccount/FindAccountResetPassword.tsx"
+import CartPage from "../pages/cart/CartPage.tsx"
 import TermsPage from "../pages/terms/TermsPage.tsx"
 import ServiceTermsPage from "../pages/terms/ServiceTermsPage.tsx"
 import PrivacyTermsPage from "../pages/terms/PrivacyTermsPage.tsx"
@@ -224,6 +225,12 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/favorite",
     element: <FavoritePage />,
+    auth: true,
+  },
+
+  {
+    path: "/cart",
+    element: <CartPage />,
     auth: true,
   },
   {
