@@ -4,6 +4,7 @@ import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
 import { Button } from "@components/Button.tsx"
 import { useOverlay } from "../../../contexts/ModalContext.tsx"
+import { usePointsEarn } from "../../../queries/usePointQueries.tsx"
 
 const PointCard = ({ point }: { point: number }) => (
   <div className={"bg-red-50 rounded-xl p-4"}>
@@ -14,8 +15,6 @@ const PointCard = ({ point }: { point: number }) => (
 )
 
 const PaymentHistoryItemCard = ({ item }: { item: PaymentHistoryItem }) => {
-  // TODO: 현재 status의 종류가 어떤 것들이 있는지 몰라서, 우선 "취소"라는 단어가 들어가있는지 여부로 구분
-  // TODO: payment history - paysub에 brand code (약손명가 | 달리아 스파 | 여리한) 구분할 값이 없어서 우선 약손명가로 하드코딩
   const canceled = item.status.includes("취소")
 
   return (
@@ -69,8 +68,10 @@ const ReceivePointBottomSheet = ({
 
 const PaymentHistoryCard = ({ payment }: { payment: PaymentHistory }) => {
   const { openBottomSheet, closeOverlay } = useOverlay()
+  const { mutateAsync: earnPoints } = usePointsEarn()
 
-  const handleReceivePoint = () => {
+  const handleReceivePoint = async () => {
+    await earnPoints(payment.id)
     openBottomSheet(
       <ReceivePointBottomSheet point={payment.point} onClose={closeOverlay} />,
     )
@@ -95,18 +96,15 @@ const PaymentHistoryCard = ({ payment }: { payment: PaymentHistory }) => {
       {payment.items.map((item) => (
         <PaymentHistoryItemCard key={item.index} item={item} />
       ))}
-      {
-        // TODO: pointStatus 타입 받으면 필터 로직 변경하기 (point > 0 추가 고려, 테스트용으로 남겨둠)
-        payment.pointStatus === "ready" && payment.type.includes("현장") && (
-          <Button
-            variantType={"gray"}
-            className={"h-10"}
-            onClick={handleReceivePoint}
-          >
-            <p className={"text-14px font-sb"}>{"포인트 받기"}</p>
-          </Button>
-        )
-      }
+      {payment.pointStatus === "yet" && payment.type.includes("현장") && (
+        <Button
+          variantType={"gray"}
+          className={"h-10"}
+          onClick={handleReceivePoint}
+        >
+          <p className={"text-14px font-sb"}>{"포인트 받기"}</p>
+        </Button>
+      )}
     </div>
   )
 }

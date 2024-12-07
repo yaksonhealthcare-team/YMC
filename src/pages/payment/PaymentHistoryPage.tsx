@@ -1,7 +1,8 @@
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useCallback, useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { usePaymentHistories } from "../../queries/usePaymentQueries.tsx"
 import PaymentHistoryCard from "./_fragments/PaymentHistoryCard.tsx"
+import useIntersection from "../../hooks/useIntersection.tsx"
 
 const PaymentHistoryPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -11,7 +12,14 @@ const PaymentHistoryPage = () => {
     hasNextPage,
     isFetchingNextPage,
   } = usePaymentHistories()
-  const observerTarget = useRef(null)
+
+  const { observerTarget } = useIntersection({
+    onIntersect: () => {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage()
+      }
+    },
+  })
 
   useEffect(() => {
     setHeader({
@@ -22,21 +30,6 @@ const PaymentHistoryPage = () => {
     })
     setNavigation({ display: false })
   }, [])
-
-  const onIntersect = useCallback(
-    ([entry]: IntersectionObserverEntry[]) => {
-      if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
-        fetchNextPage()
-      }
-    },
-    [fetchNextPage, hasNextPage, isFetchingNextPage],
-  )
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(onIntersect, { threshold: 0.1 })
-    if (observerTarget.current) observer.observe(observerTarget.current)
-    return () => observer.disconnect()
-  }, [onIntersect])
 
   if (!payments) return <></>
 
