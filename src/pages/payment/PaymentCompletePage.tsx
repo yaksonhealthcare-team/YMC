@@ -5,8 +5,9 @@ import { Button } from "@components/Button.tsx"
 import FixedButtonContainer from "@components/FixedButtonContainer.tsx"
 import { Divider } from "@mui/material"
 import CheckCircle from "@assets/icons/CheckCircle.svg"
-import CartCard from "@components/CartCard.tsx"
 import AdditionalServiceCard from "@components/AdditionalServiceCard.tsx"
+import OrderSummaryCard from "@components/OrderSummaryCard.tsx"
+import { XIcon } from "@components/icons/XIcon.tsx"
 
 interface CartOption {
   sessions: number
@@ -91,16 +92,21 @@ const PaymentCompletePage = () => {
     setHeader({
       display: true,
       title: "결제완료",
-      right: "close",
+      right: <XIcon onClick={handleClose} />,
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
   }, [])
 
+  const handleClose = () => {
+    //TODO:
+    navigate("/")
+  }
+
   const renderItems = () => {
     if (state.type === "membership") {
       return (state.items as CartItem[]).map((item) => (
-        <CartCard key={item.id} {...item} />
+        <OrderSummaryCard key={item.id} {...item} />
       ))
     }
 
