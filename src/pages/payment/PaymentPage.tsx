@@ -166,7 +166,7 @@ const PaymentPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 border-b-8 border-gray-50">
         {/* 상품 목록 섹션 */}
         <div className="p-5">
           <div className="flex items-center gap-1 mb-4">
@@ -180,10 +180,8 @@ const PaymentPage = () => {
           {renderItems()}
         </div>
 
-        <Divider />
-
         {/* 포인트 섹션 */}
-        <div className="p-5">
+        <div className="p-5 border-b-8 border-gray-50">
           <h2 className="text-gray-700 font-sb text-16px mb-4">포인트</h2>
           <div className="flex gap-2 mb-2">
             <input
@@ -209,10 +207,8 @@ const PaymentPage = () => {
           </div>
         </div>
 
-        <Divider />
-
         {/* 결제수단 섹션 */}
-        <div className="p-5">
+        <div className="p-5 border-b-8 border-gray-50">
           <h2 className="text-gray-700 font-sb text-16px mb-4">결제수단</h2>
           <div className="flex flex-col">
             <Radio
@@ -275,10 +271,8 @@ const PaymentPage = () => {
           </div>
         </div>
 
-        <Divider />
-
         {/* 결제 금액 섹션 */}
-        <div className="p-5">
+        <div className="p-5 border-b-8 border-gray-50">
           <h2 className="text-gray-700 font-sb text-16px mb-4">결제 금액</h2>
           <div className="flex flex-col gap-3">
             <div className="flex justify-between">
@@ -312,8 +306,6 @@ const PaymentPage = () => {
             </span>
           </div>
         </div>
-
-        <Divider />
 
         {/* 동의 체크박스 */}
         <div className="p-5">

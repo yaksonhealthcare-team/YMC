@@ -1,12 +1,13 @@
 import ClockIcon from "@assets/icons/ClockIcon.svg?react"
 import { Button } from "@components/Button.tsx"
+import clsx from "clsx"
 
 interface AdditionalServiceCardProps {
   id: string
   title: string
   duration: number
   price: number
-  onDelete: () => void
+  onDelete?: () => void
 }
 
 const AdditionalServiceCard = ({
@@ -35,7 +36,12 @@ const AdditionalServiceCard = ({
         </div>
 
         {/* 가격 */}
-        <div className="flex justify-end items-center">
+        <div
+          className={clsx(
+            "flex items-center",
+            onDelete ? "justify-end" : "justify-start",
+          )}
+        >
           <div className="flex items-center gap-1">
             <span className="text-gray-700 text-16px font-sb">
               {price.toLocaleString()}
@@ -46,14 +52,16 @@ const AdditionalServiceCard = ({
       </div>
 
       {/* 삭제 버튼 */}
-      <Button
-        variantType="gray"
-        sizeType="s"
-        onClick={onDelete}
-        className="w-full mt-6"
-      >
-        삭제하기
-      </Button>
+      {onDelete && (
+        <Button
+          variantType="gray"
+          sizeType="s"
+          onClick={onDelete}
+          className="w-full mt-6"
+        >
+          삭제하기
+        </Button>
+      )}
     </div>
   )
 }
