@@ -58,6 +58,7 @@ import AddUsingBranch from "../pages/addUsingBranch/AddUsingBranch.tsx"
 import PaymentHistoryDetailPage from "../pages/payment/PaymentHistoryDetailPage.tsx"
 import PaymentCancelPage from "../pages/payment/PaymentCancelPage.tsx"
 import PaymentCancelCompletePage from "../pages/payment/PaymentCancelCompletePage.tsx"
+import PaymentCompletePage from "../pages/payment/PaymentCompletePage.tsx"
 
 interface RouteConfig {
   path: string
@@ -238,14 +239,19 @@ const routeConfig: RouteConfig[] = [
     auth: true,
   },
   {
-    path: "/payment",
-    element: <PaymentPage />,
-  },
-
-  {
     path: "/cart",
     element: <CartPage />,
     auth: true,
+  },
+
+  //결제
+  {
+    path: "/payment",
+    element: <PaymentPage />,
+  },
+  {
+    path: "/payment/complete",
+    element: <PaymentCompletePage />,
   },
 
   {

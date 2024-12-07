@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import CartCard from "@components/CartCard.tsx"
 import { Divider } from "@mui/material"
@@ -6,6 +6,7 @@ import { Button } from "@components/Button.tsx"
 import FixedButtonContainer from "@components/FixedButtonContainer.tsx"
 import { Radio } from "@components/Radio.tsx"
 import AdditionalServiceCard from "@components/AdditionalServiceCard.tsx"
+import { useNavigate } from "react-router-dom"
 
 interface CartOption {
   sessions: number
@@ -42,6 +43,8 @@ const PaymentPage = () => {
   >("naver")
   const [point, setPoint] = useState<string>("")
   const [isAgreed, setIsAgreed] = useState(false)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     const dummyAdditionalItems: AdditionalItem[] = [
@@ -132,6 +135,19 @@ const PaymentPage = () => {
         onDelete={() => handleDelete(item.id)}
       />
     ))
+  }
+
+  const handlePayment = () => {
+    // TODO: 실제 결제 처리 로직 구현
+
+    // 결제 완료 후 완료 페이지로 이동
+    navigate("/payment/complete", {
+      state: {
+        amount: finalAmount,
+        type: type,
+        items: items,
+      },
+    })
   }
 
   return (
@@ -330,9 +346,7 @@ const PaymentPage = () => {
           variantType="primary"
           sizeType="l"
           disabled={!isAgreed}
-          onClick={() => {
-            /* 결제 처리 */
-          }}
+          onClick={handlePayment}
           className="w-full"
         >
           {finalAmount.toLocaleString()}원 결제하기
