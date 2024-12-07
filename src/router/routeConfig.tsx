@@ -53,6 +53,7 @@ import ServiceTermsPage from "../pages/terms/ServiceTermsPage.tsx"
 import PrivacyTermsPage from "../pages/terms/PrivacyTermsPage.tsx"
 import LocationTermsPage from "../pages/terms/LocationTermsPage.tsx"
 import MarketingTermsPage from "../pages/terms/MarketingTermsPage.tsx"
+import PaymentPage from "../pages/payment/PaymentPage.tsx"
 import AddUsingBranch from "../pages/addUsingBranch/AddUsingBranch.tsx"
 import PaymentHistoryDetailPage from "../pages/payment/PaymentHistoryDetailPage.tsx"
 import PaymentCancelPage from "../pages/payment/PaymentCancelPage.tsx"
@@ -222,6 +223,11 @@ const routeConfig: RouteConfig[] = [
     auth: true,
   },
   {
+    path: "/payment_history",
+    element: <PaymentHistoryPage />,
+    auth: true,
+  },
+  {
     path: "/inquiry",
     element: <InquiryPage />,
     auth: true,
@@ -231,12 +237,17 @@ const routeConfig: RouteConfig[] = [
     element: <FavoritePage />,
     auth: true,
   },
+  {
+    path: "/payment",
+    element: <PaymentPage />,
+  },
 
   {
     path: "/cart",
     element: <CartPage />,
     auth: true,
   },
+
   {
     path: "/payment",
     element: <PaymentHistoryPage />,
