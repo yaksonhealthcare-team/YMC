@@ -23,6 +23,7 @@ interface CartItem {
   title: string
   duration: number
   options: CartOption[]
+  status: "결제완료" | "결제미완료"
 }
 
 interface AdditionalItem {
@@ -80,6 +81,7 @@ const PaymentCompletePage = () => {
               originalPrice: 1238400,
             },
           ],
+          status: "결제완료",
         },
       ],
       paymentMethod: "simple",

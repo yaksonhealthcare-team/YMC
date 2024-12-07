@@ -19,7 +19,6 @@ interface OrderSummaryCardProps {
 const OrderSummaryCard = ({
   status,
   brand,
-  branchType,
   branchName,
   title,
   options,
