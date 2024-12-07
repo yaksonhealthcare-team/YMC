@@ -33,7 +33,7 @@ interface AdditionalItem {
 
 const PaymentPage = () => {
   const { setHeader, setNavigation } = useLayout()
-  const [type, setType] = useState<"membership" | "additional">("additional")
+  const [type] = useState<"membership" | "additional">("additional")
   const [items, setItems] = useState<CartItem[] | AdditionalItem[]>([])
   const [selectedPayment, setSelectedPayment] = useState<
     "card" | "simple" | "virtual"
@@ -62,8 +62,22 @@ const PaymentPage = () => {
       },
     ]
 
-    setItems(dummyAdditionalItems)
-  }, [])
+    const dummyMembershipItems: CartItem[] = [
+      {
+        id: "1",
+        brand: "약손명가",
+        branchType: "전지점",
+        title: "K-BEAUTY 연예인관리",
+        duration: 120,
+        options: [
+          { sessions: 30, count: 1, price: 1032000, originalPrice: 1238400 },
+          { sessions: 10, count: 2, price: 1032000, originalPrice: 1238400 },
+        ],
+      },
+    ]
+
+    setItems(type == "additional" ? dummyAdditionalItems : dummyMembershipItems)
+  }, [type])
 
   useEffect(() => {
     setHeader({
@@ -166,7 +180,7 @@ const PaymentPage = () => {
           {renderItems()}
         </div>
 
-        <Divider type="m" />
+        <Divider />
 
         {/* 포인트 섹션 */}
         <div className="p-5">
@@ -195,7 +209,7 @@ const PaymentPage = () => {
           </div>
         </div>
 
-        <Divider type="m" />
+        <Divider />
 
         {/* 결제수단 섹션 */}
         <div className="p-5">
@@ -261,7 +275,7 @@ const PaymentPage = () => {
           </div>
         </div>
 
-        <Divider type="m" />
+        <Divider />
 
         {/* 결제 금액 섹션 */}
         <div className="p-5">
@@ -290,7 +304,7 @@ const PaymentPage = () => {
               </span>
             </div>
           </div>
-          <Divider type="s_100" className="my-4" />
+          <Divider className="my-4" />
           <div className="flex justify-between items-center">
             <span className="text-gray-700 text-16px font-m">최종결제금액</span>
             <span className="text-gray-700 font-b text-20px">
@@ -299,7 +313,7 @@ const PaymentPage = () => {
           </div>
         </div>
 
-        <Divider type="m" />
+        <Divider />
 
         {/* 동의 체크박스 */}
         <div className="p-5">

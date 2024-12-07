@@ -1,5 +1,3 @@
-import React from "react"
-
 import ClockIcon from "@assets/icons/ClockIcon.svg?react"
 import { Button } from "@components/Button.tsx"
 
