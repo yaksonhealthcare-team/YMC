@@ -1,7 +1,7 @@
 import DaumPostcode from "react-daum-postcode"
 import { Address } from "react-daum-postcode/lib/loadPostcode"
 
-interface Props {
+interface PostcodeModalProps {
   setIsPostcodeOpen: (isOpen: boolean) => void
   handleCompletePostcode: (address: Address) => void
 }
@@ -9,7 +9,7 @@ interface Props {
 const PostcodeModal = ({
   setIsPostcodeOpen,
   handleCompletePostcode,
-}: Props) => {
+}: PostcodeModalProps) => {
   return (
     <>
       <div
