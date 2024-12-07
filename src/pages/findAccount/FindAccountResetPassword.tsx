@@ -21,7 +21,7 @@ const FindAccountResetPassword = () => {
     }
   }
 
-  return <ResetPassword changePasswordHandler={handleChangePassword} />
+  return <ResetPassword requestPasswordChange={handleChangePassword} />
 }
 
 export default FindAccountResetPassword

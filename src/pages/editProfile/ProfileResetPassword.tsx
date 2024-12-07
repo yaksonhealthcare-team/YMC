@@ -17,7 +17,7 @@ const ProfileResetPassword = () => {
     }
   }
 
-  return <ResetPassword changePasswordHandler={handleChangePassword} />
+  return <ResetPassword requestPasswordChange={handleChangePassword} />
 }
 
 export default ProfileResetPassword
