@@ -42,6 +42,12 @@ export const ProfileSetup = () => {
     setIsPostcodeOpen(false)
   }
 
+  const handleSignupSubmit = async () => {
+    // TODO pass api 완료 후 signup api 요청
+
+    navigate("/signup/complete")
+  }
+
   return (
     <div className="flex flex-col px-5 pt-5 pb-7 gap-10">
       <h1 className="text-[20px] font-bold leading-[30px] text-[#212121]">
@@ -251,7 +257,7 @@ export const ProfileSetup = () => {
           !signupData.address1 ||
           !signupData.postCode
         }
-        onClick={() => navigate("/signup/complete")}
+        onClick={handleSignupSubmit}
       >
         완료
       </Button>
