@@ -14,6 +14,7 @@ export interface BranchDetail {
   id: string
   name: string
   brand: string
+  brandCode: string
   images: string[]
   location: {
     address: string
@@ -95,6 +96,7 @@ export interface BranchResponse {
 export interface BranchDetailResponse {
   b_idx: string
   img_lists: string[]
+  brand_code: string
   brand_name: string
   b_name: string
   location: {

@@ -1,4 +1,9 @@
-import { Branch, BranchDetail, BranchDetailResponse, BranchResponse } from "types/Branch"
+import {
+  Branch,
+  BranchDetail,
+  BranchDetailResponse,
+  BranchResponse,
+} from "types/Branch"
 
 export class BranchMapper {
   private static toBrand(name: string): "therapist" | "dalia" | "diet" {
@@ -52,6 +57,7 @@ export class BranchMapper {
       id: dto.b_idx,
       name: dto.b_name,
       brand: dto.brand_name,
+      brandCode: dto.brand_code,
       images: dto.img_lists,
       location: {
         address: dto.location.b_addr,
