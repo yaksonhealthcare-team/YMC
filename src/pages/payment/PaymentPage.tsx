@@ -1,10 +1,11 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import CartCard from "@components/CartCard.tsx"
 import { Divider } from "@mui/material"
 import { Button } from "@components/Button.tsx"
 import FixedButtonContainer from "@components/FixedButtonContainer.tsx"
 import { Radio } from "@components/Radio.tsx"
+import AdditionalServiceCard from "@components/AdditionalServiceCard.tsx"
 
 interface CartOption {
   sessions: number
@@ -22,44 +23,46 @@ interface CartItem {
   options: CartOption[]
 }
 
+interface AdditionalItem {
+  id: string
+  title: string
+  duration: number
+  price: number
+}
+
 const PaymentPage = () => {
   const { setHeader, setNavigation } = useLayout()
+  const [type, setType] = useState<"membership" | "additional">("additional")
+  const [items, setItems] = useState<CartItem[] | AdditionalItem[]>([])
   const [selectedPayment, setSelectedPayment] = useState<
     "card" | "simple" | "virtual"
-  >("simple")
+  >("card")
   const [simplePayment, setSimplePayment] = useState<
     "naver" | "kakao" | "payco"
   >("naver")
   const [point, setPoint] = useState<string>("")
   const [isAgreed, setIsAgreed] = useState(false)
 
-  // 더미 데이터
-  const cartItems: CartItem[] = [
-    {
-      id: "1",
-      brand: "약손명가",
-      branchType: "전지점",
-      title: "K-BEAUTY 연예인관리",
-      duration: 120,
-      options: [
-        { sessions: 30, count: 1, price: 1032000, originalPrice: 1238400 },
-        { sessions: 10, count: 2, price: 1032000, originalPrice: 1238400 },
-      ],
-    },
-    {
-      id: "2",
-      brand: "달리아 스파",
-      branchType: "지정 지점",
-      title: "작은 얼굴 관리 (80분)",
-      duration: 120,
-      options: [
-        { sessions: 30, count: 1, price: 1032000, originalPrice: 1238400 },
-        { sessions: 10, count: 1, price: 1032000, originalPrice: 1238400 },
-      ],
-    },
-  ]
+  useEffect(() => {
+    const dummyAdditionalItems: AdditionalItem[] = [
+      {
+        id: "1",
+        title: "추가 관리 항목명",
+        duration: 120,
+        price: 100000,
+      },
+      {
+        id: "2",
+        title: "추가 관리 항목명",
+        duration: 120,
+        price: 100000,
+      },
+    ]
 
-  React.useEffect(() => {
+    setItems(dummyAdditionalItems)
+  }, [])
+
+  useEffect(() => {
     setHeader({
       display: true,
       title: "결제하기",
@@ -71,6 +74,34 @@ const PaymentPage = () => {
     })
   }, [])
 
+  const calculateTotalAmount = () => {
+    if (type === "membership") {
+      const membershipItems = items as CartItem[]
+      return membershipItems.reduce((total, item) => {
+        return (
+          total +
+          item.options.reduce(
+            (subTotal, option) => subTotal + option.price * option.count,
+            0,
+          )
+        )
+      }, 0)
+    } else {
+      const additionalItems = items as AdditionalItem[]
+      return additionalItems.reduce((total, item) => total + item.price, 0)
+    }
+  }
+
+  const totalAmount = calculateTotalAmount()
+  const discountAmount = type === "membership" ? 825600 : 0
+  const pointAmount = point ? parseInt(point) : 0
+  const finalAmount = totalAmount - discountAmount - pointAmount
+
+  const handleDelete = (id: string) => {
+    // TODO: 삭제 로직 구현
+    console.log("삭제:", id)
+  }
+
   const handleCountChange = (
     itemId: string,
     optionIndex: number,
@@ -80,32 +111,43 @@ const PaymentPage = () => {
     console.log("수량 변경:", itemId, optionIndex, newCount)
   }
 
-  const handleDelete = (itemId: string) => {
-    // TODO: 삭제 로직 구현
-    console.log("삭제:", itemId)
+  const renderItems = () => {
+    if (type === "membership") {
+      return (items as CartItem[]).map((item) => (
+        <CartCard
+          key={item.id}
+          {...item}
+          onCountChange={(optionIndex, newCount) =>
+            handleCountChange(item.id, optionIndex, newCount)
+          }
+          onDelete={() => handleDelete(item.id)}
+        />
+      ))
+    }
+
+    return (items as AdditionalItem[]).map((item) => (
+      <AdditionalServiceCard
+        key={item.id}
+        {...item}
+        onDelete={() => handleDelete(item.id)}
+      />
+    ))
   }
 
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex flex-col flex-1">
-        {/* 회원권 섹션 */}
+        {/* 상품 목록 섹션 */}
         <div className="p-5">
           <div className="flex items-center gap-1 mb-4">
-            <span className="text-gray-700 font-sb text-16px">담은 회원권</span>
+            <span className="text-gray-700 font-sb text-16px">
+              {type === "membership" ? "담은 회원권" : "추가 관리"}
+            </span>
             <span className="text-primary font-sb text-16px">
-              {cartItems.length}개
+              {items.length}개
             </span>
           </div>
-          {cartItems.map((item) => (
-            <CartCard
-              key={item.id}
-              {...item}
-              onCountChange={(optionIndex, newCount) =>
-                handleCountChange(item.id, optionIndex, newCount)
-              }
-              onDelete={() => handleDelete(item.id)}
-            />
-          ))}
+          {renderItems()}
         </div>
 
         <Divider type="m" />
@@ -159,24 +201,39 @@ const PaymentPage = () => {
 
             {selectedPayment === "simple" && (
               <div className="pb-4 pl-9 flex gap-2">
-                {["naver", "kakao", "payco"].map((method) => (
-                  <Button
-                    key={method}
-                    variantType={
-                      simplePayment === method ? "primary" : "grayLine"
-                    }
-                    sizeType="s"
-                    onClick={() => setSimplePayment(method as any)}
-                  >
-                    {method === "naver"
-                      ? "네이버 페이"
-                      : method === "kakao"
-                        ? "카카오페이"
-                        : "페이코"}
-                  </Button>
-                ))}
+                <Button
+                  variantType={
+                    simplePayment === "naver" ? "primary" : "grayLine"
+                  }
+                  sizeType="s"
+                  onClick={() => setSimplePayment("naver")}
+                  className={simplePayment === "naver" ? "font-m" : "font-r"}
+                >
+                  네이버 페이
+                </Button>
+                <Button
+                  variantType={
+                    simplePayment === "kakao" ? "primary" : "grayLine"
+                  }
+                  sizeType="s"
+                  onClick={() => setSimplePayment("kakao")}
+                  className={simplePayment === "kakao" ? "font-m" : "font-r"}
+                >
+                  카카오페이
+                </Button>
+                <Button
+                  variantType={
+                    simplePayment === "payco" ? "primary" : "grayLine"
+                  }
+                  sizeType="s"
+                  onClick={() => setSimplePayment("payco")}
+                  className={simplePayment === "payco" ? "font-m" : "font-r"}
+                >
+                  페이코
+                </Button>
               </div>
             )}
+
             <div className="border-b border-[#ECEFF2]" />
 
             <Radio
@@ -197,26 +254,32 @@ const PaymentPage = () => {
             <div className="flex justify-between">
               <span className="text-gray-500 text-14px font-m">상품 금액</span>
               <span className="text-gray-700 font-sb text-14px">
-                4,953,600원
+                {totalAmount.toLocaleString()}원
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-500 text-14px font-m">
                 상품할인금액
               </span>
-              <span className="text-success font-sb text-14px">-825,600원</span>
+              <span className="text-success font-sb text-14px">
+                -{discountAmount.toLocaleString()}원
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-500 text-14px font-m">
                 포인트 사용
               </span>
-              <span className="text-success font-sb text-14px">-2,000원</span>
+              <span className="text-success font-sb text-14px">
+                -{pointAmount.toLocaleString()}원
+              </span>
             </div>
           </div>
           <Divider type="s_100" className="my-4" />
           <div className="flex justify-between items-center">
             <span className="text-gray-700 text-16px font-m">최종결제금액</span>
-            <span className="text-gray-700 font-b text-20px">4,126,000원</span>
+            <span className="text-gray-700 font-b text-20px">
+              {finalAmount.toLocaleString()}원
+            </span>
           </div>
         </div>
 
@@ -272,7 +335,7 @@ const PaymentPage = () => {
           }}
           className="w-full"
         >
-          4,126,000원 결제하기
+          {finalAmount.toLocaleString()}원 결제하기
         </Button>
       </FixedButtonContainer>
     </div>
