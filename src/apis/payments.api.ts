@@ -27,3 +27,15 @@ export const fetchPayment = async (paymentId: string) => {
 
   return PaymentMapper.toHistoryDetailEntity(data.body)
 }
+
+export const cancelPayments = async (
+  orderId: string,
+  paymentIds: string[],
+  reason: string,
+) => {
+  await axiosClient.post("/payments/cancel", {
+    orderid: orderId,
+    p_idx: paymentIds,
+    cancel_memo: reason,
+  })
+}

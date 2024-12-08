@@ -1,6 +1,11 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query"
 import { queryKeys } from "./query.keys.ts"
-import { fetchPayment, fetchPayments } from "../apis/payments.api.ts"
+import {
+  cancelPayments,
+  fetchPayment,
+  fetchPayments,
+} from "../apis/payments.api.ts"
+import { queryClient } from "./clients.ts"
 
 export const usePaymentHistories = () =>
   useInfiniteQuery({
@@ -17,4 +22,19 @@ export const usePaymentHistory = (paymentId: string) =>
   useQuery({
     queryKey: queryKeys.payments.detail(paymentId),
     queryFn: () => fetchPayment(paymentId),
+  })
+
+export const usePaymentCancel = () =>
+  useMutation({
+    mutationFn: ({
+      orderId,
+      paymentIds,
+      reason,
+    }: {
+      orderId: string
+      paymentIds: string[]
+      reason: string
+    }) => cancelPayments(orderId, paymentIds, reason),
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: [queryKeys.payments] }),
   })
