@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { usePaymentHistory } from "../../queries/usePaymentQueries.tsx"
 import SplashScreen from "@components/Splash.tsx"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
@@ -13,6 +13,7 @@ import PaymentRefundDescriptionSection from "./_fragments/detail/PaymentRefundDe
 const PaymentHistoryDetailPage = () => {
   const { id } = useParams()
   const { setHeader, setNavigation } = useLayout()
+  const navigate = useNavigate()
   const { data: payment, isLoading } = usePaymentHistory(id!)
   const canceled = payment?.status.includes("취소") || false
 
@@ -34,7 +35,12 @@ const PaymentHistoryDetailPage = () => {
     if (payment.category === "additional") {
       return (
         <div className={"border-t border-gray-200 px-5 pt-3 pb-8"}>
-          <Button className={"w-full"}>{"예약 내역 보기"}</Button>
+          <Button
+            className={"w-full"}
+            onClick={() => navigate(`/reservation/${1}`)} // TODO: API Response에 예약 식별자 추가되면 변경할 것
+          >
+            {"예약 내역 보기"}
+          </Button>
         </div>
       )
     }
@@ -43,50 +49,68 @@ const PaymentHistoryDetailPage = () => {
 
     return (
       <div className={"border-t border-gray-200 px-5 pt-3 pb-8"}>
-        <Button className={"w-full"}>{"결제 취소하기"}</Button>
+        <Button
+          className={"w-full"}
+          onClick={() => navigate(`/payment/${payment.index}/cancel`)}
+        >
+          {"결제 취소하기"}
+        </Button>
       </div>
     )
   }
 
   return (
     <div className={"h-full flex flex-col justify-between overflow-hidden"}>
-      <div className={"flex flex-col overflow-scroll"}>
+      <div className={"flex flex-col overflow-scroll pb-8"}>
         <div className={"mt-6 px-5"}>
           <PaymentItemSection payment={payment} />
         </div>
         {payment.category === "additional" && (
-          <>
-            <div className={"h-2 bg-gray-50 mt-6"} />
-            <div className={"mt-6 px-5 flex flex-col gap-3"}>
-              <p className={"text-14px text-gray-500 font-m"}>
-                {"추가 관리 항목"}
-              </p>
-              <p className={"font-sb text-14px"}>
-                {payment.items.map((item) => item.name).join(" / ")}
-              </p>
-            </div>
-          </>
+          <div
+            className={
+              "mt-6 pt-6 px-5 flex flex-col gap-3 border-t-8 border-gray-50"
+            }
+          >
+            <p className={"text-14px text-gray-500 font-m"}>
+              {"추가 관리 항목"}
+            </p>
+            <p className={"font-sb text-14px"}>
+              {payment.items.map((item) => item.name).join(" / ")}
+            </p>
+          </div>
         )}
         {payment.category === "additional" && canceled && (
-          <>
-            <div className={"h-2 bg-gray-50 mt-6"} />
+          <div
+            className={
+              "mt-6 pt-6 px-5 flex flex-col gap-3 border-t-8 border-gray-50"
+            }
+          >
             <PaymentCancelReasonSection {...payment.items[0].cancel} />
-          </>
+          </div>
         )}
-        <div className={"h-2 bg-gray-50 mt-6"} />
-        <div className={"mt-6 px-5"}>
+        <div
+          className={
+            "mt-6 pt-6 px-5 flex flex-col gap-3 border-t-8 border-gray-50"
+          }
+        >
           <PaymentDescriptionSection payment={payment} />
         </div>
         {payment.category === "additional" && canceled && (
           <>
-            <div className={"h-2 bg-gray-50 mt-6"} />
-            <div className={"mt-6 px-5"}>
+            <div
+              className={
+                "mt-6 pt-6 px-5 flex flex-col gap-3 border-t-8 border-gray-50"
+              }
+            >
               <PaymentRefundDescriptionSection payment={payment} />
             </div>
           </>
         )}
-        <div className={"h-2 bg-gray-50 mt-6"} />
-        <div className={"mt-6 px-5"}>
+        <div
+          className={
+            "mt-6 pt-6 px-5 flex flex-col gap-3 border-t-8 border-gray-50"
+          }
+        >
           <PaymentPointSection payment={payment} />
         </div>
       </div>

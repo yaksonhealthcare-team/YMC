@@ -8,7 +8,7 @@ const PaymentCancelReasonSection = ({
   reason: string
 }) => {
   return (
-    <div className={"mt-6 px-5 flex flex-col gap-3"}>
+    <div className={"flex flex-col gap-3"}>
       <p className={"text-14px font-m text-gray-600"}>{reason}</p>
       <div className={"h-[1px] bg-gray-100"} />
       <div className={"flex justify-between mt-3 items-center"}>
