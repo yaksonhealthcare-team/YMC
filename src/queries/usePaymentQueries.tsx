@@ -1,6 +1,6 @@
-import { useInfiniteQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 import { queryKeys } from "./query.keys.ts"
-import { fetchPayments } from "../apis/payments.api.ts"
+import { fetchPayment, fetchPayments } from "../apis/payments.api.ts"
 
 export const usePaymentHistories = () =>
   useInfiniteQuery({
@@ -11,4 +11,10 @@ export const usePaymentHistories = () =>
       if (lastPage.length === 0) return undefined
       return allPages.length + 1
     },
+  })
+
+export const usePaymentHistory = (paymentId: string) =>
+  useQuery({
+    queryKey: queryKeys.payments.detail(paymentId),
+    queryFn: () => fetchPayment(paymentId),
   })
