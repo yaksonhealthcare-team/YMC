@@ -9,8 +9,6 @@ import CheckIcon from "@assets/icons/CheckIcon.svg?react"
 import { Button } from "@components/Button.tsx"
 import BranchIcon from "@components/icons/BranchIcon.tsx"
 
-const SEARCH_HISTORY_KEY = "search/branches"
-
 interface Branch {
   id: number
   name: string
@@ -108,10 +106,6 @@ const AddUsingBranch = () => {
   }, [setHeader, setNavigation])
 
   const [searchText, setSearchText] = useState("")
-  const [searchHistories, setSearchHistories] = useState<string[]>(() => {
-    const storedHistory = localStorage.getItem(SEARCH_HISTORY_KEY)
-    return storedHistory ? JSON.parse(storedHistory) : []
-  })
 
   const [selectedBranches, setSelectedBranches] = useState<Branch[]>([])
 
@@ -133,37 +127,7 @@ const AddUsingBranch = () => {
   }
 
   const handleSearchSubmit = () => {
-    const storedHistory = localStorage.getItem(SEARCH_HISTORY_KEY)
-
-    const updatedSearchHistories = storedHistory
-      ? JSON.parse(storedHistory)
-      : []
-
-    updatedSearchHistories.unshift(searchText)
-
-    localStorage.setItem(
-      SEARCH_HISTORY_KEY,
-      JSON.stringify(updatedSearchHistories),
-    )
-
-    setSearchHistories(updatedSearchHistories)
-  }
-
-  const handleRemoveSearch = (itemToRemove: string) => {
-    const storedHistory = localStorage.getItem(SEARCH_HISTORY_KEY)
-
-    const updatedSearchHistories = storedHistory
-      ? JSON.parse(storedHistory).filter(
-          (item: string) => item !== itemToRemove,
-        )
-      : []
-
-    localStorage.setItem(
-      SEARCH_HISTORY_KEY,
-      JSON.stringify(updatedSearchHistories),
-    )
-
-    setSearchHistories(updatedSearchHistories)
+    // TODO 브랜치 검색 API 요청
   }
 
   const handleNextStep = () => {
@@ -220,14 +184,14 @@ const AddUsingBranch = () => {
             <div className="mt-[28px]">
               <p className="text-gray-800 font-semibold mb-4">선택한 지점</p>
               <div className="flex mt-[16px] space-x-2 overflow-x-auto whitespace-nowrap">
-                {searchHistories.map((item, index) => (
+                {selectedBranches.map((item, index) => (
                   <div
                     key={index}
                     className="inline-flex items-center px-[8px] py-[5px] bg-[#f8f8f8] rounded-full text-gray-600 font-medium text-[14px]"
                   >
-                    {item}
+                    {item.name}
                     <button
-                      onClick={() => handleRemoveSearch(item)}
+                      onClick={() => handleSelectBranch(item)}
                       className="ml-[4px] text-gray-500 hover:text-gray-700 focus:outline-none"
                       aria-label="Remove"
                     >
