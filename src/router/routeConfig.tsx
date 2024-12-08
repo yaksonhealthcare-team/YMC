@@ -53,6 +53,7 @@ import ServiceTermsPage from "../pages/terms/ServiceTermsPage.tsx"
 import PrivacyTermsPage from "../pages/terms/PrivacyTermsPage.tsx"
 import LocationTermsPage from "../pages/terms/LocationTermsPage.tsx"
 import MarketingTermsPage from "../pages/terms/MarketingTermsPage.tsx"
+import AddUsingBranch from "../pages/addUsingBranch/AddUsingBranch.tsx"
 
 interface RouteConfig {
   path: string
@@ -121,7 +122,7 @@ const routeConfig: RouteConfig[] = [
   },
   {
     path: "/signup/branch",
-    element: <div>Set Branch</div>,
+    element: <AddUsingBranch />,
   },
 
   // 비밀번호 찾기, 이메일 찾기
