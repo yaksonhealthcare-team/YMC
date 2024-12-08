@@ -1,10 +1,10 @@
-import { PaymentHistory, PaymentHistoryItem } from "../../../types/Payment.ts"
+import { PaymentHistory } from "../../../types/Payment.ts"
 import { format } from "date-fns"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
-import StoreIcon from "@assets/icons/StoreIcon.svg?react"
 import { Button } from "@components/Button.tsx"
 import { useOverlay } from "../../../contexts/ModalContext.tsx"
 import { usePointsEarn } from "../../../queries/usePointQueries.tsx"
+import PaymentHistoryItemCard from "./PaymentItemList.tsx"
 
 const PointCard = ({ point }: { point: number }) => (
   <div className={"bg-red-50 rounded-xl p-4"}>
@@ -13,31 +13,6 @@ const PointCard = ({ point }: { point: number }) => (
     >{`+${point.toLocaleString()}P 적립되었습니다.`}</p>
   </div>
 )
-
-const PaymentHistoryItemCard = ({ item }: { item: PaymentHistoryItem }) => {
-  const canceled = item.status.includes("취소")
-
-  return (
-    <div className={"flex flex-col p-5 border border-gray-200 rounded-2xl"}>
-      <p
-        className={`${canceled ? "text-gray-500" : "text-primary"} text-14px font-m`}
-      >
-        {item.status}
-      </p>
-      <p className={"font-sb mt-3"}>{item.name}</p>
-      <div className={"text-14px flex gap-1 mt-1.5"}>
-        <p>{`${item.amount}회`}</p>
-        <p className={"font-bold"}>{`${item.price.toLocaleString()}원`}</p>
-      </div>
-      <div className={"mt-3 flex items-center text-gray-500 text-12px gap-1.5"}>
-        <StoreIcon />
-        <p>{item.brand}</p>
-        <div className={"h-3 w-[1px] bg-gray-200"} />
-        <p>{`${item.branchName} 사용가능`}</p>
-      </div>
-    </div>
-  )
-}
 
 const ReceivePointBottomSheet = ({
   point,
@@ -66,7 +41,7 @@ const ReceivePointBottomSheet = ({
   )
 }
 
-const PaymentHistoryCard = ({ payment }: { payment: PaymentHistory }) => {
+const PaymentHistoryListItem = ({ payment }: { payment: PaymentHistory }) => {
   const { openBottomSheet, closeOverlay } = useOverlay()
   const { mutateAsync: earnPoints } = usePointsEarn()
 
@@ -93,20 +68,20 @@ const PaymentHistoryCard = ({ payment }: { payment: PaymentHistory }) => {
         <CaretRightIcon className="w-4 h-4" />
       </div>
       {payment.pointStatus === "done" && <PointCard point={payment.point} />}
-      {payment.items.map((item) => (
-        <PaymentHistoryItemCard key={item.index} item={item} />
-      ))}
-      {payment.pointStatus === "yet" && payment.type.includes("현장") && (
-        <Button
-          variantType={"gray"}
-          className={"h-10"}
-          onClick={handleReceivePoint}
-        >
-          <p className={"text-14px font-sb"}>{"포인트 받기"}</p>
-        </Button>
-      )}
+      <PaymentHistoryItemCard payment={payment} />
+      {payment.pointStatus === "yet" &&
+        !payment.status.includes("취소") &&
+        payment.type.includes("현장") && (
+          <Button
+            variantType={"gray"}
+            className={"h-10"}
+            onClick={handleReceivePoint}
+          >
+            <p className={"text-14px font-sb"}>{"포인트 받기"}</p>
+          </Button>
+        )}
     </div>
   )
 }
 
-export default PaymentHistoryCard
+export default PaymentHistoryListItem
