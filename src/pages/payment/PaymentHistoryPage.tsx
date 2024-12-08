@@ -1,11 +1,14 @@
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useEffect } from "react"
 import { usePaymentHistories } from "../../queries/usePaymentQueries.tsx"
-import PaymentHistoryCard from "./_fragments/PaymentHistoryCard.tsx"
+import PaymentHistoryListItem from "./_fragments/PaymentHistoryListItem.tsx"
 import useIntersection from "../../hooks/useIntersection.tsx"
+import { useNavigate } from "react-router-dom"
+import SplashScreen from "@components/Splash.tsx"
 
 const PaymentHistoryPage = () => {
   const { setHeader, setNavigation } = useLayout()
+  const navigate = useNavigate()
   const {
     data: payments,
     fetchNextPage,
@@ -31,15 +34,19 @@ const PaymentHistoryPage = () => {
     setNavigation({ display: false })
   }, [])
 
-  if (!payments) return <></>
+  if (!payments) return <SplashScreen />
 
   return (
     <div className={"h-full flex flex-col overflow-hidden"}>
       <ul className={"divide-[#F7F8Fb] divide-y-8 overflow-y-scroll"}>
         {payments.pages.map((page) =>
           page.map((payment, index) => (
-            <li key={index} className={"p-5"}>
-              <PaymentHistoryCard payment={payment} />
+            <li
+              key={index}
+              className={"p-5"}
+              onClick={() => navigate(`/payment/${payment.index}`)}
+            >
+              <PaymentHistoryListItem payment={payment} />
             </li>
           )),
         )}
