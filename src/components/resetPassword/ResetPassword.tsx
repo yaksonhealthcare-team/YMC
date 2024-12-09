@@ -6,11 +6,11 @@ import { Button } from "@components/Button.tsx"
 import validatePassword from "../../utils/passwordValidator.ts"
 import PasswordCustomInput from "@components/input/PasswordCustomInput.tsx"
 
-interface props {
+interface ResetPasswordProps {
   requestPasswordChange: (password: string) => void
 }
 
-const ResetPassword = ({ requestPasswordChange }: props) => {
+const ResetPassword = ({ requestPasswordChange }: ResetPasswordProps) => {
   const [form, setForm] = useState({
     password: "",
     passwordConfirm: "",

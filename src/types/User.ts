@@ -38,8 +38,8 @@ export interface UserResponse {
 
 export interface UserSignup {
   name: string
-  mobileno: string
-  birthdate: string
+  mobileNumber: string
+  birthDate: string
   gender: string
   di: string
   tokenVersionId: string
@@ -47,9 +47,12 @@ export interface UserSignup {
   integrityValue: string
   email: string
   password: string
-  addr1: string
-  addr2: string
-  fileToUpload: File | null
+  postCode: string
+  address1: string
+  address2: string
+  profileImage: File | null
+  brand: string
+  referralCode: string
   recom: string
   marketingYn: boolean
 }
