@@ -7,6 +7,8 @@ import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useSignup } from "../../contexts/SignupContext.tsx"
 import PostcodeModal from "@components/modal/PostcodeModal.tsx"
 import { Address } from "react-daum-postcode/lib/loadPostcode"
+import Profile from "@assets/icons/Profile.svg?react"
+import SettingIcon from "@assets/icons/SettingIcon.svg?react"
 
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -65,18 +67,25 @@ export const ProfileSetup = () => {
             </span>
             <span className="text-14px text-[#A2A5AA]">(선택)</span>
           </div>
+
           <label
-            className="w-20 h-20 rounded-full border border-[#ECECEC] overflow-hidden cursor-pointer"
+            className="w-20 h-20 rounded-full border border-[#ECECEC] cursor-pointer relative"
             htmlFor="profileImageUpload"
           >
             {signupData.profileImage ? (
               <img
-                src={URL.createObjectURL(signupData.profileImage)} // File 객체를 URL로 변환
+                src={URL.createObjectURL(signupData.profileImage)}
                 alt="프로필"
-                className="w-full h-full object-cover"
+                className="rounded-full w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-[#F8F8F8]" />
+              <div className="rounded-full flex justify-center items-center w-full h-full bg-[#F8F8F8]">
+                <Profile />
+
+                <div className="absolute left-[56px] top-[56px] bg-gray-700 rounded-full bg-opacity-60 w-[24px] h-[24px] flex justify-center items-center">
+                  <SettingIcon className="text-white w-[16px] h-[16px]" />
+                </div>
+              </div>
             )}
           </label>
           {/* 파일 입력 */}
