@@ -1,6 +1,7 @@
-import { useInfiniteQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query"
 import { queryKeys } from "./query.keys.ts"
-import { fetchPointHistories } from "../apis/points.api.ts"
+import { earnPoints, fetchPointHistories } from "../apis/points.api.ts"
+import { queryClient } from "./clients.ts"
 
 export const usePointHistories = () =>
   useInfiniteQuery({
@@ -11,5 +12,15 @@ export const usePointHistories = () =>
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.data.length === 0) return undefined
       return allPages.length + 1
+    },
+  })
+
+export const usePointsEarn = () =>
+  useMutation({
+    mutationFn: (paymentId: string) => earnPoints(paymentId),
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.payments.all,
+      })
     },
   })

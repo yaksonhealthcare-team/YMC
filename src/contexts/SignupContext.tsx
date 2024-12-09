@@ -17,8 +17,8 @@ const SignupContext = createContext<SignupContextType | undefined>(undefined)
 
 const initialState: UserSignup = {
   name: "",
-  mobileno: "",
-  birthdate: "",
+  mobileNumber: "",
+  birthDate: "",
   gender: "",
   di: "",
   tokenVersionId: "",
@@ -26,9 +26,12 @@ const initialState: UserSignup = {
   integrityValue: "",
   email: "",
   password: "",
-  addr1: "",
-  addr2: "",
-  fileToUpload: null,
+  postCode: "",
+  address1: "",
+  address2: "",
+  profileImage: null,
+  brand: "",
+  referralCode: "",
   recom: "",
   marketingYn: false,
 }
