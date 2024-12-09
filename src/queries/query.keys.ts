@@ -20,6 +20,7 @@ export const queryKeys = {
     all: ["payments"] as const,
     histories: ({ page }: { page: number }) =>
       [...queryKeys.payments.all, { page: page, infinite: true }] as const,
+    detail: (id: string) => [...queryKeys.payments.all, id] as const,
   },
   questionnaires: {
     all: ["questionnaires"] as const,

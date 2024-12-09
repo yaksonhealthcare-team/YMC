@@ -32,3 +32,9 @@ export const fetchPointHistories = async ({
     data: PointMapper.toHistoryEntities(data.body.result),
   }
 }
+
+export const earnPoints = async (paymentId: string) => {
+  await axiosClient.post("/points/earn", {
+    p_idx: paymentId,
+  })
+}

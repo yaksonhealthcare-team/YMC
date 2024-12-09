@@ -53,6 +53,9 @@ import ServiceTermsPage from "../pages/terms/ServiceTermsPage.tsx"
 import PrivacyTermsPage from "../pages/terms/PrivacyTermsPage.tsx"
 import LocationTermsPage from "../pages/terms/LocationTermsPage.tsx"
 import MarketingTermsPage from "../pages/terms/MarketingTermsPage.tsx"
+import PaymentHistoryDetailPage from "../pages/payment/PaymentHistoryDetailPage.tsx"
+import PaymentCancelPage from "../pages/payment/PaymentCancelPage.tsx"
+import PaymentCancelCompletePage from "../pages/payment/PaymentCancelCompletePage.tsx"
 
 interface RouteConfig {
   path: string
@@ -236,6 +239,21 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/payment",
     element: <PaymentHistoryPage />,
+    auth: true,
+  },
+  {
+    path: "/payment/cancel/complete",
+    element: <PaymentCancelCompletePage />,
+    auth: true,
+  },
+  {
+    path: "/payment/:id/cancel",
+    element: <PaymentCancelPage />,
+    auth: true,
+  },
+  {
+    path: "/payment/:id",
+    element: <PaymentHistoryDetailPage />,
     auth: true,
   },
   {
