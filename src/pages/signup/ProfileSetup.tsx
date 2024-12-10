@@ -9,12 +9,14 @@ import PostcodeModal from "@components/modal/PostcodeModal.tsx"
 import { Address } from "react-daum-postcode/lib/loadPostcode"
 import Profile from "@assets/icons/Profile.svg?react"
 import SettingIcon from "@assets/icons/SettingIcon.svg?react"
+import { useBrands } from "../../queries/useBrandQueries.tsx"
 
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const { signupData, setSignupData } = useSignup()
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false)
+  const { data: brands } = useBrands()
 
   useEffect(() => {
     setHeader({
@@ -43,6 +45,19 @@ export const ProfileSetup = () => {
     })
     setIsPostcodeOpen(false)
   }
+
+  const toggleBrandSelection = (brandCode: string) => {
+    setSignupData((prev) => {
+      const brandCodes = prev.brandCodes || [];
+      const isSelected = brandCodes.includes(brandCode);
+
+      const updatedBrands = isSelected
+        ? brandCodes.filter((code) => code !== brandCode)
+        : [...brandCodes, brandCode];
+
+      return { ...prev, brandCodes: updatedBrands };
+    });
+  };
 
   const handleSignupSubmit = async () => {
     // TODO pass api 완료 후 signup api 요청
@@ -218,7 +233,7 @@ export const ProfileSetup = () => {
         )}
 
         {/* 브랜드 선택 */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 overflow-x-auto">
           <div className="flex items-center gap-0.5">
             <span className="text-14px font-medium text-black">
               현재 이용중인 브랜드를 선택해주세요
@@ -226,17 +241,16 @@ export const ProfileSetup = () => {
             <span className="text-14px text-[#A2A5AA]">(선택)</span>
           </div>
           <div className="flex gap-4">
-            {["약손명가", "달리아 스파", "여리한 다이어트"].map((brandName) => (
-              <BrandCard
-                key={brandName}
-                name={brandName}
-                brandSrc={`/assets/brands/${brandName}.png`}
-                onClick={() =>
-                  setSignupData({ ...signupData, brand: brandName })
-                }
-                selected={signupData.brand === brandName}
-              />
-            ))}
+            {brands &&
+              brands.map((brand) => (
+                <BrandCard
+                  key={brand.code}
+                  name={brand.name}
+                  brandSrc={brand.imageUrl || ""}
+                  onClick={() => toggleBrandSelection(brand.code)}
+                  selected={signupData.brandCodes ? signupData.brandCodes?.includes(brand.code) : false}
+                />
+              ))}
           </div>
         </div>
 
