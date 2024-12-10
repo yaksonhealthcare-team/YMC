@@ -5,6 +5,7 @@ import { Button } from "@components/Button"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import CrownIcon from "@assets/icons/CrownIcon.svg?react"
 import PersonalCardIcon from "@assets/icons/PersonalCardIcon.svg?react"
+import InformationIcon from "@assets/icons/InformationIcon.svg?react"
 import PointIcon from "@assets/icons/PointIcon.svg?react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useAuth } from "../../contexts/AuthContext.tsx"
@@ -47,6 +48,20 @@ const MyPage = () => {
             }}
           >
             {"공통 문진 보기"}
+          </Button>
+        </div>
+      </div>,
+    )
+  }
+
+  const handleOpenUserLevel = () => {
+    openBottomSheet(
+      <div className={"flex flex-col"}>
+        <p className={"font-sb text-18px px-5 pt-4"}>회원등급 안내</p>
+        <p className={"py-6"}>{"회원등급 기획 미정"}</p>
+        <div className={"border-t border-gray-200 pt-3"}>
+          <Button className={"w-full"} onClick={closeOverlay}>
+            {"예약하기"}
           </Button>
         </div>
       </div>,
@@ -136,18 +151,21 @@ const MyPage = () => {
                 </div>
               </div>
               <div className="w-full h-[1px] bg-gray-100 my-3" />
-              <div className="flex justify-between items-center">
+              <div
+                className="flex justify-between items-center"
+                onClick={handleOpenUserLevel}
+              >
                 <div className="flex items-center gap-2">
                   <CrownIcon />
                   <span className="font-m text-14px text-gray-500">
                     회원등급
                   </span>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center gap-2">
                   <span className="font-sb text-16px text-gray-900">
                     {user?.level ?? ""}
                   </span>
-                  <CaretRightIcon className="w-3 h-3 ml-1.5" />
+                  <InformationIcon className={"w-4 h-4 text-gray-500"} />
                 </div>
               </div>
             </div>
