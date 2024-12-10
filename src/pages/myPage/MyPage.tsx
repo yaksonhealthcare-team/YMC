@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom"
 import { Notice } from "@components/Notice"
 import { Button } from "@components/Button"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
+import CrownIcon from "@assets/icons/CrownIcon.svg?react"
+import PersonalCardIcon from "@assets/icons/PersonalCardIcon.svg?react"
+import PointIcon from "@assets/icons/PointIcon.svg?react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useAuth } from "../../contexts/AuthContext.tsx"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
@@ -111,12 +114,10 @@ const MyPage = () => {
               className="w-[101px] h-24 bg-white rounded-2xl border border-gray-100 flex flex-col items-center justify-center"
               onClick={handleOpenQuestionnaire}
             >
-              <div className="w-6 h-6 mb-2">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M4 6h16v12H4V6z" stroke="#757575" strokeWidth="2" />
-                </svg>
-              </div>
-              <span className="font-m text-14px text-gray-500">내 문진</span>
+              <PersonalCardIcon />
+              <span className="font-m text-14px text-gray-500 mt-1">
+                내 문진
+              </span>
             </div>
             <div className="flex-1 p-3 bg-white rounded-2xl border border-gray-100">
               <div
@@ -124,7 +125,7 @@ const MyPage = () => {
                 onClick={() => navigate("/point")}
               >
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded-full border-[1.5px] border-gray-500" />
+                  <PointIcon />
                   <span className="font-m text-14px text-gray-500">포인트</span>
                 </div>
                 <div className="flex items-center">
@@ -137,7 +138,7 @@ const MyPage = () => {
               <div className="w-full h-[1px] bg-gray-100 my-3" />
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-[1.5px] border-gray-500" />
+                  <CrownIcon />
                   <span className="font-m text-14px text-gray-500">
                     회원등급
                   </span>
