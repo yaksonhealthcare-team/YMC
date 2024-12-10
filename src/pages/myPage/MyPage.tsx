@@ -78,7 +78,7 @@ const MyPage = () => {
         <div className="flex items-center gap-3 px-5 py-4">
           <div className="w-12 h-12 rounded-full border border-gray-100 overflow-hidden">
             <img
-              src="https://via.placeholder.com/48"
+              src={user?.profileURL || "/assets/profile_image.jpeg"}
               alt="프로필"
               className="w-full h-full object-cover"
             />
