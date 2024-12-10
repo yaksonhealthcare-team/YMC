@@ -51,8 +51,7 @@ const BranchDetail = () => {
       case "therapists":
         return <TherapistList therapists={branch.staffs} />
       case "programs":
-        // TODO: branch.brandCode를 사용하여 서비스카테고리 조회하기 
-        return <ProgramList brandCode={"001"} />
+        return <ProgramList brandCode={branch.brandCode} />
       case "information":
       default:
         return <BranchInformation branch={branch} />
