@@ -1,17 +1,20 @@
 import BranchCard from "@components/BranchCard.tsx"
-import { useNavigate } from "react-router-dom"
 import useDebounce from "../../../../hooks/useDebounce.tsx"
 import { useBranches } from "../../../../queries/useBranchQueries.tsx"
 import useGeolocation from "../../../../hooks/useGeolocation.tsx"
 import { DEFAULT_COORDINATE } from "../../../../types/Coordinate.ts"
 import useIntersection from "../../../../hooks/useIntersection.tsx"
+import { Branch } from "../../../../types/Branch.ts"
 
 interface BranchSearchResultListProps {
   query: string
+  onSelect: (branch: Branch) => void
 }
 
-const BranchSearchResultList = ({ query }: BranchSearchResultListProps) => {
-  const navigate = useNavigate()
+const BranchSearchResultList = ({
+  query,
+  onSelect,
+}: BranchSearchResultListProps) => {
   const debouncedQuery = useDebounce(query, 300)
   const { location } = useGeolocation()
   const {
@@ -43,13 +46,7 @@ const BranchSearchResultList = ({ query }: BranchSearchResultListProps) => {
   return (
     <ul className={"divide-y divide-gray-100 px-5 overflow-y-scroll"}>
       {(branches?.pages.flatMap((page) => page) || []).map((branch, index) => (
-        <li
-          key={index}
-          className={"py-4"}
-          onClick={() => {
-            navigate(`/branch/${branch.id}`)
-          }}
-        >
+        <li key={index} className={"py-4"} onClick={() => onSelect(branch)}>
           <BranchCard name={branch.name} address={branch.address} />
         </li>
       ))}
