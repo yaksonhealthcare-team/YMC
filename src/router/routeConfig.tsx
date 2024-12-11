@@ -57,6 +57,8 @@ import AddUsingBranch from "../pages/addUsingBranch/AddUsingBranch.tsx"
 import PaymentHistoryDetailPage from "../pages/payment/PaymentHistoryDetailPage.tsx"
 import PaymentCancelPage from "../pages/payment/PaymentCancelPage.tsx"
 import PaymentCancelCompletePage from "../pages/payment/PaymentCancelCompletePage.tsx"
+import ReservationHistory from "pages/memberHistory/ReservationHistory.tsx"
+import MembershipHistory from "pages/memberHistory/MembershipHistory.tsx"
 
 interface RouteConfig {
   path: string
@@ -173,7 +175,16 @@ const routeConfig: RouteConfig[] = [
     auth: true,
   },
   { path: "/store", element: <Store />, auth: false },
-  { path: "/member-history/:tab?", element: <MemberHistory />, auth: true },
+  {
+    path: "/member-history/reservation",
+    element: <ReservationHistory />,
+    auth: true,
+  },
+  {
+    path: "/member-history/membership",
+    element: <MembershipHistory />,
+    auth: true,
+  },
   {
     path: "/reservation/:id",
     element: <ReservationDetailPage />,

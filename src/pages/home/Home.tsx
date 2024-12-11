@@ -153,7 +153,7 @@ const ReserveCardSection = () => {
         type="arrow"
         title="예정된 예약"
         count={`${reserveCardsData.length}건`}
-        onClick={() => navigate("/member-history")}
+        onClick={() => navigate("/member-history/reservation")}
       />
       {reserveCardsData.length > 0 ? (
         <Swiper
