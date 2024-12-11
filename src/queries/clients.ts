@@ -19,7 +19,11 @@ const axiosClient = axios.create({
 })
 
 axiosClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken")
+  // TODO 회원가입 기능이 완료되고 || 이후 코드 제거
+  const token =
+    localStorage.getItem("accessToken") ||
+    `Bearer ${import.meta.env.VITE_TEST_ACCESS_TOKEN}`
+
   if (token) {
     config.headers.Authorization = token
   }
