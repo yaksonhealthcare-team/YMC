@@ -80,8 +80,6 @@ const MembershipHistory = () => {
         {membershipFilters.map((filter) => {
           const isSelected = filter.id === membershipFilter.id
 
-          console.log("isSelected", isSelected)
-
           return (
             <Button
               key={filter.id}
