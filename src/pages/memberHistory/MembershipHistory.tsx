@@ -56,7 +56,7 @@ const MembershipHistory = () => {
   const { setHeader, setNavigation } = useLayout()
   const [membershipFilter, setMembershipFilter] =
     useState<FilterItem>(defaultFilter)
-  const [filteredMemberships, setFilteredMemberships] =
+  const [filteredMemberships, _setFilteredMemberships] =
     useState(sampleMemberships)
 
   const handleOnClickFloatingButton = () => {

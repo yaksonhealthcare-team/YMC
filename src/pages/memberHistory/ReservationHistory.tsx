@@ -64,7 +64,7 @@ const ReservationHistory = () => {
   const { setHeader, setNavigation } = useLayout()
   const [reservationFilter, setReservationFilter] =
     useState<FilterItem>(defaultFilter)
-  const [filteredReservations, setFilteredReservations] =
+  const [filteredReservations, _setFilteredReservations] =
     useState(sampleReservations)
 
   const handleOnClickFloatingButton = () => {
