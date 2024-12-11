@@ -51,7 +51,7 @@ export interface UserSignup {
   address1: string
   address2: string
   profileImage: File | null
-  brand: string
+  brandCodes: string[]
   referralCode: string
   recom: string
   marketingYn: boolean
