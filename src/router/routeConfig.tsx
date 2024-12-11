@@ -57,6 +57,7 @@ import AddUsingBranch from "../pages/addUsingBranch/AddUsingBranch.tsx"
 import PaymentHistoryDetailPage from "../pages/payment/PaymentHistoryDetailPage.tsx"
 import PaymentCancelPage from "../pages/payment/PaymentCancelPage.tsx"
 import PaymentCancelCompletePage from "../pages/payment/PaymentCancelCompletePage.tsx"
+import MembershipSelectBranchPage from "../pages/membership/MembershipBranchSelectPage.tsx"
 
 interface RouteConfig {
   path: string
@@ -162,6 +163,11 @@ const routeConfig: RouteConfig[] = [
 
   //구매, 스토어, 예약
   { path: "/membership", element: <Membership />, auth: true },
+  {
+    path: "/membership/select-branch",
+    element: <MembershipSelectBranchPage />,
+    auth: true,
+  },
   {
     path: "/membership/:id",
     element: <MembershipDetailPage />,
