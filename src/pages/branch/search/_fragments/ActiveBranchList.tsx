@@ -7,10 +7,10 @@ const ActiveBranchList = () => {
   const navigate = useNavigate()
 
   return (
-    <div className={"px-5 py-6 overflow-y-scroll space-y-4"}>
-      <p className={"font-sb"}>{"이용중인 지점"}</p>
-      <ul className={"space-y-3"}>
-        {(user?.brands ?? []).map((brand, index) => (
+    <div className={"py-6 overflow-y-hidden space-y-4"}>
+      <p className={"px-5 font-sb"}>{"이용중인 지점"}</p>
+      <ul className={"px-5 space-y-3 overflow-y-scroll h-full"}>
+        {(user?.brands || []).map((brand, index) => (
           <li
             key={index}
             className={"border border-gray-100 rounded-2xl p-5"}
