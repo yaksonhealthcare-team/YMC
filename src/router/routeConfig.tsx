@@ -58,6 +58,7 @@ import AddUsingBranch from "../pages/addUsingBranch/AddUsingBranch.tsx"
 import PaymentHistoryDetailPage from "../pages/payment/PaymentHistoryDetailPage.tsx"
 import PaymentCancelPage from "../pages/payment/PaymentCancelPage.tsx"
 import PaymentCancelCompletePage from "../pages/payment/PaymentCancelCompletePage.tsx"
+import MembershipSelectBranchPage from "../pages/membership/MembershipBranchSelectPage.tsx"
 import PaymentCompletePage from "../pages/payment/PaymentCompletePage.tsx"
 
 interface RouteConfig {
@@ -238,6 +239,7 @@ const routeConfig: RouteConfig[] = [
     element: <FavoritePage />,
     auth: true,
   },
+
   {
     path: "/cart",
     element: <CartPage />,

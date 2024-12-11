@@ -15,13 +15,16 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/swiper-bundle.css"
 import MembershipPlaceholderImage from "@assets/images/MembershipPlaceholderImage.jpg"
 import CartIcon from "@components/icons/CartIcon.tsx"
+import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
 
 const MembershipDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const { setHeader, setNavigation } = useLayout()
-  const { openBottomSheet } = useOverlay()
+  const { openBottomSheet, closeOverlay } = useOverlay()
   const navigate = useNavigate()
 
+  const { shouldOpenBottomSheet, setShouldOpenBottomSheet } =
+    useMembershipOptionsStore()
   const { data: membership, isLoading } = useMembershipDetail(id || "")
   const sortedOptions = useMemo(
     () =>
@@ -38,7 +41,12 @@ const MembershipDetailPage = () => {
       display: true,
       title: "",
       left: (
-        <div onClick={() => navigate(-1)}>
+        <div
+          onClick={() => {
+            setShouldOpenBottomSheet(false)
+            navigate(-1)
+          }}
+        >
           <CaretLeftIcon className="w-5 h-5" />
         </div>
       ),
@@ -46,13 +54,27 @@ const MembershipDetailPage = () => {
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
+
+    if (shouldOpenBottomSheet) {
+      handleOpenOptionsBottomSheet()
+    }
   }, [])
 
-  const handleOnSubmit = () => {
-    openBottomSheet(<OptionsBottomSheetContent options={sortedOptions || []} />)
-  }
-
   if (isLoading || !membership) return <div>Loading...</div>
+
+  const handleOpenOptionsBottomSheet = () => {
+    openBottomSheet(
+      <OptionsBottomSheetContent
+        serviceType={membership.serviceType}
+        options={sortedOptions || []}
+        onClickBranchSelect={() => {
+          closeOverlay()
+          setShouldOpenBottomSheet(true)
+          navigate(`/membership/select-branch`)
+        }}
+      />,
+    )
+  }
 
   const MembershipInfo = () => (
     <div className="flex flex-col px-5 py-6 gap-4">
@@ -132,11 +154,11 @@ const MembershipDetailPage = () => {
               </div>
               <div className="inline">
                 {sortedCourses.map((course) => (
-                  <>
-                    <p
-                      key={course.serviceCourseIndex}
-                      className="inline font-r text-14px whitespace-nowrap"
-                    >
+                  <div
+                    key={course.serviceCourseIndex}
+                    className={"inline-flex items-center"}
+                  >
+                    <p className="inline font-r text-14px whitespace-nowrap">
                       {course.serviceCourseName} ({course.serviceCourseMinutes}
                       분)
                     </p>
@@ -144,7 +166,7 @@ const MembershipDetailPage = () => {
                       sortedCourses.length - 1 && (
                       <CaretRightIcon className="w-4 h-4 inline text-gray-400 mx-1.5" />
                     )}
-                  </>
+                  </div>
                 ))}
               </div>
             </>
@@ -189,7 +211,7 @@ const MembershipDetailPage = () => {
       <div className="fixed bottom-0 left-0 right-0 h-[94px] bg-white border-t border-gray-50">
         <div className="px-5 pt-3">
           <Button
-            onClick={handleOnSubmit}
+            onClick={handleOpenOptionsBottomSheet}
             variantType="primary"
             sizeType="l"
             className="w-full"

@@ -1,24 +1,26 @@
 import { Button } from "@components/Button"
 import { Number } from "@components/Number"
 import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
+import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { useMemo, useState } from "react"
 import XCircleIcon from "@components/icons/XCircleIcon.tsx"
 import { MembershipOption } from "types/Membership"
 import clsx from "clsx"
+import { useMembershipOptionsStore } from "../../../hooks/useMembershipOptions.ts"
 
 interface OptionsBottomSheetContentProps {
+  serviceType: string
   options: MembershipOption[]
-}
-
-interface SelectedOption {
-  option: MembershipOption
-  count: number
+  onClickBranchSelect: () => void
 }
 
 const OptionsBottomSheetContent = ({
+  serviceType,
   options,
+  onClickBranchSelect,
 }: OptionsBottomSheetContentProps) => {
-  const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([])
+  const { selectedOptions, setSelectedOptions, selectedBranch } =
+    useMembershipOptionsStore()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const totalAmount = useMemo(() => {
@@ -37,22 +39,22 @@ const OptionsBottomSheetContent = ({
   )
 
   const handleSelectOption = (option: MembershipOption) => {
-    setSelectedOptions((prev) => {
-      const existingOption = prev.find(
-        (selected) =>
-          selected.option.subscriptionIndex === option.subscriptionIndex,
-      )
+    const existingOption = selectedOptions.find(
+      (selected) =>
+        selected.option.subscriptionIndex === option.subscriptionIndex,
+    )
 
-      if (existingOption) {
-        return prev.map((item) =>
+    if (existingOption) {
+      setSelectedOptions(
+        selectedOptions.map((item) =>
           item.option.subscriptionIndex === option.subscriptionIndex
             ? { ...item, count: item.count + 1 }
             : item,
-        )
-      }
-
-      return [...prev, { option, count: 1 }]
-    })
+        ),
+      )
+    } else {
+      return setSelectedOptions([...selectedOptions, { option, count: 1 }])
+    }
   }
 
   const handleCountChange = (optionIndex: string, newCount: number) => {
@@ -61,8 +63,8 @@ const OptionsBottomSheetContent = ({
       return
     }
 
-    setSelectedOptions((prev) =>
-      prev.map((item) =>
+    setSelectedOptions(
+      selectedOptions.map((item) =>
         item.option.subscriptionIndex === optionIndex
           ? { ...item, count: newCount }
           : item,
@@ -71,13 +73,30 @@ const OptionsBottomSheetContent = ({
   }
 
   const handleRemoveOption = (optionIndex: string) => {
-    setSelectedOptions((prev) =>
-      prev.filter((item) => item.option.subscriptionIndex !== optionIndex),
+    setSelectedOptions(
+      selectedOptions.filter(
+        (item) => item.option.subscriptionIndex !== optionIndex,
+      ),
     )
   }
 
   return (
     <div className="flex flex-col h-[610px] ">
+      {serviceType.includes("지점") && (
+        <button
+          className={
+            "w-full border border-gray-100 rounded-xl px-4 py-3 flex justify-between mb-3 items-center"
+          }
+          onClick={onClickBranchSelect}
+        >
+          <span
+            className={`${selectedBranch ? "" : "text-[#bdbdbd]"} text-base font-normal leading-normal`}
+          >
+            {selectedBranch ? selectedBranch.name : "지점을 선택해주세요"}
+          </span>
+          <CaretRightIcon className={"w-[18px] h-[18px] text-gray-900"} />
+        </button>
+      )}
       {/* Select Dropdown */}
       <div className="w-full mx-auto relative flex-1">
         <button
