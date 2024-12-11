@@ -23,8 +23,11 @@ const MembershipDetailPage = () => {
   const { openBottomSheet, closeOverlay } = useOverlay()
   const navigate = useNavigate()
 
-  const { shouldOpenBottomSheet, setShouldOpenBottomSheet } =
-    useMembershipOptionsStore()
+  const {
+    shouldOpenBottomSheet,
+    setShouldOpenBottomSheet,
+    clear: clearMembershipOptions,
+  } = useMembershipOptionsStore()
   const { data: membership, isLoading } = useMembershipDetail(id || "")
   const sortedOptions = useMemo(
     () =>
@@ -43,7 +46,7 @@ const MembershipDetailPage = () => {
       left: (
         <div
           onClick={() => {
-            setShouldOpenBottomSheet(false)
+            clearMembershipOptions()
             navigate(-1)
           }}
         >

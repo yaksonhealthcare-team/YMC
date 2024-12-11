@@ -14,6 +14,7 @@ interface MembershipOptionsStore {
   setSelectedBranch: (branch: Branch) => void
   shouldOpenBottomSheet: boolean
   setShouldOpenBottomSheet: (open: boolean) => void
+  clear: () => void
 }
 
 export const useMembershipOptionsStore = create<MembershipOptionsStore>(
@@ -24,5 +25,11 @@ export const useMembershipOptionsStore = create<MembershipOptionsStore>(
     setSelectedBranch: (branch) => set({ selectedBranch: branch }),
     shouldOpenBottomSheet: false,
     setShouldOpenBottomSheet: (open) => set({ shouldOpenBottomSheet: open }),
+    clear: () =>
+      set({
+        selectedOptions: [],
+        selectedBranch: null,
+        shouldOpenBottomSheet: false,
+      }),
   }),
 )
