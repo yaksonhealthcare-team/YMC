@@ -58,6 +58,7 @@ import PaymentHistoryDetailPage from "../pages/payment/PaymentHistoryDetailPage.
 import PaymentCancelPage from "../pages/payment/PaymentCancelPage.tsx"
 import PaymentCancelCompletePage from "../pages/payment/PaymentCancelCompletePage.tsx"
 import MembershipSelectBranchPage from "../pages/membership/MembershipBranchSelectPage.tsx"
+import ProfileChangePhoneNumber from "../pages/editProfile/ProfileChangePhoneNumber.tsx"
 
 interface RouteConfig {
   path: string
@@ -330,6 +331,10 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/profile/reset-password/complete",
     element: <ResetPasswordComplete />,
+  },
+  {
+    path: "/profile/change-phone",
+    element: <ProfileChangePhoneNumber />,
   },
   //지점 찾기, 지점 상세보기
   {
