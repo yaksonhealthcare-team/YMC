@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom"
 import DateAndTime from "./DateAndTime"
 
 interface ReserveCardProps {
-  id: number
+  id: string
   status: ReservationStatus
   store: string
   title: string
@@ -22,24 +22,48 @@ export const ReserveCard = (props: ReserveCardProps) => {
   const navigate = useNavigate()
 
   const getButton = (): ReactNode => {
-    switch (status) {
-      case ReservationStatus.UPCOMING:
-        return null
-      case ReservationStatus.IN_PROGRESS:
-        return (
-          <Button variantType="primary" sizeType="xs">
-            방문완료
-          </Button>
-        )
-      case ReservationStatus.COMPLETED:
-        return (
-          <Button variantType="primary" sizeType="xs">
-            만족도 작성
-          </Button>
-        )
-      default:
-        return null
+    const isUpcoming = [
+      ReservationStatus.CONFIRMED,
+      ReservationStatus.APPROVED,
+      ReservationStatus.PENDING,
+    ].includes(status)
+
+    const isCompleted = [
+      ReservationStatus.COMPLETED,
+      ReservationStatus.IN_PROGRESS,
+    ].includes(status)
+
+    const isCancelled = [
+      ReservationStatus.CUSTOMER_CANCELLED,
+      ReservationStatus.STORE_CANCELLED,
+      ReservationStatus.NO_SHOW,
+    ].includes(status)
+
+    if (isUpcoming) {
+      return (
+        <Button variantType="primary" sizeType="xs">
+          방문예정
+        </Button>
+      )
     }
+
+    if (isCompleted) {
+      return (
+        <Button variantType="primary" sizeType="xs">
+          방문완료
+        </Button>
+      )
+    }
+
+    if (isCancelled) {
+      return (
+        <Button variantType="primary" sizeType="xs">
+          예약취소
+        </Button>
+      )
+    }
+
+    return null
   }
 
   return (
@@ -62,7 +86,7 @@ export const ReserveCard = (props: ReserveCardProps) => {
           <DateAndTime date={date} className="mt-3" />
         </div>
         <div className="flex flex-col justify-between items-end">
-          <ReserveTag status={status} reservationDate={new Date(date)} />
+          {/* <ReserveTag status={status} reservationDate={new Date(date)} /> */}
           {getButton()}
         </div>
       </div>

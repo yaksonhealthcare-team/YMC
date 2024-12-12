@@ -1,4 +1,3 @@
-import dayjs from "dayjs"
 import { Reservation, ReservationResponse } from "types/Reservation"
 
 export class ReservationMapper {
@@ -6,7 +5,7 @@ export class ReservationMapper {
     return {
       id: dto.r_idx,
       store: dto.b_name,
-      date: dayjs(dto.r_date),
+      date: new Date(dto.r_date),
       remainingDays: dto.remaining_days,
       visit: parseInt(dto.visit),
       programName: dto.ps_name,
