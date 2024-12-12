@@ -1,45 +1,80 @@
-export enum ReservationStatus {
-  UPCOMING = "UPCOMING", // 방문예정
-  CANCELED = "CANCELED", // 예약취소
-  IN_PROGRESS = "IN_PROGRESS", // 방문시간 진행중
-  COMPLETED = "COMPLETED", // 방문완료
-  COUNSELING_CONFIRMED = "COUNSELING_CONFIRMED", // 상담예약 확정
-  COUNSELING_CANCELED = "COUNSELING_CANCELED", // 상담예약 취소
-}
+import { Dayjs } from "dayjs"
+// export enum ReservationStatus {
+//   UPCOMING = "UPCOMING", // 방문예정
+//   CANCELED = "CANCELED", // 예약취소
+//   IN_PROGRESS = "IN_PROGRESS", // 방문시간 진행중
+//   COMPLETED = "COMPLETED", // 방문완료
+//   COUNSELING_CONFIRMED = "COUNSELING_CONFIRMED", // 상담예약 확정
+//   COUNSELING_CANCELED = "COUNSELING_CANCELED", // 상담예약 취소
+// }
 
-export const reservationStatusLabel: Record<ReservationStatus, string> = {
-  [ReservationStatus.UPCOMING]: "방문예정",
-  [ReservationStatus.CANCELED]: "예약취소",
-  [ReservationStatus.IN_PROGRESS]: "방문예정",
-  [ReservationStatus.COMPLETED]: "방문완료",
-  [ReservationStatus.COUNSELING_CONFIRMED]: "방문예정",
-  [ReservationStatus.COUNSELING_CANCELED]: "예약취소",
-}
+// export const reservationStatusLabel: Record<ReservationStatus, string> = {
+//   [ReservationStatus.UPCOMING]: "방문예정",
+//   [ReservationStatus.CANCELED]: "예약취소",
+//   [ReservationStatus.IN_PROGRESS]: "방문예정",
+//   [ReservationStatus.COMPLETED]: "방문완료",
+//   [ReservationStatus.COUNSELING_CONFIRMED]: "방문예정",
+//   [ReservationStatus.COUNSELING_CANCELED]: "예약취소",
+// }
 
-export type ReservationItem = {
-  id: number
-  status: ReservationStatus
+// export type ReservationItem = {
+//   id: number
+//   status: ReservationStatus
+//   store: string
+//   title: string
+//   count: number
+//   date: Date
+//   dDay?: number
+// }
+
+// export type ReservationFilterId = "all" | ReservationStatus
+
+// export const reservationFilters = [
+//   { id: "all", title: "전체" },
+//   {
+//     id: ReservationStatus.UPCOMING,
+//     title: reservationStatusLabel[ReservationStatus.UPCOMING],
+//   },
+//   {
+//     id: ReservationStatus.COMPLETED,
+//     title: reservationStatusLabel[ReservationStatus.COMPLETED],
+//   },
+//   {
+//     id: ReservationStatus.CANCELED,
+//     title: reservationStatusLabel[ReservationStatus.CANCELED],
+//   },
+// ] as const
+
+export type ReservationStatusCode = "" | "001" | "002" | "003"
+
+export type ReservationStatus =
+  | "예약완료"
+  | "승인예약"
+  | "대기예약"
+  | "관리중"
+  | "관리완료"
+  | "고객취소"
+  | "매장취소"
+  | "미방문"
+
+export interface Reservation {
+  id: string
   store: string
-  title: string
-  count: number
-  date: Date
-  dDay?: number
+  date: Dayjs
+  remainingDays: string
+  visit: number
+  programName: string
+  duration: number
+  status: ReservationStatus
 }
 
-export type ReservationFilterId = "all" | ReservationStatus
-
-export const reservationFilters = [
-  { id: "all", title: "전체" },
-  {
-    id: ReservationStatus.UPCOMING,
-    title: reservationStatusLabel[ReservationStatus.UPCOMING],
-  },
-  {
-    id: ReservationStatus.COMPLETED,
-    title: reservationStatusLabel[ReservationStatus.COMPLETED],
-  },
-  {
-    id: ReservationStatus.CANCELED,
-    title: reservationStatusLabel[ReservationStatus.CANCELED],
-  },
-] as const
+export interface ReservationResponse {
+  r_idx: string
+  b_name: string
+  r_date: string
+  r_status: ReservationStatus
+  remaining_days: string
+  visit: string
+  ps_name: string
+  r_take_time: string
+}
