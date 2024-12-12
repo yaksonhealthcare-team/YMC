@@ -1,8 +1,3 @@
-import {
-  reservationFilters,
-  ReservationItem,
-  ReservationStatus,
-} from "types/Reservation"
 import MainTabs from "./_fragments/MainTabs"
 import { useEffect, useState } from "react"
 import { Button } from "@components/Button"
@@ -24,48 +19,12 @@ const defaultFilter: FilterItem = {
 
 export type FilterItems = FilterItem[]
 
-const sampleReservations: ReservationItem[] = [
-  {
-    id: 0,
-    store: "약손명가 강남점",
-    title: "전신관리 90분",
-    count: 2,
-    date: new Date(),
-    status: ReservationStatus.IN_PROGRESS,
-  },
-  {
-    id: 1,
-    store: "약손명가 강남구청역점",
-    title: "전신관리 120분",
-    count: 3,
-    date: new Date(),
-    status: ReservationStatus.COMPLETED,
-  },
-  {
-    id: 2,
-    store: "약손명가 서초점",
-    title: "얼굴관리 60분",
-    count: 1,
-    date: new Date(),
-    status: ReservationStatus.COMPLETED,
-  },
-  {
-    id: 3,
-    store: "약손명가 강남점",
-    title: "전신관리 90분",
-    count: 2,
-    date: new Date(),
-    status: ReservationStatus.CANCELED,
-  },
-]
-
 const ReservationHistory = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const [reservationFilter, setReservationFilter] =
     useState<FilterItem>(defaultFilter)
-  const [filteredReservations, _setFilteredReservations] =
-    useState(sampleReservations)
+  const [filteredReservations, _setFilteredReservations] = useState()
 
   const handleOnClickFloatingButton = () => {
     navigate("/reservation/form")
@@ -85,7 +44,7 @@ const ReservationHistory = () => {
       </div>
 
       <div className="px-5 py-4 flex justify-center gap-2">
-        {reservationFilters.map((filter) => {
+        {/* {reservationFilters.map((filter) => {
           const isSelected = filter.id === reservationFilter.id
 
           return (
@@ -103,12 +62,12 @@ const ReservationHistory = () => {
               {filter.title}
             </Button>
           )
-        })}
+        })} */}
       </div>
 
       <div className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto scrollbar-hide">
         <div className="space-y-3">
-          {filteredReservations.map((item, index) => (
+          {/* {filteredReservations.map((item, index) => (
             <ReserveCard
               key={index}
               id={item.id}
@@ -118,7 +77,7 @@ const ReservationHistory = () => {
               count={item.count}
               date={item.date}
             />
-          ))}
+          ))} */}
         </div>
       </div>
       <button

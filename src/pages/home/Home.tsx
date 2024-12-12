@@ -7,14 +7,12 @@ import DynamicHomeHeaderBackground from "./_fragments/DynamicHomeHeaderBackgroun
 import Logo from "@components/Logo.tsx"
 import NotiIcon from "@assets/icons/NotiIcon.svg?react"
 import { Title } from "@components/Title.tsx"
-import { ReserveCard } from "@components/ReserveCard.tsx"
 import { MembershipCard } from "@components/MembershipCard.tsx"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { BrandCard } from "@components/BrandCard.tsx"
 import { FloatingButton } from "@components/FloatingButton.tsx"
 import { EmptyCard } from "@components/EmptyCard.tsx"
 import { MembershipItem, MembershipStatus } from "types/Membership.ts"
-import { ReservationItem, ReservationStatus } from "types/Reservation.ts"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -110,52 +108,16 @@ const Home = () => {
 
 const ReserveCardSection = () => {
   const navigate = useNavigate()
-  // 예약
-  const reserveCardsData: ReservationItem[] = [
-    {
-      id: 0,
-      store: "약손명가 강남점",
-      title: "전신관리 90분",
-      count: 2,
-      date: new Date(),
-      status: ReservationStatus.IN_PROGRESS,
-    },
-    {
-      id: 1,
-      store: "약손명가 강남구청역점",
-      title: "전신관리 120분",
-      count: 3,
-      date: new Date(),
-      dDay: 8,
-      status: ReservationStatus.UPCOMING,
-    },
-    {
-      id: 2,
-      store: "약손명가 서초점",
-      title: "얼굴관리 60분",
-      count: 1,
-      date: new Date(),
-      status: ReservationStatus.COMPLETED,
-    },
-    {
-      id: 3,
-      store: "약손명가 강남점",
-      title: "전신관리 90분",
-      count: 2,
-      date: new Date(),
-      status: ReservationStatus.CANCELED,
-    },
-  ]
 
   return (
     <div className="mt-6">
-      <Title
+      {/* <Title
         type="arrow"
         title="예정된 예약"
         count={`${reserveCardsData.length}건`}
         onClick={() => navigate("/member-history/reservation")}
-      />
-      {reserveCardsData.length > 0 ? (
+      /> */}
+      {/* {reserveCardsData.length > 0 ? (
         <Swiper
           spaceBetween={10}
           slidesPerView={1}
@@ -181,7 +143,7 @@ const ReserveCardSection = () => {
 나만을 위한 힐링을 시작해보세요!`}
           button="예약하러 가기"
         />
-      )}
+      )} */}
     </div>
   )
 }
