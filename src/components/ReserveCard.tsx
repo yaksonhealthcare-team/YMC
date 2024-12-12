@@ -20,50 +20,45 @@ export const ReserveCard = (props: ReserveCardProps) => {
   const { id, status, store, title, count, date, className } = props
 
   const navigate = useNavigate()
+  const classifyReservationStatus = (status: ReservationStatus) => {
+    const statusGroups = {
+      upcoming: [
+        ReservationStatus.CONFIRMED,
+        ReservationStatus.APPROVED,
+        ReservationStatus.PENDING,
+      ],
+      completed: [ReservationStatus.COMPLETED],
+      cancelled: [
+        ReservationStatus.CUSTOMER_CANCELLED,
+        ReservationStatus.STORE_CANCELLED,
+        ReservationStatus.NO_SHOW,
+      ],
+      proressing: [ReservationStatus.IN_PROGRESS],
+    }
+
+    if (statusGroups.upcoming.includes(status)) return "upcoming"
+    if (statusGroups.completed.includes(status)) return "completed"
+    if (statusGroups.cancelled.includes(status)) return "cancelled"
+    if (statusGroups.proressing.includes(status)) return "progressing"
+    return null
+  }
 
   const getButton = (): ReactNode => {
-    const isUpcoming = [
-      ReservationStatus.CONFIRMED,
-      ReservationStatus.APPROVED,
-      ReservationStatus.PENDING,
-    ].includes(status)
-
-    const isCompleted = [
-      ReservationStatus.COMPLETED,
-      ReservationStatus.IN_PROGRESS,
-    ].includes(status)
-
-    const isCancelled = [
-      ReservationStatus.CUSTOMER_CANCELLED,
-      ReservationStatus.STORE_CANCELLED,
-      ReservationStatus.NO_SHOW,
-    ].includes(status)
-
-    if (isUpcoming) {
-      return (
-        <Button variantType="primary" sizeType="xs">
-          방문예정
-        </Button>
-      )
+    const buttonTexts = {
+      completed: "만족도 작성",
+      progressing: "방문 완료",
     }
 
-    if (isCompleted) {
-      return (
-        <Button variantType="primary" sizeType="xs">
-          방문완료
-        </Button>
-      )
-    }
+    const statusType = classifyReservationStatus(status)
 
-    if (isCancelled) {
-      return (
-        <Button variantType="primary" sizeType="xs">
-          예약취소
-        </Button>
-      )
-    }
+    if (!statusType || statusType === "upcoming") return null
+    if (!statusType || statusType === "cancelled") return null
 
-    return null
+    return (
+      <Button variantType="primary" sizeType="xs">
+        {buttonTexts[statusType]}
+      </Button>
+    )
   }
 
   return (
@@ -86,7 +81,10 @@ export const ReserveCard = (props: ReserveCardProps) => {
           <DateAndTime date={date} className="mt-3" />
         </div>
         <div className="flex flex-col justify-between items-end">
-          {/* <ReserveTag status={status} reservationDate={new Date(date)} /> */}
+          <ReserveTag
+            status={classifyReservationStatus(status)}
+            reservationDate={date}
+          />
           {getButton()}
         </div>
       </div>
