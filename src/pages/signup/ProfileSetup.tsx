@@ -10,6 +10,7 @@ import { Address } from "react-daum-postcode/lib/loadPostcode"
 import Profile from "@assets/icons/Profile.svg?react"
 import SettingIcon from "@assets/icons/SettingIcon.svg?react"
 import { useBrands } from "../../queries/useBrandQueries.tsx"
+import { Swiper, SwiperSlide } from "swiper/react"
 
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -48,16 +49,16 @@ export const ProfileSetup = () => {
 
   const toggleBrandSelection = (brandCode: string) => {
     setSignupData((prev) => {
-      const brandCodes = prev.brandCodes || [];
-      const isSelected = brandCodes.includes(brandCode);
+      const brandCodes = prev.brandCodes || []
+      const isSelected = brandCodes.includes(brandCode)
 
       const updatedBrands = isSelected
         ? brandCodes.filter((code) => code !== brandCode)
-        : [...brandCodes, brandCode];
+        : [...brandCodes, brandCode]
 
-      return { ...prev, brandCodes: updatedBrands };
-    });
-  };
+      return { ...prev, brandCodes: updatedBrands }
+    })
+  }
 
   const handleSignupSubmit = async () => {
     // TODO pass api 완료 후 signup api 요청
@@ -233,24 +234,32 @@ export const ProfileSetup = () => {
         )}
 
         {/* 브랜드 선택 */}
-        <div className="flex flex-col gap-2 overflow-x-auto">
+        <div className="flex flex-col gap-2">
           <div className="flex items-center gap-0.5">
             <span className="text-14px font-medium text-black">
               현재 이용중인 브랜드를 선택해주세요
             </span>
             <span className="text-14px text-[#A2A5AA]">(선택)</span>
           </div>
-          <div className="flex gap-4">
-            {brands &&
-              brands.map((brand) => (
-                <BrandCard
-                  key={brand.code}
-                  name={brand.name}
-                  brandSrc={brand.imageUrl || ""}
-                  onClick={() => toggleBrandSelection(brand.code)}
-                  selected={signupData.brandCodes ? signupData.brandCodes?.includes(brand.code) : false}
-                />
-              ))}
+
+          <div className="overflow-x-auto">
+            <Swiper spaceBetween={16} slidesPerView={"auto"} className="gap-4">
+              {brands &&
+                brands.map((brand) => (
+                  <SwiperSlide key={brand.code} className="!w-auto">
+                    <BrandCard
+                      name={brand.name}
+                      brandSrc={brand.imageUrl || ""}
+                      onClick={() => toggleBrandSelection(brand.code)}
+                      selected={
+                        signupData.brandCodes
+                          ? signupData.brandCodes?.includes(brand.code)
+                          : false
+                      }
+                    />
+                  </SwiperSlide>
+                ))}
+            </Swiper>
           </div>
         </div>
 
