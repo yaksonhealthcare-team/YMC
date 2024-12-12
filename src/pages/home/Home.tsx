@@ -12,10 +12,11 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import { BrandCard } from "@components/BrandCard.tsx"
 import { FloatingButton } from "@components/FloatingButton.tsx"
 import { EmptyCard } from "@components/EmptyCard.tsx"
-import { MembershipItem, MembershipStatus } from "types/Membership.ts"
 import { ReserveCard } from "@components/ReserveCard.tsx"
 import { Reservation } from "types/Reservation.ts"
 import { useReservations } from "queries/useReservationQueries.tsx"
+import { useMembershipList } from "queries/useMembershipQueries.tsx"
+import SplashScreen from "@components/Splash.tsx"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -159,62 +160,39 @@ const ReserveCardSection = () => {
 
 const MembershipCardSection = () => {
   const navigate = useNavigate()
+  const { data: memberships, isLoading } = useMembershipList("T") // 사용가능 회원권 필터
 
-  // 회원권
-  const membershipCardsData: MembershipItem[] = [
-    {
-      id: 0,
-      status: MembershipStatus.AVAILABLE,
-      title: "K-BEAUTY 연예인관리",
-      count: "4회 / 20",
-      startAt: "2024.04.01",
-      endAt: "2024.12.31",
-      isAllBranch: true,
-    },
-    {
-      id: 1,
-      status: MembershipStatus.COMPLETED,
-      title: "바디케어 프로그램",
-      count: "0회 / 10",
-      startAt: "2024.01.01",
-      endAt: "2024.03.31",
-      isAllBranch: false,
-    },
-    {
-      id: 2,
-      status: MembershipStatus.EXPIRED,
-      title: "럭셔리 스파",
-      count: "2회 / 5",
-      startAt: "2024.12.01",
-      endAt: "2024.02.29",
-      isAllBranch: true,
-    },
-  ]
+  const availableMemberships = useMemo(() => {
+    if (!memberships?.pages) return []
+    return memberships.pages.flatMap((page) => page)
+  }, [memberships])
 
   return (
     <div className="mt-6">
       <Title
         type="arrow"
         title="보유 회원권"
-        count="3개"
+        count={`${availableMemberships.length}개`}
         onClick={() => navigate(`/member-history/membership`)}
       />
-      {membershipCardsData.length > 0 ? (
+      {isLoading ? (
+        <SplashScreen />
+      ) : availableMemberships.length > 0 ? (
         <Swiper
           spaceBetween={10}
           slidesPerView={1}
           style={{ overflow: "visible" }}
           className="mt-2"
         >
-          {membershipCardsData.map((data, index) => (
-            <SwiperSlide key={index} className="mr-2">
+          {availableMemberships.map((membership) => (
+            <SwiperSlide key={membership.id} className="mr-2">
               <MembershipCard
-                id={data.id}
-                title={data.title}
-                count={data.count}
-                date={`${data.startAt} - ${data.endAt}`}
-                status={data.status}
-                isAllBranch={true}
+                id={parseInt(membership.id)}
+                title={membership.serviceName || membership.serviceType}
+                count={`${membership.remainCount}회 / ${membership.totalCount}회`}
+                date={`${membership.purchaseDate} - ${membership.expirationDate}`}
+                status={membership.status}
+                serviceType={membership.serviceType}
                 showReserveButton={true}
               />
             </SwiperSlide>
@@ -222,8 +200,7 @@ const MembershipCardSection = () => {
         </Swiper>
       ) : (
         <EmptyCard
-          title={`사용 가능한 회원권이 없어요.
-회원권 구매 후 예약이 가능해요.`}
+          title={`사용 가능한 회원권이 없어요.\n회원권 구매 후 예약이 가능해요.`}
           button="회원권 구매하기"
         />
       )}

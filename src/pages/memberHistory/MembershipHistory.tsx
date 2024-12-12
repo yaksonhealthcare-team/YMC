@@ -76,10 +76,11 @@ const MembershipHistory = () => {
                 key={membership.id}
                 id={parseInt(membership.id)}
                 status={membership.status}
-                title={membership.serviceName}
+                title={membership.serviceName || membership.serviceType}
                 count={`${membership.remainCount}회 / ${membership.totalCount}회`}
                 date={`${membership.purchaseDate} - ${membership.expirationDate}`}
                 showReserveButton={false}
+                serviceType={membership.serviceType}
               />
             ))}
           </div>
