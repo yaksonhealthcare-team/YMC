@@ -1,6 +1,6 @@
 import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
-import { User, UserResponse } from "../types/User.ts"
+import { User, UserResponse, UserUpdateRequest } from "../types/User.ts"
 import { UserMapper } from "../mappers/UserMapper.ts"
 
 export const loginWithEmail = async ({
@@ -45,5 +45,11 @@ export const resetPassword = async (
   await axiosClient.put("/auth/reset_password", {
     email: email,
     password: password,
+  })
+}
+
+export const updateUserProfile = async (request: UserUpdateRequest) => {
+  await axiosClient.patch("/auth/me", {
+    ...request,
   })
 }

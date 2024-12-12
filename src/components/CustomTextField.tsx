@@ -88,7 +88,7 @@ const CustomTextField = forwardRef<HTMLInputElement, CustomTextFieldProps>(
       {label && <p className="font-m text-14px text-gray-700 mb-2">{label}</p>}
       <div className="flex items-center">
         <TextField
-          ref={ref}
+          inputRef={ref}
           name={name}
           type={type}
           value={value}
