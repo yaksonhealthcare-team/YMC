@@ -59,7 +59,7 @@ const EditProfile = () => {
       display: true,
     })
     setNavigation({ display: false })
-  }, [address])
+  }, [address, marketingAgreed])
 
   if (!user) {
     return <></>
