@@ -250,7 +250,7 @@ const ProductList = ({
                 }
               >
                 <div className="flex justify-between items-start mb-3">
-                  <Tag type="rect" title="전지점" />
+                  <Tag type="rect" title={membership.serviceType} />
                   <div className="flex items-center gap-1">
                     <ClockIcon className="text-primary" />
                     <span className="font-r text-14px text-gray-500">
