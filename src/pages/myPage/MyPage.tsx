@@ -52,7 +52,7 @@ const MyPage = () => {
 
   const menuItems = [
     { id: "favorite", title: "즐겨찾는 지점", path: "/favorite" },
-    { id: "payment", title: "결제 내역", path: "/paymen_history" },
+    { id: "payment", title: "결제 내역", path: "/payment_history" },
     { id: "review", title: "작성한 만족도", path: "/review" },
     { id: "inquiry", title: "1:1 문의", path: "/inquiry" },
     { id: "event", title: "이벤트", path: "/event" },
