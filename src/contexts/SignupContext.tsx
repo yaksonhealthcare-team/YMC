@@ -30,7 +30,7 @@ const initialState: UserSignup = {
   address1: "",
   address2: "",
   profileImage: null,
-  brand: "",
+  brandCodes: [],
   referralCode: "",
   recom: "",
   marketingYn: false,
