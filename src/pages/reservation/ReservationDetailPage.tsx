@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useLayout } from "contexts/LayoutContext"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { useNavigate } from "react-router-dom"
@@ -6,15 +6,12 @@ import { Button } from "@components/Button"
 import Location from "./_fragments/Location"
 import { Divider } from "@mui/material"
 import MembershipUsage from "./_fragments/MembershipUsage"
-import { useOverlay } from "contexts/ModalContext"
-import CounselingCancelBottomSheetContent from "./_fragments/CounselingCancelBottomSheetContent"
-import CancelConfirmBottomSheetContent from "./_fragments/CancelConfirmBottomSheetContent"
 
 const ReservationDetailPage = () => {
   const { setHeader, setNavigation } = useLayout()
   // const [reservationStatus, setReservationStatus] =
   //   useState<ReservationStatus>()
-  const { closeOverlay, openBottomSheet } = useOverlay()
+  // const { closeOverlay, openBottomSheet } = useOverlay()
 
   const navigate = useNavigate()
 
@@ -22,21 +19,21 @@ const ReservationDetailPage = () => {
   //   setReservationStatus(ReservationStatus.COMPLETED)
   // }, [])
 
-  const handleCancel = async () => {
-    openBottomSheet(
-      <CounselingCancelBottomSheetContent
-        onConfirm={handleConfirmCancel}
-        onCancel={closeOverlay}
-      />,
-    )
-  }
+  // const handleCancel = async () => {
+  //   openBottomSheet(
+  //     <CounselingCancelBottomSheetContent
+  //       onConfirm={handleConfirmCancel}
+  //       onCancel={closeOverlay}
+  //     />,
+  //   )
+  // }
 
-  const handleConfirmCancel = async () => {
-    // TODO: Call Cancel API
-    openBottomSheet(
-      <CancelConfirmBottomSheetContent onConfirm={closeOverlay} />,
-    )
-  }
+  // const handleConfirmCancel = async () => {
+  //   // TODO: Call Cancel API
+  //   openBottomSheet(
+  //     <CancelConfirmBottomSheetContent onConfirm={closeOverlay} />,
+  //   )
+  // }
 
   // const renderButton = () => {
   //   switch (reservationStatus) {
