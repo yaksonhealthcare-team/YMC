@@ -100,13 +100,14 @@ const MembershipUsageHistory = () => {
     <>
       {memberShipDetail && (
         <div className="px-[20px] pt-[16px] pb-[100px] overflow-y-scroll min-h-[calc(100vh-82px)] bg-system-bg">
+          {/* TODO: 실제 데이터로 적용 필요 */}
           <MembershipCard
-            id={memberShipDetail?.id}
-            title={memberShipDetail.title}
-            count={memberShipDetail.count}
-            date={`${memberShipDetail.startAt} - ${memberShipDetail.endAt}`}
+            id={1}
+            title="K-BEAUTY 연예인관리"
+            count="4회 / 20회"
+            date="2024.04.01 - 2024.12.31"
             status={MembershipStatus.AVAILABLE}
-            isAllBranch={memberShipDetail.isAllBranch}
+            serviceType="지점 회원권"
             showReserveButton={false}
             showHistoryButton={false}
           />
