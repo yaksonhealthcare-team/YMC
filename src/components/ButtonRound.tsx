@@ -4,11 +4,14 @@ interface ButtonRoundProps {
 }
 
 export const ButtonRound = (props: ButtonRoundProps) => {
-  const { title } = props
+  const { title, onClick } = props
 
   return (
     <>
-      <button className="h-9 px-3 bg-primary rounded-full font-sb text-12px text-white">
+      <button
+        onClick={onClick}
+        className="h-9 px-3 bg-primary rounded-full font-sb text-12px text-white"
+      >
         {title}
       </button>
     </>
