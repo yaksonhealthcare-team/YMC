@@ -309,7 +309,7 @@ const PaymentPage = () => {
 
         {/* 동의 체크박스 */}
         <div className="p-5">
-          <label className="flex items-start gap-3">
+          <label className="flex items-start gap-3 items-center">
             <input
               type="checkbox"
               checked={isAgreed}
