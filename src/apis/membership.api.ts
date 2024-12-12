@@ -50,11 +50,13 @@ export const fetchMembershipDetail = async (
 export const fetchMyMemberships = async (
   search_type: string,
   page: number = 1,
+  page_size: number = 10,
 ) => {
-  const { data } = await axiosClient.get("/memberships/me", {
+  const { data } = await axiosClient.get("/memberships/me/me", {
     params: {
       search_type,
       page,
+      page_size,
     },
   })
   return MyMembershipMapper.toEntities(data.body)
