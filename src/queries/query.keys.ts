@@ -44,6 +44,8 @@ export const queryKeys = {
       "service_categories",
       brandCode,
     ],
+    myList: (status: string) =>
+      [...queryKeys.memberships.all, "myList", status] as const,
   },
   events: {
     all: ["events"] as const,

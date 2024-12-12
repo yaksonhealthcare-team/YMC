@@ -1,6 +1,7 @@
 import {
   MembershipDetailMapper,
   MembershipMapper,
+  MyMembershipMapper,
   ServiceCategoryMapper,
 } from "mappers/MembershipMapper"
 import { axiosClient } from "queries/clients"
@@ -44,4 +45,17 @@ export const fetchMembershipDetail = async (
     },
   })
   return MembershipDetailMapper.toEntity(data.body)
+}
+
+export const fetchMyMemberships = async (
+  search_type: string,
+  page: number = 1,
+) => {
+  const { data } = await axiosClient.get("/memberships/me", {
+    params: {
+      search_type,
+      page,
+    },
+  })
+  return MyMembershipMapper.toEntities(data.body)
 }

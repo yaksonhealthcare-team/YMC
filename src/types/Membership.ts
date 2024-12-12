@@ -140,3 +140,51 @@ export interface MembershipDetailResponse {
   pictures: string[]
   options: MembershipOptionResponse[]
 }
+
+export type MyMembershipStatusCode = "-" | "T" | "F" | "E"
+
+export interface MyMembershipResponse {
+  mp_idx: string
+  remain_amount: string
+  buy_amount: string
+  pay_date: string
+  expiration_date: string
+  service_name: string
+  s_type: string
+  status: MembershipStatus
+}
+
+export interface MyMembership {
+  id: string
+  remainCount: number
+  totalCount: number
+  purchaseDate: string
+  expirationDate: string
+  serviceName: string
+  serviceType: string
+  status: MembershipStatus
+}
+
+export interface MyMembershipFilterItem {
+  id: MyMembershipStatusCode
+  title: string
+}
+
+export const myMembershipFilters: MyMembershipFilterItem[] = [
+  {
+    id: "-",
+    title: "전체",
+  },
+  {
+    id: "T",
+    title: "사용가능",
+  },
+  {
+    id: "F",
+    title: "사용완료",
+  },
+  {
+    id: "E",
+    title: "만료됨",
+  },
+]
