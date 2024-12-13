@@ -80,7 +80,7 @@ const MyPage = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-[#F8F5F2]">
+      <div className="h-fit bg-[#F8F5F2] pb-8">
         {/* Notice */}
         <div className="px-5 py-2 m-5 rounded-[20px] bg-white">
           <Notice
