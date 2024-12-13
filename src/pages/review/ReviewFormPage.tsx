@@ -181,13 +181,6 @@ const ReviewFormPage = () => {
       images.forEach((image) => {
         formData.append("upload", image.file)
       })
-
-      console.log("Submitting review:", {
-        r_idx: "5453207",
-        review: reviewData,
-        review_memo: review,
-        upload: images.map((img) => img.file.name),
-      })
     } catch (error) {
       console.error("Failed to submit review:", error)
     }
