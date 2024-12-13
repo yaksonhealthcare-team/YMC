@@ -52,6 +52,7 @@ import ServiceTermsPage from "../pages/terms/ServiceTermsPage.tsx"
 import PrivacyTermsPage from "../pages/terms/PrivacyTermsPage.tsx"
 import LocationTermsPage from "../pages/terms/LocationTermsPage.tsx"
 import MarketingTermsPage from "../pages/terms/MarketingTermsPage.tsx"
+import PaymentPage from "../pages/payment/PaymentPage.tsx"
 import AddUsingBranch from "../pages/addUsingBranch/AddUsingBranch.tsx"
 import PaymentHistoryDetailPage from "../pages/payment/PaymentHistoryDetailPage.tsx"
 import PaymentCancelPage from "../pages/payment/PaymentCancelPage.tsx"
@@ -59,6 +60,7 @@ import PaymentCancelCompletePage from "../pages/payment/PaymentCancelCompletePag
 import ReservationHistory from "pages/memberHistory/ReservationHistory.tsx"
 import MembershipHistory from "pages/memberHistory/MembershipHistory.tsx"
 import MembershipSelectBranchPage from "../pages/membership/MembershipBranchSelectPage.tsx"
+import PaymentCompletePage from "../pages/payment/PaymentCompletePage.tsx"
 
 interface RouteConfig {
   path: string
@@ -238,6 +240,11 @@ const routeConfig: RouteConfig[] = [
     auth: true,
   },
   {
+    path: "/payment_history",
+    element: <PaymentHistoryPage />,
+    auth: true,
+  },
+  {
     path: "/inquiry",
     element: <InquiryPage />,
     auth: true,
@@ -253,6 +260,17 @@ const routeConfig: RouteConfig[] = [
     element: <CartPage />,
     auth: true,
   },
+
+  //결제
+  {
+    path: "/payment",
+    element: <PaymentPage />,
+  },
+  {
+    path: "/payment/complete",
+    element: <PaymentCompletePage />,
+  },
+
   {
     path: "/payment",
     element: <PaymentHistoryPage />,
