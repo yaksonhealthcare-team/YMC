@@ -3,6 +3,7 @@ import { HTTPResponse } from "../types/HTTPResponse.ts"
 import {
   QuestionnaireFormValues,
   QuestionnaireResult,
+  Question,
 } from "../types/Questionnaire"
 
 // 사용자 공통 문진 결과 조회
@@ -37,14 +38,16 @@ export const submitReservationQuestionnaire = async (
 
 // 공통 문진 질문 조회
 export const fetchCommonQuestionnaire = async () => {
-  const { data } = await axiosClient.get("/consultations/common/common")
-  return data
+  const { data } = await axiosClient.get<HTTPResponse<Question[]>>(
+    "/consultations/common/common",
+  )
+  return data.body
 }
 
 // 예약 문진 질문 조회
 export const fetchReservationQuestionnaire = async () => {
-  const { data } = await axiosClient.get(
+  const { data } = await axiosClient.get<HTTPResponse<Question[]>>(
     "/consultations/reservation/reservation",
   )
-  return data
+  return data.body
 }

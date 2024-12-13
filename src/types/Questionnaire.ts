@@ -3,7 +3,13 @@ export interface Question {
   question_text: string
   contents_type: string
   answer_type: "S" | "M" | "T"
-  options: QuestionOption[]
+  options: {
+    csso_idx: string
+    option_type: string
+    option_text: string
+    option_image_url: string
+    next_cssq_idx: string
+  }[]
 }
 
 export interface QuestionOption {
