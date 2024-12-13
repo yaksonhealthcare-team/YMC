@@ -177,8 +177,6 @@ const MemberHistory = () => {
               ? reservationFilter.id
               : membershipFilter.id)
 
-          console.log("isSelected", isSelected)
-
           return (
             <Button
               key={filter.id}

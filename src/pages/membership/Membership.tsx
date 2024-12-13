@@ -121,7 +121,7 @@ const BrandSection = ({
   handleSelectedBrand,
 }: BrandSectionProps) => {
   return (
-    <div className="flex ">
+    <div className="flex">
       {brands && brands.length > 0 && (
         <CustomTabs
           type="scroll"
