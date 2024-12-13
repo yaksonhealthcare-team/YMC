@@ -17,13 +17,13 @@ export interface QuestionOption {
 export type QuestionnaireType = "common" | "reservation"
 
 export interface QuestionnaireResult {
-  index: number
-  question: string
-  answerType: "single_choice" | "multiple_choice" | "text"
+  cssq_idx: string
+  question_text: string
+  answer_type: "S" | "M" | "T"
   options: {
-    optionIndex: number
-    optionText: string
-    answerText: string
+    csso_idx: string
+    option_text: string
+    answer_text: string
   }[]
 }
 
