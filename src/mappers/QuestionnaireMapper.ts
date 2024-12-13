@@ -25,9 +25,9 @@ export class QuestionnaireMapper {
       question: dto.question_text,
       answerType: this.toQuestionnaireAnswerType(dto.answer_type),
       options: dto.options.map((option) => ({
-        optionIndex: Number(option.csso_idx),
-        optionText: option.option_text,
-        answerText: option.answer_text,
+        csso_idx: option.csso_idx,
+        option_text: option.option_text,
+        answer_text: option.answer_text,
       })),
     }
   }

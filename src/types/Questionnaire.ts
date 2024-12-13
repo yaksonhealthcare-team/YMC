@@ -23,11 +23,11 @@ export interface QuestionOption {
 export type QuestionnaireType = "common" | "reservation"
 
 export interface QuestionnaireResult {
-  cssq_idx: string
-  question_text: string
-  answer_type: "S" | "M" | "T"
+  index: number
+  question: string
+  answerType: "single_choice" | "multiple_choice" | "text"
   options: {
-    csso_idx: string
+    csso_idx: string | number
     option_text: string
     answer_text: string
   }[]
