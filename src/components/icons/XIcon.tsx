@@ -13,16 +13,16 @@ export const XIcon = (props: SvgIconProps) => {
         <path
           d="M18.75 5.25L5.25 18.75"
           stroke="#212121"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
         <path
           d="M18.75 18.75L5.25 5.25"
           stroke="#212121"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </svg>
     </SvgIcon>

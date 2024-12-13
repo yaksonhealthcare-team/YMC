@@ -1,11 +1,11 @@
 <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M79.4164 47.0834V29.3335C79.4164 12.5419 75.4997 8.3335 59.7497 8.3335H28.2497C12.4997 8.3335 8.58301 12.5419 8.58301 29.3335V76.2501C8.58301 87.3334 14.6664 89.9585 22.0414 82.0418L22.083 82.0001C25.4996 78.3751 30.708 78.6668 33.6663 82.6251L37.8747 88.2501"
-          stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M27.333 29.1665H60.6663" stroke="currentColor" stroke-width="4" stroke-linecap="round"
-          stroke-linejoin="round"/>
-    <path d="M31.5 45.8335H56.5" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M27.333 29.1665H60.6663" stroke="currentColor" strokeWidth="4" strokeLinecap="round"
+          strokeLinejoin="round"/>
+    <path d="M31.5 45.8335H56.5" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
     <path d="M69.879 61.5428L55.1291 76.2929C54.5458 76.8762 54.004 77.9595 53.879 78.7512L53.0874 84.3762C52.7957 86.4179 54.2124 87.8346 56.2541 87.5429L61.8791 86.7512C62.6708 86.6262 63.7957 86.0845 64.3374 85.5012L79.0874 70.7512C81.6291 68.2096 82.8374 65.2512 79.0874 61.5012C75.3791 57.7929 72.4207 59.0011 69.879 61.5428Z"
-          stroke="currentColor" stroke-width="4" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M67.7466 63.668C68.9966 68.168 72.4966 71.668 76.9966 72.918" stroke="currentColor" stroke-width="4"
-          stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+          stroke="currentColor" strokeWidth="4" stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M67.7466 63.668C68.9966 68.168 72.4966 71.668 76.9966 72.918" stroke="currentColor" strokeWidth="4"
+          stroke-miterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
 </svg>
