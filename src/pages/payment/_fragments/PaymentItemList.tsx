@@ -102,8 +102,8 @@ const PaymentItemList = ({
 
   return (
     <ul className={"flex flex-col space-y-4"}>
-      {payment.items.map((item) => (
-        <li key={item.index}>
+      {payment.items.map((item, idx) => (
+        <li key={`${item.index}-${idx}`}>
           <Membership
             category={payment.category}
             item={item}
