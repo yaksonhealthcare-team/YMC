@@ -14,12 +14,12 @@ import { RadioGroup } from "@mui/material"
 import { RadioCard } from "@components/RadioCard.tsx"
 import CustomTextField from "@components/CustomTextField.tsx"
 import Switch from "@components/Switch.tsx"
-import PostcodeSearchModal from "./_fragments/PostcodeSearchModal.tsx"
 import {
   FieldWithButton,
   LabeledForm,
 } from "./_fragments/ProfileFormComponents.tsx"
 import { updateUserProfile } from "../../apis/auth.api.ts"
+import PostcodeModal from "@components/modal/PostcodeModal.tsx"
 
 const EditProfile = () => {
   const { user } = useAuth()
@@ -217,23 +217,25 @@ const EditProfile = () => {
               {"회원탈퇴"}
             </p>
           </button>
-          <PostcodeSearchModal
-            open={openPostcode}
-            setOpen={setOpenPostcode}
-            onComplete={({
-              roadAddress,
-              jibunAddress,
-              userSelectedType,
-              zonecode,
-            }) => {
-              setAddress({
-                road: userSelectedType === "R" ? roadAddress : jibunAddress,
-                detail: "",
-                postalCode: zonecode,
-              })
-              detailAddressFieldRef.current?.focus()
-            }}
-          />
+          {openPostcode && (
+            <PostcodeModal
+              setIsPostcodeOpen={setOpenPostcode}
+              handleCompletePostcode={({
+                roadAddress,
+                jibunAddress,
+                userSelectedType,
+                zonecode,
+              }) => {
+                setAddress({
+                  road: userSelectedType === "R" ? roadAddress : jibunAddress,
+                  detail: "",
+                  postalCode: zonecode,
+                })
+                setOpenPostcode(false)
+                detailAddressFieldRef.current?.focus()
+              }}
+            />
+          )}
         </div>
       </div>
     </div>
