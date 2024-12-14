@@ -7,6 +7,10 @@ export interface Event {
   sdate: string
   edate: string
   status: EventStatus
+  files: {
+    fileCode: string
+    fileName: string
+  }[]
 }
 
 export interface EventDetail {
@@ -16,7 +20,10 @@ export interface EventDetail {
   sdate: string
   edate: string
   contents: string
-  files: string | null
+  files: {
+    fileCode: string
+    fileName: string
+  }[]
 }
 
 export interface Notice {
