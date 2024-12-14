@@ -47,7 +47,6 @@ export class BranchMapper {
 
   static toDetailEntity(dto: BranchDetailResponse): BranchDetail {
     const staffs = dto.staff.map(this.toProfile)
-    console.log(1)
     const directorDTO = dto.staff.find(
       (item) => item.bs_grade === "원장" || item.bs_name_ko === dto.bs_name_ko,
     )

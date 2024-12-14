@@ -25,16 +25,16 @@ export default function FilledCheckIcon({
           stroke={
             isActive ? props.color || props.htmlColor || "#F37165" : "#DDDDDD"
           }
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
         <path
           d="M13.4375 8.625L8.85414 13L6.5625 10.8125"
           stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </svg>
     </SvgIcon>
