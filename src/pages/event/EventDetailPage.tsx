@@ -30,12 +30,10 @@ function EventDetailPage() {
       <div className="flex flex-col gap-6">
         <EventHeader event={event} />
         <div className="w-full h-[1px] bg-[#ECECEC] rounded-[1px]"></div>
-        <EventImage
-          imageUrl={
-            "/assets/home_event.png"
-            // TODO: replace path to `event.files` and check if event.files exists (event.files && {...})
-          }
-        />
+        {event.files.map(({ fileName }, index) => {
+          if (fileName.length === 0) return null
+          return <EventImage key={index} imageUrl={fileName} />
+        })}
         <EventDescription event={event} />
       </div>
     </div>
