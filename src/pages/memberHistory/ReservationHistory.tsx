@@ -37,12 +37,13 @@ const ReservationHistory = () => {
     setNavigation({ display: true })
   }, [])
 
+  if (isLoading) return <SplashScreen />
+
   return (
     <div className="flex flex-col bg-system-bg min-h-[calc(100vh-82px)]">
       <div className="px-5">
         <MainTabs />
       </div>
-      {isLoading && <SplashScreen />}
 
       <div className="px-5 py-4 flex justify-center gap-2">
         {reservationFilters.map((filter) => {
