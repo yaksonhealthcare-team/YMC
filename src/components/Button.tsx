@@ -17,6 +17,8 @@ const VARIANT_STYLES = {
   line: "border border-solid border-primary bg-white text-primary-400 hover:bg-[#FEF2F1] active:bg-primary-100 disabled:bg-white disabled:text-gray-300 disabled:border disabled:border-solid disabled:border-gray-300",
   gray: "bg-gray-100 text-black hover:bg-gray-50 active:bg-gray-200 disabled:bg-grey-50 disabled:text-gray-300",
   text: "bg-transparent text-primary hover:underline active:text-primary-400 active:bg-white",
+  grayLine:
+    "border border-solid border-[#ECECEC] bg-white text-gray-700 hover:bg-gray-50",
 } as const
 
 const SIZE_STYLES = {

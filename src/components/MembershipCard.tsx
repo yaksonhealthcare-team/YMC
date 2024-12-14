@@ -31,7 +31,7 @@ interface MembershipProps {
   count: string
   date: string
   status: MembershipStatus
-  isAllBranch?: boolean
+  serviceType: string
   showReserveButton?: boolean
   showHistoryButton?: boolean
   className?: string
@@ -43,7 +43,7 @@ export const MembershipCard = ({
   count,
   date,
   status,
-  isAllBranch = true,
+  serviceType,
   showReserveButton = false,
   showHistoryButton = true,
   className,
@@ -58,7 +58,7 @@ export const MembershipCard = ({
       <div className={STYLES.content}>
         <div className={STYLES.tags}>
           <MembershipTag status={status} />
-          {isAllBranch && <Tag type="rect" title="전지점" />}
+          <Tag type="rect" title={serviceType} />
         </div>
 
         <span className={STYLES.title}>{title}</span>

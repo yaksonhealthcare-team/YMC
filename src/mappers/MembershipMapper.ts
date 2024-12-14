@@ -5,6 +5,8 @@ import {
   MembershipOption,
   MembershipOptionResponse,
   MembershipResponse,
+  MyMembership,
+  MyMembershipResponse,
   ServiceCategory,
   ServiceCategoryResponse,
   ServiceCourse,
@@ -86,5 +88,24 @@ export class MembershipDetailMapper {
       pictures: dto.pictures,
       options: MembershipOptionMapper.toEntities(dto.options),
     }
+  }
+}
+
+export class MyMembershipMapper {
+  static toEntity(dto: MyMembershipResponse): MyMembership {
+    return {
+      id: dto.mp_idx,
+      serviceName: dto.service_name,
+      serviceType: dto.s_type,
+      remainCount: parseInt(dto.remain_amount),
+      totalCount: parseInt(dto.buy_amount),
+      purchaseDate: dto.pay_date,
+      expirationDate: dto.expiration_date,
+      status: dto.status,
+    }
+  }
+
+  static toEntities(dtos: MyMembershipResponse[]): MyMembership[] {
+    return dtos.map(this.toEntity)
   }
 }

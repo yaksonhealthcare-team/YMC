@@ -1,17 +1,16 @@
-import ReserveTag from "@components/ReserveTag"
-import { ReservationStatus, reservationStatusLabel } from "types/Reservation"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import { Divider } from "@mui/material"
 
-interface ReservationSummaryProps {
-  reservationStatus: ReservationStatus
-}
+// interface ReservationSummaryProps {
+//   reservationStatus: ReservationStatus
+// }
 
-const ReservationSummary = ({ reservationStatus }: ReservationSummaryProps) => {
+// const ReservationSummary = ({ reservationStatus }: ReservationSummaryProps) => {
+const ReservationSummary = () => {
   return (
     <div className="p-[20px] rounded-[20px] shadow-card bg-white">
       <div className="flex gap-[8px] items-center">
-        <p className="text-[18px] font-b text-gray-700">
+        {/* <p className="text-[18px] font-b text-gray-700">
           {reservationStatusLabel[reservationStatus]}
         </p>
         {reservationStatus !== ReservationStatus.COUNSELING_CANCELED &&
@@ -20,7 +19,7 @@ const ReservationSummary = ({ reservationStatus }: ReservationSummaryProps) => {
               status={reservationStatus}
               reservationDate={new Date("2022-12-25")}
             />
-          )}
+          )} */}
       </div>
       <div className="mt-3 flex items-center">
         <CalendarIcon className="w-3.5 h-3.5 text-gray-500" />

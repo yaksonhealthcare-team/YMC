@@ -59,33 +59,39 @@ export const CustomTabs = ({
   tabs,
   onChange,
   activeTab,
-}: CustomTabsProps) => (
-  <Tabs
-    centered
-    value={activeTab}
-    onChange={(_, newValue) => onChange(newValue)}
-    variant={type === "scroll" ? "scrollable" : "standard"}
-    scrollButtons={type === "scroll" ? "auto" : undefined}
-    TabIndicatorProps={{
-      sx: TAB_STYLES[type].indicator,
-    }}
-    className={clsx("flex", CONTAINER_STYLES[type])}
-  >
-    {tabs.map((tab) => (
-      <Tab
-        key={tab.value}
-        label={tab.label}
-        value={tab.value}
-        className={clsx(
-          TAB_STYLES[type].base,
-          activeTab === tab.value
-            ? TAB_STYLES[type].active
-            : TAB_STYLES[type].inactive,
-          type === "fit" && `w-1/${tabs.length}`,
-        )}
-      />
-    ))}
-  </Tabs>
-)
+}: CustomTabsProps) => {
+  const validActiveTab = tabs.some((tab) => tab.value === activeTab)
+    ? activeTab
+    : tabs[0]?.value || ""
+
+  return (
+    <Tabs
+      centered={type !== "scroll"}
+      value={validActiveTab}
+      onChange={(_, newValue) => onChange(newValue)}
+      variant={type === "scroll" ? "scrollable" : "standard"}
+      scrollButtons={type === "scroll" ? "auto" : undefined}
+      TabIndicatorProps={{
+        sx: TAB_STYLES[type].indicator,
+      }}
+      className={clsx("flex", CONTAINER_STYLES[type])}
+    >
+      {tabs.map((tab) => (
+        <Tab
+          key={tab.value}
+          label={tab.label}
+          value={tab.value}
+          className={clsx(
+            TAB_STYLES[type].base,
+            validActiveTab === tab.value
+              ? TAB_STYLES[type].active
+              : TAB_STYLES[type].inactive,
+            type === "fit" && `w-1/${tabs.length}`,
+          )}
+        />
+      ))}
+    </Tabs>
+  )
+}
 
 CustomTabs.displayName = "CustomTabs"

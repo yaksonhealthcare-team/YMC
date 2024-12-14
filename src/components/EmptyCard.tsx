@@ -7,7 +7,7 @@ interface EmptyCardProps {
 }
 
 export const EmptyCard = (props: EmptyCardProps) => {
-  const { title, button } = props
+  const { title, button, onClick } = props
 
   return (
     <>
@@ -17,7 +17,7 @@ export const EmptyCard = (props: EmptyCardProps) => {
             {title}
           </span>
         </div>
-        {button && <ButtonRound title={button} />}
+        {button && <ButtonRound title={button} onClick={onClick} />}
       </div>
     </>
   )

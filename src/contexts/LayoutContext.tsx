@@ -145,7 +145,8 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
                 activeIcon={"/assets/navIcon/reservation_active.png"}
                 inactiveIcon={"/assets/navIcon/reservation_inactive.png"}
                 title={"예약/회원권"}
-                link={"/member-history"}
+                link={"/member-history/reservation"}
+                isActive={(path) => path.startsWith("/member-history")}
               />
               <NavButton
                 activeIcon={"/assets/navIcon/mypage_active.png"}
@@ -166,16 +167,21 @@ interface NavButtonProps {
   inactiveIcon: string
   title: string
   link: string
+  isActive?: (currentPath: string) => boolean
 }
+
+const defaultIsActive = (currentPath: string, link: string) =>
+  currentPath === link
 
 const NavButton = ({
   activeIcon,
   inactiveIcon,
   title,
   link,
+  isActive = (path) => defaultIsActive(path, link),
 }: NavButtonProps) => {
   const path = window.location.pathname
-  const isActive = path === link
+  const active = isActive(path)
   const navigate = useNavigate()
 
   return (
@@ -184,13 +190,13 @@ const NavButton = ({
         "p-3 w-[calc(100%/5)] flex flex-col gap-1 items-center cursor-pointer shrink-0"
       }
       onClick={() => navigate(link)}
-      style={{ color: isActive ? "#F37165" : "#BDBDBD" }}
+      style={{ color: active ? "#F37165" : "#BDBDBD" }}
     >
-      <img src={isActive ? activeIcon : inactiveIcon} width={32} />
+      <img src={active ? activeIcon : inactiveIcon} width={32} />
       <Typography
         variant={"body2"}
         className={
-          isActive
+          active
             ? "text-[#F37165] text-[12px] truncate"
             : "text-[#BDBDBD] text-[12px] truncate"
         }

@@ -2,6 +2,7 @@ import { BranchFilters } from "types/Branch.ts"
 import { Coordinate } from "../types/Coordinate.ts"
 import { PointFilters } from "types/Point.ts"
 import { EventStatus } from "../types/Content.ts"
+import { ReservationStatusCode } from "types/Reservation.ts"
 
 export const queryKeys = {
   branches: {
@@ -43,6 +44,8 @@ export const queryKeys = {
       "service_categories",
       brandCode,
     ],
+    myList: (status: string) =>
+      [...queryKeys.memberships.all, "myList", status] as const,
   },
   events: {
     all: ["events"] as const,
@@ -60,5 +63,13 @@ export const queryKeys = {
     all: ["reviews"] as const,
     list: ({ page }: { page: number }) =>
       [...queryKeys.reviews.all, { page, infinite: true }] as const,
+  },
+  reservations: {
+    all: ["reservations"] as const,
+    list: ({ page, status }: { page: number; status: ReservationStatusCode }) =>
+      [
+        ...queryKeys.reservations.all,
+        { page, status, infinite: true },
+      ] as const,
   },
 } as const
