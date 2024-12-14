@@ -1,40 +1,35 @@
-import { ReservationStatus } from "types/Reservation"
 import { Tag } from "./Tag"
 import calculateDday from "utils/calculateDday"
 
+type StatusType = "upcoming" | "completed" | "cancelled" | "progressing" | null
+
 const TAG_VARIANTS = {
-  [ReservationStatus.UPCOMING]: {
+  upcoming: {
     type: "red",
     title: (date: Date) => `D${calculateDday(date)}`,
   },
-  [ReservationStatus.CANCELED]: {
-    type: "used",
-    title: "예약취소",
-  },
-  [ReservationStatus.IN_PROGRESS]: {
-    type: "red",
-    title: "D-Day",
-  },
-  [ReservationStatus.COMPLETED]: {
+  completed: {
     type: "used",
     title: "방문완료",
   },
-  [ReservationStatus.COUNSELING_CONFIRMED]: {
-    type: "red",
-    title: (date: Date) => `D${calculateDday(date)}`,
-  },
-  [ReservationStatus.COUNSELING_CANCELED]: {
+  cancelled: {
     type: "used",
     title: "예약취소",
+  },
+  progressing: {
+    type: "red",
+    title: "D-Day",
   },
 } as const
 
 interface ReserveTagProps {
-  status: ReservationStatus
+  status: StatusType
   reservationDate: Date
 }
 
 const ReserveTag = ({ status, reservationDate }: ReserveTagProps) => {
+  if (!status) return null
+
   const variant = TAG_VARIANTS[status]
   const title =
     typeof variant.title === "function"
