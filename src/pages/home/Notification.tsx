@@ -51,7 +51,7 @@ export const Notification = () => {
       display: true,
       title: "알림",
       right: (
-        <div onClick={() => navigate("/mypage/alarm")}>
+        <div onClick={() => navigate("/settings")}>
           <SettingIcon className="w-6 h-6" />
         </div>
       ),
