@@ -29,7 +29,6 @@ import EmailPassword from "../pages/signup/EmailPassword.tsx"
 import ProfileSetup from "../pages/signup/ProfileSetup.tsx"
 import SignupComplete from "../pages/signup/SignupComplete.tsx"
 import ReservationDetailPage from "pages/reservation/ReservationDetailPage.tsx"
-import MemberHistory from "../pages/memberHistory/MemberHistory.tsx"
 import ReservationCancelPage from "pages/reservation/ReservationCancelPage.tsx"
 import MembershipUsageHistory from "pages/membership/MembershipUsageHistory.tsx"
 import ReservationFormPage from "pages/reservation/ReservationFormPage.tsx"
@@ -58,6 +57,9 @@ import AddUsingBranch from "../pages/addUsingBranch/AddUsingBranch.tsx"
 import PaymentHistoryDetailPage from "../pages/payment/PaymentHistoryDetailPage.tsx"
 import PaymentCancelPage from "../pages/payment/PaymentCancelPage.tsx"
 import PaymentCancelCompletePage from "../pages/payment/PaymentCancelCompletePage.tsx"
+import ReservationHistory from "pages/memberHistory/ReservationHistory.tsx"
+import MembershipHistory from "pages/memberHistory/MembershipHistory.tsx"
+import MembershipSelectBranchPage from "../pages/membership/MembershipBranchSelectPage.tsx"
 import PaymentCompletePage from "../pages/payment/PaymentCompletePage.tsx"
 
 interface RouteConfig {
@@ -165,6 +167,11 @@ const routeConfig: RouteConfig[] = [
   //구매, 스토어, 예약
   { path: "/membership", element: <Membership />, auth: true },
   {
+    path: "/membership/select-branch",
+    element: <MembershipSelectBranchPage />,
+    auth: true,
+  },
+  {
     path: "/membership/:id",
     element: <MembershipDetailPage />,
     auth: true,
@@ -175,7 +182,16 @@ const routeConfig: RouteConfig[] = [
     auth: true,
   },
   { path: "/store", element: <Store />, auth: false },
-  { path: "/member-history/:tab?", element: <MemberHistory />, auth: true },
+  {
+    path: "/member-history/reservation",
+    element: <ReservationHistory />,
+    auth: true,
+  },
+  {
+    path: "/member-history/membership",
+    element: <MembershipHistory />,
+    auth: true,
+  },
   {
     path: "/reservation/:id",
     element: <ReservationDetailPage />,

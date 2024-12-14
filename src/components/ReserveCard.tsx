@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom"
 import DateAndTime from "./DateAndTime"
 
 interface ReserveCardProps {
-  id: number
+  id: string
   status: ReservationStatus
   store: string
   title: string
@@ -20,26 +20,45 @@ export const ReserveCard = (props: ReserveCardProps) => {
   const { id, status, store, title, count, date, className } = props
 
   const navigate = useNavigate()
+  const classifyReservationStatus = (status: ReservationStatus) => {
+    const statusGroups = {
+      upcoming: [
+        ReservationStatus.CONFIRMED,
+        ReservationStatus.APPROVED,
+        ReservationStatus.PENDING,
+      ],
+      completed: [ReservationStatus.COMPLETED],
+      cancelled: [
+        ReservationStatus.CUSTOMER_CANCELLED,
+        ReservationStatus.STORE_CANCELLED,
+        ReservationStatus.NO_SHOW,
+      ],
+      proressing: [ReservationStatus.IN_PROGRESS],
+    }
+
+    if (statusGroups.upcoming.includes(status)) return "upcoming"
+    if (statusGroups.completed.includes(status)) return "completed"
+    if (statusGroups.cancelled.includes(status)) return "cancelled"
+    if (statusGroups.proressing.includes(status)) return "progressing"
+    return null
+  }
 
   const getButton = (): ReactNode => {
-    switch (status) {
-      case ReservationStatus.UPCOMING:
-        return null
-      case ReservationStatus.IN_PROGRESS:
-        return (
-          <Button variantType="primary" sizeType="xs">
-            방문완료
-          </Button>
-        )
-      case ReservationStatus.COMPLETED:
-        return (
-          <Button variantType="primary" sizeType="xs">
-            만족도 작성
-          </Button>
-        )
-      default:
-        return null
+    const buttonTexts = {
+      completed: "만족도 작성",
+      progressing: "방문 완료",
     }
+
+    const statusType = classifyReservationStatus(status)
+
+    if (!statusType || statusType === "upcoming") return null
+    if (!statusType || statusType === "cancelled") return null
+
+    return (
+      <Button variantType="primary" sizeType="xs">
+        {buttonTexts[statusType]}
+      </Button>
+    )
   }
 
   return (
@@ -62,7 +81,10 @@ export const ReserveCard = (props: ReserveCardProps) => {
           <DateAndTime date={date} className="mt-3" />
         </div>
         <div className="flex flex-col justify-between items-end">
-          <ReserveTag status={status} reservationDate={new Date(date)} />
+          <ReserveTag
+            status={classifyReservationStatus(status)}
+            reservationDate={date}
+          />
           {getButton()}
         </div>
       </div>
