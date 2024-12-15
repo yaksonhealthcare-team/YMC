@@ -80,7 +80,11 @@ export const Notification = () => {
             key={filter.label}
             label={filter.label}
             type={filter.type as "default" | "arrow" | "reload"}
-            state={activeFilter === filter.label ? "active" : "default"}
+            state={
+              activeFilter === filter.label
+                ? "activeNoShrink"
+                : "defaultNoShrink"
+            }
             onClick={() => handleFilterClick(filter.label)}
           />
         ))}
