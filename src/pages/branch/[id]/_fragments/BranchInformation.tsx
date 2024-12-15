@@ -102,12 +102,11 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
           <LabelSection label={"오시는 길"} type={"heading"}>
             <div className={"w-full h-48 flex"}>
               <MapView
-                defaultCenter={{
-                  lat: branch.location.latitude,
-                  lng: branch.location.longitude,
+                currentLocation={{
+                  latitude: branch.location.latitude,
+                  longitude: branch.location.longitude,
                 }}
-                preventUpdateToCurrentLocation
-                showCurrentLocationButton={false}
+                options={{ showCurrentLocationButton: false }}
               />
             </div>
             <IconSection icon={<PinIcon />}>

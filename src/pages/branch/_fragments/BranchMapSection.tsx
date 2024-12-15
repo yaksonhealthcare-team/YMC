@@ -10,9 +10,17 @@ const BranchMapSection = ({
   branches,
   onSelectBranch,
 }: BranchMapSectionProps) => {
+  const markers = branches.map((branch) => {
+    return new naver.maps.Marker({
+      position: new naver.maps.LatLng(branch.latitude, branch.longitude),
+      map,
+      clickable: true,
+    })
+  })
+
   return (
     <div className={"flex flex-col flex-1 h-full"}>
-      <MapView branches={branches} onSelectBranch={onSelectBranch} />
+      <MapView />
     </div>
   )
 }
