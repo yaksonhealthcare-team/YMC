@@ -323,7 +323,7 @@ const routeConfig: RouteConfig[] = [
     element: <NoticeDetailPage />,
   },
   {
-    path: "/settings",
+    path: "/settings/notifications",
     element: <SettingsPage />,
     auth: true,
   },
