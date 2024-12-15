@@ -22,7 +22,7 @@ export class QuestionnaireMapper {
   ): QuestionnaireResult {
     return {
       index: Number(dto.cssq_idx),
-      question: dto.question_text,
+      question_text: dto.question_text,
       answerType: this.toQuestionnaireAnswerType(dto.answer_type),
       options: dto.options.map((option) => ({
         csso_idx: option.csso_idx,

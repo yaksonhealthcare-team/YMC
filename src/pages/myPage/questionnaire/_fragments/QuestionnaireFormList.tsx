@@ -12,7 +12,7 @@ const QuestionnaireFormList = ({
           <div className={"flex flex-col gap-4"}>
             <div className={"flex items-start gap-1 text-primary font-sb"}>
               <p>{"Q."}</p>
-              <p>{`${item.question}`}</p>
+              <p>{`${item.question_text}`}</p>
             </div>
             <div className={"p-5 bg-gray-50 rounded-2xl space-y-2"}>
               {item.options?.length > 0 ? (

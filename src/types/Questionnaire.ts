@@ -24,7 +24,7 @@ export type QuestionnaireType = "common" | "reservation"
 
 export interface QuestionnaireResult {
   index: number
-  question: string
+  question_text: string
   answerType: "single_choice" | "multiple_choice" | "text"
   options: {
     csso_idx: string | number
