@@ -13,6 +13,7 @@ export interface User {
   profileURL?: string
   thirdPartyType: string
   brands: {
+    id: string
     brandName: string
     address: string
   }[]
@@ -31,6 +32,7 @@ export interface UserResponse {
   profileURL?: string
   thirdPartyType: string
   brands: {
+    b_idx: string
     b_name: string
     addr: string
   }[]

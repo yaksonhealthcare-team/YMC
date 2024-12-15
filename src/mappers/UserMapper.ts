@@ -22,6 +22,7 @@ export class UserMapper {
       profileURL: dto.profileURL,
       thirdPartyType: dto.thirdPartyType,
       brands: dto.brands.map((brand) => ({
+        id: brand.b_idx,
         brandName: brand.b_name,
         address: brand.addr,
       })),
