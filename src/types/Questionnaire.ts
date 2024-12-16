@@ -3,7 +3,13 @@ export interface Question {
   question_text: string
   contents_type: string
   answer_type: "S" | "M" | "T"
-  options: QuestionOption[]
+  options: {
+    csso_idx: string
+    option_type: string
+    option_text: string
+    option_image_url: string
+    next_cssq_idx: string
+  }[]
 }
 
 export interface QuestionOption {
@@ -18,12 +24,12 @@ export type QuestionnaireType = "common" | "reservation"
 
 export interface QuestionnaireResult {
   index: number
-  question: string
+  question_text: string
   answerType: "single_choice" | "multiple_choice" | "text"
   options: {
-    optionIndex: number
-    optionText: string
-    answerText: string
+    csso_idx: string | number
+    option_text: string
+    answer_text: string
   }[]
 }
 

@@ -51,7 +51,7 @@ export const Notification = () => {
       display: true,
       title: "알림",
       right: (
-        <div onClick={() => navigate("/mypage/alarm")}>
+        <div onClick={() => navigate("/settings/notifications")}>
           <SettingIcon className="w-6 h-6" />
         </div>
       ),
@@ -80,7 +80,11 @@ export const Notification = () => {
             key={filter.label}
             label={filter.label}
             type={filter.type as "default" | "arrow" | "reload"}
-            state={activeFilter === filter.label ? "active" : "default"}
+            state={
+              activeFilter === filter.label
+                ? "activeNoShrink"
+                : "defaultNoShrink"
+            }
             onClick={() => handleFilterClick(filter.label)}
           />
         ))}

@@ -6,7 +6,7 @@ export interface PaymentHistory {
   status: string
   pointStatus: "yet" | "done"
   point: number
-  category: string // TODO: 회원권 / 추가관리 구분 필드 생기면 변경할 것
+  category: "additional" | "membership"
   items: PaymentHistoryItem[]
 }
 
@@ -18,6 +18,7 @@ export interface PaymentHistoryItem {
   brand: string
   amount: number
   price: number
+  reservationId?: string
 }
 
 export interface PaymentHistoryCancel {
@@ -32,6 +33,7 @@ export interface PaymentHistoryCancel {
 
 export interface PaymentHistoryResponse {
   orderid: string
+  is_add_service: string
   p_idx: string
   pay_date: string
   pay_gubun: string
@@ -59,6 +61,7 @@ export interface PaymentHistoryDetail extends PaymentHistory {
 
 export interface PaymentHistoryDetailResponse {
   orderid: string
+  is_add_service: string
   p_idx: string
   pay_date: string
   pay_gubun: string
@@ -78,6 +81,7 @@ export interface PaymentHistoryDetailResponse {
       ps_total_price: string
       brand_name: string
       b_name: string
+      r_idx?: string
       payCancel: {
         ps_cancel_pay_date: string
         ps_cancel_pg_paymethod: string

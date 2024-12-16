@@ -75,12 +75,12 @@ const MyPage = () => {
     { id: "inquiry", title: "1:1 문의", path: "/inquiry" },
     { id: "event", title: "이벤트", path: "/event" },
     { id: "notice", title: "공지사항", path: "/notice" },
-    { id: "settings", title: "알림설정", path: "/settings" },
+    { id: "settings", title: "알림설정", path: "/settings/notifications" },
   ]
 
   return (
     <>
-      <div className="min-h-screen bg-[#F8F5F2]">
+      <div className="h-fit bg-[#F8F5F2] pb-8">
         {/* Notice */}
         <div className="px-5 py-2 m-5 rounded-[20px] bg-white">
           <Notice

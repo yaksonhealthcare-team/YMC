@@ -12,16 +12,28 @@ const QuestionnaireFormList = ({
           <div className={"flex flex-col gap-4"}>
             <div className={"flex items-start gap-1 text-primary font-sb"}>
               <p>{"Q."}</p>
-              <p>{`${item.question}`}</p>
+              <p>{`${item.question_text}`}</p>
             </div>
-            <div className={"p-5 bg-gray-50 rounded-2xl"}>
-              {item.options.map((option) => (
-                <div key={option.optionIndex}>
-                  {item.answerType === "text" || option.optionText.length === 0
-                    ? option.answerText
-                    : option.optionText}
-                </div>
-              ))}
+            <div className={"p-5 bg-gray-50 rounded-2xl space-y-2"}>
+              {item.options?.length > 0 ? (
+                item.answerType === "text" ? (
+                  <div>{item.options[0]?.answer_text}</div>
+                ) : (
+                  item.options
+                    .filter(
+                      (option) =>
+                        option.answer_text !== undefined &&
+                        option.answer_text !== "",
+                    )
+                    .map((option, index) => (
+                      <div key={option.csso_idx || index}>
+                        {option.option_text}
+                      </div>
+                    ))
+                )
+              ) : (
+                <div className="text-gray-400">{"응답 내용이 없습니다."}</div>
+              )}
             </div>
           </div>
         </li>

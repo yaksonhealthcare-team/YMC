@@ -13,6 +13,7 @@ export interface User {
   profileURL?: string
   thirdPartyType: string
   brands: {
+    id: string
     brandName: string
     address: string
   }[]
@@ -31,6 +32,7 @@ export interface UserResponse {
   profileURL?: string
   thirdPartyType: string
   brands: {
+    b_idx: string
     b_name: string
     addr: string
   }[]
@@ -73,4 +75,12 @@ export interface UserSignupRequest {
   fileToUpload: File | null
   recom: string
   marketing_yn: boolean
+}
+
+export interface UserUpdateRequest {
+  post: string
+  addr1: string
+  addr2: string
+  marketing_yn: string
+  // TODO: API Request에 gender 필드 추가되면 여기도 추가할 것
 }

@@ -1,48 +1,53 @@
 import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
-import { QuestionnaireMapper } from "../mappers/QuestionnaireMapper.ts"
 import {
-  Question,
   QuestionnaireFormValues,
-  QuestionnaireResultResponse,
+  QuestionnaireResult,
+  Question,
 } from "../types/Questionnaire"
 
+// 사용자 공통 문진 결과 조회
 export const fetchUserGeneralQuestionnaireResult = async () => {
-  const { data } = await axiosClient.get<
-    HTTPResponse<QuestionnaireResultResponse[]>
-  >("/consultations/common/me")
-  return QuestionnaireMapper.toQuestionnaireResultEntities(data.body)
+  const { data } = await axiosClient.get<HTTPResponse<QuestionnaireResult[]>>(
+    "/consultations/common/me",
+  )
+  return data.body
 }
 
+// 사용자 예약 문진 결과 조회
 export const fetchUserReservationQuestionnaireResult = async () => {
-  const { data } = await axiosClient.get<
-    HTTPResponse<QuestionnaireResultResponse[]>
-  >("consultations/reservation/me")
-  return QuestionnaireMapper.toQuestionnaireResultEntities(data.body)
+  const { data } = await axiosClient.get<HTTPResponse<QuestionnaireResult[]>>(
+    "/consultations/reservation/me",
+  )
+  return data.body
 }
 
-export const fetchCommonQuestionnaire = async (): Promise<Question[]> => {
+// 공통 문진 제출
+export const submitCommonQuestionnaire = async (
+  values: QuestionnaireFormValues,
+) => {
+  await axiosClient.put("/consultations/common/common", values)
+}
+
+// 예약 문진 제출
+export const submitReservationQuestionnaire = async (
+  values: QuestionnaireFormValues,
+) => {
+  await axiosClient.put("/consultations/reservation/reservation", values)
+}
+
+// 공통 문진 질문 조회
+export const fetchCommonQuestionnaire = async () => {
   const { data } = await axiosClient.get<HTTPResponse<Question[]>>(
     "/consultations/common/common",
   )
   return data.body
 }
 
-export const fetchReservationQuestionnaire = async (): Promise<Question[]> => {
+// 예약 문진 질문 조회
+export const fetchReservationQuestionnaire = async () => {
   const { data } = await axiosClient.get<HTTPResponse<Question[]>>(
     "/consultations/reservation/reservation",
   )
   return data.body
-}
-
-export const submitCommonQuestionnaire = async (
-  formData: QuestionnaireFormValues,
-): Promise<void> => {
-  await axiosClient.put("/consultations/common/common", formData)
-}
-
-export const submitReservationQuestionnaire = async (
-  formData: QuestionnaireFormValues,
-): Promise<void> => {
-  await axiosClient.put("/consultations/reservation/reservation", formData)
 }

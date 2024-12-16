@@ -33,11 +33,16 @@ const PaymentHistoryDetailPage = () => {
 
   const renderFooter = () => {
     if (payment.category === "additional") {
+      if (payment.items.length === 0 || !payment.items[0].reservationId)
+        return null
+
       return (
         <div className={"border-t border-gray-200 px-5 pt-3 pb-8"}>
           <Button
             className={"w-full"}
-            onClick={() => navigate(`/reservation/${1}`)} // TODO: API Response에 예약 식별자 추가되면 변경할 것
+            onClick={() =>
+              navigate(`/reservation/${payment.items[0].reservationId}`)
+            }
           >
             {"예약 내역 보기"}
           </Button>

@@ -20,7 +20,6 @@ interface QuestionItemProps {
   fieldName: QuestionFieldName
   onValidationChange: (isValid: boolean) => void
 }
-
 export const QuestionItem = ({
   question,
   formik,
