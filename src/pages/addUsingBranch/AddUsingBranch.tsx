@@ -32,7 +32,7 @@ const AddUsingBranch = () => {
 
   const handleNextStep = () => {
     if (pageStep === 3) {
-      return
+      navigate("/questionnaire/common")
     }
 
     setPageStep(pageStep + 1)

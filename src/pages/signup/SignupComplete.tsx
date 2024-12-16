@@ -42,7 +42,7 @@ export const SignupComplete = () => {
         <div className="flex flex-col gap-2">
           <button
             onClick={() => {
-              navigate("/questionnaire/general")
+              navigate("/questionnaire/common")
             }}
             className="h-12 px-4 py-3 text-primary text-16px font-semibold"
           >
