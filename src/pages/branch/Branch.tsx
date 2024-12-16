@@ -18,7 +18,7 @@ import { useBrands } from "../../queries/useBrandQueries.tsx"
 const Branch = () => {
   const { setHeader, setNavigation } = useLayout()
   const { openBottomSheet, closeOverlay } = useOverlay()
-  const [screen, setScreen] = useState<"list" | "map">("map")
+  const [screen, setScreen] = useState<"list" | "map">("list")
   const [selectedBranch, setSelectedBranch] = useState<BranchType | null>(null)
   const [selectedFilter, setSelectedFilter] = useState<{
     brand: FilterItem | null
