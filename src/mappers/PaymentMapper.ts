@@ -15,9 +15,7 @@ export class PaymentMapper {
       status: dto.pay_status,
       pointStatus: dto.point_status === "적립" ? "done" : "yet",
       point: dto.point,
-      category: dto.paysub.every((sub) => sub.ps_name.includes("추가"))
-        ? "additional"
-        : "membership", // TODO: 회원권 / 추가관리 구분 필드 생기면 변경할 것
+      category: dto.is_add_service === "Y" ? "additional" : "membership",
       items: dto.paysub.map((sub) => ({
         index: sub.ps_idx,
         name: sub.ps_name,
@@ -49,9 +47,7 @@ export class PaymentMapper {
       totalPrice: Number(dto.total_price),
       usedPoint: Number(dto.use_point),
       actualPrice: Number(dto.actual_price),
-      category: dto.paysub.every((sub) => sub.ps_name.includes("추가"))
-        ? "additional"
-        : "membership", // TODO: 회원권 / 추가관리 구분 필드 생기면 변경할 것
+      category: dto.is_add_service === "Y" ? "additional" : "membership",
       items: dto.paysub.map((sub) => ({
         index: sub.p_idx,
         name: sub.ps_name,
@@ -60,6 +56,7 @@ export class PaymentMapper {
         branchName: sub.b_name,
         amount: Number(sub.ps_total_amount),
         price: Number(sub.ps_total_price),
+        reservationId: sub.r_idx,
         cancel: {
           canceledAt: new Date(sub.payCancel.ps_cancel_pay_date),
           payMethod: sub.payCancel.ps_cancel_pg_paymethod,
