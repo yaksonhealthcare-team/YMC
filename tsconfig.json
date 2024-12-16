@@ -24,10 +24,6 @@
     "types": [
       "vite-plugin-svgr/client",
       "navermaps"
-    ],
-    "typeRoots": [
-      "./node_modules/@types",
-      "./node_modules/@types/navermaps"
     ]
   },
   "include": [
