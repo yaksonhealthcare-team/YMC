@@ -9,7 +9,7 @@ const DEFAULT_COORDINATE: Coordinate = {
 }
 
 interface GeolocationState {
-  location: Coordinate
+  location?: Coordinate
   error: string | null
   loading: boolean
 }
