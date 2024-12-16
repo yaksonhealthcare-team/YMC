@@ -44,10 +44,6 @@ const MapView = ({
           )
         }
       },
-      onClickMap: () => {
-        setSelectedBranch(null)
-        options?.onSelectBranch?.(null)
-      },
       onMove: (center) => {
         setIsMapMoved(true)
         options?.onMoveMap?.(center)

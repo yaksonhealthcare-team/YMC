@@ -22,7 +22,6 @@ const BranchMapSection = ({
 }: BranchMapSectionProps) => {
   const [branches, setBranches] = useState<Branch[]>([])
   const [coords, setCoords] = useState<Coordinate>(DEFAULT_COORDINATE)
-  const [branchForRender, setBranchForRender] = useState<Branch | null>(null)
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
 
   const { mutateAsync: addBookmark } = useBranchBookmarkMutation()
@@ -53,7 +52,6 @@ const BranchMapSection = ({
       const newBranch = result.find((branch) => selectedBranch.id === branch.id)
       if (newBranch) {
         setSelectedBranch(newBranch)
-        setBranchForRender(newBranch)
       }
     }
   }
@@ -64,8 +62,8 @@ const BranchMapSection = ({
         branches={branches || []}
         options={{
           onSelectBranch: (branch) => {
+            if (!branch) return
             setSelectedBranch(branch)
-            if (branch) setBranchForRender(branch)
             onSelectBranch?.(branch)
           },
           onMoveMap: fetchBranchesByCoords,
@@ -75,9 +73,9 @@ const BranchMapSection = ({
       <div
         className={`w-full absolute px-5 pb-6 pt-2 -bottom-32 rounded-t-3xl ${selectedBranch ? "transition-transform -translate-y-32 duration-300" : "transition-transform translate-y-6 duration-300"} bg-white z-[300]`}
       >
-        {branchForRender ? (
+        {selectedBranch && (
           <BranchFilterListItem
-            branch={branchForRender}
+            branch={selectedBranch}
             onClick={() => {}}
             onClickFavorite={async (branch) => {
               if (branch.isFavorite) {
@@ -88,8 +86,6 @@ const BranchMapSection = ({
               await fetchBranchesByCoords(coords)
             }}
           />
-        ) : (
-          <div className={"w-full h-20"} />
         )}
       </div>
     </div>
