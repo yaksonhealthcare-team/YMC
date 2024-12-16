@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react"
-import { GeolocationOptions, GeolocationState } from "../types/Coordinate.ts"
+import {
+  DEFAULT_COORDINATE,
+  GeolocationOptions,
+  GeolocationState,
+} from "../types/Coordinate.ts"
 
 const useGeolocation = (options: GeolocationOptions = {}): GeolocationState => {
   const [state, setState] = useState<GeolocationState>({
-    location: {
-      latitude: null,
-      longitude: null,
-    },
+    location: DEFAULT_COORDINATE,
     error: null,
     loading: true,
   })
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: "Geolocation이 지원되지 않는 브라우저입니다.",
         loading: false,
@@ -22,7 +23,7 @@ const useGeolocation = (options: GeolocationOptions = {}): GeolocationState => {
     }
 
     const successHandler = (position: GeolocationPosition) => {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         location: {
           latitude: position.coords.latitude,
@@ -33,7 +34,7 @@ const useGeolocation = (options: GeolocationOptions = {}): GeolocationState => {
     }
 
     const errorHandler = (error: GeolocationPositionError) => {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: error.message,
         loading: false,
@@ -41,9 +42,9 @@ const useGeolocation = (options: GeolocationOptions = {}): GeolocationState => {
     }
 
     const defaultOptions: GeolocationOptions = {
-      enableHighAccuracy: true,
+      enableHighAccuracy: false,
       timeout: 5000,
-      maximumAge: 0,
+      maximumAge: Infinity,
       ...options,
     }
 
