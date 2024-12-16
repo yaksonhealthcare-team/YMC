@@ -2,7 +2,7 @@ import { Button } from "@components/Button.tsx"
 import React, { useEffect, useState } from "react"
 import CustomTextField from "@components/CustomTextField.tsx"
 import { BrandCard } from "@components/BrandCard.tsx"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useSignup } from "../../contexts/SignupContext.tsx"
 import PostcodeModal from "@components/modal/PostcodeModal.tsx"
@@ -15,9 +15,11 @@ import { Swiper, SwiperSlide } from "swiper/react"
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
+  const location = useLocation()
   const { signupData, setSignupData } = useSignup()
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false)
   const { data: brands } = useBrands()
+  const socialInfo = location.state?.social
 
   useEffect(() => {
     setHeader({
@@ -69,23 +71,24 @@ export const ProfileSetup = () => {
           accessToken: socialInfo.accessToken,
           userInfo: {
             name: signupData.name,
+            email: signupData.email,
             mobileno: signupData.mobileNumber,
+            birthdate: "", // TODO: 생년월일 필드 추가 필요
             gender: signupData.gender === "male" ? "M" : "F",
             post: signupData.postCode,
             addr1: signupData.address1,
-            addr2: signupData.address2,
+            addr2: signupData.address2 || "",
             marketing_yn: signupData.marketingYn ? "Y" : "N",
             brand_code: signupData.brandCodes || [],
           },
         })
       } else {
-        // 일반 회원가입
-        // ... 기존 회원가입 로직
+        // TODO: 일반 회원가입 API 호출
       }
 
       navigate("/signup/complete")
     } catch (error) {
-      // 에러 처리
+      // TODO: 에러 처리 (showAlert 등)
     }
   }
 
