@@ -15,8 +15,7 @@ const ActiveBranchList = () => {
             key={index}
             className={"border border-gray-100 rounded-2xl p-5"}
             onClick={() => {
-              // TODO: brand에 b_idx 추가되면 변경할 것
-              navigate("/branch/5")
+              navigate(`/branch/${brand.id}`)
             }}
           >
             <BranchCard name={brand.brandName} address={brand.address} />
