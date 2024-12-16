@@ -4,19 +4,21 @@ import { Event } from "../../../types/Content"
 
 const EventItem: React.FC<{ event: Event }> = ({ event }) => {
   const navigate = useNavigate()
+
+  const thumbnail = event.files.find((file) => file.fileName.length > 0)
+
   return (
     <div
       className="bg-white py-4 flex items-start gap-4"
       onClick={() => navigate(`/event/${event.code}`)}
     >
-      <img
-        src={
-          // TODO: Replace to API response's url after API fixed
-          "/assets/home_event.png"
-        }
-        alt={event.title}
-        className="w-[88px] h-[88px] rounded-lg border border-gray-100 object-cover"
-      />
+      {thumbnail && (
+        <img
+          src={thumbnail.fileName}
+          alt={event.title}
+          className="w-[88px] h-[88px] rounded-lg border border-gray-100 object-cover"
+        />
+      )}
       <div className="flex-1 flex flex-col">
         <div className="flex-1 flex flex-col justify-between">
           <div>
