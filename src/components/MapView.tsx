@@ -23,11 +23,11 @@ const MapView = ({
   const { naver } = window
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstance = useRef<naver.maps.Map | null>(null)
+  const [_, setIsMapMoved] = useState(false)
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
   const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(
     null,
   )
-  const [isMoved, setIsMoved] = useState(false)
 
   const { updateCurrentLocationMarker } = useNaverMapBranchMarkers({
     map: mapInstance.current,
@@ -49,7 +49,7 @@ const MapView = ({
         options?.onSelectBranch?.(null)
       },
       onMove: (center) => {
-        setIsMoved(true)
+        setIsMapMoved(true)
         options?.onMoveMap?.(center)
       },
     },
@@ -66,7 +66,21 @@ const MapView = ({
       zoom: 14,
     })
 
-    moveToCurrentLocation()
+    getCurrentLocation({
+      onSuccess: (coords) => {
+        setIsMapMoved((prevIsMoved) => {
+          if (!prevIsMoved && mapInstance.current) {
+            mapInstance.current.setCenter(
+              new naver.maps.LatLng(coords.latitude, coords.longitude),
+            )
+            mapInstance.current.setZoom(15)
+          }
+          setCurrentLocation(coords)
+
+          return prevIsMoved
+        })
+      },
+    })
 
     return () => {
       mapInstance.current = null
@@ -80,7 +94,7 @@ const MapView = ({
   const moveToCurrentLocation = () => {
     getCurrentLocation({
       onSuccess: (coords) => {
-        if (isMoved || !mapInstance.current || !location) return
+        if (!mapInstance.current) return
         mapInstance.current.setCenter(
           new naver.maps.LatLng(coords.latitude, coords.longitude),
         )
