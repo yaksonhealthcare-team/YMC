@@ -75,7 +75,7 @@ const MyPage = () => {
     { id: "inquiry", title: "1:1 문의", path: "/inquiry" },
     { id: "event", title: "이벤트", path: "/event" },
     { id: "notice", title: "공지사항", path: "/notice" },
-    { id: "settings", title: "알림설정", path: "/settings" },
+    { id: "settings", title: "알림설정", path: "/settings/notifications" },
   ]
 
   return (
