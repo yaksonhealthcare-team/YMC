@@ -6,6 +6,7 @@ import { getKakaoToken } from "../../libs/kakao"
 import { getNaverToken } from "../../libs/naver"
 import { signInWithPopup } from "@firebase/auth"
 import { auth, appleProvider } from "../../libs/firebase"
+import { getGoogleToken } from "../../libs/google"
 
 const OAuthCallback = () => {
   const { provider } = useParams()
@@ -37,6 +38,9 @@ const OAuthCallback = () => {
               throw new Error("State parameter is missing")
             }
             socialAccessToken = await getNaverToken(code, state)
+            break
+          case "google":
+            socialAccessToken = await getGoogleToken(code)
             break
           case "apple":
             if (!id_token) {
@@ -80,13 +84,15 @@ const OAuthCallback = () => {
   return <div>로그인 처리중...</div>
 }
 
-// provider ��드 변환
-const getProviderCode = (provider?: string): "K" | "N" | "A" => {
+// provider 코드 변환
+const getProviderCode = (provider?: string): "K" | "N" | "G" | "A" => {
   switch (provider) {
     case "kakao":
       return "K"
     case "naver":
       return "N"
+    case "google":
+      return "G"
     case "apple":
       return "A"
     default:

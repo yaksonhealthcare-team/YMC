@@ -1,10 +1,7 @@
-import React, { useLocation } from "react"
-import { useNavigate } from "react-router-dom"
+import React, { useNavigate } from "react"
 import { signup, signupWithSocial } from "../../api/auth"
 
 const Signup = () => {
-  const location = useLocation()
-  const socialInfo = location.state?.social // 소셜 로그인 정보
   const navigate = useNavigate()
 
   const handleSubmit = async (formData: any) => {

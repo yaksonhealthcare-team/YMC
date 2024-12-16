@@ -11,6 +11,8 @@ import NaverIcon from "../../assets/icons/NaverIcon.svg?react"
 import AppleIcon from "../../assets/icons/AppleIcon.svg?react"
 import { getNaverLoginUrl } from "../../libs/naver"
 import { signInWithGoogle, signInWithApple } from "../../libs/social"
+import GoogleIcon from "../../assets/icons/GoogleIcon.svg?react"
+import { getGoogleLoginUrl } from "../../libs/google"
 
 // 소셜 로그인 설정
 const SOCIAL_CONFIG = {
@@ -63,14 +65,14 @@ const Login = () => {
       switch (provider) {
         case "naver":
           window.location.href = getNaverLoginUrl()
-          return // 리다이렉트되므로 여기서 return
+          return
         case "google":
-          socialAccessToken = await signInWithGoogle()
-          break
+          const googleLoginUrl = await getGoogleLoginUrl()
+          window.location.href = googleLoginUrl
+          return
         case "apple":
           socialAccessToken = await signInWithApple()
           break
-        // ... 기존 케이스들
       }
 
       if (socialAccessToken) {
@@ -129,6 +131,17 @@ const Login = () => {
         >
           <AppleIcon className="w-6 h-6 text-white" />
           <span className="flex-1 text-center">Apple로 로그인</span>
+        </Button>
+
+        {/* 구글 로그인 */}
+        <Button
+          onClick={() => handleSocialLogin("google")}
+          fullCustom
+          sizeType="l"
+          className="bg-white border-[#DDDDDD] text-[#212121] font-b flex items-center px-3 py-4"
+        >
+          <GoogleIcon className="w-6 h-6" />
+          <span className="flex-1 text-center">Google로 로그인</span>
         </Button>
 
         {/* 이메일 로그인 */}
