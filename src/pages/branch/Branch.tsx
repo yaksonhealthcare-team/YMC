@@ -128,7 +128,8 @@ const Branch = () => {
       case "map":
         return (
           <BranchMapSection
-            branches={branches?.pages.flatMap((page) => page) || []}
+            brandCode={selectedFilter.brand?.code}
+            category={selectedFilter.category?.code}
             onSelectBranch={setSelectedBranch}
           />
         )

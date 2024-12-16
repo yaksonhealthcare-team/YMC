@@ -102,7 +102,7 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
           <LabelSection label={"오시는 길"} type={"heading"}>
             <div className={"w-full h-48 flex"}>
               <MapView
-                currentLocation={{
+                center={{
                   latitude: branch.location.latitude,
                   longitude: branch.location.longitude,
                 }}
