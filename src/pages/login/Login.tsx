@@ -7,6 +7,7 @@ import { Typography } from "@mui/material"
 import KakaoIcon from "../../assets/icons/KakaoIcon.svg?react"
 import NaverIcon from "../../assets/icons/NaverIcon.svg?react"
 import AppleIcon from "../../assets/icons/AppleIcon.svg?react"
+import { getNaverLoginUrl } from "../../libs/naver"
 
 // 소셜 로그인 설정
 const SOCIAL_CONFIG = {
@@ -34,29 +35,11 @@ const Login = () => {
   }, [])
 
   const handleSocialLogin = (provider: "kakao" | "naver" | "apple") => {
-    let authUrl = ""
-
     switch (provider) {
-      case "kakao":
-        authUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${SOCIAL_CONFIG.kakao.clientId}&redirect_uri=${SOCIAL_CONFIG.kakao.redirectUri}&response_type=code`
-        break
       case "naver":
-        const state = Math.random().toString(36).substr(2, 11)
-        localStorage.setItem("naverState", state)
-        authUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${import.meta.env.VITE_NAVER_CLIENT_ID}&redirect_uri=${window.location.origin}/oauth/callback/naver&state=${state}`
+        window.location.href = getNaverLoginUrl()
         break
-      case "apple":
-        // Apple 로그인은 플랫폼에 따라 다르게 처리
-        if (isPlatform("ios")) {
-          // iOS 네이티브 애플 로그인 처리
-        } else {
-          authUrl = `https://appleid.apple.com/auth/authorize?client_id=${SOCIAL_CONFIG.apple.clientId}&redirect_uri=${SOCIAL_CONFIG.apple.redirectUri}&response_type=code&scope=name email`
-        }
-        break
-    }
-
-    if (authUrl) {
-      window.location.href = authUrl
+      // ... 다른 케이스들
     }
   }
 

@@ -8,6 +8,25 @@ import {
 } from "react"
 import { UserSignup } from "../types/User.ts"
 
+interface SignupData {
+  email?: string
+  password?: string
+  name?: string
+  mobileNumber?: string
+  birthdate?: string
+  gender?: "male" | "female"
+  postCode?: string
+  address1?: string
+  address2?: string
+  marketingYn?: boolean
+  brandCodes?: string[]
+  profileImage?: File
+  social?: {
+    provider: "K" | "N" | "A"
+    accessToken: string
+  }
+}
+
 interface SignupContextType {
   signupData: UserSignup
   setSignupData: Dispatch<SetStateAction<UserSignup>>

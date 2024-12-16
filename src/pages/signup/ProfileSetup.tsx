@@ -11,6 +11,12 @@ import Profile from "@assets/icons/Profile.svg?react"
 import SettingIcon from "@assets/icons/SettingIcon.svg?react"
 import { useBrands } from "../../queries/useBrandQueries.tsx"
 import { Swiper, SwiperSlide } from "swiper/react"
+import { signup } from "../../apis/auth.api.ts"
+import { loginWithEmail } from "../../apis/auth.api.ts"
+import { fetchUser } from "../../apis/auth.api.ts"
+import { useAuth } from "../../contexts/AuthContext.tsx"
+import { useOverlay } from "../../contexts/ModalContext"
+import { signupWithSocial } from "../../apis/auth.api.ts"
 
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -20,6 +26,8 @@ export const ProfileSetup = () => {
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false)
   const { data: brands } = useBrands()
   const socialInfo = location.state?.social
+  const { login } = useAuth()
+  const { showAlert } = useOverlay()
 
   useEffect(() => {
     setHeader({
@@ -73,7 +81,7 @@ export const ProfileSetup = () => {
             name: signupData.name,
             email: signupData.email,
             mobileno: signupData.mobileNumber,
-            birthdate: "", // TODO: 생년월일 필드 추가 필요
+            birthdate: signupData.birthdate,
             gender: signupData.gender === "male" ? "M" : "F",
             post: signupData.postCode,
             addr1: signupData.address1,
@@ -83,12 +91,34 @@ export const ProfileSetup = () => {
           },
         })
       } else {
-        // TODO: 일반 회원가입 API 호출
+        // 일반 회원가입
+        await signup({
+          email: signupData.email,
+          password: signupData.password,
+          name: signupData.name,
+          mobileno: signupData.mobileNumber,
+          birthdate: signupData.birthdate,
+          gender: signupData.gender === "male" ? "M" : "F",
+          post: signupData.postCode,
+          addr1: signupData.address1,
+          addr2: signupData.address2,
+          marketing_yn: signupData.marketingYn ? "Y" : "N",
+          brand_code: signupData.brandCodes,
+        })
       }
 
+      // 회원가입 성공 후 자동 로그인
+      const { accessToken } = await loginWithEmail({
+        username: signupData.email,
+        password: signupData.password,
+      })
+
+      const user = await fetchUser(accessToken)
+      login({ user, token: accessToken })
+
       navigate("/signup/complete")
-    } catch (error) {
-      // TODO: 에러 처리 (showAlert 등)
+    } catch (error: any) {
+      showAlert(error.response?.data?.message || "회원가입에 실패했습니다")
     }
   }
 
@@ -216,6 +246,16 @@ export const ProfileSetup = () => {
             </button>
           </div>
         </div>
+
+        {/* 생년월일 */}
+        <CustomTextField
+          label="생년월일"
+          value={signupData.birthdate}
+          onChange={(e) =>
+            setSignupData({ ...signupData, birthdate: e.target.value })
+          }
+          placeholder="YYYYMMDD"
+        />
 
         {/* 주소 */}
         <div className="flex flex-col gap-2">

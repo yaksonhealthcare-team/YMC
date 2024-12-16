@@ -119,3 +119,20 @@ export const signupWithSocial = async ({
 
   return data
 }
+
+export const signup = async (userData: {
+  email: string
+  password: string
+  name: string
+  mobileno: string
+  birthdate: string
+  gender: string
+  post: string
+  addr1: string
+  addr2?: string
+  marketing_yn: "Y" | "N"
+  brand_code?: string[]
+}) => {
+  const { data } = await axiosClient.post("/auth/signup/email", userData)
+  return data
+}
