@@ -61,9 +61,32 @@ export const ProfileSetup = () => {
   }
 
   const handleSignupSubmit = async () => {
-    // TODO pass api 완료 후 signup api 요청
+    try {
+      if (socialInfo) {
+        // 소셜 회원가입
+        await signupWithSocial({
+          provider: socialInfo.provider,
+          accessToken: socialInfo.accessToken,
+          userInfo: {
+            name: signupData.name,
+            mobileno: signupData.mobileNumber,
+            gender: signupData.gender === "male" ? "M" : "F",
+            post: signupData.postCode,
+            addr1: signupData.address1,
+            addr2: signupData.address2,
+            marketing_yn: signupData.marketingYn ? "Y" : "N",
+            brand_code: signupData.brandCodes || [],
+          },
+        })
+      } else {
+        // 일반 회원가입
+        // ... 기존 회원가입 로직
+      }
 
-    navigate("/signup/complete")
+      navigate("/signup/complete")
+    } catch (error) {
+      // 에러 처리
+    }
   }
 
   return (

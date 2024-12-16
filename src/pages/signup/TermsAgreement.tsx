@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext"
 import { Button } from "@components/Button"
 import { Checkbox } from "@mui/material"
@@ -8,6 +8,8 @@ import CheckFillCircleIcon from "@components/icons/CheckFillCircleIcon.tsx"
 
 export const TermsAgreement = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+  const socialInfo = location.state?.social
   const { setHeader, setNavigation } = useLayout()
   const [agreements, setAgreements] = useState({
     all: false,
@@ -50,9 +52,19 @@ export const TermsAgreement = () => {
     setSignupData((prev) => ({
       ...prev,
       marketingYn: agreements.marketing,
+      ...(socialInfo && {
+        social: {
+          provider: socialInfo.provider,
+          accessToken: socialInfo.accessToken,
+        },
+      }),
     }))
 
-    navigate("/signup/email")
+    navigate("/signup/email", {
+      state: {
+        social: socialInfo,
+      },
+    })
   }
 
   return (

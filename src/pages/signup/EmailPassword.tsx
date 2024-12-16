@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import CustomTextField from "@components/CustomTextField.tsx"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { Button } from "@components/Button.tsx"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useSignup } from "../../contexts/SignupContext.tsx"
@@ -12,6 +12,8 @@ export const EmailPassword = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const { setSignupData } = useSignup()
+  const location = useLocation()
+  const socialInfo = location.state?.social
 
   useEffect(() => {
     setHeader({
@@ -66,16 +68,18 @@ export const EmailPassword = () => {
     setSignupData((prev) => ({
       ...prev,
       email: form.email,
-      password: form.password,
+      ...(socialInfo ? {} : { password: form.password }),
     }))
 
-    navigate("/signup/profile")
+    navigate("/signup/profile", {
+      state: { social: socialInfo },
+    })
   }
 
   return (
     <div className="flex flex-col px-5 pt-5 pb-7 gap-10">
       <h1 className="text-[20px] font-bold leading-[30px] text-[#212121]">
-        이메일과 비밀번호를
+        {socialInfo ? "이메일을" : "이메일과 비밀번호를"}
         <br />
         설정해주세요
       </h1>
@@ -88,10 +92,12 @@ export const EmailPassword = () => {
           placeholder="이메일 계정 입력"
         />
 
-        <PasswordCustomInput
-          onPasswordChange={handlePasswordChange}
-          onPasswordConfirmChange={handlePasswordConfirmChange}
-        />
+        {!socialInfo && (
+          <PasswordCustomInput
+            onPasswordChange={handlePasswordChange}
+            onPasswordConfirmChange={handlePasswordConfirmChange}
+          />
+        )}
       </div>
 
       <Button
