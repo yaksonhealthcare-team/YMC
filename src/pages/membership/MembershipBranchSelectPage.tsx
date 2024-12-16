@@ -24,8 +24,8 @@ const MembershipBranchSelectPage = () => {
     fetchNextPage,
     isFetchingNextPage,
   } = useBranches({
-    latitude: location.latitude ?? DEFAULT_COORDINATE.latitude!,
-    longitude: location.longitude ?? DEFAULT_COORDINATE.longitude!,
+    latitude: location?.latitude || DEFAULT_COORDINATE.latitude,
+    longitude: location?.longitude || DEFAULT_COORDINATE.longitude,
     search: query,
   })
 
