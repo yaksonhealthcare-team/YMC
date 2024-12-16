@@ -74,3 +74,11 @@ export interface UserSignupRequest {
   recom: string
   marketing_yn: boolean
 }
+
+export interface UserUpdateRequest {
+  post: string
+  addr1: string
+  addr2: string
+  marketing_yn: string
+  // TODO: API Request에 gender 필드 추가되면 여기도 추가할 것
+}
