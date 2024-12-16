@@ -1,6 +1,8 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext"
+import { useAuth } from "../../contexts/AuthContext"
+import { loginWithSocial, fetchUser } from "../../apis/auth.api"
 import Logo from "@components/Logo"
 import { Button } from "@components/Button"
 import { Typography } from "@mui/material"
@@ -8,6 +10,7 @@ import KakaoIcon from "../../assets/icons/KakaoIcon.svg?react"
 import NaverIcon from "../../assets/icons/NaverIcon.svg?react"
 import AppleIcon from "../../assets/icons/AppleIcon.svg?react"
 import { getNaverLoginUrl } from "../../libs/naver"
+import { signInWithGoogle, signInWithApple } from "../../libs/social"
 
 // 소셜 로그인 설정
 const SOCIAL_CONFIG = {
@@ -25,21 +28,63 @@ const SOCIAL_CONFIG = {
   },
 }
 
+// provider 코드 변환 함수 추가
+const getProviderCode = (provider: string): "K" | "N" | "G" | "A" => {
+  switch (provider) {
+    case "kakao":
+      return "K"
+    case "naver":
+      return "N"
+    case "google":
+      return "G"
+    case "apple":
+      return "A"
+    default:
+      throw new Error("Invalid provider")
+  }
+}
+
 const Login = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
+  const { login } = useAuth()
 
   useEffect(() => {
     setHeader({ display: false })
     setNavigation({ display: false })
   }, [])
 
-  const handleSocialLogin = (provider: "kakao" | "naver" | "apple") => {
-    switch (provider) {
-      case "naver":
-        window.location.href = getNaverLoginUrl()
-        break
-      // ... 다른 케이스들
+  const handleSocialLogin = async (
+    provider: "kakao" | "naver" | "google" | "apple",
+  ) => {
+    try {
+      let socialAccessToken = ""
+
+      switch (provider) {
+        case "naver":
+          window.location.href = getNaverLoginUrl()
+          return // 리다이렉트되므로 여기서 return
+        case "google":
+          socialAccessToken = await signInWithGoogle()
+          break
+        case "apple":
+          socialAccessToken = await signInWithApple()
+          break
+        // ... 기존 케이스들
+      }
+
+      if (socialAccessToken) {
+        const { accessToken } = await loginWithSocial({
+          provider: getProviderCode(provider),
+          accessToken: socialAccessToken,
+        })
+
+        const user = await fetchUser(accessToken)
+        login({ user, token: accessToken })
+        navigate("/")
+      }
+    } catch (error) {
+      console.error("Social login failed:", error)
     }
   }
 
@@ -74,8 +119,8 @@ const Login = () => {
           <span className="flex-1 text-center">네이버로 로그인</span>
         </Button>
 
-        {/* TODO: 기기 OS에 따라 애플/구글 로그인 다르게 처리*/}
-        {/* 애플 로그인 */}
+        {/* TODO: 애플 로그인 웹 지원 여부 확인 필요 */}
+        {/* TODO: iOS에서만 애플 로그인 버튼 표시 */}
         <Button
           onClick={() => handleSocialLogin("apple")}
           fullCustom

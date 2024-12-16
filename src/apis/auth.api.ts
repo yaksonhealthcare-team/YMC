@@ -58,9 +58,11 @@ export const loginWithSocial = async ({
   provider,
   accessToken,
 }: {
-  provider: "K" | "N" | "A"
+  provider: "K" | "N" | "G" | "A"
   accessToken: string
 }) => {
+  // TODO: 애플 로그인의 경우 id_token을 SocialAccessToken으로 전달
+  // TODO: 백엔드에서 애플 로그인 처리 방식 확인 필요
   const { data } = await axiosClient.post("/auth/signin/social", {
     thirdPartyType: provider,
     SocialAccessToken: accessToken,
@@ -68,8 +70,13 @@ export const loginWithSocial = async ({
     device_type: "TODO: 디바이스 타입 추가",
   })
 
+  if (!data?.body?.[0]?.accessToken) {
+    console.error("Unexpected response format:", data)
+    throw new Error("Invalid response format")
+  }
+
   return {
-    refreshToken: data.Header[0].refreshToken,
+    refreshToken: data.Header?.[0]?.refreshToken || "",
     accessToken: data.body[0].accessToken,
   }
 }

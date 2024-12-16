@@ -4,6 +4,8 @@ import { useAuth } from "../../contexts/AuthContext"
 import { loginWithSocial, fetchUser } from "../../apis/auth.api"
 import { getKakaoToken } from "../../libs/kakao"
 import { getNaverToken } from "../../libs/naver"
+import { signInWithPopup } from "@firebase/auth"
+import { auth, appleProvider } from "../../libs/firebase"
 
 const OAuthCallback = () => {
   const { provider } = useParams()
@@ -14,6 +16,8 @@ const OAuthCallback = () => {
     const handleCallback = async () => {
       const searchParams = new URLSearchParams(window.location.search)
       const code = searchParams.get("code")
+      const state = searchParams.get("state")
+      const id_token = searchParams.get("id_token")
 
       if (!code) {
         navigate("/login")
@@ -29,13 +33,17 @@ const OAuthCallback = () => {
             socialAccessToken = await getKakaoToken(code)
             break
           case "naver":
-            const state = searchParams.get("state")
             if (!state) {
               throw new Error("State parameter is missing")
             }
             socialAccessToken = await getNaverToken(code, state)
             break
-          // 다른 provider 추가 예정
+          case "apple":
+            if (!id_token) {
+              throw new Error("ID token is missing")
+            }
+            socialAccessToken = id_token
+            break
         }
 
         // 서버 로그인
@@ -72,7 +80,7 @@ const OAuthCallback = () => {
   return <div>로그인 처리중...</div>
 }
 
-// provider 코드 변환
+// provider ��드 변환
 const getProviderCode = (provider?: string): "K" | "N" | "A" => {
   switch (provider) {
     case "kakao":
