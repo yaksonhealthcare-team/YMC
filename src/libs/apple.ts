@@ -3,8 +3,8 @@ import { axiosClient } from "../queries/clients"
 const APPLE_CLIENT_ID = "com.yaksonhc.devapi"
 const APPLE_REDIRECT_URI = "https://devapi.yaksonhc.com/api/auth/apple_callback"
 
-// TODO: 애플 로그인 관련 백엔드 API 추가 필요
-// 1. GET /auth/apple/init - 애플 로그인 URL 반환
+// TODO: 백엔드 API 추가 필요
+// 1. GET /auth/apple/init - 로그인 URL 반환
 // 2. 콜백 처리 - /api/auth/apple_callback
 
 export const getAppleLoginUrl = () => {

@@ -5,8 +5,8 @@ const GOOGLE_CLIENT_ID =
 const GOOGLE_REDIRECT_URI =
   "https://devapi.yaksonhc.com/api/auth/google_callback"
 
-// TODO: 구글 로그인 관련 백엔드 API 추가 필요
-// 1. GET /auth/google/init - 구글 로그인 URL 반환
+// TODO: 백엔드 API 추가 필요
+// 1. GET /auth/google/init - 로그인 URL 반환
 // 2. 콜백 처리 - /api/auth/google_callback
 
 export const getGoogleLoginUrl = async () => {

@@ -109,7 +109,6 @@ const Login = () => {
           <span className="flex-1 text-center">네이버로 로그인</span>
         </Button>
 
-        {/* TODO: 애플 로그인 웹 지원 여부 확인 ���요 */}
         {/* TODO: iOS에서만 애플 로그인 버튼 표시 */}
         <Button
           onClick={() => handleSocialLogin("apple")}
