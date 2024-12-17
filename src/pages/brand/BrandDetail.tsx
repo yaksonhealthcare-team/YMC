@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useBrand } from "../../queries/useBrandQueries.tsx"
@@ -9,6 +9,7 @@ export const BrandDetailPage = () => {
   const { brandCode } = useParams()
   const { data: brand } = useBrand(brandCode)
   const [brandImage, setBrandImage] = useState<string | undefined>()
+  const navigate = useNavigate()
 
   useEffect(() => {
     setHeader({
@@ -32,7 +33,12 @@ export const BrandDetailPage = () => {
       />
 
       <div className="sticky bottom-0 w-full px-[20px] pb-[30px] pt-[12px] bg-white">
-        <Button className="w-full !rounded-[12px]">예약하기</Button>
+        <Button
+          className="w-full !rounded-[12px]"
+          onClick={() => navigate("/reservation/form")}
+        >
+          예약하기
+        </Button>
       </div>
     </div>
   )
