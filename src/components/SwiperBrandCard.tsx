@@ -3,18 +3,20 @@ import { BrandCard } from "@components/BrandCard.tsx"
 import { useBrands } from "../queries/useBrandQueries.tsx"
 
 interface SwiperBrandCardProps {
+  className?: string
   onBrandClick: (brandCode: string) => void
   selectedBrandCodes?: string[]
 }
 
 export const SwiperBrandCard = ({
+  className,
   onBrandClick,
   selectedBrandCodes,
 }: SwiperBrandCardProps) => {
   const { data: brands } = useBrands()
 
   return (
-    <div className="overflow-x-auto">
+    <div className={`overflow-x-auto ${className}`}>
       <Swiper spaceBetween={16} slidesPerView={"auto"} className="gap-4">
         {brands &&
           brands.map((brand) => (
