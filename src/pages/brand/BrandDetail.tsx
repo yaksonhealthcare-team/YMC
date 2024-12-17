@@ -24,6 +24,7 @@ export const BrandDetailPage = () => {
 
   return (
     <div className="relative w-full">
+      {/*TODO brand detail api 응답데이터에 image 데이터 추가 될 시, /assets/brand_example.png 제거 */}
       <img
         src={brandImage ? brandImage : "/assets/brand_example.png"}
         alt=""
