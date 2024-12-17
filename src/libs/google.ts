@@ -1,6 +1,7 @@
 import { axiosClient } from "../queries/clients"
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
+const GOOGLE_CLIENT_ID =
+  "39001505358-fosqvj6oti6qgiud6ispraraoo7niut6.apps.googleusercontent.com"
 const GOOGLE_REDIRECT_URI =
   "https://devapi.yaksonhc.com/api/auth/google_callback"
 
@@ -9,7 +10,6 @@ const GOOGLE_REDIRECT_URI =
 // 2. 콜백 처리 - /api/auth/google_callback
 
 export const getGoogleLoginUrl = async () => {
-  // TODO: 백엔드 API 준비될 때까지 프론트엔드에서 URL 생성
   const state = Math.random().toString(36).substr(2, 11)
   localStorage.setItem("googleState", state)
 

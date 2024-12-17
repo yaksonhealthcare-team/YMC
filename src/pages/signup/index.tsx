@@ -1,4 +1,4 @@
-import React, { useNavigate } from "react"
+import React, { useNavigate } from "react-router-dom"
 import { signup, signupWithSocial } from "../../api/auth"
 
 const Signup = () => {
