@@ -1,22 +1,38 @@
 import { useParams } from "react-router-dom"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useBrand } from "../../queries/useBrandQueries.tsx"
+import { Button } from "@components/Button.tsx"
 
 export const BrandDetailPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const { brandCode } = useParams()
   const { data: brand } = useBrand(brandCode)
+  const [brandImage, setBrandImage] = useState<string | undefined>()
 
   useEffect(() => {
     setHeader({
       display: true,
-      title: brand ? brand[0].name : "",
+      title: brand ? brand[0].name : "Brand",
       left: "back",
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
+
+    brand && setBrandImage(brand[0].imageUrl)
   }, [brand])
 
-  return <>BRAND 소개 페이지 입니다.</>
+  return (
+    <div className="relative w-full">
+      <img
+        src={brandImage ? brandImage : "/assets/brand_example.png"}
+        alt=""
+        className="w-full h-full"
+      />
+
+      <div className="sticky bottom-0 w-full px-[20px] pb-[30px] pt-[12px] bg-white">
+        <Button className="w-full !rounded-[12px]">예약하기</Button>
+      </div>
+    </div>
+  )
 }
