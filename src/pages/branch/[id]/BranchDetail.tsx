@@ -86,7 +86,7 @@ const BranchDetail = () => {
           }
           content={
             (branch.staffs.length > 0 || branch.director) && (
-              <div className={"flex flex-col gap-4 -mb-4"}>
+              <div className={"flex flex-col gap-4 -mb-4 py-4"}>
                 <div className={"w-full h-[1px] bg-gray-200 rounded-sm"} />
 
                 {branch.staffs.length > 0 && (

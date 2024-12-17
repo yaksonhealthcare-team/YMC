@@ -46,8 +46,8 @@ const Home = () => {
               </Typography>
             </div>
           }
-          content={
-            <div>
+          contents={[
+            <div className="pt-4">
               <div className="flex justify-between items-center bg-primary-300 rounded-2xl p-4">
                 <div className="flex gap-2 flex-col text-white">
                   <Typography className={"font-b"}>
@@ -59,24 +59,24 @@ const Home = () => {
                 </div>
                 {/* TODO: 예약 필요 정보와 함께 이동 필요 */}
                 <div
-                  className="rounded-full bg-white text-primary-300 py-2.5 px-5 cursor-pointer"
+                  className="rounded-full bg-white text-primary-300 py-2 px-5 cursor-pointer"
                   onClick={() => navigate("/reservation/form")}
                 >
                   예약하기
                 </div>
               </div>
-              {/* 배너영역*/}
-              <div className="mt-4">
-                {/* TODO: 실 데이터 연동, 사이즈에 관계없이 동일하게 보이도록 레이아웃 조정 필요 */}
-                <img
-                  src="/assets/home_banner.png"
-                  alt="배너영역"
-                  className="w-full h-[144px] object-cover rounded-2xl "
-                  onClick={() => navigate("/membership")}
-                />
-              </div>
-            </div>
-          }
+            </div>,
+            // 배너영역
+            <div className="mt-4 pb-4">
+              {/* TODO: 실 데이터 연동, 사이즈에 관계없이 동일하게 보이도록 레이아웃 조정 필요 */}
+              <img
+                src="/assets/home_banner.png"
+                alt="배너영역"
+                className="w-full h-[144px] object-cover rounded-2xl"
+                onClick={() => navigate("/membership")}
+              />
+            </div>,
+          ]}
           buttonArea={
             <button
               className="w-full h-full bg-primary-300 text-white rounded-full shadow-lg flex justify-center items-center"

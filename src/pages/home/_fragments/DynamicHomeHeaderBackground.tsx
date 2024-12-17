@@ -1,14 +1,29 @@
-import { ReactNode, useEffect, useRef, useState } from "react"
+import { memo, ReactNode, useEffect, useRef, useState } from "react"
 
 const DynamicHomeHeaderBackground = ({
   header,
   content,
+  contents,
   buttonArea,
 }: {
   header: ReactNode
-  content: ReactNode
+  content?: ReactNode
+  contents?: ReactNode[]
   buttonArea: ReactNode
 }) => {
+  const ContentNode = memo(({ content }: { content: ReactNode }) => {
+    return (
+      <div
+        className="relative w-full bg-cover bg-center px-8"
+        style={{
+          backgroundImage: `url("/assets/home_card_mid.png")`,
+        }}
+      >
+        {content}
+      </div>
+    )
+  })
+
   return (
     <div
       className="relative flex flex-col"
@@ -26,12 +41,12 @@ const DynamicHomeHeaderBackground = ({
           </div>
         </div>
       </div>
-      <div
-        className="relative w-full bg-cover bg-center px-8 py-4"
-        style={{ backgroundImage: `url("/assets/home_card_mid.png")` }}
-      >
-        {content}
-      </div>
+
+      {content && <ContentNode content={content} />}
+
+      {contents &&
+        contents.map((item, i) => <ContentNode key={i} content={item} />)}
+
       <img src="/assets/home_card_bottom.png" alt="" className="w-full" />
     </div>
   )
