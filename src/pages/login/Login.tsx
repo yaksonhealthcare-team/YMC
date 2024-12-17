@@ -13,6 +13,7 @@ import { getNaverLoginUrl } from "../../libs/naver"
 import { signInWithGoogle, signInWithApple } from "../../libs/social"
 import GoogleIcon from "../../assets/icons/GoogleIcon.svg?react"
 import { getGoogleLoginUrl } from "../../libs/google"
+import { getAppleLoginUrl } from "../../libs/apple"
 
 // 소셜 로그인 설정
 const SOCIAL_CONFIG = {
@@ -60,8 +61,6 @@ const Login = () => {
     provider: "kakao" | "naver" | "google" | "apple",
   ) => {
     try {
-      let socialAccessToken = ""
-
       switch (provider) {
         case "naver":
           window.location.href = getNaverLoginUrl()
@@ -71,19 +70,8 @@ const Login = () => {
           window.location.href = googleLoginUrl
           return
         case "apple":
-          socialAccessToken = await signInWithApple()
-          break
-      }
-
-      if (socialAccessToken) {
-        const { accessToken } = await loginWithSocial({
-          provider: getProviderCode(provider),
-          accessToken: socialAccessToken,
-        })
-
-        const user = await fetchUser(accessToken)
-        login({ user, token: accessToken })
-        navigate("/")
+          window.location.href = getAppleLoginUrl()
+          return
       }
     } catch (error) {
       console.error("Social login failed:", error)
@@ -121,7 +109,7 @@ const Login = () => {
           <span className="flex-1 text-center">네이버로 로그인</span>
         </Button>
 
-        {/* TODO: 애플 로그인 웹 지원 여부 확인 필요 */}
+        {/* TODO: 애플 로그인 웹 지원 여부 확인 ���요 */}
         {/* TODO: iOS에서만 애플 로그인 버튼 표시 */}
         <Button
           onClick={() => handleSocialLogin("apple")}
