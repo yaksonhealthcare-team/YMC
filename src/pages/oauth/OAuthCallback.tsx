@@ -34,10 +34,7 @@ const OAuthCallback = () => {
             socialAccessToken = await getKakaoToken(code)
             break
           case "naver":
-            if (!state) {
-              throw new Error("State parameter is missing")
-            }
-            socialAccessToken = await getNaverToken(code, state)
+            socialAccessToken = await getNaverToken(code)
             break
           case "google":
             socialAccessToken = await getGoogleToken(code)
