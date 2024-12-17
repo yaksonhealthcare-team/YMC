@@ -209,10 +209,7 @@ const MembershipCardSection = () => {
 }
 
 const BrandSection = () => {
-  const handleBrandClick = (brandCode: string) => {
-    console.log("------ brandCode main -------")
-    console.log(brandCode)
-  }
+  const handleBrandClick = (brandCode: string) => {}
   return (
     <div className="mt-6">
       <Title title="브랜드 관" />
