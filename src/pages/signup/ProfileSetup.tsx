@@ -11,6 +11,7 @@ import Profile from "@assets/icons/Profile.svg?react"
 import SettingIcon from "@assets/icons/SettingIcon.svg?react"
 import { useBrands } from "../../queries/useBrandQueries.tsx"
 import { Swiper, SwiperSlide } from "swiper/react"
+import { SwiperBrandCard } from "@components/SwiperBrandCard.tsx"
 
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -48,6 +49,8 @@ export const ProfileSetup = () => {
   }
 
   const toggleBrandSelection = (brandCode: string) => {
+    console.log("------ brand Code -----")
+    console.log(brandCode)
     setSignupData((prev) => {
       const brandCodes = prev.brandCodes || []
       const isSelected = brandCodes.includes(brandCode)
@@ -241,6 +244,11 @@ export const ProfileSetup = () => {
             </span>
             <span className="text-14px text-[#A2A5AA]">(선택)</span>
           </div>
+
+          <SwiperBrandCard
+            onBrandClick={toggleBrandSelection}
+            selectedBrandCodes={signupData.brandCodes}
+          />
 
           <div className="overflow-x-auto">
             <Swiper spaceBetween={16} slidesPerView={"auto"} className="gap-4">
