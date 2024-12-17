@@ -32,6 +32,7 @@ export const queryKeys = {
   },
   brands: {
     all: ["brands"] as const,
+    detail: ["brands/detail"] as const,
   },
   memberships: {
     all: ["memberships"] as const,

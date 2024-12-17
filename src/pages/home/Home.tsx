@@ -209,7 +209,12 @@ const MembershipCardSection = () => {
 }
 
 const BrandSection = () => {
-  const handleBrandClick = (brandCode: string) => {}
+  const navigate = useNavigate()
+
+  const handleBrandClick = (brandCode: string) => {
+    navigate(`/brand/${brandCode}`)
+  }
+
   return (
     <div className="mt-6">
       <Title title="브랜드 관" />

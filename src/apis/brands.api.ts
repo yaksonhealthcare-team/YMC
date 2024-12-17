@@ -8,3 +8,16 @@ export const fetchBrands = async (): Promise<Brand[]> => {
     await axiosClient.get<HTTPResponse<BrandResponse[]>>("/brands/brands")
   return BrandMapper.toEntities(data.body)
 }
+
+export const fetchBrand = async (brandCode: string): Promise<Brand[]> => {
+  const { data } = await axiosClient.get<HTTPResponse<BrandResponse[]>>(
+    "/brands/brands",
+    {
+      params: {
+        brand_code: brandCode,
+      },
+    },
+  )
+  console.log(data)
+  return BrandMapper.toEntities(data.body)
+}

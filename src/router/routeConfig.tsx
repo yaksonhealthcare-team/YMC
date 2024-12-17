@@ -62,6 +62,7 @@ import MembershipHistory from "pages/memberHistory/MembershipHistory.tsx"
 import MembershipSelectBranchPage from "../pages/membership/MembershipBranchSelectPage.tsx"
 import ProfileChangePhoneNumber from "../pages/editProfile/ProfileChangePhoneNumber.tsx"
 import PaymentCompletePage from "../pages/payment/PaymentCompletePage.tsx"
+import { BrandDetailPage } from "../pages/brand/BrandDetail.tsx"
 
 interface RouteConfig {
   path: string
@@ -89,8 +90,8 @@ const routeConfig: RouteConfig[] = [
   },
   //브랜드관
   {
-    path: "/brand",
-    element: <div>Brand</div>,
+    path: "/brand/:brandCode",
+    element: <BrandDetailPage />,
   },
 
   //로그인, 로그아웃
