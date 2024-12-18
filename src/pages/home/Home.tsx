@@ -17,9 +17,13 @@ import { Reservation } from "types/Reservation.ts"
 import { useReservations } from "queries/useReservationQueries.tsx"
 import { useMembershipList } from "queries/useMembershipQueries.tsx"
 import SplashScreen from "@components/Splash.tsx"
+import { Pagination } from "swiper/modules"
+import { useBanner } from "../../queries/useBannerQueries.tsx"
+import { BannerRequestType } from "../../types/Banner.ts"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
+  const { data: mainBanner } = useBanner(BannerRequestType.SLIDE)
 
   const navigate = useNavigate()
   useEffect(() => {
@@ -66,15 +70,26 @@ const Home = () => {
                 </div>
               </div>
             </div>,
-            // 배너영역
             <div className="mt-4 pb-4">
-              {/* TODO: 실 데이터 연동, 사이즈에 관계없이 동일하게 보이도록 레이아웃 조정 필요 */}
-              <img
-                src="/assets/home_banner.png"
-                alt="배너영역"
-                className="w-full h-[144px] object-cover rounded-2xl"
-                onClick={() => navigate("/membership")}
-              />
+              <Swiper
+                modules={[Pagination]}
+                pagination={{ clickable: true }}
+                slidesPerView={1}
+                className="w-full h-[144px] rounded-2xl"
+                loop={true}
+              >
+                {mainBanner &&
+                  mainBanner.map((banner, index) => (
+                    <SwiperSlide key={index}>
+                      <img
+                        src={banner.fileUrl}
+                        alt={`${banner.title}`}
+                        className="w-full h-[144px] object-cover rounded-2xl"
+                        onClick={() => navigate(banner.link || "/membership")}
+                      />
+                    </SwiperSlide>
+                  ))}
+              </Swiper>
             </div>,
           ]}
           buttonArea={
