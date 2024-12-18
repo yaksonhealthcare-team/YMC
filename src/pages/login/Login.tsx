@@ -1,8 +1,6 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext"
-import { useAuth } from "../../contexts/AuthContext"
-import { loginWithSocial, fetchUser } from "../../apis/auth.api"
 import Logo from "@components/Logo"
 import { Button } from "@components/Button"
 import { Typography } from "@mui/material"
@@ -10,47 +8,13 @@ import KakaoIcon from "../../assets/icons/KakaoIcon.svg?react"
 import NaverIcon from "../../assets/icons/NaverIcon.svg?react"
 import AppleIcon from "../../assets/icons/AppleIcon.svg?react"
 import { getNaverLoginUrl } from "../../libs/naver"
-import { signInWithGoogle, signInWithApple } from "../../libs/social"
 import GoogleIcon from "../../assets/icons/GoogleIcon.svg?react"
 import { getGoogleLoginUrl } from "../../libs/google"
 import { getAppleLoginUrl } from "../../libs/apple"
 
-// 소셜 로그인 설정
-const SOCIAL_CONFIG = {
-  kakao: {
-    clientId: import.meta.env.VITE_KAKAO_CLIENT_ID,
-    redirectUri: `${window.location.origin}/oauth/callback/kakao`,
-  },
-  naver: {
-    clientId: import.meta.env.VITE_NAVER_CLIENT_ID,
-    redirectUri: `${window.location.origin}/oauth/callback/naver`,
-  },
-  apple: {
-    clientId: import.meta.env.VITE_APPLE_CLIENT_ID,
-    redirectUri: `${window.location.origin}/oauth/callback/apple`,
-  },
-}
-
-// provider 코드 변환 함수 추가
-const getProviderCode = (provider: string): "K" | "N" | "G" | "A" => {
-  switch (provider) {
-    case "kakao":
-      return "K"
-    case "naver":
-      return "N"
-    case "google":
-      return "G"
-    case "apple":
-      return "A"
-    default:
-      throw new Error("Invalid provider")
-  }
-}
-
 const Login = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const { login } = useAuth()
 
   useEffect(() => {
     setHeader({ display: false })

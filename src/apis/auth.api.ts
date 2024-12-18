@@ -109,6 +109,7 @@ export const signupWithSocial = async ({
     addr2: string
     marketing_yn: "Y" | "N"
     brand_code: string[]
+    email?: string
   }
 }) => {
   const { data } = await axiosClient.post("/auth/signup/social", {

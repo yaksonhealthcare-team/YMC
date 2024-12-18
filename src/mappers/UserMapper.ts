@@ -6,22 +6,24 @@ import {
 } from "../types/User.ts"
 
 export class UserMapper {
-  static toEntity(dto: UserResponse): User {
+  static toEntity(response: UserResponse): User {
     return {
-      username: dto.name,
-      email: dto.email,
-      level: dto.level,
-      phone: dto.hp,
-      postalCode: dto.post,
+      id: response.id,
+      name: response.name,
+      username: response.name,
+      email: response.email,
+      level: response.level,
+      phone: response.hp,
+      postalCode: response.post,
       address: {
-        road: dto.addr1,
-        detail: dto.addr2,
+        road: response.addr1,
+        detail: response.addr2,
       },
-      marketingAgreed: dto.marketing_yn === "Y",
-      point: dto.point,
-      profileURL: dto.profileURL,
-      thirdPartyType: dto.thirdPartyType,
-      brands: dto.brands.map((brand) => ({
+      marketingAgreed: response.marketing_yn === "Y",
+      point: response.point,
+      profileURL: response.profileURL,
+      thirdPartyType: response.thirdPartyType,
+      brands: response.brands.map((brand) => ({
         id: brand.b_idx,
         brandName: brand.b_name,
         address: brand.addr,

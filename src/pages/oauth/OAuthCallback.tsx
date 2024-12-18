@@ -4,8 +4,6 @@ import { useAuth } from "../../contexts/AuthContext"
 import { loginWithSocial, fetchUser } from "../../apis/auth.api"
 import { getKakaoToken } from "../../libs/kakao"
 import { getNaverToken } from "../../libs/naver"
-import { signInWithPopup } from "@firebase/auth"
-import { auth, appleProvider } from "../../libs/firebase"
 import { getGoogleToken } from "../../libs/google"
 
 const OAuthCallback = () => {
@@ -17,8 +15,8 @@ const OAuthCallback = () => {
     const handleCallback = async () => {
       const searchParams = new URLSearchParams(window.location.search)
       const code = searchParams.get("code")
-      const state = searchParams.get("state")
       const id_token = searchParams.get("id_token")
+      let socialAccessToken = ""
 
       if (!code) {
         navigate("/login")
@@ -26,8 +24,6 @@ const OAuthCallback = () => {
       }
 
       try {
-        let socialAccessToken = ""
-
         // 소셜 플랫폼별 토큰 획득
         switch (provider) {
           case "kakao":

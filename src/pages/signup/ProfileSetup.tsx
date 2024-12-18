@@ -17,6 +17,7 @@ import { fetchUser } from "../../apis/auth.api.ts"
 import { useAuth } from "../../contexts/AuthContext.tsx"
 import { useOverlay } from "../../contexts/ModalContext"
 import { signupWithSocial } from "../../apis/auth.api.ts"
+import { UserSignup } from "../../types/User.ts"
 
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -57,14 +58,14 @@ export const ProfileSetup = () => {
     setIsPostcodeOpen(false)
   }
 
-  const toggleBrandSelection = (brandCode: string) => {
-    setSignupData((prev) => {
+  const toggleBrandSelection = (code: string) => {
+    setSignupData((prev: UserSignup) => {
       const brandCodes = prev.brandCodes || []
-      const isSelected = brandCodes.includes(brandCode)
+      const isSelected = brandCodes.includes(code)
 
       const updatedBrands = isSelected
-        ? brandCodes.filter((code) => code !== brandCode)
-        : [...brandCodes, brandCode]
+        ? brandCodes.filter((code) => code !== code)
+        : [...brandCodes, code]
 
       return { ...prev, brandCodes: updatedBrands }
     })
@@ -81,7 +82,7 @@ export const ProfileSetup = () => {
             name: signupData.name,
             email: signupData.email,
             mobileno: signupData.mobileNumber,
-            birthdate: signupData.birthdate,
+            birthdate: signupData.birthDate,
             gender: signupData.gender === "male" ? "M" : "F",
             post: signupData.postCode,
             addr1: signupData.address1,
@@ -97,7 +98,7 @@ export const ProfileSetup = () => {
           password: signupData.password,
           name: signupData.name,
           mobileno: signupData.mobileNumber,
-          birthdate: signupData.birthdate,
+          birthdate: signupData.birthDate,
           gender: signupData.gender === "male" ? "M" : "F",
           post: signupData.postCode,
           addr1: signupData.address1,
@@ -250,9 +251,9 @@ export const ProfileSetup = () => {
         {/* 생년월일 */}
         <CustomTextField
           label="생년월일"
-          value={signupData.birthdate}
+          value={signupData.birthDate}
           onChange={(e) =>
-            setSignupData({ ...signupData, birthdate: e.target.value })
+            setSignupData({ ...signupData, birthDate: e.target.value })
           }
           placeholder="YYYYMMDD"
         />
