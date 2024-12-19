@@ -14,7 +14,6 @@ export const getKakaoToken = async (code: string): Promise<string> => {
     const data = await response.json()
     return data.access_token
   } catch (error) {
-    console.error("Kakao token error:", error)
     throw error
   }
 }

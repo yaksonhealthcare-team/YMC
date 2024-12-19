@@ -36,20 +36,12 @@ const OAuthCallback = () => {
       const code = searchParams.get("code")
       const jsonData = searchParams.get("jsonData")
 
-      console.log("Provider:", provider)
-      console.log("Code:", code)
-      console.log("JsonData:", jsonData)
-
       try {
         let socialData
 
-        // jsonData가 있는 경우 (애플, 카카오, 네이버)
         if (jsonData) {
           socialData = JSON.parse(decodeURIComponent(jsonData)).body[0]
-        }
-        // code가 있는 경우 (구글, 카카오, 네이버)
-        else if (code) {
-          // 각 provider별 토큰 획득
+        } else if (code) {
           let socialAccessToken
           switch (provider) {
             case "kakao":
@@ -65,7 +57,6 @@ const OAuthCallback = () => {
               throw new Error("Invalid provider")
           }
 
-          // 백엔드에 소셜 로그인 시도
           const { data } = await axiosClient.post("/auth/signin/social", {
             thirdPartyType: getProviderCode(provider),
             SocialAccessToken: socialAccessToken,
@@ -75,12 +66,7 @@ const OAuthCallback = () => {
           throw new Error("인증 정보가 없습니다.")
         }
 
-        console.log("Social Data:", socialData)
-
-        // 회원가입이 필요한 경우
         if (!socialData.accessToken) {
-          console.log("회원가입 필요")
-
           const socialSignupInfo = {
             provider: getProviderCode(provider),
             socialId: socialData.socialId,
@@ -100,7 +86,6 @@ const OAuthCallback = () => {
           return
         }
 
-        // 로그인 성공
         const { accessToken } = await loginWithSocial({
           provider: getProviderCode(provider),
           accessToken: socialData.socialId,
@@ -110,7 +95,6 @@ const OAuthCallback = () => {
         login({ user, token: accessToken })
         navigate("/", { replace: true })
       } catch (error) {
-        console.error("Error in callback:", error)
         if (error instanceof Error) {
           showAlert(error.message)
         } else {

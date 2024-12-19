@@ -24,22 +24,21 @@ const Login = () => {
   const handleSocialLogin = async (
     provider: "kakao" | "naver" | "google" | "apple",
   ) => {
-    try {
-      switch (provider) {
-        case "naver":
-          window.location.href = getNaverLoginUrl()
-          return
-        case "google":
-          const googleLoginUrl = await getGoogleLoginUrl()
-          window.location.href = googleLoginUrl
-          return
-        case "apple":
-          window.location.href = getAppleLoginUrl()
-          return
-      }
-    } catch (error) {
-      console.error("Social login failed:", error)
+    let url = ""
+
+    switch (provider) {
+      case "naver":
+        url = getNaverLoginUrl()
+        break
+      case "google":
+        url = await getGoogleLoginUrl()
+        break
+      case "apple":
+        url = getAppleLoginUrl()
+        break
     }
+
+    if (url) window.location.href = url
   }
 
   const handleKakaoLogin = () => {
