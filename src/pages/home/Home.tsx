@@ -70,7 +70,7 @@ const Home = () => {
                 </div>
               </div>
             </div>,
-            <div className="mt-4 pb-4">
+            <div className="mt-4">
               <Swiper
                 modules={[Pagination]}
                 pagination={{ clickable: true }}
