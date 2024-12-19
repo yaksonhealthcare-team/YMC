@@ -22,6 +22,20 @@ export const EmailPassword = () => {
     setNavigation({ display: false })
   }, [])
 
+  useEffect(() => {
+    if (isSocialSignup) {
+      const socialInfo = JSON.parse(
+        sessionStorage.getItem("socialSignupInfo") || "{}",
+      )
+      if (socialInfo.email) {
+        setForm((prev) => ({
+          ...prev,
+          email: socialInfo.email,
+        }))
+      }
+    }
+  }, [])
+
   const [form, setForm] = useState({
     email: signupData.email || "",
     password: "",

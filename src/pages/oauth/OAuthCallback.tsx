@@ -20,86 +20,55 @@ const OAuthCallback = () => {
   const isProcessing = useRef(false)
 
   useEffect(() => {
-    // 헤더와 네비게이션 숨기기
     setHeader({ display: false })
     setNavigation({ display: false })
   }, [])
 
   useEffect(() => {
     const handleCallback = async () => {
-      if (isProcessing.current) {
-        return
-      }
+      if (isProcessing.current) return
       isProcessing.current = true
 
-      const searchParams = new URLSearchParams(window.location.search)
-      const code = searchParams.get("code")
-      const jsonData = searchParams.get("jsonData")
-
       try {
-        let socialData
+        const searchParams = new URLSearchParams(window.location.search)
+        const jsonData = searchParams.get("jsonData")
 
+        // 소셜 로그인 응답 처리
         if (jsonData) {
-          socialData = JSON.parse(decodeURIComponent(jsonData)).body[0]
-        } else if (code) {
-          let socialAccessToken
-          switch (provider) {
-            case "kakao":
-              socialAccessToken = await getKakaoToken(code)
-              break
-            case "naver":
-              socialAccessToken = await getNaverToken(code)
-              break
-            case "google":
-              socialAccessToken = await getGoogleToken(code)
-              break
-            default:
-              throw new Error("Invalid provider")
+          const socialData = JSON.parse(decodeURIComponent(jsonData)).body[0]
+
+          // 이미 가입된 회원 (accessToken 있음)
+          if (socialData.accessToken) {
+            const user = await fetchUser(socialData.accessToken)
+            login({ user, token: socialData.accessToken })
+            navigate("/", { replace: true })
+            return
           }
 
-          const { data } = await axiosClient.post("/auth/signin/social", {
-            thirdPartyType: getProviderCode(provider),
-            SocialAccessToken: socialAccessToken,
-          })
-          socialData = data.body[0]
-        } else {
-          throw new Error("인증 정보가 없습니다.")
-        }
+          // 미가입 회원 (socialId만 있음)
+          if (socialData.socialId) {
+            const socialSignupInfo = {
+              provider: getProviderCode(provider),
+              socialId: socialData.socialId,
+              email: socialData.email || "",
+              name: socialData.name || "",
+              mobileno: socialData.mobileno || "",
+              birthdate: socialData.birthdate || "",
+              gender: socialData.gender || "",
+            }
 
-        if (!socialData.accessToken) {
-          const socialSignupInfo = {
-            provider: getProviderCode(provider),
-            socialId: socialData.socialId,
-            email: socialData.email,
-            name: socialData.name,
-            mobileno: socialData.mobileno,
-            birthdate: socialData.birthdate,
-            gender: socialData.gender,
+            sessionStorage.setItem(
+              "socialSignupInfo",
+              JSON.stringify(socialSignupInfo),
+            )
+            navigate("/signup", { replace: true })
+            return
           }
-
-          sessionStorage.setItem(
-            "socialSignupInfo",
-            JSON.stringify(socialSignupInfo),
-          )
-
-          navigate("/signup", { replace: true })
-          return
         }
 
-        const { accessToken } = await loginWithSocial({
-          provider: getProviderCode(provider),
-          accessToken: socialData.socialId,
-        })
-
-        const user = await fetchUser(accessToken)
-        login({ user, token: accessToken })
-        navigate("/", { replace: true })
+        throw new Error("인증 정보가 없습니다.")
       } catch (error) {
-        if (error instanceof Error) {
-          showAlert(error.message)
-        } else {
-          showAlert("로그인에 실패했습니다.")
-        }
+        showAlert("로그인에 실패했습니다.")
         navigate("/login", { replace: true })
       }
     }

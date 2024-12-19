@@ -27,9 +27,9 @@ export const ProfileSetup = () => {
   const { signupData, setSignupData, cleanup } = useSignup()
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false)
   const { data: brands } = useBrands()
-  const socialInfo = location.state?.social
   const { login } = useAuth()
   const { showAlert } = useOverlay()
+  const isSocialSignup = !!sessionStorage.getItem("socialSignupInfo")
 
   useEffect(() => {
     setHeader({
@@ -38,6 +38,24 @@ export const ProfileSetup = () => {
       backgroundColor: "white",
     })
     setNavigation({ display: false })
+  }, [])
+
+  useEffect(() => {
+    if (isSocialSignup) {
+      const socialInfo = JSON.parse(
+        sessionStorage.getItem("socialSignupInfo") || "{}",
+      )
+
+      // 소셜 정보에서 가져올 수 있는 데이터 설정
+      setSignupData((prev) => ({
+        ...prev,
+        name: socialInfo.name || prev.name,
+        email: socialInfo.email || prev.email,
+        mobileNumber: socialInfo.mobileno || prev.mobileNumber,
+        birthDate: socialInfo.birthdate || prev.birthDate,
+        gender: socialInfo.gender === "M" ? "male" : "female" || prev.gender,
+      }))
+    }
   }, [])
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
