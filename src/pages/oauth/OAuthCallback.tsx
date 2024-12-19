@@ -9,13 +9,21 @@ import { getAppleToken } from "../../libs/apple"
 import { useOverlay } from "../../contexts/ModalContext"
 import { SocialSignupInfo } from "../../contexts/SignupContext"
 import { axiosClient } from "../../queries/clients"
+import { useLayout } from "../../contexts/LayoutContext"
 
 const OAuthCallback = () => {
   const { provider } = useParams()
   const navigate = useNavigate()
   const { login } = useAuth()
   const { showAlert } = useOverlay()
+  const { setHeader, setNavigation } = useLayout()
   const isProcessing = useRef(false)
+
+  useEffect(() => {
+    // 헤더와 네비게이션 숨기기
+    setHeader({ display: false })
+    setNavigation({ display: false })
+  }, [])
 
   useEffect(() => {
     const handleCallback = async () => {
