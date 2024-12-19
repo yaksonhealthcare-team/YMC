@@ -94,31 +94,39 @@ export const loginWithNaver = async ({
 
 export const signupWithSocial = async ({
   provider,
-  accessToken,
+  socialId,
   userInfo,
 }: {
-  provider: "K" | "N" | "A"
-  accessToken: string
+  provider: string
+  socialId: string
   userInfo: {
     name: string
+    email: string
     mobileno: string
     birthdate: string
-    gender: string
+    gender: "M" | "F"
     post: string
     addr1: string
     addr2: string
     marketing_yn: "Y" | "N"
     brand_code: string[]
-    email?: string
   }
 }) => {
-  const { data } = await axiosClient.post("/auth/signup/social", {
+  const response = await axiosClient.post("/auth/signup/socail", {
     thirdPartyType: provider,
-    SocialAccessToken: accessToken,
-    ...userInfo,
+    SocialAccessToken: socialId,
+    name: userInfo.name,
+    email: userInfo.email,
+    mobileno: userInfo.mobileno,
+    birthdate2: userInfo.birthdate,
+    gender2: userInfo.gender,
+    post: userInfo.post,
+    addr1: userInfo.addr1,
+    addr2: userInfo.addr2,
+    marketing_yn: userInfo.marketing_yn,
+    brand_code: userInfo.brand_code,
   })
-
-  return data
+  return response.data
 }
 
 export const signup = async (userData: {

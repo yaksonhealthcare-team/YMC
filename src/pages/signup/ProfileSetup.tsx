@@ -74,32 +74,45 @@ export const ProfileSetup = () => {
 
   const handleSignupSubmit = async () => {
     try {
-      // 소셜 정보 가져오기
       const socialInfo = JSON.parse(
         sessionStorage.getItem("socialSignupInfo") || "{}",
       )
       const isSocialSignup = !!socialInfo.provider
 
       if (isSocialSignup) {
-        // 소셜 회원가입
-        await signupWithSocial({
-          provider: socialInfo.provider,
-          accessToken: socialInfo.socialId, // socialId를 accessToken으로 사용
-          userInfo: {
-            name: signupData.name,
-            email: signupData.email,
-            mobileno: signupData.mobileNumber,
-            birthdate: signupData.birthDate,
-            gender: signupData.gender === "male" ? "M" : "F",
-            post: signupData.postCode,
-            addr1: signupData.address1,
-            addr2: signupData.address2 || "",
-            marketing_yn: signupData.marketingYn ? "Y" : "N",
-            brand_code: signupData.brandCodes || [],
-          },
-        })
+        try {
+          await signupWithSocial({
+            provider: socialInfo.provider,
+            socialId: socialInfo.socialId,
+            userInfo: {
+              name: signupData.name,
+              email: signupData.email,
+              mobileno: signupData.mobileNumber,
+              birthdate: signupData.birthDate,
+              gender: signupData.gender === "male" ? "M" : "F",
+              post: signupData.postCode,
+              addr1: signupData.address1,
+              addr2: signupData.address2 || "",
+              marketing_yn: signupData.marketingYn ? "Y" : "N",
+              brand_code: signupData.brandCodes || [],
+            },
+          })
+        } catch (error: any) {
+          if (error.response?.data?.resultCode === "23") {
+            const { accessToken } = await loginWithSocial({
+              provider: socialInfo.provider,
+              accessToken: socialInfo.socialId,
+            })
 
-        // 소셜 회원가입 후 자동 로그인
+            const user = await fetchUser(accessToken)
+            login({ user, token: accessToken })
+            cleanup()
+            navigate("/", { replace: true })
+            return
+          }
+          throw error
+        }
+
         const { accessToken } = await loginWithSocial({
           provider: socialInfo.provider,
           accessToken: socialInfo.socialId,
@@ -108,10 +121,9 @@ export const ProfileSetup = () => {
         const user = await fetchUser(accessToken)
         login({ user, token: accessToken })
       } else {
-        // 일반 이메일 회원가입
         await signup({
           email: signupData.email,
-          password: signupData.password!, // password는 필수
+          password: signupData.password!,
           name: signupData.name,
           mobileno: signupData.mobileNumber,
           birthdate: signupData.birthDate,
@@ -123,7 +135,6 @@ export const ProfileSetup = () => {
           brand_code: signupData.brandCodes,
         })
 
-        // 이메일 회원가입 후 자동 로그인
         const { accessToken } = await loginWithEmail({
           username: signupData.email,
           password: signupData.password!,
@@ -133,12 +144,9 @@ export const ProfileSetup = () => {
         login({ user, token: accessToken })
       }
 
-      // 회원가입 성공 시 소셜 정보 삭제
       cleanup()
-
       navigate("/signup/complete")
-    } catch (error: any) {
-      console.error("Signup error:", error)
+    } catch (error) {
       showAlert(error.response?.data?.message || "회원가입에 실패했습니다")
     }
   }
