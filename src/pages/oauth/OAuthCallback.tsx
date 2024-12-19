@@ -1,78 +1,105 @@
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
 import { loginWithSocial, fetchUser } from "../../apis/auth.api"
 import { getKakaoToken } from "../../libs/kakao"
 import { getNaverToken } from "../../libs/naver"
 import { getGoogleToken } from "../../libs/google"
+import { getAppleToken } from "../../libs/apple"
+import { useOverlay } from "../../contexts/ModalContext"
 
 const OAuthCallback = () => {
   const { provider } = useParams()
   const navigate = useNavigate()
   const { login } = useAuth()
+  const { showAlert } = useOverlay()
+  const isProcessing = useRef(false)
 
   useEffect(() => {
     const handleCallback = async () => {
-      const searchParams = new URLSearchParams(window.location.search)
-      const code = searchParams.get("code")
-      const id_token = searchParams.get("id_token")
-      let socialAccessToken = ""
-
-      if (!code) {
-        navigate("/login")
+      if (isProcessing.current) {
         return
       }
+      isProcessing.current = true
+
+      const searchParams = new URLSearchParams(window.location.search)
+      const code = searchParams.get("code")
+      const jsonData = searchParams.get("jsonData")
+
+      console.log("Provider:", provider)
+      console.log("JsonData:", jsonData)
 
       try {
-        // 소셜 플랫폼별 토큰 획득
-        switch (provider) {
-          case "kakao":
-            socialAccessToken = await getKakaoToken(code)
-            break
-          case "naver":
-            socialAccessToken = await getNaverToken(code)
-            break
-          case "google":
-            socialAccessToken = await getGoogleToken(code)
-            break
-          case "apple":
-            if (!id_token) {
-              throw new Error("ID token is missing")
-            }
-            socialAccessToken = id_token
-            break
-        }
+        let socialAccessToken = ""
 
-        // 서버 로그인
-        const { accessToken } = await loginWithSocial({
-          provider: getProviderCode(provider), // kakao -> K
-          accessToken: socialAccessToken,
-        })
+        // 애플 로그인의 경우 jsonData 파싱
+        if (provider === "apple" && jsonData) {
+          const data = JSON.parse(decodeURIComponent(jsonData))
+          console.log("Parsed Apple Data:", data)
 
-        const user = await fetchUser(accessToken)
-        login({ user, token: accessToken })
+          const socialInfo = data.body[0]
+          console.log("Social Info:", socialInfo)
 
-        navigate("/")
-      } catch (error: any) {
-        if (error.response?.data?.code === "28") {
-          // 회원가입 필요 - 기존 회원가입 약관 페이지로 이동
-          navigate("/signup", {
-            state: {
-              social: {
-                provider: getProviderCode(provider),
-                accessToken: socialAccessToken,
+          // 회원가입이 필요한 경우
+          if (!socialInfo.accessToken) {
+            console.log("회원가입 필요")
+            navigate("/signup", {
+              replace: true,
+              state: {
+                social: {
+                  provider: "A",
+                  socialId: socialInfo.socialId,
+                  email: socialInfo.email,
+                },
               },
-            },
-          })
-        } else {
-          console.error("Social login failed:", error)
-          navigate("/login")
+            })
+            return
+          }
+
+          socialAccessToken = socialInfo.accessToken
+        } else if (code) {
+          // 다른 소셜 로그인 처리
+          switch (provider) {
+            case "kakao":
+              socialAccessToken = await getKakaoToken(code)
+              break
+            case "naver":
+              socialAccessToken = await getNaverToken(code)
+              break
+            case "google":
+              socialAccessToken = await getGoogleToken(code)
+              break
+            default:
+              throw new Error("Invalid provider")
+          }
+        } else if (!code && !jsonData) {
+          throw new Error("인증 정보가 없습니다.")
         }
+
+        if (socialAccessToken) {
+          // 서버 로그인
+          const { accessToken } = await loginWithSocial({
+            provider: getProviderCode(provider),
+            accessToken: socialAccessToken,
+          })
+
+          const user = await fetchUser(accessToken)
+          login({ user, token: accessToken })
+          navigate("/")
+        }
+      } catch (error) {
+        console.error("Error in callback:", error)
+        if (error instanceof Error) {
+          showAlert(error.message)
+        } else {
+          showAlert("로그인에 실패했습니다.")
+        }
+        navigate("/login", { replace: true })
       }
     }
 
     handleCallback()
-  }, [])
+  }, [provider, navigate, login, showAlert])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
