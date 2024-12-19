@@ -18,6 +18,7 @@ import { useAuth } from "../../contexts/AuthContext.tsx"
 import { useOverlay } from "../../contexts/ModalContext"
 import { signupWithSocial } from "../../apis/auth.api.ts"
 import { UserSignup } from "../../types/User.ts"
+import { loginWithSocial } from "../../apis/auth.api.ts"
 
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -73,11 +74,17 @@ export const ProfileSetup = () => {
 
   const handleSignupSubmit = async () => {
     try {
-      if (socialInfo) {
+      // 소셜 정보 가져오기
+      const socialInfo = JSON.parse(
+        sessionStorage.getItem("socialSignupInfo") || "{}",
+      )
+      const isSocialSignup = !!socialInfo.provider
+
+      if (isSocialSignup) {
         // 소셜 회원가입
         await signupWithSocial({
           provider: socialInfo.provider,
-          accessToken: socialInfo.accessToken,
+          accessToken: socialInfo.socialId, // socialId를 accessToken으로 사용
           userInfo: {
             name: signupData.name,
             email: signupData.email,
@@ -91,11 +98,20 @@ export const ProfileSetup = () => {
             brand_code: signupData.brandCodes || [],
           },
         })
+
+        // 소셜 회원가입 후 자동 로그인
+        const { accessToken } = await loginWithSocial({
+          provider: socialInfo.provider,
+          accessToken: socialInfo.socialId,
+        })
+
+        const user = await fetchUser(accessToken)
+        login({ user, token: accessToken })
       } else {
-        // 일반 회원가입
+        // 일반 이메일 회원가입
         await signup({
           email: signupData.email,
-          password: signupData.password,
+          password: signupData.password!, // password는 필수
           name: signupData.name,
           mobileno: signupData.mobileNumber,
           birthdate: signupData.birthDate,
@@ -106,22 +122,23 @@ export const ProfileSetup = () => {
           marketing_yn: signupData.marketingYn ? "Y" : "N",
           brand_code: signupData.brandCodes,
         })
+
+        // 이메일 회원가입 후 자동 로그인
+        const { accessToken } = await loginWithEmail({
+          username: signupData.email,
+          password: signupData.password!,
+        })
+
+        const user = await fetchUser(accessToken)
+        login({ user, token: accessToken })
       }
-
-      // 회원가입 성공 후 자동 로그인
-      const { accessToken } = await loginWithEmail({
-        username: signupData.email,
-        password: signupData.password,
-      })
-
-      const user = await fetchUser(accessToken)
-      login({ user, token: accessToken })
 
       // 회원가입 성공 시 소셜 정보 삭제
       cleanup()
 
       navigate("/signup/complete")
     } catch (error: any) {
+      console.error("Signup error:", error)
       showAlert(error.response?.data?.message || "회원가입에 실패했습니다")
     }
   }
