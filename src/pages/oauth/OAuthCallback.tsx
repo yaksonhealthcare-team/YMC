@@ -31,14 +31,39 @@ const OAuthCallback = () => {
 
       try {
         const searchParams = new URLSearchParams(window.location.search)
+        console.log("🚀 URL Search Params:", Object.fromEntries(searchParams))
+
         const jsonData = searchParams.get("jsonData")
+        console.log("🚀 Raw jsonData:", jsonData)
 
         // 소셜 로그인 응답 처리
         if (jsonData) {
-          const socialData = JSON.parse(decodeURIComponent(jsonData)).body[0]
+          const decodedData = decodeURIComponent(jsonData)
+          console.log("🚀 Decoded jsonData:", decodedData)
+
+          const parsedData = JSON.parse(decodedData)
+          console.log("🚀 Parsed Response:", {
+            resultCode: parsedData.resultCode,
+            resultMessage: parsedData.resultMessage,
+            resultCount: parsedData.resultCount,
+            Header: parsedData.Header,
+            body: parsedData.body,
+          })
+
+          const socialData = parsedData.body[0]
+          console.log("🚀 Social Data:", {
+            accessToken: socialData.accessToken,
+            socialId: socialData.socialId,
+            email: socialData.email,
+            name: socialData.name,
+            mobileno: socialData.mobileno,
+            birthdate: socialData.birthdate,
+            gender: socialData.gender,
+          })
 
           // 이미 가입된 회원 (accessToken 있음)
           if (socialData.accessToken) {
+            console.log("✅ 이미 가입된 회원 - 자동 로그인")
             const user = await fetchUser(socialData.accessToken)
             login({ user, token: socialData.accessToken })
             navigate("/", { replace: true })
@@ -47,6 +72,7 @@ const OAuthCallback = () => {
 
           // 미가입 회원 (socialId만 있음)
           if (socialData.socialId) {
+            console.log("✅ 미가입 회원 - 회원가입 페이지로 이동")
             const socialSignupInfo = {
               provider: getProviderCode(provider),
               socialId: socialData.socialId,
@@ -56,6 +82,7 @@ const OAuthCallback = () => {
               birthdate: socialData.birthdate || "",
               gender: socialData.gender || "",
             }
+            console.log("🚀 Social Signup Info:", socialSignupInfo)
 
             sessionStorage.setItem(
               "socialSignupInfo",
@@ -68,6 +95,7 @@ const OAuthCallback = () => {
 
         throw new Error("인증 정보가 없습니다.")
       } catch (error) {
+        console.error("❌ Error:", error)
         showAlert("로그인에 실패했습니다.")
         navigate("/login", { replace: true })
       }
