@@ -8,6 +8,7 @@ import { getGoogleToken } from "../../libs/google"
 import { getAppleToken } from "../../libs/apple"
 import { useOverlay } from "../../contexts/ModalContext"
 import { SocialSignupInfo } from "../../contexts/SignupContext"
+import { axiosClient } from "../../queries/clients"
 
 const OAuthCallback = () => {
   const { provider } = useParams()
@@ -28,41 +29,20 @@ const OAuthCallback = () => {
       const jsonData = searchParams.get("jsonData")
 
       console.log("Provider:", provider)
+      console.log("Code:", code)
       console.log("JsonData:", jsonData)
 
       try {
-        let socialAccessToken = ""
+        let socialData
 
-        // 애플 로그인의 경우 jsonData 파싱
-        if (provider === "apple" && jsonData) {
-          const data = JSON.parse(decodeURIComponent(jsonData))
-          console.log("Parsed Apple Data:", data)
-
-          const socialInfo = data.body[0]
-          console.log("Social Info:", socialInfo)
-
-          // 회원가입이 필요한 경우
-          if (!socialInfo.accessToken) {
-            console.log("회원가입 필요")
-
-            // 소셜 정보 저장
-            const socialSignupInfo: SocialSignupInfo = {
-              provider: "A",
-              socialId: socialInfo.socialId,
-              email: socialInfo.email,
-            }
-            sessionStorage.setItem(
-              "socialSignupInfo",
-              JSON.stringify(socialSignupInfo),
-            )
-
-            navigate("/signup", { replace: true })
-            return
-          }
-
-          socialAccessToken = socialInfo.accessToken
-        } else if (code) {
-          // 다른 소셜 로그인 처리
+        // jsonData가 있는 경우 (애플, 카카오, 네이버)
+        if (jsonData) {
+          socialData = JSON.parse(decodeURIComponent(jsonData)).body[0]
+        }
+        // code가 있는 경우 (구글, 카카오, 네이버)
+        else if (code) {
+          // 각 provider별 토큰 획득
+          let socialAccessToken
           switch (provider) {
             case "kakao":
               socialAccessToken = await getKakaoToken(code)
@@ -76,21 +56,51 @@ const OAuthCallback = () => {
             default:
               throw new Error("Invalid provider")
           }
-        } else if (!code && !jsonData) {
+
+          // 백엔드에 소셜 로그인 시도
+          const { data } = await axiosClient.post("/auth/signin/social", {
+            thirdPartyType: getProviderCode(provider),
+            SocialAccessToken: socialAccessToken,
+          })
+          socialData = data.body[0]
+        } else {
           throw new Error("인증 정보가 없습니다.")
         }
 
-        if (socialAccessToken) {
-          // 서버 로그인
-          const { accessToken } = await loginWithSocial({
-            provider: getProviderCode(provider),
-            accessToken: socialAccessToken,
-          })
+        console.log("Social Data:", socialData)
 
-          const user = await fetchUser(accessToken)
-          login({ user, token: accessToken })
-          navigate("/")
+        // 회원가입이 필요한 경우
+        if (!socialData.accessToken) {
+          console.log("회원가입 필요")
+
+          const socialSignupInfo = {
+            provider: getProviderCode(provider),
+            socialId: socialData.socialId,
+            email: socialData.email,
+            name: socialData.name,
+            mobileno: socialData.mobileno,
+            birthdate: socialData.birthdate,
+            gender: socialData.gender,
+          }
+
+          sessionStorage.setItem(
+            "socialSignupInfo",
+            JSON.stringify(socialSignupInfo),
+          )
+
+          navigate("/signup", { replace: true })
+          return
         }
+
+        // 로그인 성공
+        const { accessToken } = await loginWithSocial({
+          provider: getProviderCode(provider),
+          accessToken: socialData.socialId,
+        })
+
+        const user = await fetchUser(accessToken)
+        login({ user, token: accessToken })
+        navigate("/", { replace: true })
       } catch (error) {
         console.error("Error in callback:", error)
         if (error instanceof Error) {
