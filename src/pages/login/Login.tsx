@@ -42,6 +42,11 @@ const Login = () => {
     }
   }
 
+  const handleKakaoLogin = () => {
+    const kakaoAuthUrl = `https://devapi.yaksonhc.com/api/auth/kakao_login`
+    window.location.href = kakaoAuthUrl
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-[#F8F5F2]">
       {/* 로고 */}
@@ -53,7 +58,7 @@ const Login = () => {
       <div className="mt-[205px] px-5 flex flex-col gap-3">
         {/* 카카오 로그인 */}
         <Button
-          onClick={() => handleSocialLogin("kakao")}
+          onClick={handleKakaoLogin}
           fullCustom
           sizeType="l"
           className="bg-[#FEE500] border-[#FEE500] text-[#262626] font-b flex items-center px-3 py-4"
