@@ -26,9 +26,13 @@ export const TermsAgreement = () => {
       display: true,
       left: "back",
       backgroundColor: "white",
+      onClickBack: () => {
+        sessionStorage.removeItem("socialSignupInfo")
+        navigate("/login", { replace: true })
+      },
     })
     setNavigation({ display: false })
-  }, [])
+  }, [navigate, setHeader, setNavigation])
 
   const handleAllCheck = () => {
     const newValue = !agreements.all

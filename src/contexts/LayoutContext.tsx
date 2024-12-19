@@ -3,6 +3,7 @@ import PageContainer from "@components/PageContainer.tsx"
 import { Typography } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 import CaretLeftIcon from "../assets/icons/CaretLeftIcon.svg?react"
+import Header from "@components/Header.tsx"
 
 type NavigationConfig = {
   display?: boolean
@@ -17,6 +18,7 @@ type DetailedHeaderConfig = BaseHeaderConfig & {
   title?: string | React.ReactNode
   left?: "back" | React.ReactNode
   right?: React.ReactNode
+  onClickBack?: () => void
 }
 
 type FullHeaderConfig = BaseHeaderConfig & {
@@ -70,32 +72,20 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
     return (
       <div className={"z-10"}>
         <div
-          className={`fixed w-full h-12 max-w-[500px] min-w-[375px] py-3 px-5 ${
+          className={`fixed w-full max-w-[500px] min-w-[375px] ${
             header.backgroundColor ? header.backgroundColor : "bg-system-bg"
           }`}
         >
-          <div className="flex justify-between items-center">
-            <div className="shrink-0 min-w-20">
-              {headerConfig.left === "back" ? (
-                <button onClick={() => window.history.back()}>
-                  <CaretLeftIcon />
-                </button>
-              ) : (
-                headerConfig.left
-              )}
-            </div>
-
-            <Typography
-              variant="h6"
-              className="flex-1 text-center mx-4 font-sb text-16px text-gray-700"
-            >
-              {headerConfig.title}
-            </Typography>
-
-            <div className="shrink-0 min-w-20 flex justify-end">
-              {headerConfig.right}
-            </div>
-          </div>
+          <Header
+            type={
+              headerConfig.left === "back" ? "back_title" : "title_right_icon"
+            }
+            title={headerConfig.title}
+            onClickBack={
+              headerConfig.onClickBack || (() => window.history.back())
+            }
+            iconRight={headerConfig.right}
+          />
         </div>
         <div className={"h-12"} />
       </div>
