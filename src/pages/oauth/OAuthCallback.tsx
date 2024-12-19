@@ -7,6 +7,7 @@ import { getNaverToken } from "../../libs/naver"
 import { getGoogleToken } from "../../libs/google"
 import { getAppleToken } from "../../libs/apple"
 import { useOverlay } from "../../contexts/ModalContext"
+import { SocialSignupInfo } from "../../contexts/SignupContext"
 
 const OAuthCallback = () => {
   const { provider } = useParams()
@@ -43,16 +44,19 @@ const OAuthCallback = () => {
           // 회원가입이 필요한 경우
           if (!socialInfo.accessToken) {
             console.log("회원가입 필요")
-            navigate("/signup", {
-              replace: true,
-              state: {
-                social: {
-                  provider: "A",
-                  socialId: socialInfo.socialId,
-                  email: socialInfo.email,
-                },
-              },
-            })
+
+            // 소셜 정보 저장
+            const socialSignupInfo: SocialSignupInfo = {
+              provider: "A",
+              socialId: socialInfo.socialId,
+              email: socialInfo.email,
+            }
+            sessionStorage.setItem(
+              "socialSignupInfo",
+              JSON.stringify(socialSignupInfo),
+            )
+
+            navigate("/signup", { replace: true })
             return
           }
 

@@ -23,7 +23,7 @@ export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const location = useLocation()
-  const { signupData, setSignupData } = useSignup()
+  const { signupData, setSignupData, cleanup } = useSignup()
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false)
   const { data: brands } = useBrands()
   const socialInfo = location.state?.social
@@ -116,6 +116,9 @@ export const ProfileSetup = () => {
 
       const user = await fetchUser(accessToken)
       login({ user, token: accessToken })
+
+      // 회원가입 성공 시 소셜 정보 삭제
+      cleanup()
 
       navigate("/signup/complete")
     } catch (error: any) {
