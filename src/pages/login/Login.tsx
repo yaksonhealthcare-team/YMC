@@ -42,7 +42,7 @@ const Login = () => {
   }
 
   const handleKakaoLogin = () => {
-    const kakaoAuthUrl = `https://devapi.yaksonhc.com/api/auth/kakao_login`
+    const kakaoAuthUrl = `https://devapi.yaksonhc.com/api/auth/kakao_login?scope=account_email`
     window.location.href = kakaoAuthUrl
   }
 

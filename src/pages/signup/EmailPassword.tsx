@@ -80,7 +80,6 @@ export const EmailPassword = () => {
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
           placeholder="이메일 계정 입력"
-          disabled={isSocialSignup}
         />
 
         {!isSocialSignup && (
