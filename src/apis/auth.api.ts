@@ -112,7 +112,7 @@ export const signupWithSocial = async ({
     brand_code: string[]
   }
 }) => {
-  const response = await axiosClient.post("/auth/signup/socail", {
+  const response = await axiosClient.post("/auth/signup/social", {
     thirdPartyType: provider,
     SocialAccessToken: socialId,
     name: userInfo.name,
