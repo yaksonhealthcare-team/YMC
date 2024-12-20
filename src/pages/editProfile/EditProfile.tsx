@@ -20,6 +20,7 @@ import {
 } from "./_fragments/ProfileFormComponents.tsx"
 import { updateUserProfile } from "../../apis/auth.api.ts"
 import PostcodeModal from "@components/modal/PostcodeModal.tsx"
+import { UpdateUserProfileRequest } from "../../types/User.ts"
 
 const EditProfile = () => {
   const { user } = useAuth()
@@ -75,17 +76,17 @@ const EditProfile = () => {
     if (!user) return
 
     try {
-      const updatedData = {
+      const updatedData: UpdateUserProfileRequest = {
         post: address.postalCode,
         addr1: address.road,
         addr2: address.detail,
-        sex: gender === "male" ? "M" : "F",
+        sex: gender === "male" ? "M" : ("F" as "M" | "F"),
         profileURL: user.profileURL || "",
         marketing_yn: marketingAgreed ? "Y" : "N",
       }
 
       console.log("프재 gender 상태:", gender)
-      console.log("전송할 sex 값:", gender === "male" ? "M" : "F")
+      console.log("전송할 sex 값:", updatedData.sex)
       console.log("프로필 업데이트 요청 데이터:", updatedData)
 
       await updateUserProfile(updatedData)
