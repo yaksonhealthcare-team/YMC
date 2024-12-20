@@ -27,7 +27,9 @@ const EditProfile = () => {
   const { openBottomSheet, closeOverlay } = useOverlay()
   const navigate = useNavigate()
 
-  const [gender, setGender] = useState<"male" | "female">("female")
+  const [gender, setGender] = useState<"male" | "female">(
+    user?.gender === "M" ? "male" : "female",
+  )
   const [address, setAddress] = useState({
     ...user!.address,
     postalCode: user!.postalCode,
@@ -70,20 +72,34 @@ const EditProfile = () => {
   }
 
   const handleSubmit = async () => {
-    await updateUserProfile({
-      post: address.postalCode,
-      addr1: address.road,
-      addr2: address.detail,
-      marketing_yn: marketingAgreed ? "Y" : "N",
-    })
+    if (!user) return
+
+    try {
+      const updatedData = {
+        post: address.postalCode,
+        addr1: address.road,
+        addr2: address.detail,
+        sex: gender === "male" ? "M" : "F",
+        profileURL: user.profileURL || "",
+        marketing_yn: marketingAgreed ? "Y" : "N",
+      }
+
+      console.log("프재 gender 상태:", gender)
+      console.log("전송할 sex 값:", gender === "male" ? "M" : "F")
+      console.log("프로필 업데이트 요청 데이터:", updatedData)
+
+      await updateUserProfile(updatedData)
+      alert("프로필이 성공적으로 수정되었습니다.")
+    } catch (error) {
+      console.error("프로필 수정 실패:", error)
+      alert("프로필 수정에 실패했습니다.")
+    }
   }
 
   const handleChangeGender = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value === "female") {
-      setGender("female")
-    } else {
-      setGender("male")
-    }
+    const newGender = event.target.value as "male" | "female"
+    console.log("성별 변경:", newGender)
+    setGender(newGender)
   }
 
   const handleClickBackButton = () => {
@@ -176,10 +192,10 @@ const EditProfile = () => {
           <LabeledForm label={"성별"}>
             <RadioGroup value={gender} onChange={handleChangeGender}>
               <div className={"flex gap-2 items-center"}>
-                <RadioCard checked={gender === "female"} value={"female"}>
+                <RadioCard value={"female"} checked={gender === "female"}>
                   <p>{"여자"}</p>
                 </RadioCard>
-                <RadioCard checked={gender === "male"} value={"male"}>
+                <RadioCard value={"male"} checked={gender === "male"}>
                   <p>{"남자"}</p>
                 </RadioCard>
               </div>

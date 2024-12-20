@@ -48,10 +48,18 @@ export const resetPassword = async (
   })
 }
 
-export const updateUserProfile = async (request: UserUpdateRequest) => {
-  await axiosClient.patch("/auth/me", {
-    ...request,
-  })
+interface UpdateUserProfileRequest {
+  post: string
+  addr1: string
+  addr2: string
+  sex: "M" | "F"
+  profileURL: string
+  marketing_yn: "Y" | "N"
+}
+
+export const updateUserProfile = async (data: UpdateUserProfileRequest) => {
+  const response = await axiosClient.patch("/auth/me", data)
+  return response.data
 }
 
 export const loginWithSocial = async ({
