@@ -72,7 +72,12 @@ const MyPage = () => {
     { id: "favorite", title: "즐겨찾는 지점", path: "/favorite" },
     { id: "payment", title: "결제 내역", path: "/payment_history" },
     { id: "review", title: "작성한 만족도", path: "/review" },
-    { id: "inquiry", title: "1:1 문의", path: "/inquiry" },
+    {
+      id: "inquiry",
+      title: "1:1 문의",
+      path: "https://o33vp.channel.io",
+      external: true,
+    },
     { id: "event", title: "이벤트", path: "/event" },
     { id: "notice", title: "공지사항", path: "/notice" },
     { id: "settings", title: "알림설정", path: "/settings/notifications" },
@@ -186,7 +191,32 @@ const MyPage = () => {
             {menuItems.map((item) => (
               <div
                 key={item.id}
-                onClick={() => navigate(item.path)}
+                onClick={() => {
+                  if (item.external) {
+                    if (window.ReactNativeWebView) {
+                      window.ReactNativeWebView.postMessage(
+                        JSON.stringify({
+                          type: "OPEN_EXTERNAL_LINK",
+                          url: item.path,
+                        }),
+                      )
+                    } else if (
+                      (window as any).webkit?.messageHandlers?.openExternalLink
+                    ) {
+                      ;(
+                        window as any
+                      ).webkit.messageHandlers.openExternalLink.postMessage(
+                        item.path,
+                      )
+                    } else if ((window as any).Android?.openExternalLink) {
+                      ;(window as any).Android.openExternalLink(item.path)
+                    } else {
+                      window.open(item.path, "_blank")
+                    }
+                  } else {
+                    navigate(item.path)
+                  }
+                }}
                 className="flex items-center h-12 px-5 gap-3 cursor-pointer"
               >
                 <span className="flex-1 font-m text-16px text-gray-900">
