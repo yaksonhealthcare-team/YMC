@@ -38,22 +38,26 @@ const EditProfile = () => {
 
   useEffect(() => {
     setHeader({
-      left: (
-        <button onClick={handleClickBackButton}>
-          <CaretLeftIcon />
-        </button>
-      ),
+      left: "back",
       title: "내 정보 수정",
-      right: (
-        <button
-          className={
-            "font-m text-gray-500 disabled:text-gray-300 disabled:cursor-default"
-          }
-          disabled={address.detail.length === 0}
-          onClick={handleSubmit}
-        >
-          <p>{"저장"}</p>
-        </button>
+      component: (
+        <div className="h-12 flex items-center justify-between px-5 bg-white relative">
+          <button onClick={handleClickBackButton} className="absolute left-5">
+            <CaretLeftIcon />
+          </button>
+          <span className="font-sb text-18px flex-1 text-center">
+            내 정보 수정
+          </span>
+          <button
+            className={
+              "font-m text-gray-500 disabled:text-gray-300 disabled:cursor-default absolute right-5"
+            }
+            disabled={address.detail.length === 0}
+            onClick={handleSubmit}
+          >
+            <p>{"저장"}</p>
+          </button>
+        </div>
       ),
       backgroundColor: "bg-white",
       display: true,
