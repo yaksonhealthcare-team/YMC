@@ -3,6 +3,7 @@ import { Coordinate } from "../types/Coordinate.ts"
 import { PointFilters } from "types/Point.ts"
 import { EventStatus } from "../types/Content.ts"
 import { ReservationStatusCode } from "types/Reservation.ts"
+import { BannerRequestType } from "../types/Banner.ts"
 
 export const queryKeys = {
   branches: {
@@ -72,5 +73,10 @@ export const queryKeys = {
         ...queryKeys.reservations.all,
         { page, status, infinite: true },
       ] as const,
+  },
+  banners: {
+    all: ["banners"] as const,
+    bannerType: (bannerRequestType: BannerRequestType) =>
+      [...queryKeys.banners.all, { bannerRequestType }] as const,
   },
 } as const
