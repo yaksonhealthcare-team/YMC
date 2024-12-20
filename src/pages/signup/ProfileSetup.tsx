@@ -9,8 +9,6 @@ import { Address } from "react-daum-postcode/lib/loadPostcode"
 import Profile from "@assets/icons/Profile.svg?react"
 import SettingIcon from "@assets/icons/SettingIcon.svg?react"
 import { SwiperBrandCard } from "@components/SwiperBrandCard.tsx"
-import { useBrands } from "../../queries/useBrandQueries.tsx"
-import { Swiper, SwiperSlide } from "swiper/react"
 import { signup } from "../../apis/auth.api.ts"
 import { loginWithEmail } from "../../apis/auth.api.ts"
 import { fetchUser } from "../../apis/auth.api.ts"
@@ -36,7 +34,6 @@ export const ProfileSetup = () => {
   const { signupData, setSignupData, cleanup } = useSignup()
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false)
 
-  const { data: brands } = useBrands()
   const { login } = useAuth()
   const { showAlert } = useOverlay()
   const isSocialSignup = !!sessionStorage.getItem("socialSignupInfo")
