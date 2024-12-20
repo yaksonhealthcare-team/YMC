@@ -11,13 +11,34 @@ import Profile from "@assets/icons/Profile.svg?react"
 import SettingIcon from "@assets/icons/SettingIcon.svg?react"
 import { useBrands } from "../../queries/useBrandQueries.tsx"
 import { Swiper, SwiperSlide } from "swiper/react"
+import { signup } from "../../apis/auth.api.ts"
+import { loginWithEmail } from "../../apis/auth.api.ts"
+import { fetchUser } from "../../apis/auth.api.ts"
+import { useAuth } from "../../contexts/AuthContext.tsx"
+import { useOverlay } from "../../contexts/ModalContext"
+import { signupWithSocial } from "../../apis/auth.api.ts"
+import { UserSignup } from "../../types/User.ts"
+import { loginWithSocial } from "../../apis/auth.api.ts"
+import { AxiosError } from "axios"
+
+interface CustomError extends Error {
+  response?: {
+    data?: {
+      resultCode?: string
+      message?: string
+    }
+  }
+}
 
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const { signupData, setSignupData } = useSignup()
+  const { signupData, setSignupData, cleanup } = useSignup()
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false)
   const { data: brands } = useBrands()
+  const { login } = useAuth()
+  const { showAlert } = useOverlay()
+  const isSocialSignup = !!sessionStorage.getItem("socialSignupInfo")
 
   useEffect(() => {
     setHeader({
@@ -26,6 +47,23 @@ export const ProfileSetup = () => {
       backgroundColor: "white",
     })
     setNavigation({ display: false })
+  }, [])
+
+  useEffect(() => {
+    if (isSocialSignup) {
+      const socialInfo = JSON.parse(
+        sessionStorage.getItem("socialSignupInfo") || "{}",
+      )
+
+      setSignupData((prev) => ({
+        ...prev,
+        name: socialInfo.name || prev.name,
+        email: socialInfo.email || prev.email,
+        mobileNumber: socialInfo.mobileno || prev.mobileNumber,
+        birthDate: socialInfo.birthdate || prev.birthDate,
+        gender: socialInfo.gender === "M" ? "male" : "female",
+      }))
+    }
   }, [])
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,23 +85,101 @@ export const ProfileSetup = () => {
     setIsPostcodeOpen(false)
   }
 
-  const toggleBrandSelection = (brandCode: string) => {
-    setSignupData((prev) => {
+  const toggleBrandSelection = (code: string) => {
+    setSignupData((prev: UserSignup) => {
       const brandCodes = prev.brandCodes || []
-      const isSelected = brandCodes.includes(brandCode)
+      const isSelected = brandCodes.includes(code)
 
       const updatedBrands = isSelected
-        ? brandCodes.filter((code) => code !== brandCode)
-        : [...brandCodes, brandCode]
+        ? brandCodes.filter((code) => code !== code)
+        : [...brandCodes, code]
 
       return { ...prev, brandCodes: updatedBrands }
     })
   }
 
   const handleSignupSubmit = async () => {
-    // TODO pass api 완료 후 signup api 요청
+    try {
+      const socialInfo = JSON.parse(
+        sessionStorage.getItem("socialSignupInfo") || "{}",
+      )
+      const isSocialSignup = !!socialInfo.provider
 
-    navigate("/signup/complete")
+      if (isSocialSignup) {
+        try {
+          const { body } = await signupWithSocial({
+            provider: socialInfo.provider,
+            accessToken: socialInfo.socialAccessToken,
+            userInfo: {
+              ...socialInfo,
+              SocialAccessToken: socialInfo.socialId,
+              id: socialInfo.id,
+              name: signupData.name,
+              email: signupData.email,
+              mobileno: signupData.mobileNumber,
+              birthdate: signupData.birthDate,
+              gender: signupData.gender === "male" ? "M" : "F",
+              post: signupData.postCode,
+              addr1: signupData.address1,
+              addr2: signupData.address2 || "",
+              marketing_yn: signupData.marketingYn ? "Y" : "N",
+              brand_code: signupData.brandCodes || [],
+            },
+          })
+
+          const user = await fetchUser(body[0].accessToken)
+          login({ user, token: body[0].accessToken })
+          cleanup()
+          navigate("/signup/complete")
+        } catch (error) {
+          const customError = error as CustomError
+          if (customError.response?.data?.resultCode === "23") {
+            const { accessToken } = await loginWithSocial({
+              provider: socialInfo.provider,
+              accessToken: socialInfo.socialId,
+            })
+
+            const user = await fetchUser(accessToken)
+            login({ user, token: accessToken })
+            cleanup()
+            navigate("/", { replace: true })
+            return
+          }
+          throw error
+        }
+      } else {
+        await signup({
+          email: signupData.email,
+          password: signupData.password!,
+          name: signupData.name,
+          mobileno: signupData.mobileNumber,
+          birthdate: signupData.birthDate,
+          gender: signupData.gender === "male" ? "M" : "F",
+          post: signupData.postCode,
+          addr1: signupData.address1,
+          addr2: signupData.address2,
+          marketing_yn: signupData.marketingYn ? "Y" : "N",
+          brand_code: signupData.brandCodes,
+        })
+
+        const { accessToken } = await loginWithEmail({
+          username: signupData.email,
+          password: signupData.password!,
+        })
+
+        const user = await fetchUser(accessToken)
+        login({ user, token: accessToken })
+      }
+
+      cleanup()
+      navigate("/signup/complete")
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        showAlert(error.response?.data?.message || "회원가입에 실패했습니다")
+      } else {
+        showAlert("회원가입에 실패했습니다")
+      }
+    }
   }
 
   return (
@@ -190,6 +306,16 @@ export const ProfileSetup = () => {
             </button>
           </div>
         </div>
+
+        {/* 생년월일 */}
+        <CustomTextField
+          label="생년월일"
+          value={signupData.birthDate}
+          onChange={(e) =>
+            setSignupData({ ...signupData, birthDate: e.target.value })
+          }
+          placeholder="YYYYMMDD"
+        />
 
         {/* 주소 */}
         <div className="flex flex-col gap-2">

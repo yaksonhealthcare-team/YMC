@@ -34,10 +34,16 @@ interface HeaderProps {
   onClickLeft?: () => void
   onClickRight?: () => void
   onClickLocation?: () => void
+  onClickBack?: () => void
 }
 
-const LeftSection = ({ type, iconLeft, onClickLeft }: HeaderProps) => (
-  <button onClick={onClickLeft}>
+const LeftSection = ({
+  type,
+  iconLeft,
+  onClickLeft,
+  onClickBack,
+}: HeaderProps) => (
+  <button onClick={type.startsWith("back") ? onClickBack : onClickLeft}>
     {type === "two_icon" ? (
       cloneElement(iconLeft!, ICON_DIMENSIONS)
     ) : type === "title_right_icon" ? (
@@ -97,11 +103,15 @@ const RightSection = ({
     )
   }
 
-  return (
-    <button onClick={onClickRight}>
-      {cloneElement(iconRight!, ICON_DIMENSIONS)}
-    </button>
-  )
+  if (iconRight) {
+    return (
+      <button onClick={onClickRight}>
+        {cloneElement(iconRight, ICON_DIMENSIONS)}
+      </button>
+    )
+  }
+
+  return <div className="w-5 h-5" />
 }
 
 export const Header = (props: HeaderProps) => (
@@ -126,3 +136,5 @@ export const Header = (props: HeaderProps) => (
 )
 
 Header.displayName = "Header"
+
+export default Header

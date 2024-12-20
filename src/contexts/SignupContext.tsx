@@ -8,12 +8,23 @@ import {
 } from "react"
 import { UserSignup } from "../types/User.ts"
 
+export interface SocialSignupInfo {
+  provider: string
+  id: string
+  socialId: string
+  email: string
+  name: string
+  mobileno: string
+  birthdate: string
+  gender: string
+  socialAccessToken: string
+}
+
 interface SignupContextType {
   signupData: UserSignup
   setSignupData: Dispatch<SetStateAction<UserSignup>>
+  cleanup: () => void
 }
-
-const SignupContext = createContext<SignupContextType | undefined>(undefined)
 
 const initialState: UserSignup = {
   name: "",
@@ -34,13 +45,22 @@ const initialState: UserSignup = {
   referralCode: "",
   recom: "",
   marketingYn: false,
+  // sessionStorage에서 소셜 정보 가져오기
+  ...JSON.parse(sessionStorage.getItem("socialSignupInfo") || "{}"),
 }
+
+const SignupContext = createContext<SignupContextType | undefined>(undefined)
 
 export const SignupProvider = ({ children }: { children: ReactNode }) => {
   const [signupData, setSignupData] = useState<UserSignup>(initialState)
 
+  // 회원가입 완료 시 호출할 cleanup 함수
+  const cleanup = () => {
+    sessionStorage.removeItem("socialSignupInfo")
+  }
+
   return (
-    <SignupContext.Provider value={{ signupData, setSignupData }}>
+    <SignupContext.Provider value={{ signupData, setSignupData, cleanup }}>
       {children}
     </SignupContext.Provider>
   )

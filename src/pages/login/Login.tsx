@@ -7,6 +7,10 @@ import { Typography } from "@mui/material"
 import KakaoIcon from "../../assets/icons/KakaoIcon.svg?react"
 import NaverIcon from "../../assets/icons/NaverIcon.svg?react"
 import AppleIcon from "../../assets/icons/AppleIcon.svg?react"
+import { getNaverLoginUrl } from "../../libs/naver"
+import GoogleIcon from "../../assets/icons/GoogleIcon.svg?react"
+import { getGoogleLoginUrl } from "../../libs/google"
+import { getAppleLoginUrl } from "../../libs/apple"
 
 const Login = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -17,9 +21,29 @@ const Login = () => {
     setNavigation({ display: false })
   }, [])
 
-  const handleSocialLogin = (provider: string) => {
-    // TODO: 소셜 로그인 구현
-    console.log(`${provider} 로그인`)
+  const handleSocialLogin = async (
+    provider: "kakao" | "naver" | "google" | "apple",
+  ) => {
+    let url = ""
+
+    switch (provider) {
+      case "naver":
+        url = getNaverLoginUrl()
+        break
+      case "google":
+        url = await getGoogleLoginUrl()
+        break
+      case "apple":
+        url = getAppleLoginUrl()
+        break
+    }
+
+    if (url) window.location.href = url
+  }
+
+  const handleKakaoLogin = () => {
+    const kakaoAuthUrl = `https://devapi.yaksonhc.com/api/auth/kakao_login?scope=account_email`
+    window.location.href = kakaoAuthUrl
   }
 
   return (
@@ -33,7 +57,7 @@ const Login = () => {
       <div className="mt-[205px] px-5 flex flex-col gap-3">
         {/* 카카오 로그인 */}
         <Button
-          onClick={() => handleSocialLogin("카카오")}
+          onClick={handleKakaoLogin}
           fullCustom
           sizeType="l"
           className="bg-[#FEE500] border-[#FEE500] text-[#262626] font-b flex items-center px-3 py-4"
@@ -44,7 +68,7 @@ const Login = () => {
 
         {/* 네이버 로그인 */}
         <Button
-          onClick={() => handleSocialLogin("네이버")}
+          onClick={() => handleSocialLogin("naver")}
           fullCustom
           sizeType="l"
           className="bg-[#03C75A] border-[#03C75A] text-white font-b flex items-center px-3 py-4"
@@ -53,16 +77,26 @@ const Login = () => {
           <span className="flex-1 text-center">네이버로 로그인</span>
         </Button>
 
-        {/* TODO: 기기 OS에 따라 애플/구글 로그인 다르게 처리*/}
-        {/* 애플 로그인 */}
+        {/* TODO: iOS에서만 애플 로그인 버튼 표시 */}
         <Button
-          onClick={() => handleSocialLogin("애플")}
+          onClick={() => handleSocialLogin("apple")}
           fullCustom
           sizeType="l"
           className="bg-[#000000] border-black text-white font-b flex items-center px-3 py-4"
         >
           <AppleIcon className="w-6 h-6 text-white" />
           <span className="flex-1 text-center">Apple로 로그인</span>
+        </Button>
+
+        {/* 구글 로그인 */}
+        <Button
+          onClick={() => handleSocialLogin("google")}
+          fullCustom
+          sizeType="l"
+          className="bg-white border-[#DDDDDD] text-[#212121] font-b flex items-center px-3 py-4"
+        >
+          <GoogleIcon className="w-6 h-6" />
+          <span className="flex-1 text-center">Google로 로그인</span>
         </Button>
 
         {/* 이메일 로그인 */}
