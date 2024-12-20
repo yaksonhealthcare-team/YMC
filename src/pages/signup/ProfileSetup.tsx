@@ -99,10 +99,14 @@ export const ProfileSetup = () => {
 
       if (isSocialSignup) {
         try {
-          await signupWithSocial({
+          const { body } = await signupWithSocial({
             provider: socialInfo.provider,
             socialId: socialInfo.socialId,
+            accessToken: socialInfo.socialAccessToken,
             userInfo: {
+              ...socialInfo,
+              SocialAccessToken: socialInfo.socialId,
+              id: socialInfo.id,
               name: signupData.name,
               email: signupData.email,
               mobileno: signupData.mobileNumber,
@@ -115,6 +119,12 @@ export const ProfileSetup = () => {
               brand_code: signupData.brandCodes || [],
             },
           })
+
+          // 회원가입 응답에서 받은 accessToken으로 로그인
+          const user = await fetchUser(body[0].accessToken)
+          login({ user, token: body[0].accessToken })
+          cleanup()
+          navigate("/signup/complete")
         } catch (error: any) {
           if (error.response?.data?.resultCode === "23") {
             const { accessToken } = await loginWithSocial({
@@ -130,14 +140,6 @@ export const ProfileSetup = () => {
           }
           throw error
         }
-
-        const { accessToken } = await loginWithSocial({
-          provider: socialInfo.provider,
-          accessToken: socialInfo.socialId,
-        })
-
-        const user = await fetchUser(accessToken)
-        login({ user, token: accessToken })
       } else {
         await signup({
           email: signupData.email,

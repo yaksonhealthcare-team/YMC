@@ -75,12 +75,8 @@ const OAuthCallback = () => {
             console.log("✅ 미가입 회원 - 회원가입 페이지로 이동")
             const socialSignupInfo = {
               provider: getProviderCode(provider),
-              socialId: socialData.socialId,
-              email: socialData.email || "",
-              name: socialData.name || "",
-              mobileno: socialData.mobileno || "",
-              birthdate: socialData.birthdate || "",
-              gender: socialData.gender || "",
+              id: parsedData.Header[0].id, // Header에서 id 값 가져오기
+              ...socialData, // 모든 응답 데이터 포함
             }
             console.log("🚀 Social Signup Info:", socialSignupInfo)
 
