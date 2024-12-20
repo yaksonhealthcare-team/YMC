@@ -53,3 +53,91 @@ export const updateUserProfile = async (request: UserUpdateRequest) => {
     ...request,
   })
 }
+
+export const loginWithSocial = async ({
+  provider,
+  accessToken,
+}: {
+  provider: "K" | "N" | "G" | "A"
+  accessToken: string
+}) => {
+  const { data } = await axiosClient.post("/auth/signin/social", {
+    thirdPartyType: provider,
+    SocialAccessToken: accessToken,
+    device_token: "TODO: FCM 토큰 추가",
+    device_type: "TODO: 디바이스 타입 추가",
+  })
+
+  return {
+    refreshToken: data.Header?.[0]?.refreshToken || "",
+    accessToken: data.body[0].accessToken,
+  }
+}
+
+export const loginWithNaver = async ({
+  accessToken,
+}: {
+  accessToken: string
+}) => {
+  const { data } = await axiosClient.post("/auth/signin/social", {
+    thirdPartyType: "N",
+    SocialAccessToken: accessToken,
+    device_token: "TODO: FCM 토큰 추가",
+    device_type: "TODO: 디바이스 타입 추가",
+  })
+
+  return {
+    refreshToken: data.Header[0].refreshToken,
+    accessToken: data.body[0].accessToken,
+  }
+}
+
+export const signupWithSocial = async ({
+  provider,
+  accessToken,
+  userInfo,
+}: {
+  provider: string
+  accessToken: string
+  userInfo: {
+    name: string
+    email: string
+    mobileno: string
+    birthdate: string
+    gender: "M" | "F"
+    post: string
+    addr1: string
+    addr2: string
+    marketing_yn: "Y" | "N"
+    brand_code: string[]
+    nationalinfo: string
+    di: string
+    token_version_id: string
+    enc_data: string
+    integrity_value: string
+  }
+}) => {
+  const response = await axiosClient.post("/auth/signup/social", {
+    thirdPartyType: provider,
+    SocialAccessToken: accessToken,
+    ...userInfo,
+  })
+  return response.data
+}
+
+export const signup = async (userData: {
+  email: string
+  password: string
+  name: string
+  mobileno: string
+  birthdate: string
+  gender: string
+  post: string
+  addr1: string
+  addr2?: string
+  marketing_yn: "Y" | "N"
+  brand_code?: string[]
+}) => {
+  const { data } = await axiosClient.post("/auth/signup/email", userData)
+  return data
+}

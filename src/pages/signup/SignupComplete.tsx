@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useEffect } from "react"
 import CheckCircle from "@assets/icons/CheckCircle.svg?react"
+import { useAuth } from "../../contexts/AuthContext.tsx"
 
 export const SignupComplete = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
+  const { user } = useAuth()
 
   useEffect(() => {
     setHeader({ display: false })
@@ -27,7 +29,7 @@ export const SignupComplete = () => {
               가입 완료!
             </p>
             <p className="text-[#212121] text-20px font-semibold leading-[30px]">
-              김민정님, 환영해요
+              {user?.name}님, 환영해요
             </p>
           </div>
           <p className="text-[#9E9E9E] text-14px font-medium text-center leading-[21px]">

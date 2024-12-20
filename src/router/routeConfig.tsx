@@ -63,6 +63,7 @@ import MembershipSelectBranchPage from "../pages/membership/MembershipBranchSele
 import ProfileChangePhoneNumber from "../pages/editProfile/ProfileChangePhoneNumber.tsx"
 import PaymentCompletePage from "../pages/payment/PaymentCompletePage.tsx"
 import { BrandDetailPage } from "../pages/brand/BrandDetail.tsx"
+import OAuthCallback from "../pages/oauth/OAuthCallback"
 
 interface RouteConfig {
   path: string
@@ -381,6 +382,12 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/branch/:id",
     element: <BranchDetail />,
+  },
+
+  // OAuth 콜백
+  {
+    path: "/oauth/callback/:provider",
+    element: <OAuthCallback />,
   },
 ]
 

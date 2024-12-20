@@ -5,13 +5,13 @@ import { Button } from "@components/Button.tsx"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useSignup } from "../../contexts/SignupContext.tsx"
 import PasswordCustomInput from "@components/input/PasswordCustomInput.tsx"
-import validatePassword from "../../utils/passwordValidator.ts"
 import validateEmail from "../../utils/emailValidator.ts"
 
 export const EmailPassword = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const { setSignupData } = useSignup()
+  const { signupData, setSignupData } = useSignup()
+  const isSocialSignup = !!sessionStorage.getItem("socialSignupInfo")
 
   useEffect(() => {
     setHeader({
@@ -22,24 +22,30 @@ export const EmailPassword = () => {
     setNavigation({ display: false })
   }, [])
 
+  useEffect(() => {
+    if (isSocialSignup) {
+      const socialInfo = JSON.parse(
+        sessionStorage.getItem("socialSignupInfo") || "{}",
+      )
+      if (socialInfo.email) {
+        setForm((prev) => ({
+          ...prev,
+          email: socialInfo.email,
+        }))
+      }
+    }
+  }, [])
+
   const [form, setForm] = useState({
-    email: "",
+    email: signupData.email || "",
     password: "",
     passwordConfirm: "",
   })
 
   const [isFormValid, setIsFormValid] = useState(false)
 
-  const handlePasswordChange = (value: string) => {
-    setForm((prev) => ({ ...prev, password: value }))
-  }
-
-  const handlePasswordConfirmChange = (value: string) => {
-    setForm((prev) => ({ ...prev, passwordConfirm: value }))
-  }
-
   useEffect(() => {
-    if (!form.email || !form.password || !form.passwordConfirm) {
+    if (!form.email) {
       setIsFormValid(false)
       return
     }
@@ -49,24 +55,26 @@ export const EmailPassword = () => {
       return
     }
 
-    if (form.password !== form.passwordConfirm) {
-      setIsFormValid(false)
-      return
-    }
+    if (!isSocialSignup) {
+      if (!form.password || !form.passwordConfirm) {
+        setIsFormValid(false)
+        return
+      }
 
-    if (!validatePassword(form.password)) {
-      setIsFormValid(false)
-      return
+      if (form.password !== form.passwordConfirm) {
+        setIsFormValid(false)
+        return
+      }
     }
 
     setIsFormValid(true)
-  }, [form])
+  }, [form, isSocialSignup])
 
   const handleNavigateToNext = () => {
     setSignupData((prev) => ({
       ...prev,
       email: form.email,
-      password: form.password,
+      ...(isSocialSignup ? {} : { password: form.password }),
     }))
 
     navigate("/signup/profile")
@@ -75,7 +83,7 @@ export const EmailPassword = () => {
   return (
     <div className="flex flex-col px-5 pt-5 pb-7 gap-10">
       <h1 className="text-[20px] font-bold leading-[30px] text-[#212121]">
-        이메일과 비밀번호를
+        {isSocialSignup ? "이메일을" : "이메일과 비밀번호를"}
         <br />
         설정해주세요
       </h1>
@@ -88,10 +96,16 @@ export const EmailPassword = () => {
           placeholder="이메일 계정 입력"
         />
 
-        <PasswordCustomInput
-          onPasswordChange={handlePasswordChange}
-          onPasswordConfirmChange={handlePasswordConfirmChange}
-        />
+        {!isSocialSignup && (
+          <PasswordCustomInput
+            onPasswordChange={(value) =>
+              setForm((prev) => ({ ...prev, password: value }))
+            }
+            onPasswordConfirmChange={(value) =>
+              setForm((prev) => ({ ...prev, passwordConfirm: value }))
+            }
+          />
+        )}
       </div>
 
       <Button

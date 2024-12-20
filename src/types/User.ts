@@ -1,4 +1,6 @@
 export interface User {
+  id: string
+  name: string
   username: string
   email: string
   level?: string
@@ -20,6 +22,7 @@ export interface User {
 }
 
 export interface UserResponse {
+  id: string
   name: string
   level?: string
   email: string
