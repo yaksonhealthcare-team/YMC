@@ -2,7 +2,7 @@ import { Button } from "@components/Button.tsx"
 import React, { useEffect, useState } from "react"
 import CustomTextField from "@components/CustomTextField.tsx"
 import { BrandCard } from "@components/BrandCard.tsx"
-import { useNavigate, useLocation } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useSignup } from "../../contexts/SignupContext.tsx"
 import PostcodeModal from "@components/modal/PostcodeModal.tsx"
@@ -19,11 +19,20 @@ import { useOverlay } from "../../contexts/ModalContext"
 import { signupWithSocial } from "../../apis/auth.api.ts"
 import { UserSignup } from "../../types/User.ts"
 import { loginWithSocial } from "../../apis/auth.api.ts"
+import { AxiosError } from "axios"
+
+interface CustomError extends Error {
+  response?: {
+    data?: {
+      resultCode?: string
+      message?: string
+    }
+  }
+}
 
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const location = useLocation()
   const { signupData, setSignupData, cleanup } = useSignup()
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false)
   const { data: brands } = useBrands()
@@ -46,14 +55,13 @@ export const ProfileSetup = () => {
         sessionStorage.getItem("socialSignupInfo") || "{}",
       )
 
-      // 소셜 정보에서 가져올 수 있는 데이터 설정
       setSignupData((prev) => ({
         ...prev,
         name: socialInfo.name || prev.name,
         email: socialInfo.email || prev.email,
         mobileNumber: socialInfo.mobileno || prev.mobileNumber,
         birthDate: socialInfo.birthdate || prev.birthDate,
-        gender: socialInfo.gender === "M" ? "male" : "female" || prev.gender,
+        gender: socialInfo.gender === "M" ? "male" : "female",
       }))
     }
   }, [])
@@ -101,7 +109,6 @@ export const ProfileSetup = () => {
         try {
           const { body } = await signupWithSocial({
             provider: socialInfo.provider,
-            socialId: socialInfo.socialId,
             accessToken: socialInfo.socialAccessToken,
             userInfo: {
               ...socialInfo,
@@ -120,13 +127,13 @@ export const ProfileSetup = () => {
             },
           })
 
-          // 회원가입 응답에서 받은 accessToken으로 로그인
           const user = await fetchUser(body[0].accessToken)
           login({ user, token: body[0].accessToken })
           cleanup()
           navigate("/signup/complete")
-        } catch (error: any) {
-          if (error.response?.data?.resultCode === "23") {
+        } catch (error) {
+          const customError = error as CustomError
+          if (customError.response?.data?.resultCode === "23") {
             const { accessToken } = await loginWithSocial({
               provider: socialInfo.provider,
               accessToken: socialInfo.socialId,
@@ -167,7 +174,11 @@ export const ProfileSetup = () => {
       cleanup()
       navigate("/signup/complete")
     } catch (error) {
-      showAlert(error.response?.data?.message || "회원가입에 실패했습니다")
+      if (error instanceof AxiosError) {
+        showAlert(error.response?.data?.message || "회원가입에 실패했습니다")
+      } else {
+        showAlert("회원가입에 실패했습니다")
+      }
     }
   }
 

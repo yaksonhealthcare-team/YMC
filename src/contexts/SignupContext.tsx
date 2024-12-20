@@ -8,6 +8,18 @@ import {
 } from "react"
 import { UserSignup } from "../types/User.ts"
 
+export interface SocialSignupInfo {
+  provider: string
+  id: string
+  socialId: string
+  email: string
+  name: string
+  mobileno: string
+  birthdate: string
+  gender: string
+  socialAccessToken: string
+}
+
 interface SignupContextType {
   signupData: UserSignup
   setSignupData: Dispatch<SetStateAction<UserSignup>>

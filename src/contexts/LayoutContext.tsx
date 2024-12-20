@@ -2,7 +2,6 @@ import { createContext, useContext, useState } from "react"
 import PageContainer from "@components/PageContainer.tsx"
 import { Typography } from "@mui/material"
 import { useNavigate } from "react-router-dom"
-import CaretLeftIcon from "../assets/icons/CaretLeftIcon.svg?react"
 import Header from "@components/Header.tsx"
 
 type NavigationConfig = {
@@ -15,9 +14,9 @@ type BaseHeaderConfig = {
 }
 
 type DetailedHeaderConfig = BaseHeaderConfig & {
-  title?: string | React.ReactNode
+  title?: string
   left?: "back" | React.ReactNode
-  right?: React.ReactNode
+  right?: React.ReactElement<React.SVGProps<SVGSVGElement>>
   onClickBack?: () => void
 }
 
@@ -80,11 +79,15 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
             type={
               headerConfig.left === "back" ? "back_title" : "title_right_icon"
             }
-            title={headerConfig.title}
+            title={headerConfig.title as string}
             onClickBack={
               headerConfig.onClickBack || (() => window.history.back())
             }
-            iconRight={headerConfig.right}
+            iconRight={
+              headerConfig.right as React.ReactElement<
+                React.SVGProps<SVGSVGElement>
+              >
+            }
           />
         </div>
         <div className={"h-12"} />

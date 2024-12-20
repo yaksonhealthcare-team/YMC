@@ -94,12 +94,10 @@ export const loginWithNaver = async ({
 
 export const signupWithSocial = async ({
   provider,
-  socialId,
   accessToken,
   userInfo,
 }: {
   provider: string
-  socialId: string
   accessToken: string
   userInfo: {
     name: string
@@ -118,14 +116,7 @@ export const signupWithSocial = async ({
     enc_data: string
     integrity_value: string
   }
-}): Promise<{
-  resultCode: string
-  resultMessage: string
-  resultCount: string
-  body: Array<{
-    accessToken: string
-  }>
-}> => {
+}) => {
   const response = await axiosClient.post("/auth/signup/social", {
     thirdPartyType: provider,
     SocialAccessToken: accessToken,

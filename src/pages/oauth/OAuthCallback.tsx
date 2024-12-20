@@ -1,15 +1,9 @@
 import { useEffect, useRef } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
-import { loginWithSocial, fetchUser } from "../../apis/auth.api"
-import { getKakaoToken } from "../../libs/kakao"
-import { getNaverToken } from "../../libs/naver"
-import { getGoogleToken } from "../../libs/google"
-import { getAppleToken } from "../../libs/apple"
 import { useOverlay } from "../../contexts/ModalContext"
-import { SocialSignupInfo } from "../../contexts/SignupContext"
-import { axiosClient } from "../../queries/clients"
 import { useLayout } from "../../contexts/LayoutContext"
+import { fetchUser } from "../../apis/auth.api"
 
 const OAuthCallback = () => {
   const { provider } = useParams()
