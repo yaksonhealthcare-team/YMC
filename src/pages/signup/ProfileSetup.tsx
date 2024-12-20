@@ -1,7 +1,6 @@
 import { Button } from "@components/Button.tsx"
 import React, { useEffect, useState } from "react"
 import CustomTextField from "@components/CustomTextField.tsx"
-import { BrandCard } from "@components/BrandCard.tsx"
 import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useSignup } from "../../contexts/SignupContext.tsx"
@@ -9,8 +8,7 @@ import PostcodeModal from "@components/modal/PostcodeModal.tsx"
 import { Address } from "react-daum-postcode/lib/loadPostcode"
 import Profile from "@assets/icons/Profile.svg?react"
 import SettingIcon from "@assets/icons/SettingIcon.svg?react"
-import { useBrands } from "../../queries/useBrandQueries.tsx"
-import { Swiper, SwiperSlide } from "swiper/react"
+import { SwiperBrandCard } from "@components/SwiperBrandCard.tsx"
 import { signup } from "../../apis/auth.api.ts"
 import { loginWithEmail } from "../../apis/auth.api.ts"
 import { fetchUser } from "../../apis/auth.api.ts"
@@ -35,7 +33,7 @@ export const ProfileSetup = () => {
   const navigate = useNavigate()
   const { signupData, setSignupData, cleanup } = useSignup()
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false)
-  const { data: brands } = useBrands()
+
   const { login } = useAuth()
   const { showAlert } = useOverlay()
   const isSocialSignup = !!sessionStorage.getItem("socialSignupInfo")
@@ -368,25 +366,10 @@ export const ProfileSetup = () => {
             <span className="text-14px text-[#A2A5AA]">(선택)</span>
           </div>
 
-          <div className="overflow-x-auto">
-            <Swiper spaceBetween={16} slidesPerView={"auto"} className="gap-4">
-              {brands &&
-                brands.map((brand) => (
-                  <SwiperSlide key={brand.code} className="!w-auto">
-                    <BrandCard
-                      name={brand.name}
-                      brandSrc={brand.imageUrl || ""}
-                      onClick={() => toggleBrandSelection(brand.code)}
-                      selected={
-                        signupData.brandCodes
-                          ? signupData.brandCodes?.includes(brand.code)
-                          : false
-                      }
-                    />
-                  </SwiperSlide>
-                ))}
-            </Swiper>
-          </div>
+          <SwiperBrandCard
+            onBrandClick={toggleBrandSelection}
+            selectedBrandCodes={signupData.brandCodes}
+          />
         </div>
 
         {/* 추천인 코드 */}

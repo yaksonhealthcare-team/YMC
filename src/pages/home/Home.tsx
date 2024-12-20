@@ -9,7 +9,6 @@ import NotiIcon from "@assets/icons/NotiIcon.svg?react"
 import { Title } from "@components/Title.tsx"
 import { MembershipCard } from "@components/MembershipCard.tsx"
 import { Swiper, SwiperSlide } from "swiper/react"
-import { BrandCard } from "@components/BrandCard.tsx"
 import { FloatingButton } from "@components/FloatingButton.tsx"
 import { EmptyCard } from "@components/EmptyCard.tsx"
 import { ReserveCard } from "@components/ReserveCard.tsx"
@@ -17,6 +16,7 @@ import { Reservation } from "types/Reservation.ts"
 import { useReservations } from "queries/useReservationQueries.tsx"
 import { useMembershipList } from "queries/useMembershipQueries.tsx"
 import SplashScreen from "@components/Splash.tsx"
+import { SwiperBrandCard } from "@components/SwiperBrandCard.tsx"
 import { Pagination } from "swiper/modules"
 import { useBanner } from "../../queries/useBannerQueries.tsx"
 import { BannerRequestType } from "../../types/Banner.ts"
@@ -224,32 +224,16 @@ const MembershipCardSection = () => {
 }
 
 const BrandSection = () => {
+  const navigate = useNavigate()
+
+  const handleBrandClick = (brandCode: string) => {
+    navigate(`/brand/${brandCode}`)
+  }
+
   return (
     <div className="mt-6">
       <Title title="브랜드 관" />
-      <div className="mt-2 flex gap-4">
-        <BrandCard
-          brandSrc="/assets/home_logo_therapist.png"
-          name="약손명가"
-          onClick={() => {
-            alert("clicked")
-          }}
-        />
-        <BrandCard
-          brandSrc="/assets/home_logo_dalia.png"
-          name="달리아 스파"
-          onClick={() => {
-            alert("clicked")
-          }}
-        />
-        <BrandCard
-          brandSrc="/assets/home_logo_diet.png"
-          name="여리한 다이어트"
-          onClick={() => {
-            alert("clicked")
-          }}
-        />
-      </div>
+      <SwiperBrandCard className="mt-2" onBrandClick={handleBrandClick} />
     </div>
   )
 }
