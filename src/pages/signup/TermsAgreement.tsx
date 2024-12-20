@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext"
 import { Button } from "@components/Button"
 import { Checkbox } from "@mui/material"
+import { EncryptData, fetchEncryptDataForNice } from "../../apis/pass.api.ts"
 import { useSignup } from "../../contexts/SignupContext.tsx"
 import CheckFillCircleIcon from "@components/icons/CheckFillCircleIcon.tsx"
+
+window.name = "Parent_window"
 
 export const TermsAgreement = () => {
   const navigate = useNavigate()
@@ -18,6 +21,8 @@ export const TermsAgreement = () => {
     location: false,
     marketing: false,
   })
+  const [formData, setFormData] = useState<EncryptData>()
+  const formRef = useRef<HTMLFormElement>(null)
 
   const { setSignupData } = useSignup()
 
@@ -32,6 +37,14 @@ export const TermsAgreement = () => {
       },
     })
     setNavigation({ display: false })
+    fetchEncryptDataForNice().then((data) => {
+      setFormData({
+        m: data.body[0].m,
+        token_version_id: data.body[0].token_version_id,
+        enc_data: decodeURIComponent(data.body[0].enc_data),
+        integrity_value: decodeURIComponent(data.body[0].integrity_value),
+      })
+    })
   }, [navigate, setHeader, setNavigation])
 
   const handleAllCheck = () => {
@@ -50,6 +63,15 @@ export const TermsAgreement = () => {
       ...agreements,
       [key]: !agreements[key],
     })
+  }
+
+  const handleNextClick = async () => {
+    window.open(
+      "",
+      "popupChk",
+      "width=480, height=812, top=100, fullscreen=no, menubar=no, status=no, toolbar=no,titlebar=yes, location=no, scrollbar=no",
+    )
+    formRef.current?.submit()
   }
 
   const handleNavigateToNext = () => {
@@ -124,6 +146,25 @@ export const TermsAgreement = () => {
           />
         </div>
       </div>
+      <form
+        ref={formRef}
+        action="https://nice.checkplus.co.kr/CheckPlusSafeModel/checkplus.cb"
+        method="post"
+        target="popupChk"
+      >
+        <input type="hidden" name="m" value="service" />
+        <input
+          type="hidden"
+          name="token_version_id"
+          value={formData?.token_version_id}
+        />
+        <input type="hidden" name="enc_data" value={formData?.enc_data} />
+        <input
+          type="hidden"
+          name="integrity_value"
+          value={formData?.integrity_value}
+        />
+      </form>
 
       <Button
         variantType="primary"
@@ -154,13 +195,7 @@ const AgreementItem = ({
 }: AgreementItemProps) => {
   return (
     <div className="flex items-center gap-3">
-      <Checkbox
-        className="p-0 w-auto h-auto"
-        checked={checked}
-        onChange={onChange}
-        checkedIcon={<CheckFillCircleIcon />}
-        icon={<CheckFillCircleIcon color="#DDDDDD" />}
-      />
+      <Checkbox checked={checked} onChange={onChange} />
       <span className="text-14px text-[#212121]">{title}</span>
       <button onClick={onDetail} className="text-primary text-14px underline">
         상세보기
