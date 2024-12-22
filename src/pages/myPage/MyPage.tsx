@@ -93,10 +93,6 @@ const MyPage = () => {
               <CaretRightIcon className="flex-shrink-0 min-w-[4px] h-4 ml-auto" />
             }
           />
-          {/*<Notice*/}
-          {/*  title="9월 1일 회원권 변경사항 안내드립니다."*/}
-          {/*  onClick={() => navigate("/notice/1")}*/}
-          {/*/>*/}
         </div>
 
         {/* Profile Section */}
