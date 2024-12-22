@@ -58,7 +58,8 @@ interface UpdateUserProfileRequest {
 }
 
 export const updateUserProfile = async (data: UpdateUserProfileRequest) => {
-  const response = await axiosClient.patch("/auth/me", data)
+  const requestData = UserMapper.toUpdateProfileRequest(data)
+  const response = await axiosClient.patch("/auth/me", requestData)
   return response.data
 }
 

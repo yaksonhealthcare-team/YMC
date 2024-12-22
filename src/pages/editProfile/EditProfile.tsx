@@ -77,17 +77,13 @@ const EditProfile = () => {
 
     try {
       const updatedData: UpdateUserProfileRequest = {
-        post: address.postalCode,
-        addr1: address.road,
-        addr2: address.detail,
-        sex: gender === "male" ? "M" : ("F" as "M" | "F"),
-        profileURL: user.profileURL || "",
-        marketing_yn: marketingAgreed ? "Y" : "N",
+        postalCode: address.postalCode,
+        address1: address.road,
+        address2: address.detail,
+        sex: gender === "male" ? "M" : "F",
+        profileUrl: user.profileURL || "",
+        marketingAgreed: marketingAgreed,
       }
-
-      console.log("프재 gender 상태:", gender)
-      console.log("전송할 sex 값:", updatedData.sex)
-      console.log("프로필 업데이트 요청 데이터:", updatedData)
 
       await updateUserProfile(updatedData)
       alert("프로필이 성공적으로 수정되었습니다.")
