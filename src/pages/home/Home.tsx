@@ -20,6 +20,7 @@ import { SwiperBrandCard } from "@components/SwiperBrandCard.tsx"
 import { Pagination } from "swiper/modules"
 import { useBanner } from "../../queries/useBannerQueries.tsx"
 import { BannerRequestType } from "../../types/Banner.ts"
+import NoticesSummarySlider from "@components/NoticesSummarySlider.tsx"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -38,20 +39,22 @@ const Home = () => {
     <>
       <Container
         className={
-          "relative w-full bg-system-bg py-4 overflow-x-hidden scrollbar-hide"
+          "relative w-full bg-system-bg py-4 overflow-x-hidden scrollbar-hide "
         }
       >
         <DynamicHomeHeaderBackground
           header={
             <div className={"space-y-2"}>
               <Logo text size={136} />
-              <Typography className="text-sm text-gray-500">
-                [공지] 9월 1일 회원권 변경사항 안내드립니다.
-              </Typography>
+
+              <NoticesSummarySlider
+                className={"h-[21px] mt-[12px] max-w-[90%] text-gray-500"}
+                left={<span className="min-w-[40px]">[공지]</span>}
+              />
             </div>
           }
           contents={[
-            <div className="pt-4">
+            <div className="pt-2">
               <div className="flex justify-between items-center bg-primary-300 rounded-2xl p-4">
                 <div className="flex gap-2 flex-col text-white">
                   <Typography className={"font-b"}>
