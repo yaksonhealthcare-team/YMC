@@ -239,28 +239,9 @@ const BrandSection = () => {
 }
 
 const EventSection = () => {
-  const navigate = useNavigate()
+  const { data: eventBanner } = useBanner(BannerRequestType.CARD)
 
-  const EventCardsData: Array<{
-    imageSrc: string
-    title: string
-    date: string
-    id: number
-  }> = [
-    {
-      imageSrc: "/assets/home_event.png",
-      title: "애정에 애정을 더하며☘️",
-      date: "2024.08.12",
-      id: 1,
-    },
-    {
-      imageSrc: "/assets/home_event.png",
-      title: "장마 맞이 시원한 할인!",
-      date: "2024.08.12",
-      id: 2,
-    },
-  ]
-  return (
+  return eventBanner ? (
     <div className="mt-6">
       <Title title="이벤트 프로모션" />
       <Swiper
@@ -269,16 +250,19 @@ const EventSection = () => {
         style={{ overflow: "visible" }}
         className="mt-2"
       >
-        {EventCardsData.map((data, index) => (
+        {eventBanner.map((data, index) => (
           <SwiperSlide key={index} className="mr-3">
             <div
               className="flex flex-col gap-4 bg-white pb-4 rounded-[20px] border border-gray-100"
-              // TODO: 실제 이벤트 아이디를 이용해 이벤트 상세 페이지로 이동
-              // onClick={() => navigate(`/event/${data.id}`)}
-              onClick={() => navigate(`/event/${data.id}`)}
+              onClick={() => {
+                const link = data.link.startsWith("http")
+                  ? data.link
+                  : `https://${data.link}`
+                window.location.href = link || `/event/${data.code}`
+              }}
             >
               <div
-                style={{ backgroundImage: `url(${data.imageSrc})` }}
+                style={{ backgroundImage: `url(${data.fileUrl})` }}
                 className="w-full h-[190px] bg-cover bg-center rounded-t-[20px]"
               ></div>
               <div className="flex flex-col px-5 gap-1.5">
@@ -286,7 +270,8 @@ const EventSection = () => {
                   {data.title}
                 </span>
                 <span className="font-r text-12px text-gray-600">
-                  {data.date}
+                  {/*TODO event banner api 응답데이터에 date가 추가 될 시 변경 필요*/}
+                  2024.08.12
                 </span>
               </div>
             </div>
@@ -294,7 +279,7 @@ const EventSection = () => {
         ))}
       </Swiper>
     </div>
-  )
+  ) : null
 }
 
 const BusinessInfo = () => {
