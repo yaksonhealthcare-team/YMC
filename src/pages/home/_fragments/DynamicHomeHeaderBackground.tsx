@@ -36,7 +36,7 @@ const DynamicHomeHeaderBackground = ({
         <img src="/assets/home_card_top.png" alt="" className="w-full" />
         <div className="absolute top-3 left-3 w-full h-24">
           <div className="flex justify-between w-full">
-            <div className={"px-5 pt-5 w-full"}>{header}</div>
+            <div className={"px-5 pt-5 w-full max-w-[84%]"}>{header}</div>
             <DynamicSquareContainer>{buttonArea}</DynamicSquareContainer>
           </div>
         </div>

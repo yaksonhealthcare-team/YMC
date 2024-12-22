@@ -1,6 +1,5 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { Notice } from "@components/Notice"
 import { Button } from "@components/Button"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import CrownIcon from "@assets/icons/CrownIcon.svg?react"
@@ -10,6 +9,8 @@ import PointIcon from "@assets/icons/PointIcon.svg?react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useAuth } from "../../contexts/AuthContext.tsx"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
+import NoticesSummarySlider from "@components/NoticesSummarySlider.tsx"
+import MegaPhoneIcon from "@assets/icons/MegaPhoneIcon.svg?react"
 
 const MyPage = () => {
   const { user } = useAuth()
@@ -87,10 +88,15 @@ const MyPage = () => {
     <>
       <div className="h-fit bg-[#F8F5F2] pb-8">
         {/* Notice */}
-        <div className="px-5 py-2 m-5 rounded-[20px] bg-white">
-          <Notice
-            title="9월 1일 회원권 변경사항 안내드립니다."
-            onClick={() => navigate("/notice/1")}
+        <div className="flex gap-[8px] items-center px-5 h-[40px] m-5 rounded-[20px] bg-white text-primary">
+          <MegaPhoneIcon className="min-w-5 h-5" />
+          <NoticesSummarySlider
+            className={
+              "w-full h-[21px] overflow-hidden text-ellipsis whitespace-nowrap"
+            }
+            right={
+              <CaretRightIcon className="flex-shrink-0 min-w-[4px] h-4 ml-auto" />
+            }
           />
         </div>
 
