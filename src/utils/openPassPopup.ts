@@ -1,8 +1,8 @@
-import { pass } from "../apis/pass.api.ts"
+import { fetchEncryptDataForNice } from "../apis/pass.api.ts"
 
 export const openPassPopup = async () => {
   try {
-    const data = await pass()
+    const data = await fetchEncryptDataForNice()
 
     console.log("폼 데이터:", data)
 
@@ -11,7 +11,12 @@ export const openPassPopup = async () => {
     form.action = "https://nice.checkplus.co.kr/CheckPlusSafeModel/service.cb"
     form.target = "popupChk"
 
-    const formData = data["body"][0]
+    const formData = {
+      m: data.body[0].m,
+      token_version_id: data.body[0].token_version_id,
+      enc_data: decodeURIComponent(data.body[0].enc_data),
+      integrity_value: decodeURIComponent(data.body[0].integrity_value),
+    }
 
     console.log(formData)
 
