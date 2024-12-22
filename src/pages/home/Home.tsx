@@ -88,7 +88,12 @@ const Home = () => {
                         src={banner.fileUrl}
                         alt={`${banner.title}`}
                         className="w-full h-[144px] object-cover rounded-2xl"
-                        onClick={() => navigate(banner.link || "/membership")}
+                        onClick={() => {
+                          const link = banner.link.startsWith("http")
+                            ? banner.link
+                            : `https://${banner.link}`
+                          window.location.href = link || "/membership"
+                        }}
                       />
                     </SwiperSlide>
                   ))}
