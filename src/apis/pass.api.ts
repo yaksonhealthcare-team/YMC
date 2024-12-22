@@ -9,8 +9,9 @@ export interface EncryptData {
 }
 
 export const fetchEncryptDataForNice = async () => {
-  const { data } = await axiosClient.post<HTTPResponse<EncryptData[]>>(
+  const { data } = await axiosClient.get<HTTPResponse<EncryptData[]>>(
     "/auth/crypto/token.php",
+    { params: { return_url: "http://localhost:5172/callback" } },
   )
 
   return data
