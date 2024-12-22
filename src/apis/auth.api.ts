@@ -1,6 +1,6 @@
 import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
-import { User, UserResponse } from "../types/User.ts"
+import { User, UserResponse, UpdateUserProfileRequest } from "../types/User.ts"
 import { UserMapper } from "../mappers/UserMapper.ts"
 
 export const loginWithEmail = async ({
@@ -48,17 +48,9 @@ export const resetPassword = async (
   })
 }
 
-interface UpdateUserProfileRequest {
-  post: string
-  addr1: string
-  addr2: string
-  sex: "M" | "F"
-  profileURL: string
-  marketing_yn: "Y" | "N"
-}
-
 export const updateUserProfile = async (data: UpdateUserProfileRequest) => {
-  const response = await axiosClient.patch("/auth/me", data)
+  const requestData = UserMapper.toUpdateProfileRequest(data)
+  const response = await axiosClient.patch("/auth/me", requestData)
   return response.data
 }
 

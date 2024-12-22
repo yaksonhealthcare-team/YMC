@@ -91,10 +91,10 @@ export interface UserUpdateRequest {
 }
 
 export interface UpdateUserProfileRequest {
-  post: string
-  addr1: string
-  addr2: string
+  postalCode: string
+  address1: string
+  address2: string
   sex: "M" | "F"
-  profileURL: string
-  marketing_yn: "Y" | "N"
+  profileUrl: string
+  marketingAgreed: boolean
 }

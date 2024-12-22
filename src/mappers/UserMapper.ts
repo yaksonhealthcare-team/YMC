@@ -3,6 +3,7 @@ import {
   UserResponse,
   UserSignup,
   UserSignupRequest,
+  UpdateUserProfileRequest,
 } from "../types/User.ts"
 
 export class UserMapper {
@@ -29,6 +30,17 @@ export class UserMapper {
         brandName: brand.b_name,
         address: brand.addr,
       })),
+    }
+  }
+
+  static toUpdateProfileRequest(dto: UpdateUserProfileRequest) {
+    return {
+      post: dto.postalCode,
+      addr1: dto.address1,
+      addr2: dto.address2,
+      sex: dto.sex,
+      profileURL: dto.profileUrl,
+      marketing_yn: dto.marketingAgreed ? "Y" : "N",
     }
   }
 }
