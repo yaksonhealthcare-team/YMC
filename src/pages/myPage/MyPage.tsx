@@ -215,6 +215,7 @@ const MyPage = () => {
               </span>
             </div>
             <span className="font-r text-12px text-gray-300">
+              {/* TODO: 실제 버전 표시 */}
               v.1.1.4 version
             </span>
           </div>
