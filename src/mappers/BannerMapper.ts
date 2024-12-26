@@ -9,6 +9,8 @@ export class BannerMapper {
       prior: dto.prior,
       fileCode: dto.fileCode,
       fileUrl: dto.fileurl,
+      startDate: dto.sdate,
+      endDate: dto.edate,
     }
   }
 

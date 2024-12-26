@@ -278,8 +278,7 @@ const EventSection = () => {
                   {data.title}
                 </span>
                 <span className="font-r text-12px text-gray-600">
-                  {/*TODO event banner api 응답데이터에 date가 추가 될 시 변경 필요*/}
-                  2024.08.12
+                  {data.startDate} ~ {data.endDate}
                 </span>
               </div>
             </div>
