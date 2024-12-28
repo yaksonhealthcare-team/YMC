@@ -6,9 +6,7 @@ import BranchFilterBottomSheet, {
   FilterItem,
 } from "./_fragments/BranchFilterBottomSheet.tsx"
 import BranchFilterSection from "./_fragments/BranchFilterSection.tsx"
-import BranchFilterList, {
-  BranchFilterListItem,
-} from "./_fragments/BranchFilterList.tsx"
+import BranchFilterList from "./_fragments/BranchFilterList.tsx"
 import { SearchFloatingButton } from "@components/SearchFloatingButton.tsx"
 import { useLocation, useNavigate } from "react-router-dom"
 import BranchMapSection from "./_fragments/BranchMapSection.tsx"
@@ -130,7 +128,8 @@ const Branch = () => {
       case "map":
         return (
           <BranchMapSection
-            branches={branches?.pages.flatMap((page) => page) || []}
+            brandCode={selectedFilter.brand?.code}
+            category={selectedFilter.category?.code}
             onSelectBranch={setSelectedBranch}
           />
         )
@@ -156,23 +155,6 @@ const Branch = () => {
           }}
         />
       </div>
-      {screen === "map" && (
-        <div
-          className={`absolute w-full bottom-0 left-0 rounded-t-2xl bg-white z-[300] max-h-40 px-5 py-3 ${selectedBranch ? "transition-transform translate-y-0 duration-300 opacity-100" : "transition-transform opacity-0 translate-y-40 duration-300"}`}
-        >
-          {selectedBranch && (
-            <BranchFilterListItem
-              branch={selectedBranch}
-              onClick={() => {
-                navigate(`/branch/${selectedBranch.id}`)
-              }}
-              onClickFavorite={() => {
-                console.log("FAVORITE")
-              }}
-            />
-          )}
-        </div>
-      )}
     </div>
   )
 }

@@ -12,6 +12,13 @@ export const queryKeys = {
       [...queryKeys.branches.all, filters] as const,
     detail: (id: string, coords: Coordinate) =>
       [...queryKeys.branches.all, id, coords] as const,
+    map: (coords: Coordinate, brandCode?: string, category?: string) => [
+      ...queryKeys.branches.all,
+      "maps",
+      coords,
+      brandCode,
+      category,
+    ],
   },
   points: {
     all: ["points"] as const,
