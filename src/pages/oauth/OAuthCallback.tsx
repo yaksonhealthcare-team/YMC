@@ -25,67 +25,65 @@ const OAuthCallback = () => {
 
       try {
         const searchParams = new URLSearchParams(window.location.search)
-        console.log("🚀 URL Search Params:", Object.fromEntries(searchParams))
+        console.log("🚀 소셜 로그인 콜백 시작:", {
+          provider,
+          searchParams: Object.fromEntries(searchParams),
+        })
 
         const jsonData = searchParams.get("jsonData")
-        console.log("🚀 Raw jsonData:", jsonData)
+        if (!jsonData) {
+          console.error("❌ jsonData가 없음")
+          throw new Error("인증 정보가 없습니다.")
+        }
 
-        // 소셜 로그인 응답 처리
-        if (jsonData) {
-          const decodedData = decodeURIComponent(jsonData)
-          console.log("🚀 Decoded jsonData:", decodedData)
+        const decodedData = decodeURIComponent(jsonData)
+        const parsedData = JSON.parse(decodedData)
 
-          const parsedData = JSON.parse(decodedData)
-          console.log("🚀 Parsed Response:", {
-            resultCode: parsedData.resultCode,
-            resultMessage: parsedData.resultMessage,
-            resultCount: parsedData.resultCount,
-            Header: parsedData.Header,
-            body: parsedData.body,
-          })
+        console.log("📦 소셜 로그인 응답:", {
+          resultCode: parsedData.resultCode,
+          resultMessage: parsedData.resultMessage,
+          header: parsedData.Header[0],
+          body: parsedData.body[0],
+        })
 
-          const socialData = parsedData.body[0]
-          console.log("🚀 Social Data:", {
-            accessToken: socialData.accessToken,
-            socialId: socialData.socialId,
-            email: socialData.email,
-            name: socialData.name,
-            mobileno: socialData.mobileno,
-            birthdate: socialData.birthdate,
-            gender: socialData.gender,
-          })
+        const socialData = parsedData.body[0]
 
-          // 이미 가입된 회원 (accessToken 있음)
-          if (socialData.accessToken) {
-            console.log("✅ 이미 가입된 회원 - 자동 로그인")
+        // 이미 가입된 회원 (accessToken 있음)
+        if (socialData.accessToken) {
+          console.log("✅ 이미 가입된 회원 - 로그인 시도")
+          try {
             const user = await fetchUser(socialData.accessToken)
+            console.log("✅ 유저 정보 조회 성공:", user)
             login({ user, token: socialData.accessToken })
             navigate("/", { replace: true })
             return
-          }
-
-          // 미가입 회원 (socialId만 있음)
-          if (socialData.socialId) {
-            console.log("✅ 미가입 회원 - 회원가입 페이지로 이동")
-            const socialSignupInfo = {
-              provider: getProviderCode(provider),
-              id: parsedData.Header[0].id, // Header에서 id 값 가져오기
-              ...socialData, // 모든 응답 데이터 포함
-            }
-            console.log("🚀 Social Signup Info:", socialSignupInfo)
-
-            sessionStorage.setItem(
-              "socialSignupInfo",
-              JSON.stringify(socialSignupInfo),
-            )
-            navigate("/signup", { replace: true })
-            return
+          } catch (error) {
+            console.error("❌ 유저 정보 조회 실패:", error)
+            throw error
           }
         }
 
-        throw new Error("인증 정보가 없습니다.")
+        // 미가입 회원 (socialId만 있음)
+        if (socialData.socialId) {
+          console.log("ℹ️ 미가입 회원 - 회원가입 페이지로 이동")
+          const socialSignupInfo = {
+            provider: getProviderCode(provider),
+            id: parsedData.Header[0].id,
+            ...socialData,
+          }
+          console.log("📝 저장할 회원가입 정보:", socialSignupInfo)
+
+          sessionStorage.setItem(
+            "socialSignupInfo",
+            JSON.stringify(socialSignupInfo),
+          )
+          navigate("/signup", { replace: true })
+          return
+        }
+
+        throw new Error("유효하지 않은 응답 데이터")
       } catch (error) {
-        console.error("❌ Error:", error)
+        console.error("❌ 소셜 로그인 처리 실패:", error)
         showAlert("로그인에 실패했습니다.")
         navigate("/login", { replace: true })
       }
