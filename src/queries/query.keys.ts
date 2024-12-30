@@ -55,6 +55,8 @@ export const queryKeys = {
     ],
     myList: (status: string) =>
       [...queryKeys.memberships.all, "myList", status] as const,
+    additionalManagement: (membershipIdx: number | undefined) =>
+      [...queryKeys.memberships.all, "detail", membershipIdx] as const,
   },
   events: {
     all: ["events"] as const,

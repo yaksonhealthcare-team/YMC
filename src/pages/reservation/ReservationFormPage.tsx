@@ -25,6 +25,7 @@ import FixedButtonContainer from "@components/FixedButtonContainer"
 import clsx from "clsx"
 import CheckIcon from "@components/icons/CheckIcon"
 import { ClockIcon } from "@mui/x-date-pickers"
+import { useAdditionalManagement } from "../../queries/useMembershipQueries.tsx"
 
 interface FormDataType {
   item: undefined | number
@@ -37,7 +38,7 @@ interface FormDataType {
 
 const example_items: MembershipItem[] = [
   {
-    id: 1,
+    id: 1170944,
     status: MembershipStatus.AVAILABLE,
     title: "K-BEAUTY 연예인관리",
     count: "4회 / 20",
@@ -47,7 +48,7 @@ const example_items: MembershipItem[] = [
     isReady: false,
   },
   {
-    id: 2,
+    id: 1170945,
     status: MembershipStatus.COMPLETED,
     title: "바디케어 프로그램",
     count: "0회 / 10",
@@ -56,7 +57,7 @@ const example_items: MembershipItem[] = [
     isReady: true,
   },
   {
-    id: 3,
+    id: 1170946,
     status: MembershipStatus.EXPIRED,
     title: "럭셔리 스파",
     count: "2회 / 5",
@@ -64,7 +65,7 @@ const example_items: MembershipItem[] = [
     endAt: "2024.02.29",
   },
   {
-    id: 4,
+    id: 1170943,
     status: MembershipStatus.EXPIRED,
     title: "럭셔리 스파",
     count: "2회 / 5",
@@ -115,6 +116,14 @@ const ReservationFormPage = () => {
   const [additionalServiceOptions, _setAdditionalServiceOptions] = useState(
     example_additional_services,
   )
+
+  const [selectMembership, setSelectMembership] =
+    useState<MembershipItem | null>(null)
+
+  const { data: AdditionalManagements, isLoading } = useAdditionalManagement(
+    selectMembership?.id,
+  )
+
   const [data, setData] = useState<FormDataType>({
     item: undefined,
     branch: undefined,
@@ -177,6 +186,7 @@ const ReservationFormPage = () => {
             checked={data.item === 0}
             value={0}
             disabled={consultationSlot >= 2}
+            onClick={() => setSelectMembership(null)}
           >
             <div className="justify-start items-center gap-2 flex">
               <div className="text-gray-700 text-16px font-sb">상담 예약</div>
@@ -239,6 +249,7 @@ const ReservationFormPage = () => {
                       membership={item}
                       checked={data.item === item.id}
                       value={item.id}
+                      onClick={() => setSelectMembership(item)}
                     />
                   </SwiperSlide>
                 ))}
@@ -331,6 +342,7 @@ const ReservationFormPage = () => {
           ))}
         </div>
       </section>
+      ,
       <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
         <div className="flex flex-col gap-6">
           <CustomInputButton
