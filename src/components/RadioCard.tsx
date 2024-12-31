@@ -8,7 +8,6 @@ interface RadioCardProps {
   value: number | string
   className?: string
   disabled?: boolean
-  onClick?: () => void
 }
 
 export const RadioCard = ({
@@ -17,7 +16,6 @@ export const RadioCard = ({
   value,
   className,
   disabled = false,
-  onClick,
 }: RadioCardProps) => {
   return (
     <label
@@ -39,7 +37,6 @@ export const RadioCard = ({
             height: "20px",
           }}
           disabled={disabled}
-          onClick={onClick}
         />
         <div className={clsx("w-5 h-5 relative", disabled && "hidden")}>
           {checked ? (

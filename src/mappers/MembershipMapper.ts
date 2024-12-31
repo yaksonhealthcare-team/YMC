@@ -117,6 +117,7 @@ export class AdditionalManagementMapper {
     return {
       serviceIndex: dto.s_idx,
       serviceName: dto.s_name,
+      serviceTime: dto.s_time,
       options: MembershipOptionMapper.toEntities(dto.options),
     }
   }

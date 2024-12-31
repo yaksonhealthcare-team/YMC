@@ -6,14 +6,12 @@ interface MembershipRadioCardProps {
   membership: MembershipItem
   checked: boolean
   value: number | string
-  onClick?: () => void
 }
 
 export const MembershipRadioCard = ({
   membership,
   checked,
   value,
-  onClick,
 }: MembershipRadioCardProps) => {
   return (
     <RadioCard
@@ -21,7 +19,6 @@ export const MembershipRadioCard = ({
       value={value}
       className="!h-[124px] items-start"
       disabled={membership.isReady}
-      onClick={onClick}
     >
       <div className="w-[206px] flex-col justify-start items-start gap-4">
         <div className="self-stretch flex-col justify-start items-start gap-3">

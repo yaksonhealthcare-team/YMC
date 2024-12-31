@@ -168,11 +168,13 @@ export const myMembershipFilters: MyMembershipFilterItem[] = [
 export interface AdditionalManagement {
   serviceIndex: string
   serviceName: string
+  serviceTime: string
   options: MembershipOption[]
 }
 
 export interface AdditionalManagementResponse {
   s_idx: string
   s_name: string
+  s_time: string
   options: MembershipOptionResponse[]
 }
