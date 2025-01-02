@@ -14,6 +14,7 @@ export class UserMapper {
       username: response.name,
       email: response.email,
       level: response.level,
+      levelName: response.level_name,
       phone: response.hp,
       postalCode: response.post,
       address: {

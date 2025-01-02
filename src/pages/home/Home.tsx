@@ -21,10 +21,12 @@ import { Pagination } from "swiper/modules"
 import { useBanner } from "../../queries/useBannerQueries.tsx"
 import { BannerRequestType } from "../../types/Banner.ts"
 import NoticesSummarySlider from "@components/NoticesSummarySlider.tsx"
+import { useAuth } from "../../contexts/AuthContext.tsx"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
   const { data: mainBanner } = useBanner(BannerRequestType.SLIDE)
+  const { user } = useAuth()
 
   const navigate = useNavigate()
   useEffect(() => {
@@ -58,10 +60,12 @@ const Home = () => {
               <div className="flex justify-between items-center bg-primary-300 rounded-2xl p-4">
                 <div className="flex gap-2 flex-col text-white">
                   <Typography className={"font-b"}>
-                    <span className={"text-18px"}>김민정님</span> 반갑습니다.
+                    <span className={"text-18px"}>{user?.name}</span>{" "}
+                    반갑습니다.
                   </Typography>
                   <Typography className="font-m text-14px space-x-2">
-                    <span>SILVER</span> <span>10,000 P</span>
+                    <span>{user?.levelName}</span>{" "}
+                    <span>{user && user.point ? user.point : 0} P</span>
                   </Typography>
                 </div>
                 {/* TODO: 예약 필요 정보와 함께 이동 필요 */}
