@@ -86,4 +86,11 @@ export const queryKeys = {
     bannerType: (bannerRequestType: BannerRequestType) =>
       [...queryKeys.banners.all, { bannerRequestType }] as const,
   },
+  notifications: {
+    all: ["notifications"] as const,
+    list: (filters: BranchFilters) =>
+      [...queryKeys.notifications.all, filters] as const,
+    detail: (id: string, coords: Coordinate) =>
+      [...queryKeys.notifications.all, id, coords] as const,
+  },
 } as const
