@@ -7,7 +7,7 @@ import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import { RadioCard } from "@components/RadioCard"
 import { MembershipRadioCard } from "./_fragments/MembershipRadioCard"
 import {
-  AdditionalService,
+  AdditionalManagement,
   MembershipItem,
   MembershipStatus,
 } from "types/Membership"
@@ -25,6 +25,7 @@ import FixedButtonContainer from "@components/FixedButtonContainer"
 import clsx from "clsx"
 import CheckIcon from "@components/icons/CheckIcon"
 import { ClockIcon } from "@mui/x-date-pickers"
+import { useAdditionalManagement } from "../../queries/useMembershipQueries.tsx"
 
 interface FormDataType {
   item: undefined | number
@@ -32,12 +33,12 @@ interface FormDataType {
   date: null | Dayjs
   time: null | string
   request: string
-  additionalServices: AdditionalService[]
+  additionalServices: AdditionalManagement[]
 }
 
 const example_items: MembershipItem[] = [
   {
-    id: 1,
+    id: 1170944,
     status: MembershipStatus.AVAILABLE,
     title: "K-BEAUTY 연예인관리",
     count: "4회 / 20",
@@ -47,7 +48,7 @@ const example_items: MembershipItem[] = [
     isReady: false,
   },
   {
-    id: 2,
+    id: 1170945,
     status: MembershipStatus.COMPLETED,
     title: "바디케어 프로그램",
     count: "0회 / 10",
@@ -56,7 +57,7 @@ const example_items: MembershipItem[] = [
     isReady: true,
   },
   {
-    id: 3,
+    id: 1170946,
     status: MembershipStatus.EXPIRED,
     title: "럭셔리 스파",
     count: "2회 / 5",
@@ -64,43 +65,12 @@ const example_items: MembershipItem[] = [
     endAt: "2024.02.29",
   },
   {
-    id: 4,
+    id: 1170943,
     status: MembershipStatus.EXPIRED,
     title: "럭셔리 스파",
     count: "2회 / 5",
     startAt: "2024.12.01",
     endAt: "2024.02.29",
-  },
-]
-
-const example_additional_services: AdditionalService[] = [
-  {
-    id: 1,
-    title: "전신 마사지 딥티슈",
-    duration: 120,
-    price: 100000,
-    selected: false,
-  },
-  {
-    id: 2,
-    title: "발 마사지",
-    duration: 60,
-    price: 50000,
-    selected: false,
-  },
-  {
-    id: 3,
-    title: "얼굴 마사지",
-    duration: 90,
-    price: 80000,
-    selected: false,
-  },
-  {
-    id: 4,
-    title: "림프 드레니지",
-    duration: 120,
-    price: 120000,
-    selected: false,
   },
 ]
 
@@ -112,9 +82,7 @@ const ReservationFormPage = () => {
   const [consultationSlot, _setConsultationSlot] = useState(1)
   const [hasMembership, _setHasMembership] = useState(true)
   const [itemOptions, setItemOptions] = useState(example_items)
-  const [additionalServiceOptions, _setAdditionalServiceOptions] = useState(
-    example_additional_services,
-  )
+
   const [data, setData] = useState<FormDataType>({
     item: undefined,
     branch: undefined,
@@ -123,6 +91,10 @@ const ReservationFormPage = () => {
     request: "",
     additionalServices: [],
   })
+
+  const { data: additionalManagements, isLoading } = useAdditionalManagement(
+    data.item === 0 ? undefined : data.item,
+  )
 
   const handleOnChangeItem = (event: ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, item: parseInt(event.target.value) })
@@ -301,36 +273,40 @@ const ReservationFormPage = () => {
           새로 작성하기
         </Button>
       </section>
-      <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
-        <p className="font-m text-14px text-gray-700 mb-4">추가관리</p>
-        <div className="flex flex-col gap-3">
-          {additionalServiceOptions.map((option) => (
-            <AdditionalServiceCheckbox
-              key={option.id}
-              service={option}
-              selected={data.additionalServices.some(
-                (service) => service.id === option.id,
-              )}
-              onSelect={() => {
-                setData((prev) => {
-                  const isSelected = prev.additionalServices.some(
-                    (service) => service.id === option.id,
-                  )
+      {!isLoading && additionalManagements && (
+        <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
+          <p className="font-m text-14px text-gray-700 mb-4">추가관리</p>
+          <div className="flex flex-col gap-3">
+            {additionalManagements.map((option) => (
+              <AdditionalServiceCheckbox
+                key={option.serviceIndex}
+                service={option}
+                selected={data.additionalServices.some(
+                  (service) => service.serviceIndex === option.serviceIndex,
+                )}
+                onSelect={() => {
+                  setData((prev) => {
+                    const isSelected = prev.additionalServices.some(
+                      (service) => service.serviceIndex === option.serviceIndex,
+                    )
 
-                  return {
-                    ...prev,
-                    additionalServices: isSelected
-                      ? prev.additionalServices.filter(
-                          (service) => service.id !== option.id,
-                        )
-                      : [...prev.additionalServices, option],
-                  }
-                })
-              }}
-            />
-          ))}
-        </div>
-      </section>
+                    return {
+                      ...prev,
+                      additionalServices: isSelected
+                        ? prev.additionalServices.filter(
+                            (service) =>
+                              service.serviceIndex !== option.serviceIndex,
+                          )
+                        : [...prev.additionalServices, option],
+                    }
+                  })
+                }}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
         <div className="flex flex-col gap-6">
           <CustomInputButton
@@ -380,12 +356,12 @@ const ReservationFormPage = () => {
         <p className="font-m text-14px mb-2 text-gray-700">결제 금액</p>
         <div className="flex flex-col gap-3 mt-4">
           {data.additionalServices.map((service) => (
-            <div key={service.id} className="flex justify-between">
+            <div key={service.serviceIndex} className="flex justify-between">
               <p className="text-gray-400 text-sm font-medium">
-                {service.title}
+                {service.serviceName}
               </p>
               <p className="text-base font-medium">
-                {service.price.toLocaleString()}원
+                {service.options[0].subscriptionPrice.toLocaleString()}원
               </p>
             </div>
           ))}
@@ -395,7 +371,14 @@ const ReservationFormPage = () => {
           <p>최종 결제 금액</p>
           <p className="text-xl font-bold">
             {data.additionalServices
-              .reduce((sum, service) => sum + service.price, 0)
+              .reduce(
+                (sum, service) =>
+                  sum +
+                  parseInt(
+                    service.options[0].subscriptionPrice.replace(/,/g, ""),
+                  ),
+                0,
+              )
               .toLocaleString()}
             원
           </p>
@@ -415,7 +398,14 @@ const ReservationFormPage = () => {
           {data.item === 0
             ? "예약하기"
             : `${data.additionalServices
-                .reduce((sum, service) => sum + service.price, 0)
+                .reduce(
+                  (sum, service) =>
+                    sum +
+                    parseInt(
+                      service.options[0].subscriptionPrice.replace(/,/g, ""),
+                    ),
+                  0,
+                )
                 .toLocaleString()}원 결제하기`}
         </Button>
       </FixedButtonContainer>
@@ -424,7 +414,7 @@ const ReservationFormPage = () => {
 }
 
 interface AdditionalServiceCheckboxProps {
-  service: AdditionalService
+  service: AdditionalManagement
   selected: boolean
   onSelect: () => void
 }
@@ -444,7 +434,7 @@ const AdditionalServiceCheckbox = ({
     >
       <div className="w-full justify-between items-center inline-flex">
         <div className="text-gray-700 text-base font-medium leading-normal">
-          {service.title}
+          {service.serviceName}
         </div>
         <div className="w-5 h-5 justify-center items-center flex">
           <CheckIcon htmlColor={selected ? "#F37165" : "#DDDDDD"} />
@@ -456,11 +446,11 @@ const AdditionalServiceCheckbox = ({
             <ClockIcon className={"text-gray-500"} />
           </div>
           <div className="text-gray-500 text-sm font-normal leading-tight">
-            {service.duration}분 소요
+            {service.serviceTime}분 소요
           </div>
         </div>
         <div className="grow shrink basis-0 text-right text-gray-700 text-base font-bold leading-normal">
-          {service.price.toLocaleString()}원
+          {service.options[0].subscriptionPrice.toLocaleString()}원
         </div>
       </div>
     </div>

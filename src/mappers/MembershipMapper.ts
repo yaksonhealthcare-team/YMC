@@ -1,4 +1,6 @@
 import {
+  AdditionalManagement,
+  AdditionalManagementResponse,
   Membership,
   MembershipDetail,
   MembershipDetailResponse,
@@ -106,6 +108,23 @@ export class MyMembershipMapper {
   }
 
   static toEntities(dtos: MyMembershipResponse[]): MyMembership[] {
+    return dtos.map(this.toEntity)
+  }
+}
+
+export class AdditionalManagementMapper {
+  static toEntity(dto: AdditionalManagementResponse): AdditionalManagement {
+    return {
+      serviceIndex: dto.s_idx,
+      serviceName: dto.s_name,
+      serviceTime: dto.s_time,
+      options: MembershipOptionMapper.toEntities(dto.options),
+    }
+  }
+
+  static toEntities(
+    dtos: AdditionalManagementResponse[],
+  ): AdditionalManagement[] {
     return dtos.map(this.toEntity)
   }
 }

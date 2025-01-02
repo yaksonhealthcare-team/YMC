@@ -164,3 +164,17 @@ export const myMembershipFilters: MyMembershipFilterItem[] = [
     title: "만료됨",
   },
 ]
+
+export interface AdditionalManagement {
+  serviceIndex: string
+  serviceName: string
+  serviceTime: string
+  options: MembershipOption[]
+}
+
+export interface AdditionalManagementResponse {
+  s_idx: string
+  s_name: string
+  s_time: string
+  options: MembershipOptionResponse[]
+}
