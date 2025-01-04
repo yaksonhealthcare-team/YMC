@@ -8,19 +8,22 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { DateCalendar } from "@mui/x-date-pickers"
 import { styled } from "@mui/material/styles"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import dayjs, { Dayjs } from "dayjs"
 import "dayjs/locale/ko"
 import CaretRigthIcon from "@assets/icons/CaretRightIcon.svg?react"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import clsx from "clsx"
 import { Button } from "@components/Button"
+import { useScheduleTimesQueries } from "../../../queries/useScheduleQueries.tsx"
 
 interface DateAndTimeBottomSheetProps {
   onClose: () => void
   date: Dayjs | null
   time: string | null
   onSelect: (date: Dayjs | null, time: string | null) => void
+  membershipIndex?: number
+  addServices?: number[]
 }
 
 const DateAndTimeBottomSheet = ({
@@ -28,6 +31,8 @@ const DateAndTimeBottomSheet = ({
   date: initialDate,
   time: initialTime,
   onSelect,
+  membershipIndex,
+  addServices,
 }: DateAndTimeBottomSheetProps) => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(initialDate)
   const [selectedTime, setSelectedTime] = useState<string | null>(initialTime)
@@ -57,6 +62,9 @@ const DateAndTimeBottomSheet = ({
         <TimePickerSection
           selectedTime={selectedTime}
           handleTimeSelect={handleTimeSelect}
+          membershipIndex={membershipIndex}
+          addServices={addServices}
+          selectedDate={selectedDate}
         />
       ) : (
         <div className="w-full p-4 bg-[#f7f7f7] rounded-lg">
@@ -289,19 +297,39 @@ const timeSlots: TimeSlot[] = [
 interface TimePickerSectionProps {
   selectedTime: string | null
   handleTimeSelect: (time: string | null) => void
+  membershipIndex?: number
+  addServices?: number[]
+  selectedDate?: Dayjs
 }
 
 const TimePickerSection = ({
   selectedTime,
   handleTimeSelect,
+  membershipIndex,
+  addServices,
+  selectedDate,
 }: TimePickerSectionProps) => {
+  const { data: times, isLoading } = useScheduleTimesQueries({
+    membershipIndex,
+    addServices,
+    searchDate: selectedDate,
+  })
+
+  useEffect(() => {
+    if (isLoading) {
+      return
+    }
+
+    console.log(times)
+  }, [isLoading])
+
   return (
     <div className="w-full grid grid-cols-4 gap-[9px]">
       {timeSlots.map((slot) => (
         <Button
           key={slot.time}
           fullCustom
-          disabled={slot.disabled}
+          // disabled={slot.disabled}
           onClick={() => handleTimeSelect(slot.time)}
           className={clsx(
             "h-10 px-2.5 rounded-lg text-sm font-normal flex justify-center items-center whitespace-nowrap",

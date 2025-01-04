@@ -4,7 +4,7 @@ import { PointFilters } from "types/Point.ts"
 import { EventStatus } from "../types/Content.ts"
 import { ReservationStatusCode } from "types/Reservation.ts"
 import { BannerRequestType } from "../types/Banner.ts"
-import { ScheduleDateFilters } from "../types/Schedule.ts"
+import { ScheduleFilters } from "../types/Schedule.ts"
 
 export const queryKeys = {
   branches: {
@@ -16,8 +16,10 @@ export const queryKeys = {
   },
   schedules: {
     all: ["schedules"] as const,
-    date: (filters: ScheduleDateFilters) =>
-      [...queryKeys.schedules.all, filters] as const,
+    date: (filters: ScheduleFilters) =>
+      [...queryKeys.schedules.all, "date", filters] as const,
+    times: (filters: ScheduleFilters) =>
+      [...queryKeys.schedules.all, "times", filters] as const,
   },
   points: {
     all: ["points"] as const,
