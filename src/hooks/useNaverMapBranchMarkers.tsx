@@ -1,6 +1,6 @@
 import { Branch } from "../types/Branch.ts"
 import { Coordinate } from "../types/Coordinate.ts"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { createMarkerIcon, MarkerState } from "../utils/createMarkerIcon.ts"
 
 interface UseNaverMapBranchMarkersProps {
@@ -8,6 +8,7 @@ interface UseNaverMapBranchMarkersProps {
   branches: Branch[]
   selectedBranchId?: string
   options?: {
+    showCurrentLocationMarker?: boolean
     onClickMarker?: (branch: Branch) => void
     onClickMap?: () => void
     onMove?: (center: Coordinate) => void
@@ -27,9 +28,9 @@ export const useNaverMapBranchMarkers = ({
     useState<naver.maps.Marker | null>(null)
   const listenersRef = useRef<naver.maps.MapEventListener[]>([])
 
-  const initializeMarkers = useCallback(() => {
+  const initializeMarkers = () => {
     markers.forEach((marker) => marker.setMap(null))
-  }, [markers])
+  }
 
   const getMarkerState = (branch: Branch): MarkerState => {
     if (branch.id === selectedBranchId) {
@@ -93,7 +94,7 @@ export const useNaverMapBranchMarkers = ({
   }, [map])
 
   const updateCurrentLocationMarker = (currentLocation: Coordinate) => {
-    if (!map) return
+    if (!map || !options?.showCurrentLocationMarker) return
 
     currentLocationMarker?.setMap(null)
     setCurrentLocationMarker(null)
