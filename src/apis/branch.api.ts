@@ -5,7 +5,7 @@ import { BranchMapper } from "mappers/BranchMapper.ts"
 
 export const fetchBranches = async (
   filters: BranchFilters,
-): Promise<Branch[]> => {
+): Promise<{ branches: Branch[]; address: string }> => {
   const { data } = await axiosClient.get("/branches/branches", {
     params: {
       page: filters.page,

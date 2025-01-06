@@ -31,18 +31,24 @@ export class BranchMapper {
     }
   }
 
-  static toEntities(dto: BranchResponse): Branch[] {
-    return dto.result.map((item) => ({
-      id: item.b_idx,
-      name: item.b_name,
-      address: item.b_addr,
-      latitude: Number(item.b_lat),
-      longitude: Number(item.b_lon),
-      canBookToday: item.reserve === "Y",
-      distanceInMeters: item.distance,
-      isFavorite: item.b_bookmark === "Y",
-      brand: this.toBrand(item.b_name),
-    }))
+  static toEntities(dto: BranchResponse): {
+    branches: Branch[]
+    address: string
+  } {
+    return {
+      branches: dto.result.map((item) => ({
+        id: item.b_idx,
+        name: item.b_name,
+        address: item.b_addr,
+        latitude: Number(item.b_lat),
+        longitude: Number(item.b_lon),
+        canBookToday: item.reserve === "Y",
+        distanceInMeters: item.distance,
+        isFavorite: item.b_bookmark === "Y",
+        brand: this.toBrand(item.b_name),
+      })),
+      address: dto.current_addr,
+    }
   }
 
   static toDetailEntity(dto: BranchDetailResponse): BranchDetail {

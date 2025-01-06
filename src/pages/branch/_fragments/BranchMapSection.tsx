@@ -33,7 +33,7 @@ const BranchMapSection = ({
 
   const fetchBranchesByCoords = async (coords: Coordinate) => {
     setCoords(coords)
-    const result = await fetchBranches({
+    const { branches } = await fetchBranches({
       page: 1,
       latitude: coords.latitude,
       longitude: coords.longitude,
@@ -43,13 +43,15 @@ const BranchMapSection = ({
     setBranches((prev) => {
       return [
         ...prev.filter(
-          (branch) => !result.some((newBranch) => newBranch.id === branch.id),
+          (branch) => !branches.some((newBranch) => newBranch.id === branch.id),
         ),
-        ...result,
+        ...branches,
       ]
     })
     if (selectedBranch) {
-      const newBranch = result.find((branch) => selectedBranch.id === branch.id)
+      const newBranch = branches.find(
+        (branch) => selectedBranch.id === branch.id,
+      )
       if (newBranch) {
         setSelectedBranch(newBranch)
       }
@@ -68,6 +70,7 @@ const BranchMapSection = ({
           },
           onMoveMap: fetchBranchesByCoords,
           showCurrentLocationButton: true,
+          showCurrentLocation: true,
         }}
       />
       <div

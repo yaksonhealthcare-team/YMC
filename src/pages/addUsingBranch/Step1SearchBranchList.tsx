@@ -25,7 +25,7 @@ const Step1SearchBranchList = ({
       search: searchText || undefined,
     })
 
-  const branches = data?.pages.flatMap((page) => page) || []
+  const branches = data?.pages.flatMap(({ branches }) => branches) || []
 
   const { observerTarget } = useIntersection({
     onIntersect: () => {

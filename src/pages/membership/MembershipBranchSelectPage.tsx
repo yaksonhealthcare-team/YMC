@@ -29,7 +29,9 @@ const MembershipBranchSelectPage = () => {
     search: query,
   })
 
-  const branches = (branchPages?.pages || []).flatMap((page) => page)
+  const branches = (branchPages?.pages || []).flatMap(
+    ({ branches }) => branches,
+  )
 
   const { observerTarget } = useIntersection({
     onIntersect: () => {
