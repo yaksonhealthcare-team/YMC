@@ -14,5 +14,5 @@ export const useScheduleTimesQueries = (filter: ScheduleFilters) =>
   useQuery({
     queryKey: queryKeys.schedules.times(filter),
     queryFn: () => fetchScheduleTimes(filter),
-    // enabled: Boolean(filter.membershipIndex && filter.searchDate),
+    enabled: Boolean(filter.membershipIndex && filter.searchDate),
   })

@@ -45,9 +45,11 @@ axiosClient.interceptors.response.use(
 
     // 성공이 아닌 경우에도 에러 처리
     if (data.resultCode !== "00") {
+      console.log("error: ", response)
       throw new Error(data.resultMessage)
     }
 
+    console.log("success: ", response)
     return response
   },
   async (error: AxiosError<ErrorResponse>) => {

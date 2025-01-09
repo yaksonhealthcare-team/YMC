@@ -1,6 +1,7 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 import { queryKeys } from "./query.keys"
 import {
+  fetchAdditionalManagement,
   fetchMembershipDetail,
   fetchMemberships,
   fetchMyMemberships,
@@ -48,3 +49,10 @@ export const useMembershipList = (status: string) => {
     },
   })
 }
+
+export const useAdditionalManagement = (membershipIdx: number | undefined) =>
+  useQuery({
+    queryKey: queryKeys.memberships.additionalManagement(membershipIdx),
+    queryFn: () => fetchAdditionalManagement(membershipIdx),
+    enabled: membershipIdx !== undefined,
+  })

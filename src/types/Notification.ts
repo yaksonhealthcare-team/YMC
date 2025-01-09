@@ -1,0 +1,63 @@
+export interface Notification {
+  readStatus: ReadStatus
+  mainCategory: string
+  subCategory?: string
+  title: string
+  content: string
+  pushDate: string
+  reservationDate?: string
+  brandName?: string
+}
+
+export interface NotificationResponse {
+  is_read: ReadStatus
+  main_category: string
+  sub_category: string
+  title: string
+  content: string
+  push_date: string
+  r_date: string
+  b_name?: string
+}
+
+export interface NotificationFilters {
+  page?: number
+  searchType?: NotificationSearchType
+}
+
+export enum ReadStatus {
+  READ = "읽음",
+  UN_READ = "안읽음",
+}
+
+export enum NotificationFilter {
+  ALL = "전체",
+  RESERVATION = "예약",
+  MEMBERSHIP = "회원권",
+  POINT = "포인트",
+  NOTIFICATION = "공지",
+}
+
+export enum NotificationSearchType {
+  ALL = "",
+  RESERVATION = "reserve",
+  MEMBERSHIP = "membership",
+  POINT = "point",
+  NOTIFICATION = "notice",
+}
+
+export const getSearchType = (
+  filter: NotificationFilter,
+): NotificationSearchType => {
+  const mapping: Record<NotificationFilter, NotificationSearchType> = {
+    [NotificationFilter.ALL]: NotificationSearchType.ALL,
+    [NotificationFilter.RESERVATION]: NotificationSearchType.RESERVATION,
+    [NotificationFilter.MEMBERSHIP]: NotificationSearchType.MEMBERSHIP,
+    [NotificationFilter.POINT]: NotificationSearchType.POINT,
+    [NotificationFilter.NOTIFICATION]: NotificationSearchType.NOTIFICATION,
+  }
+
+  return mapping[filter]
+}
+
+export enum NotificationSearchType {}

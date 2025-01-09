@@ -1,4 +1,5 @@
 import {
+  AdditionalManagementMapper,
   MembershipDetailMapper,
   MembershipMapper,
   MyMembershipMapper,
@@ -60,4 +61,20 @@ export const fetchMyMemberships = async (
     },
   })
   return MyMembershipMapper.toEntities(data.body)
+}
+
+export const fetchAdditionalManagement = async (
+  membershipIdx: number | undefined,
+  page: number = 1,
+) => {
+  const { data } = await axiosClient.get(
+    "/memberships/additional-managements",
+    {
+      params: {
+        mp_idx: membershipIdx,
+        page,
+      },
+    },
+  )
+  return AdditionalManagementMapper.toEntities(data.body)
 }

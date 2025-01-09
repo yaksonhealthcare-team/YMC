@@ -25,8 +25,8 @@ const BranchSearchResultList = ({
     isFetchingNextPage,
   } = useBranches({
     page: 1,
-    latitude: location.latitude ?? DEFAULT_COORDINATE.latitude!,
-    longitude: location.longitude ?? DEFAULT_COORDINATE.longitude!,
+    latitude: location?.latitude || DEFAULT_COORDINATE.latitude,
+    longitude: location?.longitude || DEFAULT_COORDINATE.longitude,
     brandCode: "",
     search: debouncedQuery,
   })

@@ -14,7 +14,7 @@ import TherapistActivePin from "@assets/icons/pin/TherapistActivePin.svg?url"
 import TherapistBookmarkPin from "@assets/icons/pin/TherapistBookmarkPin.svg?url"
 import TherapistPin from "@assets/icons/pin/TherapistPin.svg?url"
 
-type MarkerState =
+export type MarkerState =
   | "current-location"
   | "default"
   | "active"
@@ -22,29 +22,23 @@ type MarkerState =
   | "active-bookmark"
   | "location-selector"
 
-interface NaverMapIcon {
-  url: string
-  size: naver.maps.Size
-  anchor: naver.maps.Point
-}
-
 export const createMarkerIcon = (
   branch: Branch | null,
   state: MarkerState,
-): NaverMapIcon => {
+): naver.maps.ImageIcon => {
   if (state === "current-location") {
     return {
       url: CurrentLocationPin,
-      size: new window.naver.maps.Size(34, 34),
-      anchor: new window.naver.maps.Point(17, 17),
+      size: new naver.maps.Size(34, 34),
+      anchor: new naver.maps.Point(17, 17),
     }
   }
 
   if (state === "location-selector") {
     return {
       url: LocationSelectorPin,
-      size: new window.naver.maps.Size(48, 54),
-      anchor: new window.naver.maps.Point(24, 54),
+      size: new naver.maps.Size(48, 54),
+      anchor: new naver.maps.Point(24, 54),
     }
   }
 
@@ -82,9 +76,13 @@ export const createMarkerIcon = (
     )
   }
 
+  const size =
+    state === "default" || state === "bookmark"
+      ? { w: 40, h: 40 }
+      : { w: 48, h: 54 }
+
   return {
     url: icon,
-    size: new window.naver.maps.Size(48, 52),
-    anchor: new window.naver.maps.Point(24, 52),
+    size: new naver.maps.Size(size.w, size.h),
   }
 }

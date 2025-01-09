@@ -6,41 +6,20 @@ import SettingIcon from "@assets/icons/SettingIcon.svg?react"
 import { Filter } from "@components/Filter.tsx"
 import { NotificationCard } from "@components/NotificationCard.tsx"
 import { Container } from "@mui/material"
+import {
+  getSearchType,
+  NotificationFilter,
+  NotificationSearchType,
+} from "../../types/Notification.ts"
+import { useNotifications } from "../../queries/useNotificationQueries.tsx"
+import useIntersection from "../../hooks/useIntersection.tsx"
 
 const filters = [
-  { label: "전체", type: "default" },
-  { label: "예약", type: "default" },
-  { label: "회원권", type: "default" },
-  { label: "포인트", type: "default" },
-  { label: "공지", type: "default" },
-]
-const reserveCardsData: Array<{
-  read?: boolean
-  store: string
-  title: string
-  date: string
-  time: string
-  reserveTitle: string
-  reserveDate: string
-  onClick?: () => void
-}> = [
-  {
-    store: "약손명가 강남구청역점",
-    title: "전신관리 120분",
-    date: "7월 12일 (토)",
-    time: "오전 11:00",
-    reserveTitle: "예약완료",
-    reserveDate: "07. 12 오전 10:12",
-  },
-  {
-    read: true,
-    store: "약손명가 강남구청역점",
-    title: "전신관리 120분",
-    date: "7월 12일 (토)",
-    time: "오전 11:00",
-    reserveTitle: "예약취소",
-    reserveDate: "07. 12 오전 10:12",
-  },
+  { label: NotificationFilter.ALL, type: "default" },
+  { label: NotificationFilter.RESERVATION, type: "default" },
+  { label: NotificationFilter.MEMBERSHIP, type: "default" },
+  { label: NotificationFilter.POINT, type: "default" },
+  { label: NotificationFilter.NOTIFICATION, type: "default" },
 ]
 
 export const Notification = () => {
@@ -66,14 +45,38 @@ export const Notification = () => {
 
   const navigate = useNavigate()
 
-  const [activeFilter, setActiveFilter] = useState<string>("전체") // 초기값을 "전체"로 설정
+  const [activeFilter, setActiveFilter] = useState<NotificationFilter>(
+    NotificationFilter.ALL,
+  )
 
-  const handleFilterClick = (label: string) => {
-    setActiveFilter(label) // 클릭된 필터의 label을 active로 설정
+  const handleFilterClick = (label: NotificationFilter) => {
+    setActiveFilter(label)
   }
 
+  const {
+    data: notifications,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useNotifications({
+    page: 1,
+    searchType: activeFilter
+      ? getSearchType(activeFilter)
+      : NotificationSearchType.ALL,
+  })
+
+  const { observerTarget } = useIntersection({
+    onIntersect: () => {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage()
+      }
+    },
+  })
+
   return (
-    <Container className={"relative w-full bg-system-bg py-4 h-full"}>
+    <Container
+      className={"relative w-full bg-system-bg py-4 h-full overflow-y-scroll"}
+    >
       <div className="py-4 px-5 flex gap-2 justify-center">
         {filters.map((filter) => (
           <Filter
@@ -89,9 +92,17 @@ export const Notification = () => {
           />
         ))}
       </div>
-      {reserveCardsData.map((data) => (
-        <NotificationCard {...data} className="mt-4" />
-      ))}
+
+      <ul>
+        {(notifications?.pages.flatMap((page) => page) || []).map(
+          (notification, index) => (
+            <li key={index} className={`${index && "mt-4"}`}>
+              <NotificationCard notification={notification} />
+            </li>
+          ),
+        )}
+        <div ref={observerTarget} className={"h-4"} />
+      </ul>
     </Container>
   )
 }
