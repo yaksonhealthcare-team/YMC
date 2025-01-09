@@ -30,9 +30,9 @@ function EventDetailPage() {
       <div className="flex flex-col gap-6">
         <EventHeader event={event} />
         <div className="w-full h-[1px] bg-[#ECECEC] rounded-[1px]"></div>
-        {event.files.map(({ fileName }, index) => {
-          if (fileName.length === 0) return null
-          return <EventImage key={index} imageUrl={fileName} />
+        {event.files.map(({ fileurl }, index) => {
+          if (fileurl.length === 0) return null
+          return <EventImage key={index} imageUrl={fileurl} />
         })}
         <EventDescription event={event} />
       </div>
