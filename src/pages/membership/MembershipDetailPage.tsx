@@ -29,7 +29,11 @@ const MembershipDetailPage = () => {
     setShouldOpenBottomSheet,
     clear: clearMembershipOptions,
   } = useMembershipOptionsStore()
-  const { selectedOptions, selectedBranch } = useMembershipOptionsStore()
+  const {
+    selectedOptions,
+    selectedBranch,
+    clear: clearOptions,
+  } = useMembershipOptionsStore()
   const { data: membership, isLoading } = useMembershipDetail(id || "")
   const sortedOptions = useMemo(
     () =>
@@ -73,10 +77,13 @@ const MembershipDetailPage = () => {
         s_idx: Number(id!),
         ss_idx: Number(option.subscriptionIndex),
         b_idx: Number(selectedBranch.id),
+        // TODO: 전지점 회원권 케이스에 대해 API 수정 요청드림.
+        //  추후 변경: b_idx: selectedBranch ? Number(selectedBranch.id) : undefined와 비슷하게 변경해야 할 것 같습니다.
         brand_code: "001", // TODO: API 수정 요청드림
         amount: count,
       })),
     )
+    clearOptions()
     closeOverlay()
     navigate("/cart")
   }
