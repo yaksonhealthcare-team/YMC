@@ -16,6 +16,7 @@ import "swiper/swiper-bundle.css"
 import MembershipPlaceholderImage from "@assets/images/MembershipPlaceholderImage.jpg"
 import CartIcon from "@components/icons/CartIcon.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
+import { addCart } from "../../apis/cart.api.ts"
 
 const MembershipDetailPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -28,6 +29,7 @@ const MembershipDetailPage = () => {
     setShouldOpenBottomSheet,
     clear: clearMembershipOptions,
   } = useMembershipOptionsStore()
+  const { selectedOptions, selectedBranch } = useMembershipOptionsStore()
   const { data: membership, isLoading } = useMembershipDetail(id || "")
   const sortedOptions = useMemo(
     () =>
@@ -63,6 +65,22 @@ const MembershipDetailPage = () => {
     }
   }, [])
 
+  const handleAddItemsToCart = async () => {
+    if (!selectedBranch) return
+
+    await addCart(
+      selectedOptions.map(({ option, count }) => ({
+        s_idx: Number(id!),
+        ss_idx: Number(option.subscriptionIndex),
+        b_idx: Number(selectedBranch.id),
+        brand_code: "001", // TODO: API 수정 요청드림
+        amount: count,
+      })),
+    )
+    closeOverlay()
+    navigate("/cart")
+  }
+
   if (isLoading || !membership) return <div>Loading...</div>
 
   const handleOpenOptionsBottomSheet = () => {
@@ -70,6 +88,7 @@ const MembershipDetailPage = () => {
       <OptionsBottomSheetContent
         serviceType={membership.serviceType}
         options={sortedOptions || []}
+        onClickAddToCart={handleAddItemsToCart}
         onClickBranchSelect={() => {
           closeOverlay()
           setShouldOpenBottomSheet(true)

@@ -1,5 +1,5 @@
 import { Button } from "@components/Button"
-import { Number } from "@components/Number"
+import { Number as Counter } from "@components/Number"
 import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { useMemo, useState } from "react"
@@ -11,12 +11,14 @@ import { useMembershipOptionsStore } from "../../../hooks/useMembershipOptions.t
 interface OptionsBottomSheetContentProps {
   serviceType: string
   options: MembershipOption[]
+  onClickAddToCart: () => void
   onClickBranchSelect: () => void
 }
 
 const OptionsBottomSheetContent = ({
   serviceType,
   options,
+  onClickAddToCart,
   onClickBranchSelect,
 }: OptionsBottomSheetContentProps) => {
   const { selectedOptions, setSelectedOptions, selectedBranch } =
@@ -153,7 +155,7 @@ const OptionsBottomSheetContent = ({
                 />
               </div>
               <div className="flex justify-between items-center">
-                <Number
+                <Counter
                   count={count}
                   onClickMinus={() =>
                     handleCountChange(option.subscriptionIndex, count - 1)
@@ -207,6 +209,7 @@ const OptionsBottomSheetContent = ({
             sizeType="l"
             className="flex-1"
             disabled={selectedOptions.length === 0}
+            onClick={onClickAddToCart}
           >
             장바구니 담기
           </Button>
