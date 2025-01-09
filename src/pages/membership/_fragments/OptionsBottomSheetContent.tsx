@@ -6,12 +6,19 @@ import { useMemo, useState } from "react"
 import XCircleIcon from "@components/icons/XCircleIcon.tsx"
 import { MembershipOption } from "types/Membership"
 import clsx from "clsx"
-import { useMembershipOptionsStore } from "../../../hooks/useMembershipOptions.ts"
+import {
+  SelectedOption,
+  useMembershipOptionsStore,
+} from "../../../hooks/useMembershipOptions.ts"
+import { Branch } from "../../../types/Branch.ts"
 
 interface OptionsBottomSheetContentProps {
   serviceType: string
   options: MembershipOption[]
-  onClickAddToCart: () => void
+  onClickAddToCart: (
+    selectedOptions: SelectedOption[],
+    selectedBranch: Branch | null,
+  ) => void
   onClickBranchSelect: () => void
 }
 
@@ -209,7 +216,9 @@ const OptionsBottomSheetContent = ({
             sizeType="l"
             className="flex-1"
             disabled={selectedOptions.length === 0}
-            onClick={onClickAddToCart}
+            onClick={() => {
+              onClickAddToCart(selectedOptions, selectedBranch)
+            }}
           >
             장바구니 담기
           </Button>

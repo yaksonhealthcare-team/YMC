@@ -2,7 +2,7 @@ import { MembershipOption } from "../types/Membership.ts"
 import { Branch } from "../types/Branch.ts"
 import { create } from "zustand"
 
-interface SelectedOption {
+export interface SelectedOption {
   option: MembershipOption
   count: number
 }
