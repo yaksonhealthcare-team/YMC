@@ -24,7 +24,7 @@ export const updateCart = async (id: number, data: any) => {
   return await axiosClient.put(`/cart/${id}`, data)
 }
 
-export const fetchCartCount = async (): Promise<string> => {
+export const fetchCartCount = async (): Promise<number> => {
   const { data } = await axiosClient.get("/carts/count")
-  return data.total_count
+  return Number(data.total_count)
 }
