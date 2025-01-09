@@ -2,7 +2,11 @@ import { axiosClient } from "../queries/clients.ts"
 
 //TODO: 실제 Cart API 연동
 export const fetchCart = async () => {
-  return await axiosClient.get("/cart")
+  const { data } = await axiosClient.get<{
+    cartList: CartItem[]
+    cartList_summary: CartSummary
+  }>("/carts/carts")
+  return data
 }
 
 export const addCart = async (data: any) => {
