@@ -122,6 +122,14 @@ export const ProfileSetup = () => {
 
           console.log("회원가입 응답:", response)
 
+          if (
+            !response.body ||
+            !Array.isArray(response.body) ||
+            response.body.length === 0
+          ) {
+            throw new Error("회원가입 응답에 유효한 body가 없습니다")
+          }
+
           if (!response.body[0]?.accessToken) {
             throw new Error("회원가입 응답에 accessToken이 없습니다")
           }
@@ -172,15 +180,10 @@ export const ProfileSetup = () => {
       cleanup()
       navigate("/signup/complete")
     } catch (error) {
-      if (error instanceof Error) {
-        console.error("에러 발생:", error)
-        console.error("에러 상세:", {
-          response: (error as any).response?.data,
-          message: error.message,
-        })
-        showAlert(
-          (error as any).response?.data?.message || "회원가입에 실패했습니다",
-        )
+      if (error instanceof AxiosError) {
+        showAlert(error.response?.data?.message || "회원가입에 실패했습니다")
+      } else {
+        showAlert("회원가입에 실패했습니다")
       }
     }
   }
