@@ -94,35 +94,18 @@ export const loginWithNaver = async ({
 
 export const signupWithSocial = async ({
   provider,
-  accessToken,
   userInfo,
 }: {
   provider: string
-  accessToken: string
-  userInfo: {
-    name: string
-    email: string
-    mobileno: string
-    birthdate: string
-    gender: "M" | "F"
-    post: string
-    addr1: string
-    addr2: string
-    marketing_yn: "Y" | "N"
-    brand_code: string[]
-    nationalinfo: string
-    di: string
-    token_version_id: string
-    enc_data: string
-    integrity_value: string
-  }
+  userInfo: Record<string, unknown>
 }) => {
-  const response = await axiosClient.post("/auth/signup/social", {
+  const { data } = await axiosClient.post("/auth/signup/social", {
     thirdPartyType: provider,
-    SocialAccessToken: accessToken,
     ...userInfo,
   })
-  return response.data
+
+  console.log("소셜 회원가입 API 응답:", data)
+  return data
 }
 
 export const signup = async (userData: {
