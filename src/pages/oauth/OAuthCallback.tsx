@@ -4,6 +4,7 @@ import { useAuth } from "../../contexts/AuthContext"
 import { useOverlay } from "../../contexts/ModalContext"
 import { useLayout } from "../../contexts/LayoutContext"
 import { fetchUser, signinWithSocial } from "../../apis/auth.api"
+import { isValid } from "date-fns"
 
 type NextActionType = "signin" | "signup"
 
@@ -41,17 +42,13 @@ const OAuthCallback = () => {
         const decodedData = decodeURIComponent(jsonData)
         const parsedData = JSON.parse(decodedData)
 
-        console.log("📦 소셜 로그인 응답:", {
-          resultCode: parsedData.resultCode,
-          resultMessage: parsedData.resultMessage,
-          header: parsedData.Header[0],
-          body: parsedData.body[0],
-        })
-
         const socialData = parsedData.body[0]
 
-        console.log("🚀 소셜 로그인 응답:", {
+        console.log("🚀 소셜 로그인 응답 검증:", {
           socialData,
+          next_action_type: socialData.next_action_type,
+          signin: socialData.next_action_type === "signin",
+          signup: socialData.next_action_type === "signup",
         })
 
         // next_action_type에 따라 분기 처리
