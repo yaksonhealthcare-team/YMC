@@ -1,17 +1,5 @@
 import { QueryClient } from "@tanstack/react-query"
-import axios, { AxiosError } from "axios"
-
-interface ApiResponse<T> {
-  resultCode: string
-  resultMessage: string
-  resultCount: string
-  body: T
-}
-
-interface ErrorResponse {
-  resultCode: string
-  resultMessage: string
-}
+import axios from "axios"
 
 const queryClient = new QueryClient({
   defaultOptions: {

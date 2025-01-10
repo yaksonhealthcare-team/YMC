@@ -19,15 +19,6 @@ import { UserSignup } from "../../types/User.ts"
 import { loginWithSocial } from "../../apis/auth.api.ts"
 import { AxiosError } from "axios"
 
-interface CustomError extends Error {
-  response?: {
-    data?: {
-      resultCode?: string
-      message?: string
-    }
-  }
-}
-
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
@@ -105,12 +96,16 @@ export const ProfileSetup = () => {
 
       if (isSocialSignup) {
         try {
-          const { body } = await signupWithSocial({
+          console.log("소셜 회원가입 시도:", {
             provider: socialInfo.provider,
-            accessToken: socialInfo.socialAccessToken,
+            socialId: socialInfo.socialId,
+            accessToken: socialInfo.accessToken,
+          })
+
+          const response = await signupWithSocial({
+            provider: socialInfo.provider,
             userInfo: {
               ...socialInfo,
-              SocialAccessToken: socialInfo.socialId,
               id: socialInfo.id,
               name: signupData.name,
               email: signupData.email,
@@ -125,25 +120,40 @@ export const ProfileSetup = () => {
             },
           })
 
-          const user = await fetchUser(body[0].accessToken)
-          login({ user, token: body[0].accessToken })
+          console.log("회원가입 응답:", response.body)
+
+          if (
+            !response ||
+            !response.body ||
+            !Array.isArray(response.body) ||
+            response.body.length === 0
+          ) {
+            console.error("응답 구조:", response)
+            throw new Error("회원가입 응답에 유효한 body가 없습니다")
+          }
+
+          if (!response.body[0]?.accessToken) {
+            throw new Error("회원가입 응답에 accessToken이 없습니다")
+          }
+
+          const { accessToken } = await loginWithSocial({
+            provider: socialInfo.provider,
+            accessToken: response.body[0].accessToken,
+            socialId: socialInfo.socialId,
+          })
+
+          const user = await fetchUser(accessToken)
+          login({ user, token: accessToken })
           cleanup()
           navigate("/signup/complete")
-        } catch (error) {
-          const customError = error as CustomError
-          if (customError.response?.data?.resultCode === "23") {
-            const { accessToken } = await loginWithSocial({
-              provider: socialInfo.provider,
-              accessToken: socialInfo.socialId,
-            })
-
-            const user = await fetchUser(accessToken)
-            login({ user, token: accessToken })
-            cleanup()
-            navigate("/", { replace: true })
-            return
-          }
-          throw error
+          return
+        } catch (error: any) {
+          console.error("에러 발생:", error)
+          console.error("에러 상세:", {
+            response: error.response?.data,
+            message: error.message,
+          })
+          showAlert(error.response?.data?.message || "회원가입에 실패했습니다")
         }
       } else {
         await signup({

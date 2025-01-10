@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
 import { useOverlay } from "../../contexts/ModalContext"
 import { useLayout } from "../../contexts/LayoutContext"
-import { fetchUser } from "../../apis/auth.api"
+import { fetchUser, signinWithSocial } from "../../apis/auth.api"
 
 const OAuthCallback = () => {
   const { provider } = useParams()
@@ -25,67 +25,66 @@ const OAuthCallback = () => {
 
       try {
         const searchParams = new URLSearchParams(window.location.search)
-        console.log("🚀 URL Search Params:", Object.fromEntries(searchParams))
+        console.log("🚀 소셜 로그인 콜백 시작:", {
+          provider,
+          searchParams: Object.fromEntries(searchParams),
+        })
 
         const jsonData = searchParams.get("jsonData")
-        console.log("🚀 Raw jsonData:", jsonData)
-
-        // 소셜 로그인 응답 처리
-        if (jsonData) {
-          const decodedData = decodeURIComponent(jsonData)
-          console.log("🚀 Decoded jsonData:", decodedData)
-
-          const parsedData = JSON.parse(decodedData)
-          console.log("🚀 Parsed Response:", {
-            resultCode: parsedData.resultCode,
-            resultMessage: parsedData.resultMessage,
-            resultCount: parsedData.resultCount,
-            Header: parsedData.Header,
-            body: parsedData.body,
-          })
-
-          const socialData = parsedData.body[0]
-          console.log("🚀 Social Data:", {
-            accessToken: socialData.accessToken,
-            socialId: socialData.socialId,
-            email: socialData.email,
-            name: socialData.name,
-            mobileno: socialData.mobileno,
-            birthdate: socialData.birthdate,
-            gender: socialData.gender,
-          })
-
-          // 이미 가입된 회원 (accessToken 있음)
-          if (socialData.accessToken) {
-            console.log("✅ 이미 가입된 회원 - 자동 로그인")
-            const user = await fetchUser(socialData.accessToken)
-            login({ user, token: socialData.accessToken })
-            navigate("/", { replace: true })
-            return
-          }
-
-          // 미가입 회원 (socialId만 있음)
-          if (socialData.socialId) {
-            console.log("✅ 미가입 회원 - 회원가입 페이지로 이동")
-            const socialSignupInfo = {
-              provider: getProviderCode(provider),
-              id: parsedData.Header[0].id, // Header에서 id 값 가져오기
-              ...socialData, // 모든 응답 데이터 포함
-            }
-            console.log("🚀 Social Signup Info:", socialSignupInfo)
-
-            sessionStorage.setItem(
-              "socialSignupInfo",
-              JSON.stringify(socialSignupInfo),
-            )
-            navigate("/signup", { replace: true })
-            return
-          }
+        if (!jsonData) {
+          console.error("❌ jsonData가 없음")
+          throw new Error("인증 정보가 없습니다.")
         }
 
-        throw new Error("인증 정보가 없습니다.")
+        const decodedData = decodeURIComponent(jsonData)
+        const parsedData = JSON.parse(decodedData)
+
+        const socialData = parsedData.body[0]
+
+        console.log("🚀 소셜 로그인 응답 검증:", {
+          socialData,
+          next_action_type: socialData.next_action_type,
+          signin: socialData.next_action_type === "signin",
+          signup: socialData.next_action_type === "signup",
+        })
+
+        // next_action_type에 따라 분기 처리
+        if (socialData.next_action_type === "signup") {
+          console.log("ℹ️ 미가입 회원 - 회원가입 페이지로 이동")
+          const socialSignupInfo = {
+            provider: getProviderCode(provider),
+            id: parsedData.Header[0].id,
+            ...socialData,
+          }
+          console.log("📝 저장할 회원가입 정보:", socialSignupInfo)
+
+          sessionStorage.setItem(
+            "socialSignupInfo",
+            JSON.stringify(socialSignupInfo),
+          )
+          navigate("/signup", { replace: true })
+          return
+        }
+
+        // 이미 가입된 회원 (next_action_type === "signin")
+        console.log("✅ 이미 가입된 회원 - 로그인 시도")
+        try {
+          const accessToken = await signinWithSocial({
+            SocialAccessToken: socialData.SocialAccessToken,
+            socialId: socialData.socialId,
+            provider: getProviderCode(provider),
+          })
+          const user = await fetchUser(accessToken)
+          console.log("✅ 유저 정보 조회 성공:", user)
+          login({ user, token: accessToken })
+          navigate("/", { replace: true })
+          return
+        } catch (error) {
+          console.error("❌ 유저 정보 조회 실패:", error)
+          throw error
+        }
       } catch (error) {
-        console.error("❌ Error:", error)
+        console.error("❌ 소셜 로그인 처리 실패:", error)
         showAlert("로그인에 실패했습니다.")
         navigate("/login", { replace: true })
       }
