@@ -4,9 +4,6 @@ import { useAuth } from "../../contexts/AuthContext"
 import { useOverlay } from "../../contexts/ModalContext"
 import { useLayout } from "../../contexts/LayoutContext"
 import { fetchUser, signinWithSocial } from "../../apis/auth.api"
-import { isValid } from "date-fns"
-
-type NextActionType = "signin" | "signup"
 
 const OAuthCallback = () => {
   const { provider } = useParams()

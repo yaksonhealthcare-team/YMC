@@ -1,17 +1,5 @@
 import { QueryClient } from "@tanstack/react-query"
-import axios, { AxiosError } from "axios"
-
-interface ApiResponse<T> {
-  resultCode: string
-  resultMessage: string
-  resultCount: string
-  body: T
-}
-
-interface ErrorResponse {
-  resultCode: string
-  resultMessage: string
-}
+import axios from "axios"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -38,22 +26,5 @@ axiosClient.interceptors.request.use((config) => {
   }
   return config
 })
-
-// axiosClient.interceptors.response.use(
-//   (response) => {
-//     const { resultCode } = response.data
-
-//     // resultCode가 "00"이면 성공으로 처리
-//     if (resultCode === "00") {
-//       return response
-//     }
-
-//     // 그 외의 경우만 에러로 처리
-//     throw new Error(response.data.resultMessage || "API Error")
-//   },
-//   (error) => {
-//     return Promise.reject(error)
-//   },
-// )
 
 export { queryClient, axiosClient }
