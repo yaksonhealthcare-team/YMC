@@ -15,13 +15,18 @@ import CaretRigthIcon from "@assets/icons/CaretRightIcon.svg?react"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import clsx from "clsx"
 import { Button } from "@components/Button"
-import { useScheduleTimesQueries } from "../../../queries/useScheduleQueries.tsx"
+import {
+  useScheduleDateQueries,
+  useScheduleTimesQueries,
+} from "../../../queries/useScheduleQueries.tsx"
+import { TimeSlot } from "../../../types/Schedule.ts"
+import { mapTimesToTimeSlots } from "../../../utils/formatToTimeSlot.ts"
 
 interface DateAndTimeBottomSheetProps {
   onClose: () => void
   date: Dayjs | null
-  time: string | null
-  onSelect: (date: Dayjs | null, time: string | null) => void
+  time: TimeSlot | null
+  onSelect: (date: Dayjs | null, timeSlot: TimeSlot | null) => void
   membershipIndex?: number
   addServices?: number[]
 }
@@ -35,13 +40,13 @@ const DateAndTimeBottomSheet = ({
   addServices,
 }: DateAndTimeBottomSheetProps) => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(initialDate)
-  const [selectedTime, setSelectedTime] = useState<string | null>(initialTime)
+  const [selectedTime, setSelectedTime] = useState<TimeSlot | null>(initialTime)
 
   const handleDateSelect = (date: Dayjs | null) => {
     setSelectedDate(date)
   }
 
-  const handleTimeSelect = (time: string | null) => {
+  const handleTimeSelect = (time: TimeSlot | null) => {
     setSelectedTime(time)
   }
 
@@ -56,6 +61,8 @@ const DateAndTimeBottomSheet = ({
       <DatePickerSection
         date={selectedDate}
         handleDateSelect={handleDateSelect}
+        membershipIndex={membershipIndex}
+        addServices={addServices}
       />
       <div className="w-full h-px bg-gray-100" />
       {selectedDate ? (
@@ -189,7 +196,7 @@ const StyledDateCalendar = styled(DateCalendar)<DateCalendarProps<Dayjs>>(
     // 주말 색상
     "& .MuiPickersDay-root:nth-child(1)": {
       // 일요일
-      color: theme.palette.grey[300],
+      // color: theme.palette.grey[300],
     },
   }),
 )
@@ -197,18 +204,41 @@ const StyledDateCalendar = styled(DateCalendar)<DateCalendarProps<Dayjs>>(
 interface DatePickerSectionProps {
   date: Dayjs | null
   handleDateSelect: (date: Dayjs | null) => void
+  membershipIndex?: number
+  addServices?: number[]
 }
 
 const DatePickerSection = ({
   date,
   handleDateSelect,
+  membershipIndex,
+  addServices,
 }: DatePickerSectionProps) => {
   const isDateDisabled = (date: Dayjs) => {
-    const today = dayjs()
-    return (
-      date.isBefore(today, "day") || date.isAfter(today.add(2, "month"), "day")
-    )
+    if (!scheduleDate) return true
+
+    const scheduledDates = scheduleDate.map((item) => item.dates)
+
+    return !scheduledDates.includes(date.format("YYYY-MM-DD"))
   }
+
+  const [currentYearMonth, setCurrentYearMonth] = useState<Dayjs>(dayjs())
+
+  const handleMonthChange = (newDate: Dayjs) => {
+    setCurrentYearMonth(newDate)
+  }
+
+  const { data: scheduleDate, isLoading } = useScheduleDateQueries({
+    membershipIndex,
+    searchDate: currentYearMonth,
+    addServices,
+  })
+
+  useEffect(() => {
+    if (isLoading) {
+      return
+    }
+  }, [scheduleDate, isLoading])
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
@@ -224,6 +254,7 @@ const DatePickerSection = ({
         slots={{
           calendarHeader: CalendarHeader,
         }}
+        onMonthChange={handleMonthChange}
       />
     </LocalizationProvider>
   )
@@ -271,32 +302,9 @@ const CalendarHeader = (props: PickersCalendarHeaderProps<Dayjs>) => {
   )
 }
 
-interface TimeSlot {
-  time: string
-  disabled?: boolean
-}
-
-const timeSlots: TimeSlot[] = [
-  { time: "오전 10:00", disabled: true },
-  { time: "오전 10:30", disabled: true },
-  { time: "오전 11:00" },
-  { time: "오전 11:30" },
-  { time: "오후 12:00" },
-  { time: "오후 12:30" },
-  { time: "오후 1:00" },
-  { time: "오후 1:30" },
-  { time: "오후 2:00" },
-  { time: "오후 2:30" },
-  { time: "오후 3:00" },
-  { time: "오후 3:30" },
-  { time: "오후 4:00", disabled: true },
-  { time: "오후 4:30", disabled: true },
-  { time: "오후 5:00" },
-]
-
 interface TimePickerSectionProps {
-  selectedTime: string | null
-  handleTimeSelect: (time: string | null) => void
+  selectedTime: TimeSlot | null
+  handleTimeSelect: (timeSlot: TimeSlot | null) => void
   membershipIndex?: number
   addServices?: number[]
   selectedDate?: Dayjs
@@ -315,12 +323,14 @@ const TimePickerSection = ({
     searchDate: selectedDate,
   })
 
+  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([])
+
   useEffect(() => {
-    if (isLoading) {
+    if (isLoading || !times) {
       return
     }
 
-    console.log(times)
+    setTimeSlots(mapTimesToTimeSlots(times))
   }, [isLoading])
 
   return (
@@ -329,11 +339,10 @@ const TimePickerSection = ({
         <Button
           key={slot.time}
           fullCustom
-          // disabled={slot.disabled}
-          onClick={() => handleTimeSelect(slot.time)}
+          onClick={() => handleTimeSelect(slot)}
           className={clsx(
             "h-10 px-2.5 rounded-lg text-sm font-normal flex justify-center items-center whitespace-nowrap",
-            selectedTime === slot.time
+            selectedTime?.time === slot.time
               ? "!bg-primary-300 !text-white !border-none hover:!bg-primary-300"
               : "!bg-white !border !border-solid !border-gray-200 hover:!bg-[#f7f7f7]",
             "!text-gray-700",

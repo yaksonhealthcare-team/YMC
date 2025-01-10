@@ -13,3 +13,8 @@ export interface ScheduleDate {
 export interface ScheduleTime {
   times: string
 }
+
+export interface TimeSlot {
+  time: string
+  code: string
+}

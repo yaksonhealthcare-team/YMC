@@ -8,7 +8,7 @@ import dayjs from "dayjs"
 
 export const fetchScheduleDates = async (
   filters: ScheduleFilters,
-): Promise<ScheduleDate> => {
+): Promise<ScheduleDate[]> => {
   const { data } = await axiosClient.get("/schedules/date", {
     params: {
       mp_idx: filters.membershipIndex,
@@ -25,7 +25,7 @@ export const fetchScheduleDates = async (
 
 export const fetchScheduleTimes = async (
   filters: ScheduleFilters,
-): Promise<ScheduleTime> => {
+): Promise<ScheduleTime[]> => {
   const { data } = await axiosClient.get("/schedules/times", {
     params: {
       mp_idx: filters.membershipIndex,

@@ -26,12 +26,13 @@ import clsx from "clsx"
 import CheckIcon from "@components/icons/CheckIcon"
 import { ClockIcon } from "@mui/x-date-pickers"
 import { useAdditionalManagement } from "../../queries/useMembershipQueries.tsx"
+import { TimeSlot } from "../../types/Schedule.ts"
 
 interface FormDataType {
   item: undefined | number
   branch: undefined | number
   date: null | Dayjs
-  time: null | string
+  timeSlot: null | TimeSlot
   request: string
   additionalServices: AdditionalManagement[]
 }
@@ -87,7 +88,7 @@ const ReservationFormPage = () => {
     item: undefined,
     branch: undefined,
     date: null,
-    time: null,
+    timeSlot: null,
     request: "",
     additionalServices: [],
   })
@@ -105,14 +106,18 @@ const ReservationFormPage = () => {
       <DateAndTimeBottomSheet
         onClose={closeOverlay}
         date={data.date}
-        time={data.time}
-        onSelect={(date, time) => {
+        time={data.timeSlot}
+        onSelect={(date, timeSlot) => {
           setData((prev) => ({
             ...prev,
             date,
-            time,
+            timeSlot,
           }))
         }}
+        membershipIndex={data.item}
+        addServices={data.additionalServices.map((item) =>
+          parseInt(item.serviceIndex),
+        )}
       />,
       {
         height: "large",
@@ -321,8 +326,8 @@ const ReservationFormPage = () => {
           <CustomInputButton
             label="예약 일시"
             value={
-              data.date && data.time
-                ? `${data.date.format("YYYY.MM.DD")} ${data.time}`
+              data.date && data.timeSlot
+                ? `${data.date.format("YYYY.MM.DD")} ${data.timeSlot.time}`
                 : ""
             }
             placeholder="예약 날짜를 선택해주세요."
