@@ -102,13 +102,19 @@ export const signupWithSocial = async ({
   provider: string
   userInfo: Record<string, unknown>
 }) => {
-  const { data } = await axiosClient.post("/auth/signup/social", {
+  const response = await axiosClient.post("/auth/signup/social", {
     thirdPartyType: provider,
     ...userInfo,
   })
 
-  console.log("소셜 회원가입 API 응답:", data)
-  return data
+  // BOM 제거
+  const cleanedData = response.data.replace(/^\uFEFF/, "")
+
+  // JSON 파싱
+  const parsedData = JSON.parse(cleanedData)
+
+  console.log("소셜 회원가입 API 응답:", parsedData)
+  return parsedData
 }
 
 export const signup = async (userData: {
