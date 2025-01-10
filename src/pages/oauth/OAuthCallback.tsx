@@ -3,7 +3,9 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
 import { useOverlay } from "../../contexts/ModalContext"
 import { useLayout } from "../../contexts/LayoutContext"
-import { fetchUser } from "../../apis/auth.api"
+import { fetchUser, signinWithSocial } from "../../apis/auth.api"
+
+type NextActionType = "signin" | "signup"
 
 const OAuthCallback = () => {
   const { provider } = useParams()
@@ -49,12 +51,17 @@ const OAuthCallback = () => {
         const socialData = parsedData.body[0]
 
         // 이미 가입된 회원 (accessToken 있음)
-        if (socialData.accessToken) {
+        if (socialData.next_action_type === "signin") {
           console.log("✅ 이미 가입된 회원 - 로그인 시도")
           try {
-            const user = await fetchUser(socialData.accessToken)
+            const accessToken = await signinWithSocial({
+              SocialAccessToken: socialData.SocialAccessToken,
+              socialId: socialData.socialId,
+              provider: getProviderCode(provider),
+            })
+            const user = await fetchUser(accessToken)
             console.log("✅ 유저 정보 조회 성공:", user)
-            login({ user, token: socialData.accessToken })
+            login({ user, token: accessToken })
             navigate("/", { replace: true })
             return
           } catch (error) {

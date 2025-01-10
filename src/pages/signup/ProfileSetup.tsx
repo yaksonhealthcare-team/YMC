@@ -129,6 +129,7 @@ export const ProfileSetup = () => {
           const { accessToken } = await loginWithSocial({
             provider: socialInfo.provider,
             accessToken: response.body[0].accessToken,
+            socialId: socialInfo.socialId,
           })
 
           const user = await fetchUser(accessToken)
@@ -171,10 +172,15 @@ export const ProfileSetup = () => {
       cleanup()
       navigate("/signup/complete")
     } catch (error) {
-      if (error instanceof AxiosError) {
-        showAlert(error.response?.data?.message || "회원가입에 실패했습니다")
-      } else {
-        showAlert("회원가입에 실패했습니다")
+      if (error instanceof Error) {
+        console.error("에러 발생:", error)
+        console.error("에러 상세:", {
+          response: (error as any).response?.data,
+          message: error.message,
+        })
+        showAlert(
+          (error as any).response?.data?.message || "회원가입에 실패했습니다",
+        )
       }
     }
   }

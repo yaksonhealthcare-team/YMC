@@ -57,13 +57,16 @@ export const updateUserProfile = async (data: UpdateUserProfileRequest) => {
 export const loginWithSocial = async ({
   provider,
   accessToken,
+  socialId,
 }: {
   provider: "K" | "N" | "G" | "A"
   accessToken: string
+  socialId: string
 }) => {
   const { data } = await axiosClient.post("/auth/signin/social", {
     thirdPartyType: provider,
     SocialAccessToken: accessToken,
+    socialId: socialId,
     device_token: "TODO: FCM 토큰 추가",
     device_type: "TODO: 디바이스 타입 추가",
   })
@@ -123,4 +126,24 @@ export const signup = async (userData: {
 }) => {
   const { data } = await axiosClient.post("/auth/signup/email", userData)
   return data
+}
+
+export const signinWithSocial = async ({
+  SocialAccessToken,
+  socialId,
+  provider,
+}: {
+  SocialAccessToken: string
+  socialId: string
+  provider: "K" | "N" | "G" | "A"
+}): Promise<string> => {
+  const { data } = await axiosClient.post("/auth/signin/social", {
+    thirdPartyType: provider,
+    socialId: socialId,
+    device_token: "TODO: FCM 토큰 추가",
+    device_type: "TODO: 디바이스 타입 추가",
+    SocialAccessToken: SocialAccessToken,
+  })
+
+  return data.body[0].accessToken
 }
