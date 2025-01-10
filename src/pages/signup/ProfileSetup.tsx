@@ -120,13 +120,15 @@ export const ProfileSetup = () => {
             },
           })
 
-          console.log("회원가입 응답:", response)
+          console.log("회원가입 응답:", response.body)
 
           if (
+            !response ||
             !response.body ||
             !Array.isArray(response.body) ||
             response.body.length === 0
           ) {
+            console.error("응답 구조:", response)
             throw new Error("회원가입 응답에 유효한 body가 없습니다")
           }
 
