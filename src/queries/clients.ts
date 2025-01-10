@@ -41,16 +41,27 @@ axiosClient.interceptors.request.use((config) => {
 
 axiosClient.interceptors.response.use(
   (response) => {
-    const data = response.data as ApiResponse<unknown>
+    let parsedData
 
-    // 성공이 아닌 경우에도 에러 처리
+    try {
+      parsedData =
+        typeof response.data === "string"
+          ? JSON.parse(response.data.replace(/^\uFEFF/, ""))
+          : response.data
+    } catch (error) {
+      throw new Error("Response data is not a valid JSON string")
+    }
+
+    const data = parsedData as ApiResponse<unknown>
+
     if (data.resultCode !== "00") {
-      console.log("error: ", response)
       throw new Error(data.resultMessage)
     }
 
-    console.log("success: ", response)
-    return response
+    return {
+      ...response,
+      data: data,
+    }
   },
   async (error: AxiosError<ErrorResponse>) => {
     const errorCode = error.response?.data.resultCode
