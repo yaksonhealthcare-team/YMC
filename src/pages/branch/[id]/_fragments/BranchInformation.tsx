@@ -106,7 +106,11 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
                   latitude: branch.location.latitude,
                   longitude: branch.location.longitude,
                 }}
-                options={{ showCurrentLocationButton: false }}
+                branches={[]}
+                options={{
+                  showCurrentLocation: false,
+                  showCurrentLocationButton: false,
+                }}
               />
             </div>
             <IconSection icon={<PinIcon />}>

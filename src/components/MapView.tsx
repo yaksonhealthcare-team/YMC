@@ -4,17 +4,31 @@ import CrosshairIcon from "@assets/icons/CrosshairIcon.svg?react"
 import { Branch } from "../types/Branch.ts"
 import { useNaverMapBranchMarkers } from "../hooks/useNaverMapBranchMarkers.tsx"
 import { getCurrentLocation } from "../utils/getCurrentLocation.ts"
+import clsx from "clsx"
 
 interface MapViewProps {
   center?: Coordinate
   branches?: Branch[]
   options?: {
     showCurrentLocationButton?: boolean
+    showCurrentLocation?: boolean
     onSelectBranch?: (branch: Branch | null) => void
     onMoveMap?: (center: Coordinate) => void
+    currentLocationButtonClassName?: string
   }
 }
 
+/**
+ * NOTE @Seyoung
+ * Please add `branches={[]}` to MapView's props explicitly if you encounter an infinite call of useEffect
+ *
+ * example:
+ * ```tsx
+ * <MapView />
+ * //to
+ * <MapView branches={[]} />
+ * ```
+ */
 const MapView = ({
   center,
   branches = [],
@@ -34,6 +48,7 @@ const MapView = ({
     branches,
     selectedBranchId: selectedBranch?.id,
     options: {
+      showCurrentLocationMarker: options?.showCurrentLocation,
       onClickMarker: (branch) => {
         setSelectedBranch(branch)
         options?.onSelectBranch?.(branch)
@@ -62,21 +77,23 @@ const MapView = ({
       zoom: 14,
     })
 
-    getCurrentLocation({
-      onSuccess: (coords) => {
-        setIsMapMoved((prevIsMoved) => {
-          if (!prevIsMoved && mapInstance.current) {
-            mapInstance.current.setCenter(
-              new naver.maps.LatLng(coords.latitude, coords.longitude),
-            )
-            mapInstance.current.setZoom(15)
-          }
-          setCurrentLocation(coords)
+    if (options?.showCurrentLocation) {
+      getCurrentLocation({
+        onSuccess: (coords) => {
+          setIsMapMoved((prevIsMoved) => {
+            if (!prevIsMoved && mapInstance.current) {
+              mapInstance.current.setCenter(
+                new naver.maps.LatLng(coords.latitude, coords.longitude),
+              )
+              mapInstance.current.setZoom(15)
+            }
+            setCurrentLocation(coords)
 
-          return prevIsMoved
-        })
-      },
-    })
+            return prevIsMoved
+          })
+        },
+      })
+    }
 
     return () => {
       mapInstance.current = null
@@ -97,6 +114,7 @@ const MapView = ({
         mapInstance.current.setZoom(15)
         setCurrentLocation(coords)
         updateCurrentLocationMarker(coords)
+        options?.onMoveMap?.(coords)
       },
     })
   }
@@ -105,7 +123,10 @@ const MapView = ({
     <div id={"map"} ref={mapRef} className={"relative w-full h-full"}>
       {options?.showCurrentLocationButton && (
         <button
-          className={`absolute right-5 bottom-10 z-10 w-10 h-10 bg-white rounded-full items-center justify-center flex shadow-xl ${selectedBranch ? "transition-transform -translate-y-32 duration-300" : "transition-transform translate-y-0 duration-300"}`}
+          className={clsx(
+            `absolute right-5 bottom-10 z-10 w-10 h-10 bg-white rounded-full items-center justify-center flex shadow-xl ${selectedBranch ? "transition-transform -translate-y-32 duration-300" : "transition-transform translate-y-0 duration-300"}`,
+            options.currentLocationButtonClassName || "",
+          )}
           onClick={moveToCurrentLocation}
         >
           <CrosshairIcon />

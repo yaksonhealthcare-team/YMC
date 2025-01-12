@@ -45,11 +45,13 @@ const BranchSearchResultList = ({
 
   return (
     <ul className={"divide-y divide-gray-100 px-5 overflow-y-scroll"}>
-      {(branches?.pages.flatMap((page) => page) || []).map((branch, index) => (
-        <li key={index} className={"py-4"} onClick={() => onSelect(branch)}>
-          <BranchCard name={branch.name} address={branch.address} />
-        </li>
-      ))}
+      {(branches?.pages.flatMap(({ branches }) => branches) || []).map(
+        (branch, index) => (
+          <li key={index} className={"py-4"} onClick={() => onSelect(branch)}>
+            <BranchCard name={branch.name} address={branch.address} />
+          </li>
+        ),
+      )}
       <div ref={observerTarget} className={"h-4"} />
     </ul>
   )
