@@ -96,12 +96,6 @@ export const ProfileSetup = () => {
 
       if (isSocialSignup) {
         try {
-          console.log("소셜 회원가입 시도:", {
-            provider: socialInfo.provider,
-            socialId: socialInfo.socialId,
-            accessToken: socialInfo.accessToken,
-          })
-
           const response = await signupWithSocial({
             provider: socialInfo.provider,
             userInfo: {
@@ -120,15 +114,12 @@ export const ProfileSetup = () => {
             },
           })
 
-          console.log("회원가입 응답:", response.body)
-
           if (
             !response ||
             !response.body ||
             !Array.isArray(response.body) ||
             response.body.length === 0
           ) {
-            console.error("응답 구조:", response)
             throw new Error("회원가입 응답에 유효한 body가 없습니다")
           }
 
@@ -148,11 +139,6 @@ export const ProfileSetup = () => {
           navigate("/signup/complete")
           return
         } catch (error: any) {
-          console.error("에러 발생:", error)
-          console.error("에러 상세:", {
-            response: error.response?.data,
-            message: error.message,
-          })
           showAlert(error.response?.data?.message || "회원가입에 실패했습니다")
         }
       } else {

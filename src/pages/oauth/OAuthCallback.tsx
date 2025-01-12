@@ -25,14 +25,9 @@ const OAuthCallback = () => {
 
       try {
         const searchParams = new URLSearchParams(window.location.search)
-        console.log("🚀 소셜 로그인 콜백 시작:", {
-          provider,
-          searchParams: Object.fromEntries(searchParams),
-        })
 
         const jsonData = searchParams.get("jsonData")
         if (!jsonData) {
-          console.error("❌ jsonData가 없음")
           throw new Error("인증 정보가 없습니다.")
         }
 
@@ -41,22 +36,13 @@ const OAuthCallback = () => {
 
         const socialData = parsedData.body[0]
 
-        console.log("🚀 소셜 로그인 응답 검증:", {
-          socialData,
-          next_action_type: socialData.next_action_type,
-          signin: socialData.next_action_type === "signin",
-          signup: socialData.next_action_type === "signup",
-        })
-
         // next_action_type에 따라 분기 처리
         if (socialData.next_action_type === "signup") {
-          console.log("ℹ️ 미가입 회원 - 회원가입 페이지로 이동")
           const socialSignupInfo = {
             provider: getProviderCode(provider),
             id: parsedData.Header[0].id,
             ...socialData,
           }
-          console.log("📝 저장할 회원가입 정보:", socialSignupInfo)
 
           sessionStorage.setItem(
             "socialSignupInfo",
@@ -67,7 +53,6 @@ const OAuthCallback = () => {
         }
 
         // 이미 가입된 회원 (next_action_type === "signin")
-        console.log("✅ 이미 가입된 회원 - 로그인 시도")
         try {
           const accessToken = await signinWithSocial({
             SocialAccessToken: socialData.SocialAccessToken,
@@ -75,16 +60,13 @@ const OAuthCallback = () => {
             provider: getProviderCode(provider),
           })
           const user = await fetchUser(accessToken)
-          console.log("✅ 유저 정보 조회 성공:", user)
           login({ user, token: accessToken })
           navigate("/", { replace: true })
           return
         } catch (error) {
-          console.error("❌ 유저 정보 조회 실패:", error)
           throw error
         }
       } catch (error) {
-        console.error("❌ 소셜 로그인 처리 실패:", error)
         showAlert("로그인에 실패했습니다.")
         navigate("/login", { replace: true })
       }

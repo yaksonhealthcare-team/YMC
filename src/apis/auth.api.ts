@@ -113,7 +113,6 @@ export const signupWithSocial = async ({
   // JSON 파싱
   const parsedData = JSON.parse(cleanedData)
 
-  console.log("소셜 회원가입 API 응답:", parsedData)
   return parsedData
 }
 
