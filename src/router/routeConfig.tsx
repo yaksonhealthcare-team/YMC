@@ -64,6 +64,7 @@ import ProfileChangePhoneNumber from "../pages/editProfile/ProfileChangePhoneNum
 import PaymentCompletePage from "../pages/payment/PaymentCompletePage.tsx"
 import { BrandDetailPage } from "../pages/brand/BrandDetail.tsx"
 import OAuthCallback from "../pages/oauth/OAuthCallback"
+import LocationPickerMap from "../pages/branch/_fragments/LocationPickerMap.tsx"
 
 interface RouteConfig {
   path: string
@@ -374,6 +375,10 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/branch/location",
     element: <LocationSettings />,
+  },
+  {
+    path: "/branch/location/picker",
+    element: <LocationPickerMap />,
   },
   {
     path: "/branch/search",

@@ -53,7 +53,7 @@ const useGeolocation = (options: GeolocationOptions = {}): GeolocationState => {
       errorHandler,
       defaultOptions,
     )
-  }, [options])
+  }, [])
 
   return state
 }

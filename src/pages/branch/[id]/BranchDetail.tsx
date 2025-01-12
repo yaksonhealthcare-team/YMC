@@ -15,7 +15,7 @@ import BranchInformation from "./_fragments/BranchInformation.tsx"
 import ProfileCard from "@components/ProfileCard.tsx"
 import BranchDetailBottomActionBar from "./_fragments/BranchDetailBottomActionBar.tsx"
 import { useBranch } from "../../../queries/useBranchQueries.tsx"
-import { INITIAL_CENTER } from "@constants/LocationConstants.ts"
+import { DEFAULT_COORDINATE } from "../../../types/Coordinate.ts"
 
 const branchDetailTabs = ["therapists", "programs", "information"] as const
 type BranchDetailTab = (typeof branchDetailTabs)[number]
@@ -33,8 +33,8 @@ const BranchDetail = () => {
   const [selectedTab, setSelectedTab] = useState<string>("therapists")
   // TODO: INITIAL_CENTER에 현재위치 반영하기
   const { data: branch, isLoading } = useBranch(id!, {
-    latitude: INITIAL_CENTER.lat,
-    longitude: INITIAL_CENTER.lng,
+    latitude: DEFAULT_COORDINATE.latitude,
+    longitude: DEFAULT_COORDINATE.longitude,
   })
 
   useEffect(() => {

@@ -10,6 +10,8 @@ interface SearchFieldProps {
   onChange?: ChangeEventHandler<HTMLInputElement>
   disabled?: boolean
   onClear?: () => void
+  onFocus?: () => void
+  onBlur?: () => void
 }
 
 export const SearchField = ({
@@ -18,11 +20,15 @@ export const SearchField = ({
   onChange,
   disabled,
   onClear,
+  onFocus,
+  onBlur,
 }: SearchFieldProps) => (
   <TextField
     placeholder={placeholder}
     value={value}
     onChange={onChange}
+    onFocus={onFocus}
+    onBlur={onBlur}
     disabled={disabled}
     variant="outlined"
     fullWidth

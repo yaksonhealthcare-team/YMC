@@ -17,7 +17,7 @@ export const useBranches = (filters: BranchFilters) =>
     queryFn: ({ pageParam = 1 }) =>
       fetchBranches({ ...filters, page: pageParam }),
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === 0) return undefined
+      if (lastPage.branches.length === 0) return undefined
       return allPages.length + 1
     },
   })

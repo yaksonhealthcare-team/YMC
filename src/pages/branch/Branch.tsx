@@ -1,6 +1,5 @@
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useEffect, useState } from "react"
-import { Header } from "@components/Header.tsx"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
 import BranchFilterBottomSheet, {
   FilterItem,
@@ -11,13 +10,20 @@ import { SearchFloatingButton } from "@components/SearchFloatingButton.tsx"
 import { useLocation, useNavigate } from "react-router-dom"
 import BranchMapSection from "./_fragments/BranchMapSection.tsx"
 import { useBranches } from "../../queries/useBranchQueries.tsx"
-import { INITIAL_CENTER } from "@constants/LocationConstants.ts"
 import { Branch as BranchType } from "../../types/Branch.ts"
 import { useBrands } from "../../queries/useBrandQueries.tsx"
+import useGeolocation from "../../hooks/useGeolocation.tsx"
+import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
+import SearchIcon from "@components/icons/SearchIcon"
+import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
+import { useBranchLocationSelect } from "../../hooks/useBranchLocationSelect.ts"
+import { DEFAULT_COORDINATE } from "../../types/Coordinate.ts"
 
 const Branch = () => {
   const { setHeader, setNavigation } = useLayout()
   const { openBottomSheet, closeOverlay } = useOverlay()
+  const { location: currentLocation } = useGeolocation()
+  const { location: selectedLocation } = useBranchLocationSelect()
   const [screen, setScreen] = useState<"list" | "map">("list")
   const [selectedBranch, setSelectedBranch] = useState<BranchType | null>(null)
   const [selectedFilter, setSelectedFilter] = useState<{
@@ -32,17 +38,26 @@ const Branch = () => {
   // TODO: Category API 추가되면 여기에 useCategory로 추가하기 (+ useEffect dependencies)
 
   const {
-    data: branches,
+    data: result,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     refetch,
   } = useBranches({
-    latitude: INITIAL_CENTER.lat,
-    longitude: INITIAL_CENTER.lng,
+    latitude: (
+      selectedLocation?.coords ??
+      (currentLocation || DEFAULT_COORDINATE)
+    ).latitude,
+    longitude: (
+      selectedLocation?.coords ??
+      (currentLocation || DEFAULT_COORDINATE)
+    ).longitude,
     brandCode: selectedFilter.brand?.code,
     category: selectedFilter.category?.code,
   })
+
+  const address = result?.pages[0].address || "서울 강남구 테헤란로78길 14-10"
+  const branches = result?.pages.flatMap(({ branches }) => branches) || []
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -81,6 +96,7 @@ const Branch = () => {
       component: (
         <div>
           <BranchHeader
+            address={selectedLocation?.address ?? address}
             onBack={handleNavigateToBack}
             onClickLocation={handleNavigateToLocationSettings}
             onSearch={handleNavigateToBranchSearch}
@@ -110,14 +126,14 @@ const Branch = () => {
     setNavigation({
       display: false,
     })
-  }, [selectedFilter, brands])
+  }, [selectedFilter, brands, address])
 
   const renderScreen = () => {
     switch (screen) {
       case "list":
         return (
           <BranchFilterList
-            branches={branches?.pages.flatMap((page) => page) || []}
+            branches={branches}
             onIntersect={() => {
               if (hasNextPage && !isFetchingNextPage) {
                 fetchNextPage()
@@ -160,22 +176,33 @@ const Branch = () => {
 }
 
 const BranchHeader = ({
+  address,
   onBack,
   onSearch,
   onClickLocation,
 }: {
+  address: string
   onBack: () => void
   onSearch: () => void
   onClickLocation: () => void
 }) => {
   return (
-    <Header
-      type="location"
-      title="서울 강남구 테헤란로78길 14-10"
-      onClickLocation={onClickLocation}
-      onClickLeft={onBack}
-      onClickRight={onSearch}
-    />
+    <div
+      className={"w-full justify-between flex px-5 py-3.5 bg-white h-12 gap-4"}
+    >
+      <button onClick={onBack}>
+        <CaretLeftIcon className={"w-5 h-5"} />
+      </button>
+      <button className={"flex gap-2 items-center"} onClick={onClickLocation}>
+        <p className={"font-sb text-14px overflow-ellipsis line-clamp-1"}>
+          {address}
+        </p>
+        <CaretDownIcon className={"w-4 h-4"} />
+      </button>
+      <button onClick={onSearch}>
+        <SearchIcon className={"w-6 h-6"} />
+      </button>
+    </div>
   )
 }
 
