@@ -15,7 +15,12 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/swiper-bundle.css"
 import MembershipPlaceholderImage from "@assets/images/MembershipPlaceholderImage.jpg"
 import CartIcon from "@components/icons/CartIcon.tsx"
-import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
+import {
+  SelectedOption,
+  useMembershipOptionsStore,
+} from "../../hooks/useMembershipOptions.ts"
+import { addCart } from "../../apis/cart.api.ts"
+import { Branch } from "../../types/Branch.ts"
 
 const MembershipDetailPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -28,6 +33,7 @@ const MembershipDetailPage = () => {
     setShouldOpenBottomSheet,
     clear: clearMembershipOptions,
   } = useMembershipOptionsStore()
+  const { clear: clearOptions } = useMembershipOptionsStore()
   const { data: membership, isLoading } = useMembershipDetail(id || "")
   const sortedOptions = useMemo(
     () =>
@@ -42,18 +48,19 @@ const MembershipDetailPage = () => {
   useEffect(() => {
     setHeader({
       display: true,
-      title: "",
-      left: (
-        <div
-          onClick={() => {
-            clearMembershipOptions()
-            navigate(-1)
-          }}
-        >
-          <CaretLeftIcon className="w-5 h-5" />
+      component: (
+        <div className={"flex items-center justify-between px-5 py-3 h-[48px]"}>
+          <div
+            onClick={() => {
+              clearMembershipOptions()
+              navigate(-1)
+            }}
+          >
+            <CaretLeftIcon className={"w-5 h-5"} />
+          </div>
+          <CartIcon />
         </div>
       ),
-      right: <CartIcon />,
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
@@ -63,6 +70,28 @@ const MembershipDetailPage = () => {
     }
   }, [])
 
+  const handleAddItemsToCart = async (
+    selectedOptions: SelectedOption[],
+    selectedBranch: Branch | null,
+  ) => {
+    if (!selectedBranch) return
+
+    await addCart(
+      selectedOptions.map(({ option, count }) => ({
+        s_idx: Number(id!),
+        ss_idx: Number(option.subscriptionIndex),
+        b_idx: Number(selectedBranch.id),
+        // TODO: 전지점 회원권 케이스에 대해 API 수정 요청드림.
+        //  추후 변경: b_idx: selectedBranch ? Number(selectedBranch.id) : undefined와 비슷하게 변경해야 할 것 같습니다.
+        brand_code: selectedBranch.brandCode,
+        amount: count,
+      })),
+    )
+    clearOptions()
+    closeOverlay()
+    navigate("/cart")
+  }
+
   if (isLoading || !membership) return <div>Loading...</div>
 
   const handleOpenOptionsBottomSheet = () => {
@@ -70,6 +99,7 @@ const MembershipDetailPage = () => {
       <OptionsBottomSheetContent
         serviceType={membership.serviceType}
         options={sortedOptions || []}
+        onClickAddToCart={handleAddItemsToCart}
         onClickBranchSelect={() => {
           closeOverlay()
           setShouldOpenBottomSheet(true)

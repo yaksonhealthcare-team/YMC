@@ -1,22 +1,31 @@
 import { Button } from "@components/Button"
-import { Number } from "@components/Number"
+import { Number as Counter } from "@components/Number"
 import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { useMemo, useState } from "react"
 import XCircleIcon from "@components/icons/XCircleIcon.tsx"
 import { MembershipOption } from "types/Membership"
 import clsx from "clsx"
-import { useMembershipOptionsStore } from "../../../hooks/useMembershipOptions.ts"
+import {
+  SelectedOption,
+  useMembershipOptionsStore,
+} from "../../../hooks/useMembershipOptions.ts"
+import { Branch } from "../../../types/Branch.ts"
 
 interface OptionsBottomSheetContentProps {
   serviceType: string
   options: MembershipOption[]
+  onClickAddToCart: (
+    selectedOptions: SelectedOption[],
+    selectedBranch: Branch | null,
+  ) => void
   onClickBranchSelect: () => void
 }
 
 const OptionsBottomSheetContent = ({
   serviceType,
   options,
+  onClickAddToCart,
   onClickBranchSelect,
 }: OptionsBottomSheetContentProps) => {
   const { selectedOptions, setSelectedOptions, selectedBranch } =
@@ -153,7 +162,7 @@ const OptionsBottomSheetContent = ({
                 />
               </div>
               <div className="flex justify-between items-center">
-                <Number
+                <Counter
                   count={count}
                   onClickMinus={() =>
                     handleCountChange(option.subscriptionIndex, count - 1)
@@ -207,6 +216,9 @@ const OptionsBottomSheetContent = ({
             sizeType="l"
             className="flex-1"
             disabled={selectedOptions.length === 0}
+            onClick={() => {
+              onClickAddToCart(selectedOptions, selectedBranch)
+            }}
           >
             장바구니 담기
           </Button>

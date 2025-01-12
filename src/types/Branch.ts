@@ -7,6 +7,7 @@ export interface Branch {
   canBookToday: boolean
   distanceInMeters: string | null
   isFavorite: boolean
+  brandCode: string
   brand: "therapist" | "dalia" | "diet"
 }
 
@@ -95,6 +96,7 @@ export interface BranchResponse {
     reserve: string
     distance: string
     b_bookmark: string
+    brand_code: string
   }[]
 }
 
