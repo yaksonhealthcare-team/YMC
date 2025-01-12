@@ -9,7 +9,7 @@ export interface Event {
   status: EventStatus
   files: {
     fileCode: string
-    fileName: string
+    fileurl: string
   }[]
 }
 
@@ -22,7 +22,7 @@ export interface EventDetail {
   contents: string
   files: {
     fileCode: string
-    fileName: string
+    fileurl: string
   }[]
 }
 

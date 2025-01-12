@@ -5,7 +5,7 @@ import { Event } from "../../../types/Content"
 const EventItem: React.FC<{ event: Event }> = ({ event }) => {
   const navigate = useNavigate()
 
-  const thumbnail = event.files.find((file) => file.fileName.length > 0)
+  const thumbnail = event.files.find((file) => file.fileurl.length > 0)
 
   return (
     <div
@@ -14,7 +14,7 @@ const EventItem: React.FC<{ event: Event }> = ({ event }) => {
     >
       {thumbnail && (
         <img
-          src={thumbnail.fileName}
+          src={thumbnail.fileurl}
           alt={event.title}
           className="w-[88px] h-[88px] rounded-lg border border-gray-100 object-cover"
         />
