@@ -1,3 +1,9 @@
+/**
+ * ss: subscription
+ * s: membership (s_idx -> /membership/:s_idx in the url)
+ *
+ * CartItem: 장바구니에 담긴 항목의 아이템입니다.
+ */
 export interface CartItem {
   csc_idx: string
   membership: {
@@ -28,6 +34,10 @@ export interface CartSummary {
   total_count: number
 }
 
+/**
+ * 장바구니에 아이템을 추가하는 API body 타입입니다.
+ * TODO: 앱전용 회원권일 경우 b_idx가 존재하지 않아서, 백엔드 측에 문의해놓은 상태입니다.
+ */
 export interface CartItemPostRequest {
   s_idx: number
   ss_idx: number
