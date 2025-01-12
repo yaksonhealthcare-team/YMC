@@ -38,11 +38,11 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <OverlayProvider>
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <OverlayProvider>
           <AppRouter />
-        </QueryClientProvider>
-      </OverlayProvider>
+        </OverlayProvider>
+      </QueryClientProvider>
     </ThemeProvider>
   )
 }
