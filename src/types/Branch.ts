@@ -10,6 +10,11 @@ export interface Branch {
   brand: "therapist" | "dalia" | "diet"
 }
 
+export interface BranchesWithCurrentAddress {
+  branches: Branch[]
+  address: string
+}
+
 export interface BranchDetail {
   id: string
   name: string

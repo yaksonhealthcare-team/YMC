@@ -1,7 +1,7 @@
 import {
-  Branch,
   BranchDetail,
   BranchDetailResponse,
+  BranchesWithCurrentAddress,
   BranchResponse,
 } from "types/Branch"
 
@@ -31,10 +31,7 @@ export class BranchMapper {
     }
   }
 
-  static toEntities(dto: BranchResponse): {
-    branches: Branch[]
-    address: string
-  } {
+  static toEntities(dto: BranchResponse): BranchesWithCurrentAddress {
     return {
       branches: dto.result.map((item) => ({
         id: item.b_idx,

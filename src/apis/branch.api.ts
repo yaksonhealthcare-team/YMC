@@ -1,11 +1,15 @@
-import { Branch, BranchDetail, BranchFilters } from "../types/Branch.ts"
+import {
+  BranchDetail,
+  BranchesWithCurrentAddress,
+  BranchFilters,
+} from "../types/Branch.ts"
 import { axiosClient } from "../queries/clients.ts"
 import { Coordinate } from "../types/Coordinate.ts"
 import { BranchMapper } from "mappers/BranchMapper.ts"
 
 export const fetchBranches = async (
   filters: BranchFilters,
-): Promise<{ branches: Branch[]; address: string }> => {
+): Promise<BranchesWithCurrentAddress> => {
   const { data } = await axiosClient.get("/branches/branches", {
     params: {
       page: filters.page,
