@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "63506b3d-0e32-490d-b74d-afabc758de29",
 		"name": "개발서버",
-		"description": "**※ 응답 코드**\n\n| 코드 | 내역 | 비고 |\n| --- | --- | --- |\n| **00** | **성공** |  |\n| \\- 00 | SUCCESS | 요청에 대한 처리 완료 |\n| **1X** | **token** |  |\n| \\- 10 | Access token expired | Access token 기간만료 또는 존재하지않아 인증 안됨 |\n| \\- 11 | refresh token expired | refresh token 기간만료 또는 존재하지않아 인증 안됨 |\n| \\- 12 | nice 인증 error | 무결성 값이 다릅니다. 데이터가 변경된 것이 아닌지 확인 바랍니다. |\n| \\- 13 | nice session error | 세션값이 다릅니다. 올바른 경로로 접근하시기 바랍니다. |\n| **2X** | **실패** |  |\n| \\- 20 | Parameter Error | Parameter 입력이 누락되었거나 인증 안됨 |\n| \\- 21 | ID/Password Error | ID/Password 입력이 누락되었거나 인증 안됨 |\n| \\- 22 | HTTP Method | Error HTTP Method가 규격에 맞지 않음 |\n| \\- 23 | 해당 ID가 이미 있습니다. | 해당 ID가 이미 있습니다. |\n| \\- 24 | Bad Request | Bad Request |\n| \\- 25 | DATA Not Found | DATA Not Found |\n| \\- 26 | File Upload Error | File Upload Error |\n| \\- 27 | social 간편로그인 실패 | social 간편로그인 실패하였습니다. |\n| \\- 28 | social 회원 미가입 | 소셜 회원가입을 먼저 해야 합니다. |\n| \\- 29 | Data exists | Data exists |\n| **3X** | **포인트 오류** |  |\n| \\- 30 | 해당 결제건은 이미 지급하였습니다. |  |\n| \\- 31 | 결제 정보가 존재하지 않습니다. |  |\n| **5X** | **오류** |  |\n| \\- 50 | Error | 내부 오류 |\n| \\- 51 | DB Error | 내부 DB 오류 |\n| 6X | 결제 오류 |  |\n| \\- 60 | PG 인증 실패 |  |\n| \\- 61 | PG 결제 실패 |  |",
+		"description": "**※ 응답 코드 (20250110 업데이트)**\n\n| 코드 | 내역 | 비고 |\n| --- | --- | --- |\n| **00** | **성공** |  |\n| \\- 00 | SUCCESS | 요청에 대한 처리 완료 |\n| **1X** | **token** |  |\n| \\- 10 | Access token expired | Access token 기간만료 또는 존재하지않아 인증 안됨 |\n| \\- 11 | refresh token expired | refresh token 기간만료 또는 존재하지않아 인증 안됨 |\n| \\- 12 | nice 인증 error | 무결성 값이 다릅니다. 데이터가 변경된 것이 아닌지 확인 바랍니다. |\n| \\- 13 | nice session error | 세션값이 다릅니다. 올바른 경로로 접근하시기 바랍니다. |\n| **2X** | **실패** |  |\n| \\- 20 | Parameter Error | Parameter 입력이 누락되었거나 인증 안됨 |\n| \\- 21 | ID/Password Error | ID/Password 입력이 누락되었거나 인증 안됨 |\n| \\- 22 | HTTP Method | Error HTTP Method가 규격에 맞지 않음 |\n| \\- 23 | 해당 ID가 이미 있습니다. | 해당 ID가 이미 있습니다. |\n| \\- 24 | Bad Request | Bad Request |\n| \\- 25 | DATA Not Found | DATA Not Found |\n| \\- 26 | File Upload Error | File Upload Error |\n| \\- 27 | social 간편로그인 실패 | social 간편로그인 실패하였습니다. |\n| \\- 28 | social 회원 미가입 | 소셜 회원가입을 먼저 해야 합니다. |\n| \\- 29 | Data exists | Data exists |\n| **3X** | **포인트 오류** |  |\n| \\- 30 | 해당 결제건은 이미 지급하였습니다. |  |\n| \\- 31 | 결제 정보가 존재하지 않습니다. |  |\n| **5X** | **오류** |  |\n| \\- 50 | Error | 내부 오류 |\n| \\- 51 | DB Error | 내부 DB 오류 |\n| \\- 52 | 알림 발송시간 오류 | 국내 정보통신망법에 의거하여 야간(오후 8시 50분 \\~ 오전 7시 59분)에는 알림 발송이 불가합니다. |\n| \\- 53 | 비밀번호 오류 | 비밀번호가 일치하지 않습니다. |\n| \\- 54 | 비밀번호 오류 | 비밀번호는 영문 대문자, 영문 소문자, 특수문자를 반드시 포함하여 10자 이상이어야 합니다. |\n| 6X | 결제 오류 |  |\n| \\- 60 | PG 인증 실패 |  |\n| \\- 61 | PG 결제 실패 |  |",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "37958914",
 		"_collection_link": "https://yaksonhc.postman.co/workspace/Team-Workspace~34821a51-840a-442c-80f4-eeb9dc894ed4/collection/37761356-63506b3d-0e32-490d-b74d-afabc758de29?action=share&source=collection_link&creator=37958914"
@@ -182,7 +182,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"thirdPartyType\": \"N\", //K(카카오)/N(네이버)/G(구글)/A(애플)/E(이메일)\r\n    \"SocialAccessToken\": \"YnIm8GjeWTA0mYSGaYGxvC2z0ZEE\",\r\n    \"device_token\": \"123dfadsfdasfsdaf\",\r\n    \"device_type\": \"ios\" // 'android', 'ios'    \r\n}",
+											"raw": "{\r\n    \"thirdPartyType\": \"A\", //K(카카오)/N(네이버)/G(구글)/A(애플)/E(이메일)\r\n    \"SocialAccessToken\": \"a6fe2280c50894ef6810fe403885b669d.0.srtsr.laYy0WMgAaiXLk-8_cSU6w\",\r\n    \"socialId\": \"001321.85c69b01466046978bda1869a2794af4.0706\",\r\n    \"device_token\": \"123dfadsfdasfsdaf\",\r\n    \"device_type\": \"ios\" // 'android', 'ios'    \r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -219,7 +219,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"홍길동\",\r\n    \"mobileno\": \"01034771158\",\r\n    \"birthdate\": \"20010401\",\r\n    \"gender\": \"4\",\r\n    \"nationalinfo\": \"0\",\r\n    \"di\": \"MC0GCCqGSIb3DQIJAyEA49h5LJv8y1FbAELUTG6NXvNbtYoxQPonjGbQNPzMJFM=\",\r\n    \"token_version_id\": \"20240911172809CG-NCD9CE264-1846E-C4H137BFBC\",\r\n    \"enc_data\": \"qSSANv6zpmq+uaIlCsWUxGYs389hZoUZvD2BiaBSY5gIUph5Y3Xqi9mR/++Z8tRioZ4M/yFN2HTfmyoFoSCQdD29ZgdZuFmPdbQpz/svgHIeMb/Hdm18htWVDMR5I0MAfmcISo82DUpFDUgxsc+AdNvZd8Q1Zm2+IC0H3GRQInrUq672PrycxFXA5UedyiousR7JHWLwi8Bh1oo3v8iPw1Rr6R80TXRjZL4djIOG3phY/86HBni8+rtEG7aYK7oVsqL31mrrzal8YXomhPF+mFAfBYaSWTMZPA3Nh+67q7BAWWnOPBUZj4hxBPPoL9gK2b9KFOAYSdZ68pfJ2F+i6oirVAFs55cKtZTUAj6Rt2jil/dt/HHW+V107EbKPuNT+6KTMNtCrWzIKd2SWVn2C2oNUB54uPhy+lOsw5ALNJOPE/eIgFDQ4dyskV3OcKrVYHJKD+2Th9vcfB8uOE1LNQU8C+ANNdlRtN0/UUDJ8KtL/z6V6hYn17ckUcoA+gvlQQ27LhElw2cC1wAU7yWgDA==\",\r\n    \"integrity_value\": \"wXQndhssmG7qlf+YnIm8GjeWTA0mYSGaYGxvC2z0ZEE=\",\r\n    \"email\": \"coolkyung@nate.com\",\r\n    \"password\": \"coolkyung1234\",\r\n    \"post\": \"061001\",\r\n    \"addr1\": \"경기 수원시 권선구 고산로 1\",\r\n    \"addr2\": \"AA아파트\",\r\n    \"file\": {\r\n        \"filename\": \"sample3.png\",\r\n        \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217174347_e4e556cc.png\"\r\n    },\r\n    \"marketing_yn\": \"Y\", \r\n    \"brand_code\": [\r\n        \"001\",\r\n        \"002\",\r\n        \"003\"\r\n    ],             \r\n    \"recom\": \"01034771111\"   \r\n}",
+											"raw": "{\r\n    \"name\": \"홍길동\",\r\n    \"mobileno\": \"01034771158\",\r\n    \"birthdate\": \"20010401\",\r\n    \"gender\": \"4\",\r\n    \"nationalinfo\": \"0\",\r\n    \"di\": \"1MC0GCCqGSIb3DQIJAyEA49h5LJv8y1FbAELUTG6NXvNbtYoxQPonjGbQNPzMJFM=\",\r\n    \"token_version_id\": \"20240911172809CG-NCD9CE264-1846E-C4H137BFBC\",\r\n    \"enc_data\": \"qSSANv6zpmq+uaIlCsWUxGYs389hZoUZvD2BiaBSY5gIUph5Y3Xqi9mR/++Z8tRioZ4M/yFN2HTfmyoFoSCQdD29ZgdZuFmPdbQpz/svgHIeMb/Hdm18htWVDMR5I0MAfmcISo82DUpFDUgxsc+AdNvZd8Q1Zm2+IC0H3GRQInrUq672PrycxFXA5UedyiousR7JHWLwi8Bh1oo3v8iPw1Rr6R80TXRjZL4djIOG3phY/86HBni8+rtEG7aYK7oVsqL31mrrzal8YXomhPF+mFAfBYaSWTMZPA3Nh+67q7BAWWnOPBUZj4hxBPPoL9gK2b9KFOAYSdZ68pfJ2F+i6oirVAFs55cKtZTUAj6Rt2jil/dt/HHW+V107EbKPuNT+6KTMNtCrWzIKd2SWVn2C2oNUB54uPhy+lOsw5ALNJOPE/eIgFDQ4dyskV3OcKrVYHJKD+2Th9vcfB8uOE1LNQU8C+ANNdlRtN0/UUDJ8KtL/z6V6hYn17ckUcoA+gvlQQ27LhElw2cC1wAU7yWgDA==\",\r\n    \"integrity_value\": \"wXQndhssmG7qlf+YnIm8GjeWTA0mYSGaYGxvC2z0ZEE=\",\r\n    \"email\": \"coolkyung@nate.com\",\r\n    \"password\": \"coolkyung1234\",\r\n    \"post\": \"06101\",\r\n    \"addr1\": \"경기 수원시 권선구 고산로 1\",\r\n    \"addr2\": \"AA아파트\",\r\n    \"file\": {\r\n        \"filename\": \"sample3.png\",\r\n        \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217174347_e4e556cc.png\"\r\n    },\r\n    \"marketing_yn\": \"Y\", \r\n    \"brand_code\": [\r\n        \"001\",\r\n        \"002\",\r\n        \"003\"\r\n    ],             \r\n    \"recom\": \"01034771111\"   \r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -251,7 +251,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"name\": \"홍길동\",\r\n    \"mobileno\": \"01034771158\",\r\n    \"birthdate\": \"20010401\",\r\n    \"gender\": \"4\",\r\n    \"nationalinfo\": \"0\",\r\n    \"di\": \"MC0GCCqGSIb3DQIJAyEA49h5LJv8y1FbAELUTG6NXvNbtYoxQPonjGbQNPzMJFM=\",\r\n    \"token_version_id\": \"20240911172809CG-NCD9CE264-1846E-C4H137BFBC\",\r\n    \"enc_data\": \"qSSANv6zpmq+uaIlCsWUxGYs389hZoUZvD2BiaBSY5gIUph5Y3Xqi9mR/++Z8tRioZ4M/yFN2HTfmyoFoSCQdD29ZgdZuFmPdbQpz/svgHIeMb/Hdm18htWVDMR5I0MAfmcISo82DUpFDUgxsc+AdNvZd8Q1Zm2+IC0H3GRQInrUq672PrycxFXA5UedyiousR7JHWLwi8Bh1oo3v8iPw1Rr6R80TXRjZL4djIOG3phY/86HBni8+rtEG7aYK7oVsqL31mrrzal8YXomhPF+mFAfBYaSWTMZPA3Nh+67q7BAWWnOPBUZj4hxBPPoL9gK2b9KFOAYSdZ68pfJ2F+i6oirVAFs55cKtZTUAj6Rt2jil/dt/HHW+V107EbKPuNT+6KTMNtCrWzIKd2SWVn2C2oNUB54uPhy+lOsw5ALNJOPE/eIgFDQ4dyskV3OcKrVYHJKD+2Th9vcfB8uOE1LNQU8C+ANNdlRtN0/UUDJ8KtL/z6V6hYn17ckUcoA+gvlQQ27LhElw2cC1wAU7yWgDA==\",\r\n    \"integrity_value\": \"wXQndhssmG7qlf+YnIm8GjeWTA0mYSGaYGxvC2z0ZEE=\",\r\n    \"thirdPartyType\": \"K\", //K(카카오)/N(네이버)/G(구글)/A(애플)/E(이메일)\r\n    \"SocialAccessToken\": \"4hgGdpwFdCX3AI-gvUUkGhEdSTkQUOE2AAAAAQopyV8AAAGT3eArHtIOHznOlwLN\",\r\n    \"gender2\": \"M\", // M(남성) / F(여성)\r\n    \"birthdate2\": \"20010401\",\r\n    \"post\": \"06101\",\r\n    \"addr1\": \"경기 수원시 권선구 고산로 1\",\r\n    \"addr2\": \"AA아파트\",\r\n    \"file\": {\r\n        \"filename\": \"sample3.png\",\r\n        \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217174347_e4e556cc.png\"\r\n    },\r\n    \"marketing_yn\": \"Y\",\r\n    \"brand_code\": [\r\n        \"001\",\r\n        \"002\",\r\n        \"003\"\r\n    ],    \r\n    \"recom\": \"01034771111\"   \r\n}",
+											"raw": "/*\r\n{\r\n    \"name\": \"홍길동\",\r\n    \"mobileno\": \"01034771158\",\r\n    \"birthdate\": \"20010401\",\r\n    \"gender\": \"4\",\r\n    \"nationalinfo\": \"0\",\r\n    \"di\": \"MC0GCCqGSIb3DQIJAyEA49h5LJv8y1FbAELUTG6NXvNbtYoxQPonjGbQNPzMJFM=\",\r\n    \"token_version_id\": \"20240911172809CG-NCD9CE264-1846E-C4H137BFBC\",\r\n    \"enc_data\": \"qSSANv6zpmq+uaIlCsWUxGYs389hZoUZvD2BiaBSY5gIUph5Y3Xqi9mR/++Z8tRioZ4M/yFN2HTfmyoFoSCQdD29ZgdZuFmPdbQpz/svgHIeMb/Hdm18htWVDMR5I0MAfmcISo82DUpFDUgxsc+AdNvZd8Q1Zm2+IC0H3GRQInrUq672PrycxFXA5UedyiousR7JHWLwi8Bh1oo3v8iPw1Rr6R80TXRjZL4djIOG3phY/86HBni8+rtEG7aYK7oVsqL31mrrzal8YXomhPF+mFAfBYaSWTMZPA3Nh+67q7BAWWnOPBUZj4hxBPPoL9gK2b9KFOAYSdZ68pfJ2F+i6oirVAFs55cKtZTUAj6Rt2jil/dt/HHW+V107EbKPuNT+6KTMNtCrWzIKd2SWVn2C2oNUB54uPhy+lOsw5ALNJOPE/eIgFDQ4dyskV3OcKrVYHJKD+2Th9vcfB8uOE1LNQU8C+ANNdlRtN0/UUDJ8KtL/z6V6hYn17ckUcoA+gvlQQ27LhElw2cC1wAU7yWgDA==\",\r\n    \"integrity_value\": \"wXQndhssmG7qlf+YnIm8GjeWTA0mYSGaYGxvC2z0ZEE=\",\r\n    \"thirdPartyType\": \"K\", //K(카카오)/N(네이버)/G(구글)/A(애플)/E(이메일)\r\n    \"SocialAccessToken\": \"4hgGdpwFdCX3AI-gvUUkGhEdSTkQUOE2AAAAAQopyV8AAAGT3eArHtIOHznOlwLN\",\r\n    \"gender2\": \"M\", // M(남성) / F(여성)\r\n    \"birthdate2\": \"20010401\",\r\n    \"post\": \"06101\",\r\n    \"addr1\": \"경기 수원시 권선구 고산로 1\",\r\n    \"addr2\": \"AA아파트\",\r\n    \"file\": {\r\n        \"filename\": \"sample3.png\",\r\n        \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217174347_e4e556cc.png\"\r\n    },\r\n    \"marketing_yn\": \"Y\",\r\n    \"brand_code\": [\r\n        \"001\",\r\n        \"002\",\r\n        \"003\"\r\n    ],    \r\n    \"recom\": \"01034771111\",\r\n    \"email\": \"coolkyung@nate.com\",\r\n    \"id\": \"coolkyung@nate.com\"\r\n}\r\n*/\r\n{\r\n    \"name\": \"홍길동\",\r\n    \"mobileno\": \"01034771158\",\r\n    \"birthdate\": \"20010401\",\r\n    \"gender\": \"4\",\r\n    \"nationalinfo\": \"0\",\r\n    \"di\": \"MC0GCCqGSIb3DQIJAyEA49h5LJv8y1FbAELUTG6NXvNbtYoxQPonjGbQNPzMJFM=\",\r\n    \"token_version_id\": \"20240911172809CG-NCD9CE264-1846E-C4H137BFBC\",\r\n    \"enc_data\": \"qSSANv6zpmq+uaIlCsWUxGYs389hZoUZvD2BiaBSY5gIUph5Y3Xqi9mR/++Z8tRioZ4M/yFN2HTfmyoFoSCQdD29ZgdZuFmPdbQpz/svgHIeMb/Hdm18htWVDMR5I0MAfmcISo82DUpFDUgxsc+AdNvZd8Q1Zm2+IC0H3GRQInrUq672PrycxFXA5UedyiousR7JHWLwi8Bh1oo3v8iPw1Rr6R80TXRjZL4djIOG3phY/86HBni8+rtEG7aYK7oVsqL31mrrzal8YXomhPF+mFAfBYaSWTMZPA3Nh+67q7BAWWnOPBUZj4hxBPPoL9gK2b9KFOAYSdZ68pfJ2F+i6oirVAFs55cKtZTUAj6Rt2jil/dt/HHW+V107EbKPuNT+6KTMNtCrWzIKd2SWVn2C2oNUB54uPhy+lOsw5ALNJOPE/eIgFDQ4dyskV3OcKrVYHJKD+2Th9vcfB8uOE1LNQU8C+ANNdlRtN0/UUDJ8KtL/z6V6hYn17ckUcoA+gvlQQ27LhElw2cC1wAU7yWgDA==\",\r\n    \"integrity_value\": \"wXQndhssmG7qlf+YnIm8GjeWTA0mYSGaYGxvC2z0ZEE=\",\r\n    \"thirdPartyType\": \"K\", //K(카카오)/N(네이버)/G(구글)/A(애플)/E(이메일)\r\n    \"SocialAccessToken\": \"4hgGdpwFdCX3AI-gvUUkGhEdSTkQUOE2AAAAAQopyV8AAAGT3eArHtIOHznOlwLN\",\r\n    \"socialId\": \"001321.85c69b01466046978bda1869a2794af4.0706\",\r\n    \"gender2\": \"M\", // M(남성) / F(여성)\r\n    \"birthdate2\": \"20010401\",\r\n    \"post\": \"06101\",\r\n    \"addr1\": \"경기 수원시 권선구 고산로 1\",\r\n    \"addr2\": \"AA아파트\",\r\n    \"file\": {\r\n        \"filename\": \"sample3.png\",\r\n        \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217174347_e4e556cc.png\"\r\n    },\r\n    \"marketing_yn\": \"Y\",\r\n    \"brand_code\": [\r\n        \"001\",\r\n        \"002\",\r\n        \"003\"\r\n    ],    \r\n    \"recom\": \"01034771111\",\r\n    \"email\": \"coolkyung@nate.com\",\r\n    \"id\": \"coolkyung@nate.com\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -434,7 +434,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer a329ef98c2b46343ffb429156210ecd8c013b9b9b363fba1ab9de3ca3a79a05d8934bb698c255d67a8f38f70d7191532e9e12773bec047967d03835637183b6b",
+										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
 										"type": "text"
 									}
 								],
@@ -552,6 +552,43 @@
 										"api",
 										"auth",
 										"find_acount"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "임시_소셜가입정보_삭제",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"taejin.kim@yaksonhealthcare.com\",\n    \"hp\": \"01051237583\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://devapi.yaksonhc.com/api/auth/tmp_del_socialMember",
+									"protocol": "https",
+									"host": [
+										"devapi",
+										"yaksonhc",
+										"com"
+									],
+									"path": [
+										"api",
+										"auth",
+										"tmp_del_socialMember"
 									]
 								}
 							},
@@ -899,7 +936,7 @@
 										"header": [
 											{
 												"key": "Authorization",
-												"value": "Bearer 79c305c8c459276425908552b546d18bad91538a62f8cf40fa2c192f1d9a6f51036a58f45321bb213c0fa350225312279f8f73efe0ec13585b36400fbd6741d0",
+												"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
 												"type": "text"
 											}
 										],
@@ -955,7 +992,7 @@
 										"header": [
 											{
 												"key": "Authorization",
-												"value": "Bearer 79c305c8c459276425908552b546d18bad91538a62f8cf40fa2c192f1d9a6f51036a58f45321bb213c0fa350225312279f8f73efe0ec13585b36400fbd6741d0",
+												"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
 												"type": "text"
 											}
 										],
@@ -1012,7 +1049,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer 79c305c8c459276425908552b546d18bad91538a62f8cf40fa2c192f1d9a6f51036a58f45321bb213c0fa350225312279f8f73efe0ec13585b36400fbd6741d0",
+										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
 										"type": "text"
 									}
 								],
@@ -1113,7 +1150,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer 79c305c8c459276425908552b546d18bad91538a62f8cf40fa2c192f1d9a6f51036a58f45321bb213c0fa350225312279f8f73efe0ec13585b36400fbd6741d0",
+										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
 										"type": "text"
 									}
 								],
@@ -1127,7 +1164,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://devapi.yaksonhc.com/api/memberships/additional-managements?mp_idx=1170944&page=1",
+									"raw": "https://devapi.yaksonhc.com/api/memberships/additional-managements?mp_idx=1170946&page=1",
 									"protocol": "https",
 									"host": [
 										"devapi",
@@ -1142,7 +1179,7 @@
 									"query": [
 										{
 											"key": "mp_idx",
-											"value": "1170944"
+											"value": "1170946"
 										},
 										{
 											"key": "page",
@@ -1236,6 +1273,120 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "장바구니 담기",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"cartOptions\": [\n        {\n            \"s_idx\": 48250,\n            \"ss_idx\": 88885,\n            \"b_idx\": 123,\n            \"brand_code\": \"001\",\n            \"amount\": 3\n        },\n        {\n            \"s_idx\": 48250,\n            \"ss_idx\": 88885,\n            \"b_idx\": 123,\n            \"brand_code\": \"001\",\n            \"amount\": 2\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://devapi.yaksonhc.com/api/memberships/carts",
+									"protocol": "https",
+									"host": [
+										"devapi",
+										"yaksonhc",
+										"com"
+									],
+									"path": [
+										"api",
+										"memberships",
+										"carts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "장바구니 조회",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://devapi.yaksonhc.com/api/memberships/carts",
+									"protocol": "https",
+									"host": [
+										"devapi",
+										"yaksonhc",
+										"com"
+									],
+									"path": [
+										"api",
+										"memberships",
+										"carts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "장바구니 삭제",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"del_idxs\": [1, 2]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://devapi.yaksonhc.com/api/memberships/carts",
+									"protocol": "https",
+									"host": [
+										"devapi",
+										"yaksonhc",
+										"com"
+									],
+									"path": [
+										"api",
+										"memberships",
+										"carts"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -1252,7 +1403,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer 79c305c8c459276425908552b546d18bad91538a62f8cf40fa2c192f1d9a6f51036a58f45321bb213c0fa350225312279f8f73efe0ec13585b36400fbd6741d0",
+										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
 										"type": "text"
 									}
 								],
@@ -1289,7 +1440,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer 79c305c8c459276425908552b546d18bad91538a62f8cf40fa2c192f1d9a6f51036a58f45321bb213c0fa350225312279f8f73efe0ec13585b36400fbd6741d0",
+										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
 										"type": "text"
 									}
 								],
@@ -1329,7 +1480,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer 79c305c8c459276425908552b546d18bad91538a62f8cf40fa2c192f1d9a6f51036a58f45321bb213c0fa350225312279f8f73efe0ec13585b36400fbd6741d0",
+										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
 										"type": "text"
 									}
 								],
@@ -1343,7 +1494,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://devapi.yaksonhc.com/api/notifications/notifications?page=1&search_type",
+									"raw": "https://devapi.yaksonhc.com/api/notifications/notifications?page=1&search_type=membership",
 									"protocol": "https",
 									"host": [
 										"devapi",
@@ -1362,7 +1513,7 @@
 										},
 										{
 											"key": "search_type",
-											"value": null,
+											"value": "membership",
 											"description": "search_type 전체('') / 예약('reserve') / 회원권('membership') / 포인트('point') / 공지('notice')"
 										}
 									]
@@ -1385,7 +1536,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer 79c305c8c459276425908552b546d18bad91538a62f8cf40fa2c192f1d9a6f51036a58f45321bb213c0fa350225312279f8f73efe0ec13585b36400fbd6741d0",
+										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
 										"type": "text"
 									}
 								],
@@ -1399,7 +1550,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://devapi.yaksonhc.com/api/branches/branches?page=1&nowlat=37.57316863612506&nowlon=127.01091249642245&brand_code&csbc_idx&search=",
+									"raw": "https://devapi.yaksonhc.com/api/branches/branches?page=1&nowlat=&nowlon=&brand_code&csbc_idx&search=",
 									"protocol": "https",
 									"host": [
 										"devapi",
@@ -1418,11 +1569,11 @@
 										},
 										{
 											"key": "nowlat",
-											"value": "37.57316863612506"
+											"value": ""
 										},
 										{
 											"key": "nowlon",
-											"value": "127.01091249642245"
+											"value": ""
 										},
 										{
 											"key": "brand_code",
@@ -1768,7 +1919,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer 79c305c8c459276425908552b546d18bad91538a62f8cf40fa2c192f1d9a6f51036a58f45321bb213c0fa350225312279f8f73efe0ec13585b36400fbd6741d0",
+										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
 										"type": "text"
 									}
 								],
@@ -1814,7 +1965,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer 79c305c8c459276425908552b546d18bad91538a62f8cf40fa2c192f1d9a6f51036a58f45321bb213c0fa350225312279f8f73efe0ec13585b36400fbd6741d0",
+										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
 										"type": "text"
 									}
 								],
@@ -2556,7 +2707,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer 79c305c8c459276425908552b546d18bad91538a62f8cf40fa2c192f1d9a6f51036a58f45321bb213c0fa350225312279f8f73efe0ec13585b36400fbd6741d0",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
 										"type": "text"
 									}
 								],
@@ -2593,7 +2744,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer 79c305c8c459276425908552b546d18bad91538a62f8cf40fa2c192f1d9a6f51036a58f45321bb213c0fa350225312279f8f73efe0ec13585b36400fbd6741d0",
+										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
 										"type": "text"
 									}
 								],
@@ -2712,6 +2863,43 @@
 							"response": []
 						},
 						{
+							"name": "커머스 결제취소 테스트",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orderid\": \"241224145916889\"\n}\n\t\t\t\t",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://devapi.yaksonhc.com/api/payments/cancel_m",
+									"protocol": "https",
+									"host": [
+										"devapi",
+										"yaksonhc",
+										"com"
+									],
+									"path": [
+										"api",
+										"payments",
+										"cancel_m"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "결제 상세 조회",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
@@ -2721,7 +2909,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer 79c305c8c459276425908552b546d18bad91538a62f8cf40fa2c192f1d9a6f51036a58f45321bb213c0fa350225312279f8f73efe0ec13585b36400fbd6741d0",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
 										"type": "text"
 									}
 								],
@@ -2735,7 +2923,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://devapi.yaksonhc.com/api/payments/detail?p_idx=1733895",
+									"raw": "https://devapi.yaksonhc.com/api/payments/detail?p_idx=1676476",
 									"protocol": "https",
 									"host": [
 										"devapi",
@@ -2750,7 +2938,7 @@
 									"query": [
 										{
 											"key": "p_idx",
-											"value": "1733895"
+											"value": "1676476"
 										}
 									]
 								}
@@ -2809,7 +2997,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
 										"type": "text"
 									}
 								],
@@ -2823,7 +3011,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://devapi.yaksonhc.com/api/schedules/date?mp_idx=61990&search_date=2024-11&add_services[]=1&add_services[]=2&add_services[]=3",
+									"raw": "https://devapi.yaksonhc.com/api/schedules/date?search_date=2025-01&b_idx=123",
 									"protocol": "https",
 									"host": [
 										"devapi",
@@ -2838,23 +3026,26 @@
 									"query": [
 										{
 											"key": "mp_idx",
-											"value": "61990"
+											"value": "1170948",
+											"disabled": true
+										},
+										{
+											"key": "add_services",
+											"value": "3",
+											"disabled": true
 										},
 										{
 											"key": "search_date",
-											"value": "2024-11"
+											"value": "2025-01"
 										},
 										{
-											"key": "add_services[]",
-											"value": "1"
+											"key": "b_idx",
+											"value": "123"
 										},
 										{
-											"key": "add_services[]",
-											"value": "2"
-										},
-										{
-											"key": "add_services[]",
-											"value": "3"
+											"key": "",
+											"value": "",
+											"disabled": true
 										}
 									]
 								}
@@ -2871,7 +3062,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
 										"type": "text"
 									}
 								],
@@ -2885,7 +3076,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://devapi.yaksonhc.com/api/schedules/times?mp_idx=61990&search_date=2024-12-01&add_services[]",
+									"raw": "https://devapi.yaksonhc.com/api/schedules/times?search_date=2025-01-10&b_idx=123",
 									"protocol": "https",
 									"host": [
 										"devapi",
@@ -2900,15 +3091,26 @@
 									"query": [
 										{
 											"key": "mp_idx",
-											"value": "61990"
+											"value": "61990",
+											"disabled": true
+										},
+										{
+											"key": "add_services",
+											"value": "1,2,3",
+											"disabled": true
 										},
 										{
 											"key": "search_date",
-											"value": "2024-12-01"
+											"value": "2025-01-10"
 										},
 										{
-											"key": "add_services[]",
-											"value": null
+											"key": "",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "b_idx",
+											"value": "123"
 										}
 									]
 								}
@@ -2985,7 +3187,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
 										"type": "text"
 									}
 								],
@@ -3065,13 +3267,13 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
 										"type": "text"
 									}
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"r_gubun\": \"C\", //예약(R)  상담(C)\r\n    \"mp_idx\": \"1151749\", //회원권  식별자\r\n    \"b_idx\": \"93\", //지점  식별자\r\n    \"r_date\": \"2024-11-30\", //예약 일자\r\n    \"r_stime\": \"10:30\", //예약 시간\r\n    \"add_services\": [],   //추가관리 옵션 식별자(목록) mp_idx로 전달\r\n    \"r_memo\": \"상담 요청사항\" //요청사항\r\n}",
+									"raw": "{\r\n    \"r_gubun\": \"R\", //예약(R)  상담(C)\r\n    \"mp_idx\": \"242\", //회원권  식별자\r\n    \"b_idx\": \"123\", //지점  식별자\r\n    \"r_date\": \"2025-01-09\", //예약 일자\r\n    \"r_stime\": \"10:30\", //예약 시간\r\n    \"add_services\": [113939,134051],   //추가관리 옵션 식별자(목록) mp_idx로 전달\r\n    \"r_memo\": \"상담 요청사항\" //요청사항    \r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3102,7 +3304,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer 79c305c8c459276425908552b546d18bad91538a62f8cf40fa2c192f1d9a6f51036a58f45321bb213c0fa350225312279f8f73efe0ec13585b36400fbd6741d0",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
 										"type": "text"
 									}
 								],
@@ -3116,7 +3318,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://devapi.yaksonhc.com/api/reservation/reservations?r_idx=5829555&cancel_memo=취소 사유2",
+									"raw": "https://devapi.yaksonhc.com/api/reservation/reservations?r_idx=5829602&cancel_memo=취소 사유2",
 									"protocol": "https",
 									"host": [
 										"devapi",
@@ -3131,7 +3333,7 @@
 									"query": [
 										{
 											"key": "r_idx",
-											"value": "5829555"
+											"value": "5829602"
 										},
 										{
 											"key": "cancel_memo",
@@ -3190,6 +3392,202 @@
 										"api",
 										"images",
 										"images"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "CARTS",
+					"item": [
+						{
+							"name": "장바구니 담기",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"cartOptions\": [\n        {\n            \"s_idx\": 48250,\n            \"ss_idx\": 88885,\n            \"b_idx\": 123,\n            \"brand_code\": \"001\",\n            \"amount\": 3\n        },\n        {\n            \"s_idx\": 48250,\n            \"ss_idx\": 88885,\n            \"b_idx\": 123,\n            \"brand_code\": \"001\",\n            \"amount\": 2\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://devapi.yaksonhc.com/api/carts/carts",
+									"protocol": "https",
+									"host": [
+										"devapi",
+										"yaksonhc",
+										"com"
+									],
+									"path": [
+										"api",
+										"carts",
+										"carts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "장바구니 수량변경",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"update_idx\" : 3,\n    \"updateAmount\" : 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://devapi.yaksonhc.com/api/carts/carts",
+									"protocol": "https",
+									"host": [
+										"devapi",
+										"yaksonhc",
+										"com"
+									],
+									"path": [
+										"api",
+										"carts",
+										"carts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "장바구니 조회",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://devapi.yaksonhc.com/api/carts/carts",
+									"protocol": "https",
+									"host": [
+										"devapi",
+										"yaksonhc",
+										"com"
+									],
+									"path": [
+										"api",
+										"carts",
+										"carts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "장바구니 수량 조회",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://devapi.yaksonhc.com/api/carts/count",
+									"protocol": "https",
+									"host": [
+										"devapi",
+										"yaksonhc",
+										"com"
+									],
+									"path": [
+										"api",
+										"carts",
+										"count"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "장바구니 삭제",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"del_idxs\": [1, 2]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://devapi.yaksonhc.com/api/carts/carts",
+									"protocol": "https",
+									"host": [
+										"devapi",
+										"yaksonhc",
+										"com"
+									],
+									"path": [
+										"api",
+										"carts",
+										"carts"
 									]
 								}
 							},
@@ -6447,7 +6845,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"gubun\": \"N01\",\n    \"title\": \"공지사항2\",\n    \"link\": \"www.naver.com\",\n    \"contents\": \"22222\",\n    \"regDate\": \"2024-10-12\",\n    \"notification\": \"Y\",\n    \"files\": [\n        {\n            \"filename\": \"sample3.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217174346_29923f87.png\"\n        },\n        {\n            \"filename\": \"sample1.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample1_20241217174347_53b6ea75.png\"\n        },\n        {\n            \"filename\": \"sample3.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217174347_e4e556cc.png\"\n        }\n    ]\n}",
+											"raw": "{\n    \"gubun\": \"N01\",\n    \"title\": \"공지사항15\",\n    \"link\": \"www.naver.com\",\n    \"contents\": \"22222\",\n    \"regDate\": \"2024-10-12\",\n    \"notification\": \"Y\",\n    \"files\": [\n        {\n            \"filename\": \"sample3.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217174346_29923f87.png\"\n        },\n        {\n            \"filename\": \"sample1.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample1_20241217174347_53b6ea75.png\"\n        },\n        {\n            \"filename\": \"sample3.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217174347_e4e556cc.png\"\n        }\n    ]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -7180,7 +7578,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://devapiadmin.yaksonhc.com/api/schedules/date?mp_idx=61990&add_services[]=1&add_services[]=2&add_services[]=3&search_date=2024-11",
+									"raw": "https://devapiadmin.yaksonhc.com/api/schedules/date?mp_idx=&add_services=&search_date=2025-01&b_idx=123",
 									"protocol": "https",
 									"host": [
 										"devapiadmin",
@@ -7195,23 +7593,19 @@
 									"query": [
 										{
 											"key": "mp_idx",
-											"value": "61990"
+											"value": ""
 										},
 										{
-											"key": "add_services[]",
-											"value": "1"
-										},
-										{
-											"key": "add_services[]",
-											"value": "2"
-										},
-										{
-											"key": "add_services[]",
-											"value": "3"
+											"key": "add_services",
+											"value": ""
 										},
 										{
 											"key": "search_date",
-											"value": "2024-11"
+											"value": "2025-01"
+										},
+										{
+											"key": "b_idx",
+											"value": "123"
 										}
 									]
 								}
@@ -7242,7 +7636,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://devapiadmin.yaksonhc.com/api/schedules/times?mp_idx=61990&add_services[]=1&add_services[]=2&add_services[]=3&search_date=2024-11-15",
+									"raw": "https://devapiadmin.yaksonhc.com/api/schedules/times?mp_idx=61990&add_services=&search_date=2025-01-10&b_idx=123",
 									"protocol": "https",
 									"host": [
 										"devapiadmin",
@@ -7260,20 +7654,16 @@
 											"value": "61990"
 										},
 										{
-											"key": "add_services[]",
-											"value": "1"
-										},
-										{
-											"key": "add_services[]",
-											"value": "2"
-										},
-										{
-											"key": "add_services[]",
-											"value": "3"
+											"key": "add_services",
+											"value": ""
 										},
 										{
 											"key": "search_date",
-											"value": "2024-11-15"
+											"value": "2025-01-10"
+										},
+										{
+											"key": "b_idx",
+											"value": "123"
 										}
 									]
 								}
@@ -7725,7 +8115,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://devapiadmin.yaksonhc.com/api/reservation/reservations?r_idx=5829546&cancel_memo=취소 사유",
+									"raw": "https://devapiadmin.yaksonhc.com/api/reservation/reservations?r_idx=284263&cancel_memo=취소 사유",
 									"protocol": "https",
 									"host": [
 										"devapiadmin",
@@ -7740,7 +8130,7 @@
 									"query": [
 										{
 											"key": "r_idx",
-											"value": "5829546"
+											"value": "284263"
 										},
 										{
 											"key": "cancel_memo",
@@ -7852,7 +8242,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://devapiadmin.yaksonhc.com/api/payments/detail?p_idx=1733880",
+									"raw": "https://devapiadmin.yaksonhc.com/api/payments/detail?p_idx=206027",
 									"protocol": "https",
 									"host": [
 										"devapiadmin",
@@ -7867,7 +8257,7 @@
 									"query": [
 										{
 											"key": "p_idx",
-											"value": "1733880",
+											"value": "206027",
 											"description": "\b복수 p_idx를 가진 결제 건의 경우, 일부 p_idx만 지정해도 전체결제 상세 제공"
 										}
 									]
