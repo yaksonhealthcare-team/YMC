@@ -42,6 +42,7 @@ export class BranchMapper {
       distanceInMeters: item.distance,
       isFavorite: item.b_bookmark === "Y",
       brand: this.toBrand(item.b_name),
+      brandCode: item.brand_code,
     }))
   }
 

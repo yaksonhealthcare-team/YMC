@@ -76,18 +76,6 @@ const MembershipDetailPage = () => {
   ) => {
     if (!selectedBranch) return
 
-    console.log(
-      selectedOptions.map(({ option, count }) => ({
-        s_idx: Number(id!),
-        ss_idx: Number(option.subscriptionIndex),
-        b_idx: Number(selectedBranch.id),
-        // TODO: 전지점 회원권 케이스에 대해 API 수정 요청드림.
-        //  추후 변경: b_idx: selectedBranch ? Number(selectedBranch.id) : undefined와 비슷하게 변경해야 할 것 같습니다.
-        brand_code: "001", // TODO: API 수정 요청드림
-        amount: count,
-      })),
-    )
-
     await addCart(
       selectedOptions.map(({ option, count }) => ({
         s_idx: Number(id!),
@@ -95,7 +83,7 @@ const MembershipDetailPage = () => {
         b_idx: Number(selectedBranch.id),
         // TODO: 전지점 회원권 케이스에 대해 API 수정 요청드림.
         //  추후 변경: b_idx: selectedBranch ? Number(selectedBranch.id) : undefined와 비슷하게 변경해야 할 것 같습니다.
-        brand_code: "001", // TODO: API 수정 요청드림
+        brand_code: selectedBranch.brandCode,
         amount: count,
       })),
     )
