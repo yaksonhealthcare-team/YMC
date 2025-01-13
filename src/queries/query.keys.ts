@@ -95,4 +95,7 @@ export const queryKeys = {
     detail: (id: string, coords: Coordinate) =>
       [...queryKeys.notifications.all, id, coords] as const,
   },
+  carts: {
+    all: ["carts"] as const,
+  },
 } as const
