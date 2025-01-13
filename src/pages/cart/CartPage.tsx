@@ -42,6 +42,9 @@ const CartPage = () => {
     removeCartItems(itemIds)
   }
 
+  const getTotalItemCount = () =>
+    items.reduce((prev, acc) => prev + acc.options.length, 0)
+
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex-1">
@@ -49,7 +52,7 @@ const CartPage = () => {
           <div className="flex items-center gap-1 mb-4">
             <span className="text-gray-700 text-16px font-sb">담은 회원권</span>
             <span className="text-primary text-16px font-sb">
-              {summary?.total_count || 0}개
+              {getTotalItemCount()}개
             </span>
           </div>
 
