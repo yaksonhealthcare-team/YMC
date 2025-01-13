@@ -1,0 +1,99 @@
+import { CartItem, CartItemOption, CartItemResponse } from "../types/Cart"
+
+export class CartMapper {
+  /**
+   * @Seyoung: This function maps `CartItemResponse[]` to `CartItem[]`.
+   * - Basically this function classifies the items based on `membership.s_idx` and `option.ss_count`
+   * - So this function creates the record to classify the items that have the same `membership.s_idx`
+   *   - `{[membership.s_idx]: CartItem}`
+   * - And for the items that have the same `membership.s_idx`, it classifies the items with `option.ss_count`.
+   * - Next, it creates / updates the `CartItem` using dto that has same `membership.s_idx`
+   * @param dtos
+   */
+  static toEntities(dtos: CartItemResponse[]): CartItem[] {
+    const itemsMap = dtos.reduce(
+      (acc, dto) => {
+        if (Number(dto.amount) === 0) return acc
+
+        const itemId = dto.membership.s_idx
+
+        if (itemId in acc) {
+          acc[itemId] = this.updateExistingItem(acc[itemId], dto)
+        } else {
+          acc[itemId] = this.createNewItem(dto)
+        }
+
+        return acc
+      },
+      {} as Record<string, CartItem>,
+    )
+
+    return Object.values(itemsMap)
+  }
+
+  private static createNewItem(dto: CartItemResponse): CartItem {
+    return {
+      id: dto.membership.s_idx,
+      brand: dto.branch.brand_name,
+      branchType: dto.branch.b_type,
+      title: dto.membership.s_name,
+      duration: Number(dto.membership.s_time),
+      options: [this.createOption(dto)],
+    }
+  }
+
+  private static updateExistingItem(
+    item: CartItem,
+    dto: CartItemResponse,
+  ): CartItem {
+    const sessionCount = Number(dto.option.ss_count)
+    const existingOptionIndex = item.options.findIndex(
+      (option) => option.sessions === sessionCount,
+    )
+
+    if (existingOptionIndex === -1) {
+      return {
+        ...item,
+        options: [...item.options, this.createOption(dto)],
+      }
+    }
+
+    return {
+      ...item,
+      options: item.options.map((option, index) =>
+        index === existingOptionIndex
+          ? {
+              ...option,
+              items: [
+                ...option.items,
+                {
+                  cartId: dto.csc_idx,
+                  count: Number(dto.amount),
+                },
+              ],
+            }
+          : option,
+      ),
+    }
+  }
+
+  private static createOption(dto: CartItemResponse): CartItemOption {
+    const price = Number(dto.membership.ss_price)
+    const originalPrice =
+      dto.membership.original_price === null
+        ? price
+        : Number(dto.membership.original_price)
+
+    return {
+      items: [
+        {
+          cartId: dto.csc_idx,
+          count: Number(dto.amount),
+        },
+      ],
+      sessions: Number(dto.option.ss_count),
+      price,
+      originalPrice,
+    }
+  }
+}

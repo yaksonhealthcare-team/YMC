@@ -1,29 +1,56 @@
+export interface CartWithSummary {
+  items: CartItem[]
+  summary: CartSummary
+}
+
+export interface CartItem {
+  id: string
+  brand: string
+  branchType: string
+  title: string
+  duration: number
+  options: CartItemOption[]
+}
+
+export interface CartItemOption {
+  items: {
+    cartId: string
+    count: number
+  }[]
+  sessions: number
+  price: number
+  originalPrice: number
+}
+
 /**
  * ss: subscription
  * s: membership (s_idx -> /membership/:s_idx in the url)
  *
  * CartItem: 장바구니에 담긴 항목의 아이템입니다.
  */
-export interface CartItem {
+export interface CartItemResponse {
   csc_idx: string
   membership: {
     s_idx: string
     s_name: string
     s_time: string
-    original_price: string
+    original_price: string | null
     ss_price: string
   }
   branch: {
     b_idx: string
     b_name: string
+    brand_name: string
+    brand_code: string
+    b_type: string
   }
   option: {
     ss_idx: string
     ss_count: string
     ss_unit_price: string
-    original_price: string
+    original_price: string | null
   }
-  original_price: number
+  origin_price: number
   price: number
   amount: string
 }
