@@ -31,7 +31,11 @@ const CartPage = () => {
   }, [])
 
   const handleUpdateItem = (itemId: string, amount: number) => {
-    updateCartItem({ cartId: itemId, amount: amount })
+    if (amount === 0) {
+      removeCartItems([itemId])
+    } else {
+      updateCartItem({ cartId: itemId, amount: amount })
+    }
   }
 
   const handleRemoveItems = (itemIds: string[]) => {
