@@ -1,51 +1,24 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext"
 import { Button } from "@components/Button"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 import CartCard from "@components/CartCard.tsx"
-
-interface CartItem {
-  id: number
-  brand: string
-  branchType: "전지점" | "지정 지점"
-  title: string
-  duration: number
-  options: {
-    count: number
-    sessions: number
-    price: number
-    originalPrice: number
-  }[]
-}
+import {
+  useCartItems,
+  useDeleteCartItemsMutation,
+  useUpdateCartItemMutation,
+} from "../../queries/useCartQueries.tsx"
 
 const CartPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
-  const [items, setItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      brand: "약손명가",
-      branchType: "전지점",
-      title: "K-BEAUTY 연예인관리",
-      duration: 120,
-      options: [
-        { sessions: 30, count: 1, price: 1032000, originalPrice: 1238400 },
-        { sessions: 10, count: 2, price: 1032000, originalPrice: 1238400 },
-      ],
-    },
-    {
-      id: 2,
-      brand: "달리아 스파",
-      branchType: "지정 지점",
-      title: "작은 얼굴 관리 (80분)",
-      duration: 120,
-      options: [
-        { sessions: 30, count: 1, price: 1032000, originalPrice: 1238400 },
-        { sessions: 10, count: 1, price: 1032000, originalPrice: 1238400 },
-      ],
-    },
-  ])
+  const { data: cartWithSummary } = useCartItems()
+  const { mutate: removeCartItems } = useDeleteCartItemsMutation()
+  const { mutate: updateCartItem } = useUpdateCartItemMutation()
+
+  const items = cartWithSummary?.items || []
+  const summary = cartWithSummary?.summary
 
   useEffect(() => {
     setHeader({
@@ -57,55 +30,13 @@ const CartPage = () => {
     setNavigation({ display: false })
   }, [])
 
-  const handleCountChange = (
-    itemId: number,
-    sessionIndex: number,
-    newCount: number,
-  ) => {
-    setItems(
-      items.map((item) =>
-        item.id === itemId
-          ? {
-              ...item,
-              options: item.options.map((option, idx) =>
-                idx === sessionIndex ? { ...option, count: newCount } : option,
-              ),
-            }
-          : item,
-      ),
-    )
+  const handleUpdateItem = (itemId: string, amount: number) => {
+    updateCartItem({ cartId: itemId, amount: amount })
   }
 
-  const handleRemoveItem = (itemId: number) => {
-    setItems(items.filter((item) => item.id !== itemId))
+  const handleRemoveItems = (itemIds: string[]) => {
+    removeCartItems(itemIds)
   }
-
-  const calculateTotalPrice = () => {
-    const totalOriginal = items.reduce(
-      (sum, item) =>
-        sum +
-        item.options.reduce(
-          (optSum, opt) => optSum + opt.originalPrice * opt.count,
-          0,
-        ),
-      0,
-    )
-
-    const totalDiscounted = items.reduce(
-      (sum, item) =>
-        sum +
-        item.options.reduce((optSum, opt) => optSum + opt.price * opt.count, 0),
-      0,
-    )
-
-    return {
-      original: totalOriginal,
-      discounted: totalDiscounted,
-      discount: totalOriginal - totalDiscounted,
-    }
-  }
-
-  const totalPrices = calculateTotalPrice()
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -114,7 +45,7 @@ const CartPage = () => {
           <div className="flex items-center gap-1 mb-4">
             <span className="text-gray-700 text-16px font-sb">담은 회원권</span>
             <span className="text-primary text-16px font-sb">
-              {items.length}개
+              {summary?.total_count || 0}개
             </span>
           </div>
 
@@ -126,10 +57,17 @@ const CartPage = () => {
               title={item.title}
               duration={item.duration}
               options={item.options}
-              onCountChange={(optionIndex, newCount) =>
-                handleCountChange(item.id, optionIndex, newCount)
+              onCountChange={(cartId, newCount) => {
+                handleUpdateItem(cartId, newCount)
+              }}
+              onDelete={() =>
+                handleRemoveItems(
+                  item.options.flatMap((option) =>
+                    option.items.flatMap((item) => item.cartId),
+                  ),
+                )
               }
-              onDelete={() => handleRemoveItem(item.id)}
+              onDeleteOption={(cartIds) => handleRemoveItems(cartIds)}
             />
           ))}
 
@@ -157,7 +95,7 @@ const CartPage = () => {
             <div className="flex justify-between">
               <span className="text-gray-500 text-14px font-m">상품 금액</span>
               <span className="text-gray-700 text-14px font-sb">
-                {totalPrices.original.toLocaleString()}원
+                {(summary?.total_origin_price || 0).toLocaleString()}원
               </span>
             </div>
             <div className="flex justify-between">
@@ -165,7 +103,7 @@ const CartPage = () => {
                 상품할인금액
               </span>
               <span className="text-success text-14px font-sb">
-                -{totalPrices.discount.toLocaleString()}원
+                {`-${((summary?.total_origin_price || 0) - (summary?.total_price || 0)).toLocaleString()}원`}
               </span>
             </div>
             <div className="w-full h-[1px] bg-gray-100 my-4" />
@@ -174,7 +112,7 @@ const CartPage = () => {
                 결제예정금액
               </span>
               <span className="text-gray-700 text-20px font-b">
-                {totalPrices.discounted.toLocaleString()}원
+                {(summary?.total_price || 0).toLocaleString()}원
               </span>
             </div>
           </div>
@@ -189,7 +127,7 @@ const CartPage = () => {
           onClick={() => navigate("/payment")}
           className={"w-full"}
         >
-          {totalPrices.discounted.toLocaleString()}원 결제하기
+          {(summary?.total_price || 0).toLocaleString()}원 결제하기
         </Button>
       </FixedButtonContainer>
     </div>

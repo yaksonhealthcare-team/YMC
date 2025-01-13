@@ -1,21 +1,17 @@
 import { Number } from "@components/Number"
 import ClockIcon from "@assets/icons/ClockIcon.svg?react"
-
-interface CartOption {
-  sessions: number
-  count: number
-  price: number
-  originalPrice: number
-}
+import XCircleIcon from "@components/icons/XCircleIcon.tsx"
+import { CartItemOption } from "../types/Cart.ts"
 
 interface CartCardProps {
   brand: string
-  branchType: "전지점" | "지정 지점"
+  branchType: string
   title: string
   duration: number
-  options: CartOption[]
-  onCountChange: (optionIndex: number, newCount: number) => void
+  options: CartItemOption[]
+  onCountChange: (cartId: string, newCount: number) => void
   onDelete: () => void
+  onDeleteOption: (cartIds: string[]) => void
 }
 
 const CartCard = ({
@@ -26,6 +22,7 @@ const CartCard = ({
   options,
   onCountChange,
   onDelete,
+  onDeleteOption,
 }: CartCardProps) => {
   return (
     <div className="mb-4 p-5 bg-white rounded-[20px] border border-gray-200">
@@ -46,42 +43,63 @@ const CartCard = ({
         <p className="text-gray-700 text-16px font-sb mt-1">{title}</p>
       </div>
 
-      {options.map((option, idx) => (
-        <div key={idx} className="mb-4 last:mb-0">
-          <div className="flex items-center gap-1 mb-4">
-            <span className="text-gray-700 text-16px font-m">
-              {option.sessions}회
-            </span>
-          </div>
-          <div className="flex w-full justify-between items-center mb-4">
-            <div className="flex w-full items-center justify-between gap-4">
-              <Number
-                count={option.count}
-                onClickMinus={() =>
-                  onCountChange(idx, Math.max(0, option.count - 1))
+      {options.map((option, idx) => {
+        const count = option.items.reduce((prev, acc) => prev + acc.count, 0)
+        return (
+          <div key={idx} className="mb-4 last:mb-0">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-gray-700 text-16px font-m">
+                {option.sessions}회
+              </span>
+              <button
+                onClick={() =>
+                  onDeleteOption(option.items.flatMap((item) => item.cartId))
                 }
-                onClickPlus={() => onCountChange(idx, option.count + 1)}
-              />
-              <div className={"flex items-center gap-4"}>
-                <div>
-                  <span className="text-gray-700 text-16px font-sb">
-                    {option.price.toLocaleString()}
-                  </span>
-                  <span className="text-gray-700 text-14px font-r ml-1">
-                    원
-                  </span>
+              >
+                <XCircleIcon className={"w-4"} />
+              </button>
+            </div>
+            <div className="flex w-full justify-between items-center mb-4">
+              <div className="flex w-full items-center justify-between gap-4">
+                <Number
+                  count={count}
+                  minimumCount={1}
+                  onClickMinus={() => {
+                    onCountChange(
+                      option.items[0].cartId,
+                      Math.max(0, option.items[0].count - 1),
+                    )
+                  }}
+                  onClickPlus={() =>
+                    onCountChange(
+                      option.items[0].cartId,
+                      option.items[0].count + 1,
+                    )
+                  }
+                />
+                <div className={"flex items-center gap-4"}>
+                  <div>
+                    <span className="text-gray-700 text-16px font-sb">
+                      {(option.price * count).toLocaleString()}
+                    </span>
+                    <span className="text-gray-700 text-14px font-r ml-1">
+                      원
+                    </span>
+                  </div>
+                  {option.originalPrice !== option.price && (
+                    <span className="text-gray-300 text-14px font-r line-through">
+                      {(option.originalPrice * count).toLocaleString()}원
+                    </span>
+                  )}
                 </div>
-                <span className="text-gray-300 text-14px font-r line-through">
-                  {option.originalPrice.toLocaleString()}원
-                </span>
               </div>
             </div>
+            {idx < options.length - 1 && (
+              <div className="w-full h-[1px] bg-gray-100 my-4" />
+            )}
           </div>
-          {idx < options.length - 1 && (
-            <div className="w-full h-[1px] bg-gray-100 my-4" />
-          )}
-        </div>
-      ))}
+        )
+      })}
 
       <button
         onClick={onDelete}

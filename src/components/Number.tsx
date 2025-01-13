@@ -5,14 +5,15 @@ import PlusIcon from "@assets/icons/PlusIcon.svg?react"
 interface NumberProps {
   count: number
   disabled?: boolean
+  minimumCount?: number
   onClickMinus: () => void
   onClickPlus: () => void
 }
 
 export const Number = (props: NumberProps) => {
-  const { count, disabled, onClickMinus, onClickPlus } = props
+  const { count, disabled, minimumCount, onClickMinus, onClickPlus } = props
 
-  const isMinusDisabled = disabled || count === 0
+  const isMinusDisabled = disabled || count === (minimumCount || 0)
 
   return (
     <>
