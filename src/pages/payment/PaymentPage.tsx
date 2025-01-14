@@ -121,7 +121,7 @@ const PaymentPage = () => {
 
   const handleCountChange = (
     itemId: string,
-    optionIndex: number,
+    optionIndex: string,
     newCount: number,
   ) => {
     // TODO: 수량 변경 로직 구현
@@ -134,6 +134,7 @@ const PaymentPage = () => {
         <CartCard
           key={item.id}
           {...item}
+          options={[]} // TODO: Replace `CartItem` in this file to `Cart.ts - CartItem`
           onCountChange={(optionIndex, newCount) =>
             handleCountChange(item.id, optionIndex, newCount)
           }

@@ -11,7 +11,7 @@ interface CartCardProps {
   options: CartItemOption[]
   onCountChange: (cartId: string, newCount: number) => void
   onDelete: () => void
-  onDeleteOption: (cartIds: string[]) => void
+  onDeleteOption?: (cartIds: string[]) => void
 }
 
 const CartCard = ({
@@ -55,7 +55,9 @@ const CartCard = ({
                 </span>
                 <button
                   onClick={() =>
-                    onDeleteOption(option.items.flatMap((item) => item.cartId))
+                    onDeleteOption?.(
+                      option.items.flatMap((item) => item.cartId),
+                    )
                   }
                 >
                   <XCircleIcon className={"w-4"} />
