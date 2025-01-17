@@ -1,13 +1,20 @@
 import { axiosClient } from "../queries/clients.ts"
-import { CartItem, CartItemPostRequest, CartSummary } from "../types/Cart.ts"
+import {
+  CartItemPostRequest,
+  CartItemResponse,
+  CartSummary,
+  CartWithSummary,
+} from "../types/Cart.ts"
+import { CartMapper } from "../mappers/CartMapper.ts"
 
-//TODO: 실제 Cart API 연동
-export const fetchCart = async () => {
-  const { data } = await axiosClient.get<{
-    cartList: CartItem[]
+export const fetchCart = async (): Promise<CartWithSummary> => {
+  const {
+    data: { cartList, cartList_summary },
+  } = await axiosClient.get<{
+    cartList: CartItemResponse[]
     cartList_summary: CartSummary
   }>("/carts/carts")
-  return data
+  return { items: CartMapper.toEntities(cartList), summary: cartList_summary }
 }
 
 export const addCart = async (data: CartItemPostRequest[]) => {
@@ -16,12 +23,19 @@ export const addCart = async (data: CartItemPostRequest[]) => {
   })
 }
 
-export const removeCart = async (id: number) => {
-  return await axiosClient.delete(`/cart/${id}`)
+export const removeCart = async (cartIds: string[]) => {
+  return await axiosClient.delete(`/carts/carts`, {
+    data: {
+      del_idxs: cartIds.map((id) => Number(id)),
+    },
+  })
 }
 
-export const updateCart = async (id: number, data: any) => {
-  return await axiosClient.put(`/cart/${id}`, data)
+export const updateCart = async (cartId: string, amount: number) => {
+  return await axiosClient.patch(`/carts/carts`, {
+    update_idx: Number(cartId),
+    updateAmount: amount,
+  })
 }
 
 export const fetchCartCount = async (): Promise<number> => {

@@ -21,6 +21,8 @@ import {
 } from "../../hooks/useMembershipOptions.ts"
 import { addCart } from "../../apis/cart.api.ts"
 import { Branch } from "../../types/Branch.ts"
+import { queryClient } from "../../queries/clients.ts"
+import { queryKeys } from "../../queries/query.keys.ts"
 
 const MembershipDetailPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -87,6 +89,7 @@ const MembershipDetailPage = () => {
         amount: count,
       })),
     )
+    await queryClient.refetchQueries({ queryKey: queryKeys.carts.all })
     clearOptions()
     closeOverlay()
     navigate("/cart")
