@@ -6,7 +6,7 @@ import {
 export class QuestionnaireMapper {
   static toQuestionnaireAnswerType(
     dto: QuestionnaireResultResponse["answer_type"],
-  ): QuestionnaireResult["answerType"] {
+  ): QuestionnaireResult["answer_type"] {
     switch (dto) {
       case "S":
         return "single_choice"
@@ -14,6 +14,8 @@ export class QuestionnaireMapper {
         return "multiple_choice"
       case "T":
         return "text"
+      case "C":
+        return "single_choice"
     }
   }
 
@@ -23,7 +25,7 @@ export class QuestionnaireMapper {
     return {
       index: Number(dto.cssq_idx),
       question_text: dto.question_text,
-      answerType: this.toQuestionnaireAnswerType(dto.answer_type),
+      answer_type: this.toQuestionnaireAnswerType(dto.answer_type),
       options: dto.options.map((option) => ({
         csso_idx: option.csso_idx,
         option_text: option.option_text,
