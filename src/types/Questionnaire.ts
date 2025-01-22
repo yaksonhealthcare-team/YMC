@@ -27,7 +27,8 @@ export interface QuestionnaireResult {
   question_text: string
   answer_type: "S" | "M" | "T" | "C"
   options: {
-    csso_idx: string | number
+    csso_idx: string
+    option_type?: string
     option_text: string
     answer_text: string
   }[]

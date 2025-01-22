@@ -249,7 +249,7 @@ const ReservationFormPage = () => {
           <button
             type="button"
             onClick={() => {
-              // TODO: navigate to view reservation questionnaire page
+              navigate("/mypage/questionnaire/reservation")
             }}
             className="w-full bg-white border !border-gray-200 rounded-xl h-[61px] px-5 flex items-center justify-between cursor-pointer"
           >

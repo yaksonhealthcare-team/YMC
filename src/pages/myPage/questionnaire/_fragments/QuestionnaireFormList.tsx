@@ -16,7 +16,7 @@ const QuestionnaireFormList = ({
             </div>
             <div className={"p-5 bg-gray-50 rounded-2xl space-y-2"}>
               {item.options?.length > 0 ? (
-                item.answer_type === "T" ? (
+                item.answer_type === "T" || item.answer_type === "C" ? (
                   <div>{item.options[0].answer_text}</div>
                 ) : (
                   item.options
@@ -26,10 +26,10 @@ const QuestionnaireFormList = ({
                         option.answer_text !== "",
                     )
                     .map((option, index) => (
-                      <>
+                      <div key={option.csso_idx || index}>
                         {option.option_text}
                         {index < item.options.length - 1 && ", "}
-                      </>
+                      </div>
                     ))
                 )
               ) : (
