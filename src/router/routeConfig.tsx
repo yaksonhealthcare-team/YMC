@@ -64,6 +64,7 @@ import ProfileChangePhoneNumber from "../pages/editProfile/ProfileChangePhoneNum
 import PaymentCompletePage from "../pages/payment/PaymentCompletePage.tsx"
 import { BrandDetailPage } from "../pages/brand/BrandDetail.tsx"
 import OAuthCallback from "../pages/oauth/OAuthCallback"
+import SignupCallback from "../pages/signup/SignupCallback.tsx"
 
 interface RouteConfig {
   path: string
@@ -125,6 +126,10 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/signup/profile",
     element: <ProfileSetup />,
+  },
+  {
+    path: "/signup/callback",
+    element: <SignupCallback />,
   },
   {
     path: "/signup/complete",
