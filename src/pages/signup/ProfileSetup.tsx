@@ -19,6 +19,22 @@ import { UserSignup } from "../../types/User.ts"
 import { loginWithSocial } from "../../apis/auth.api.ts"
 import { AxiosError } from "axios"
 
+interface SignupData {
+  email: string
+  password?: string
+  name: string
+  mobileNumber: string
+  birthDate: string
+  gender: "male" | "female"
+  postCode: string
+  address1: string
+  address2?: string
+  marketingYn: boolean
+  brandCodes?: string[]
+  profileImage?: File
+  referralCode?: string
+}
+
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
@@ -138,8 +154,14 @@ export const ProfileSetup = () => {
           cleanup()
           navigate("/signup/complete")
           return
-        } catch (error: any) {
-          showAlert(error.response?.data?.message || "회원가입에 실패했습니다")
+        } catch (error: unknown) {
+          if (error instanceof AxiosError) {
+            showAlert(
+              error.response?.data?.message || "회원가입에 실패했습니다",
+            )
+          } else {
+            showAlert("회원가입에 실패했습니다")
+          }
         }
       } else {
         await signup({

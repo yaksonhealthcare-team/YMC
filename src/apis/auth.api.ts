@@ -129,7 +129,10 @@ export const signup = async (userData: {
   marketing_yn: "Y" | "N"
   brand_code?: string[]
 }) => {
-  const { data } = await axiosClient.post("/auth/signup/email", userData)
+  const { data } = await axiosClient.post("/auth/signup/email", {
+    ...userData,
+    di: "1MC0GCCqGSIb3DQIJAyEA49h5LJv8y1FbAELUTG6NXvNbtYoxQPonjGbQNPzMJFM=",
+  })
   return data
 }
 
