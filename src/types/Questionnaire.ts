@@ -2,7 +2,7 @@ export interface Question {
   cssq_idx: string
   question_text: string
   contents_type: string
-  answer_type: "S" | "M" | "T"
+  answer_type: "S" | "M" | "T" | "C"
   options: {
     csso_idx: string
     option_type: string
