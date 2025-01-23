@@ -86,18 +86,15 @@ export interface BranchFilters {
 }
 
 export interface BranchResponse {
-  current_addr: string
-  result: {
-    b_idx: string
-    b_name: string
-    b_addr: string
-    b_lat: string
-    b_lon: string
-    reserve: string
-    distance: string
-    b_bookmark: string
-    brand_code: string
-  }[]
+  b_idx: string
+  b_name: string
+  addr: string
+  lat: string
+  lon: string
+  b_tel: string
+  b_owner: string
+  brand_code: string
+  brand_name: string
 }
 
 export interface BranchDetailResponse {

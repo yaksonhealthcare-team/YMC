@@ -1,48 +1,46 @@
-import BranchCard from "@components/BranchCard.tsx"
-import { useAuth } from "../../../contexts/AuthContext.tsx"
-import { useMembershipOptionsStore } from "../../../hooks/useMembershipOptions.ts"
 import { useNavigate } from "react-router-dom"
-import { Branch } from "../../../types/Branch"
+import BranchCard from "../../../components/BranchCard"
+import { useMembershipOptionsStore } from "../../../hooks/useMembershipOptions"
+import { useVisitedStores } from "../../../hooks/useVisitedStores"
+import { BranchResponse } from "../../../types/Branch"
 
-const MembershipActiveBranchList = () => {
-  const { user } = useAuth()
+export const MembershipActiveBranchList = () => {
   const navigate = useNavigate()
   const { setSelectedBranch } = useMembershipOptionsStore()
+  const { data: visitedStores } = useVisitedStores()
+
+  if (!visitedStores?.body?.length) {
+    return (
+      <div className="p-4 text-center text-gray-500">
+        이용중인 지점이 없습니다.
+      </div>
+    )
+  }
 
   return (
-    <div className={"py-6 overflow-y-hidden space-y-4"}>
-      <p className={"px-5 font-sb"}>{"이용중인 지점"}</p>
-      <ul className={"px-5 space-y-3 overflow-y-scroll h-full"}>
-        {(user?.brands || []).map((brand, index) => {
-          const branch: Branch = {
-            id: brand.id,
-            name: brand.brandName,
-            address: brand.address,
-            brandCode: brand.brandCode || "",
-            latitude: 0,
-            longitude: 0,
-            canBookToday: false,
-            distanceInMeters: null,
-            isFavorite: false,
-            brand: "therapist",
-          }
-
-          return (
-            <li
-              key={index}
-              className={"border border-gray-100 rounded-2xl p-5"}
-              onClick={() => {
-                setSelectedBranch(branch)
-                navigate(-1)
-              }}
-            >
-              <BranchCard name={brand.brandName} address={brand.address} />
-            </li>
-          )
-        })}
-      </ul>
+    <div className="flex flex-col gap-4 p-4">
+      {visitedStores.body.map((branch: BranchResponse) => (
+        <button
+          key={branch.b_idx}
+          onClick={() => {
+            setSelectedBranch({
+              id: branch.b_idx,
+              name: branch.b_name,
+              address: branch.addr,
+              brandCode: branch.brand_code,
+              latitude: Number(branch.lat),
+              longitude: Number(branch.lon),
+              canBookToday: false,
+              distanceInMeters: null,
+              isFavorite: false,
+              brand: "therapist",
+            })
+            navigate(-1)
+          }}
+        >
+          <BranchCard name={branch.b_name} address={branch.addr} />
+        </button>
+      ))}
     </div>
   )
 }
-
-export default MembershipActiveBranchList

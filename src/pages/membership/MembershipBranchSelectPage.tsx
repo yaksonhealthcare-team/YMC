@@ -1,14 +1,14 @@
-import { useLayout } from "../../contexts/LayoutContext.tsx"
+import { useLayout } from "../../contexts/LayoutContext"
 import { useEffect, useState } from "react"
-import { useBranches } from "../../queries/useBranchQueries.tsx"
-import { DEFAULT_COORDINATE } from "../../types/Coordinate.ts"
-import { SearchField } from "@components/SearchField.tsx"
-import useIntersection from "../../hooks/useIntersection.tsx"
-import BranchPlaceholderImage from "@assets/images/BranchPlaceholderImage.png"
-import useGeolocation from "../../hooks/useGeolocation.tsx"
-import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
+import { useBranches } from "../../queries/useBranchQueries"
+import { DEFAULT_COORDINATE } from "../../types/Coordinate"
+import { SearchField } from "../../components/SearchField"
+import useIntersection from "../../hooks/useIntersection"
+import BranchPlaceholderImage from "../../assets/images/BranchPlaceholderImage.png"
+import useGeolocation from "../../hooks/useGeolocation"
+import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import { useNavigate } from "react-router-dom"
-import MembershipActiveBranchList from "./_fragments/MembershipActiveBranchList.tsx"
+import { MembershipActiveBranchList } from "./_fragments/MembershipActiveBranchList"
 
 const MembershipBranchSelectPage = () => {
   const [query, setQuery] = useState("")
