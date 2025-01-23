@@ -25,55 +25,53 @@ import { queryClient } from "../../queries/clients.ts"
 import { queryKeys } from "../../queries/query.keys.ts"
 
 const MembershipDetailPage = () => {
-  const { id } = useParams<{ id: string }>()
-  const { setHeader, setNavigation } = useLayout()
+  const { id } = useParams()
+  const { data: membership } = useMembershipDetail(id!)
   const { openBottomSheet, closeOverlay } = useOverlay()
+  const { selectedBranch, clear: clearOptions } = useMembershipOptionsStore()
   const navigate = useNavigate()
-
-  const {
-    shouldOpenBottomSheet,
-    setShouldOpenBottomSheet,
-    clear: clearMembershipOptions,
-  } = useMembershipOptionsStore()
-  const { clear: clearOptions } = useMembershipOptionsStore()
-  const { data: membership, isLoading } = useMembershipDetail(id || "")
-  console.log("membership:", membership)
-  console.log("membership options:", membership?.options)
-  const sortedOptions = useMemo(
-    () =>
-      membership?.options?.sort(
-        (a, b) => Number(a.ss_idx) - Number(b.ss_idx),
-      ) || [],
-    [membership?.options],
-  )
-
-  console.log("sortedOptions:", sortedOptions)
-
-  const firstOption = sortedOptions?.[0]
+  const { setHeader } = useLayout()
 
   useEffect(() => {
     setHeader({
-      display: true,
-      component: (
-        <div className={"flex items-center justify-between px-5 py-3 h-[48px]"}>
-          <div
-            onClick={() => {
-              navigate(-1)
-            }}
-          >
-            <CaretLeftIcon className={"w-5 h-5"} />
-          </div>
-          <CartIcon />
-        </div>
-      ),
-      backgroundColor: "bg-white",
+      title: membership?.s_name || "데이터가 없습니다",
+      left: "back",
     })
-    setNavigation({ display: false })
+  }, [membership?.s_name])
 
-    if (shouldOpenBottomSheet) {
+  useEffect(() => {
+    if (selectedBranch && membership?.options) {
       handleOpenOptionsBottomSheet()
     }
-  }, [])
+  }, [selectedBranch, membership])
+
+  const handleOpenOptionsBottomSheet = () => {
+    openBottomSheet(
+      <OptionsBottomSheetContent
+        serviceType={membership?.s_type}
+        options={membership?.options || []}
+        onClickBranchSelect={() => {
+          closeOverlay()
+          navigate(`/membership/select-branch`)
+        }}
+        onAddToCartSuccess={() => {
+          closeOverlay()
+          navigate("/cart")
+        }}
+      />,
+    )
+  }
+
+  const { sortedOptions } = useMemo(() => {
+    const sortedOptions =
+      membership?.options?.sort(
+        (a, b) => Number(a.ss_idx) - Number(b.ss_idx),
+      ) || []
+    console.log("sortedOptions:", sortedOptions)
+    return { sortedOptions }
+  }, [membership?.options])
+
+  const firstOption = sortedOptions?.[0]
 
   const handleAddItemsToCart = async (selectedOptions: SelectedOption[]) => {
     const selectedBranch = useMembershipOptionsStore.getState().selectedBranch
@@ -94,24 +92,7 @@ const MembershipDetailPage = () => {
     navigate("/cart")
   }
 
-  if (isLoading || !membership) return <div>Loading...</div>
-
-  const handleOpenOptionsBottomSheet = () => {
-    openBottomSheet(
-      <OptionsBottomSheetContent
-        serviceType={membership.s_type}
-        options={sortedOptions}
-        onClickBranchSelect={() => {
-          closeOverlay()
-          setShouldOpenBottomSheet(true)
-          navigate(`/membership/select-branch`)
-        }}
-        onAddToCartSuccess={() => {
-          navigate("/cart")
-        }}
-      />,
-    )
-  }
+  if (!membership) return <div>Loading...</div>
 
   const MembershipInfo = () => (
     <div className="flex flex-col px-5 py-6 gap-4">

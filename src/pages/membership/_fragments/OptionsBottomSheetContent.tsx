@@ -19,13 +19,13 @@ import { queryClient } from "../../../queries/clients"
 import { queryKeys } from "../../../queries/query.keys"
 
 interface Props {
-  serviceType: string
+  serviceType?: string
   options: MembershipOption[]
   onClickBranchSelect: () => void
   onAddToCartSuccess: () => void
 }
 
-const OptionsBottomSheetContent = ({
+export const OptionsBottomSheetContent = ({
   serviceType,
   options,
   onClickBranchSelect,
