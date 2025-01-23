@@ -1,14 +1,13 @@
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useMembershipCategories } from "../../../queries/useMembershipQueries"
+import { MembershipCategory } from "../../../types/Membership"
 import { Button } from "@components/Button"
-import { useMembershipCategories } from "queries/useMembershipQueries"
-import { MembershipCategory } from "types/Membership"
 
-interface ProgramListProps {
-  brandCode: string
-}
-
-const ProgramList = ({ brandCode }: ProgramListProps) => {
+export const ProgramList = () => {
   const navigate = useNavigate()
+  const [brandCode] = useState("001") // 약손명가
+
   const { data: categoriesData } = useMembershipCategories(brandCode)
 
   return (
@@ -50,5 +49,3 @@ const ProgramList = ({ brandCode }: ProgramListProps) => {
     </div>
   )
 }
-
-export default ProgramList

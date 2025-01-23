@@ -1,148 +1,65 @@
 export enum MembershipStatus {
-  AVAILABLE = "사용가능",
-  COMPLETED = "사용완료",
-  EXPIRED = "만료됨",
+  ACTIVE = "T",
+  INACTIVE = "F",
+  EXPIRED = "E",
 }
 
-export type MembershipItem = {
-  id: number
-  title: string
-  count: string
-  startAt: string
-  endAt: string
-  status: MembershipStatus
-  isAllBranch?: boolean
-  isReady?: boolean
-}
-
-export interface MebershipHistory {
-  id: number
-  store: string
-  date: Date
-}
-
-export interface MembershipDetailHistory extends MembershipItem {
-  history: MebershipHistory[]
-}
-
-export interface AdditionalService {
-  id: number
-  title: string
-  duration: number
-  price: number
-  selected?: boolean
-}
-
-export interface ServiceCategory {
-  brandCode: string
-  serviceCategoryName: string
-  serviceCategoryImageUrl?: string
-  serviceCategoryCode: string
-  priorirty: string
-}
-
-export interface ServiceCategoryResponse {
-  brand_code: string
-  sc_code: string
-  prior: string
-  sc_name: string
-  sc_pic: string
+export interface MembershipCategory {
+  sc_idx: string
+  category_name: string
+  category_description?: string
 }
 
 export interface MembershipOption {
-  subscriptionIndex: string
-  subscriptionCount: string
-  subscriptionOriginalPrice: string
-  subscriptionPrice: string
-}
-
-export interface Membership {
-  serviceIndex: string
-  serviceName: string
-  brandName: string
-  serviceTime: string
-  serviceType: string
-  options: MembershipOption[]
-}
-
-export interface MembershipOptionResponse {
   ss_idx: string
-  ss_count: string
-  original_price: string
-  ss_price: string
+  option_name: string
+  option_count: number
+  option_price: number
 }
 
-export interface MembershipResponse {
+export interface MembershipItem {
   s_idx: string
-  s_name: string
-  brand_name: string
-  s_time: string
-  options: MembershipOptionResponse[]
-  s_type: string
-}
-
-export interface ServiceCourse {
-  serviceCourseIndex: string
-  serviceCourseName: string
-  serviceCourseMinutes: string
-  priority: string
+  service_name: string
+  service_time: number
+  service_description: string
+  service_notice?: string
+  service_image_url?: string
+  options: MembershipOption[]
 }
 
 export interface MembershipDetail {
-  serviceName: string
-  brandName: string
-  serviceContent: string
-  serviceTime: string
-  serviceType: string
+  s_idx: string
+  service_name: string
+  service_time: number
+  service_description: string
+  service_notice?: string
+  service_image_url?: string
+  brand_name: string
+  options: MembershipOption[]
   courses: ServiceCourse[]
   pictures: string[]
-  options: MembershipOption[]
 }
 
-export interface ServiceCourseResponse {
+export interface ServiceCourse {
   sc_idx: string
   sc_name: string
   sc_min: string
-  prior: string
-}
-
-export interface MembershipDetailResponse {
-  s_name: string
-  brand_name: string | null
-  s_content: string | null
-  s_time: string
-  s_type: string
-  courses: ServiceCourseResponse[]
-  pictures: string[]
-  options: MembershipOptionResponse[]
-}
-
-export type MyMembershipStatusCode = "-" | "T" | "F" | "E"
-
-export interface MyMembershipResponse {
-  mp_idx: string
-  remain_amount: string
-  buy_amount: string
-  pay_date: string
-  expiration_date: string
-  service_name: string
-  s_type: string
-  status: MembershipStatus
+  priority: string
 }
 
 export interface MyMembership {
-  id: string
-  remainCount: number
-  totalCount: number
-  purchaseDate: string
-  expirationDate: string
-  serviceName: string
-  serviceType: string
+  mp_idx: string
+  service_name: string
+  service_time: number
+  remaining_count: number
+  valid_from: string
+  valid_until: string
   status: MembershipStatus
+  available_branches: string[]
 }
 
 export interface MyMembershipFilterItem {
-  id: MyMembershipStatusCode
+  id: MembershipStatus | "-"
   title: string
 }
 
@@ -152,29 +69,31 @@ export const myMembershipFilters: MyMembershipFilterItem[] = [
     title: "전체",
   },
   {
-    id: "T",
+    id: MembershipStatus.ACTIVE,
     title: "사용가능",
   },
   {
-    id: "F",
+    id: MembershipStatus.INACTIVE,
     title: "사용완료",
   },
   {
-    id: "E",
+    id: MembershipStatus.EXPIRED,
     title: "만료됨",
   },
 ]
 
 export interface AdditionalManagement {
-  serviceIndex: string
-  serviceName: string
-  serviceTime: string
-  options: MembershipOption[]
+  am_idx: string
+  service_name: string
+  service_description: string
+  service_time: number
+  service_price: number
+  options: AdditionalManagementOption[]
 }
 
-export interface AdditionalManagementResponse {
-  s_idx: string
-  s_name: string
-  s_time: string
-  options: MembershipOptionResponse[]
+export interface AdditionalManagementOption {
+  ams_idx: string
+  option_name: string
+  option_count: number
+  option_price: number
 }

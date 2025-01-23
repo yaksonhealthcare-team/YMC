@@ -1,74 +1,145 @@
+import axios from "axios"
 import {
-  AdditionalManagementMapper,
-  MembershipDetailMapper,
-  MembershipMapper,
-  MyMembershipMapper,
-  ServiceCategoryMapper,
-} from "mappers/MembershipMapper"
-import { axiosClient } from "queries/clients"
-import { HTTPResponse } from "types/HTTPResponse"
-import {
+  MembershipCategory,
   MembershipDetail,
-  MembershipDetailResponse,
-  ServiceCategoryResponse,
-} from "types/Membership"
+  MembershipItem,
+  MyMembership,
+  AdditionalManagement,
+} from "../types/Membership"
 
-export const fetchServiceCategories = async (brandCode: string) => {
-  const { data } = await axiosClient.get<
-    HTTPResponse<ServiceCategoryResponse[]>
-  >(`/memberships/categories?brand_code=${brandCode}`)
-  return ServiceCategoryMapper.toEntities(data.body)
+const axiosInstance = axios.create({
+  baseURL: "https://devapi.yaksonhc.com/api",
+  headers: {
+    "Content-Type": "application/json",
+  },
+})
+
+// 요청 인터셉터 추가
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("accessToken")
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  },
+)
+
+// 응답 인터셉터 추가
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  async (error) => {
+    const originalRequest = error.config
+
+    // 토큰이 만료되었을 때 (401 에러)
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true
+
+      try {
+        const refreshToken = localStorage.getItem("refreshToken")
+        const response = await axios.post(
+          "https://devapi.yaksonhc.com/api/auth/refresh",
+          {
+            refresh_token: refreshToken,
+          },
+        )
+
+        const { access_token } = response.data
+        localStorage.setItem("accessToken", access_token)
+
+        originalRequest.headers.Authorization = `Bearer ${access_token}`
+        return axiosInstance(originalRequest)
+      } catch (error) {
+        // 리프레시 토큰도 만료되었을 경우
+        localStorage.removeItem("accessToken")
+        localStorage.removeItem("refreshToken")
+        window.location.href = "/login"
+        return Promise.reject(error)
+      }
+    }
+
+    return Promise.reject(error)
+  },
+)
+
+export interface ListResponse<T> {
+  total_count: number
+  items: T[]
 }
 
-export const fetchMemberships = async (
+export const fetchMembershipList = async (
   brandCode: string,
-  scCode: string = "",
+  scCode?: string,
   page: number = 1,
+  pageSize: number = 10,
 ) => {
-  const { data } = await axiosClient.get(`/memberships/memberships`, {
-    params: {
-      brand_code: brandCode,
-      sc_code: scCode,
-      page,
+  const response = await axiosInstance.get<ListResponse<MembershipItem>>(
+    `/memberships/memberships`,
+    {
+      params: {
+        brand_code: brandCode,
+        sc_code: scCode,
+        page,
+        page_size: pageSize,
+      },
     },
-  })
-  return MembershipMapper.toEntities(data.body)
+  )
+  return response.data
 }
 
-export const fetchMembershipDetail = async (
-  s_idx: string,
-): Promise<MembershipDetail> => {
-  const { data } = await axiosClient.get<
-    HTTPResponse<MembershipDetailResponse>
-  >(`/memberships/detail`, {
-    params: {
-      s_idx,
+export const fetchMembershipDetail = async (sIdx: string) => {
+  const response = await axiosInstance.get<MembershipDetail>(
+    `/memberships/detail`,
+    {
+      params: {
+        s_idx: sIdx,
+      },
     },
-  })
-  return MembershipDetailMapper.toEntity(data.body)
+  )
+  return response.data
 }
 
-export const fetchMyMemberships = async (
-  search_type: string,
-  page: number = 1,
-  page_size: number = 10,
-) => {
-  const { data } = await axiosClient.get("/memberships/me/me", {
-    params: {
-      search_type,
-      page,
-      page_size,
+export const fetchMembershipCategories = async (brandCode: string) => {
+  const response = await axiosInstance.get<ListResponse<MembershipCategory>>(
+    `/memberships/categories`,
+    {
+      params: {
+        brand_code: brandCode,
+      },
     },
-  })
-  return MyMembershipMapper.toEntities(data.body)
+  )
+  return response.data
+}
+
+export const fetchUserMemberships = async (
+  searchType?: string,
+  page: number = 1,
+  pageSize: number = 10,
+) => {
+  const response = await axiosInstance.get<ListResponse<MyMembership>>(
+    `/memberships/me/me`,
+    {
+      params: {
+        search_type: searchType,
+        page,
+        page_size: pageSize,
+      },
+    },
+  )
+  return response.data
 }
 
 export const fetchAdditionalManagement = async (
-  membershipIdx: number | undefined,
+  membershipIdx: string,
   page: number = 1,
 ) => {
-  const { data } = await axiosClient.get(
-    "/memberships/additional-managements",
+  const response = await axiosInstance.get<ListResponse<AdditionalManagement>>(
+    `/memberships/additional-managements`,
     {
       params: {
         mp_idx: membershipIdx,
@@ -76,5 +147,5 @@ export const fetchAdditionalManagement = async (
       },
     },
   )
-  return AdditionalManagementMapper.toEntities(data.body)
+  return response.data
 }
