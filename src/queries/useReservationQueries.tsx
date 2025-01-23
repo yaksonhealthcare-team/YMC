@@ -68,8 +68,11 @@ export interface ReservationDetail {
     id: string
     name: string
     price: number
-    duration: number
+    time: number
   }>
+  membershipName: string
+  branchName: string
+  remainingCount: string
 }
 
 export const useReservationDetail = (id: string) => {
@@ -86,19 +89,14 @@ export const useReservationDetail = (id: string) => {
         throw new Error(data.resultMessage || "API 오류가 발생했습니다.")
       }
 
-      if (
-        !data.body ||
-        !Array.isArray(data.body) ||
-        !data.body[0] ||
-        Object.keys(data.body[0]).length <= 1
-      ) {
+      if (!data.body || !Array.isArray(data.body) || !data.body[0]) {
         throw new Error("예약 정보를 찾을 수 없습니다.")
       }
 
       const body = data.body[0]
       return {
-        id: body.r_idx || "",
-        status: body.r_status || "예약완료",
+        id: body.r_idx || id,
+        status: body.r_status || ReservationStatus.CONFIRMED,
         store: body.b_name || "",
         programName: body.ps_name || "",
         visit: parseInt(body.visit) || 0,
@@ -117,8 +115,11 @@ export const useReservationDetail = (id: string) => {
             id: service.mp_idx || "",
             name: service.service_name || "",
             price: parseInt(service.price) || 0,
-            duration: parseInt(service.service_time) || 0,
+            time: parseInt(service.service_time) || 0,
           })) || [],
+        membershipName: body.membership_name || "",
+        branchName: body.b_name || "",
+        remainingCount: body.remaining_count || "",
       }
     },
     enabled: !!id,

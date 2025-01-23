@@ -4,38 +4,53 @@ import { useLayout } from "contexts/LayoutContext"
 import { Button } from "@components/Button"
 import Divider from "@mui/material/Divider"
 import { useReservationDetail } from "queries/useReservationQueries"
-import SplashScreen from "@components/Splash"
 import ReservationSummary from "./_fragments/ReservationSummary"
 import Location from "./_fragments/Location"
 import MembershipUsage from "./_fragments/MembershipUsage"
 import FixedButtonContainer from "@components/FixedButtonContainer"
-import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { ReservationStatus } from "types/Reservation"
+import { Skeleton } from "@mui/material"
 
-// 테스트용 임시 데이터
-const mockReservation = {
-  id: "35439",
-  status: ReservationStatus.CONFIRMED, // 상태는 enum 타입이어야 함
-  store: "강남본점", // 매장명 추가
-  programName: "", // 프로그램명 없음 테스트
-  visit: 1,
-  date: new Date("invalid date"), // 날짜 정보 없음 테스트
-  duration: 0, // 소요시간 없음 테스트
-  request: "", // 요청사항 없음 테스트
-  branchId: "1",
-  address: "서울특별시 강남구 테헤란로 123", // 주소 추가
-  latitude: 37.4979, // 강남 테헤란로 근처 좌표
-  longitude: 127.0276,
-  phone: "", // 전화번호 없음 테스트
-  additionalServices: [], // 추가 관리 없음 테스트
-}
+const LoadingSkeleton = () => (
+  <div className="flex-1 px-[20px] pt-[16px] pb-[150px] bg-system-bg">
+    {/* 예약 정보 스켈레톤 */}
+    <div className="flex flex-col gap-2">
+      <Skeleton variant="rectangular" width={100} height={24} />
+      <Skeleton variant="rectangular" width="100%" height={120} />
+    </div>
 
-// 테스트용 회원권 데이터
-const mockMembership = {
-  membershipName: "", // 회원권명 없음 테스트
-  branchName: "", // 지점명 없음 테스트
-  remainingCount: "", // 잔여 횟수 없음 테스트
-}
+    {/* 예약 문진 버튼 스켈레톤 */}
+    <Skeleton
+      variant="rectangular"
+      width="100%"
+      height={40}
+      className="mt-[24px]"
+    />
+
+    {/* 위치 정보 스켈레톤 */}
+    <div className="mt-[24px]">
+      <Skeleton variant="rectangular" width={80} height={24} />
+      <Skeleton
+        variant="rectangular"
+        width="100%"
+        height={200}
+        className="mt-[16px]"
+      />
+      <div className="mt-[16px] flex flex-col gap-[12px]">
+        <Skeleton variant="rectangular" width="100%" height={40} />
+        <Skeleton variant="rectangular" width="100%" height={40} />
+      </div>
+    </div>
+
+    <Divider className="my-[24px] border-gray-100" />
+
+    {/* 회원권 정보 스켈레톤 */}
+    <div className="flex flex-col gap-2">
+      <Skeleton variant="rectangular" width={120} height={24} />
+      <Skeleton variant="rectangular" width="100%" height={80} />
+    </div>
+  </div>
+)
 
 const ReservationDetailPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -45,6 +60,7 @@ const ReservationDetailPage = () => {
     data: reservation,
     isLoading,
     isError,
+    error,
   } = useReservationDetail(id || "")
 
   useEffect(() => {
@@ -57,14 +73,20 @@ const ReservationDetailPage = () => {
     setNavigation({ display: false })
   }, [navigate, setHeader, setNavigation])
 
-  if (isLoading) return <SplashScreen />
-
-  // 테스트를 위해 mockReservation 사용
-  const currentReservation = mockReservation // reservation || mockReservation
+  if (isLoading) return <LoadingSkeleton />
+  if (isError)
+    return (
+      <div className="p-5 text-red-500">
+        에러가 발생했습니다:{" "}
+        {error instanceof Error ? error.message : "알 수 없는 에러"}
+      </div>
+    )
+  if (!reservation)
+    return <div className="p-5">예약 정보를 찾을 수 없습니다.</div>
 
   return (
     <div className="flex-1 px-[20px] pt-[16px] pb-[150px] bg-system-bg">
-      <ReservationSummary reservation={currentReservation} />
+      <ReservationSummary reservation={reservation} />
       <Button
         variantType="gray"
         sizeType="s"
@@ -73,15 +95,15 @@ const ReservationDetailPage = () => {
       >
         예약 문진 확인하기
       </Button>
-      <Location reservation={currentReservation} />
+      <Location reservation={reservation} />
       <Divider className="my-[24px] border-gray-100" />
       <MembershipUsage
-        membershipName={mockMembership.membershipName}
-        branchName={mockMembership.branchName}
-        remainingCount={mockMembership.remainingCount}
+        membershipName={reservation.membershipName}
+        branchName={reservation.branchName}
+        remainingCount={reservation.remainingCount}
       />
       <FixedButtonContainer>
-        {currentReservation.status === ReservationStatus.CONFIRMED && (
+        {reservation.status === ReservationStatus.CONFIRMED && (
           <Button
             variantType="primary"
             sizeType="l"
