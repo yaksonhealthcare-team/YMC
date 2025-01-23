@@ -53,6 +53,19 @@ export const MembershipCard = ({
   const showReservationButton =
     showReserveButton && status === MembershipStatus.ACTIVE
 
+  const getStatusText = (status: MembershipStatus) => {
+    switch (status) {
+      case MembershipStatus.ACTIVE:
+        return "사용가능"
+      case MembershipStatus.INACTIVE:
+        return "사용완료"
+      case MembershipStatus.EXPIRED:
+        return "만료됨"
+      default:
+        return ""
+    }
+  }
+
   return (
     <div className={clsx(STYLES.container, className)}>
       <div className={STYLES.content}>
