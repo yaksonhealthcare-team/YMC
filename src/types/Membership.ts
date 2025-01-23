@@ -14,10 +14,9 @@ export interface MembershipCategory {
 
 export interface MembershipOption {
   ss_idx: string
-  option_name: string
-  option_count: number
-  option_price: number
-  option_original_price?: number
+  ss_count: string
+  ss_price: string
+  original_price: string
 }
 
 export interface MembershipItem {
@@ -31,25 +30,21 @@ export interface MembershipItem {
 }
 
 export interface MembershipDetail {
-  s_idx: string
-  service_name: string
-  service_time: number
-  service_description: string
-  service_notice?: string
-  service_image_url?: string
-  service_type: string
-  service_content: string
-  brand_name: string
-  options: MembershipOption[]
+  s_name: string
+  brand_name: string | null
+  s_content: string | null
+  s_time: string
+  s_type: string
   courses: ServiceCourse[]
   pictures: string[]
+  options: MembershipOption[]
 }
 
 export interface ServiceCourse {
   sc_idx: string
   sc_name: string
   sc_min: string
-  priority: string
+  prior: string
 }
 
 export interface MyMembership {

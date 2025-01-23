@@ -98,7 +98,7 @@ const MembershipDetailPage = () => {
   const handleOpenOptionsBottomSheet = () => {
     openBottomSheet(
       <OptionsBottomSheetContent
-        serviceType={membership.service_type}
+        serviceType={membership.s_type}
         options={sortedOptions || []}
         onClickAddToCart={handleAddItemsToCart}
         onClickBranchSelect={() => {
@@ -115,32 +115,32 @@ const MembershipDetailPage = () => {
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1">
           <span className="text-primary font-sb text-14px">
-            {membership.brand_name}
+            {membership.brand_name || "약손명가"}
           </span>
           <h1 className="text-gray-900 font-sb text-16px">
-            {membership.service_name}
+            {membership.s_name}
           </h1>
         </div>
         {firstOption && (
           <div className="flex items-end gap-2">
-            {membership.options[0].option_original_price && (
+            {firstOption.original_price && (
               <span className="text-primary font-b text-18px">
                 {calculateDiscountRate(
-                  membership.options[0].option_price,
-                  membership.options[0].option_original_price,
+                  Number(firstOption.ss_price.replace(/,/g, "")),
+                  Number(firstOption.original_price.replace(/,/g, "")),
                 )}
                 %
               </span>
             )}
             <div className="flex items-baseline gap-1">
               <span className="text-gray-900 font-b text-18px">
-                {membership.options[0].option_price}원
+                {firstOption.ss_price}원
               </span>
               <span className="text-gray-900 font-r text-12px">부터~</span>
             </div>
-            {membership.options[0].option_original_price && (
+            {firstOption.original_price && (
               <span className="text-gray-400 font-r text-14px line-through">
-                {membership.options[0].option_original_price}원
+                {firstOption.original_price}원
               </span>
             )}
           </div>
@@ -148,7 +148,7 @@ const MembershipDetailPage = () => {
       </div>
       <div className="h-px bg-gray-100" />
       <p className="text-gray-900 font-r text-14px leading-[24px]">
-        {membership.service_content}
+        {membership.s_content || membership.s_name}
       </p>
     </div>
   )
@@ -157,7 +157,7 @@ const MembershipDetailPage = () => {
     const sortedCourses = useMemo(
       () =>
         membership?.courses?.sort(
-          (a, b) => Number(a.priority) - Number(b.priority),
+          (a, b) => Number(a.prior) - Number(b.prior),
         ) || [],
       [membership?.courses],
     )
@@ -169,13 +169,13 @@ const MembershipDetailPage = () => {
           <div className="flex items-center gap-2">
             <StoreIcon className="text-primary" />
             <span className="text-gray-800 font-m text-14px">
-              {membership.service_type}
+              {membership.s_type}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <ClockIcon className="text-primary" />
             <span className="text-gray-800 font-m text-14px">
-              {membership.service_time}분 소요
+              {membership.s_time}분 소요
             </span>
           </div>
           {sortedCourses.length > 0 && (
@@ -217,7 +217,7 @@ const MembershipDetailPage = () => {
             <SwiperSlide key={index}>
               <img
                 src={imageUrl || MembershipPlaceholderImage}
-                alt={`${membership.service_name} 이미지 ${index + 1}`}
+                alt={`${membership.s_name} 이미지 ${index + 1}`}
                 className="w-full h-full object-cover"
               />
             </SwiperSlide>
@@ -226,7 +226,7 @@ const MembershipDetailPage = () => {
           <SwiperSlide>
             <img
               src={MembershipPlaceholderImage}
-              alt={`${membership.service_name} 기본 이미지`}
+              alt={`${membership.s_name} 기본 이미지`}
               className="w-full h-full object-cover"
             />
           </SwiperSlide>
