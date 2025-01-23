@@ -34,13 +34,25 @@ const MembershipDetailPage = () => {
 
   useEffect(() => {
     setHeader({
-      title: membership?.s_name || "데이터가 없습니다",
-      left: "back",
+      display: true,
+      component: (
+        <div className={"flex items-center justify-between px-5 py-3 h-[48px]"}>
+          <div
+            onClick={() => {
+              navigate(-1)
+            }}
+          >
+            <CaretLeftIcon className={"w-5 h-5"} />
+          </div>
+          <CartIcon />
+        </div>
+      ),
+      backgroundColor: "bg-white",
     })
     setNavigation({
       display: false,
     })
-  }, [membership?.s_name])
+  }, [])
 
   useEffect(() => {
     if (selectedBranch && membership?.options) {
