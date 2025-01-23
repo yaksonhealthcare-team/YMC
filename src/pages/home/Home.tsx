@@ -268,44 +268,52 @@ const BrandSection = () => {
 }
 
 const EventSection = ({ banners }: { banners: any[] | undefined }) => {
-  return banners ? (
+  const navigate = useNavigate()
+
+  return (
     <div className="mt-6">
       <Title title="이벤트 프로모션" />
-      <Swiper
-        spaceBetween={10}
-        slidesPerView={1.1}
-        style={{ overflow: "visible" }}
-        className="mt-2"
-      >
-        {banners.map((data, index) => (
-          <SwiperSlide key={index} className="mr-3">
-            <div
-              className="flex flex-col gap-4 bg-white pb-4 rounded-[20px] border border-gray-100"
-              onClick={() => {
-                const link = data.link.startsWith("http")
-                  ? data.link
-                  : `https://${data.link}`
-                window.location.href = link || `/event/${data.code}`
-              }}
-            >
+      {banners && banners.length > 0 ? (
+        <Swiper
+          spaceBetween={10}
+          slidesPerView={1.1}
+          style={{ overflow: "visible" }}
+          className="mt-2"
+        >
+          {banners.map((data, index) => (
+            <SwiperSlide key={index} className="mr-3">
               <div
-                style={{ backgroundImage: `url(${data.fileUrl})` }}
-                className="w-full h-[190px] bg-cover bg-center rounded-t-[20px]"
-              ></div>
-              <div className="flex flex-col px-5 gap-1.5">
-                <span className="font-b text-16px text-gray-700">
-                  {data.title}
-                </span>
-                <span className="font-r text-12px text-gray-600">
-                  {data.startDate} ~ {data.endDate}
-                </span>
+                className="flex flex-col gap-4 bg-white pb-4 rounded-[20px] border border-gray-100"
+                onClick={() => {
+                  const link = data.link.startsWith("http")
+                    ? data.link
+                    : `https://${data.link}`
+                  window.location.href = link || `/event/${data.code}`
+                }}
+              >
+                <div
+                  style={{ backgroundImage: `url(${data.fileUrl})` }}
+                  className="w-full h-[190px] bg-cover bg-center rounded-t-[20px]"
+                ></div>
+                <div className="flex flex-col px-5 gap-1.5">
+                  <span className="font-b text-16px text-gray-700">
+                    {data.title}
+                  </span>
+                  <span className="font-r text-12px text-gray-600">
+                    {data.startDate} ~ {data.endDate}
+                  </span>
+                </div>
               </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      ) : (
+        <EmptyCard
+          title={`진행중인 이벤트가 없어요.\n새로운 이벤트로 곧 찾아뵐게요.`}
+        />
+      )}
     </div>
-  ) : null
+  )
 }
 
 const BusinessInfo = () => {
