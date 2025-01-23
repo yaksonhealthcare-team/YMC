@@ -11,6 +11,7 @@ import {
   useMembershipCategories,
   useMembershipList,
 } from "../../queries/useMembershipQueries"
+import { ListResponse } from "../../apis/membership.api"
 
 const MembershipPage = () => {
   const navigate = useNavigate()
@@ -19,9 +20,15 @@ const MembershipPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>()
 
   const { data: categoriesData, isLoading: isCategoriesLoading } =
-    useMembershipCategories(brandCode)
+    useMembershipCategories(brandCode) as {
+      data: ListResponse<MembershipCategory> | undefined
+      isLoading: boolean
+    }
   const { data: membershipsData, isLoading: isMembershipsLoading } =
-    useMembershipList(brandCode, selectedCategory)
+    useMembershipList(brandCode, selectedCategory) as {
+      data: ListResponse<MembershipItem> | undefined
+      isLoading: boolean
+    }
 
   useEffect(() => {
     setHeader({
@@ -40,8 +47,8 @@ const MembershipPage = () => {
   if (
     isCategoriesLoading ||
     isMembershipsLoading ||
-    !categoriesData ||
-    !membershipsData
+    !categoriesData?.body ||
+    !membershipsData?.body
   ) {
     return <SplashScreen />
   }
@@ -57,7 +64,7 @@ const MembershipPage = () => {
           aria-label="회원권 카테고리"
         >
           <Tab label="전체" value="" />
-          {categoriesData.items.map((category: MembershipCategory) => (
+          {categoriesData.body.map((category: MembershipCategory) => (
             <Tab
               key={category.sc_idx}
               label={category.category_name}
@@ -68,7 +75,7 @@ const MembershipPage = () => {
       </Box>
 
       <div className="flex-1 overflow-y-auto p-5 space-y-4">
-        {membershipsData.items.map((membership: MembershipItem) => (
+        {membershipsData.body.map((membership: MembershipItem) => (
           <MembershipCard
             key={membership.s_idx}
             membership={membership}

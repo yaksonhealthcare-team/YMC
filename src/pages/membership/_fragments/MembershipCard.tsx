@@ -10,9 +10,9 @@ export const MembershipCard = ({
   membership,
   onClick,
 }: MembershipCardProps) => {
-  const lowestOption = membership.options.reduce((lowest, current) => {
+  const lowestOption = membership.options?.reduce((lowest, current) => {
     return current.option_price < lowest.option_price ? current : lowest
-  })
+  }, membership.options[0])
 
   return (
     <div
@@ -35,7 +35,7 @@ export const MembershipCard = ({
         </p>
         <div className="flex items-baseline gap-1">
           <span className="text-gray-900 font-bold text-lg">
-            {lowestOption.option_price.toLocaleString()}원
+            {lowestOption?.option_price?.toLocaleString()}원
           </span>
           <span className="text-gray-900 text-xs">부터~</span>
         </div>
