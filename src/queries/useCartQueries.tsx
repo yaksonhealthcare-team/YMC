@@ -13,7 +13,7 @@ export const useDeleteCartItemsMutation = () =>
   useMutation({
     mutationFn: (cartIds: string[]) => removeCart(cartIds),
     onSettled: async () => {
-      await queryClient.invalidateQueries({
+      await queryClient.refetchQueries({
         queryKey: queryKeys.carts.all,
       })
     },
@@ -24,7 +24,7 @@ export const useUpdateCartItemMutation = () =>
     mutationFn: ({ cartId, amount }: { cartId: string; amount: number }) =>
       updateCart(cartId, amount),
     onSettled: async () => {
-      await queryClient.invalidateQueries({
+      await queryClient.refetchQueries({
         queryKey: queryKeys.carts.all,
       })
     },
