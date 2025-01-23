@@ -16,16 +16,16 @@ import { ReservationStatus } from "types/Reservation"
 const mockReservation = {
   id: "35439",
   status: ReservationStatus.CONFIRMED, // 상태는 enum 타입이어야 함
-  store: "", // 매장명 없음 테스트
+  store: "강남본점", // 매장명 추가
   programName: "", // 프로그램명 없음 테스트
   visit: 1,
   date: new Date("invalid date"), // 날짜 정보 없음 테스트
   duration: 0, // 소요시간 없음 테스트
   request: "", // 요청사항 없음 테스트
   branchId: "1",
-  address: "", // 주소 없음 테스트
-  latitude: 0, // 위치 정보 없음 테스트
-  longitude: 0,
+  address: "서울특별시 강남구 테헤란로 123", // 주소 추가
+  latitude: 37.4979, // 강남 테헤란로 근처 좌표
+  longitude: 127.0276,
   phone: "", // 전화번호 없음 테스트
   additionalServices: [], // 추가 관리 없음 테스트
 }
