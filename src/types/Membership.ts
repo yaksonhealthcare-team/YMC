@@ -91,8 +91,8 @@ export interface AdditionalManagementOption {
 
 export interface AdditionalManagement {
   am_idx: string
-  service_name: string
-  service_time: string
+  s_name: string
+  s_time: string
   options: AdditionalManagementOption[]
 }
 

@@ -28,6 +28,7 @@ import { ClockIcon } from "@mui/x-date-pickers"
 import { useAdditionalManagement } from "../../queries/useMembershipQueries.tsx"
 import { TimeSlot } from "../../types/Schedule.ts"
 import { Checkbox } from "@mui/material"
+import { useMembershipList } from "../../queries/useMembershipQueries.tsx"
 
 const example_items: MembershipItem[] = [
   {
@@ -93,7 +94,10 @@ const ReservationFormPage = () => {
   const theme = useTheme()
   const [consultationSlot, _setConsultationSlot] = useState(1)
   const [hasMembership, _setHasMembership] = useState(true)
-  const [itemOptions, setItemOptions] = useState(example_items)
+  const [brandCode] = useState("001") // 약손명가
+
+  const { data: membershipsData, isLoading: isMembershipsLoading } =
+    useMembershipList(brandCode)
 
   const [data, setData] = useState<FormDataType>({
     item: undefined,
@@ -109,7 +113,11 @@ const ReservationFormPage = () => {
   )
 
   const handleOnChangeItem = (event: ChangeEvent<HTMLInputElement>) => {
-    setData({ ...data, item: event.target.value })
+    setData((prev) => ({
+      ...prev,
+      item: event.target.value,
+      additionalServices: [],
+    }))
   }
 
   const handleOpenCalendar = () => {
@@ -152,7 +160,7 @@ const ReservationFormPage = () => {
     setNavigation({ display: false })
 
     // TODO: Get item options from API
-    setItemOptions(example_items)
+    // setItemOptions(example_items)
   }, [])
 
   const totalPrice = data.additionalServices.reduce((sum, service) => {
@@ -168,30 +176,17 @@ const ReservationFormPage = () => {
           value={data.item}
           onChange={handleOnChangeItem}
         >
-          <RadioCard
-            checked={data.item === "0"}
-            value="0"
-            disabled={consultationSlot >= 2}
-          >
+          <RadioCard checked={data.item === "상담 예약"} value="상담 예약">
             <div className="justify-start items-center gap-2 flex">
               <div className="text-gray-700 text-16px font-sb">상담 예약</div>
-              {consultationSlot < 2 && (
-                <div className="px-2 py-0.5 bg-tag-greenBg rounded-[999px] justify-center items-center flex">
-                  <div className="text-center text-tag-green text-12px font-m">
-                    {consultationSlot === 0 ? "Free" : "1/2"}
-                  </div>
+              <div className="px-2 py-0.5 bg-tag-greenBg rounded-[999px] justify-center items-center flex">
+                <div className="text-center text-tag-green text-12px font-m">
+                  {consultationSlot}회
                 </div>
-              )}
-              {consultationSlot >= 2 && (
-                <div className="px-2 h-4 bg-tag-redBg rounded-[999px] justify-center items-center flex">
-                  <div className="text-center text-tag-red text-12px font-m">
-                    0/2
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
           </RadioCard>
-          {hasMembership ? (
+          {!isMembershipsLoading && membershipsData?.body && (
             <Box
               className="w-full"
               sx={(theme) => ({
@@ -228,37 +223,18 @@ const ReservationFormPage = () => {
                 className="w-full"
                 pagination={{ clickable: true }}
               >
-                {itemOptions.map((item) => (
-                  <SwiperSlide key={item.s_idx} className="mr-2">
+                {membershipsData.body.map((membership) => (
+                  <SwiperSlide key={membership.s_idx} className="mr-2">
                     <MembershipRadioCard
-                      membership={item}
-                      checked={data.item === item.s_idx}
-                      value={item.s_idx}
+                      membership={membership}
+                      checked={data.item === membership.s_idx}
+                      value={membership.s_idx}
                     />
                   </SwiperSlide>
                 ))}
               </Swiper>
             </Box>
-          ) : (
-            <Button
-              variantType="primary"
-              className="bg-tag-redBg !text-tag-red justify-between items-center hover:bg-red-100"
-              iconRight={<CaretRigthIcon className="w-5 h-5" />}
-              onClick={() => navigate("/membership")}
-            >
-              회원권 구매하기
-            </Button>
           )}
-          <div>
-            <p className="text-gray-500 text-sm">
-              * 상담 예약은 월간 2회까지 이용 가능합니다.
-            </p>
-            {!hasMembership && (
-              <p className="text-gray-500 text-sm mt-1">
-                * 관리 프로그램은 회원권 구매 후 예약이 가능합니다.
-              </p>
-            )}
-          </div>
         </RadioGroup>
       </section>
       <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
@@ -298,56 +274,89 @@ const ReservationFormPage = () => {
       </section>
       {!isLoading &&
         additionalManagements &&
-        additionalManagements.body.length > 0 && (
+        additionalManagements.body.length > 0 &&
+        data.item !== "상담 예약" && (
           <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
             <p className="font-m text-14px text-gray-700 mb-4">추가관리</p>
             <div className="flex flex-col gap-3">
-              {additionalManagements.body.map((option) => (
-                <div
-                  key={option.am_idx}
-                  className="flex items-center justify-between py-4 border-b border-gray-100"
-                >
-                  <div className="flex-1">
-                    <p className="text-gray-700 text-base font-sb">
-                      {option.service_name}
-                    </p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <ClockIcon className="w-4 h-4 text-gray-400" />
-                      <span className="text-gray-500 text-sm">
-                        {Number(option.service_time || 0)}분
-                      </span>
+              {additionalManagements.body.map((option) => {
+                const isChecked = data.additionalServices.some(
+                  (service) => service.am_idx === option.am_idx,
+                )
+                return (
+                  <div
+                    key={option.am_idx}
+                    className="p-5 bg-white rounded-xl border border-gray-100 flex flex-col gap-2"
+                  >
+                    <div className="flex justify-between items-center">
+                      <p className="text-[#212121] text-16px font-m leading-[23.68px]">
+                        {option.s_name}
+                      </p>
+                      <Checkbox
+                        checked={isChecked}
+                        onChange={() => {
+                          setData((prev) => {
+                            // 이미 선택된 항목인지 확인
+                            const existingIndex =
+                              prev.additionalServices.findIndex(
+                                (service) => service.am_idx === option.am_idx,
+                              )
+
+                            // 새로운 additionalServices 배열 생성
+                            const newAdditionalServices = [
+                              ...prev.additionalServices,
+                            ]
+
+                            if (existingIndex >= 0) {
+                              // 이미 선택된 항목이면 제거
+                              newAdditionalServices.splice(existingIndex, 1)
+                            } else {
+                              // 선택되지 않은 항목이면 추가
+                              newAdditionalServices.push({
+                                am_idx: option.am_idx,
+                                s_name: option.s_name,
+                                s_time: option.s_time,
+                                options: option.options,
+                              })
+                            }
+
+                            return {
+                              ...prev,
+                              additionalServices: newAdditionalServices,
+                            }
+                          })
+                        }}
+                        sx={{
+                          width: 20,
+                          height: 20,
+                          padding: 0,
+                          "& .MuiSvgIcon-root": {
+                            width: 20,
+                            height: 20,
+                          },
+                          "&.Mui-checked": {
+                            color: "#F37165",
+                          },
+                          "&:not(.Mui-checked)": {
+                            color: "#DDDDDD",
+                          },
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-2">
+                        <ClockIcon className="w-3.5 h-3.5 text-gray-500" />
+                        <span className="text-gray-500 text-14px font-r leading-[20.72px]">
+                          {Number(option.s_time || 0)}분 소요
+                        </span>
+                      </div>
+                      <p className="text-[#212121] text-16px font-bold leading-[23.68px]">
+                        {option.options?.[0]?.ss_price || "0"}원
+                      </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <p className="text-gray-700 text-base font-sb">
-                      {option.options?.[0]?.ss_price || "0"}원
-                    </p>
-                    <Checkbox
-                      checked={data.additionalServices.some(
-                        (item) => item.am_idx === option.am_idx,
-                      )}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setData((prev) => ({
-                            ...prev,
-                            additionalServices: [
-                              ...prev.additionalServices,
-                              option,
-                            ],
-                          }))
-                        } else {
-                          setData((prev) => ({
-                            ...prev,
-                            additionalServices: prev.additionalServices.filter(
-                              (item) => item.am_idx !== option.am_idx,
-                            ),
-                          }))
-                        }
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </section>
         )}
@@ -403,7 +412,7 @@ const ReservationFormPage = () => {
           {data.additionalServices.map((service) => (
             <div key={service.am_idx} className="flex justify-between">
               <p className="text-gray-400 text-sm font-medium">
-                {service.service_name}
+                {service.s_name}
               </p>
               <p className="text-base font-medium">
                 {service.options?.[0]?.ss_price || "0"}원
