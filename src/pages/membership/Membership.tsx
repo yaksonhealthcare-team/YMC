@@ -54,7 +54,7 @@ const MembershipPage = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-system-bg">
+    <div className="h-screen bg-system-bg">
       <div className="fixed top-[48px] left-0 right-0 z-10 flex justify-center">
         <Box
           sx={{ borderBottom: 1, borderColor: "divider" }}
@@ -67,12 +67,21 @@ const MembershipPage = () => {
             scrollButtons={false}
             allowScrollButtonsMobile={false}
             TabIndicatorProps={{
-              sx: { transition: "none" },
+              sx: {
+                transition: "none",
+                bgcolor: "#212121",
+              },
             }}
             sx={{
               "& .MuiTabs-scroller": {
                 overflowX: "auto !important",
                 "&::-webkit-scrollbar": { display: "none" },
+              },
+              "& .MuiTab-root": {
+                color: "#9E9E9E",
+                "&.Mui-selected": {
+                  color: "#212121",
+                },
               },
             }}
             aria-label="회원권 카테고리"
@@ -89,14 +98,22 @@ const MembershipPage = () => {
         </Box>
       </div>
 
-      <div className="pt-[96px] pb-[100px] p-5 space-y-4 bg-system-bg">
-        {membershipsData.body.map((membership: MembershipItem) => (
-          <MembershipCard
-            key={membership.s_idx}
-            membership={membership}
-            onClick={() => navigate(`/membership/${membership.s_idx}`)}
-          />
-        ))}
+      <div className="pt-[96px] pb-[100px] p-5 bg-system-bg">
+        {membershipsData.body.length === 0 ? (
+          <div className="flex justify-center items-center h-[200px] text-gray-600">
+            준비중 입니다
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {membershipsData.body.map((membership: MembershipItem) => (
+              <MembershipCard
+                key={membership.s_idx}
+                membership={membership}
+                onClick={() => navigate(`/membership/${membership.s_idx}`)}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
