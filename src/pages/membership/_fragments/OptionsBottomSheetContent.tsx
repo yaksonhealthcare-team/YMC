@@ -10,7 +10,7 @@ import {
   SelectedOption,
   useMembershipOptionsStore,
 } from "../../../hooks/useMembershipOptions.ts"
-import { Branch } from "../../../types/Branch.ts"
+import { Divider } from "@mui/material"
 
 interface Props {
   serviceType: string
@@ -39,11 +39,11 @@ const OptionsBottomSheetContent = ({
     }
 
     const newSelectedOptions = [
-      ...selectedOptions,
       {
         option,
         count: 1,
       },
+      ...selectedOptions,
     ]
     setSelectedOptions(newSelectedOptions)
   }
@@ -79,107 +79,107 @@ const OptionsBottomSheetContent = ({
   const totalPrice = useMemo(() => calculateTotalPrice(), [selectedOptions])
 
   return (
-    <div className="flex flex-col h-[610px] ">
-      {serviceType?.includes("지점") && (
-        <button
-          className={
-            "w-full border border-gray-100 rounded-xl px-4 py-3 flex justify-between mb-3 items-center"
-          }
-          onClick={onClickBranchSelect}
-        >
-          <span
-            className={`${selectedBranch ? "" : "text-[#bdbdbd]"} text-base font-normal leading-normal`}
+    <div className="flex flex-col h-[610px]">
+      <div className="flex flex-1 flex-col items-center p-3 pt-6">
+        {serviceType?.includes("지점") && (
+          <button
+            className={
+              "w-full border border-gray-100 rounded-xl px-4 py-3 flex justify-between mb-3 items-center"
+            }
+            onClick={onClickBranchSelect}
           >
-            {selectedBranch ? selectedBranch.name : "지점을 선택해주세요"}
-          </span>
-          <CaretRightIcon className={"w-[18px] h-[18px] text-gray-900"} />
-        </button>
-      )}
-      {/* Select Dropdown */}
-      <div className="w-full mx-auto relative flex-1">
-        <button
-          className={clsx(
-            "w-full h-[52px] px-4 py-3 bg-white flex justify-between items-center",
-            isDropdownOpen
-              ? "rounded-t-xl border border-[#ebebeb] border-b-0"
-              : "rounded-xl border border-[#ebebeb]",
-          )}
-          onClick={() => setIsDropdownOpen((prev) => !prev)}
-        >
-          <span className="text-[#bdbdbd] text-base font-normal leading-normal">
-            관리 횟수를 선택해주세요
-          </span>
-          <CaretDownIcon
-            className={`w-4 h-4 text-gray-900 transition-transform ${
-              isDropdownOpen ? "rotate-180" : ""
-            }`}
-          />
-        </button>
+            <span
+              className={`${selectedBranch ? "" : "text-[#bdbdbd]"} text-base font-normal leading-normal`}
+            >
+              {selectedBranch ? selectedBranch.name : "지점을 선택해주세요"}
+            </span>
+            <CaretRightIcon className={"w-[18px] h-[18px] text-gray-900"} />
+          </button>
+        )}
 
-        {/* Dropdown Menu */}
-        {isDropdownOpen && (
-          <div className="absolute w-full bg-white rounded-b-xl border border-[#dddddd] flex flex-col">
-            {options.map((option, index) => (
-              <button
-                key={option.ss_idx}
-                className={`w-full px-4 py-3.5 text-left text-[#212121] text-sm font-normal border-b border-[#ebebeb] hover:bg-gray-50 
+        <div className="w-full mx-auto relative flex-1">
+          <button
+            className={clsx(
+              "w-full h-[52px] px-4 py-3 bg-white flex justify-between items-center",
+              isDropdownOpen
+                ? "rounded-t-xl border border-[#ebebeb] border-b-0"
+                : "rounded-xl border border-[#ebebeb]",
+            )}
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <span className="text-[#bdbdbd] text-base font-normal leading-normal">
+              관리 횟수를 선택해주세요
+            </span>
+            <CaretDownIcon
+              className={`w-4 h-4 text-gray-900 transition-transform ${
+                isDropdownOpen ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+
+          {isDropdownOpen && (
+            <div className="absolute z-10 w-full bg-white rounded-b-xl border border-[#dddddd] flex flex-col">
+              {options.map((option, index) => (
+                <button
+                  key={option.ss_idx}
+                  className={`w-full px-4 py-3.5 text-left text-[#212121] text-sm font-normal border-b border-[#ebebeb] hover:bg-gray-50 
             ${index === options.length - 1 ? "rounded-b-xl border-b-0" : ""}`}
-                onClick={() => {
-                  handleSelectOption(option)
-                  setIsDropdownOpen(false)
-                }}
-              >
-                {option.ss_count}
-              </button>
+                  onClick={() => {
+                    handleSelectOption(option)
+                    setIsDropdownOpen(false)
+                  }}
+                >
+                  {option.ss_count}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className="flex flex-col gap-4 mt-5 px-3">
+            {selectedOptions.map(({ option, count }, index) => (
+              <div key={option.ss_idx} className="flex flex-col gap-4">
+                <div className="flex justify-between items-center">
+                  <span className="font-m text-16px text-gray-900">
+                    {option.ss_count}
+                  </span>
+                  <XCircleIcon
+                    className="w-5 cursor-pointer"
+                    onClick={() => handleRemoveOption(option.ss_idx)}
+                  />
+                </div>
+                <div className="flex justify-between items-center">
+                  <Number
+                    count={count}
+                    onClickMinus={() =>
+                      handleCountChange(option.ss_idx, count - 1)
+                    }
+                    onClickPlus={() =>
+                      handleCountChange(option.ss_idx, count + 1)
+                    }
+                  />
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-baseline gap-0.5">
+                      <span className="font-sb text-16px text-gray-900">
+                        {option.ss_price}
+                      </span>
+                      <span className="font-r text-14px text-gray-900">원</span>
+                    </div>
+                    {option.original_price && (
+                      <span className="font-r text-14px text-gray-400 line-through">
+                        {option.original_price}원
+                      </span>
+                    )}
+                  </div>
+                </div>
+                {index !== selectedOptions.length - 1 && (
+                  <Divider className={"border-[#F8F8F8"} />
+                )}
+              </div>
             ))}
           </div>
-        )}
-      </div>
-
-      {/* Selected Options */}
-      <div className="px-5 mt-5">
-        <div className="flex flex-col gap-4">
-          {selectedOptions.map(({ option, count }) => (
-            <div key={option.ss_idx} className="flex flex-col gap-4">
-              <div className="flex justify-between items-center">
-                <span className="font-m text-16px text-gray-900">
-                  {option.ss_count}
-                </span>
-                <XCircleIcon
-                  className="w-5 cursor-pointer"
-                  onClick={() => handleRemoveOption(option.ss_idx)}
-                />
-              </div>
-              <div className="flex justify-between items-center">
-                <Number
-                  count={count}
-                  onClickMinus={() =>
-                    handleCountChange(option.ss_idx, count - 1)
-                  }
-                  onClickPlus={() =>
-                    handleCountChange(option.ss_idx, count + 1)
-                  }
-                />
-                <div className="flex items-center gap-2">
-                  <div className="flex items-baseline gap-0.5">
-                    <span className="font-sb text-16px text-gray-900">
-                      {option.ss_price}
-                    </span>
-                    <span className="font-r text-14px text-gray-900">원</span>
-                  </div>
-                  {option.original_price && (
-                    <span className="font-r text-14px text-gray-400 line-through">
-                      {option.original_price}원
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
         </div>
       </div>
 
-      {/* Total */}
       <div className="mt-5 px-5 py-5 border-t border-gray-100">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-1">
@@ -197,7 +197,6 @@ const OptionsBottomSheetContent = ({
         </div>
       </div>
 
-      {/* Actions */}
       <div className="px-5 pt-3">
         <div className="flex gap-2">
           <Button

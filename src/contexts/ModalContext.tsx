@@ -209,7 +209,7 @@ const OverlayContainer: React.FC = () => {
           }}
         >
           <DialogContent className={"p-0"}>
-            <div className="p-3 flex flex-col items-center">
+            <div className="flex flex-col items-center">
               {(options?.title as string) && (
                 <h2 className="text-xl font-bold mb-4 text-center">
                   {options?.title as string}
