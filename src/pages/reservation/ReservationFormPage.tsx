@@ -1,6 +1,6 @@
 import { useLayout } from "contexts/LayoutContext"
 import { ChangeEvent, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import CaretRigthIcon from "@assets/icons/CaretRightIcon.svg?react"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
@@ -30,6 +30,7 @@ import { useAdditionalManagement } from "../../queries/useMembershipQueries.tsx"
 import { TimeSlot } from "../../types/Schedule.ts"
 import { Checkbox } from "@mui/material"
 import { useMembershipList } from "../../queries/useMembershipQueries.tsx"
+import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 
 const example_items: MembershipItem[] = [
   {
@@ -92,10 +93,11 @@ const ReservationFormPage = () => {
   const { openBottomSheet, closeOverlay } = useOverlay()
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
+  const location = useLocation()
   const theme = useTheme()
   const [consultationSlot, _setConsultationSlot] = useState(1)
-  const [hasMembership, _setHasMembership] = useState(true)
   const [brandCode] = useState("001") // 약손명가
+  const { selectedBranch, setSelectedBranch } = useMembershipOptionsStore()
 
   const { data: membershipsData, isLoading: isMembershipsLoading } =
     useMembershipList(brandCode)
@@ -136,9 +138,9 @@ const ReservationFormPage = () => {
             timeSlot,
           }))
         }}
-        membershipIndex={parseInt(data.item)}
-        addServices={data.additionalServices.map((item) =>
-          parseInt(item.am_idx),
+        membershipIndex={data.item === "상담 예약" ? 0 : Number(data.item)}
+        addServices={data.additionalServices.map((service) =>
+          Number(service.am_idx),
         )}
       />,
       {
@@ -160,9 +162,20 @@ const ReservationFormPage = () => {
     })
     setNavigation({ display: false })
 
-    // TODO: Get item options from API
-    // setItemOptions(example_items)
-  }, [])
+    if (selectedBranch) {
+      setData((prev) => ({
+        ...prev,
+        branch: selectedBranch.id,
+      }))
+    }
+
+    if (location.state?.selectedItem) {
+      setData((prev) => ({
+        ...prev,
+        item: location.state.selectedItem,
+      }))
+    }
+  }, [selectedBranch, location.state])
 
   const totalPrice = data.additionalServices.reduce((sum, service) => {
     const optionPrice = service.options?.[0]?.ss_price?.replace(/,/g, "")
@@ -358,11 +371,20 @@ const ReservationFormPage = () => {
         <div className="flex flex-col gap-6">
           <CustomInputButton
             label="지점 선택"
-            value={data.branch ? String(data.branch) : ""}
+            value={selectedBranch ? selectedBranch.name : ""}
             placeholder="지점을 선택해주세요."
             iconRight={<CaretRigthIcon className="w-4 h-4" />}
             onClick={() => {
-              //   TODO: navigate to branch selection page
+              if (!data.item) {
+                alert("회원권을 먼저 선택해주세요.")
+                return
+              }
+              navigate("/membership/select-branch", {
+                state: {
+                  returnPath: "/reservation",
+                  selectedItem: data.item,
+                },
+              })
             }}
           />
           <CustomInputButton
@@ -379,7 +401,17 @@ const ReservationFormPage = () => {
                 color={theme.palette.grey[300]}
               />
             }
-            onClick={handleOpenCalendar}
+            onClick={() => {
+              if (!data.item) {
+                alert("회원권을 먼저 선택해주세요.")
+                return
+              }
+              if (!data.branch) {
+                alert("지점을 먼저 선택해주세요.")
+                return
+              }
+              handleOpenCalendar()
+            }}
           />
           <CustomTextField
             name="request"
@@ -387,11 +419,17 @@ const ReservationFormPage = () => {
             placeholder="요청사항을 입력해주세요."
             value={data.request}
             onChange={(event) => {
+              const value = event.target.value
+              if (value.length > 100) {
+                alert("요청사항은 100자 이내로 입력해주세요.")
+                return
+              }
               setData((prev) => ({
                 ...prev,
-                request: event.target.value,
+                request: value,
               }))
             }}
+            helperText={`${data.request.length}/100`}
           />
           <p className="text-gray-500 text-sm">
             * 예약 당일 취소, 노쇼의 경우 예약시 차감된 회원권 횟수가 반환되지
