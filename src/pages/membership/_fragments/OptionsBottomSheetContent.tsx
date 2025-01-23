@@ -11,20 +11,28 @@ import {
   useMembershipOptionsStore,
 } from "../../../hooks/useMembershipOptions.ts"
 import { Divider } from "@mui/material"
+import { useNavigate } from "react-router-dom"
+import { addCart } from "../../../apis/cart.api"
+import { useOverlay } from "../../../contexts/ModalContext"
+import { useParams } from "react-router-dom"
+import { queryClient } from "../../../queries/clients"
+import { queryKeys } from "../../../queries/query.keys"
 
 interface Props {
   serviceType: string
   options: MembershipOption[]
   onClickBranchSelect: () => void
-  onClickAddToCart: (options: SelectedOption[]) => void
+  onAddToCartSuccess: () => void
 }
 
 const OptionsBottomSheetContent = ({
   serviceType,
   options,
   onClickBranchSelect,
-  onClickAddToCart,
+  onAddToCartSuccess,
 }: Props) => {
+  const { id } = useParams<{ id: string }>()
+  const { closeOverlay } = useOverlay()
   const { selectedOptions, setSelectedOptions, selectedBranch } =
     useMembershipOptionsStore()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -77,6 +85,36 @@ const OptionsBottomSheetContent = ({
   }
 
   const totalPrice = useMemo(() => calculateTotalPrice(), [selectedOptions])
+
+  const handleAddToCart = async () => {
+    if (!selectedBranch) {
+      alert("지점을 선택해주세요")
+      return
+    }
+
+    if (!id) {
+      alert("잘못된 접근입니다.")
+      return
+    }
+
+    try {
+      const cartItems = selectedOptions.map(({ option, count }) => ({
+        s_idx: parseInt(id),
+        ss_idx: parseInt(option.ss_idx),
+        b_idx: parseInt(selectedBranch.id),
+        brand_code: selectedBranch.brandCode,
+        amount: count,
+      }))
+
+      await addCart(cartItems)
+      await queryClient.refetchQueries({ queryKey: queryKeys.carts.all })
+      closeOverlay()
+      onAddToCartSuccess()
+    } catch (error) {
+      console.error("장바구니 담기 실패:", error)
+      alert("장바구니 담기에 실패했습니다. 다시 시도해주세요.")
+    }
+  }
 
   return (
     <div className="flex flex-col h-[610px]">
@@ -204,9 +242,7 @@ const OptionsBottomSheetContent = ({
             sizeType="l"
             className="flex-1"
             disabled={selectedOptions.length === 0}
-            onClick={() => {
-              onClickAddToCart(selectedOptions)
-            }}
+            onClick={handleAddToCart}
           >
             장바구니 담기
           </Button>

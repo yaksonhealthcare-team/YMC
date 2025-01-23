@@ -102,11 +102,13 @@ const MembershipDetailPage = () => {
       <OptionsBottomSheetContent
         serviceType={membership.s_type}
         options={sortedOptions}
-        onClickAddToCart={handleAddItemsToCart}
         onClickBranchSelect={() => {
           closeOverlay()
           setShouldOpenBottomSheet(true)
           navigate(`/membership/select-branch`)
+        }}
+        onAddToCartSuccess={() => {
+          navigate("/cart")
         }}
       />,
     )
