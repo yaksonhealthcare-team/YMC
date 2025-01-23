@@ -5,17 +5,12 @@ import {
   MembershipItem,
   MyMembership,
   AdditionalManagement,
+  MembershipUsageHistory,
 } from "../types/Membership"
-
-const axiosInstance = axios.create({
-  baseURL: "https://devapi.yaksonhc.com/api",
-  headers: {
-    "Content-Type": "application/json",
-  },
-})
+import { axiosClient } from "../queries/clients"
 
 // 요청 인터셉터 추가
-axiosInstance.interceptors.request.use(
+axiosClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("accessToken")
     if (token) {
@@ -29,7 +24,7 @@ axiosInstance.interceptors.request.use(
 )
 
 // 응답 인터셉터 추가
-axiosInstance.interceptors.response.use(
+axiosClient.interceptors.response.use(
   (response) => {
     return response
   },
@@ -53,7 +48,7 @@ axiosInstance.interceptors.response.use(
         localStorage.setItem("accessToken", access_token)
 
         originalRequest.headers.Authorization = `Bearer ${access_token}`
-        return axiosInstance(originalRequest)
+        return axiosClient(originalRequest)
       } catch (error) {
         // 리프레시 토큰도 만료되었을 경우
         localStorage.removeItem("accessToken")
@@ -83,7 +78,7 @@ export const fetchMembershipList = async (
   page: number = 1,
   pageSize: number = 10,
 ) => {
-  const response = await axiosInstance.get<ListResponse<MembershipItem>>(
+  const response = await axiosClient.get<ListResponse<MembershipItem>>(
     `/memberships/memberships`,
     {
       params: {
@@ -98,7 +93,7 @@ export const fetchMembershipList = async (
 }
 
 export const fetchMembershipDetail = async (sIdx: string) => {
-  const response = await axiosInstance.get<MembershipDetail>(
+  const response = await axiosClient.get<MembershipDetail>(
     `/memberships/detail`,
     {
       params: {
@@ -110,7 +105,7 @@ export const fetchMembershipDetail = async (sIdx: string) => {
 }
 
 export const fetchMembershipCategories = async (brandCode: string) => {
-  const response = await axiosInstance.get<ListResponse<MembershipCategory>>(
+  const response = await axiosClient.get<ListResponse<MembershipCategory>>(
     `/memberships/categories`,
     {
       params: {
@@ -126,7 +121,7 @@ export const fetchUserMemberships = async (
   page: number = 1,
   pageSize: number = 10,
 ) => {
-  const response = await axiosInstance.get<ListResponse<MyMembership>>(
+  const response = await axiosClient.get<ListResponse<MyMembership>>(
     `/memberships/me/me`,
     {
       params: {
@@ -143,12 +138,30 @@ export const fetchAdditionalManagement = async (
   membershipIdx: string,
   page: number = 1,
 ) => {
-  const response = await axiosInstance.get<ListResponse<AdditionalManagement>>(
+  const response = await axiosClient.get<ListResponse<AdditionalManagement>>(
     `/memberships/additional-managements`,
     {
       params: {
         mp_idx: membershipIdx,
         page,
+      },
+    },
+  )
+  return response.data
+}
+
+export const fetchMembershipUsageHistory = async (
+  membershipIdx: string,
+  page: number = 1,
+  pageSize: number = 50,
+) => {
+  const response = await axiosClient.get<ListResponse<MembershipUsageHistory>>(
+    `/memberships/me/detail`,
+    {
+      params: {
+        mp_idx: membershipIdx,
+        page,
+        page_size: pageSize,
       },
     },
   )
