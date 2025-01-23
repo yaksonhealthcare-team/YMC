@@ -1,5 +1,5 @@
 import MainTabs from "./_fragments/MainTabs"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Button } from "@components/Button"
 import clsx from "clsx"
 import { ReserveCard } from "@components/ReserveCard"
@@ -20,11 +20,6 @@ const ReservationHistory = () => {
   const { data: reservations, isLoading } = useReservations(
     reservationFilter.id,
   )
-
-  const flattenedReservations = useMemo(() => {
-    if (!reservations?.pages) return []
-    return reservations.pages.flatMap((page) => page)
-  }, [reservations])
 
   const handleFilterChange = useCallback((filter: FilterItem) => {
     setReservationFilter(filter)
@@ -67,13 +62,13 @@ const ReservationHistory = () => {
       </div>
 
       <div className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto scrollbar-hide">
-        {flattenedReservations.length === 0 ? (
+        {!reservations || reservations.length === 0 ? (
           <div className="flex justify-center items-center p-4">
             예약 내역이 없습니다.
           </div>
         ) : (
           <div className="space-y-3">
-            {flattenedReservations.map((reservation) => (
+            {reservations.map((reservation) => (
               <ReserveCard
                 key={reservation.id}
                 id={reservation.id}

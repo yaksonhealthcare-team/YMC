@@ -1,23 +1,37 @@
-import { useQuery, UseQueryOptions } from "@tanstack/react-query"
-import { fetchReservations } from "apis/reservation.api"
-import { queryKeys } from "./query.keys"
-import { ReservationStatusCode, Reservation } from "types/Reservation"
+import { useQuery } from "@tanstack/react-query"
+import {
+  Reservation,
+  ReservationResponse as ApiResponse,
+  ReservationStatus,
+} from "types/Reservation"
+import { axiosClient } from "./clients"
 
-export const useReservations = (
-  status: ReservationStatusCode,
-  options?: Omit<UseQueryOptions<Reservation[], Error>, "queryKey" | "queryFn">,
-) =>
-  useQuery({
-    queryKey: queryKeys.reservations.list({
-      page: 1,
-      status,
-    }),
-    queryFn: () => fetchReservations(status, 1),
+export const useReservations = (status: string = "000") => {
+  return useQuery<Reservation[]>({
+    queryKey: ["reservations", status],
+    queryFn: async () => {
+      const { data } = await axiosClient.get("/reservation/reservations", {
+        params: {
+          r_status: status,
+          page: 1,
+        },
+      })
+
+      return data.body.map((item: ApiResponse) => ({
+        id: item.r_idx,
+        status: item.r_status,
+        store: item.b_name,
+        programName: item.ps_name,
+        visit: parseInt(item.visit),
+        date: new Date(item.r_date),
+        remainingDays: item.remaining_days,
+        duration: parseInt(item.r_take_time),
+      }))
+    },
+    staleTime: 1000 * 60 * 5, // 5분
+    gcTime: 1000 * 60 * 10, // 10분
     retry: false,
-    retryOnMount: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    gcTime: 60 * 1000, // 1분
-    staleTime: 30 * 1000, // 30초
-    ...options,
   })
+}
