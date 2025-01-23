@@ -37,11 +37,17 @@ const MembershipDetailPage = () => {
   } = useMembershipOptionsStore()
   const { clear: clearOptions } = useMembershipOptionsStore()
   const { data: membership, isLoading } = useMembershipDetail(id || "")
+  console.log("membership:", membership)
+  console.log("membership options:", membership?.options)
   const sortedOptions = useMemo(
     () =>
-      membership?.options.sort((a, b) => Number(a.ss_idx) - Number(b.ss_idx)),
+      membership?.options?.sort(
+        (a, b) => Number(a.ss_idx) - Number(b.ss_idx),
+      ) || [],
     [membership?.options],
   )
+
+  console.log("sortedOptions:", sortedOptions)
 
   const firstOption = sortedOptions?.[0]
 
@@ -70,10 +76,8 @@ const MembershipDetailPage = () => {
     }
   }, [])
 
-  const handleAddItemsToCart = async (
-    selectedOptions: SelectedOption[],
-    selectedBranch: Branch | null,
-  ) => {
+  const handleAddItemsToCart = async (selectedOptions: SelectedOption[]) => {
+    const selectedBranch = useMembershipOptionsStore.getState().selectedBranch
     if (!selectedBranch) return
 
     await addCart(
@@ -81,8 +85,6 @@ const MembershipDetailPage = () => {
         s_idx: Number(id!),
         ss_idx: Number(option.ss_idx),
         b_idx: Number(selectedBranch.id),
-        // TODO: 전지점 회원권 케이스에 대해 API 수정 요청드림.
-        //  추후 변경: b_idx: selectedBranch ? Number(selectedBranch.id) : undefined와 비슷하게 변경해야 할 것 같습니다.
         brand_code: selectedBranch.brandCode,
         amount: count,
       })),
@@ -99,7 +101,7 @@ const MembershipDetailPage = () => {
     openBottomSheet(
       <OptionsBottomSheetContent
         serviceType={membership.s_type}
-        options={sortedOptions || []}
+        options={sortedOptions}
         onClickAddToCart={handleAddItemsToCart}
         onClickBranchSelect={() => {
           closeOverlay()

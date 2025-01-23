@@ -1,97 +1,86 @@
-import { Button } from "@components/Button"
-import { Number as Counter } from "@components/Number"
-import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
-import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { useMemo, useState } from "react"
 import XCircleIcon from "@components/icons/XCircleIcon.tsx"
-import { MembershipOption } from "types/Membership"
+import { MembershipOption } from "../../../types/Membership"
 import clsx from "clsx"
+import { Number } from "@components/Number.tsx"
+import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
+import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
+import { Button } from "@components/Button"
 import {
   SelectedOption,
   useMembershipOptionsStore,
 } from "../../../hooks/useMembershipOptions.ts"
 import { Branch } from "../../../types/Branch.ts"
 
-interface OptionsBottomSheetContentProps {
+interface Props {
   serviceType: string
   options: MembershipOption[]
-  onClickAddToCart: (
-    selectedOptions: SelectedOption[],
-    selectedBranch: Branch | null,
-  ) => void
   onClickBranchSelect: () => void
+  onClickAddToCart: (options: SelectedOption[]) => void
 }
 
 const OptionsBottomSheetContent = ({
   serviceType,
   options,
-  onClickAddToCart,
   onClickBranchSelect,
-}: OptionsBottomSheetContentProps) => {
+  onClickAddToCart,
+}: Props) => {
   const { selectedOptions, setSelectedOptions, selectedBranch } =
     useMembershipOptionsStore()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
-  const totalAmount = useMemo(() => {
-    return selectedOptions.reduce((acc, curr) => {
-      const price = parseInt(
-        curr.option.subscriptionPrice.replace(/,/g, ""),
-        10,
-      )
-      return acc + price * curr.count
-    }, 0)
-  }, [selectedOptions])
-
-  const totalCount = useMemo(
-    () => selectedOptions.reduce((acc, curr) => acc + curr.count, 0),
-    [selectedOptions],
-  )
-
   const handleSelectOption = (option: MembershipOption) => {
     const existingOption = selectedOptions.find(
-      (selected) =>
-        selected.option.subscriptionIndex === option.subscriptionIndex,
+      (selectedOption) => selectedOption.option.ss_idx === option.ss_idx,
     )
 
     if (existingOption) {
-      setSelectedOptions(
-        selectedOptions.map((item) =>
-          item.option.subscriptionIndex === option.subscriptionIndex
-            ? { ...item, count: item.count + 1 }
-            : item,
-        ),
-      )
-    } else {
-      return setSelectedOptions([...selectedOptions, { option, count: 1 }])
-    }
-  }
-
-  const handleCountChange = (optionIndex: string, newCount: number) => {
-    if (newCount <= 0) {
-      handleRemoveOption(optionIndex)
       return
     }
 
-    setSelectedOptions(
-      selectedOptions.map((item) =>
-        item.option.subscriptionIndex === optionIndex
-          ? { ...item, count: newCount }
-          : item,
-      ),
+    const newSelectedOptions = [
+      ...selectedOptions,
+      {
+        option,
+        count: 1,
+      },
+    ]
+    setSelectedOptions(newSelectedOptions)
+  }
+
+  const handleRemoveOption = (optionId: string) => {
+    const newSelectedOptions = selectedOptions.filter(
+      (option) => option.option.ss_idx !== optionId,
+    )
+    setSelectedOptions(newSelectedOptions)
+  }
+
+  const handleCountChange = (optionId: string, newCount: number) => {
+    if (newCount < 1) {
+      return
+    }
+
+    const newSelectedOptions = selectedOptions.map((selectedOption) =>
+      selectedOption.option.ss_idx === optionId
+        ? { ...selectedOption, count: newCount }
+        : selectedOption,
+    )
+    setSelectedOptions(newSelectedOptions)
+  }
+
+  const calculateTotalPrice = () => {
+    return selectedOptions.reduce(
+      (total, { option, count }) =>
+        total + parseInt(option.ss_price.replace(/,/g, "")) * count,
+      0,
     )
   }
 
-  const handleRemoveOption = (optionIndex: string) => {
-    setSelectedOptions(
-      selectedOptions.filter(
-        (item) => item.option.subscriptionIndex !== optionIndex,
-      ),
-    )
-  }
+  const totalPrice = useMemo(() => calculateTotalPrice(), [selectedOptions])
 
   return (
     <div className="flex flex-col h-[610px] ">
-      {serviceType.includes("지점") && (
+      {serviceType?.includes("지점") && (
         <button
           className={
             "w-full border border-gray-100 rounded-xl px-4 py-3 flex justify-between mb-3 items-center"
@@ -132,7 +121,7 @@ const OptionsBottomSheetContent = ({
           <div className="absolute w-full bg-white rounded-b-xl border border-[#dddddd] flex flex-col">
             {options.map((option, index) => (
               <button
-                key={option.subscriptionIndex}
+                key={option.ss_idx}
                 className={`w-full px-4 py-3.5 text-left text-[#212121] text-sm font-normal border-b border-[#ebebeb] hover:bg-gray-50 
             ${index === options.length - 1 ? "rounded-b-xl border-b-0" : ""}`}
                 onClick={() => {
@@ -140,7 +129,7 @@ const OptionsBottomSheetContent = ({
                   setIsDropdownOpen(false)
                 }}
               >
-                {option.subscriptionCount}
+                {option.ss_count}
               </button>
             ))}
           </div>
@@ -151,36 +140,36 @@ const OptionsBottomSheetContent = ({
       <div className="px-5 mt-5">
         <div className="flex flex-col gap-4">
           {selectedOptions.map(({ option, count }) => (
-            <div key={option.subscriptionIndex} className="flex flex-col gap-4">
+            <div key={option.ss_idx} className="flex flex-col gap-4">
               <div className="flex justify-between items-center">
                 <span className="font-m text-16px text-gray-900">
-                  {option.subscriptionCount}
+                  {option.ss_count}
                 </span>
                 <XCircleIcon
                   className="w-5 cursor-pointer"
-                  onClick={() => handleRemoveOption(option.subscriptionIndex)}
+                  onClick={() => handleRemoveOption(option.ss_idx)}
                 />
               </div>
               <div className="flex justify-between items-center">
-                <Counter
+                <Number
                   count={count}
                   onClickMinus={() =>
-                    handleCountChange(option.subscriptionIndex, count - 1)
+                    handleCountChange(option.ss_idx, count - 1)
                   }
                   onClickPlus={() =>
-                    handleCountChange(option.subscriptionIndex, count + 1)
+                    handleCountChange(option.ss_idx, count + 1)
                   }
                 />
                 <div className="flex items-center gap-2">
                   <div className="flex items-baseline gap-0.5">
                     <span className="font-sb text-16px text-gray-900">
-                      {option.subscriptionPrice}
+                      {option.ss_price}
                     </span>
                     <span className="font-r text-14px text-gray-900">원</span>
                   </div>
-                  {option.subscriptionOriginalPrice && (
+                  {option.original_price && (
                     <span className="font-r text-14px text-gray-400 line-through">
-                      {option.subscriptionOriginalPrice}원
+                      {option.original_price}원
                     </span>
                   )}
                 </div>
@@ -196,13 +185,13 @@ const OptionsBottomSheetContent = ({
           <div className="flex items-center gap-1">
             <span className="font-r text-16px text-gray-900">총</span>
             <span className="font-b text-18px text-primary">
-              {totalCount}개
+              {selectedOptions.length}개
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="font-r text-16px text-gray-900">총</span>
             <span className="font-b text-18px text-primary">
-              {totalAmount.toLocaleString()}원
+              {totalPrice.toLocaleString()}원
             </span>
           </div>
         </div>
@@ -217,7 +206,7 @@ const OptionsBottomSheetContent = ({
             className="flex-1"
             disabled={selectedOptions.length === 0}
             onClick={() => {
-              onClickAddToCart(selectedOptions, selectedBranch)
+              onClickAddToCart(selectedOptions)
             }}
           >
             장바구니 담기

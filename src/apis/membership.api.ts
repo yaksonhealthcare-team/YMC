@@ -94,7 +94,7 @@ export const fetchMembershipList = async (
 }
 
 export const fetchMembershipDetail = async (sIdx: string) => {
-  const response = await axiosClient.get<MembershipDetail>(
+  const response = await axiosClient.get<HTTPResponse<MembershipDetail>>(
     `/memberships/detail`,
     {
       params: {
@@ -102,7 +102,7 @@ export const fetchMembershipDetail = async (sIdx: string) => {
       },
     },
   )
-  return response.data
+  return response.data.body
 }
 
 export const fetchMembershipCategories = async (brandCode: string) => {
