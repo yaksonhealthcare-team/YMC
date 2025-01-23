@@ -21,16 +21,16 @@ const ReservationDetailPage = () => {
   useEffect(() => {
     setHeader({
       display: true,
-      title: reservation?.store || "예약 상세",
+      title: "예약 상세",
       left: (
-        <div onClick={() => navigate(-1)}>
-          <CaretLeftIcon className="w-5 h-5" />
-        </div>
+        <button onClick={() => navigate(-1)} className="p-2">
+          <CaretLeftIcon className="w-5 h-5 text-gray-900" />
+        </button>
       ),
-      backgroundColor: "bg-white",
+      backgroundColor: "bg-system-bg",
     })
     setNavigation({ display: false })
-  }, [reservation?.store])
+  }, [])
 
   if (isLoading) return <SplashScreen />
 

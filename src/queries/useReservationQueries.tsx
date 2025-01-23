@@ -68,7 +68,7 @@ export interface ReservationDetail {
 
 export const useReservationDetail = (id: string) => {
   return useQuery<ReservationDetail>({
-    queryKey: ["reservation", id],
+    queryKey: ["reservation", "detail", id],
     queryFn: async () => {
       const { data } = await axiosClient.get("/reservation/detail", {
         params: {
@@ -111,7 +111,11 @@ export const useReservationDetail = (id: string) => {
       }
     },
     enabled: !!id,
-    staleTime: 1000 * 60 * 5, // 5분
+    staleTime: Infinity, // 캐시가 만료되지 않도록 설정
     gcTime: 1000 * 60 * 10, // 10분
+    retry: 0, // 재시도 하지 않음
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   })
 }
