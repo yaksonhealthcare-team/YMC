@@ -66,9 +66,9 @@ const MembershipPage = () => {
           <Tab label="전체" value="" />
           {categoriesData.body.map((category: MembershipCategory) => (
             <Tab
-              key={category.sc_idx}
-              label={category.category_name}
-              value={category.sc_idx}
+              key={category.sc_code}
+              label={category.sc_name}
+              value={category.sc_code}
             />
           ))}
         </Tabs>

@@ -5,9 +5,11 @@ export enum MembershipStatus {
 }
 
 export interface MembershipCategory {
-  sc_idx: string
-  category_name: string
-  category_description?: string
+  brand_code: string
+  sc_code: string
+  prior: string
+  sc_name: string
+  sc_pic: string
 }
 
 export interface MembershipOption {
