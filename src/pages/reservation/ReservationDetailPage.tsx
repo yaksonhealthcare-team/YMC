@@ -51,15 +51,11 @@ const ReservationDetailPage = () => {
     setHeader({
       display: true,
       title: "예약 상세",
-      left: (
-        <button onClick={() => navigate(-1)} className="p-2">
-          <CaretLeftIcon className="w-5 h-5 text-gray-900" />
-        </button>
-      ),
+      left: "back",
       backgroundColor: "bg-system-bg",
     })
     setNavigation({ display: false })
-  }, [])
+  }, [navigate, setHeader, setNavigation])
 
   if (isLoading) return <SplashScreen />
 
