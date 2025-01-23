@@ -13,6 +13,7 @@ import {
 } from "types/Membership"
 import { Box, RadioGroup, useTheme } from "@mui/material"
 import { Swiper, SwiperSlide } from "swiper/react"
+import "swiper/css"
 import "swiper/css/pagination"
 import { Pagination } from "swiper/modules"
 import { Button } from "@components/Button"
@@ -176,60 +177,52 @@ const ReservationFormPage = () => {
           value={data.item}
           onChange={handleOnChangeItem}
         >
-          <RadioCard checked={data.item === "상담 예약"} value="상담 예약">
-            <div className="justify-start items-center gap-2 flex">
-              <div className="text-gray-700 text-16px font-sb">상담 예약</div>
-              <div className="px-2 py-0.5 bg-tag-greenBg rounded-[999px] justify-center items-center flex">
-                <div className="text-center text-tag-green text-12px font-m">
-                  {consultationSlot}회
+          <div>
+            <RadioCard checked={data.item === "상담 예약"} value="상담 예약">
+              <div className="justify-start items-center gap-2 flex">
+                <div className="text-gray-700 text-16px font-sb">상담 예약</div>
+                <div className="px-2 py-0.5 bg-tag-greenBg rounded-[999px] justify-center items-center flex">
+                  <div className="text-center text-tag-green text-12px font-m">
+                    {consultationSlot}회
+                  </div>
                 </div>
               </div>
-            </div>
-          </RadioCard>
+            </RadioCard>
+          </div>
           {!isMembershipsLoading && membershipsData?.body && (
-            <Box
-              className="w-full"
-              sx={(theme) => ({
-                "& .swiper-pagination": {
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "5px",
-                  position: "relative",
-                  bottom: "0",
-                  marginTop: "12px",
-                },
-                "& .swiper-pagination-bullet": {
-                  width: "6px",
-                  height: "6px",
-                  borderRadius: "9999px",
-                  cursor: "pointer",
-                  backgroundColor: "white",
-                  border: `1px solid ${theme.palette.grey[200]}`,
-                  opacity: 1,
-                  margin: "0 !important",
-                },
-                "& .swiper-pagination-bullet-active": {
-                  backgroundColor: theme.palette.primary.main,
-                  border: "none",
-                },
-              })}
-            >
+            <Box className="w-full">
               <Swiper
                 modules={[Pagination]}
-                spaceBetween={10}
+                spaceBetween={20}
                 slidesPerView={1}
                 style={{ overflow: "visible" }}
                 className="w-full"
-                pagination={{ clickable: true }}
+                pagination={{
+                  clickable: true,
+                }}
               >
+                <style>
+                  {`
+                    .swiper-pagination-bullet {
+                      width: 6px;
+                      height: 6px;
+                      background: #DDDDDD;
+                      opacity: 1;
+                    }
+                    .swiper-pagination-bullet-active {
+                      background: #F37165;
+                    }
+                  `}
+                </style>
                 {membershipsData.body.map((membership) => (
-                  <SwiperSlide key={membership.s_idx} className="mr-2">
-                    <MembershipRadioCard
-                      membership={membership}
-                      checked={data.item === membership.s_idx}
-                      value={membership.s_idx}
-                    />
+                  <SwiperSlide key={membership.s_idx}>
+                    <div>
+                      <MembershipRadioCard
+                        membership={membership}
+                        checked={data.item === membership.s_idx}
+                        value={membership.s_idx}
+                      />
+                    </div>
                   </SwiperSlide>
                 ))}
               </Swiper>
