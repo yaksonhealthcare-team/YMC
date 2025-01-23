@@ -47,12 +47,9 @@ const MembershipHistory = () => {
 
   useEffect(() => {
     setHeader({
-      display: true,
-      title: "회원권 내역",
-      left: "back",
-      backgroundColor: "bg-system-bg",
+      display: false,
     })
-    setNavigation({ display: false })
+    setNavigation({ display: true })
   }, [setHeader, setNavigation])
 
   if (isLoading) return <LoadingSkeleton />
