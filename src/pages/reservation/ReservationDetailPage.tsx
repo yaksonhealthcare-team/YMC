@@ -12,11 +12,40 @@ import FixedButtonContainer from "@components/FixedButtonContainer"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { ReservationStatus } from "types/Reservation"
 
+// 테스트용 임시 데이터
+const mockReservation = {
+  id: "35439",
+  status: ReservationStatus.CONFIRMED, // 상태는 enum 타입이어야 함
+  store: "", // 매장명 없음 테스트
+  programName: "", // 프로그램명 없음 테스트
+  visit: 1,
+  date: new Date("invalid date"), // 날짜 정보 없음 테스트
+  duration: 0, // 소요시간 없음 테스트
+  request: "", // 요청사항 없음 테스트
+  branchId: "1",
+  address: "", // 주소 없음 테스트
+  latitude: 0, // 위치 정보 없음 테스트
+  longitude: 0,
+  phone: "", // 전화번호 없음 테스트
+  additionalServices: [], // 추가 관리 없음 테스트
+}
+
+// 테스트용 회원권 데이터
+const mockMembership = {
+  membershipName: "", // 회원권명 없음 테스트
+  branchName: "", // 지점명 없음 테스트
+  remainingCount: "", // 잔여 횟수 없음 테스트
+}
+
 const ReservationDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
-  const { data: reservation, isLoading } = useReservationDetail(id || "")
+  const {
+    data: reservation,
+    isLoading,
+    isError,
+  } = useReservationDetail(id || "")
 
   useEffect(() => {
     setHeader({
@@ -34,21 +63,12 @@ const ReservationDetailPage = () => {
 
   if (isLoading) return <SplashScreen />
 
-  const emptyReservation = {
-    id: id || "",
-    status: ReservationStatus.CONFIRMED,
-    store: "",
-    programName: "",
-    visit: 0,
-    date: new Date(),
-    duration: 0,
-    request: "",
-    additionalServices: [],
-  }
+  // 테스트를 위해 mockReservation 사용
+  const currentReservation = mockReservation // reservation || mockReservation
 
   return (
     <div className="flex-1 px-[20px] pt-[16px] pb-[150px] bg-system-bg">
-      <ReservationSummary reservation={reservation || emptyReservation} />
+      <ReservationSummary reservation={currentReservation} />
       <Button
         variantType="gray"
         sizeType="s"
@@ -57,12 +77,15 @@ const ReservationDetailPage = () => {
       >
         예약 문진 확인하기
       </Button>
-      <Location />
+      <Location reservation={currentReservation} />
       <Divider className="my-[24px] border-gray-100" />
-      <MembershipUsage />
+      <MembershipUsage
+        membershipName={mockMembership.membershipName}
+        branchName={mockMembership.branchName}
+        remainingCount={mockMembership.remainingCount}
+      />
       <FixedButtonContainer>
-        {(reservation?.status === ReservationStatus.CONFIRMED ||
-          !reservation) && (
+        {currentReservation.status === ReservationStatus.CONFIRMED && (
           <Button
             variantType="primary"
             sizeType="l"

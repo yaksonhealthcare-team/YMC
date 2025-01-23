@@ -34,11 +34,12 @@ export const useReservations = (status: string = "000") => {
         duration: parseInt(item.r_take_time) || 60,
       }))
     },
-    staleTime: 1000 * 60 * 5, // 5분
+    staleTime: Infinity,
     gcTime: 1000 * 60 * 10, // 10분
-    retry: false,
+    retry: 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   })
 }
 
@@ -58,6 +59,11 @@ export interface ReservationDetail {
   date: Date
   duration: number
   request: string
+  branchId: string
+  address: string
+  latitude: number
+  longitude: number
+  phone: string
   additionalServices: Array<{
     id: string
     name: string
@@ -101,6 +107,11 @@ export const useReservationDetail = (id: string) => {
           : new Date(),
         duration: parseInt(body.r_take_time) || 60,
         request: body.r_memo || "",
+        branchId: body.b_idx || "",
+        address: body.b_addr || "",
+        latitude: parseFloat(body.b_lat) || 0,
+        longitude: parseFloat(body.b_lon) || 0,
+        phone: body.b_tel || "",
         additionalServices:
           body.add_services?.map((service: AdditionalService) => ({
             id: service.mp_idx || "",
@@ -111,9 +122,9 @@ export const useReservationDetail = (id: string) => {
       }
     },
     enabled: !!id,
-    staleTime: Infinity, // 캐시가 만료되지 않도록 설정
+    staleTime: Infinity,
     gcTime: 1000 * 60 * 10, // 10분
-    retry: 0, // 재시도 하지 않음
+    retry: 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,

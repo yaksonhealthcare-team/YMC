@@ -1,8 +1,21 @@
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { useNavigate } from "react-router-dom"
 
-const MembershipUsage = () => {
+interface MembershipUsageProps {
+  membershipName?: string
+  branchName?: string
+  remainingCount?: string
+}
+
+const MembershipUsage = ({
+  membershipName,
+  branchName,
+  remainingCount,
+}: MembershipUsageProps) => {
   const navigate = useNavigate()
+  const hasMembershipName = !!membershipName
+  const hasBranchName = !!branchName
+  const hasRemainingCount = !!remainingCount
 
   return (
     <div className="flex flex-col gap-[16px] mt-[40px]">
@@ -21,20 +34,26 @@ const MembershipUsage = () => {
       <div className="flex flex-col gap-[12px]">
         <div>
           <p className="text-gray-500 font-sb text-[14px]">회원권명</p>
-          <p className="font-r text-[14px] text-gray-700 mt-[4px]">
-            회원권명이 노출됩니다
+          <p
+            className={`font-r text-[14px] mt-[4px] ${!hasMembershipName ? "text-gray-500" : "text-gray-700"}`}
+          >
+            {hasMembershipName ? membershipName : "회원권 정보가 없습니다"}
           </p>
         </div>
         <div>
           <p className="text-gray-500 font-sb text-[14px]">사용 지점</p>
-          <p className="font-r text-[14px] text-gray-700 mt-[4px]">
-            약손명가 강남구청역점
+          <p
+            className={`font-r text-[14px] mt-[4px] ${!hasBranchName ? "text-gray-500" : "text-gray-700"}`}
+          >
+            {hasBranchName ? branchName : "지점 정보가 없습니다"}
           </p>
         </div>
         <div>
           <p className="text-gray-500 font-sb text-[14px]">잔여 횟수</p>
-          <p className="font-r text-[14px] text-gray-700 mt-[4px]">
-            4회 / 10회
+          <p
+            className={`font-r text-[14px] mt-[4px] ${!hasRemainingCount ? "text-gray-500" : "text-gray-700"}`}
+          >
+            {hasRemainingCount ? remainingCount : "잔여 횟수 정보가 없습니다"}
           </p>
         </div>
       </div>
