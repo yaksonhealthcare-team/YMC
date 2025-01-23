@@ -88,6 +88,7 @@ const MembershipDetailPage = () => {
         b_idx: Number(selectedBranch.id),
         brand_code: selectedBranch.brandCode,
         amount: count,
+        b_type: "지정지점" as const,
       })),
     )
     await queryClient.refetchQueries({ queryKey: queryKeys.carts.all })

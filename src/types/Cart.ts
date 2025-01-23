@@ -71,5 +71,5 @@ export interface CartItemPostRequest {
   b_idx: number
   brand_code: string
   amount: number
-  b_type: "M" | "P" // M: 회원권, P: 패키지
+  b_type: "지정지점" | "앱전용" // 지점 타입
 }

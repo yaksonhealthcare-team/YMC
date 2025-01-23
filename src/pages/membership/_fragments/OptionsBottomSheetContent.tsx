@@ -107,7 +107,7 @@ export const OptionsBottomSheetContent = ({
         b_idx: parseInt(selectedBranch.id),
         brand_code: selectedBranch.brandCode,
         amount: count,
-        b_type: "M" as const, // M: 회원권, P: 패키지
+        b_type: "지정지점" as const,
       }))
 
       await addCart(cartItems)
