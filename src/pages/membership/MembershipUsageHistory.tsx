@@ -1,48 +1,16 @@
 import { useLayout } from "contexts/LayoutContext"
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
+import { useEffect, useCallback, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { MembershipCard } from "@components/MembershipCard"
-import { MembershipDetailHistory, MembershipStatus } from "types/Membership"
+import {
+  MembershipStatus,
+  MyMembership,
+  MembershipUsageHistory as MembershipUsageHistoryType,
+} from "types/Membership"
 import DateAndTime from "@components/DateAndTime"
 import CartIcon from "@components/icons/CartIcon.tsx"
-
-const sampleMembershipDetail = {
-  id: 0,
-  status: MembershipStatus.AVAILABLE,
-  title: "K-BEAUTY 연예인관리",
-  count: "4회 / 20",
-  startAt: "2024.04.01",
-  endAt: "2024.12.31",
-  history: [
-    {
-      id: 0,
-      store: "달리아스파 건대점",
-      date: new Date(),
-    },
-    {
-      id: 1,
-      store: "달리아스파 건대점",
-      date: new Date(),
-    },
-    {
-      id: 2,
-      store: "달리아스파 건대점",
-      date: new Date(),
-    },
-    {
-      id: 3,
-      store: "달리아스파 건대점",
-      date: new Date(),
-    },
-    {
-      id: 4,
-      store: "달리아스파 건대점",
-      date: new Date(),
-    },
-  ],
-}
+import { fetchMembershipUsageHistory } from "../../apis/membership.api"
 
 interface ReservationThumbnailProps {
   title: string
@@ -73,59 +41,67 @@ const ReservationThumbnail = ({
 
 const MembershipUsageHistory = () => {
   const { setHeader, setNavigation } = useLayout()
-  //   const { id } = useParams<{ id: string }>()
-  const [memberShipDetail, setMemberShipDetail] =
-    useState<MembershipDetailHistory>()
+  const { id } = useParams<{ id: string }>()
+  const [memberShipDetail, setMemberShipDetail] = useState<MyMembership>()
 
   const navigate = useNavigate()
+
+  const fetchData = useCallback(async () => {
+    if (!id) return
+    try {
+      const data = await fetchMembershipUsageHistory(id)
+      setMemberShipDetail(data)
+    } catch (error) {
+      console.error("Failed to fetch membership usage history", error)
+    }
+  }, [id])
 
   useEffect(() => {
     setHeader({
       display: true,
       title: "회원권 이용내역",
-      left: (
-        <div onClick={() => navigate(-1)}>
-          <CaretLeftIcon className="w-5 h-5" />
-        </div>
-      ),
+      left: "back",
       right: <CartIcon />,
     })
-    setNavigation({ display: true })
-
-    // TODO: fetch membership detail by id
-    setMemberShipDetail(sampleMembershipDetail)
-  }, [])
+    setNavigation({ display: false })
+    fetchData()
+  }, [setHeader, setNavigation, fetchData])
 
   return (
     <>
       {memberShipDetail && (
         <div className="px-[20px] pt-[16px] pb-[100px] overflow-y-scroll min-h-[calc(100vh-82px)] bg-system-bg">
-          {/* TODO: 실제 데이터로 적용 필요 */}
           <MembershipCard
-            id={1}
-            title="K-BEAUTY 연예인관리"
-            count="4회 / 20회"
-            date="2024.04.01 - 2024.12.31"
-            status={MembershipStatus.AVAILABLE}
-            serviceType="지점 회원권"
+            id={parseInt(memberShipDetail.mp_idx)}
+            title={memberShipDetail.service_name}
+            count={`${memberShipDetail.remain_amount}회 / ${memberShipDetail.buy_amount}회`}
+            date={`${memberShipDetail.pay_date.split(" ")[0]} - ${memberShipDetail.expiration_date.split(" ")[0]}`}
+            status={
+              memberShipDetail.status === "사용가능"
+                ? MembershipStatus.ACTIVE
+                : memberShipDetail.status === "사용완료"
+                  ? MembershipStatus.INACTIVE
+                  : MembershipStatus.EXPIRED
+            }
+            serviceType={memberShipDetail.s_type}
             showReserveButton={false}
             showHistoryButton={false}
           />
           <div>
             <p className="text-[14px] font-sb mt-[40px] mb-[16px]">
               <span className="text-primary-300">
-                {memberShipDetail.history.length}건
+                {memberShipDetail.history?.length || 0}건
               </span>
               의 이용내역이 있습니다.
             </p>
           </div>
           <div className="flex flex-col gap-[12px]">
-            {memberShipDetail.history.map((history) => (
+            {memberShipDetail.history?.map((history) => (
               <ReservationThumbnail
                 key={`history-${history.id}`}
                 title={history.store}
-                date={history.date}
-                onClick={() => navigate(`/reservation/${history.id}`)}
+                date={new Date(history.date)}
+                onClick={() => navigate(`/reservation/${history.r_idx}`)}
               />
             ))}
           </div>

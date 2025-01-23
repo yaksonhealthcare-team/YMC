@@ -56,6 +56,7 @@ export interface MyMembership {
   buy_amount: string
   pay_date: string
   expiration_date: string
+  history?: MembershipUsageHistory[]
 }
 
 export interface MyMembershipFilterItem {
@@ -96,4 +97,11 @@ export interface AdditionalManagementOption {
   option_name: string
   option_count: number
   option_price: number
+}
+
+export interface MembershipUsageHistory {
+  id: string
+  store: string
+  date: string
+  r_idx: string
 }

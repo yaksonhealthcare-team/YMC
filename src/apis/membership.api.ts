@@ -5,9 +5,9 @@ import {
   MembershipItem,
   MyMembership,
   AdditionalManagement,
-  MembershipUsageHistory,
 } from "../types/Membership"
 import { axiosClient } from "../queries/clients"
+import { HTTPResponse } from "types/HTTPResponse"
 
 // 요청 인터셉터 추가
 axiosClient.interceptors.request.use(
@@ -155,7 +155,7 @@ export const fetchMembershipUsageHistory = async (
   page: number = 1,
   pageSize: number = 50,
 ) => {
-  const response = await axiosClient.get<ListResponse<MembershipUsageHistory>>(
+  const response = await axiosClient.get<HTTPResponse<MyMembership>>(
     `/memberships/me/detail`,
     {
       params: {
@@ -165,5 +165,5 @@ export const fetchMembershipUsageHistory = async (
       },
     },
   )
-  return response.data
+  return response.data.body
 }
