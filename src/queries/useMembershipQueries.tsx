@@ -53,10 +53,15 @@ export const useUserMemberships = (
   })
 }
 
-export const useAdditionalManagement = (membershipIdx: string) => {
+export const useAdditionalManagement = (membershipIdx?: string) => {
   return useQuery({
     queryKey: ["memberships", "additional", membershipIdx],
-    queryFn: () => fetchAdditionalManagement(membershipIdx),
+    queryFn: () => {
+      if (!membershipIdx) {
+        throw new Error("membershipIdx is required")
+      }
+      return fetchAdditionalManagement(membershipIdx)
+    },
     enabled: !!membershipIdx,
     refetchOnMount: false,
     refetchOnWindowFocus: false,

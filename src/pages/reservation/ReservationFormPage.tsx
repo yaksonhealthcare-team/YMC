@@ -27,53 +27,64 @@ import CheckIcon from "@components/icons/CheckIcon"
 import { ClockIcon } from "@mui/x-date-pickers"
 import { useAdditionalManagement } from "../../queries/useMembershipQueries.tsx"
 import { TimeSlot } from "../../types/Schedule.ts"
+import { Checkbox } from "@mui/material"
+
+const example_items: MembershipItem[] = [
+  {
+    s_idx: "1170944",
+    s_name: "K-BEAUTY 연예인관리",
+    brand_name: "약손명가",
+    s_time: "120",
+    s_type: "T",
+    options: [
+      {
+        ss_idx: "1",
+        ss_count: "20",
+        ss_price: "2000000",
+        original_price: "2500000",
+      },
+    ],
+  },
+  {
+    s_idx: "1170945",
+    s_name: "바디케어 프로그램",
+    brand_name: "약손명가",
+    s_time: "90",
+    s_type: "T",
+    options: [
+      {
+        ss_idx: "2",
+        ss_count: "10",
+        ss_price: "1000000",
+        original_price: "1200000",
+      },
+    ],
+  },
+  {
+    s_idx: "1170946",
+    s_name: "럭셔리 스파",
+    brand_name: "약손명가",
+    s_time: "60",
+    s_type: "T",
+    options: [
+      {
+        ss_idx: "3",
+        ss_count: "5",
+        ss_price: "500000",
+        original_price: "600000",
+      },
+    ],
+  },
+]
 
 interface FormDataType {
-  item: undefined | number
-  branch: undefined | number
+  item: undefined | string
+  branch: undefined | string
   date: null | Dayjs
   timeSlot: null | TimeSlot
   request: string
   additionalServices: AdditionalManagement[]
 }
-
-const example_items: MembershipItem[] = [
-  {
-    id: 1170944,
-    status: MembershipStatus.AVAILABLE,
-    title: "K-BEAUTY 연예인관리",
-    count: "4회 / 20",
-    startAt: "2024.04.01",
-    endAt: "2024.12.31",
-    isAllBranch: true,
-    isReady: false,
-  },
-  {
-    id: 1170945,
-    status: MembershipStatus.COMPLETED,
-    title: "바디케어 프로그램",
-    count: "0회 / 10",
-    startAt: "2024.01.01",
-    endAt: "2024.03.31",
-    isReady: true,
-  },
-  {
-    id: 1170946,
-    status: MembershipStatus.EXPIRED,
-    title: "럭셔리 스파",
-    count: "2회 / 5",
-    startAt: "2024.12.01",
-    endAt: "2024.02.29",
-  },
-  {
-    id: 1170943,
-    status: MembershipStatus.EXPIRED,
-    title: "럭셔리 스파",
-    count: "2회 / 5",
-    startAt: "2024.12.01",
-    endAt: "2024.02.29",
-  },
-]
 
 const ReservationFormPage = () => {
   const { openBottomSheet, closeOverlay } = useOverlay()
@@ -94,14 +105,16 @@ const ReservationFormPage = () => {
   })
 
   const { data: additionalManagements, isLoading } = useAdditionalManagement(
-    data.item === 0 ? undefined : data.item,
+    data.item,
   )
 
   const handleOnChangeItem = (event: ChangeEvent<HTMLInputElement>) => {
-    setData({ ...data, item: parseInt(event.target.value) })
+    setData({ ...data, item: event.target.value })
   }
 
   const handleOpenCalendar = () => {
+    if (!data.item) return
+
     openBottomSheet(
       <DateAndTimeBottomSheet
         onClose={closeOverlay}
@@ -114,9 +127,9 @@ const ReservationFormPage = () => {
             timeSlot,
           }))
         }}
-        membershipIndex={data.item}
+        membershipIndex={parseInt(data.item)}
         addServices={data.additionalServices.map((item) =>
-          parseInt(item.serviceIndex),
+          parseInt(item.am_idx),
         )}
       />,
       {
@@ -142,8 +155,13 @@ const ReservationFormPage = () => {
     setItemOptions(example_items)
   }, [])
 
+  const totalPrice = data.additionalServices.reduce((sum, service) => {
+    const optionPrice = service.options?.[0]?.ss_price?.replace(/,/g, "")
+    return sum + (optionPrice ? Number(optionPrice) : 0)
+  }, 0)
+
   return (
-    <div className="flex-1space-y-3 pb-32 overflow-y-auto overflow-x-hidden">
+    <div className="flex-1 space-y-3 pb-32 overflow-y-auto overflow-x-hidden">
       <section className="px-5 pt-2 pb-6 border-b-8 border-[#f7f7f7]">
         <RadioGroup
           className="flex flex-col space-y-4"
@@ -151,8 +169,8 @@ const ReservationFormPage = () => {
           onChange={handleOnChangeItem}
         >
           <RadioCard
-            checked={data.item === 0}
-            value={0}
+            checked={data.item === "0"}
+            value="0"
             disabled={consultationSlot >= 2}
           >
             <div className="justify-start items-center gap-2 flex">
@@ -211,11 +229,11 @@ const ReservationFormPage = () => {
                 pagination={{ clickable: true }}
               >
                 {itemOptions.map((item) => (
-                  <SwiperSlide key={item.id} className="mr-2">
+                  <SwiperSlide key={item.s_idx} className="mr-2">
                     <MembershipRadioCard
                       membership={item}
-                      checked={data.item === item.id}
-                      value={item.id}
+                      checked={data.item === item.s_idx}
+                      value={item.s_idx}
                     />
                   </SwiperSlide>
                 ))}
@@ -278,39 +296,61 @@ const ReservationFormPage = () => {
           새로 작성하기
         </Button>
       </section>
-      {!isLoading && additionalManagements && (
-        <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
-          <p className="font-m text-14px text-gray-700 mb-4">추가관리</p>
-          <div className="flex flex-col gap-3">
-            {additionalManagements.map((option) => (
-              <AdditionalServiceCheckbox
-                key={option.serviceIndex}
-                service={option}
-                selected={data.additionalServices.some(
-                  (service) => service.serviceIndex === option.serviceIndex,
-                )}
-                onSelect={() => {
-                  setData((prev) => {
-                    const isSelected = prev.additionalServices.some(
-                      (service) => service.serviceIndex === option.serviceIndex,
-                    )
-
-                    return {
-                      ...prev,
-                      additionalServices: isSelected
-                        ? prev.additionalServices.filter(
-                            (service) =>
-                              service.serviceIndex !== option.serviceIndex,
-                          )
-                        : [...prev.additionalServices, option],
-                    }
-                  })
-                }}
-              />
-            ))}
-          </div>
-        </section>
-      )}
+      {!isLoading &&
+        additionalManagements &&
+        additionalManagements.body.length > 0 && (
+          <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
+            <p className="font-m text-14px text-gray-700 mb-4">추가관리</p>
+            <div className="flex flex-col gap-3">
+              {additionalManagements.body.map((option) => (
+                <div
+                  key={option.am_idx}
+                  className="flex items-center justify-between py-4 border-b border-gray-100"
+                >
+                  <div className="flex-1">
+                    <p className="text-gray-700 text-base font-sb">
+                      {option.service_name}
+                    </p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <ClockIcon className="w-4 h-4 text-gray-400" />
+                      <span className="text-gray-500 text-sm">
+                        {Number(option.service_time || 0)}분
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <p className="text-gray-700 text-base font-sb">
+                      {option.options?.[0]?.ss_price || "0"}원
+                    </p>
+                    <Checkbox
+                      checked={data.additionalServices.some(
+                        (item) => item.am_idx === option.am_idx,
+                      )}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setData((prev) => ({
+                            ...prev,
+                            additionalServices: [
+                              ...prev.additionalServices,
+                              option,
+                            ],
+                          }))
+                        } else {
+                          setData((prev) => ({
+                            ...prev,
+                            additionalServices: prev.additionalServices.filter(
+                              (item) => item.am_idx !== option.am_idx,
+                            ),
+                          }))
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
       <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
         <div className="flex flex-col gap-6">
@@ -357,35 +397,25 @@ const ReservationFormPage = () => {
           </p>
         </div>
       </section>
-      <section className="px-5 py-6 ">
+      <section className="px-5 py-6">
         <p className="font-m text-14px mb-2 text-gray-700">결제 금액</p>
         <div className="flex flex-col gap-3 mt-4">
           {data.additionalServices.map((service) => (
-            <div key={service.serviceIndex} className="flex justify-between">
+            <div key={service.am_idx} className="flex justify-between">
               <p className="text-gray-400 text-sm font-medium">
-                {service.serviceName}
+                {service.service_name}
               </p>
               <p className="text-base font-medium">
-                {service.options[0].subscriptionPrice.toLocaleString()}원
+                {service.options?.[0]?.ss_price || "0"}원
               </p>
             </div>
           ))}
         </div>
         <div className="w-full h-px bg-gray-100 my-4" />
-        <div className="flex justify-between text-gray-700">
-          <p>최종 결제 금액</p>
-          <p className="text-xl font-bold">
-            {data.additionalServices
-              .reduce(
-                (sum, service) =>
-                  sum +
-                  parseInt(
-                    service.options[0].subscriptionPrice.replace(/,/g, ""),
-                  ),
-                0,
-              )
-              .toLocaleString()}
-            원
+        <div className="flex justify-between items-center">
+          <p className="text-gray-700 text-base font-sb">총 결제금액</p>
+          <p className="text-primary text-xl font-bold">
+            {totalPrice.toLocaleString()}원
           </p>
         </div>
       </section>
@@ -400,64 +430,11 @@ const ReservationFormPage = () => {
           //   TODO: handle disaabled conditions
           //   disabled={!data.item || !data.branch || !data.date || !data.time}
         >
-          {data.item === 0
+          {data.item === "0"
             ? "예약하기"
-            : `${data.additionalServices
-                .reduce(
-                  (sum, service) =>
-                    sum +
-                    parseInt(
-                      service.options[0].subscriptionPrice.replace(/,/g, ""),
-                    ),
-                  0,
-                )
-                .toLocaleString()}원 결제하기`}
+            : `${totalPrice.toLocaleString()}원 결제하기`}
         </Button>
       </FixedButtonContainer>
-    </div>
-  )
-}
-
-interface AdditionalServiceCheckboxProps {
-  service: AdditionalManagement
-  selected: boolean
-  onSelect: () => void
-}
-
-const AdditionalServiceCheckbox = ({
-  service,
-  selected,
-  onSelect,
-}: AdditionalServiceCheckboxProps) => {
-  return (
-    <div
-      className={clsx(
-        "h-24 p-5 rounded-xl border flex-col justify-start items-start gap-2 flex w-full cursor-pointer",
-        selected ? "bg-tag-redBg border-primary" : "bg-white border-gray-200",
-      )}
-      onClick={onSelect}
-    >
-      <div className="w-full justify-between items-center inline-flex">
-        <div className="text-gray-700 text-base font-medium leading-normal">
-          {service.serviceName}
-        </div>
-        <div className="w-5 h-5 justify-center items-center flex">
-          <CheckIcon htmlColor={selected ? "#F37165" : "#DDDDDD"} />
-        </div>
-      </div>
-      <div className="w-full justify-start items-center gap-2 inline-flex">
-        <div className="justify-start items-center gap-1 flex">
-          <div className="w-3.5 h-3.5 justify-center items-center flex">
-            <ClockIcon className={"text-gray-500"} />
-          </div>
-          <div className="text-gray-500 text-sm font-normal leading-tight">
-            {service.serviceTime}분 소요
-          </div>
-        </div>
-        <div className="grow shrink basis-0 text-right text-gray-700 text-base font-bold leading-normal">
-          {service.options[0].subscriptionPrice.toLocaleString()}원
-        </div>
-      </div>
     </div>
   )
 }

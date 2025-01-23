@@ -82,20 +82,18 @@ export const myMembershipFilters: MyMembershipFilterItem[] = [
   },
 ]
 
+export interface AdditionalManagementOption {
+  ss_idx: string
+  ss_count: string
+  ss_price: string
+  original_price?: string
+}
+
 export interface AdditionalManagement {
   am_idx: string
   service_name: string
-  service_description: string
-  service_time: number
-  service_price: number
+  service_time: string
   options: AdditionalManagementOption[]
-}
-
-export interface AdditionalManagementOption {
-  ams_idx: string
-  option_name: string
-  option_count: number
-  option_price: number
 }
 
 export interface MembershipUsageHistory {
