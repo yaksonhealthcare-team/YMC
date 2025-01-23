@@ -58,7 +58,6 @@ const MembershipDetailPage = () => {
         <div className={"flex items-center justify-between px-5 py-3 h-[48px]"}>
           <div
             onClick={() => {
-              clearMembershipOptions()
               navigate(-1)
             }}
           >
