@@ -14,7 +14,7 @@ import { EmptyCard } from "@components/EmptyCard.tsx"
 import { ReserveCard } from "@components/ReserveCard.tsx"
 import { Reservation } from "types/Reservation.ts"
 import { useReservations } from "queries/useReservationQueries.tsx"
-import { useMembershipList } from "queries/useMembershipQueries.tsx"
+import { useUserMemberships } from "queries/useMembershipQueries.tsx"
 import SplashScreen from "@components/Splash.tsx"
 import { SwiperBrandCard } from "@components/SwiperBrandCard.tsx"
 import { Pagination } from "swiper/modules"
@@ -187,11 +187,11 @@ const ReserveCardSection = () => {
 
 const MembershipCardSection = () => {
   const navigate = useNavigate()
-  const { data: memberships, isLoading } = useMembershipList("T") // 사용가능 회원권 필터
+  const { data: memberships, isLoading } = useUserMemberships("T") // 사용가능 회원권 필터
 
   const availableMemberships = useMemo(() => {
-    if (!memberships?.pages) return []
-    return memberships.pages.flatMap((page) => page)
+    if (!memberships?.items) return []
+    return memberships.items
   }, [memberships])
 
   return (
@@ -212,14 +212,13 @@ const MembershipCardSection = () => {
           className="mt-2"
         >
           {availableMemberships.map((membership) => (
-            <SwiperSlide key={membership.id} className="mr-2">
+            <SwiperSlide key={membership.mp_idx} className="mr-2">
               <MembershipCard
-                id={parseInt(membership.id)}
-                title={membership.serviceName || membership.serviceType}
-                count={`${membership.remainCount}회 / ${membership.totalCount}회`}
-                date={`${membership.purchaseDate} - ${membership.expirationDate}`}
+                id={parseInt(membership.mp_idx)}
+                title={membership.service_name}
+                count={`${membership.remaining_count}회`}
+                date={`${membership.valid_from} - ${membership.valid_until}`}
                 status={membership.status}
-                serviceType={membership.serviceType}
                 showReserveButton={true}
               />
             </SwiperSlide>
@@ -229,6 +228,7 @@ const MembershipCardSection = () => {
         <EmptyCard
           title={`사용 가능한 회원권이 없어요.\n회원권 구매 후 예약이 가능해요.`}
           button="회원권 구매하기"
+          onClick={() => navigate("/membership")}
         />
       )}
     </div>
