@@ -3,12 +3,12 @@ import { useEffect, useState } from "react"
 import { useBranches } from "../../queries/useBranchQueries.tsx"
 import { DEFAULT_COORDINATE } from "../../types/Coordinate.ts"
 import { SearchField } from "@components/SearchField.tsx"
-import ActiveBranchList from "../branch/search/_fragments/ActiveBranchList.tsx"
 import useIntersection from "../../hooks/useIntersection.tsx"
 import BranchPlaceholderImage from "@assets/images/BranchPlaceholderImage.png"
 import useGeolocation from "../../hooks/useGeolocation.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
 import { useNavigate } from "react-router-dom"
+import MembershipActiveBranchList from "./_fragments/MembershipActiveBranchList.tsx"
 
 const MembershipBranchSelectPage = () => {
   const [query, setQuery] = useState("")
@@ -61,8 +61,7 @@ const MembershipBranchSelectPage = () => {
         />
       </div>
       {query.length === 0 ? (
-        // TODO: Active branch list 수정되면 변경할 것
-        <ActiveBranchList />
+        <MembershipActiveBranchList />
       ) : (
         <ul className={"overflow-y-scroll h-full divide-y divide-gray-100"}>
           {branches.map((branch) => (
