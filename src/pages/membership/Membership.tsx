@@ -60,7 +60,7 @@ const MembershipPage = () => {
           value={selectedCategory || ""}
           onChange={(_, value) => setSelectedCategory(value)}
           variant="scrollable"
-          scrollButtons="auto"
+          scrollButtons={false}
           aria-label="회원권 카테고리"
         >
           <Tab label="전체" value="" />
