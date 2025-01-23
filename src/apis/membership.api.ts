@@ -5,6 +5,7 @@ import {
   MembershipItem,
   MyMembership,
   AdditionalManagement,
+  MembershipDetailWithHistory,
 } from "../types/Membership"
 import { axiosClient } from "../queries/clients"
 import { HTTPResponse } from "types/HTTPResponse"
@@ -165,5 +166,10 @@ export const fetchMembershipUsageHistory = async (
       },
     },
   )
-  return response.data.body
+
+  const data = response.data.body
+  return {
+    ...data,
+    history: data.reservations || [],
+  } as MembershipDetailWithHistory
 }

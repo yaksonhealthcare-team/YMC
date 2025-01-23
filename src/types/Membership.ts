@@ -56,7 +56,7 @@ export interface MyMembership {
   buy_amount: string
   pay_date: string
   expiration_date: string
-  history?: MembershipUsageHistory[]
+  reservations?: MembershipUsageHistory[]
 }
 
 export interface MyMembershipFilterItem {
@@ -104,4 +104,9 @@ export interface MembershipUsageHistory {
   store: string
   date: string
   r_idx: string
+}
+
+export interface MembershipDetailWithHistory
+  extends Omit<MyMembership, "reservations"> {
+  history: MembershipUsageHistory[]
 }

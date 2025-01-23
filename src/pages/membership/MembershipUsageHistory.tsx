@@ -3,11 +3,7 @@ import { useEffect, useCallback, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { MembershipCard } from "@components/MembershipCard"
-import {
-  MembershipStatus,
-  MyMembership,
-  MembershipUsageHistory as MembershipUsageHistoryType,
-} from "types/Membership"
+import { MembershipStatus, MembershipDetailWithHistory } from "types/Membership"
 import DateAndTime from "@components/DateAndTime"
 import CartIcon from "@components/icons/CartIcon.tsx"
 import { fetchMembershipUsageHistory } from "../../apis/membership.api"
@@ -42,7 +38,8 @@ const ReservationThumbnail = ({
 const MembershipUsageHistory = () => {
   const { setHeader, setNavigation } = useLayout()
   const { id } = useParams<{ id: string }>()
-  const [memberShipDetail, setMemberShipDetail] = useState<MyMembership>()
+  const [memberShipDetail, setMemberShipDetail] =
+    useState<MembershipDetailWithHistory>()
 
   const navigate = useNavigate()
 
@@ -73,7 +70,7 @@ const MembershipUsageHistory = () => {
         <div className="px-[20px] pt-[16px] pb-[100px] overflow-y-scroll min-h-[calc(100vh-82px)] bg-system-bg">
           <MembershipCard
             id={parseInt(memberShipDetail.mp_idx)}
-            title={memberShipDetail.service_name}
+            title={memberShipDetail.service_name || "No Named"}
             count={`${memberShipDetail.remain_amount}회 / ${memberShipDetail.buy_amount}회`}
             date={`${memberShipDetail.pay_date.split(" ")[0]} - ${memberShipDetail.expiration_date.split(" ")[0]}`}
             status={
@@ -83,7 +80,7 @@ const MembershipUsageHistory = () => {
                   ? MembershipStatus.INACTIVE
                   : MembershipStatus.EXPIRED
             }
-            serviceType={memberShipDetail.s_type}
+            serviceType={memberShipDetail.s_type || "No Named"}
             showReserveButton={false}
             showHistoryButton={false}
           />
