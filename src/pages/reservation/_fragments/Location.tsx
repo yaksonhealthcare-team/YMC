@@ -5,6 +5,7 @@ import { copyToClipboard } from "utils/copyUtils"
 import MapView from "@components/MapView"
 import { Branch } from "types/Branch"
 import { ReservationDetail } from "queries/useReservationQueries"
+import { useOverlay } from "contexts/ModalContext"
 
 const InfoGroup = ({
   icon,
@@ -24,6 +25,8 @@ interface LocationProps {
 }
 
 const Location = ({ reservation }: LocationProps) => {
+  const { showAlert } = useOverlay()
+
   const hasLocation = reservation.latitude && reservation.longitude
   const hasAddress = !!reservation.address
   const hasPhone = !!reservation.phone
@@ -44,6 +47,18 @@ const Location = ({ reservation }: LocationProps) => {
     isFavorite: false,
     brandCode: "T",
     brand: "therapist",
+  }
+
+  const handleCopyAddress = async () => {
+    if (!hasAddress) return
+    await copyToClipboard(branch.address)
+    showAlert("주소가 복사되었습니다")
+  }
+
+  const handleCopyPhone = async () => {
+    if (!hasPhone) return
+    await copyToClipboard(reservation.phone)
+    showAlert("전화번호가 복사되었습니다")
   }
 
   return (
@@ -73,7 +88,7 @@ const Location = ({ reservation }: LocationProps) => {
             </p>
             <button
               className={`flex-shrink-0 ${hasAddress ? "text-tag-blue" : "text-gray-300 cursor-not-allowed"}`}
-              onClick={() => hasAddress && copyToClipboard(branch.address)}
+              onClick={handleCopyAddress}
               disabled={!hasAddress}
             >
               복사
@@ -87,7 +102,7 @@ const Location = ({ reservation }: LocationProps) => {
             </p>
             <button
               className={`flex-shrink-0 ${hasPhone ? "text-tag-blue" : "text-gray-300 cursor-not-allowed"}`}
-              onClick={() => hasPhone && copyToClipboard(reservation.phone)}
+              onClick={handleCopyPhone}
               disabled={!hasPhone}
             >
               복사
