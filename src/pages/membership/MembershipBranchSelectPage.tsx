@@ -29,9 +29,7 @@ const MembershipBranchSelectPage = () => {
     search: query,
   })
 
-  const branches = (branchPages?.pages || []).flatMap(
-    ({ branches }) => branches,
-  )
+  const branches = branchPages?.pages.flatMap((page) => page.body.result) || []
 
   const { observerTarget } = useIntersection({
     onIntersect: () => {
@@ -62,14 +60,29 @@ const MembershipBranchSelectPage = () => {
       </div>
       {query.length === 0 ? (
         <MembershipActiveBranchList />
+      ) : branches.length === 0 ? (
+        <div className="p-4 text-center text-gray-500">
+          검색 결과가 없습니다.
+        </div>
       ) : (
         <ul className={"overflow-y-scroll h-full divide-y divide-gray-100"}>
           {branches.map((branch) => (
-            <li key={branch.id}>
+            <li key={branch.b_idx}>
               <div
                 className={"w-full px-5 py-4 gap-4 flex items-stretch"}
                 onClick={() => {
-                  setSelectedBranch(branch)
+                  setSelectedBranch({
+                    id: branch.b_idx,
+                    name: branch.b_name,
+                    address: branch.b_addr,
+                    brandCode: branch.brand_code,
+                    latitude: Number(branch.b_lat),
+                    longitude: Number(branch.b_lon),
+                    canBookToday: branch.reserve === "Y",
+                    distanceInMeters: branch.distance,
+                    isFavorite: branch.b_bookmark === "Y",
+                    brand: "therapist",
+                  })
                   navigate(-1)
                 }}
               >
@@ -82,10 +95,10 @@ const MembershipBranchSelectPage = () => {
                 />
                 <div className={"w-full flex flex-col"}>
                   <div className={"mt-0.5"}>
-                    <p className={"font-b text-16px"}>{branch.name}</p>
+                    <p className={"font-b text-16px"}>{branch.b_name}</p>
                   </div>
                   <div className={"flex items-center gap-[2.5px]"}>
-                    {branch.canBookToday && (
+                    {branch.reserve === "Y" && (
                       <>
                         <p className={"font-r text-12px text-tag-green"}>
                           {"당일 예약 가능"}
@@ -93,14 +106,14 @@ const MembershipBranchSelectPage = () => {
                         <div className={"w-0.5 h-0.5 rounded-xl bg-gray-400"} />
                       </>
                     )}
-                    {branch.distanceInMeters && (
+                    {branch.distance && (
                       <p className={"font-r text-12px text-gray-400"}>
-                        {branch.distanceInMeters}
+                        {branch.distance}
                       </p>
                     )}
                   </div>
                   <p className={"font-r text-14px text-start"}>
-                    {branch.address}
+                    {branch.b_addr}
                   </p>
                 </div>
               </div>

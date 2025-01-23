@@ -85,16 +85,29 @@ export interface BranchFilters {
   search?: string
 }
 
+export interface BranchSearchResponse {
+  resultCode: string
+  resultMessage: string
+  resultCount: string
+  total_count: number
+  total_page_count: number
+  current_page: number
+  body: {
+    current_addr: string
+    result: BranchResponse[]
+  }
+}
+
 export interface BranchResponse {
+  brand_code: string
   b_idx: string
   b_name: string
-  addr: string
-  lat: string
-  lon: string
-  b_tel: string
-  b_owner: string
-  brand_code: string
-  brand_name: string
+  b_addr: string
+  b_lat: string
+  b_lon: string
+  reserve: string
+  distance: string
+  b_bookmark: string
 }
 
 export interface BranchDetailResponse {
