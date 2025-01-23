@@ -21,18 +21,7 @@ const NoticesSummarySlider = ({
   right,
 }: NoticesSummarySliderProps) => {
   const navigate = useNavigate()
-  const { data: pages, hasNextPage, fetchNextPage } = useNotices()
-
-  const notices = (pages?.pages || []).flatMap((page) => page)
-
-  const handleSlideChange = (swiper: SwiperType) => {
-    const currentIndex = swiper.activeIndex
-    const totalSlides = swiper.slides.length
-
-    if (hasNextPage && currentIndex >= totalSlides - 5) {
-      fetchNextPage()
-    }
-  }
+  const { data: notices } = useNotices()
 
   const handleSlideClick = (notice: Notice) => {
     navigate(`/notice/${notice.code}`)
@@ -52,7 +41,6 @@ const NoticesSummarySlider = ({
           direction="vertical"
           slidesPerView={1}
           autoHeight={true}
-          onSlideChange={handleSlideChange}
         >
           {notices.map((notice, index) => (
             <SwiperSlide

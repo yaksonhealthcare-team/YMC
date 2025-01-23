@@ -25,30 +25,53 @@ import { useAuth } from "../../contexts/AuthContext.tsx"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
-  const { data: mainBanner } = useBanner(BannerRequestType.SLIDE)
+  const { data: mainBanner } = useBanner(BannerRequestType.SLIDE, {
+    staleTime: 5 * 60 * 1000, // 5분
+    gcTime: 10 * 60 * 1000, // 10분
+  })
+  const { data: eventBanner } = useBanner(BannerRequestType.CARD, {
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  })
+  const { data: reservations } = useReservations("001", {
+    staleTime: 30 * 1000, // 30초
+    gcTime: 1 * 60 * 1000, // 1분
+  })
+  const { data: memberships, isLoading: membershipLoading } =
+    useUserMemberships("T", {
+      staleTime: 30 * 1000,
+      gcTime: 1 * 60 * 1000,
+    })
   const { user } = useAuth()
 
   const navigate = useNavigate()
+
+  const upcomingReservations = useMemo(() => {
+    if (!reservations) return []
+    return reservations
+  }, [reservations])
+
+  const availableMemberships = useMemo(() => {
+    if (!memberships?.items) return []
+    return memberships.items
+  }, [memberships])
+
   useEffect(() => {
     setHeader({
       display: false,
     })
-
     setNavigation({ display: true })
   }, [])
 
+  if (!user) return <SplashScreen />
+
   return (
     <>
-      <Container
-        className={
-          "relative w-full bg-system-bg py-4 overflow-x-hidden scrollbar-hide "
-        }
-      >
+      <Container className="relative w-full bg-system-bg py-4 overflow-x-hidden scrollbar-hide">
         <DynamicHomeHeaderBackground
           header={
             <div className={"space-y-2"}>
               <Logo text size={136} />
-
               <NoticesSummarySlider
                 className={"h-[21px] mt-[12px] max-w-[90%] text-gray-500"}
                 left={<span className="min-w-[40px]">[공지]</span>}
@@ -68,7 +91,6 @@ const Home = () => {
                     <span>{user && user.point ? user.point : 0} P</span>
                   </Typography>
                 </div>
-                {/* TODO: 예약 필요 정보와 함께 이동 필요 */}
                 <div
                   className="rounded-full bg-white text-primary-300 py-2 px-5 cursor-pointer"
                   onClick={() => navigate("/reservation/form")}
@@ -114,18 +136,15 @@ const Home = () => {
           }
         />
 
-        <ReserveCardSection />
-        <MembershipCardSection />
+        <ReserveCardSection reservations={upcomingReservations} />
+        <MembershipCardSection
+          memberships={availableMemberships}
+          isLoading={membershipLoading}
+        />
         <BrandSection />
-        <EventSection />
+        <EventSection banners={eventBanner} />
         <BusinessInfo />
 
-        <button
-          className="fixed bottom-40 right-5 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200 z-10"
-          onClick={() => navigate("/dev")}
-        >
-          dev
-        </button>
         <FloatingButton
           type="search"
           onClick={() => {
@@ -137,31 +156,29 @@ const Home = () => {
   )
 }
 
-const ReserveCardSection = () => {
+const ReserveCardSection = ({
+  reservations,
+}: {
+  reservations: Reservation[]
+}) => {
   const navigate = useNavigate()
-  const { data: reservations } = useReservations("001")
-
-  const upcomingReservations = useMemo(() => {
-    if (!reservations?.pages) return []
-    return reservations.pages.flatMap((page) => page)
-  }, [reservations])
 
   return (
     <div className="mt-6">
       <Title
         type="arrow"
         title="예정된 예약"
-        count={`${upcomingReservations.length}건`}
+        count={`${reservations.length}건`}
         onClick={() => navigate("/member-history/reservation")}
       />
-      {upcomingReservations.length > 0 ? (
+      {reservations.length > 0 ? (
         <Swiper
           spaceBetween={10}
           slidesPerView={1}
           style={{ overflow: "visible" }}
           className="mt-2"
         >
-          {upcomingReservations.map((reservation: Reservation) => (
+          {reservations.map((reservation: Reservation) => (
             <SwiperSlide key={reservation.id} className="mr-2">
               <ReserveCard
                 id={reservation.id}
@@ -185,33 +202,33 @@ const ReserveCardSection = () => {
   )
 }
 
-const MembershipCardSection = () => {
+const MembershipCardSection = ({
+  memberships,
+  isLoading,
+}: {
+  memberships: any[]
+  isLoading: boolean
+}) => {
   const navigate = useNavigate()
-  const { data: memberships, isLoading } = useUserMemberships("T") // 사용가능 회원권 필터
-
-  const availableMemberships = useMemo(() => {
-    if (!memberships?.items) return []
-    return memberships.items
-  }, [memberships])
 
   return (
     <div className="mt-6">
       <Title
         type="arrow"
         title="보유 회원권"
-        count={`${availableMemberships.length}개`}
+        count={`${memberships.length}개`}
         onClick={() => navigate(`/member-history/membership`)}
       />
       {isLoading ? (
         <SplashScreen />
-      ) : availableMemberships.length > 0 ? (
+      ) : memberships.length > 0 ? (
         <Swiper
           spaceBetween={10}
           slidesPerView={1}
           style={{ overflow: "visible" }}
           className="mt-2"
         >
-          {availableMemberships.map((membership) => (
+          {memberships.map((membership) => (
             <SwiperSlide key={membership.mp_idx} className="mr-2">
               <MembershipCard
                 id={parseInt(membership.mp_idx)}
@@ -250,10 +267,8 @@ const BrandSection = () => {
   )
 }
 
-const EventSection = () => {
-  const { data: eventBanner } = useBanner(BannerRequestType.CARD)
-
-  return eventBanner ? (
+const EventSection = ({ banners }: { banners: any[] | undefined }) => {
+  return banners ? (
     <div className="mt-6">
       <Title title="이벤트 프로모션" />
       <Swiper
@@ -262,7 +277,7 @@ const EventSection = () => {
         style={{ overflow: "visible" }}
         className="mt-2"
       >
-        {eventBanner.map((data, index) => (
+        {banners.map((data, index) => (
           <SwiperSlide key={index} className="mr-3">
             <div
               className="flex flex-col gap-4 bg-white pb-4 rounded-[20px] border border-gray-100"

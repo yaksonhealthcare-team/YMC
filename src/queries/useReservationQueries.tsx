@@ -1,18 +1,23 @@
-import { useInfiniteQuery } from "@tanstack/react-query"
+import { useQuery, UseQueryOptions } from "@tanstack/react-query"
 import { fetchReservations } from "apis/reservation.api"
 import { queryKeys } from "./query.keys"
-import { ReservationStatusCode } from "types/Reservation"
+import { ReservationStatusCode, Reservation } from "types/Reservation"
 
-export const useReservations = (status: ReservationStatusCode) =>
-  useInfiniteQuery({
-    initialPageParam: 1,
+export const useReservations = (
+  status: ReservationStatusCode,
+  options?: Omit<UseQueryOptions<Reservation[], Error>, "queryKey" | "queryFn">,
+) =>
+  useQuery({
     queryKey: queryKeys.reservations.list({
       page: 1,
       status,
     }),
-    queryFn: ({ pageParam = 1 }) => fetchReservations(status, pageParam),
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === 0) return undefined
-      return allPages.length + 1
-    },
+    queryFn: () => fetchReservations(status, 1),
+    retry: false,
+    retryOnMount: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    gcTime: 60 * 1000, // 1분
+    staleTime: 30 * 1000, // 30초
+    ...options,
   })
