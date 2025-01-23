@@ -61,6 +61,16 @@ const MembershipPage = () => {
           onChange={(_, value) => setSelectedCategory(value)}
           variant="scrollable"
           scrollButtons={false}
+          allowScrollButtonsMobile={false}
+          TabIndicatorProps={{
+            sx: { transition: "none" },
+          }}
+          sx={{
+            "& .MuiTabs-scroller": {
+              overflowX: "auto !important",
+              "&::-webkit-scrollbar": { display: "none" },
+            },
+          }}
           aria-label="회원권 카테고리"
         >
           <Tab label="전체" value="" />

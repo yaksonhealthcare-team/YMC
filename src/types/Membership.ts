@@ -17,6 +17,7 @@ export interface MembershipOption {
   option_name: string
   option_count: number
   option_price: number
+  option_original_price?: number
 }
 
 export interface MembershipItem {
@@ -36,6 +37,8 @@ export interface MembershipDetail {
   service_description: string
   service_notice?: string
   service_image_url?: string
+  service_type: string
+  service_content: string
   brand_name: string
   options: MembershipOption[]
   courses: ServiceCourse[]

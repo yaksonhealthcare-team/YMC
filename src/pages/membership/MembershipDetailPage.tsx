@@ -39,9 +39,7 @@ const MembershipDetailPage = () => {
   const { data: membership, isLoading } = useMembershipDetail(id || "")
   const sortedOptions = useMemo(
     () =>
-      membership?.options.sort(
-        (a, b) => Number(a.subscriptionIndex) - Number(b.subscriptionIndex),
-      ),
+      membership?.options.sort((a, b) => Number(a.ss_idx) - Number(b.ss_idx)),
     [membership?.options],
   )
 
@@ -81,7 +79,7 @@ const MembershipDetailPage = () => {
     await addCart(
       selectedOptions.map(({ option, count }) => ({
         s_idx: Number(id!),
-        ss_idx: Number(option.subscriptionIndex),
+        ss_idx: Number(option.ss_idx),
         b_idx: Number(selectedBranch.id),
         // TODO: 전지점 회원권 케이스에 대해 API 수정 요청드림.
         //  추후 변경: b_idx: selectedBranch ? Number(selectedBranch.id) : undefined와 비슷하게 변경해야 할 것 같습니다.
@@ -100,7 +98,7 @@ const MembershipDetailPage = () => {
   const handleOpenOptionsBottomSheet = () => {
     openBottomSheet(
       <OptionsBottomSheetContent
-        serviceType={membership.serviceType}
+        serviceType={membership.service_type}
         options={sortedOptions || []}
         onClickAddToCart={handleAddItemsToCart}
         onClickBranchSelect={() => {
@@ -117,32 +115,32 @@ const MembershipDetailPage = () => {
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1">
           <span className="text-primary font-sb text-14px">
-            {membership.brandName}
+            {membership.brand_name}
           </span>
           <h1 className="text-gray-900 font-sb text-16px">
-            {membership.serviceName}
+            {membership.service_name}
           </h1>
         </div>
         {firstOption && (
           <div className="flex items-end gap-2">
-            {membership.options[0].subscriptionOriginalPrice && (
+            {membership.options[0].option_original_price && (
               <span className="text-primary font-b text-18px">
                 {calculateDiscountRate(
-                  membership.options[0].subscriptionPrice,
-                  membership.options[0].subscriptionOriginalPrice,
+                  membership.options[0].option_price,
+                  membership.options[0].option_original_price,
                 )}
                 %
               </span>
             )}
             <div className="flex items-baseline gap-1">
               <span className="text-gray-900 font-b text-18px">
-                {membership.options[0].subscriptionPrice}원
+                {membership.options[0].option_price}원
               </span>
               <span className="text-gray-900 font-r text-12px">부터~</span>
             </div>
-            {membership.options[0].subscriptionOriginalPrice && (
+            {membership.options[0].option_original_price && (
               <span className="text-gray-400 font-r text-14px line-through">
-                {membership.options[0].subscriptionOriginalPrice}원
+                {membership.options[0].option_original_price}원
               </span>
             )}
           </div>
@@ -150,7 +148,7 @@ const MembershipDetailPage = () => {
       </div>
       <div className="h-px bg-gray-100" />
       <p className="text-gray-900 font-r text-14px leading-[24px]">
-        {membership.serviceContent}
+        {membership.service_content}
       </p>
     </div>
   )
@@ -158,9 +156,9 @@ const MembershipDetailPage = () => {
   const MembershipDetail = () => {
     const sortedCourses = useMemo(
       () =>
-        membership?.courses.sort(
+        membership?.courses?.sort(
           (a, b) => Number(a.priority) - Number(b.priority),
-        ),
+        ) || [],
       [membership?.courses],
     )
 
@@ -171,13 +169,13 @@ const MembershipDetailPage = () => {
           <div className="flex items-center gap-2">
             <StoreIcon className="text-primary" />
             <span className="text-gray-800 font-m text-14px">
-              {membership.serviceType}
+              {membership.service_type}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <ClockIcon className="text-primary" />
             <span className="text-gray-800 font-m text-14px">
-              {membership.serviceTime}분 소요
+              {membership.service_time}분 소요
             </span>
           </div>
           {sortedCourses.length > 0 && (
@@ -191,12 +189,11 @@ const MembershipDetailPage = () => {
               <div className="inline">
                 {sortedCourses.map((course) => (
                   <div
-                    key={course.serviceCourseIndex}
+                    key={course.sc_idx}
                     className={"inline-flex items-center"}
                   >
                     <p className="inline font-r text-14px whitespace-nowrap">
-                      {course.serviceCourseName} ({course.serviceCourseMinutes}
-                      분)
+                      {course.sc_name} ({course.sc_min}분)
                     </p>
                     {sortedCourses.indexOf(course) !==
                       sortedCourses.length - 1 && (
@@ -215,12 +212,12 @@ const MembershipDetailPage = () => {
   return (
     <div className="pb-[94px]">
       <Swiper className="w-full h-[280px]">
-        {membership.pictures.length > 0 ? (
+        {membership?.pictures?.length > 0 ? (
           membership.pictures.map((imageUrl, index) => (
             <SwiperSlide key={index}>
               <img
                 src={imageUrl || MembershipPlaceholderImage}
-                alt={`${membership.serviceName} 이미지 ${index + 1}`}
+                alt={`${membership.service_name} 이미지 ${index + 1}`}
                 className="w-full h-full object-cover"
               />
             </SwiperSlide>
@@ -229,7 +226,7 @@ const MembershipDetailPage = () => {
           <SwiperSlide>
             <img
               src={MembershipPlaceholderImage}
-              alt={`${membership.serviceName} 기본 이미지`}
+              alt={`${membership.service_name} 기본 이미지`}
               className="w-full h-full object-cover"
             />
           </SwiperSlide>
