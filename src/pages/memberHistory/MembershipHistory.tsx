@@ -37,8 +37,8 @@ const MembershipHistory = () => {
   } = useUserMemberships(membershipFilter.id === "-" ? "" : membershipFilter.id)
 
   const flattenedMemberships = useMemo(() => {
-    if (!memberships?.items) return []
-    return memberships.items
+    if (!memberships?.body) return []
+    return memberships.body
   }, [memberships])
 
   const handleFilterChange = useCallback((filter: MyMembershipFilterItem) => {
@@ -92,7 +92,7 @@ const MembershipHistory = () => {
       </div>
 
       <div className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto scrollbar-hide">
-        {!memberships?.items?.length ? (
+        {!memberships?.body?.length ? (
           <div className="flex justify-center items-center p-4">
             회원권 내역이 없습니다.
           </div>
@@ -102,12 +102,18 @@ const MembershipHistory = () => {
               <MembershipCard
                 key={membership.mp_idx}
                 id={parseInt(membership.mp_idx)}
-                status={membership.status as MembershipStatus}
-                title={membership.membership_name}
-                count={`${membership.remaining_count}회 / ${membership.total_count}회`}
-                date={`${membership.purchase_date} - ${membership.expiration_date}`}
+                status={
+                  membership.status === "사용가능"
+                    ? MembershipStatus.ACTIVE
+                    : membership.status === "사용완료"
+                      ? MembershipStatus.INACTIVE
+                      : MembershipStatus.EXPIRED
+                }
+                title={membership.s_type}
+                count={`${membership.remain_amount}회 / ${membership.buy_amount}회`}
+                date={`${membership.pay_date.split(" ")[0]} - ${membership.expiration_date.split(" ")[0]}`}
                 showReserveButton={false}
-                serviceType={membership.service_type}
+                serviceType={membership.service_name || membership.s_type}
               />
             ))}
           </div>

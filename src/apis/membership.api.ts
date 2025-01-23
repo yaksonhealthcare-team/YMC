@@ -68,8 +68,13 @@ axiosInstance.interceptors.response.use(
 )
 
 export interface ListResponse<T> {
+  resultCode: string
+  resultMessage: string
+  resultCount: number
   total_count: number
-  items: T[]
+  total_page_count: number
+  current_page: number
+  body: T[]
 }
 
 export const fetchMembershipList = async (
