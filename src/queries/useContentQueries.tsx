@@ -29,7 +29,8 @@ export const useEvent = (id: string) =>
     refetchOnWindowFocus: false,
   })
 
-export const useNotices = () =>
+// 홈 화면의 공지사항 슬라이더용 (첫 페이지만)
+export const useNoticesSummary = () =>
   useQuery({
     queryKey: queryKeys.notices.list({ page: 1 }),
     queryFn: () => fetchNotices(1),
@@ -37,6 +38,20 @@ export const useNotices = () =>
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000, // 5분
     gcTime: 10 * 60 * 1000, // 10분
+  })
+
+// 공지사항 목록 페이지용 (무한 스크롤)
+export const useNotices = () =>
+  useInfiniteQuery({
+    initialPageParam: 1,
+    queryKey: queryKeys.notices.list({ page: 1 }),
+    queryFn: ({ pageParam = 1 }) => fetchNotices(pageParam),
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length === 0) return undefined
+      return allPages.length + 1
+    },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   })
 
 export const useNotice = (id: string) =>

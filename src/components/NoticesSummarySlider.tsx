@@ -1,7 +1,7 @@
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
 import { Autoplay } from "swiper/modules"
-import { useNotices } from "../queries/useContentQueries.tsx"
+import { useNoticesSummary } from "../queries/useContentQueries.tsx"
 import React from "react"
 import { useNavigate } from "react-router-dom"
 import { Notice } from "../types/Content.ts"
@@ -21,7 +21,7 @@ const NoticesSummarySlider = ({
   right,
 }: NoticesSummarySliderProps) => {
   const navigate = useNavigate()
-  const { data: notices } = useNotices()
+  const { data: notices } = useNoticesSummary()
 
   const handleSlideClick = (notice: Notice) => {
     navigate(`/notice/${notice.code}`)
