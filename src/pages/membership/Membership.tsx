@@ -39,9 +39,9 @@ const MembershipPage = () => {
           <CaretLeftIcon className="w-5 h-5" />
         </div>
       ),
-      backgroundColor: "bg-white",
+      backgroundColor: "bg-system-bg",
     })
-    setNavigation({ display: false })
+    setNavigation({ display: true })
   }, [])
 
   if (
@@ -54,37 +54,42 @@ const MembershipPage = () => {
   }
 
   return (
-    <div className="flex flex-col h-full">
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={selectedCategory || ""}
-          onChange={(_, value) => setSelectedCategory(value)}
-          variant="scrollable"
-          scrollButtons={false}
-          allowScrollButtonsMobile={false}
-          TabIndicatorProps={{
-            sx: { transition: "none" },
-          }}
-          sx={{
-            "& .MuiTabs-scroller": {
-              overflowX: "auto !important",
-              "&::-webkit-scrollbar": { display: "none" },
-            },
-          }}
-          aria-label="회원권 카테고리"
+    <div className="flex flex-col min-h-screen bg-system-bg">
+      <div className="fixed top-[48px] left-0 right-0 z-10 flex justify-center">
+        <Box
+          sx={{ borderBottom: 1, borderColor: "divider" }}
+          className="w-full max-w-[500px] min-w-[375px] bg-system-bg"
         >
-          <Tab label="전체" value="" />
-          {categoriesData.body.map((category: MembershipCategory) => (
-            <Tab
-              key={category.sc_code}
-              label={category.sc_name}
-              value={category.sc_code}
-            />
-          ))}
-        </Tabs>
-      </Box>
+          <Tabs
+            value={selectedCategory || ""}
+            onChange={(_, value) => setSelectedCategory(value)}
+            variant="scrollable"
+            scrollButtons={false}
+            allowScrollButtonsMobile={false}
+            TabIndicatorProps={{
+              sx: { transition: "none" },
+            }}
+            sx={{
+              "& .MuiTabs-scroller": {
+                overflowX: "auto !important",
+                "&::-webkit-scrollbar": { display: "none" },
+              },
+            }}
+            aria-label="회원권 카테고리"
+          >
+            <Tab label="전체" value="" />
+            {categoriesData.body.map((category: MembershipCategory) => (
+              <Tab
+                key={category.sc_code}
+                label={category.sc_name}
+                value={category.sc_code}
+              />
+            ))}
+          </Tabs>
+        </Box>
+      </div>
 
-      <div className="flex-1 overflow-y-auto p-5 space-y-4">
+      <div className="pt-[96px] pb-[100px] p-5 space-y-4 bg-system-bg">
         {membershipsData.body.map((membership: MembershipItem) => (
           <MembershipCard
             key={membership.s_idx}
@@ -92,17 +97,6 @@ const MembershipPage = () => {
             onClick={() => navigate(`/membership/${membership.s_idx}`)}
           />
         ))}
-      </div>
-
-      <div className="p-5 border-t border-gray-100">
-        <Button
-          variantType="primary"
-          sizeType="l"
-          className="w-full"
-          onClick={() => navigate("/cart")}
-        >
-          장바구니
-        </Button>
       </div>
     </div>
   )

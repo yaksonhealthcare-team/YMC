@@ -21,11 +21,10 @@ export interface MembershipOption {
 
 export interface MembershipItem {
   s_idx: string
-  service_name: string
-  service_time: number
-  service_description: string
-  service_notice?: string
-  service_image_url?: string
+  s_name: string
+  brand_name: string
+  s_time: string
+  s_type: string
   options: MembershipOption[]
 }
 
