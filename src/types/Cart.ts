@@ -71,4 +71,5 @@ export interface CartItemPostRequest {
   b_idx: number
   brand_code: string
   amount: number
+  b_type: "M" | "P" // M: 회원권, P: 패키지
 }

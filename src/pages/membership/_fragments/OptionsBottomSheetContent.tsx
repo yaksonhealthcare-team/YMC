@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useMemo, useState, useEffect } from "react"
 import XCircleIcon from "@components/icons/XCircleIcon.tsx"
 import { MembershipOption } from "../../../types/Membership"
 import clsx from "clsx"
@@ -11,18 +11,18 @@ import {
   useMembershipOptionsStore,
 } from "../../../hooks/useMembershipOptions.ts"
 import { Divider } from "@mui/material"
-import { useNavigate } from "react-router-dom"
 import { addCart } from "../../../apis/cart.api"
 import { useOverlay } from "../../../contexts/ModalContext"
-import { useParams } from "react-router-dom"
 import { queryClient } from "../../../queries/clients"
 import { queryKeys } from "../../../queries/query.keys"
+import { useLayout } from "../../../contexts/LayoutContext"
 
 interface Props {
   serviceType?: string
   options: MembershipOption[]
   onClickBranchSelect: () => void
   onAddToCartSuccess: () => void
+  membershipId: string
 }
 
 export const OptionsBottomSheetContent = ({
@@ -30,12 +30,20 @@ export const OptionsBottomSheetContent = ({
   options,
   onClickBranchSelect,
   onAddToCartSuccess,
+  membershipId,
 }: Props) => {
-  const { id } = useParams<{ id: string }>()
   const { closeOverlay } = useOverlay()
   const { selectedOptions, setSelectedOptions, selectedBranch } =
     useMembershipOptionsStore()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const { setHeader } = useLayout()
+
+  useEffect(() => {
+    setHeader({
+      left: "back",
+      title: "옵션 선택",
+    })
+  }, [])
 
   const handleSelectOption = (option: MembershipOption) => {
     const existingOption = selectedOptions.find(
@@ -92,18 +100,14 @@ export const OptionsBottomSheetContent = ({
       return
     }
 
-    if (!id) {
-      alert("잘못된 접근입니다.")
-      return
-    }
-
     try {
       const cartItems = selectedOptions.map(({ option, count }) => ({
-        s_idx: parseInt(id),
+        s_idx: parseInt(membershipId),
         ss_idx: parseInt(option.ss_idx),
         b_idx: parseInt(selectedBranch.id),
         brand_code: selectedBranch.brandCode,
         amount: count,
+        b_type: "M" as const, // M: 회원권, P: 패키지
       }))
 
       await addCart(cartItems)

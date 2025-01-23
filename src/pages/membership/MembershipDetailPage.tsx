@@ -30,12 +30,15 @@ const MembershipDetailPage = () => {
   const { openBottomSheet, closeOverlay } = useOverlay()
   const { selectedBranch, clear: clearOptions } = useMembershipOptionsStore()
   const navigate = useNavigate()
-  const { setHeader } = useLayout()
+  const { setHeader, setNavigation } = useLayout()
 
   useEffect(() => {
     setHeader({
       title: membership?.s_name || "데이터가 없습니다",
       left: "back",
+    })
+    setNavigation({
+      display: false,
     })
   }, [membership?.s_name])
 
@@ -50,6 +53,7 @@ const MembershipDetailPage = () => {
       <OptionsBottomSheetContent
         serviceType={membership?.s_type}
         options={membership?.options || []}
+        membershipId={id!}
         onClickBranchSelect={() => {
           closeOverlay()
           navigate(`/membership/select-branch`)
