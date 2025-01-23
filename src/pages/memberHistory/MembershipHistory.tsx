@@ -6,9 +6,22 @@ import { MembershipCard } from "@components/MembershipCard"
 import { useNavigate } from "react-router-dom"
 import ReservationIcon from "@assets/icons/ReservationIcon.png"
 import { useLayout } from "contexts/LayoutContext"
-import { useMembershipList } from "queries/useMembershipQueries"
-import { MyMembershipFilterItem, myMembershipFilters } from "types/Membership"
+import { useUserMemberships } from "queries/useMembershipQueries"
+import {
+  MyMembershipFilterItem,
+  myMembershipFilters,
+  MembershipStatus,
+} from "types/Membership"
 import SplashScreen from "@components/Splash"
+import { Skeleton } from "@mui/material"
+
+const LoadingSkeleton = () => (
+  <div className="flex flex-col gap-4 p-5">
+    <Skeleton variant="rectangular" width="100%" height={100} />
+    <Skeleton variant="rectangular" width="100%" height={100} />
+    <Skeleton variant="rectangular" width="100%" height={100} />
+  </div>
+)
 
 const MembershipHistory = () => {
   const navigate = useNavigate()
@@ -16,13 +29,16 @@ const MembershipHistory = () => {
   const [membershipFilter, setMembershipFilter] =
     useState<MyMembershipFilterItem>(myMembershipFilters[0])
 
-  const { data: memberships, isLoading } = useMembershipList(
-    membershipFilter.id,
-  )
+  const {
+    data: memberships,
+    isLoading,
+    isError,
+    error,
+  } = useUserMemberships(membershipFilter.id === "-" ? "" : membershipFilter.id)
 
   const flattenedMemberships = useMemo(() => {
-    if (!memberships?.pages) return []
-    return memberships.pages.flatMap((page) => page)
+    if (!memberships?.items) return []
+    return memberships.items
   }, [memberships])
 
   const handleFilterChange = useCallback((filter: MyMembershipFilterItem) => {
@@ -31,12 +47,22 @@ const MembershipHistory = () => {
 
   useEffect(() => {
     setHeader({
-      display: false,
+      display: true,
+      title: "회원권 내역",
+      left: "back",
+      backgroundColor: "bg-system-bg",
     })
-    setNavigation({ display: true })
+    setNavigation({ display: false })
   }, [setHeader, setNavigation])
 
-  if (isLoading) return <SplashScreen />
+  if (isLoading) return <LoadingSkeleton />
+  if (isError)
+    return (
+      <div className="p-5 text-red-500">
+        에러가 발생했습니다:{" "}
+        {error instanceof Error ? error.message : "알 수 없는 에러"}
+      </div>
+    )
 
   return (
     <div className="flex flex-col bg-system-bg min-h-[calc(100vh-82px)]">
@@ -66,7 +92,7 @@ const MembershipHistory = () => {
       </div>
 
       <div className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto scrollbar-hide">
-        {flattenedMemberships.length === 0 ? (
+        {!memberships?.items?.length ? (
           <div className="flex justify-center items-center p-4">
             회원권 내역이 없습니다.
           </div>
@@ -74,14 +100,14 @@ const MembershipHistory = () => {
           <div className="space-y-3">
             {flattenedMemberships.map((membership) => (
               <MembershipCard
-                key={membership.id}
-                id={parseInt(membership.id)}
-                status={membership.status}
-                title={membership.serviceName || membership.serviceType}
-                count={`${membership.remainCount}회 / ${membership.totalCount}회`}
-                date={`${membership.purchaseDate} - ${membership.expirationDate}`}
+                key={membership.mp_idx}
+                id={parseInt(membership.mp_idx)}
+                status={membership.status as MembershipStatus}
+                title={membership.membership_name}
+                count={`${membership.remaining_count}회 / ${membership.total_count}회`}
+                date={`${membership.purchase_date} - ${membership.expiration_date}`}
                 showReserveButton={false}
-                serviceType={membership.serviceType}
+                serviceType={membership.service_type}
               />
             ))}
           </div>

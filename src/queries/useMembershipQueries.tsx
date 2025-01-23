@@ -49,7 +49,6 @@ export const useUserMemberships = (
     queryFn: () => fetchUserMemberships(searchType),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    enabled: !!searchType,
     ...options,
   })
 }

@@ -49,13 +49,14 @@ export interface ServiceCourse {
 
 export interface MyMembership {
   mp_idx: string
-  service_name: string
-  service_time: number
-  remaining_count: number
-  valid_from: string
-  valid_until: string
-  status: MembershipStatus
-  available_branches: string[]
+  membership_name: string
+  branch_name: string
+  remaining_count: string
+  total_count: string
+  purchase_date: string
+  expiration_date: string
+  service_type: string
+  status: string
 }
 
 export interface MyMembershipFilterItem {
