@@ -110,7 +110,11 @@ const CartPage = () => {
                 상품할인금액
               </span>
               <span className="text-success text-14px font-sb">
-                {`-${((summary?.total_origin_price || 0) - (summary?.total_price || 0)).toLocaleString()}원`}
+                {(
+                  (summary?.total_origin_price || 0) -
+                  (summary?.total_price || 0)
+                ).toLocaleString()}
+                원
               </span>
             </div>
             <div className="w-full h-[1px] bg-gray-100 my-4" />
