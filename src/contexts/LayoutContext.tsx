@@ -77,7 +77,11 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
         >
           <Header
             type={
-              headerConfig.left === "back" ? "back_title" : "title_right_icon"
+              headerConfig.left === "back" && headerConfig.right
+                ? "back_title_right_icon"
+                : headerConfig.left === "back"
+                ? "back_title"
+                : "title_right_icon"
             }
             title={headerConfig.title as string}
             onClickBack={

@@ -153,7 +153,10 @@ const MyPage = () => {
               </span>
               <div className="flex items-center">
                 <span className="font-sb text-14px text-gray-900">
-                  약손명가 강남구청역점 외 2개
+                  {user?.brands?.length ? 
+                    `${user.brands[0].brandName}${user.brands.length > 1 ? ` 외 ${user.brands.length - 1}개` : ''}`
+                    : '이용중인 지점이 없습니다.'
+                  }
                 </span>
                 <CaretRightIcon className="w-3 h-3 ml-1.5" />
               </div>
