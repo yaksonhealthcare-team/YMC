@@ -24,15 +24,17 @@ export const BrandDetailPage = () => {
   }, [brand])
 
   return (
-    <div className="relative w-full">
-      {/*TODO brand detail api 응답데이터에 image 데이터 추가 될 시, /assets/brand_example.png 제거 */}
-      <img
-        src={brandImage ? brandImage : "/assets/brand_example.png"}
-        alt=""
-        className="w-full h-full"
-      />
+    <div className="relative w-full min-h-screen flex flex-col">
+      <div className="flex-1">
+        {/*TODO brand detail api 응답데이터에 image 데이터 추가 될 시, /assets/brand_example.png 제거 */}
+        <img
+          src={brandImage ? brandImage : "/assets/brand_example.png"}
+          alt=""
+          className="w-full object-contain"
+        />
+      </div>
 
-      <div className="sticky bottom-0 w-full px-[20px] pb-[30px] pt-[12px] bg-white">
+      <div className="w-full px-[20px] pb-[30px] pt-[12px] bg-white">
         <Button
           className="w-full !rounded-[12px]"
           onClick={() => navigate("/reservation/form")}
