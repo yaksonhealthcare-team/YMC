@@ -64,6 +64,7 @@ interface CustomTextFieldProps {
   iconRight?: ReactNode
   button?: ReactNode
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  maxLength?: number
 }
 
 const CustomTextField = forwardRef<HTMLInputElement, CustomTextFieldProps>(
@@ -81,6 +82,7 @@ const CustomTextField = forwardRef<HTMLInputElement, CustomTextFieldProps>(
       iconRight,
       button,
       onChange,
+      maxLength,
     },
     ref,
   ) => (
@@ -97,6 +99,7 @@ const CustomTextField = forwardRef<HTMLInputElement, CustomTextFieldProps>(
           onChange={onChange}
           variant="outlined"
           fullWidth
+          inputProps={{ maxLength }}
           InputProps={{
             startAdornment: iconLeft && (
               <InputAdornment position="start">{iconLeft}</InputAdornment>

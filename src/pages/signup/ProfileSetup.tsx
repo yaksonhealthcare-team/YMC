@@ -260,10 +260,13 @@ export const ProfileSetup = () => {
         <CustomTextField
           label="휴대폰 번호"
           value={signupData.mobileNumber}
-          onChange={(e) =>
-            setSignupData({ ...signupData, mobileNumber: e.target.value })
-          }
-          placeholder="휴대폰 번호 입력"
+          onChange={(e) => {
+            const value = e.target.value.replace(/[^0-9]/g, '');
+            setSignupData({ ...signupData, mobileNumber: value });
+          }}
+          placeholder="- 없이 입력"
+          maxLength={11}
+          type="tel"
         />
 
         {/* 성별 */}
