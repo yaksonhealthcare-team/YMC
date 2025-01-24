@@ -43,3 +43,5 @@ export const BrandDetailPage = () => {
     </div>
   )
 }
+
+export default BrandDetailPage
