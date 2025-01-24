@@ -74,6 +74,7 @@ export interface Profile {
   name: string
   profileImageUrl?: string
   description?: string
+  grade: string
 }
 
 export interface BranchFilters {

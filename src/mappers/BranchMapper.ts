@@ -23,11 +23,13 @@ export class BranchMapper {
     name: string
     profileImageUrl?: string
     description?: string
+    grade: string
   } {
     return {
-      name: `${dto.bs_name_ko} ${dto.bs_grade}`,
+      name: dto.bs_name_ko,
       profileImageUrl: dto.bs_image.length > 0 ? dto.bs_image : undefined,
       description: dto.profile,
+      grade: dto.bs_grade,
     }
   }
 

@@ -113,13 +113,12 @@ const BranchDetail = () => {
                 {branch.staffs.length > 0 && (
                   <StaffSection
                     directorCount={
-                      branch.staffs.filter((staff) =>
-                        staff.name.includes("원장"),
-                      ).length
+                      branch.staffs.filter((staff) => staff.grade === "원장")
+                        .length
                     }
                     staffCount={
-                      branch.staffs.filter((staff) =>
-                        staff.name.includes("테라피스트"),
+                      branch.staffs.filter(
+                        (staff) => staff.grade === "테라피스트",
                       ).length
                     }
                   />
