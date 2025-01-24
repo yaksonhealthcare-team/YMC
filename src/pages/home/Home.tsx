@@ -24,6 +24,7 @@ import NoticesSummarySlider from "@components/NoticesSummarySlider.tsx"
 import { useAuth } from "../../contexts/AuthContext.tsx"
 import { MyMembership, MembershipStatus } from "types/Membership"
 import { useEvents } from "queries/useEventQueries"
+import { Event } from "types/Event"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -276,19 +277,20 @@ const EventSection = () => {
           style={{ overflow: "visible" }}
           className="mt-2"
         >
-          {events.map((event) => (
+          {events.map((event: Event) => (
             <SwiperSlide key={event.code} className="mr-3">
               <div
                 className="flex flex-col gap-4 bg-white pb-4 rounded-[20px] border border-gray-100"
                 onClick={() => navigate(`/event/${event.code}`)}
               >
                 {event.files.length > 0 && (
-                  <div
-                    style={{
-                      backgroundImage: `url(${event.files[0].fileurl})`,
-                    }}
-                    className="w-full h-[190px] bg-cover bg-center rounded-t-[20px]"
-                  ></div>
+                  <div className="w-full aspect-[16/9] relative rounded-t-[20px] overflow-hidden">
+                    <img
+                      src={event.files[0].fileurl}
+                      alt={event.title}
+                      className="w-full h-full object-cover absolute inset-0"
+                    />
+                  </div>
                 )}
                 <div className="flex flex-col px-5 gap-1.5">
                   <span className="font-b text-16px text-gray-700">

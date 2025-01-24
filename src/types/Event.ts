@@ -1,27 +1,18 @@
 export interface Event {
   code: string
+  gubun: string
   title: string
-  contents: string
   sdate: string
   edate: string
+  contents?: string
   files: {
+    fileCode: string
     fileurl: string
   }[]
-  status: string
-  gubun: string
-  seq?: string
-  reg_date?: string
-  mod_date?: string
-  reg_id?: string
-  mod_id?: string
 }
 
 export interface EventDetail extends Event {
-  seq: string
-  reg_date: string
-  mod_date: string
-  reg_id: string
-  mod_id: string
+  contents: string
 }
 
 export type Tab = "ALL" | "ONGOING" | "ENDED"

@@ -12,11 +12,6 @@ export class ContentMapper {
       files: dto.files || [],
       status: dto.status || "",
       gubun: dto.gubun,
-      seq: dto.seq,
-      reg_date: dto.reg_date,
-      mod_date: dto.mod_date,
-      reg_id: dto.reg_id,
-      mod_id: dto.mod_id,
     }))
   }
 
@@ -28,13 +23,7 @@ export class ContentMapper {
       sdate: dto.sdate,
       edate: dto.edate,
       files: dto.files || [],
-      status: dto.status || "",
       gubun: dto.gubun,
-      seq: dto.seq || "",
-      reg_date: dto.reg_date || "",
-      mod_date: dto.mod_date || "",
-      reg_id: dto.reg_id || "",
-      mod_id: dto.mod_id || "",
     }
   }
 

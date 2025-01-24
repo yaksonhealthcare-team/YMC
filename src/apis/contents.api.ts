@@ -1,5 +1,5 @@
 import { axiosClient } from "../queries/clients.ts"
-import { HTTPResponse, http } from "./http"
+import { HTTPResponse } from "./http.ts"
 import { Event, EventDetail } from "types/Event"
 import { Notice, NoticeDetail } from "../types/Content.ts"
 import { ContentMapper } from "mappers/ContentMapper"
@@ -19,15 +19,16 @@ export const fetchEvents = async (): Promise<Event[]> => {
 }
 
 export const fetchEventDetail = async (code: string): Promise<EventDetail> => {
-  const { data } = await axiosClient.get<HTTPResponse<EventDetail>>(
+  const { data } = await axiosClient.get<HTTPResponse<EventDetail[]>>(
     "/contents/detail",
     {
       params: {
+        gubun: "E01",
         code,
       },
     },
   )
-  return ContentMapper.toEventDetail(data.body)
+  return ContentMapper.toEventDetail(data.body[0])
 }
 
 export const fetchNotices = async (page: number = 1): Promise<Notice[]> => {
