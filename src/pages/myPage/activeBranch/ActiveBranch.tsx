@@ -4,9 +4,7 @@ import InformationIcon from "@assets/icons/InformationIcon.svg?react"
 import { useOverlay } from "../../../contexts/ModalContext.tsx"
 import { Button } from "@components/Button.tsx"
 import BranchCard from "@components/BranchCard.tsx"
-import { useQuery } from "@tanstack/react-query"
-import { Branch, getActiveBranches } from "@apis/branch"
-import SplashScreen from "@components/Splash"
+import { useAuth } from "../../../contexts/AuthContext.tsx"
 
 const InformationBottomSheet = ({ onClose }: { onClose: () => void }) => (
   <div className={"flex flex-col"}>
@@ -28,10 +26,7 @@ const InformationBottomSheet = ({ onClose }: { onClose: () => void }) => (
 const ActiveBranch = () => {
   const { setHeader, setNavigation } = useLayout()
   const { openBottomSheet, closeOverlay } = useOverlay()
-  const { data: branches = [], isLoading } = useQuery<Branch[]>({
-    queryKey: ["activeBranches"],
-    queryFn: getActiveBranches,
-  })
+  const { user } = useAuth()
 
   const handleClickInformation = () => {
     openBottomSheet(<InformationBottomSheet onClose={closeOverlay} />)
@@ -52,16 +47,16 @@ const ActiveBranch = () => {
     setNavigation({ display: false })
   }, [])
 
-  if (isLoading) {
-    return <SplashScreen />
+  if (!user) {
+    return null
   }
 
   return (
     <div className={"w-full h-full p-5"}>
       <ul className={"space-y-3"}>
-        {branches.map((branch, index) => (
+        {user.brands.map((branch, index) => (
           <li key={index} className={"p-5 rounded-2xl border border-gray-100"}>
-            <BranchCard name={branch.name} address={branch.address} />
+            <BranchCard name={branch.brandName} address={branch.address} />
           </li>
         ))}
       </ul>
