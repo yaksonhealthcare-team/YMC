@@ -19,22 +19,6 @@ import { UserSignup } from "../../types/User.ts"
 import { loginWithSocial } from "../../apis/auth.api.ts"
 import { AxiosError } from "axios"
 
-interface SignupData {
-  email: string
-  password?: string
-  name: string
-  mobileNumber: string
-  birthDate: string
-  gender: "male" | "female"
-  postCode: string
-  address1: string
-  address2?: string
-  marketingYn: boolean
-  brandCodes?: string[]
-  profileImage?: File
-  referralCode?: string
-}
-
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
@@ -261,8 +245,8 @@ export const ProfileSetup = () => {
           label="휴대폰 번호"
           value={signupData.mobileNumber}
           onChange={(e) => {
-            const value = e.target.value.replace(/[^0-9]/g, '');
-            setSignupData({ ...signupData, mobileNumber: value });
+            const value = e.target.value.replace(/[^0-9]/g, "")
+            setSignupData({ ...signupData, mobileNumber: value })
           }}
           placeholder="- 없이 입력"
           maxLength={11}

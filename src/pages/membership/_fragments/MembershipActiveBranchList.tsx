@@ -3,6 +3,7 @@ import BranchCard from "../../../components/BranchCard"
 import { useMembershipOptionsStore } from "../../../hooks/useMembershipOptions"
 import { useVisitedStores } from "../../../hooks/useVisitedStores"
 import { BranchResponse } from "../../../types/Branch"
+import { Branch } from "types/Branch"
 
 export const MembershipActiveBranchList = () => {
   const navigate = useNavigate()
@@ -19,28 +20,31 @@ export const MembershipActiveBranchList = () => {
 
   return (
     <div className="flex flex-col gap-4 p-4">
-      {visitedStores.body.map((branch: BranchResponse) => (
-        <button
-          key={branch.b_idx}
-          onClick={() => {
-            setSelectedBranch({
-              id: branch.b_idx,
-              name: branch.b_name,
-              address: branch.addr,
-              brandCode: branch.brand_code,
-              latitude: Number(branch.lat),
-              longitude: Number(branch.lon),
-              canBookToday: false,
-              distanceInMeters: null,
-              isFavorite: false,
-              brand: "therapist",
-            })
-            navigate(-1)
-          }}
-        >
-          <BranchCard name={branch.b_name} address={branch.addr} />
-        </button>
-      ))}
+      {visitedStores.body.map((branch: BranchResponse) => {
+        const branchData: Branch = {
+          id: branch.b_idx,
+          name: branch.b_name,
+          address: branch.addr || "",
+          latitude: parseFloat(branch.b_lat || "0"),
+          longitude: parseFloat(branch.b_lon || "0"),
+          canBookToday: false,
+          distanceInMeters: null,
+          isFavorite: false,
+          brandCode: branch.brand_code,
+          brand: "therapist",
+        }
+        return (
+          <button
+            key={branch.b_idx}
+            onClick={() => {
+              setSelectedBranch(branchData)
+              navigate(-1)
+            }}
+          >
+            <BranchCard name={branch.b_name} address={branch.addr || ""} />
+          </button>
+        )
+      })}
     </div>
   )
 }

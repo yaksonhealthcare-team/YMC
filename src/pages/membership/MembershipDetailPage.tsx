@@ -15,20 +15,13 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/swiper-bundle.css"
 import MembershipPlaceholderImage from "@assets/images/MembershipPlaceholderImage.jpg"
 import CartIcon from "@components/icons/CartIcon.tsx"
-import {
-  SelectedOption,
-  useMembershipOptionsStore,
-} from "../../hooks/useMembershipOptions.ts"
-import { addCart } from "../../apis/cart.api.ts"
-import { Branch } from "../../types/Branch.ts"
-import { queryClient } from "../../queries/clients.ts"
-import { queryKeys } from "../../queries/query.keys.ts"
+import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
 
 const MembershipDetailPage = () => {
   const { id } = useParams()
   const { data: membership } = useMembershipDetail(id!)
   const { openBottomSheet, closeOverlay } = useOverlay()
-  const { selectedBranch, clear: clearOptions } = useMembershipOptionsStore()
+  const { selectedBranch } = useMembershipOptionsStore()
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
 
@@ -87,26 +80,6 @@ const MembershipDetailPage = () => {
   }, [membership?.options])
 
   const firstOption = sortedOptions?.[0]
-
-  const handleAddItemsToCart = async (selectedOptions: SelectedOption[]) => {
-    const selectedBranch = useMembershipOptionsStore.getState().selectedBranch
-    if (!selectedBranch) return
-
-    await addCart(
-      selectedOptions.map(({ option, count }) => ({
-        s_idx: Number(id!),
-        ss_idx: Number(option.ss_idx),
-        b_idx: Number(selectedBranch.id),
-        brand_code: selectedBranch.brandCode,
-        amount: count,
-        b_type: "지정지점" as const,
-      })),
-    )
-    await queryClient.refetchQueries({ queryKey: queryKeys.carts.all })
-    clearOptions()
-    closeOverlay()
-    navigate("/cart")
-  }
 
   if (!membership) return <div>Loading...</div>
 

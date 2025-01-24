@@ -109,6 +109,9 @@ export interface BranchResponse {
   reserve: string
   distance: string
   b_bookmark: string
+  lat?: string
+  lon?: string
+  addr?: string
 }
 
 export interface BranchDetailResponse {

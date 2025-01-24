@@ -6,11 +6,7 @@ import CaretRigthIcon from "@assets/icons/CaretRightIcon.svg?react"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import { RadioCard } from "@components/RadioCard"
 import { MembershipRadioCard } from "./_fragments/MembershipRadioCard"
-import {
-  AdditionalManagement,
-  MembershipItem,
-  MembershipStatus,
-} from "types/Membership"
+import { AdditionalManagement } from "types/Membership"
 import { Box, RadioGroup, useTheme } from "@mui/material"
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
@@ -23,8 +19,6 @@ import DateAndTimeBottomSheet from "./_fragments/DateAndTimeBottomSheet"
 import { Dayjs } from "dayjs"
 import CustomTextField from "@components/CustomTextField"
 import FixedButtonContainer from "@components/FixedButtonContainer"
-import clsx from "clsx"
-import CheckIcon from "@components/icons/CheckIcon"
 import { ClockIcon } from "@mui/x-date-pickers"
 import { useAdditionalManagement } from "../../queries/useMembershipQueries.tsx"
 import { TimeSlot } from "../../types/Schedule.ts"
@@ -49,7 +43,7 @@ const ReservationFormPage = () => {
   const theme = useTheme()
   const [consultationSlot, _setConsultationSlot] = useState(1)
   const [brandCode] = useState("001") // 약손명가
-  const { selectedBranch, setSelectedBranch } = useMembershipOptionsStore()
+  const { selectedBranch } = useMembershipOptionsStore()
 
   const { data: membershipsData, isLoading: isMembershipsLoading } =
     useMembershipList(brandCode)

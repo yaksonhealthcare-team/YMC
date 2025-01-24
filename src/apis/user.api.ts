@@ -1,10 +1,4 @@
 import { ListResponse } from "../types/Common"
-import {
-  User,
-  UserResponse,
-  UserSignupRequest,
-  UserUpdateRequest,
-} from "../types/User"
 import { BranchResponse } from "../types/Branch"
 import { axiosClient } from "../queries/clients"
 

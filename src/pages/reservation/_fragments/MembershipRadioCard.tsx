@@ -1,6 +1,5 @@
 import { RadioCard } from "@components/RadioCard"
 import { MembershipItem } from "../../../types/Membership"
-import { Tag } from "@components/Tag"
 
 interface MembershipRadioCardProps {
   membership: MembershipItem

@@ -17,6 +17,7 @@ export interface MembershipOption {
   ss_count: string
   ss_price: string
   original_price: string
+  subscriptionIndex?: string
 }
 
 export interface MembershipItem {
@@ -37,6 +38,7 @@ export interface MembershipDetail {
   courses: ServiceCourse[]
   pictures: string[]
   options: MembershipOption[]
+  serviceName?: string
 }
 
 export interface ServiceCourse {
@@ -44,6 +46,7 @@ export interface ServiceCourse {
   sc_name: string
   sc_min: string
   prior: string
+  serviceCourseIndex?: string
 }
 
 export interface MyMembership {
@@ -56,6 +59,7 @@ export interface MyMembership {
   pay_date: string
   expiration_date: string
   reservations?: MembershipUsageHistory[]
+  id?: string
 }
 
 export interface MyMembershipFilterItem {
@@ -94,6 +98,7 @@ export interface AdditionalManagement {
   s_name: string
   s_time: string
   options: AdditionalManagementOption[]
+  serviceIndex?: string
 }
 
 export interface MembershipUsageHistory {
@@ -107,3 +112,79 @@ export interface MembershipDetailWithHistory
   extends Omit<MyMembership, "reservations"> {
   history: MembershipUsageHistory[]
 }
+
+export interface ServiceCategory {
+  sc_idx: string
+  sc_name: string
+  sc_min: string
+  prior: string
+  brandCode?: string
+  serviceCategoryCode?: string
+  serviceCategoryName?: string
+  serviceCategoryImageUrl?: string
+}
+
+export interface ServiceCategoryResponse {
+  sc_idx: string
+  sc_name: string
+  sc_min: string
+  prior: string
+  brand_code: string
+  sc_code: string
+  sc_pic: string
+}
+
+export interface ServiceCourseResponse {
+  sc_idx: string
+  sc_name: string
+  sc_min: string
+  prior: string
+}
+
+export interface MembershipResponse {
+  s_idx: string
+  s_name: string
+  brand_name: string
+  s_time: string
+  s_type: string
+  options: MembershipOption[]
+}
+
+export interface MembershipDetailResponse {
+  s_name: string
+  brand_name: string | null
+  s_content: string | null
+  s_time: string
+  s_type: string
+  courses: ServiceCourse[]
+  pictures: string[]
+  options: MembershipOption[]
+}
+
+export interface MyMembershipResponse {
+  mp_idx: string
+  status: string
+  service_name: string
+  s_type: string
+  remain_amount: string
+  buy_amount: string
+  pay_date: string
+  expiration_date: string
+  reservations?: MembershipUsageHistory[]
+}
+
+export interface AdditionalManagementResponse {
+  am_idx: string
+  s_name: string
+  s_time: string
+  options: AdditionalManagementOption[]
+}
+
+export interface MembershipOptionResponse {
+  ss_idx: string
+  ss_count: string
+  ss_price: string
+  original_price: string
+}
+
+export type Membership = MyMembership

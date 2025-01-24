@@ -3,6 +3,7 @@ import {
   BranchDetailResponse,
   BranchesWithCurrentAddress,
   BranchResponse,
+  BranchSearchResponse,
 } from "types/Branch"
 
 export class BranchMapper {
@@ -33,9 +34,9 @@ export class BranchMapper {
     }
   }
 
-  static toEntities(dto: BranchResponse): BranchesWithCurrentAddress {
+  static toEntities(dto: BranchSearchResponse): BranchesWithCurrentAddress {
     return {
-      branches: dto.result.map((item) => ({
+      branches: dto.body.result.map((item: BranchResponse) => ({
         id: item.b_idx,
         name: item.b_name,
         address: item.b_addr,
@@ -47,7 +48,7 @@ export class BranchMapper {
         brand: this.toBrand(item.b_name),
         brandCode: item.brand_code,
       })),
-      address: dto.current_addr,
+      address: dto.body.current_addr,
     }
   }
 

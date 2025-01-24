@@ -6,10 +6,7 @@ import { Number } from "@components/Number.tsx"
 import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { Button } from "@components/Button"
-import {
-  SelectedOption,
-  useMembershipOptionsStore,
-} from "../../../hooks/useMembershipOptions.ts"
+import { useMembershipOptionsStore } from "../../../hooks/useMembershipOptions.ts"
 import { Divider } from "@mui/material"
 import { addCart } from "../../../apis/cart.api"
 import { useOverlay } from "../../../contexts/ModalContext"

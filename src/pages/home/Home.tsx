@@ -22,6 +22,8 @@ import { useBanner } from "../../queries/useBannerQueries.tsx"
 import { BannerRequestType } from "../../types/Banner.ts"
 import NoticesSummarySlider from "@components/NoticesSummarySlider.tsx"
 import { useAuth } from "../../contexts/AuthContext.tsx"
+import { MyMembership, MembershipStatus } from "types/Membership"
+import { Banner } from "types/Banner"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -33,10 +35,7 @@ const Home = () => {
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   })
-  const { data: reservations } = useReservations("001", {
-    staleTime: 30 * 1000, // 30초
-    gcTime: 1 * 60 * 1000, // 1분
-  })
+  const { data: reservations } = useReservations("001")
   const { data: memberships, isLoading: membershipLoading } =
     useUserMemberships("T", {
       staleTime: 30 * 1000,
@@ -52,8 +51,8 @@ const Home = () => {
   }, [reservations])
 
   const availableMemberships = useMemo(() => {
-    if (!memberships?.items) return []
-    return memberships.items
+    if (!memberships?.body) return []
+    return memberships.body
   }, [memberships])
 
   useEffect(() => {
@@ -206,7 +205,7 @@ const MembershipCardSection = ({
   memberships,
   isLoading,
 }: {
-  memberships: any[]
+  memberships: MyMembership[]
   isLoading: boolean
 }) => {
   const navigate = useNavigate()
@@ -233,9 +232,9 @@ const MembershipCardSection = ({
               <MembershipCard
                 id={parseInt(membership.mp_idx)}
                 title={membership.service_name}
-                count={`${membership.remaining_count}회`}
-                date={`${membership.valid_from} - ${membership.valid_until}`}
-                status={membership.status}
+                count={`${membership.remain_amount}회`}
+                date={`${membership.pay_date} - ${membership.expiration_date}`}
+                status={membership.status as MembershipStatus}
                 showReserveButton={true}
               />
             </SwiperSlide>
@@ -267,9 +266,7 @@ const BrandSection = () => {
   )
 }
 
-const EventSection = ({ banners }: { banners: any[] | undefined }) => {
-  const navigate = useNavigate()
-
+const EventSection = ({ banners }: { banners: Banner[] | undefined }) => {
   return (
     <div className="mt-6">
       <Title title="이벤트 프로모션" />

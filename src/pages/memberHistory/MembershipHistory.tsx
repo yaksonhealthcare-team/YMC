@@ -12,7 +12,6 @@ import {
   myMembershipFilters,
   MembershipStatus,
 } from "types/Membership"
-import SplashScreen from "@components/Splash"
 import { Skeleton } from "@mui/material"
 
 const LoadingSkeleton = () => (

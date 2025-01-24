@@ -17,6 +17,7 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
+    "outDir": "./dist",
 
     /* Linting */
     "strict": true,
@@ -25,5 +26,5 @@
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src", "src/queries/**/*"]
+  "include": ["src"]
 }
