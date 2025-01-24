@@ -59,7 +59,38 @@ const MyPage = () => {
     openBottomSheet(
       <div className={"flex flex-col"}>
         <p className={"font-sb text-18px px-5 pt-4"}>회원등급 안내</p>
-        <p className={"py-6"}>{"회원등급 기획 미정"}</p>
+        <div className={"px-7 py-6"}>
+          <table className={"w-full border-collapse"}>
+            <thead>
+              <tr className={"bg-system-bg"}>
+                <th className={"p-3 pl-5 text-16px font-medium text-gray-900 text-left w-[100px]"}>등급</th>
+                <th className={"p-3 text-16px font-medium text-gray-900 text-left"}>최근 1년간 누적 결제 금액</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className={"border-b border-gray-100"}>
+                <td className={"p-3 pl-5 text-16px text-left w-[100px]"}>A등급</td>
+                <td className={"p-3 text-16px text-left"}>1,000만원 이상</td>
+              </tr>
+              <tr className={"border-b border-gray-100"}>
+                <td className={"p-3 pl-5 text-16px text-left w-[100px]"}>B등급</td>
+                <td className={"p-3 text-16px text-left"}>330만원 이상</td>
+              </tr>
+              <tr className={"border-b border-gray-100"}>
+                <td className={"p-3 pl-5 text-16px text-left w-[100px]"}>C등급</td>
+                <td className={"p-3 text-16px text-left"}>150만원 이상</td>
+              </tr>
+              <tr className={"border-b border-gray-100"}>
+                <td className={"p-3 pl-5 text-16px text-left w-[100px]"}>D등급</td>
+                <td className={"p-3 text-16px text-left"}>30만원 이상</td>
+              </tr>
+              <tr className={"border-b border-gray-100"}>
+                <td className={"p-3 pl-5 text-16px text-left w-[100px]"}>E등급</td>
+                <td className={"p-3 text-16px text-left"}>기본 등급</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>,
     )
   }
