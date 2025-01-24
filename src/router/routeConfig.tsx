@@ -26,6 +26,8 @@ const EmailPassword = lazy(() => import("../pages/signup/EmailPassword"))
 const ProfileSetup = lazy(() => import("../pages/signup/ProfileSetup"))
 const SignupComplete = lazy(() => import("../pages/signup/SignupComplete"))
 const PointPage = lazy(() => import("../pages/point/PointPage"))
+const Branch = lazy(() => import("../pages/branch/Branch"))
+const BranchDetail = lazy(() => import("../pages/branch/[id]/BranchDetail"))
 
 export const routeConfig: RouteConfig[] = [
   {
@@ -97,6 +99,16 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/point",
     element: <PointPage />,
+    auth: true,
+  },
+  {
+    path: "/branch",
+    element: <Branch />,
+    auth: true,
+  },
+  {
+    path: "/branch/:id",
+    element: <BranchDetail />,
     auth: true,
   },
 ]
