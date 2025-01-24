@@ -83,7 +83,6 @@ const MembershipDetailPage = () => {
       membership?.options?.sort(
         (a, b) => Number(a.ss_idx) - Number(b.ss_idx),
       ) || []
-    console.log("sortedOptions:", sortedOptions)
     return { sortedOptions }
   }, [membership?.options])
 

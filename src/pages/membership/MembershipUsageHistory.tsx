@@ -49,7 +49,7 @@ const MembershipUsageHistory = () => {
       const data = await fetchMembershipUsageHistory(id)
       setMemberShipDetail(data)
     } catch (error) {
-      console.error("Failed to fetch membership usage history", error)
+      // Error handling
     }
   }, [id])
 

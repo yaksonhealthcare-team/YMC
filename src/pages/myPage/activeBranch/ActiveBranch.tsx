@@ -4,6 +4,9 @@ import InformationIcon from "@assets/icons/InformationIcon.svg?react"
 import { useOverlay } from "../../../contexts/ModalContext.tsx"
 import { Button } from "@components/Button.tsx"
 import BranchCard from "@components/BranchCard.tsx"
+import { useQuery } from "@tanstack/react-query"
+import { Branch, getActiveBranches } from "@apis/branch"
+import SplashScreen from "@components/Splash"
 
 const InformationBottomSheet = ({ onClose }: { onClose: () => void }) => (
   <div className={"flex flex-col"}>
@@ -25,27 +28,14 @@ const InformationBottomSheet = ({ onClose }: { onClose: () => void }) => (
 const ActiveBranch = () => {
   const { setHeader, setNavigation } = useLayout()
   const { openBottomSheet, closeOverlay } = useOverlay()
+  const { data: branches = [], isLoading } = useQuery<Branch[]>({
+    queryKey: ["activeBranches"],
+    queryFn: getActiveBranches,
+  })
 
   const handleClickInformation = () => {
     openBottomSheet(<InformationBottomSheet onClose={closeOverlay} />)
   }
-
-  const branches: { name: string; address: string }[] = Array(5)
-    .fill([
-      {
-        name: "약손명가 강남구청역점",
-        address: "서울특별시 강남구 테헤란로78길 14-10 1층",
-      },
-      {
-        name: "달리아 스파 강남점",
-        address: "서울특별시 강남구 테헤란로78길 14-10 1층",
-      },
-      {
-        name: "여리한 다이어트 신림점",
-        address: "서울특별시 강남구 테헤란로78길 14-10 1층",
-      },
-    ])
-    .flat()
 
   useEffect(() => {
     setHeader({
@@ -61,6 +51,10 @@ const ActiveBranch = () => {
     })
     setNavigation({ display: false })
   }, [])
+
+  if (isLoading) {
+    return <SplashScreen />
+  }
 
   return (
     <div className={"w-full h-full p-5"}>

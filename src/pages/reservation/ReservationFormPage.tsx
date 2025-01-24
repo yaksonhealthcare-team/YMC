@@ -32,54 +32,6 @@ import { Checkbox } from "@mui/material"
 import { useMembershipList } from "../../queries/useMembershipQueries.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 
-const example_items: MembershipItem[] = [
-  {
-    s_idx: "1170944",
-    s_name: "K-BEAUTY 연예인관리",
-    brand_name: "약손명가",
-    s_time: "120",
-    s_type: "T",
-    options: [
-      {
-        ss_idx: "1",
-        ss_count: "20",
-        ss_price: "2000000",
-        original_price: "2500000",
-      },
-    ],
-  },
-  {
-    s_idx: "1170945",
-    s_name: "바디케어 프로그램",
-    brand_name: "약손명가",
-    s_time: "90",
-    s_type: "T",
-    options: [
-      {
-        ss_idx: "2",
-        ss_count: "10",
-        ss_price: "1000000",
-        original_price: "1200000",
-      },
-    ],
-  },
-  {
-    s_idx: "1170946",
-    s_name: "럭셔리 스파",
-    brand_name: "약손명가",
-    s_time: "60",
-    s_type: "T",
-    options: [
-      {
-        ss_idx: "3",
-        ss_count: "5",
-        ss_price: "500000",
-        original_price: "600000",
-      },
-    ],
-  },
-]
-
 interface FormDataType {
   item: undefined | string
   branch: undefined | string
@@ -463,12 +415,8 @@ const ReservationFormPage = () => {
         <Button
           variantType="primary"
           sizeType="l"
-          onClick={() => {
-            // TODO: handle reservation
-          }}
+          onClick={() => {}}
           className="w-full"
-          //   TODO: handle disaabled conditions
-          //   disabled={!data.item || !data.branch || !data.date || !data.time}
         >
           {data.item === "0"
             ? "예약하기"

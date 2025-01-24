@@ -115,7 +115,6 @@ export const OptionsBottomSheetContent = ({
       closeOverlay()
       onAddToCartSuccess()
     } catch (error) {
-      console.error("장바구니 담기 실패:", error)
       alert("장바구니 담기에 실패했습니다. 다시 시도해주세요.")
     }
   }

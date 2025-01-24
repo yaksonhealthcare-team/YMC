@@ -11,23 +11,12 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
-      "@components/*": [
-        "components/*"
-      ],
-      "@constants/*": [
-        "constants/*"
-      ],
-      "@assets/*": [
-        "assets/*"
-      ]
+      "@components/*": ["components/*"],
+      "@constants/*": ["constants/*"],
+      "@assets/*": ["assets/*"],
+      "@apis/*": ["apis/*"]
     },
-    "types": [
-      "vite-plugin-svgr/client",
-      "navermaps"
-    ]
+    "types": ["vite-plugin-svgr/client", "navermaps"]
   },
-  "include": [
-    "svg.d.ts",
-    "naver-maps.d.ts"
-  ]
+  "include": ["svg.d.ts", "naver-maps.d.ts"]
 }

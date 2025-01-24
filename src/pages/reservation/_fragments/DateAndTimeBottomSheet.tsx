@@ -189,15 +189,6 @@ const StyledDateCalendar = styled(DateCalendar)<DateCalendarProps<Dayjs>>(
         },
       },
     },
-    // 달력 뷰 전환 버튼 숨기기
-    "& .MuiPickersCalendarHeader-switchViewButton": {
-      display: "none",
-    },
-    // 주말 색상
-    "& .MuiPickersDay-root:nth-child(1)": {
-      // 일요일
-      // color: theme.palette.grey[300],
-    },
   }),
 )
 

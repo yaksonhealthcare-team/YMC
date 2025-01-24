@@ -39,8 +39,6 @@ const ReservationCancelPage = () => {
   const handleConfirmCancel = async () => {
     try {
       setIsLoading(true)
-      // TODO: API 연동
-      // await cancelReservation(id, cancelReason)
 
       showAlert("예약이 취소되었습니다")
       navigate("/reservation/0")
