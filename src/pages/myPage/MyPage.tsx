@@ -60,11 +60,6 @@ const MyPage = () => {
       <div className={"flex flex-col"}>
         <p className={"font-sb text-18px px-5 pt-4"}>회원등급 안내</p>
         <p className={"py-6"}>{"회원등급 기획 미정"}</p>
-        <div className={"border-t border-gray-200 pt-3"}>
-          <Button className={"w-full"} onClick={closeOverlay}>
-            {"예약하기"}
-          </Button>
-        </div>
       </div>,
     )
   }
