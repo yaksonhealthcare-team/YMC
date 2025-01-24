@@ -13,27 +13,23 @@ import { FloatingButton } from "@components/FloatingButton.tsx"
 import { EmptyCard } from "@components/EmptyCard.tsx"
 import { ReserveCard } from "@components/ReserveCard.tsx"
 import { Reservation } from "types/Reservation.ts"
-import { useReservations } from "queries/useReservationQueries.tsx"
-import { useUserMemberships } from "queries/useMembershipQueries.tsx"
+import { useReservations } from "queries/useReservationQueries"
+import { useUserMemberships } from "queries/useMembershipQueries"
 import SplashScreen from "@components/Splash.tsx"
 import { SwiperBrandCard } from "@components/SwiperBrandCard.tsx"
 import { Pagination } from "swiper/modules"
-import { useBanner } from "../../queries/useBannerQueries.tsx"
-import { BannerRequestType } from "../../types/Banner.ts"
+import { useBanner } from "queries/useBannerQueries"
+import { BannerRequestType } from "types/Banner"
 import NoticesSummarySlider from "@components/NoticesSummarySlider.tsx"
 import { useAuth } from "../../contexts/AuthContext.tsx"
 import { MyMembership, MembershipStatus } from "types/Membership"
-import { Banner } from "types/Banner"
+import { useEvents } from "queries/useEventQueries"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
   const { data: mainBanner } = useBanner(BannerRequestType.SLIDE, {
     staleTime: 5 * 60 * 1000, // 5분
     gcTime: 10 * 60 * 1000, // 10분
-  })
-  const { data: eventBanner } = useBanner(BannerRequestType.CARD, {
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
   })
   const { data: reservations } = useReservations("001")
   const { data: memberships, isLoading: membershipLoading } =
@@ -141,7 +137,7 @@ const Home = () => {
           isLoading={membershipLoading}
         />
         <BrandSection />
-        <EventSection banners={eventBanner} />
+        <EventSection />
         <BusinessInfo />
 
         <FloatingButton
@@ -266,38 +262,40 @@ const BrandSection = () => {
   )
 }
 
-const EventSection = ({ banners }: { banners: Banner[] | undefined }) => {
+const EventSection = () => {
+  const { data: events } = useEvents()
+  const navigate = useNavigate()
+
   return (
     <div className="mt-6">
       <Title title="이벤트 프로모션" />
-      {banners && banners.length > 0 ? (
+      {events && events.length > 0 ? (
         <Swiper
           spaceBetween={10}
           slidesPerView={1.1}
           style={{ overflow: "visible" }}
           className="mt-2"
         >
-          {banners.map((data, index) => (
-            <SwiperSlide key={index} className="mr-3">
+          {events.map((event) => (
+            <SwiperSlide key={event.code} className="mr-3">
               <div
                 className="flex flex-col gap-4 bg-white pb-4 rounded-[20px] border border-gray-100"
-                onClick={() => {
-                  const link = data.link.startsWith("http")
-                    ? data.link
-                    : `https://${data.link}`
-                  window.location.href = link || `/event/${data.code}`
-                }}
+                onClick={() => navigate(`/event/${event.code}`)}
               >
-                <div
-                  style={{ backgroundImage: `url(${data.fileUrl})` }}
-                  className="w-full h-[190px] bg-cover bg-center rounded-t-[20px]"
-                ></div>
+                {event.files.length > 0 && (
+                  <div
+                    style={{
+                      backgroundImage: `url(${event.files[0].fileurl})`,
+                    }}
+                    className="w-full h-[190px] bg-cover bg-center rounded-t-[20px]"
+                  ></div>
+                )}
                 <div className="flex flex-col px-5 gap-1.5">
                   <span className="font-b text-16px text-gray-700">
-                    {data.title}
+                    {event.title}
                   </span>
                   <span className="font-r text-12px text-gray-600">
-                    {data.startDate} ~ {data.endDate}
+                    {event.sdate} ~ {event.edate}
                   </span>
                 </div>
               </div>
