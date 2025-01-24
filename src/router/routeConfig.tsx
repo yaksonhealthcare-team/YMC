@@ -1,102 +1,47 @@
-import Home from "../pages/home/Home.tsx"
-import Login from "../pages/login/Login.tsx"
-
-import Membership from "../pages/membership/Membership.tsx"
-import Store from "../pages/store/Store.tsx"
-import MyPage from "../pages/myPage/MyPage.tsx"
-import Logout from "../pages/logout/Logout.tsx"
 import { ReactNode } from "react"
-import Dev from "../pages/DevPage.tsx"
-import Branch from "../pages/branch/Branch.tsx"
-import { Notification } from "../pages/home/Notification.tsx"
-import BranchDetail from "../pages/branch/[id]/BranchDetail.tsx"
-import FavoritePage from "../pages/favorite/FavoritePage.tsx"
-import PaymentHistoryPage from "../pages/payment/PaymentHistoryPage.tsx"
-import ReviewPage from "../pages/review/ReviewPage.tsx"
-import InquiryPage from "../pages/inquiry/InquiryPage.tsx"
-import EventPage from "../pages/event/EventPage.tsx"
-import NoticePage from "../pages/notice/NoticePage.tsx"
-import SettingsPage from "../pages/settings/SettingsPage.tsx"
-import PointPage from "../pages/point/PointPage.tsx"
-import EventDetailPage from "../pages/event/EventDetailPage.tsx"
-import NoticeDetailPage from "../pages/notice/NoticeDetail.tsx"
-import LocationSettings from "../pages/branch/_fragments/LocationSettings.tsx"
-import MembershipDetailPage from "../pages/membership/MembershipDetailPage.tsx"
-import EmailLogin from "../pages/login/EmailLogin.tsx"
 import { Navigate } from "react-router-dom"
-import TermsAgreement from "../pages/signup/TermsAgreement.tsx"
-import EmailPassword from "../pages/signup/EmailPassword.tsx"
-import ProfileSetup from "../pages/signup/ProfileSetup.tsx"
-import SignupComplete from "../pages/signup/SignupComplete.tsx"
-import ReservationDetailPage from "pages/reservation/ReservationDetailPage.tsx"
-import ReservationCancelPage from "pages/reservation/ReservationCancelPage.tsx"
-import MembershipUsageHistory from "pages/membership/MembershipUsageHistory.tsx"
-import ReservationFormPage from "pages/reservation/ReservationFormPage.tsx"
-import BranchSearch from "../pages/branch/search/BranchSearch.tsx"
-import ResetPasswordComplete from "@components/resetPassword/ResetPasswordComplete.tsx"
-import ReviewFormPage from "pages/review/ReviewFormPage.tsx"
-import ReviewDetailPage from "pages/review/ReviewDetailPage.tsx"
-import ActiveBranch from "../pages/myPage/activeBranch/ActiveBranch.tsx"
-import EditProfile from "../pages/editProfile/EditProfile.tsx"
-import Questionnaire from "pages/questionnaire/Questionnaire.tsx"
-import QuestionnaireComplete from "pages/questionnaire/QusetionnaireComplete.tsx"
-import GeneralQuestionnaireHistory from "../pages/myPage/questionnaire/GeneralQuestionnaireHistory.tsx"
-import ReservationQuestionnaireHistory from "../pages/myPage/questionnaire/ReservationQuestionnaireHistory.tsx"
-import FindAccount from "../pages/findAccount/FindAccount.tsx"
-import FindEmail from "../pages/findAccount/FindEmail.tsx"
-import ProfileResetPassword from "../pages/editProfile/ProfileResetPassword.tsx"
-import FindAccountResetPassword from "../pages/findAccount/FindAccountResetPassword.tsx"
-import CartPage from "../pages/cart/CartPage.tsx"
-import TermsPage from "../pages/terms/TermsPage.tsx"
-import ServiceTermsPage from "../pages/terms/ServiceTermsPage.tsx"
-import PrivacyTermsPage from "../pages/terms/PrivacyTermsPage.tsx"
-import LocationTermsPage from "../pages/terms/LocationTermsPage.tsx"
-import MarketingTermsPage from "../pages/terms/MarketingTermsPage.tsx"
-import PaymentPage from "../pages/payment/PaymentPage.tsx"
-import AddUsingBranch from "../pages/addUsingBranch/AddUsingBranch.tsx"
-import PaymentHistoryDetailPage from "../pages/payment/PaymentHistoryDetailPage.tsx"
-import PaymentCancelPage from "../pages/payment/PaymentCancelPage.tsx"
-import PaymentCancelCompletePage from "../pages/payment/PaymentCancelCompletePage.tsx"
-import ReservationHistory from "pages/memberHistory/ReservationHistory.tsx"
-import MembershipHistory from "pages/memberHistory/MembershipHistory.tsx"
-import MembershipSelectBranchPage from "../pages/membership/MembershipBranchSelectPage.tsx"
-import ProfileChangePhoneNumber from "../pages/editProfile/ProfileChangePhoneNumber.tsx"
-import PaymentCompletePage from "../pages/payment/PaymentCompletePage.tsx"
-import { BrandDetailPage } from "../pages/brand/BrandDetail.tsx"
-import OAuthCallback from "../pages/oauth/OAuthCallback"
-import LocationPickerMap from "../pages/branch/_fragments/LocationPickerMap.tsx"
+import { lazy } from "react"
 
-interface RouteConfig {
+export interface RouteConfig {
   path: string
   element: ReactNode
   auth?: boolean
   children?: RouteConfig[]
 }
 
-const routeConfig: RouteConfig[] = [
+const Home = lazy(() => import("../pages/home/Home"))
+const Login = lazy(() => import("../pages/login/Login"))
+const Membership = lazy(() => import("../pages/membership/Membership"))
+const Store = lazy(() => import("../pages/store/Store"))
+const MyPage = lazy(() => import("../pages/myPage/MyPage"))
+const Logout = lazy(() => import("../pages/logout/Logout"))
+const Dev = lazy(() => import("../pages/DevPage"))
+const Notification = lazy(() => import("../pages/home/Notification"))
+const MembershipDetailPage = lazy(
+  () => import("../pages/membership/MembershipDetailPage"),
+)
+const EmailLogin = lazy(() => import("../pages/login/EmailLogin"))
+const TermsAgreement = lazy(() => import("../pages/signup/TermsAgreement"))
+const EmailPassword = lazy(() => import("../pages/signup/EmailPassword"))
+const ProfileSetup = lazy(() => import("../pages/signup/ProfileSetup"))
+const SignupComplete = lazy(() => import("../pages/signup/SignupComplete"))
+const PointPage = lazy(() => import("../pages/point/PointPage"))
+
+export const routeConfig: RouteConfig[] = [
   {
     path: "/dev",
     element: <Dev />,
   },
-  //홈
   {
     path: "/",
     element: <Home />,
     auth: true,
   },
-  //알림
   {
     path: "/notification",
     element: <Notification />,
     auth: true,
   },
-  //브랜드관
-  {
-    path: "/brand/:brandCode",
-    element: <BrandDetailPage />,
-  },
-
-  //로그인, 로그아웃
   {
     path: "/login",
     element: <Login />,
@@ -109,8 +54,6 @@ const routeConfig: RouteConfig[] = [
     path: "/logout",
     element: <Logout />,
   },
-
-  // 회원가입
   {
     path: "/signup",
     element: <Navigate to="/signup/terms" />,
@@ -132,47 +75,8 @@ const routeConfig: RouteConfig[] = [
     element: <SignupComplete />,
   },
   {
-    path: "/signup/branch",
-    element: <AddUsingBranch />,
-  },
-
-  // 비밀번호 찾기, 이메일 찾기
-  {
-    path: "/find-account",
-    element: <FindAccount />,
-  },
-  {
-    path: "/find-account/find-email",
-    element: <FindEmail />,
-  },
-  {
-    path: "/find-account/reset-password",
-    element: <FindAccountResetPassword />,
-  },
-  {
-    path: "/find-account/reset-password/complete",
-    element: <ResetPasswordComplete />,
-  },
-  // 문진작성
-  {
-    path: "/questionnaire/common",
-    element: <Questionnaire type="common" />,
-  },
-  {
-    path: "/questionnaire/reservation",
-    element: <Questionnaire type="reservation" />,
-  },
-  {
-    path: "/questionnaire/complete",
-    element: <QuestionnaireComplete />,
-    auth: true,
-  },
-
-  //구매, 스토어, 예약
-  { path: "/membership", element: <Membership />, auth: true },
-  {
-    path: "/membership/select-branch",
-    element: <MembershipSelectBranchPage />,
+    path: "/membership",
+    element: <Membership />,
     auth: true,
   },
   {
@@ -181,51 +85,13 @@ const routeConfig: RouteConfig[] = [
     auth: true,
   },
   {
-    path: "/membership/usage/:id",
-    element: <MembershipUsageHistory />,
-    auth: true,
+    path: "/store",
+    element: <Store />,
+    auth: false,
   },
-  { path: "/store", element: <Store />, auth: false },
-  {
-    path: "/member-history/reservation",
-    element: <ReservationHistory />,
-    auth: true,
-  },
-  {
-    path: "/member-history/membership",
-    element: <MembershipHistory />,
-    auth: true,
-  },
-  {
-    path: "/reservation/:id",
-    element: <ReservationDetailPage />,
-    auth: true,
-  },
-  {
-    path: "/reservation/:id/cancel",
-    element: <ReservationCancelPage />,
-    auth: true,
-  },
-  {
-    path: "/reservation/form",
-    element: <ReservationFormPage />,
-    auth: true,
-  },
-
-  //마이페이지
   {
     path: "/mypage",
     element: <MyPage />,
-    auth: true,
-  },
-  {
-    path: "/mypage/active-branch",
-    element: <ActiveBranch />,
-    auth: true,
-  },
-  {
-    path: "/myinfo",
-    element: <div>My Info</div>,
     auth: true,
   },
   {
@@ -233,167 +99,4 @@ const routeConfig: RouteConfig[] = [
     element: <PointPage />,
     auth: true,
   },
-  {
-    path: "/mypage/questionnaire/general",
-    element: <GeneralQuestionnaireHistory />,
-    auth: true,
-  },
-  {
-    path: "/mypage/questionnaire/reservation",
-    element: <ReservationQuestionnaireHistory />,
-    auth: true,
-  },
-  {
-    path: "/payment_history",
-    element: <PaymentHistoryPage />,
-    auth: true,
-  },
-  {
-    path: "/inquiry",
-    element: <InquiryPage />,
-    auth: true,
-  },
-  {
-    path: "/favorite",
-    element: <FavoritePage />,
-    auth: true,
-  },
-
-  {
-    path: "/cart",
-    element: <CartPage />,
-    auth: true,
-  },
-
-  //결제
-  {
-    path: "/payment",
-    element: <PaymentPage />,
-  },
-  {
-    path: "/payment/complete",
-    element: <PaymentCompletePage />,
-  },
-
-  {
-    path: "/payment",
-    element: <PaymentHistoryPage />,
-    auth: true,
-  },
-  {
-    path: "/payment/cancel/complete",
-    element: <PaymentCancelCompletePage />,
-    auth: true,
-  },
-  {
-    path: "/payment/:id/cancel",
-    element: <PaymentCancelPage />,
-    auth: true,
-  },
-  {
-    path: "/payment/:id",
-    element: <PaymentHistoryDetailPage />,
-    auth: true,
-  },
-  {
-    path: "/review",
-    element: <ReviewPage />,
-    auth: true,
-  },
-  {
-    path: "/review/form",
-    element: <ReviewFormPage />,
-    auth: true,
-  },
-  {
-    path: "/review/:id",
-    element: <ReviewDetailPage />,
-    auth: true,
-  },
-  {
-    path: "/event",
-    element: <EventPage />,
-  },
-  {
-    path: "/event/:id",
-    element: <EventDetailPage />,
-  },
-  {
-    path: "/notice",
-    element: <NoticePage />,
-  },
-  {
-    path: "/notice/:id",
-    element: <NoticeDetailPage />,
-  },
-  {
-    path: "/settings/notifications",
-    element: <SettingsPage />,
-    auth: true,
-  },
-  {
-    path: "/terms",
-    element: <TermsPage />,
-  },
-  {
-    path: "/terms/service",
-    element: <ServiceTermsPage />,
-  },
-  {
-    path: "/terms/privacy",
-    element: <PrivacyTermsPage />,
-  },
-  {
-    path: "/terms/location",
-    element: <LocationTermsPage />,
-  },
-  {
-    path: "/terms/marketing",
-    element: <MarketingTermsPage />,
-  },
-  {
-    path: "/profile",
-    element: <EditProfile />,
-  },
-  {
-    path: "/profile/reset-password",
-    element: <ProfileResetPassword />,
-  },
-  {
-    path: "/profile/reset-password/complete",
-    element: <ResetPasswordComplete />,
-  },
-  {
-    path: "/profile/change-phone",
-    element: <ProfileChangePhoneNumber />,
-  },
-  //지점 찾기, 지점 상세보기
-  {
-    path: "/branch",
-    element: <Branch />,
-  },
-  {
-    path: "/branch/location",
-    element: <LocationSettings />,
-  },
-  {
-    path: "/branch/location/picker",
-    element: <LocationPickerMap />,
-  },
-  {
-    path: "/branch/search",
-    element: <BranchSearch />,
-  },
-  {
-    path: "/branch/:id",
-    element: <BranchDetail />,
-  },
-
-  // OAuth 콜백
-  {
-    path: "/oauth/callback/:provider",
-    element: <OAuthCallback />,
-  },
 ]
-
-export default routeConfig
