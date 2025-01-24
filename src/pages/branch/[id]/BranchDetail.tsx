@@ -46,6 +46,27 @@ const BranchDetail = () => {
     return <></>
   }
 
+  const handleShare = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: branch.name,
+          text: `${branch.brand} ${branch.name}\n${branch.location.address}`,
+          url: window.location.href,
+        })
+      } else {
+        await navigator.clipboard.writeText(window.location.href)
+        alert("주소가 복사되었습니다.")
+      }
+    } catch (error) {
+      console.error("공유하기 실패:", error)
+    }
+  }
+
+  const handleMembershipBannerClick = () => {
+    navigate(`/membership?brand=${branch.brandCode}`)
+  }
+
   const renderTab = () => {
     switch (selectedTab) {
       case "therapists":
@@ -106,7 +127,7 @@ const BranchDetail = () => {
               className={
                 "flex w-10 h-10 rounded-full bg-primary justify-center items-center text-white shadow-md"
               }
-              onClick={() => alert(`share branch ${id}`)}
+              onClick={handleShare}
             >
               <ShareIcon className={"w-6 h-6"} />
             </button>
@@ -115,11 +136,7 @@ const BranchDetail = () => {
         {branch.availableMembershipCount > 0 && (
           <MembershipAvailableBanner
             availableMembershipCount={branch.availableMembershipCount}
-            onClick={() =>
-              alert(
-                `Available membership count: ${branch.availableMembershipCount}`,
-              )
-            }
+            onClick={handleMembershipBannerClick}
           />
         )}
       </div>
