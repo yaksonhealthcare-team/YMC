@@ -1,22 +1,23 @@
-import { useLayout } from "../../contexts/LayoutContext"
 import { useEffect, useState } from "react"
+import { useNavigate, useLocation } from "react-router-dom"
+import { useLayout } from "../../contexts/LayoutContext"
+import { useGeolocation } from "../../hooks/useGeolocation"
+import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import { useBranches } from "../../queries/useBranchQueries"
 import { DEFAULT_COORDINATE } from "../../types/Coordinate"
+import { Branch, BranchResponse } from "../../types/Branch"
 import { SearchField } from "../../components/SearchField"
 import useIntersection from "../../hooks/useIntersection"
 import BranchPlaceholderImage from "../../assets/images/BranchPlaceholderImage.png"
-import { useGeolocation } from "../../hooks/useGeolocation"
-import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
-import { useNavigate } from "react-router-dom"
 import { MembershipActiveBranchList } from "./_fragments/MembershipActiveBranchList"
 
 const MembershipBranchSelectPage = () => {
   const [query, setQuery] = useState("")
-
   const navigate = useNavigate()
+  const location = useLocation()
   const { setHeader, setNavigation } = useLayout()
-  const { location } = useGeolocation()
-  const { setSelectedBranch } = useMembershipOptionsStore()
+  const { location: geolocationLocation } = useGeolocation()
+  const { setSelectedBranch, setIsBottomSheetOpen } = useMembershipOptionsStore()
 
   const {
     data: branchPages,
@@ -24,8 +25,8 @@ const MembershipBranchSelectPage = () => {
     fetchNextPage,
     isFetchingNextPage,
   } = useBranches({
-    latitude: location?.latitude || DEFAULT_COORDINATE.latitude,
-    longitude: location?.longitude || DEFAULT_COORDINATE.longitude,
+    latitude: geolocationLocation?.latitude || DEFAULT_COORDINATE.latitude,
+    longitude: geolocationLocation?.longitude || DEFAULT_COORDINATE.longitude,
     search: query,
   })
 
@@ -49,6 +50,30 @@ const MembershipBranchSelectPage = () => {
     setNavigation({ display: false })
   }, [])
 
+  const handleBranchSelect = (branch: BranchResponse | Branch) => {
+    const branchData: Branch = 'b_idx' in branch ? {
+      id: branch.b_idx,
+      name: branch.b_name,
+      address: branch.b_addr,
+      latitude: Number(branch.b_lat),
+      longitude: Number(branch.b_lon),
+      canBookToday: branch.reserve === "Y",
+      distanceInMeters: branch.distance,
+      isFavorite: branch.b_bookmark === "Y",
+      brandCode: branch.brand_code,
+      brand: "therapist",
+    } : branch
+
+    setSelectedBranch(branchData)
+    setIsBottomSheetOpen(true)
+    
+    const returnPath = location.state?.returnPath || "/membership"
+    navigate(returnPath, { 
+      replace: true,
+      state: { fromBranchSelect: true }
+    })
+  }
+
   return (
     <div className={"flex flex-col overflow-y-hidden"}>
       <div className={"px-5 pt-5 pb-6 border-b-8 border-gray-50"}>
@@ -59,7 +84,7 @@ const MembershipBranchSelectPage = () => {
         />
       </div>
       {query.length === 0 ? (
-        <MembershipActiveBranchList />
+        <MembershipActiveBranchList onBranchSelect={handleBranchSelect} />
       ) : branches.length === 0 ? (
         <div className="p-4 text-center text-gray-500">
           검색 결과가 없습니다.
@@ -70,26 +95,10 @@ const MembershipBranchSelectPage = () => {
             <li key={branch.b_idx}>
               <div
                 className={"w-full px-5 py-4 gap-4 flex items-stretch"}
-                onClick={() => {
-                  setSelectedBranch({
-                    id: branch.b_idx,
-                    name: branch.b_name,
-                    address: branch.b_addr,
-                    brandCode: branch.brand_code,
-                    latitude: Number(branch.b_lat),
-                    longitude: Number(branch.b_lon),
-                    canBookToday: branch.reserve === "Y",
-                    distanceInMeters: branch.distance,
-                    isFavorite: branch.b_bookmark === "Y",
-                    brand: "therapist",
-                  })
-                  navigate(-1)
-                }}
+                onClick={() => handleBranchSelect(branch)}
               >
                 <img
-                  className={
-                    "border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"
-                  }
+                  className={"border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"}
                   src={BranchPlaceholderImage}
                   alt={"지점 사진"}
                 />

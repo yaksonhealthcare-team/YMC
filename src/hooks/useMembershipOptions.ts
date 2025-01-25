@@ -8,28 +8,29 @@ export interface SelectedOption {
 }
 
 interface MembershipOptionsStore {
+  currentPath: string | null
   selectedOptions: SelectedOption[]
-  setSelectedOptions: (options: SelectedOption[]) => void
   selectedBranch: Branch | null
-  setSelectedBranch: (branch: Branch) => void
-  shouldOpenBottomSheet: boolean
-  setShouldOpenBottomSheet: (open: boolean) => void
+  isBottomSheetOpen: boolean
+  setCurrentPath: (path: string | null) => void
+  setSelectedOptions: (options: SelectedOption[]) => void
+  setSelectedBranch: (branch: Branch | null) => void
+  setIsBottomSheetOpen: (isOpen: boolean) => void
   clear: () => void
 }
 
-export const useMembershipOptionsStore = create<MembershipOptionsStore>(
-  (set) => ({
-    selectedOptions: [],
-    setSelectedOptions: (options) => set({ selectedOptions: options }),
-    selectedBranch: null,
-    setSelectedBranch: (branch) => set({ selectedBranch: branch }),
-    shouldOpenBottomSheet: false,
-    setShouldOpenBottomSheet: (open) => set({ shouldOpenBottomSheet: open }),
-    clear: () =>
-      set({
-        selectedOptions: [],
-        selectedBranch: null,
-        shouldOpenBottomSheet: false,
-      }),
-  }),
-)
+const initialState = {
+  currentPath: null,
+  selectedOptions: [],
+  selectedBranch: null,
+  isBottomSheetOpen: false,
+}
+
+export const useMembershipOptionsStore = create<MembershipOptionsStore>((set) => ({
+  ...initialState,
+  setCurrentPath: (path) => set({ currentPath: path }),
+  setSelectedOptions: (options) => set({ selectedOptions: options }),
+  setSelectedBranch: (branch) => set({ selectedBranch: branch }),
+  setIsBottomSheetOpen: (isOpen) => set({ isBottomSheetOpen: isOpen }),
+  clear: () => set(initialState),
+}))
