@@ -8,11 +8,8 @@ const mainTabs = [
   { label: "회원권", value: "membership" },
 ]
 
-const MainTabs = () => {
+const TabsContent = ({ activeTab }: { activeTab: MemberHistoryTab }) => {
   const navigate = useNavigate()
-  const location = useLocation()
-
-  const activeTab = location.pathname.split("/").pop() as MemberHistoryTab
 
   const handleOnChangeTab = (value: MemberHistoryTab) => {
     navigate(`/member-history/${value}`)
@@ -26,6 +23,13 @@ const MainTabs = () => {
       activeTab={activeTab}
     />
   )
+}
+
+const MainTabs = () => {
+  const location = useLocation()
+  const activeTab = location.pathname.split("/").pop() as MemberHistoryTab
+
+  return <TabsContent activeTab={activeTab} />
 }
 
 export default MainTabs
