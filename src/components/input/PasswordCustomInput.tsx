@@ -1,8 +1,7 @@
-import CustomTextField from "@components/CustomTextField.tsx"
 import { useEffect, useState } from "react"
+import CustomTextField from "../CustomTextField"
 import EyeIcon from "../../assets/icons/EyeIcon.svg?react"
 import EyeSlashIcon from "../../assets/icons/EyeSlashIcon.svg?react"
-import validatePassword from "../../utils/passwordValidator.ts"
 
 interface props {
   onPasswordChange: (value: string) => void
@@ -19,15 +18,11 @@ const PasswordCustomInput = ({
 }: props) => {
   const [showPassword, setShowPassword] = useState(false)
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
-
   const [password, setPassword] = useState("")
   const [passwordConfirm, setPasswordConfirm] = useState("")
 
-  const [isValidationPassword, setIsValidationPassword] = useState(false)
-
   useEffect(() => {
     onPasswordChange(password)
-    setIsValidationPassword(validatePassword(password))
   }, [password])
 
   useEffect(() => {

@@ -1,23 +1,33 @@
 import {
   useInfiniteQuery,
-  useMutation,
   useQuery,
+  useMutation,
   useQueryClient,
 } from "@tanstack/react-query"
-import { queryKeys } from "./query.keys.ts"
 import {
-  bookmarkBranch,
-  fetchBranch,
   fetchBranches,
-  unbookmarkBranch,
   getBranchBookmarks,
+  fetchBranch,
   addBranchBookmark,
   removeBranchBookmark,
 } from "../apis/branch.api.ts"
 import { Coordinate } from "../types/Coordinate.ts"
-import { queryClient } from "./clients.ts"
-import { BranchFilters } from "types/Branch.ts"
-import { Branch } from "../types/Branch.ts"
+
+interface BranchFilters {
+  page?: number
+  latitude: number
+  longitude: number
+  brandCode?: string
+  category?: string
+  search?: string
+}
+
+const queryKeys = {
+  branches: {
+    list: (filters: BranchFilters) => ["branches", filters],
+    detail: (id: string, coords: Coordinate) => ["branch", id, coords],
+  },
+}
 
 export const useBranches = (filters: BranchFilters) =>
   useInfiniteQuery({
@@ -37,6 +47,21 @@ export const useBranch = (id: string, coords: Coordinate) =>
     queryFn: () => fetchBranch(id, coords),
   })
 
+export const useBranchBookmarksQuery = (coords?: Coordinate) => {
+  return useQuery({
+    queryKey: ["branchBookmarks", coords],
+    queryFn: () => getBranchBookmarks(coords),
+    enabled: !!coords,
+  })
+}
+
+export const useBranchDetailQuery = (id: string) => {
+  return useQuery({
+    queryKey: ["branchDetail", id],
+    queryFn: () => fetchBranch(id, { latitude: 0, longitude: 0 }),
+  })
+}
+
 export const useBranchBookmarkMutation = () => {
   const queryClient = useQueryClient()
   return useMutation({
@@ -54,15 +79,5 @@ export const useBranchUnbookmarkMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["branchBookmarks"] })
     },
-  })
-}
-
-export const useBranchBookmarksQuery = (coords?: Coordinate) => {
-  return useQuery({
-    queryKey: ["branchBookmarks", coords],
-    queryFn: () => getBranchBookmarks(coords),
-    staleTime: 1000 * 60 * 5, // 5분
-    gcTime: 1000 * 60 * 30, // 30분
-    enabled: !!coords,
   })
 }
