@@ -114,7 +114,7 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
               />
             </div>
             <IconSection icon={<PinIcon />}>
-              <div className={"flex w-full justify-between"}>
+              <div className={"flex w-full justify-between gap-3"}>
                 <p>{branch.location.address}</p>
                 <button
                   className={"text-tag-blue flex-shrink-0"}
