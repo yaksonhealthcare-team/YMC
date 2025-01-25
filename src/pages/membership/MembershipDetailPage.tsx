@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react"
 import { Button } from "@components/Button"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams, useLocation } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
 import OptionsBottomSheetContent from "./_fragments/OptionsBottomSheetContent.tsx"
@@ -19,11 +19,50 @@ import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
 
 const MembershipDetailPage = () => {
   const { id } = useParams()
-  const { data: membership } = useMembershipDetail(id!)
-  const { openBottomSheet, closeOverlay } = useOverlay()
-  const { selectedBranch } = useMembershipOptionsStore()
+  const location = useLocation()
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
+  const { data: membership } = useMembershipDetail(id!)
+  const { openBottomSheet, closeOverlay } = useOverlay()
+  const {
+    currentPath,
+    isBottomSheetOpen,
+    setCurrentPath,
+    setSelectedOptions,
+    setIsBottomSheetOpen,
+    clear
+  } = useMembershipOptionsStore()
+
+  useEffect(() => {
+    if (currentPath !== location.pathname) {
+      clear()
+      closeOverlay()
+      setCurrentPath(location.pathname)
+    }
+  }, [location.pathname])
+
+  const optionsBottomSheetContent = useMemo(
+    () => (
+      <OptionsBottomSheetContent
+        key={location.pathname}
+        serviceType={membership?.s_type}
+        options={membership?.options || []}
+        membershipId={id!}
+        onClickBranchSelect={() => {
+          closeOverlay()
+          navigate("/membership/select-branch", {
+            state: { returnPath: location.pathname }
+          })
+        }}
+        onAddToCartSuccess={() => {
+          closeOverlay()
+          setSelectedOptions([])
+          navigate("/cart")
+        }}
+      />
+    ),
+    [membership, location.pathname]
+  )
 
   useEffect(() => {
     setHeader({
@@ -32,7 +71,11 @@ const MembershipDetailPage = () => {
         <div className={"flex items-center justify-between px-5 py-3 h-[48px]"}>
           <div
             onClick={() => {
-              navigate(-1)
+              if (location.state?.fromBranchSelect) {
+                navigate("/membership", { replace: true })
+              } else {
+                navigate(-1)
+              }
             }}
           >
             <CaretLeftIcon className={"w-5 h-5"} />
@@ -42,44 +85,15 @@ const MembershipDetailPage = () => {
       ),
       backgroundColor: "bg-white",
     })
-    setNavigation({
-      display: false,
-    })
+    setNavigation({ display: false })
   }, [])
 
   useEffect(() => {
-    if (selectedBranch && membership?.options) {
-      handleOpenOptionsBottomSheet()
+    if (isBottomSheetOpen) {
+      openBottomSheet(optionsBottomSheetContent)
+      setIsBottomSheetOpen(false)
     }
-  }, [selectedBranch, membership])
-
-  const handleOpenOptionsBottomSheet = () => {
-    openBottomSheet(
-      <OptionsBottomSheetContent
-        serviceType={membership?.s_type}
-        options={membership?.options || []}
-        membershipId={id!}
-        onClickBranchSelect={() => {
-          closeOverlay()
-          navigate(`/membership/select-branch`)
-        }}
-        onAddToCartSuccess={() => {
-          closeOverlay()
-          navigate("/cart")
-        }}
-      />,
-    )
-  }
-
-  const { sortedOptions } = useMemo(() => {
-    const sortedOptions =
-      membership?.options?.sort(
-        (a, b) => Number(a.ss_idx) - Number(b.ss_idx),
-      ) || []
-    return { sortedOptions }
-  }, [membership?.options])
-
-  const firstOption = sortedOptions?.[0]
+  }, [isBottomSheetOpen])
 
   if (!membership) return <div>Loading...</div>
 
@@ -94,32 +108,28 @@ const MembershipDetailPage = () => {
             {membership.s_name || "데이터가 없습니다"}
           </h1>
         </div>
-        {firstOption ? (
+        {membership.options?.length > 0 && (
           <div className="flex items-end gap-2">
-            {firstOption.original_price && (
+            {membership.options[0].original_price && (
               <span className="text-primary font-b text-18px">
                 {calculateDiscountRate(
-                  Number(firstOption.ss_price.replace(/,/g, "")),
-                  Number(firstOption.original_price.replace(/,/g, "")),
+                  Number(membership.options[0].ss_price.replace(/,/g, "")),
+                  Number(membership.options[0].original_price.replace(/,/g, "")),
                 )}
                 %
               </span>
             )}
             <div className="flex items-baseline gap-1">
               <span className="text-gray-900 font-b text-18px">
-                {firstOption.ss_price}원
+                {membership.options[0].ss_price}원
               </span>
               <span className="text-gray-900 font-r text-12px">부터~</span>
             </div>
-            {firstOption.original_price && (
+            {membership.options[0].original_price && (
               <span className="text-gray-400 font-r text-14px line-through">
-                {firstOption.original_price}원
+                {membership.options[0].original_price}원
               </span>
             )}
-          </div>
-        ) : (
-          <div className="text-gray-400 font-r text-14px">
-            가격 정보가 없습니다
           </div>
         )}
       </div>
@@ -220,7 +230,7 @@ const MembershipDetailPage = () => {
       <div className="fixed bottom-0 left-0 right-0 h-[94px] bg-white border-t border-gray-50">
         <div className="px-5 pt-3">
           <Button
-            onClick={handleOpenOptionsBottomSheet}
+            onClick={() => openBottomSheet(optionsBottomSheetContent)}
             variantType="primary"
             sizeType="l"
             className="w-full"
