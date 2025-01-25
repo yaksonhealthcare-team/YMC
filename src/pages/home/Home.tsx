@@ -60,8 +60,8 @@ const Home = () => {
   }, [])
 
   const handleReservationClick = () => {
-    clear() // 상태 초기화
-    navigate("/reservation/form", { replace: true })
+    clear()
+    navigate("/reservation/form")
   }
 
   if (!user) return <SplashScreen />
