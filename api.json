@@ -58,6 +58,45 @@
 								{
 									"name": "token 본인확인 암호화 token 요청",
 									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"return_url\": \"https://devapi.yaksonhc.com/api/auth/decrypt/test.php\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://devapi.yaksonhc.com/api/auth/crypto/token.php",
+											"protocol": "https",
+											"host": [
+												"devapi",
+												"yaksonhc",
+												"com"
+											],
+											"path": [
+												"api",
+												"auth",
+												"crypto",
+												"token.php"
+											],
+											"query": [
+												{
+													"key": "return_url",
+													"value": "https://devapi.yaksonhc.com/api/auth/decrypt/test.php",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "token 본인확인 암호화 token 요청 Copy",
+									"request": {
 										"method": "GET",
 										"header": [],
 										"url": {
@@ -126,15 +165,12 @@
 							"item": [
 								{
 									"name": "token 본인확인 암호화 token 요청",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
 									"request": {
-										"method": "GET",
+										"method": "POST",
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "",
+											"raw": "{\r\n    \"token_version_id\": \"20250122150251GG-NC3ACE264-EFH4F-ADCCEG200H\",\r\n    \"enc_data\": \"+DmwZezcdAVWgE7vLLfrU47eF1a4DyLwNuL9SFFpAXQ83vweDS2gahLntEegDNkG4md/Hkr0MP5Utifkr2L6n1lzobAdQOudRb/1uCte8uf+BjSOazirclqOMotmDNb00y+YXV+1LFOcUvCO/G7R49Q4+lEheYp88tmiIuhDbaSrRilUeO8l4lwaY27XVOYL\",\r\n    \"integrity_value\": \"Nfv/ALKbIrtIdmcSofYUEnaDojIF+6jXCSqIY2f9ZcY=\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -142,7 +178,7 @@
 											}
 										},
 										"url": {
-											"raw": "https://devapi.yaksonhc.com/api/auth/decrypt/result.php?token_version_id=202412181420361G-NC81CE264-D41B1-4F5A1C33G2&enc_data=5K7WCNzUlrFTX2wLuUZMkdAgw8C2ijesJR6MxcJ6g6dcDOglwXgQE2beZD0Nuq6bpq8KUmW2cWK6S6VmEwQWvM8j0Ok+lV9QUTKD7IwxZqJLYwEWjC0kr+42urVoivK3zuKKaQGcDmWho/QmGJby2O3i1E9RJOj30ZWmYgGQcVHlcY/CMFEspmV3B86HWGsf&integrity_value=2Wepg1xlZE0YYgYzr+KynI/YDVsr+3TlC2IdTgCFuUU=",
+											"raw": "https://devapi.yaksonhc.com/api/auth/decrypt/result.php",
 											"protocol": "https",
 											"host": [
 												"devapi",
@@ -154,20 +190,6 @@
 												"auth",
 												"decrypt",
 												"result.php"
-											],
-											"query": [
-												{
-													"key": "token_version_id",
-													"value": "202412181420361G-NC81CE264-D41B1-4F5A1C33G2"
-												},
-												{
-													"key": "enc_data",
-													"value": "5K7WCNzUlrFTX2wLuUZMkdAgw8C2ijesJR6MxcJ6g6dcDOglwXgQE2beZD0Nuq6bpq8KUmW2cWK6S6VmEwQWvM8j0Ok+lV9QUTKD7IwxZqJLYwEWjC0kr+42urVoivK3zuKKaQGcDmWho/QmGJby2O3i1E9RJOj30ZWmYgGQcVHlcY/CMFEspmV3B86HWGsf"
-												},
-												{
-													"key": "integrity_value",
-													"value": "2Wepg1xlZE0YYgYzr+KynI/YDVsr+3TlC2IdTgCFuUU="
-												}
 											]
 										}
 									},
@@ -1085,7 +1107,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
+										"value": "Bearer bb4d6a14cbbd8319ba98d75b909b46b384ad8c0d266098db6fae8cc85925ef04d538e19edb32fb3647069a127392fef25f21b812d78b0b8533ee92e86a641e95",
 										"type": "text"
 									}
 								],
@@ -1955,7 +1977,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
 										"type": "text"
 									}
 								],
@@ -2001,7 +2023,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer adea04d884dd47b35daacadcdd89021cedb0afe53be894e835d49e1b539b6b5bc2ce11ab67e94307f6c072061e73c85eb607f0a22523c0bf0cda0e4f1004c938",
+										"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
 										"type": "text"
 									}
 								],
@@ -2414,7 +2436,7 @@
 										"header": [
 											{
 												"key": "Authorization",
-												"value": "Bearer 79c305c8c459276425908552b546d18bad91538a62f8cf40fa2c192f1d9a6f51036a58f45321bb213c0fa350225312279f8f73efe0ec13585b36400fbd6741d0",
+												"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
 												"type": "text"
 											}
 										],
@@ -2455,7 +2477,7 @@
 										"header": [
 											{
 												"key": "Authorization",
-												"value": "Bearer 79c305c8c459276425908552b546d18bad91538a62f8cf40fa2c192f1d9a6f51036a58f45321bb213c0fa350225312279f8f73efe0ec13585b36400fbd6741d0",
+												"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
 												"type": "text"
 											}
 										],
@@ -2493,13 +2515,13 @@
 										"header": [
 											{
 												"key": "Authorization",
-												"value": "Bearer 79c305c8c459276425908552b546d18bad91538a62f8cf40fa2c192f1d9a6f51036a58f45321bb213c0fa350225312279f8f73efe0ec13585b36400fbd6741d0",
+												"value": "Bearer 9aa1526bdcb30bac8fc704b815b2d0f0b3f983d11b869f80a5d402d26620954509364e8bb9a73bdeb72d417dbd2bf33add37bab01990dd4ba737d751c2df9fd3",
 												"type": "text"
 											}
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n\t\"1_text\": \"19961212\",\r\n\t\"2_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"21\"\r\n\t\t}\r\n\t],\r\n\t\"3_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"1\"\r\n\t\t}\r\n\t],\r\n\t\"4_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"5\"\r\n\t\t}\r\n\t],\r\n\t\"5_text\": \"160\",\r\n\t\"6_text\": \"50\",\r\n\t\"7_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"9\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"10\"\r\n\t\t}\r\n\t],\r\n\t\"8_text\": \"당뇨로 일주일에 한번씩 무슨 무슨 약을 먹고 있습니다.\",\r\n\t\"8_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"24\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"25\"\r\n\t\t}\r\n\t],\r\n\t\"9_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"26\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"27\"\r\n\t\t}\r\n\t],\r\n\t\"10_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"50\"\r\n\t\t}\r\n\t],\r\n\t\"11_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"53\"\r\n\t\t}\r\n\t],\r\n\t\"12_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"56\"\r\n\t\t}\r\n\t],\r\n\t\"13_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"60\"\r\n\t\t}\r\n\t],\r\n\t\"14_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"63\"\r\n\t\t}\r\n\t],\r\n\t\"15_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"68\"\r\n\t\t}\r\n\t],\r\n\t\"16_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"73\"\r\n\t\t}\r\n\t],\r\n\t\"17_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"79\"\r\n\t\t}\r\n\t],\r\n\t\"18_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"83\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"84\"\r\n\t\t}\r\n\t],\r\n\t\"19_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"89\"\r\n\t\t}\r\n\t],\r\n\t\"20_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"94\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"95\"\r\n\t\t}\r\n\t],\r\n\t\"21_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"98\"\r\n\t\t}\r\n\t]\r\n}\r\n",
+											"raw": "{\r\n\t\"1_text\": \"19961212\",\r\n\t\"2_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": [\"21\", \"20\"]\r\n\t\t}\r\n\t],\r\n\t\"3_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"1\"\r\n\t\t}\r\n\t],\r\n\t\"4_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"5\"\r\n\t\t}\r\n\t],\r\n\t\"5_text\": \"160\",\r\n\t\"6_text\": \"50\",\r\n\t\"7_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"9\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"10\"\r\n\t\t}\r\n\t],\r\n\t\"8_text\": \"당뇨로 일주일에 한번씩 무슨 무슨 약을 먹고 있습니다.\",\r\n\t\"8_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"24\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"25\"\r\n\t\t}\r\n\t],\r\n\t\"9_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"26\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"27\"\r\n\t\t}\r\n\t],\r\n\t\"10_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"50\"\r\n\t\t}\r\n\t],\r\n\t\"11_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"53\"\r\n\t\t}\r\n\t],\r\n\t\"12_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"56\"\r\n\t\t}\r\n\t],\r\n\t\"13_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"60\"\r\n\t\t}\r\n\t],\r\n\t\"14_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"63\"\r\n\t\t}\r\n\t],\r\n\t\"15_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"68\"\r\n\t\t}\r\n\t],\r\n\t\"16_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"73\"\r\n\t\t}\r\n\t],\r\n\t\"17_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"79\"\r\n\t\t}\r\n\t],\r\n\t\"18_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"83\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"84\"\r\n\t\t}\r\n\t],\r\n\t\"19_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"89\"\r\n\t\t}\r\n\t],\r\n\t\"20_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"94\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"95\"\r\n\t\t}\r\n\t],\r\n\t\"21_option\": [\r\n\t\t{\r\n\t\t\t\"csso_idx\": \"98\"\r\n\t\t}\r\n\t]\r\n}\r\n",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -3451,7 +3473,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"cartOptions\": [\n        {\n            \"s_idx\": 48250,\n            \"ss_idx\": 88885,\n            \"b_type\": \"지정지점\",\n            \"b_idx\": 123,\n            \"brand_code\": \"001\",\n            \"amount\": 3\n        },\n        {\n            \"s_idx\": 48250,\n            \"ss_idx\": 88885,\n            \"b_type\": \"전지점\",\n            //\"b_idx\": 123, //b_type이 전지점인 경우 생략 가능\n            \"brand_code\": \"001\",\n            \"amount\": 2\n        }\n    ]\n}",
+									"raw": "{\n    \"cartOptions\": [\n        {\n            \"s_idx\": 48250,\n            \"ss_idx\": 88885,\n            \"b_type\": \"지정지점\",\n            \"b_idx\": 123,\n            \"brand_code\": \"001\",\n            \"amount\": 2\n        }\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3605,7 +3627,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"del_idxs\": [1, 2]\n}",
+									"raw": "{\n    \"del_idxs\": [34, 35, 29]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5368,7 +5390,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"s_type\": \"O\", // O(Online) / X(Offline) \r\n    \"brand_code\": \"005\", \r\n    \"sc_code\": \"001\",\r\n    \"add_use\": \"N\", // Y(추가관리 사용) / F(추가관리 미사용)\r\n    \"s_name\": \"테스트 상품권\",\r\n    \"options\": [\r\n        {\r\n            \"ss_count\": 1,\r\n            \"original_price\": 100000,\r\n            \"ss_price\": 80000\r\n        },\r\n        {\r\n            \"ss_count\": 10,\r\n            \"original_price\": 1000000,\r\n            \"ss_price\": 800000\r\n        },\r\n        {\r\n            \"ss_count\": 20,\r\n            \"original_price\": 100000,\r\n            \"ss_price\": 160000\r\n        }\r\n    ],     \r\n    \"s_time\": \"120\",\r\n    \"courses\": [\r\n        {\r\n            \"sc_name\": \"등관리\",\r\n            \"sc_min\": 10,\r\n            \"prior\": 1        \r\n        },\r\n        {\r\n            \"sc_name\": \"어깨관리\",\r\n            \"sc_min\": 20,\r\n            \"prior\": 2        \r\n         },\r\n        {\r\n            \"sc_name\": \"얼굴관리\",\r\n            \"sc_min\": 30,\r\n            \"prior\": 3        \r\n         }\r\n    ],\r\n    \"add_services\": [\r\n        {\r\n            \"s_idx\": 1\r\n        },\r\n        {\r\n            \"s_idx\": 2\r\n       },\r\n        {\r\n            \"s_idx\": 3\r\n        }\r\n    ],\r\n    \"s_content\": \"상세한 설명입니다.\",\r\n    \"files\": [\r\n        {\r\n            \"filename\": \"sample3.png\",\r\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217174346_29923f87.png\"\r\n        },\r\n        {\r\n            \"filename\": \"sample1.png\",\r\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample1_20241217174347_53b6ea75.png\"\r\n        },\r\n        {\r\n            \"filename\": \"sample3.png\",\r\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217174347_e4e556cc.png\"\r\n        }\r\n    ]\r\n}\r\n",
+									"raw": "{\r\n    \"s_type\": \"O\", // O(Online) / X(Offline) \r\n    \"brand_code\": \"005\", \r\n    \"sc_code\": \"001\",\r\n    \"add_use\": \"N\", // Y(추가관리 사용) / F(추가관리 미사용)\r\n    \"s_name\": \"테스트 상품권1\",\r\n    \"options\": [\r\n        {\r\n            \"ss_count\": 1,\r\n            \"original_price\": 100000,\r\n            \"ss_price\": 80000\r\n        },\r\n        {\r\n            \"ss_count\": 10,\r\n            \"original_price\": 1000000,\r\n            \"ss_price\": 800000\r\n        },\r\n        {\r\n            \"ss_count\": 20,\r\n            \"original_price\": 100000,\r\n            \"ss_price\": 160000\r\n        }\r\n    ],     \r\n    \"s_time\": \"120\",\r\n    \"courses\": [\r\n        {\r\n            \"sc_name\": \"등관리\",\r\n            \"sc_min\": 10,\r\n            \"prior\": 1        \r\n        },\r\n        {\r\n            \"sc_name\": \"어깨관리\",\r\n            \"sc_min\": 20,\r\n            \"prior\": 2        \r\n         },\r\n        {\r\n            \"sc_name\": \"얼굴관리\",\r\n            \"sc_min\": 30,\r\n            \"prior\": 3        \r\n         }\r\n    ],\r\n    \"add_services\": [\r\n        {\r\n            \"s_idx\": 1\r\n        },\r\n        {\r\n            \"s_idx\": 2\r\n       },\r\n        {\r\n            \"s_idx\": 3\r\n        }\r\n    ],\r\n    \"s_content\": \"상세한 설명입니다.\",\r\n    \"files\": [\r\n        {\r\n            \"filename\": \"sample3.png\",\r\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217174346_29923f87.png\"\r\n        },\r\n        {\r\n            \"filename\": \"sample1.png\",\r\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample1_20241217174347_53b6ea75.png\"\r\n        },\r\n        {\r\n            \"filename\": \"sample3.png\",\r\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217174347_e4e556cc.png\"\r\n        }\r\n    ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -6839,7 +6861,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"gubun\": \"S01\",\n    \"title\": \"슬라이드 배너01\",\n    \"link\": \"www.naver.com\",\n    \"sdate\": \"2024-10-01\",\n    \"edate\": \"2024-12-31\",\n    \"prior\": \"1\",\n    \"files\": [\n        {\n            \"filename\": \"sample3.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217161911_79d4ad51.png\"\n        },\n        {\n            \"filename\": \"sample1.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample1_20241217161911_0330fd0f.png\"\n        },\n        {\n            \"filename\": \"sample3.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217161911_03ed6cf7.png\"\n        }\n    ]\n}",
+											"raw": "{\n    \"gubun\": \"S01\",\n    \"title\": \"슬라이드 배너021\",\n    \"link\": \"www.naver.com\",\n    \"sdate\": \"2024-10-01\",\n    \"edate\": \"2024-12-31\",\n    \"prior\": \"1\",\n    \"files\": [\n        {\n            \"filename\": \"sample3.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217161911_79d4ad51.png\"\n        },\n        {\n            \"filename\": \"sample1.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample1_20241217161911_0330fd0f.png\"\n        },\n        {\n            \"filename\": \"sample3.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217161911_03ed6cf7.png\"\n        }\n    ]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -7073,7 +7095,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"gubun\": \"R01\",\n    \"title\": \"리본 배너19\",\n    \"link\": \"www.naver.com\",\n    \"sdate\": \"2024-08-30\",\n    \"edate\": \"2024-09-30\",\n    \"prior\": \"10\",\n    \"area01\": \"Y\",\n    \"area02\": \"\",\n    \"files\": [\n        {\n            \"filename\": \"sample3.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217174346_29923f87.png\"\n        },\n        {\n            \"filename\": \"sample1.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample1_20241217174347_53b6ea75.png\"\n        },\n        {\n            \"filename\": \"sample3.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217174347_e4e556cc.png\"\n        }\n    ]\n}",
+											"raw": "{\n    \"gubun\": \"R01\",\n    \"title\": \"리본 배너19\",\n    \"link\": \"www.naver.com\",\n    \"sdate\": \"2024-08-30\",\n    \"edate\": \"2024-09-30\",\n    \"prior\": \"1\",\n    \"area01\": \"Y\",\n    \"area02\": \"\",\n    \"files\": [\n        {\n            \"filename\": \"sample3.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217174346_29923f87.png\"\n        },\n        {\n            \"filename\": \"sample1.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample1_20241217174347_53b6ea75.png\"\n        },\n        {\n            \"filename\": \"sample3.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217174347_e4e556cc.png\"\n        }\n    ]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -7757,7 +7779,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"gubun\": \"E01\",\n    \"title\": \"이벤트2\",\n    \"link\": \"www.naver.com\",\n    \"contents\": \"22222\",\n    \"sdate\": \"2024-09-30\",\n    \"edate\": \"2024-10-30\",\n    \"notification\": \"Y\",\n    \"files\": [\n        {\n            \"filename\": \"sample3.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217161911_79d4ad51.png\"\n        },\n        {\n            \"filename\": \"sample1.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample1_20241217161911_0330fd0f.png\"\n        },\n        {\n            \"filename\": \"sample3.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217161911_03ed6cf7.png\"\n        }\n    ]\n}",
+											"raw": "{\n    \"gubun\": \"E01\",\n    \"title\": \"이벤트2\",\n    \"link\": \"https://www.naver.com\",\n    \"contents\": \"22222\",\n    \"sdate\": \"2024-09-30\",\n    \"edate\": \"2024-10-30\",\n    \"notification\": \"Y\",\n    \"files\": [\n        {\n            \"filename\": \"sample3.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217161911_79d4ad51.png\"\n        },\n        {\n            \"filename\": \"sample1.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample1_20241217161911_0330fd0f.png\"\n        },\n        {\n            \"filename\": \"sample3.png\",\n            \"fileurl\": \"https://image.yaksonhc.com/api/banners/banners/sample3_20241217161911_03ed6cf7.png\"\n        }\n    ]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -8785,14 +8807,11 @@
 											"key": "fileToUpload[]",
 											"contentType": "multipart/form-data",
 											"type": "file",
-											"src": [
-												"/Users/yongyeonkim/Documents/무제 폴더/sample1.png",
-												"/Users/yongyeonkim/Documents/무제 폴더/통합 문서1.xlsx"
-											]
+											"src": "/Users/yongyeonkim/Documents/무제 폴더/sample1.png"
 										},
 										{
 											"key": "nextUrl",
-											"value": "https://devapiadin.yaksonhc.com/api/banners/banners",
+											"value": "https://devapiadmin.yaksonhc.com/api/banners/banners",
 											"description": "(필숫값) 전달받은 파일명을 전송할 다음 URL 입력",
 											"type": "text"
 										}
