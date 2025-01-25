@@ -1,16 +1,15 @@
 import { useNavigate } from "react-router-dom"
 import BranchCard from "../../../components/BranchCard"
 import { useMembershipOptionsStore } from "../../../hooks/useMembershipOptions"
-import { useVisitedStores } from "../../../hooks/useVisitedStores"
-import { BranchResponse } from "../../../types/Branch"
 import { Branch } from "types/Branch"
+import { useAuth } from "../../../contexts/AuthContext"
 
 export const MembershipActiveBranchList = () => {
   const navigate = useNavigate()
   const { setSelectedBranch } = useMembershipOptionsStore()
-  const { data: visitedStores } = useVisitedStores()
+  const { user } = useAuth()
 
-  if (!visitedStores?.body?.length) {
+  if (!user?.brands?.length) {
     return (
       <div className="p-4 text-center text-gray-500">
         이용중인 지점이 없습니다.
@@ -20,28 +19,28 @@ export const MembershipActiveBranchList = () => {
 
   return (
     <div className="flex flex-col gap-4 p-4">
-      {visitedStores.body.map((branch: BranchResponse) => {
+      {user.brands.map((branch) => {
         const branchData: Branch = {
-          id: branch.b_idx,
-          name: branch.b_name,
-          address: branch.addr || "",
-          latitude: parseFloat(branch.b_lat || "0"),
-          longitude: parseFloat(branch.b_lon || "0"),
+          id: branch.id,
+          name: branch.brandName,
+          address: branch.address || "",
+          latitude: 0,
+          longitude: 0,
           canBookToday: false,
           distanceInMeters: null,
           isFavorite: false,
-          brandCode: branch.brand_code,
+          brandCode: "001",
           brand: "therapist",
         }
         return (
           <button
-            key={branch.b_idx}
+            key={branch.id}
             onClick={() => {
               setSelectedBranch(branchData)
               navigate(-1)
             }}
           >
-            <BranchCard name={branch.b_name} address={branch.addr || ""} />
+            <BranchCard name={branch.brandName} address={branch.address || ""} />
           </button>
         )
       })}

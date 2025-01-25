@@ -99,11 +99,7 @@ const ReservationFormPage = () => {
     setHeader({
       display: true,
       title: "예약하기",
-      left: (
-        <div onClick={() => navigate(-1)}>
-          <CaretLeftIcon className="w-5 h-5" />
-        </div>
-      ),
+      left: "back",
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
