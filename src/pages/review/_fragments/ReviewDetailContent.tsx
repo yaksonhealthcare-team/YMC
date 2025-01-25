@@ -7,8 +7,8 @@ import StoreIcon from "@assets/icons/StoreIcon.svg?react"
 import { ReviewDetail } from "../../../types/Review.ts"
 
 const RATING_LABEL: Record<"H" | "M" | "L", string> = {
-  H: "최고예요!",
-  M: "보통이에요",
+  H: "좋았어요!",
+  M: "그냥 그래요",
   L: "아쉬워요",
 } as const
 
@@ -30,12 +30,8 @@ export const ReviewDetailContent = ({ review }: Props) => {
     setHeader({
       display: true,
       title: "만족도 보기",
-      left: (
-        <div onClick={() => navigate(-1)}>
-          <CaretLeftIcon className="w-5 h-5" />
-        </div>
-      ),
-      backgroundColor: "bg-gray-50",
+      left: "back",
+      backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
   }, [])
@@ -47,9 +43,9 @@ export const ReviewDetailContent = ({ review }: Props) => {
   ]
 
   return (
-    <div className="flex flex-col bg-gray-50 min-h-[calc(100vh-56px)]">
+    <div className="flex flex-col bg-white">
       <div className="px-5 pt-4">
-        <div className="flex flex-col gap-5 bg-white rounded-[20px] p-5">
+        <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-1.5">
               <CalendarIcon className="w-3.5 h-3.5 text-gray-500" />
@@ -65,16 +61,16 @@ export const ReviewDetailContent = ({ review }: Props) => {
                 {review.programName} {review.totalCount}회
               </span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center">
               {review.additionalServices.map((service, index) => (
-                <>
+                <div key={index} className="flex items-center">
                   {index > 0 && (
-                    <div className="w-[1px] h-3 border border-gray-200" />
+                    <div className="mx-2 w-[1px] h-3 border border-gray-200" />
                   )}
-                  <span className="text-gray-500 text-xs font-medium">
+                  <span className="text-gray-500 text-xs font-medium whitespace-nowrap">
                     {service}
                   </span>
-                </>
+                </div>
               ))}
             </div>
           </div>
@@ -86,6 +82,8 @@ export const ReviewDetailContent = ({ review }: Props) => {
           </div>
         </div>
       </div>
+
+      <div className="w-full h-2 bg-gray-50 mt-6" />
 
       <div className="px-5 py-6">
         <div className="flex gap-1.5">
@@ -121,43 +119,42 @@ export const ReviewDetailContent = ({ review }: Props) => {
         </div>
       </div>
 
-      {review.content && (
-        <>
-          <div className="w-full h-px bg-gray-100 my-6" />
-          {/* 종합 평가 */}
-          <div className="px-5 flex flex-col gap-3">
-            <h3 className="text-gray-700 text-sm font-semibold">종합 평가</h3>
-            <p className="text-gray-700 text-sm leading-normal">
-              {review.content}
-            </p>
-          </div>
-        </>
-      )}
+      <div className="w-full h-px bg-gray-100 my-6" />
 
-      {review.imageUrls && review.imageUrls.length > 0 && (
-        <>
-          <div className="w-full h-px bg-gray-100 my-6" />
-          <div className="px-5 flex flex-col gap-3">
-            <h3 className="text-gray-700 text-sm font-semibold">
-              업로드한 사진
-            </h3>
-            <div className="flex gap-2 overflow-x-auto no-scrollbar touch-pan-x">
-              {review.imageUrls.map((image, index) => (
-                <div
-                  key={index}
-                  className="shrink-0 w-20 h-20 rounded-lg border border-gray-100"
-                >
-                  <img
-                    src={image}
-                    alt={`리뷰 이미지 ${index + 1}`}
-                    className="w-full h-full object-cover rounded-lg"
-                  />
-                </div>
-              ))}
-            </div>
+      <div className="px-5 flex flex-col gap-3">
+        <h3 className="text-gray-700 text-sm font-semibold">종합 평가</h3>
+        {review.content ? (
+          <p className="text-gray-700 text-sm leading-[23.52px]">
+            {review.content}
+          </p>
+        ) : (
+          <p className="text-gray-400 text-sm">작성된 평가가 없습니다.</p>
+        )}
+      </div>
+
+      <div className="w-full h-px bg-gray-100 my-6" />
+
+      <div className="px-5 flex flex-col gap-3">
+        <h3 className="text-gray-700 text-sm font-semibold">업로드한 사진</h3>
+        {review.imageUrls && review.imageUrls.length > 0 ? (
+          <div className="flex gap-2 overflow-x-auto no-scrollbar touch-pan-x">
+            {review.imageUrls.map((image, index) => (
+              <div
+                key={index}
+                className="shrink-0 w-20 h-20 rounded-lg border border-gray-100 p-[5px]"
+              >
+                <img
+                  src={image}
+                  alt={`리뷰 이미지 ${index + 1}`}
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+            ))}
           </div>
-        </>
-      )}
+        ) : (
+          <p className="text-gray-400 text-sm">등록된 사진이 없습니다.</p>
+        )}
+      </div>
     </div>
   )
 }

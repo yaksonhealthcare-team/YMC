@@ -1,9 +1,4 @@
-import {
-  Review,
-  ReviewResponse,
-  ReviewDetail,
-  ReviewDetailResponse,
-} from "../types/Review.ts"
+import { Review, ReviewResponse, ReviewDetail } from "../types/Review.ts"
 import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
 import { ReviewMapper } from "../mappers/ReviewMapper.ts"
@@ -25,8 +20,8 @@ export const fetchReviews = async (page: number): Promise<Review[]> => {
 export const fetchReviewDetail = async (
   reviewId: string,
 ): Promise<ReviewDetail> => {
-  const { data } = await axiosClient.get<HTTPResponse<ReviewDetailResponse>>(
-    "/reviews/detail",
+  const { data } = await axiosClient.get<HTTPResponse<ReviewResponse[]>>(
+    "/reviews/history/detail",
     {
       params: {
         r_idx: reviewId,
@@ -34,5 +29,9 @@ export const fetchReviewDetail = async (
     },
   )
 
-  return ReviewMapper.toReviewDetailEntity(data.body)
+  if (!data.body.length) {
+    throw new Error("리뷰를 찾을 수 없습니다.")
+  }
+
+  return ReviewMapper.toReviewDetailEntity(data.body[0])
 }

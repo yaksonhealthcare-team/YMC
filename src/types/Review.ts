@@ -3,21 +3,13 @@ export interface ReviewResponse {
   r_date: string
   b_name: string
   ps_name: string
-  visit: number
-  total_count: number
+  visit: string
+  sc_name: string
   rs_grade_L: string
   rs_grade_M: string
   rs_grade_H: string
-  evaluations: {
-    question: string
-    rs_grade: "L" | "M" | "H"
-  }[]
   review_memo: string
   imgList: string[]
-}
-
-export interface ReviewDetailResponse extends ReviewResponse {
-  additional_services: string[]
 }
 
 export interface Review {

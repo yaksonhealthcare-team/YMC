@@ -4,7 +4,6 @@ import { useReviews } from "../../queries/useReviewQueries.tsx"
 import { ReviewListItem } from "./_fragments/ReviewListItem.tsx"
 import { useIntersection } from "../../hooks/useIntersection.tsx"
 import { useNavigate } from "react-router-dom"
-import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 
 const ReviewPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -21,12 +20,8 @@ const ReviewPage = () => {
     setHeader({
       display: true,
       title: "작성한 만족도",
+      left: "back",
       backgroundColor: "bg-white",
-      left: (
-        <div onClick={() => navigate(-1)}>
-          <CaretLeftIcon className="w-5 h-5" />
-        </div>
-      ),
     })
     setNavigation({ display: false })
   }, [])
