@@ -60,6 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = () => {
     setUser(null)
     localStorage.removeItem("accessToken")
+    sessionStorage.removeItem("socialSignupInfo")
   }
 
   const value = { user, login, logout, isLoading } as AuthContextType
