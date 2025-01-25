@@ -18,13 +18,13 @@ const ProfileImageButton = ({
     profileImageUrl || null,
   )
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const { showAlert } = useOverlay()
+  const { showToast } = useOverlay()
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       if (file.size > MAX_FILE_SIZE) {
-        showAlert(
+        showToast(
           "이미지 크기가 너무 큽니다. 5MB 이하의 이미지를 선택해주세요.",
         )
         if (fileInputRef.current) {

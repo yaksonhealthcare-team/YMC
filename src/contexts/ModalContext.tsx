@@ -42,7 +42,7 @@ interface OverlayContextValue {
     content: ReactNode,
     options?: Record<string, unknown> | undefined,
   ) => void
-  showAlert: (message: string, options?: Record<string, unknown>) => void
+  showToast: (message: string, options?: Record<string, unknown>) => void
 }
 
 // 오버레이 컨텍스트 생성
@@ -109,7 +109,7 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
     openOverlay(OverlayTypes.BOTTOM_SHEET, content, options)
   }
 
-  const showAlert = (
+  const showToast = (
     message: string,
     options: Record<string, unknown> = {},
   ) => {
@@ -125,7 +125,7 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
         closeOverlay,
         openMessageBox,
         openBottomSheet,
-        showAlert,
+        showToast,
       }}
     >
       {children}

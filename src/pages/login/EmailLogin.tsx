@@ -18,7 +18,7 @@ const EmailLogin = () => {
   const { setHeader, setNavigation } = useLayout()
   const { login } = useAuth()
   const navigate = useNavigate()
-  const { showAlert } = useOverlay()
+  const { showToast } = useOverlay()
   const [formData, setFormData] = useState<LoginForm>({
     email: "coolkyung@nate.com",
     password: "coolkyung1234",
@@ -44,11 +44,11 @@ const EmailLogin = () => {
 
   const handleSubmit = async () => {
     if (!formData.email || !validateEmail(formData.email)) {
-      showAlert("올바른 이메일을 입력해주세요")
+      showToast("올바른 이메일을 입력해주세요")
       return
     }
     if (!formData.password) {
-      showAlert("비밀번호를 입력해주세요")
+      showToast("비밀번호를 입력해주세요")
       return
     }
 
@@ -65,7 +65,7 @@ const EmailLogin = () => {
       })
       navigate("/")
     } catch (error) {
-      showAlert("로그인에 실패했습니다")
+      showToast("로그인에 실패했습니다")
     }
   }
 

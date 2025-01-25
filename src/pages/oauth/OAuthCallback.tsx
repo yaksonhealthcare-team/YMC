@@ -9,7 +9,7 @@ const OAuthCallback = () => {
   const { provider } = useParams()
   const navigate = useNavigate()
   const { login } = useAuth()
-  const { showAlert } = useOverlay()
+  const { showToast } = useOverlay()
   const { setHeader, setNavigation } = useLayout()
   const isProcessing = useRef(false)
 
@@ -67,13 +67,13 @@ const OAuthCallback = () => {
           throw error
         }
       } catch (error) {
-        showAlert("로그인에 실패했습니다.")
+        showToast("로그인에 실패했습니다.")
         navigate("/login", { replace: true })
       }
     }
 
     handleCallback()
-  }, [provider, navigate, login, showAlert])
+  }, [provider, navigate, login, showToast])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">

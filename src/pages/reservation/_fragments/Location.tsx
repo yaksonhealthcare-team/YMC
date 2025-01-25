@@ -25,7 +25,7 @@ interface LocationProps {
 }
 
 const Location = ({ reservation }: LocationProps) => {
-  const { showAlert } = useOverlay()
+  const { showToast } = useOverlay()
 
   const hasLocation = reservation.latitude && reservation.longitude
   const hasAddress = !!reservation.address
@@ -52,13 +52,13 @@ const Location = ({ reservation }: LocationProps) => {
   const handleCopyAddress = async () => {
     if (!hasAddress) return
     await copyToClipboard(branch.address)
-    showAlert("주소가 복사되었습니다")
+    showToast("주소가 복사되었습니다")
   }
 
   const handleCopyPhone = async () => {
     if (!hasPhone) return
     await copyToClipboard(reservation.phone)
-    showAlert("전화번호가 복사되었습니다")
+    showToast("전화번호가 복사되었습니다")
   }
 
   return (

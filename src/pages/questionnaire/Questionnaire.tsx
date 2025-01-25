@@ -48,7 +48,7 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
   const navigate = useNavigate()
   const location = useLocation()
   const { setHeader, setNavigation } = useLayout()
-  const { showAlert, openBottomSheet, closeOverlay } = useOverlay()
+  const { showToast, openBottomSheet, closeOverlay } = useOverlay()
   const { data: questions, isLoading } = useQuestionnaire(type)
   const submitMutation = useSubmitQuestionnaire(type)
 
@@ -115,7 +115,7 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
           },
         })
       } catch (error) {
-        showAlert("문진 제출에 실패했습니다")
+        showToast("문진 제출에 실패했습니다")
       }
     },
   })

@@ -21,7 +21,7 @@ const ReservationCancelPage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
-  const { showAlert, openBottomSheet } = useOverlay()
+  const { showToast, openBottomSheet } = useOverlay()
   const [cancelReason, setCancelReason] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [reservation, setReservation] = useState<ReservationDetail>()
@@ -40,10 +40,10 @@ const ReservationCancelPage = () => {
     try {
       setIsLoading(true)
 
-      showAlert("예약이 취소되었습니다")
+      showToast("예약이 취소되었습니다")
       navigate("/reservation/0")
     } catch (error) {
-      showAlert("예약 취소에 실패했습니다")
+      showToast("예약 취소에 실패했습니다")
     } finally {
       setIsLoading(false)
     }
@@ -51,7 +51,7 @@ const ReservationCancelPage = () => {
 
   const handleCancel = async () => {
     if (cancelReason.length < 5) {
-      showAlert("취소 사유를 5자 이상 입력해주세요.")
+      showToast("취소 사유를 5자 이상 입력해주세요.")
       return
     }
 
