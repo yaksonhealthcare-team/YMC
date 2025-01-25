@@ -88,6 +88,7 @@ const ReservationFormPage = () => {
         addServices={data.additionalServices.map((service) =>
           Number(service.am_idx),
         )}
+        b_idx={selectedBranch?.id || ""}
       />,
       {
         height: "large",

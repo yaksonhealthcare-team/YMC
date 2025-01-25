@@ -29,6 +29,7 @@ interface DateAndTimeBottomSheetProps {
   onSelect: (date: Dayjs | null, timeSlot: TimeSlot | null) => void
   membershipIndex?: number
   addServices?: number[]
+  b_idx: string
 }
 
 const DateAndTimeBottomSheet = ({
@@ -38,6 +39,7 @@ const DateAndTimeBottomSheet = ({
   onSelect,
   membershipIndex,
   addServices,
+  b_idx,
 }: DateAndTimeBottomSheetProps) => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(initialDate)
   const [selectedTime, setSelectedTime] = useState<TimeSlot | null>(initialTime)
@@ -63,6 +65,7 @@ const DateAndTimeBottomSheet = ({
         handleDateSelect={handleDateSelect}
         membershipIndex={membershipIndex}
         addServices={addServices}
+        b_idx={b_idx}
       />
       <div className="w-full h-px bg-gray-100" />
       {selectedDate ? (
@@ -72,6 +75,7 @@ const DateAndTimeBottomSheet = ({
           membershipIndex={membershipIndex}
           addServices={addServices}
           selectedDate={selectedDate}
+          b_idx={b_idx}
         />
       ) : (
         <div className="w-full p-4 bg-[#f7f7f7] rounded-lg">
@@ -197,6 +201,7 @@ interface DatePickerSectionProps {
   handleDateSelect: (date: Dayjs | null) => void
   membershipIndex?: number
   addServices?: number[]
+  b_idx: string
 }
 
 const DatePickerSection = ({
@@ -204,6 +209,7 @@ const DatePickerSection = ({
   handleDateSelect,
   membershipIndex,
   addServices,
+  b_idx,
 }: DatePickerSectionProps) => {
   const isDateDisabled = (date: Dayjs) => {
     if (!scheduleDate) return true
@@ -223,6 +229,7 @@ const DatePickerSection = ({
     membershipIndex,
     searchDate: currentYearMonth,
     addServices,
+    b_idx,
   })
 
   useEffect(() => {
@@ -299,6 +306,7 @@ interface TimePickerSectionProps {
   membershipIndex?: number
   addServices?: number[]
   selectedDate?: Dayjs
+  b_idx: string
 }
 
 const TimePickerSection = ({
@@ -307,11 +315,13 @@ const TimePickerSection = ({
   membershipIndex,
   addServices,
   selectedDate,
+  b_idx,
 }: TimePickerSectionProps) => {
   const { data: times, isLoading } = useScheduleTimesQueries({
     membershipIndex,
-    addServices,
     searchDate: selectedDate,
+    addServices,
+    b_idx,
   })
 
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([])
