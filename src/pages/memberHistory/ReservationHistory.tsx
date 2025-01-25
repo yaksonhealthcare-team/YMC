@@ -9,6 +9,7 @@ import { useLayout } from "contexts/LayoutContext"
 import { useReservations } from "queries/useReservationQueries"
 import { FilterItem, reservationFilters } from "types/Reservation"
 import LoadingIndicator from "@components/LoadingIndicator"
+import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 
 const ReservationContent = ({ filterId }: { filterId: string }) => {
   const { data: reservations, isLoading } = useReservations(filterId)
@@ -84,6 +85,13 @@ const ReservationHistory = () => {
     setReservationFilter(filter)
   }, [])
 
+  const { clear } = useMembershipOptionsStore()
+
+  const handleReservationClick = () => {
+    clear()
+    navigate("/reservation/form")
+  }
+
   useEffect(() => {
     setHeader({
       display: false,
@@ -106,7 +114,7 @@ const ReservationHistory = () => {
 
       <button
         className="fixed bottom-[98px] right-5 w-14 h-14 bg-primary-300 text-white rounded-full shadow-lg hover:bg-primary-400 focus:outline-none focus:bg-primary-500 focus:ring-opacity-50 transition-colors duration-200 z-10"
-        onClick={() => navigate("/reservation/form")}
+        onClick={handleReservationClick}
       >
         <ReservationIcon className="w-8 h-8 mx-auto text-white" />
       </button>

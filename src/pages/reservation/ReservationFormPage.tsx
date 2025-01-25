@@ -25,7 +25,7 @@ import { Checkbox } from "@mui/material"
 import { useMembershipList } from "../../queries/useMembershipQueries.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
-
+import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 interface FormDataType {
   item: undefined | string
   branch: undefined | string
@@ -44,7 +44,7 @@ const ReservationFormPage = () => {
   const location = useLocation()
   const theme = useTheme()
   const [consultationSlot] = useState(1)
-  const { selectedBranch } = useMembershipOptionsStore()
+  const { selectedBranch, clear } = useMembershipOptionsStore()
 
   const { data: membershipsData, isLoading: isMembershipsLoading } =
     useMembershipList(BRAND_CODE)
@@ -98,6 +98,10 @@ const ReservationFormPage = () => {
       display: true,
       title: "예약하기",
       left: "back",
+      onClickBack: () => {
+        navigate(-1)
+        clear()
+      },
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
