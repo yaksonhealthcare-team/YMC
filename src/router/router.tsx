@@ -9,6 +9,7 @@ import { AuthProvider } from "../contexts/AuthContext.tsx"
 import { LayoutProvider } from "../contexts/LayoutContext.tsx"
 import { routeConfig, RouteConfig } from "./routeConfig"
 import { SignupProvider } from "../contexts/SignupContext.tsx"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 export const createRoutes = () => {
   const mapRoutes = (routes: RouteConfig[]): RouteObject[] => {
@@ -28,7 +29,9 @@ export const createRoutes = () => {
       return {
         path: route.path,
         element: (
-          <Suspense fallback={<div>Loading...</div>}>{element}</Suspense>
+          <Suspense fallback={<LoadingIndicator className="min-h-screen" />}>
+            {element}
+          </Suspense>
         ),
         children: route.children ? mapRoutes(route.children) : undefined,
       }

@@ -5,6 +5,7 @@ import { AuthProvider } from "../contexts/AuthContext.tsx"
 import { LayoutProvider } from "../contexts/LayoutContext.tsx"
 import { routeConfig, RouteConfig } from "./routeConfig"
 import { SignupProvider } from "../contexts/SignupContext.tsx"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 const createRoutes = () => {
   return createBrowserRouter(
@@ -20,7 +21,9 @@ const createRoutes = () => {
       return {
         path,
         element: (
-          <Suspense fallback={<div>Loading...</div>}>{element}</Suspense>
+          <Suspense fallback={<LoadingIndicator className="min-h-screen" />}>
+            {element}
+          </Suspense>
         ),
         children,
       }
