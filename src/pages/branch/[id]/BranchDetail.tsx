@@ -16,6 +16,7 @@ import ProfileCard from "@components/ProfileCard.tsx"
 import BranchDetailBottomActionBar from "./_fragments/BranchDetailBottomActionBar.tsx"
 import { useBranch } from "../../../queries/useBranchQueries.tsx"
 import { DEFAULT_COORDINATE } from "../../../types/Coordinate.ts"
+import LoadingIndicator from "@components/LoadingIndicator.tsx"
 
 const branchDetailTabs = ["therapists", "programs", "information"] as const
 type BranchDetailTab = (typeof branchDetailTabs)[number]
@@ -43,7 +44,7 @@ const BranchDetail = () => {
   }, [])
 
   if (!branch || isLoading) {
-    return <></>
+    return <LoadingIndicator className="min-h-screen" />
   }
 
   const handleShare = async () => {

@@ -4,13 +4,13 @@ import {
   usePaymentHistory,
 } from "../../queries/usePaymentQueries.tsx"
 import { useEffect, useState } from "react"
-import SplashScreen from "@components/Splash.tsx"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { Button } from "@components/Button.tsx"
 import { PaymentHistoryItem } from "../../types/Payment.ts"
 import CheckIcon from "@components/icons/CheckIcon.tsx"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
 import { AxiosError } from "axios"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 const PaymentCancelItemCard = ({
   item,
@@ -74,7 +74,8 @@ const PaymentCancelPage = () => {
     setNavigation({ display: false })
   }, [])
 
-  if (!payment || isLoading) return <SplashScreen />
+  if (!payment || isLoading)
+    return <LoadingIndicator className="min-h-screen" />
 
   switch (step) {
     case "select":

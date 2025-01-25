@@ -5,36 +5,14 @@ import { Divider } from "@mui/material"
 import { Button } from "@components/Button.tsx"
 import FixedButtonContainer from "@components/FixedButtonContainer.tsx"
 import { Radio } from "@components/Radio.tsx"
-import AdditionalServiceCard from "@components/AdditionalServiceCard.tsx"
 import { useNavigate } from "react-router-dom"
-
-interface CartOption {
-  sessions: number
-  count: number
-  price: number
-  originalPrice: number
-}
-
-interface CartItem {
-  id: string
-  brand: string
-  branchType: "전지점" | "지정 지점"
-  title: string
-  duration: number
-  options: CartOption[]
-}
-
-interface AdditionalItem {
-  id: string
-  title: string
-  duration: number
-  price: number
-}
+import LoadingIndicator from "@components/LoadingIndicator.tsx"
+import { useCartItems } from "../../queries/useCartQueries.tsx"
 
 const PaymentPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const [type] = useState<"membership" | "additional">("additional")
-  const [items, setItems] = useState<CartItem[] | AdditionalItem[]>([])
+  const { data: cartWithSummary, isLoading } = useCartItems()
   const [selectedPayment, setSelectedPayment] = useState<
     "card" | "simple" | "virtual"
   >("card")
@@ -45,39 +23,6 @@ const PaymentPage = () => {
   const [isAgreed, setIsAgreed] = useState(false)
 
   const navigate = useNavigate()
-
-  useEffect(() => {
-    const dummyAdditionalItems: AdditionalItem[] = [
-      {
-        id: "1",
-        title: "추가 관리 항목명",
-        duration: 120,
-        price: 100000,
-      },
-      {
-        id: "2",
-        title: "추가 관리 항목명",
-        duration: 120,
-        price: 100000,
-      },
-    ]
-
-    const dummyMembershipItems: CartItem[] = [
-      {
-        id: "1",
-        brand: "약손명가",
-        branchType: "전지점",
-        title: "K-BEAUTY 연예인관리",
-        duration: 120,
-        options: [
-          { sessions: 30, count: 1, price: 1032000, originalPrice: 1238400 },
-          { sessions: 10, count: 2, price: 1032000, originalPrice: 1238400 },
-        ],
-      },
-    ]
-
-    setItems(type == "additional" ? dummyAdditionalItems : dummyMembershipItems)
-  }, [type])
 
   useEffect(() => {
     setHeader({
@@ -91,21 +36,26 @@ const PaymentPage = () => {
     })
   }, [])
 
+  if (isLoading) {
+    return <LoadingIndicator className="min-h-screen" />
+  }
+
+  const items = cartWithSummary?.items || []
+
   const calculateTotalAmount = () => {
     if (type === "membership") {
-      const membershipItems = items as CartItem[]
-      return membershipItems.reduce((total, item) => {
+      return items.reduce((total, item) => {
         return (
           total +
           item.options.reduce(
-            (subTotal, option) => subTotal + option.price * option.count,
+            (subTotal, option) =>
+              subTotal + option.price * option.items[0].count,
             0,
           )
         )
       }, 0)
     } else {
-      const additionalItems = items as AdditionalItem[]
-      return additionalItems.reduce((total, item) => total + item.price, 0)
+      return 0
     }
   }
 
@@ -130,11 +80,10 @@ const PaymentPage = () => {
 
   const renderItems = () => {
     if (type === "membership") {
-      return (items as CartItem[]).map((item) => (
+      return items.map((item) => (
         <CartCard
           key={item.id}
           {...item}
-          options={[]} // TODO: Replace `CartItem` in this file to `Cart.ts - CartItem`
           onCountChange={(optionIndex, newCount) =>
             handleCountChange(item.id, optionIndex, newCount)
           }
@@ -143,13 +92,7 @@ const PaymentPage = () => {
       ))
     }
 
-    return (items as AdditionalItem[]).map((item) => (
-      <AdditionalServiceCard
-        key={item.id}
-        {...item}
-        onDelete={() => handleDelete(item.id)}
-      />
-    ))
+    return []
   }
 
   const handlePayment = () => {

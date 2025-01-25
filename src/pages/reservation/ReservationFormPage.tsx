@@ -24,6 +24,7 @@ import { TimeSlot } from "../../types/Schedule.ts"
 import { Checkbox } from "@mui/material"
 import { useMembershipList } from "../../queries/useMembershipQueries.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
+import LoadingIndicator from "@components/LoadingIndicator.tsx"
 
 interface FormDataType {
   item: undefined | string
@@ -57,9 +58,8 @@ const ReservationFormPage = () => {
     additionalServices: [],
   })
 
-  const { data: additionalManagements, isLoading } = useAdditionalManagement(
-    data.item,
-  )
+  const { data: additionalManagements, isLoading: isAdditionalLoading } =
+    useAdditionalManagement(data.item)
 
   const handleOnChangeItem = (event: ChangeEvent<HTMLInputElement>) => {
     setData((prev) => ({
@@ -124,6 +124,10 @@ const ReservationFormPage = () => {
     const optionPrice = service.options?.[0]?.ss_price?.replace(/,/g, "")
     return sum + (optionPrice ? Number(optionPrice) : 0)
   }, 0)
+
+  if (isMembershipsLoading || isAdditionalLoading) {
+    return <LoadingIndicator className="min-h-screen" />
+  }
 
   return (
     <div className="flex-1 space-y-3 pb-32 overflow-y-auto overflow-x-hidden">
@@ -221,7 +225,7 @@ const ReservationFormPage = () => {
           새로 작성하기
         </Button>
       </section>
-      {!isLoading &&
+      {!isAdditionalLoading &&
         additionalManagements &&
         additionalManagements.body.length > 0 &&
         data.item !== "상담 예약" && (

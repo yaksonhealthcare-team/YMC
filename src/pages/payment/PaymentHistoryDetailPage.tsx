@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { usePaymentHistory } from "../../queries/usePaymentQueries.tsx"
-import SplashScreen from "@components/Splash.tsx"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useEffect } from "react"
 import { Button } from "@components/Button.tsx"
@@ -9,6 +8,7 @@ import PaymentPointSection from "./_fragments/detail/PaymentPointSection.tsx"
 import PaymentItemSection from "./_fragments/detail/PaymentItemSection.tsx"
 import PaymentCancelReasonSection from "./_fragments/detail/PaymentCancelReasonSection.tsx"
 import PaymentRefundDescriptionSection from "./_fragments/detail/PaymentRefundDescriptionSection.tsx"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 const PaymentHistoryDetailPage = () => {
   const { id } = useParams()
@@ -28,7 +28,7 @@ const PaymentHistoryDetailPage = () => {
   }, [])
 
   if (isLoading || !payment) {
-    return <SplashScreen />
+    return <LoadingIndicator className="min-h-screen" />
   }
 
   const renderFooter = () => {

@@ -4,6 +4,7 @@ import { useAuth } from "../../contexts/AuthContext"
 import { useOverlay } from "../../contexts/ModalContext"
 import { useLayout } from "../../contexts/LayoutContext"
 import { fetchUser, signinWithSocial } from "../../apis/auth.api"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 const OAuthCallback = () => {
   const { provider } = useParams()
@@ -77,8 +78,7 @@ const OAuthCallback = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-      <p className="mt-4 text-gray-600">로그인 처리중...</p>
+      <LoadingIndicator />
     </div>
   )
 }

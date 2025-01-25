@@ -3,11 +3,16 @@ import { useEvents } from "queries/useEventQueries"
 import { Event, Tab } from "types/Event"
 import { useState } from "react"
 import { EmptyCard } from "@components/EmptyCard"
+import LoadingIndicator from "@components/LoadingIndicator.tsx"
 
 const EventPage = () => {
   const navigate = useNavigate()
   const [selectedTab, setSelectedTab] = useState<Tab>("ALL")
-  const { data: events } = useEvents()
+  const { data: events, isLoading } = useEvents()
+
+  if (isLoading) {
+    return <LoadingIndicator className="min-h-screen" />
+  }
 
   return (
     <div className="flex flex-col gap-6 pb-[100px]">
