@@ -4,7 +4,7 @@ import { Button } from "@components/Button"
 import clsx from "clsx"
 import { MembershipCard } from "@components/MembershipCard"
 import { useNavigate } from "react-router-dom"
-import ReservationIcon from "@assets/icons/ReservationIcon.png"
+import ReservationIcon from "@assets/icons/ReservationIcon.svg?react"
 import { useLayout } from "contexts/LayoutContext"
 import { useUserMemberships } from "queries/useMembershipQueries"
 import {
@@ -133,7 +133,7 @@ const MembershipHistory = () => {
         className="fixed bottom-[98px] right-5 w-14 h-14 bg-primary-300 text-white rounded-full shadow-lg hover:bg-primary-400 focus:outline-none focus:bg-primary-500 focus:ring-opacity-50 transition-colors duration-200 z-10"
         onClick={() => navigate("/membership")}
       >
-        <img src={ReservationIcon} alt="예약하기" className="w-8 h-8 mx-auto" />
+        <ReservationIcon className="w-8 h-8 mx-auto text-white" />
       </button>
     </div>
   )
