@@ -137,6 +137,7 @@ const CartPage = () => {
           sizeType="l"
           onClick={() => navigate("/payment")}
           className={"w-full"}
+          disabled={getTotalItemCount() === 0}
         >
           {(summary?.total_price || 0).toLocaleString()}원 결제하기
         </Button>
