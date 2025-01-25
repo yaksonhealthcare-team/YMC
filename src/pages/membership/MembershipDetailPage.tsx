@@ -21,7 +21,7 @@ const MembershipDetailPage = () => {
   const { id } = useParams()
   const { data: membership } = useMembershipDetail(id!)
   const { openBottomSheet, closeOverlay } = useOverlay()
-  const { selectedBranch } = useMembershipOptionsStore()
+  const { selectedBranch, clear } = useMembershipOptionsStore()
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
 
@@ -52,6 +52,12 @@ const MembershipDetailPage = () => {
       handleOpenOptionsBottomSheet()
     }
   }, [selectedBranch, membership])
+
+  useEffect(() => {
+    return () => {
+      clear()
+    }
+  }, [])
 
   const handleOpenOptionsBottomSheet = () => {
     openBottomSheet(
