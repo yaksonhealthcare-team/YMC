@@ -159,12 +159,22 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
       </p>
 
       {currentQuestion && (
-        <QuestionItem
-          question={currentQuestion}
-          formik={formik}
-          fieldName={getFieldName(currentQuestion)}
-          onValidationChange={handleValidationChange}
-        />
+        <>
+          <h2 className="text-primary text-xl font-bold mb-3">
+            {currentQuestion.question_text}
+          </h2>
+          {currentQuestion.options.length > 1 && (
+            <p className="text-gray-500 text-sm font-medium mb-10">
+              * 복수 선택 가능
+            </p>
+          )}
+          <QuestionItem
+            question={currentQuestion}
+            formik={formik}
+            fieldName={getFieldName(currentQuestion)}
+            onValidationChange={handleValidationChange}
+          />
+        </>
       )}
 
       <FixedButtonContainer className="bg-white flex gap-2">
