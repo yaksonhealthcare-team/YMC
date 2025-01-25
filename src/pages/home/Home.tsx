@@ -26,6 +26,7 @@ import { MyMembership, MembershipStatus } from "types/Membership"
 import { useEvents } from "queries/useEventQueries"
 import { Event } from "types/Event"
 import LoadingIndicator from "@components/LoadingIndicator"
+import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -42,6 +43,7 @@ const Home = () => {
   const { user } = useAuth()
 
   const navigate = useNavigate()
+  const { clear } = useMembershipOptionsStore()
 
   const upcomingReservations = reservations || []
 
@@ -56,6 +58,11 @@ const Home = () => {
     })
     setNavigation({ display: true })
   }, [])
+
+  const handleReservationClick = () => {
+    clear() // 상태 초기화
+    navigate("/reservation/form", { replace: true })
+  }
 
   if (!user) return <SplashScreen />
 
@@ -87,7 +94,7 @@ const Home = () => {
                 </div>
                 <div
                   className="rounded-full bg-white text-primary-300 py-2 px-5 cursor-pointer"
-                  onClick={() => navigate("/reservation/form")}
+                  onClick={handleReservationClick}
                 >
                   예약하기
                 </div>
