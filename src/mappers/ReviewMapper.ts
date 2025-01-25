@@ -1,5 +1,4 @@
 import { Review, ReviewResponse, ReviewDetail } from "../types/Review.ts"
-import dayjs from "dayjs"
 
 export class ReviewMapper {
   static toReviewEntity(review: ReviewResponse): Review {

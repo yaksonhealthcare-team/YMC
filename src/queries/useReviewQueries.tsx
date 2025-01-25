@@ -1,5 +1,4 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
-import { queryKeys } from "./query.keys.ts"
 import { fetchReviewDetail, fetchReviews } from "../apis/review.api.ts"
 
 export const useReviews = () => {

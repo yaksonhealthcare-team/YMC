@@ -1,7 +1,6 @@
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import SettingIcon from "@assets/icons/SettingIcon.svg?react"
 import { Filter } from "@components/Filter.tsx"
 import { NotificationCard } from "@components/NotificationCard.tsx"

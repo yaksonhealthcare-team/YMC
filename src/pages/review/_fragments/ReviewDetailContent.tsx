@@ -1,7 +1,5 @@
 import { useLayout } from "../../../contexts/LayoutContext.tsx"
 import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
 import { ReviewDetail } from "../../../types/Review.ts"
@@ -25,7 +23,6 @@ interface Props {
 
 export const ReviewDetailContent = ({ review }: Props) => {
   const { setHeader, setNavigation } = useLayout()
-  const navigate = useNavigate()
 
   useEffect(() => {
     setHeader({
