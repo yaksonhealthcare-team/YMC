@@ -49,7 +49,7 @@ export const ReviewDetailContent = ({ review }: Props) => {
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-1.5">
-              <CalendarIcon className="w-3.5 h-3.5 text-gray-500" />
+              <CalendarIcon className="w-3.5 h-3.5 text-primary" />
               <span className="text-gray-500 text-sm font-medium">
                 {formatDate(review.date)}
               </span>

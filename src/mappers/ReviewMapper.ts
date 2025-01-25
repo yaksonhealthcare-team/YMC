@@ -9,7 +9,7 @@ export class ReviewMapper {
       brandName: review.b_name,
       programName: review.ps_name,
       visit: parseInt(review.visit),
-      totalCount: 20, // 프로그램의 총 횟수는 고정값으로 설정
+      totalCount: review.ss_count,
       grade: {
         L: review.rs_grade_L || "0",
         M: review.rs_grade_M || "0",

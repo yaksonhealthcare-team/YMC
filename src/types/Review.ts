@@ -10,6 +10,7 @@ export interface ReviewResponse {
   rs_grade_H: string
   review_memo: string
   imgList: string[]
+  ss_count: string
 }
 
 export interface Review {
@@ -18,7 +19,7 @@ export interface Review {
   brandName: string
   programName: string
   visit: number
-  totalCount: number
+  totalCount: string
   grade: {
     L: string
     M: string
