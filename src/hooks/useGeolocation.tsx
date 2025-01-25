@@ -5,7 +5,9 @@ import {
   GeolocationState,
 } from "../types/Coordinate.ts"
 
-const useGeolocation = (options: GeolocationOptions = {}): GeolocationState => {
+export const useGeolocation = (
+  options: GeolocationOptions = {},
+): GeolocationState => {
   const [state, setState] = useState<GeolocationState>({
     location: DEFAULT_COORDINATE,
     error: null,
@@ -57,5 +59,3 @@ const useGeolocation = (options: GeolocationOptions = {}): GeolocationState => {
 
   return state
 }
-
-export default useGeolocation

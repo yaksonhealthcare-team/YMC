@@ -1,7 +1,7 @@
 import BranchCard from "@components/BranchCard.tsx"
 import useDebounce from "../../../../hooks/useDebounce.tsx"
 import { useBranches } from "../../../../queries/useBranchQueries.tsx"
-import useGeolocation from "../../../../hooks/useGeolocation.tsx"
+import { useGeolocation } from "../../../../hooks/useGeolocation.tsx"
 import { DEFAULT_COORDINATE } from "../../../../types/Coordinate.ts"
 import useIntersection from "../../../../hooks/useIntersection.tsx"
 import { Branch } from "../../../../types/Branch.ts"

@@ -1,14 +1,23 @@
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query"
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query"
 import { queryKeys } from "./query.keys.ts"
 import {
   bookmarkBranch,
   fetchBranch,
   fetchBranches,
   unbookmarkBranch,
+  getBranchBookmarks,
+  addBranchBookmark,
+  removeBranchBookmark,
 } from "../apis/branch.api.ts"
 import { Coordinate } from "../types/Coordinate.ts"
 import { queryClient } from "./clients.ts"
 import { BranchFilters } from "types/Branch.ts"
+import { Branch } from "../types/Branch.ts"
 
 export const useBranches = (filters: BranchFilters) =>
   useInfiniteQuery({
@@ -28,22 +37,32 @@ export const useBranch = (id: string, coords: Coordinate) =>
     queryFn: () => fetchBranch(id, coords),
   })
 
-export const useBranchBookmarkMutation = () =>
-  useMutation({
-    mutationFn: (branchId: string) => bookmarkBranch(branchId),
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.branches.all,
-      })
+export const useBranchBookmarkMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (branchId: string) => addBranchBookmark(branchId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["branchBookmarks"] })
     },
   })
+}
 
-export const useBranchUnbookmarkMutation = () =>
-  useMutation({
-    mutationFn: (branchId: string) => unbookmarkBranch(branchId),
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.branches.all,
-      })
+export const useBranchUnbookmarkMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (branchId: string) => removeBranchBookmark(branchId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["branchBookmarks"] })
     },
   })
+}
+
+export const useBranchBookmarksQuery = (coords?: Coordinate) => {
+  return useQuery({
+    queryKey: ["branchBookmarks", coords],
+    queryFn: () => getBranchBookmarks(coords),
+    staleTime: 1000 * 60 * 5, // 5분
+    gcTime: 1000 * 60 * 30, // 30분
+    enabled: !!coords,
+  })
+}
