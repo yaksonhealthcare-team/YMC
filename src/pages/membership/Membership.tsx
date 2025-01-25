@@ -12,12 +12,14 @@ import {
   useMembershipList,
 } from "../../queries/useMembershipQueries"
 import { ListResponse } from "../../apis/membership.api"
+import { fetchCartCount } from "../../apis/cart.api"
 
 const MembershipPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const [brandCode, setBrandCode] = useState("001") // 약손명가
   const [selectedCategory, setSelectedCategory] = useState<string>()
+  const [cartCount, setCartCount] = useState(0)
 
   const { data: categoriesData, isLoading: isCategoriesLoading } =
     useMembershipCategories(brandCode) as {
@@ -31,6 +33,7 @@ const MembershipPage = () => {
     }
 
   useEffect(() => {
+    fetchCartCount().then((count) => setCartCount(count))
     setHeader({
       display: true,
       title: "회원권 구매",
@@ -59,15 +62,17 @@ const MembershipPage = () => {
       {/* 고정 영역 */}
       <div className="fixed top-[48px] left-0 right-0 z-10">
         {/* 안내 메시지 */}
-        <div className="w-full bg-[#92443D]">
-          <div className="max-w-[500px] min-w-[375px] mx-auto">
-            <div className="w-full h-[41px] flex items-center justify-center">
-              <span className="text-white text-14px font-medium">
-                이용하고 싶은 회원권을 담아주세요.
-              </span>
+        {cartCount === 0 && (
+          <div className="w-full bg-[#92443D]">
+            <div className="max-w-[500px] min-w-[375px] mx-auto">
+              <div className="w-full h-[41px] flex items-center justify-center">
+                <span className="text-white text-14px font-medium">
+                  이용하고 싶은 회원권을 담아주세요.
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* 브랜드 선택 탭 */}
         <div className="w-full bg-system-bg border-b border-gray-100">
