@@ -5,6 +5,7 @@ interface ProfileCardProps {
   name: string
   profileImageUrl?: string
   description?: string
+  grade: string
 }
 
 interface ProfileImageProps {
@@ -41,6 +42,7 @@ const ProfileCard = ({
   name,
   profileImageUrl,
   description,
+  grade,
 }: ProfileCardProps) => {
   const styles = STYLE_VARIANTS[type]
 
@@ -49,7 +51,7 @@ const ProfileCard = ({
       className={`${styles.background} p-5 rounded-2xl shadow-md flex justify-between items-center`}
     >
       <div>
-        <p className={`font-b text-18px ${styles.text}`}>{name}</p>
+        <p className={`font-b text-18px ${styles.text}`}>{name} {grade}</p>
         {description && (
           <p className={`${styles.description} text-14px ${styles.text}`}>
             {description}

@@ -7,6 +7,7 @@ const TherapistList = ({
     name: string
     profileImageUrl?: string
     description?: string
+    grade: string
   }[]
 }) => (
   <div className={"flex flex-col items-stretch gap-4 p-5"}>
