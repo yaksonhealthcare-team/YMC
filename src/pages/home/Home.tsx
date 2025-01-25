@@ -42,10 +42,7 @@ const Home = () => {
 
   const navigate = useNavigate()
 
-  const upcomingReservations = useMemo(() => {
-    if (!reservations) return []
-    return reservations
-  }, [reservations])
+  const upcomingReservations = reservations || []
 
   const availableMemberships = useMemo(() => {
     if (!memberships?.body) return []
@@ -98,11 +95,31 @@ const Home = () => {
             <div className="mt-4">
               <Swiper
                 modules={[Pagination]}
-                pagination={{ clickable: true }}
+                pagination={{
+                  clickable: true,
+                }}
                 slidesPerView={1}
                 className="w-full h-[144px] rounded-2xl"
                 loop={true}
               >
+                <style>
+                  {`
+                    .swiper-pagination {
+                      bottom: 4px !important;
+                    }
+                    .swiper-pagination-bullet {
+                      width: 7px !important;
+                      height: 7px !important;
+                      background: transparent !important;
+                      border: 1px solid white !important;
+                      opacity: 1 !important;
+                    }
+                    .swiper-pagination-bullet-active {
+                      background: white !important;
+                      border-color: white !important;
+                    }
+                  `}
+                </style>
                 {mainBanner &&
                   mainBanner.map((banner, index) => (
                     <SwiperSlide key={index}>
