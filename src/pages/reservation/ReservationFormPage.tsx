@@ -90,9 +90,6 @@ const ReservationFormPage = () => {
         )}
         b_idx={selectedBranch?.id || ""}
       />,
-      {
-        height: "large",
-      },
     )
   }
 

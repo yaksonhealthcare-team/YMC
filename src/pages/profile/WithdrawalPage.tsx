@@ -4,17 +4,15 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "contexts/AuthContext"
 import { useOverlay } from "contexts/ModalContext"
 import { Button } from "@components/Button"
-import CustomTextField from "@components/CustomTextField"
 import { useWithdrawal } from "queries/useAuthQueries"
 
 const WithdrawalPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const { user, logout } = useAuth()
-  const { showToast, openBottomSheet, closeOverlay } = useOverlay()
-  const [password, setPassword] = useState("")
+  const { logout } = useAuth()
+  const { openAlert } = useOverlay()
   const [isAgreed, setIsAgreed] = useState(false)
-  const withdrawalMutation = useWithdrawal()
+  const { mutateAsync: withdrawal } = useWithdrawal()
 
   useEffect(() => {
     setHeader({
@@ -27,53 +25,30 @@ const WithdrawalPage = () => {
   }, [])
 
   const handleWithdrawal = async () => {
-    if (!user?.email) {
-      showToast("이메일 정보를 찾을 수 없습니다.")
-      return
-    }
-
-    if (!password) {
-      showToast("비밀번호를 입력해주세요.")
-      return
-    }
-
     if (!isAgreed) {
-      showToast("회원탈퇴 동의사항에 동의해주세요.")
+      openAlert({
+        title: "안내",
+        description: "회원탈퇴 안내에 동의해주세요.",
+      })
       return
     }
 
-    openBottomSheet(
-      <div className="p-5">
-        <h2 className="text-lg font-semibold mb-2">정말 탈퇴하시겠습니까?</h2>
-        <p className="text-gray-500 mb-5">
-          탈퇴 시 모든 정보가 삭제되며 복구할 수 없습니다.
-        </p>
-        <div className="flex flex-col gap-2">
-          <Button
-            variantType="primary"
-            sizeType="l"
-            onClick={async () => {
-              try {
-                await withdrawalMutation.mutateAsync({
-                  username: user.email,
-                  password: password,
-                })
-                closeOverlay()
-                logout()
-                navigate("/")
-              } catch (error) {
-                showToast("회원탈퇴에 실패했습니다. 비밀번호를 확인해주세요.")
-              }
-            }}
-          >
-            탈퇴하기
-          </Button>
-          <Button variantType="line" sizeType="l" onClick={closeOverlay}>
-            취소
-          </Button>
-        </div>
-      </div>,
-    )
+    try {
+      await withdrawal()
+      openAlert({
+        title: "안내",
+        description: "회원탈퇴가 완료되었습니다.",
+        onClose: () => {
+          logout()
+          navigate("/")
+        },
+      })
+    } catch (error) {
+      openAlert({
+        title: "오류",
+        description: "회원탈퇴에 실패했습니다. 다시 시도해주세요.",
+      })
+    }
   }
 
   return (
@@ -88,16 +63,6 @@ const WithdrawalPage = () => {
 • 작성하신 리뷰는 삭제되지 않습니다.`}
           </p>
         </div>
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <h3 className="text-gray-700 text-16px font-sb">비밀번호 확인</h3>
-        <CustomTextField
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="비밀번호를 입력해주세요"
-        />
       </div>
 
       <div className="flex flex-col gap-4">
@@ -129,7 +94,7 @@ const WithdrawalPage = () => {
           variantType="primary"
           sizeType="l"
           onClick={handleWithdrawal}
-          disabled={!password || !isAgreed}
+          disabled={!isAgreed}
         >
           회원탈퇴
         </Button>
