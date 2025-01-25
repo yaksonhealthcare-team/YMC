@@ -88,7 +88,7 @@ const ReservationDetailPage = () => {
     <div className="flex-1 px-[20px] pt-[16px] pb-[150px] bg-system-bg">
       <ReservationSummary reservation={reservation} />
       <Button
-        variantType="gray"
+        variantType="line"
         sizeType="s"
         className="w-full mt-[24px]"
         onClick={() => navigate("/mypage/questionnaire/reservation")}
