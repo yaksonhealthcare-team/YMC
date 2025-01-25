@@ -7,12 +7,12 @@ export const useScheduleDateQueries = (filter: ScheduleFilters) =>
   useQuery({
     queryKey: queryKeys.schedules.date(filter),
     queryFn: () => fetchScheduleDates(filter),
-    enabled: Boolean(filter.membershipIndex && filter.searchDate),
+    enabled: Boolean(filter.searchDate),
   })
 
 export const useScheduleTimesQueries = (filter: ScheduleFilters) =>
   useQuery({
     queryKey: queryKeys.schedules.times(filter),
     queryFn: () => fetchScheduleTimes(filter),
-    enabled: Boolean(filter.membershipIndex && filter.searchDate),
+    enabled: Boolean(filter.searchDate),
   })

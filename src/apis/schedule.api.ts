@@ -11,12 +11,13 @@ export const fetchScheduleDates = async (
 ): Promise<ScheduleDate[]> => {
   const { data } = await axiosClient.get("/schedules/date", {
     params: {
-      mp_idx: filters.membershipIndex,
+      ...(filters.membershipIndex !== 0 && { mp_idx: filters.membershipIndex }),
       add_services:
         filters.addServices && filters.addServices.length > 0
           ? filters.addServices.join(",")
-          : null,
+          : undefined,
       search_date: dayjs(filters.searchDate).format("YYYY-MM"),
+      b_idx: filters.b_idx,
     },
   })
 
@@ -28,12 +29,13 @@ export const fetchScheduleTimes = async (
 ): Promise<ScheduleTime[]> => {
   const { data } = await axiosClient.get("/schedules/times", {
     params: {
-      mp_idx: filters.membershipIndex,
+      ...(filters.membershipIndex !== 0 && { mp_idx: filters.membershipIndex }),
       add_services:
         filters.addServices && filters.addServices.length > 0
           ? filters.addServices.join(",")
-          : null,
+          : undefined,
       search_date: dayjs(filters.searchDate).format("YYYY-MM-DD"),
+      b_idx: filters.b_idx,
     },
   })
 
