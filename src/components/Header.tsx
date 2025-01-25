@@ -13,6 +13,7 @@ const HEADER_STYLES = {
   two_icon: "py-3 px-5",
   back_title_text: "py-3 px-5",
   title_right_icon: "py-3 px-5",
+  back_title_right_icon: "py-3 px-5",
 } as const
 
 const TITLE_STYLES = {
@@ -48,13 +49,15 @@ const LeftSection = ({
       cloneElement(iconLeft!, ICON_DIMENSIONS)
     ) : type === "title_right_icon" ? (
       <div className="w-5 h-5" />
-    ) : (
+    ) : type.includes("back") ? (
       <CaretLeftIcon
         className={clsx(
           "w-5 h-5",
           type === "back_w" ? "text-white" : "text-gray-700",
         )}
       />
+    ) : (
+      <div className="w-5 h-5" />
     )}
   </button>
 )
