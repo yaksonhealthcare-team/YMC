@@ -13,6 +13,18 @@ export const EmailPassword = () => {
   const { signupData, setSignupData } = useSignup()
   const isSocialSignup = !!sessionStorage.getItem("socialSignupInfo")
 
+  const [form, setForm] = useState({
+    email: signupData.email || "",
+    password: "",
+    passwordConfirm: "",
+  })
+
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+    passwordConfirm: "",
+  })
+
   useEffect(() => {
     setHeader({
       display: true,
@@ -36,48 +48,65 @@ export const EmailPassword = () => {
     }
   }, [])
 
-  const [form, setForm] = useState({
-    email: signupData.email || "",
-    password: "",
-    passwordConfirm: "",
-  })
+  const validatePassword = (password: string) => {
+    if (password.length < 8) {
+      return "비밀번호는 8자 이상이어야 합니다"
+    }
+    if (!/[a-z]/.test(password)) {
+      return "비밀번호는 영문자를 포함해야 합니다"
+    }
+    if (!/[0-9]/.test(password)) {
+      return "비밀번호는 숫자를 포함해야 합니다"
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      return "비밀번호는 특수문자를 포함해야 합니다"
+    }
+    return ""
+  }
 
-  const [isFormValid, setIsFormValid] = useState(false)
+  const validateForm = () => {
+    const newErrors = {
+      email: "",
+      password: "",
+      passwordConfirm: "",
+    }
 
-  useEffect(() => {
+    // 이메일 검증
     if (!form.email) {
-      setIsFormValid(false)
-      return
+      newErrors.email = "이메일을 입력해주세요"
+    } else if (!validateEmail(form.email)) {
+      newErrors.email = "올바른 이메일 형식이 아닙니다"
     }
 
-    if (!validateEmail(form.email)) {
-      setIsFormValid(false)
-      return
-    }
-
+    // 소셜 로그인이 아닌 경우에만 비밀번호 검증
     if (!isSocialSignup) {
-      if (!form.password || !form.passwordConfirm) {
-        setIsFormValid(false)
-        return
+      // 비밀번호 검증
+      const passwordError = validatePassword(form.password)
+      if (passwordError) {
+        newErrors.password = passwordError
       }
 
-      if (form.password !== form.passwordConfirm) {
-        setIsFormValid(false)
-        return
+      // 비밀번호 확인 검증
+      if (!form.passwordConfirm) {
+        newErrors.passwordConfirm = "비밀번호 확인을 입력해주세요"
+      } else if (form.password !== form.passwordConfirm) {
+        newErrors.passwordConfirm = "비밀번호가 일치하지 않습니다"
       }
     }
 
-    setIsFormValid(true)
-  }, [form, isSocialSignup])
+    setErrors(newErrors)
+    return !Object.values(newErrors).some((error) => error !== "")
+  }
 
   const handleNavigateToNext = () => {
-    setSignupData((prev) => ({
-      ...prev,
-      email: form.email,
-      ...(isSocialSignup ? {} : { password: form.password }),
-    }))
-
-    navigate("/signup/profile")
+    if (validateForm()) {
+      setSignupData((prev) => ({
+        ...prev,
+        email: form.email,
+        ...(isSocialSignup ? {} : { password: form.password }),
+      }))
+      navigate("/signup/profile")
+    }
   }
 
   return (
@@ -92,28 +121,32 @@ export const EmailPassword = () => {
         <CustomTextField
           label="이메일"
           value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          onChange={(e) => {
+            setForm({ ...form, email: e.target.value })
+            setErrors({ ...errors, email: "" })
+          }}
           placeholder="이메일 계정 입력"
+          state={errors.email ? "error" : "default"}
+          helperText={errors.email}
         />
 
         {!isSocialSignup && (
           <PasswordCustomInput
-            onPasswordChange={(value) =>
+            onPasswordChange={(value) => {
               setForm((prev) => ({ ...prev, password: value }))
-            }
-            onPasswordConfirmChange={(value) =>
+              setErrors((prev) => ({ ...prev, password: "" }))
+            }}
+            onPasswordConfirmChange={(value) => {
               setForm((prev) => ({ ...prev, passwordConfirm: value }))
-            }
+              setErrors((prev) => ({ ...prev, passwordConfirm: "" }))
+            }}
+            passwordError={errors.password}
+            passwordConfirmError={errors.passwordConfirm}
           />
         )}
       </div>
 
-      <Button
-        variantType="primary"
-        sizeType="l"
-        disabled={!isFormValid}
-        onClick={handleNavigateToNext}
-      >
+      <Button variantType="primary" sizeType="l" onClick={handleNavigateToNext}>
         다음
       </Button>
     </div>
