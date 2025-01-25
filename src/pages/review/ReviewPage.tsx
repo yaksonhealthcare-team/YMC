@@ -4,6 +4,7 @@ import { useReviews } from "../../queries/useReviewQueries.tsx"
 import { ReviewListItem } from "./_fragments/ReviewListItem.tsx"
 import { useIntersection } from "../../hooks/useIntersection.tsx"
 import { useNavigate } from "react-router-dom"
+import LoadingIndicator from "@components/LoadingIndicator.tsx"
 
 const ReviewPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -27,17 +28,7 @@ const ReviewPage = () => {
   }, [])
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col">
-        {Array(3)
-          .fill(null)
-          .map((_, index) => (
-            <div key={index} className="px-5 py-4">
-              <div className="h-[302px] bg-gray-100 animate-pulse rounded-[20px]" />
-            </div>
-          ))}
-      </div>
-    )
+    return <LoadingIndicator className="min-h-screen" />
   }
 
   if (!data) {

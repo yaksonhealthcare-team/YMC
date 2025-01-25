@@ -9,11 +9,12 @@ import {
   useDeleteCartItemsMutation,
   useUpdateCartItemMutation,
 } from "../../queries/useCartQueries.tsx"
+import LoadingIndicator from "@components/LoadingIndicator.tsx"
 
 const CartPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
-  const { data: cartWithSummary } = useCartItems()
+  const { data: cartWithSummary, isLoading } = useCartItems()
   const { mutate: removeCartItems } = useDeleteCartItemsMutation()
   const { mutate: updateCartItem } = useUpdateCartItemMutation()
 
@@ -29,6 +30,10 @@ const CartPage = () => {
     })
     setNavigation({ display: false })
   }, [])
+
+  if (isLoading) {
+    return <LoadingIndicator className="min-h-screen" />
+  }
 
   const handleUpdateItem = (itemId: string, amount: number) => {
     if (amount === 0) {

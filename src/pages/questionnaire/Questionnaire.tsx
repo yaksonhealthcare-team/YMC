@@ -17,7 +17,7 @@ import {
   useSubmitQuestionnaire,
 } from "queries/useQuestionnaireQueries"
 import FixedButtonContainer from "@components/FixedButtonContainer"
-import SplashScreen from "@components/Splash"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 const getFieldName = (question: Question): QuestionFieldName => {
   return `${question.cssq_idx}_${
@@ -145,7 +145,7 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
   }
 
   if (isLoading || !questions) {
-    return <SplashScreen />
+    return <LoadingIndicator className="min-h-screen" />
   }
 
   const currentQuestion = questions[currentIndex]

@@ -25,6 +25,7 @@ import { useAuth } from "../../contexts/AuthContext.tsx"
 import { MyMembership, MembershipStatus } from "types/Membership"
 import { useEvents } from "queries/useEventQueries"
 import { Event } from "types/Event"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -233,7 +234,7 @@ const MembershipCardSection = ({
         onClick={() => navigate(`/member-history/membership`)}
       />
       {isLoading ? (
-        <SplashScreen />
+        <LoadingIndicator className="py-8" />
       ) : memberships.length > 0 ? (
         <Swiper
           spaceBetween={10}

@@ -5,7 +5,6 @@ import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import CartIcon from "@components/icons/CartIcon"
 import { Tab, Tabs } from "@mui/material"
 import { MembershipCard } from "./_fragments/MembershipCard"
-import SplashScreen from "@components/Splash"
 import { MembershipCategory, MembershipItem } from "../../types/Membership"
 import {
   useMembershipCategories,
@@ -13,6 +12,7 @@ import {
 } from "../../queries/useMembershipQueries"
 import { ListResponse } from "../../apis/membership.api"
 import { fetchCartCount } from "../../apis/cart.api"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 const MembershipPage = () => {
   const navigate = useNavigate()
@@ -54,7 +54,7 @@ const MembershipPage = () => {
     !categoriesData?.body ||
     !membershipsData?.body
   ) {
-    return <SplashScreen />
+    return <LoadingIndicator className="min-h-screen" />
   }
 
   return (

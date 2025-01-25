@@ -5,6 +5,7 @@ import { Notice } from "types/Content"
 import { EmptyCard } from "@components/EmptyCard"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { fetchNotices } from "apis/contents.api"
+import LoadingIndicator from "@components/LoadingIndicator.tsx"
 
 const NoticePage: React.FC = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -15,6 +16,7 @@ const NoticePage: React.FC = () => {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isLoading,
   } = useInfiniteQuery<Notice[]>({
     queryKey: ["notices"],
     queryFn: async ({ pageParam }) => fetchNotices(pageParam as number),
@@ -37,8 +39,12 @@ const NoticePage: React.FC = () => {
     setNavigation({ display: false })
   }, [setHeader, setNavigation])
 
+  if (isLoading) {
+    return <LoadingIndicator className="min-h-screen" />
+  }
+
   if (isFetchingNextPage) {
-    return <div className={"w-full text-center mt-20"}>로딩중...</div>
+    return <LoadingIndicator className="min-h-[100px]" />
   }
 
   return (

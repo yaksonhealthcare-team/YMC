@@ -8,7 +8,7 @@ import ReservationIcon from "@assets/icons/ReservationIcon.png"
 import { useLayout } from "contexts/LayoutContext"
 import { useReservations } from "queries/useReservationQueries"
 import { FilterItem, reservationFilters } from "types/Reservation"
-import SplashScreen from "@components/Splash"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 const ReservationHistory = () => {
   const navigate = useNavigate()
@@ -32,7 +32,7 @@ const ReservationHistory = () => {
     setNavigation({ display: true })
   }, [])
 
-  if (isLoading) return <SplashScreen />
+  if (isLoading) return <LoadingIndicator className="min-h-screen" />
 
   return (
     <div className="flex flex-col bg-system-bg min-h-[calc(100vh-82px)]">
