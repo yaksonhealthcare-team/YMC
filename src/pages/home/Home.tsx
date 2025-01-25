@@ -42,10 +42,7 @@ const Home = () => {
 
   const navigate = useNavigate()
 
-  const upcomingReservations = useMemo(() => {
-    if (!reservations) return []
-    return reservations
-  }, [reservations])
+  const upcomingReservations = reservations || []
 
   const availableMemberships = useMemo(() => {
     if (!memberships?.body) return []

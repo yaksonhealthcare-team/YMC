@@ -1,7 +1,6 @@
 import { useLayout } from "contexts/LayoutContext"
 import { ChangeEvent, useEffect, useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
-import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import CaretRigthIcon from "@assets/icons/CaretRightIcon.svg?react"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import { RadioCard } from "@components/RadioCard"
@@ -35,18 +34,19 @@ interface FormDataType {
   additionalServices: AdditionalManagement[]
 }
 
+const BRAND_CODE = "001" // 약손명가
+
 const ReservationFormPage = () => {
   const { openBottomSheet, closeOverlay } = useOverlay()
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const location = useLocation()
   const theme = useTheme()
-  const [consultationSlot, _setConsultationSlot] = useState(1)
-  const [brandCode] = useState("001") // 약손명가
+  const [consultationSlot] = useState(1)
   const { selectedBranch } = useMembershipOptionsStore()
 
   const { data: membershipsData, isLoading: isMembershipsLoading } =
-    useMembershipList(brandCode)
+    useMembershipList(BRAND_CODE)
 
   const [data, setData] = useState<FormDataType>({
     item: undefined,
