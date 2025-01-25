@@ -16,6 +16,7 @@ import "swiper/swiper-bundle.css"
 import MembershipPlaceholderImage from "@assets/images/MembershipPlaceholderImage.jpg"
 import CartIcon from "@components/icons/CartIcon.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 const MembershipDetailPage = () => {
   const { id } = useParams()
@@ -95,7 +96,7 @@ const MembershipDetailPage = () => {
     }
   }, [isBottomSheetOpen])
 
-  if (!membership) return <div>Loading...</div>
+  if (!membership) return <LoadingIndicator className="min-h-screen" />
 
   const MembershipInfo = () => (
     <div className="flex flex-col px-5 py-6 gap-4">
