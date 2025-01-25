@@ -226,7 +226,9 @@ const ReservationFormPage = () => {
         additionalManagements.body.length > 0 &&
         data.item !== "상담 예약" && (
           <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
-            <p className="font-m text-14px text-gray-700 mb-4">추가관리</p>
+            <p className="font-m text-14px text-gray-700 mb-4">
+              추가관리 (선택)
+            </p>
             <div className="flex flex-col gap-3">
               {additionalManagements.body.map((option) => {
                 const isChecked = data.additionalServices.some(
