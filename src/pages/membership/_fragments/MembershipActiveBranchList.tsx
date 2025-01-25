@@ -1,6 +1,4 @@
-import { useNavigate } from "react-router-dom"
 import BranchCard from "../../../components/BranchCard"
-import { useMembershipOptionsStore } from "../../../hooks/useMembershipOptions"
 import { Branch } from "types/Branch"
 import { useAuth } from "../../../contexts/AuthContext"
 
