@@ -3,12 +3,9 @@ import dayjs from "dayjs"
 
 export class ReviewMapper {
   static toReviewEntity(review: ReviewResponse): Review {
-    // 날짜 포맷 변환 (2024-07-31 20:20 -> 2024년 7월 31일)
-    const formattedDate = dayjs(review.r_date).format("YYYY년 M월 D일")
-
     return {
       id: review.r_idx,
-      date: formattedDate,
+      date: review.r_date,
       brandName: review.b_name,
       programName: review.ps_name,
       visit: parseInt(review.visit),
