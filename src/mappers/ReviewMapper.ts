@@ -1,24 +1,42 @@
-import { Review, ReviewResponse } from "../types/Review.ts"
+import {
+  Review,
+  ReviewResponse,
+  ReviewDetail,
+  ReviewDetailResponse,
+} from "../types/Review.ts"
 
 export class ReviewMapper {
-  static toReviewEntity = (dto: ReviewResponse): Review => {
+  static toReviewEntity(review: ReviewResponse): Review {
     return {
-      id: dto.r_idx,
-      date: new Date(dto.r_date),
-      brandName: dto.b_name,
-      programName: dto.ps_name,
-      visit: dto.visit,
+      id: review.r_idx,
+      date: review.r_date,
+      brandName: review.b_name,
+      programName: review.ps_name,
+      visit: review.visit,
+      totalCount: review.total_count,
       grade: {
-        low: dto.rs_grade_L,
-        medium: dto.rs_grade_M,
-        high: dto.rs_grade_H,
+        L: review.rs_grade_L || "0",
+        M: review.rs_grade_M || "0",
+        H: review.rs_grade_H || "0",
       },
-      content: dto.review_memo,
-      imageUrls: dto.imgList,
+      evaluations:
+        review.evaluations?.map((evaluation) => ({
+          question: evaluation.question,
+          grade: evaluation.rs_grade,
+        })) || [],
+      content: review.review_memo || "",
+      imageUrls: review.imgList || [],
     }
   }
 
-  static toReviewEntities = (dtos: ReviewResponse[]): Review[] => {
-    return dtos.map(this.toReviewEntity)
+  static toReviewEntities(reviews: ReviewResponse[]): Review[] {
+    return reviews.map((review) => this.toReviewEntity(review))
+  }
+
+  static toReviewDetailEntity(review: ReviewDetailResponse): ReviewDetail {
+    return {
+      ...this.toReviewEntity(review),
+      additionalServices: review.additional_services || [],
+    }
   }
 }
