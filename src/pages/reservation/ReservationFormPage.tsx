@@ -327,9 +327,10 @@ const ReservationFormPage = () => {
               }
               navigate("/membership/select-branch", {
                 state: {
-                  returnPath: "/reservation",
+                  returnPath: "/reservation/form",
                   selectedItem: data.item,
                 },
+                replace: true,
               })
             }}
           />
