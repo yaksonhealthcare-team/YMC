@@ -15,8 +15,9 @@ export const fetchScheduleDates = async (
       add_services:
         filters.addServices && filters.addServices.length > 0
           ? filters.addServices.join(",")
-          : null,
+          : undefined,
       search_date: dayjs(filters.searchDate).format("YYYY-MM"),
+      b_idx: filters.b_idx,
     },
   })
 
@@ -32,8 +33,9 @@ export const fetchScheduleTimes = async (
       add_services:
         filters.addServices && filters.addServices.length > 0
           ? filters.addServices.join(",")
-          : null,
+          : undefined,
       search_date: dayjs(filters.searchDate).format("YYYY-MM-DD"),
+      b_idx: filters.b_idx,
     },
   })
 
