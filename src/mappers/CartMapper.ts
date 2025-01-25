@@ -1,6 +1,14 @@
 import { CartItem, CartItemOption, CartItemResponse } from "../types/Cart"
 
 export class CartMapper {
+  private static toValidId(id: string): string {
+    const numId = Number(id)
+    if (isNaN(numId) || numId <= 0) {
+      throw new Error(`Invalid cart ID: ${id}`)
+    }
+    return numId.toString()
+  }
+
   /**
    * @Seyoung: This function maps `CartItemResponse[]` to `CartItem[]`.
    * - Basically this function classifies the items based on `membership.s_idx` and `option.ss_count`
@@ -67,7 +75,7 @@ export class CartMapper {
               items: [
                 ...option.items,
                 {
-                  cartId: dto.csc_idx,
+                  cartId: this.toValidId(dto.csc_idx),
                   count: Number(dto.amount),
                 },
               ],
@@ -87,7 +95,7 @@ export class CartMapper {
     return {
       items: [
         {
-          cartId: dto.csc_idx,
+          cartId: this.toValidId(dto.csc_idx),
           count: Number(dto.amount),
         },
       ],

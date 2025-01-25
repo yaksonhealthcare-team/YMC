@@ -24,16 +24,29 @@ export const addCart = async (data: CartItemPostRequest[]) => {
 }
 
 export const removeCart = async (cartIds: string[]) => {
+  const validIds = cartIds
+    .map((id) => Number(id))
+    .filter((id) => !isNaN(id) && id > 0)
+
+  if (validIds.length === 0) {
+    throw new Error("Invalid cart IDs")
+  }
+
   return await axiosClient.delete(`/carts/carts`, {
     data: {
-      del_idxs: cartIds.map((id) => Number(id)),
+      del_idxs: validIds,
     },
   })
 }
 
 export const updateCart = async (cartId: string, amount: number) => {
+  const validId = Number(cartId)
+  if (isNaN(validId) || validId <= 0) {
+    throw new Error("Invalid cart ID")
+  }
+
   return await axiosClient.patch(`/carts/carts`, {
-    update_idx: Number(cartId),
+    update_idx: validId,
     updateAmount: amount,
   })
 }
