@@ -157,7 +157,7 @@ const MembershipPage = () => {
       </div>
 
       {/* 회원권 목록 */}
-      <div className="pt-[185px] bg-system-bg">
+      <div className="pt-[185px] pb-[96px] bg-system-bg">
         <div className="max-w-[500px] min-w-[375px] mx-auto">
           <div className="px-5 py-6">
             {membershipsData.body.length === 0 ? (
