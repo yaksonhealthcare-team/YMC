@@ -1,6 +1,7 @@
 import { ReactNode } from "react"
 import { Navigate } from "react-router-dom"
 import { lazy } from "react"
+import WithdrawalPage from "../pages/profile/WithdrawalPage"
 
 export interface RouteConfig {
   path: string
@@ -417,6 +418,10 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/profile/change-phone",
     element: <ProfileChangePhoneNumber />,
+  },
+  {
+    path: "/profile/withdrawal",
+    element: <WithdrawalPage />,
   },
   //지점 찾기, 지점 상세보기
   {

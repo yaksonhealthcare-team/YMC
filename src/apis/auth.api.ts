@@ -155,3 +155,13 @@ export const signinWithSocial = async ({
 
   return data.body[0].accessToken
 }
+
+export const withdrawal = async (username: string, password: string) => {
+  const response = await axiosClient.delete(`/api/auth/withdrawal`, {
+    params: {
+      username,
+      password,
+    },
+  })
+  return response.data
+}

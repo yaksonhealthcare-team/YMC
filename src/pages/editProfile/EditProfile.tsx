@@ -126,7 +126,10 @@ const EditProfile = () => {
         content={"탈퇴 시 적립금은 소멸되며, 계정 복구가 불가합니다."}
         confirmOptions={{
           text: "탈퇴하기",
-          onClick: () => {},
+          onClick: () => {
+            closeOverlay()
+            navigate("/profile/withdrawal")
+          },
         }}
         cancelOptions={{
           text: "취소하기",
