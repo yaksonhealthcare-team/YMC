@@ -140,7 +140,10 @@ export const QuestionItem = ({
   }
 
   const handleTextChange = (value: string) => {
-    formik.setFieldValue(`${fieldName}_text`, value)
+    // 100자를 초과하는 입력 방지
+    if (value.length <= 100) {
+      formik.setFieldValue(`${fieldName}_text`, value)
+    }
   }
 
   const handleOptionChange = (optionIdx: string, checked: boolean) => {
