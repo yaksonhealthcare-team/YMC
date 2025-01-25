@@ -11,8 +11,10 @@ const FavoritePage: React.FC = () => {
     setHeader({
       display: true,
       title: "즐겨찾는 지점",
+      left: "back",
+      backgroundColor: "bg-white",
     })
-    setNavigation({ display: true })
+    setNavigation({ display: false })
 
     // 즐겨찾는 지점 목록을 가져오는 로직 추가
     // setFavoriteBranches()
