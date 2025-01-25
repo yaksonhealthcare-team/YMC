@@ -36,7 +36,7 @@ export const Notification = () => {
       left: "back",
       onClickBack: () => navigate(-1),
     })
-    setNavigation({ display: true })
+    setNavigation({ display: false })
   }, [])
 
   const navigate = useNavigate()
