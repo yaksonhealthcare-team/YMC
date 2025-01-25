@@ -110,7 +110,7 @@ const MembershipDetailPage = () => {
           </h1>
         </div>
         {membership.options?.length > 0 && (
-          <div className="flex items-end gap-2">
+          <div className="flex items-baseline gap-2">
             {membership.options[0].original_price && (
               <span className="text-primary font-b text-18px">
                 {calculateDiscountRate(
@@ -127,7 +127,7 @@ const MembershipDetailPage = () => {
               <span className="text-gray-900 font-r text-12px">부터~</span>
             </div>
             {membership.options[0].original_price && (
-              <span className="text-gray-400 font-r text-14px line-through">
+              <span className="text-gray-400 font-r text-14px line-through translate-y-[0.5px]">
                 {membership.options[0].original_price}원
               </span>
             )}
