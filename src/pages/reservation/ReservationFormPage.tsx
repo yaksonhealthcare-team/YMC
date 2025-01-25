@@ -25,7 +25,7 @@ import { Checkbox } from "@mui/material"
 import { useMembershipList } from "../../queries/useMembershipQueries.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
-import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
+
 interface FormDataType {
   item: undefined | string
   branch: undefined | string
