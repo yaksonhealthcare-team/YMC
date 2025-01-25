@@ -13,6 +13,7 @@ import InquiryIcon from "@assets/icons/InquiryIcon.svg?react"
 import EventIcon from "@assets/icons/EventIcon.svg?react"
 import NoticeIcon from "@assets/icons/NoticeIcon.svg?react"
 import NotificationIcon from "@assets/icons/NotificationIcon.svg?react"
+import CartIcon from "@assets/icons/CartIcon.svg?react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useAuth } from "../../contexts/AuthContext.tsx"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
@@ -146,6 +147,12 @@ const MyPage = () => {
       title: "즐겨찾는 지점",
       path: "/favorite",
       icon: BookmarkIcon,
+    },
+    {
+      id: "cart",
+      title: "장바구니",
+      path: "/cart",
+      icon: CartIcon,
     },
     {
       id: "payment",
