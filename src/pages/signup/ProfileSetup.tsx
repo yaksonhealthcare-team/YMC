@@ -26,7 +26,7 @@ export const ProfileSetup = () => {
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false)
 
   const { login } = useAuth()
-  const { showAlert } = useOverlay()
+  const { showToast } = useOverlay()
   const isSocialSignup = !!sessionStorage.getItem("socialSignupInfo")
 
   const [nameError, setNameError] = useState("")
@@ -113,7 +113,7 @@ export const ProfileSetup = () => {
 
   const handleSignupSubmit = async () => {
     if (!validateName(signupData.name)) {
-      showAlert("이름을 올바르게 입력해주세요")
+      showToast("이름을 올바르게 입력해주세요")
       return
     }
 
@@ -169,11 +169,11 @@ export const ProfileSetup = () => {
           return
         } catch (error: unknown) {
           if (error instanceof AxiosError) {
-            showAlert(
+            showToast(
               error.response?.data?.message || "회원가입에 실패했습니다",
             )
           } else {
-            showAlert("회원가입에 실패했습니다")
+            showToast("회원가입에 실패했습니다")
           }
         }
       } else {
@@ -206,14 +206,14 @@ export const ProfileSetup = () => {
       if (error instanceof AxiosError) {
         const errorMessage = error.response?.data?.message
         if (errorMessage?.includes("already exists")) {
-          showAlert("이미 가입된 이메일입니다")
+          showToast("이미 가입된 이메일입니다")
         } else if (errorMessage?.includes("Invalid mobile")) {
-          showAlert("올바르지 않은 휴대폰 번호입니다")
+          showToast("올바르지 않은 휴대폰 번호입니다")
         } else {
-          showAlert(errorMessage || "회원가입에 실패했습니다")
+          showToast(errorMessage || "회원가입에 실패했습니다")
         }
       } else {
-        showAlert("회원가입에 실패했습니다")
+        showToast("회원가입에 실패했습니다")
       }
     }
   }

@@ -353,7 +353,7 @@ export const routeConfig: RouteConfig[] = [
     auth: true,
   },
   {
-    path: "/review/:id",
+    path: "/review/:reviewId",
     element: <ReviewDetailPage />,
     auth: true,
   },

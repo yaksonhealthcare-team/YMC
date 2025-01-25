@@ -4,6 +4,7 @@ export interface ReviewResponse {
   b_name: string
   ps_name: string
   visit: string
+  sc_name: string
   rs_grade_L: string
   rs_grade_M: string
   rs_grade_H: string
@@ -13,15 +14,24 @@ export interface ReviewResponse {
 
 export interface Review {
   id: string
-  date: Date
+  date: string
   brandName: string
   programName: string
-  visit: string
+  visit: number
+  totalCount: number
   grade: {
-    low: string
-    medium: string
-    high: string
+    L: string
+    M: string
+    H: string
   }
+  evaluations: {
+    question: string
+    grade: "L" | "M" | "H"
+  }[]
   content: string
   imageUrls: string[]
+}
+
+export interface ReviewDetail extends Review {
+  additionalServices: string[]
 }

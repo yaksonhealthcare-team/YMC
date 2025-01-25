@@ -1,29 +1,60 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { Branch } from "../../types/Branch.ts"
 import { BranchFilterListItem } from "../branch/_fragments/BranchFilterList.tsx"
+import {
+  useBranchBookmarksQuery,
+  useBranchBookmarkMutation,
+  useBranchUnbookmarkMutation,
+} from "../../queries/useBranchQueries.tsx"
+import { useNavigate } from "react-router-dom"
+import { useGeolocation } from "../../hooks/useGeolocation.tsx"
 
 const FavoritePage: React.FC = () => {
   const { setHeader, setNavigation } = useLayout()
-  const [favoriteBranches, _setFavoriteBranches] = useState<Branch[]>([])
+  const navigate = useNavigate()
+  const { location, loading, error } = useGeolocation()
+  const { data: favoriteBranches = [] } = useBranchBookmarksQuery(location)
+  const { mutate: addBookmark } = useBranchBookmarkMutation()
+  const { mutate: removeBookmark } = useBranchUnbookmarkMutation()
 
   useEffect(() => {
     setHeader({
       display: true,
       title: "즐겨찾는 지점",
+      left: "back",
+      backgroundColor: "bg-white",
     })
-    setNavigation({ display: true })
-
-    // 즐겨찾는 지점 목록을 가져오는 로직 추가
-    // setFavoriteBranches()
+    setNavigation({ display: false })
   }, [setHeader, setNavigation])
 
   function handleBranchClick(branch: Branch) {
-    console.log("Branch clicked", branch)
+    navigate(`/branch/${branch.id}`)
   }
 
   function handleToggleFavorite(branch: Branch) {
-    console.log("TOGGLE FAVORITE", branch)
+    if (branch.isFavorite) {
+      removeBookmark(branch.id)
+    } else {
+      addBookmark(branch.id)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="h-screen max-h-full bg-white p-5">
+        <p>위치 정보를 불러오는 중입니다...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="h-screen max-h-full bg-white p-5">
+        <p>위치 정보를 불러올 수 없습니다.</p>
+        <p className="text-gray-500 text-sm mt-2">{error}</p>
+      </div>
+    )
   }
 
   return (

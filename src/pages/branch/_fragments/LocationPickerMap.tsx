@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useLayout } from "../../../contexts/LayoutContext.tsx"
 import MapView from "@components/MapView.tsx"
-import useGeolocation from "../../../hooks/useGeolocation.tsx"
+import { useGeolocation } from "../../../hooks/useGeolocation.tsx"
 import LocationSelectorPin from "@assets/icons/pin/LocationSelectorPin.svg?react"
 import { Coordinate, DEFAULT_COORDINATE } from "../../../types/Coordinate.ts"
 import { Button } from "@components/Button.tsx"

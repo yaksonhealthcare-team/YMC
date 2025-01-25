@@ -42,7 +42,7 @@ interface OverlayContextValue {
     content: ReactNode,
     options?: Record<string, unknown> | undefined,
   ) => void
-  showAlert: (message: string, options?: Record<string, unknown>) => void
+  showToast: (message: string, options?: Record<string, unknown>) => void
 }
 
 // 오버레이 컨텍스트 생성
@@ -109,7 +109,7 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
     openOverlay(OverlayTypes.BOTTOM_SHEET, content, options)
   }
 
-  const showAlert = (
+  const showToast = (
     message: string,
     options: Record<string, unknown> = {},
   ) => {
@@ -125,7 +125,7 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
         closeOverlay,
         openMessageBox,
         openBottomSheet,
-        showAlert,
+        showToast,
       }}
     >
       {children}
@@ -219,23 +219,36 @@ const OverlayContainer: React.FC = () => {
             </div>
             <Divider className={"border-[#F8F8F8"} />
             {(options as BottomSheetOptions)?.buttons && (
-              <div className="w-full flex flex-col space-y-2 p-3 mb-7">
-                {(options as BottomSheetOptions)?.buttons?.map(
-                  (button, index) => (
-                    <Button
-                      key={index}
-                      onClick={() => {
-                        button.onClick()
-                        closeOverlay()
-                      }}
-                      variant={button.variant || "contained"}
-                      fullWidth
-                      className="py-3"
-                    >
-                      {button.text}
-                    </Button>
-                  ),
-                )}
+              <div className="w-full p-5">
+                <div className="flex gap-5">
+                  {(options as BottomSheetOptions)?.buttons?.map(
+                    (button, index) => (
+                      <Button
+                        key={index}
+                        onClick={() => {
+                          button.onClick()
+                          closeOverlay()
+                        }}
+                        variant={button.variant || "contained"}
+                        fullWidth
+                        className={`h-[52px] rounded-xl font-bold text-base px-5 ${
+                          button.variant === "outlined"
+                            ? "border-primary text-primary hover:border-primary"
+                            : "bg-primary text-white hover:bg-primary"
+                        }`}
+                        sx={{
+                          textTransform: "none",
+                          boxShadow: "none",
+                          "&:hover": {
+                            boxShadow: "none",
+                          },
+                        }}
+                      >
+                        {button.text}
+                      </Button>
+                    ),
+                  )}
+                </div>
               </div>
             )}
           </DialogContent>
