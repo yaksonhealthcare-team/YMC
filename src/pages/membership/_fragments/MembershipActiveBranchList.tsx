@@ -4,9 +4,11 @@ import { useMembershipOptionsStore } from "../../../hooks/useMembershipOptions"
 import { Branch } from "types/Branch"
 import { useAuth } from "../../../contexts/AuthContext"
 
-export const MembershipActiveBranchList = () => {
-  const navigate = useNavigate()
-  const { setSelectedBranch } = useMembershipOptionsStore()
+interface Props {
+  onBranchSelect: (branch: Branch) => void
+}
+
+export const MembershipActiveBranchList = ({ onBranchSelect }: Props) => {
   const { user } = useAuth()
 
   if (!user?.brands?.length) {
@@ -35,10 +37,7 @@ export const MembershipActiveBranchList = () => {
         return (
           <button
             key={branch.id}
-            onClick={() => {
-              setSelectedBranch(branchData)
-              navigate(-1)
-            }}
+            onClick={() => onBranchSelect(branchData)}
           >
             <BranchCard name={branch.brandName} address={branch.address || ""} />
           </button>
