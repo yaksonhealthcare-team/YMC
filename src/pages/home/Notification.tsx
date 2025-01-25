@@ -34,11 +34,8 @@ export const Notification = () => {
           <SettingIcon className="w-6 h-6" />
         </div>
       ),
-      left: (
-        <div onClick={() => navigate(-1)}>
-          <CaretLeftIcon className="w-5 h-5" />
-        </div>
-      ),
+      left: "back",
+      onClickBack: () => navigate(-1),
     })
     setNavigation({ display: true })
   }, [])
