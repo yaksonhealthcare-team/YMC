@@ -21,6 +21,15 @@ const PasswordCustomInput = ({
   const [password, setPassword] = useState("")
   const [passwordConfirm, setPasswordConfirm] = useState("")
 
+  const validatePassword = (password: string) => {
+    return (
+      password.length >= 8 &&
+      /[a-z]/i.test(password) &&
+      /[0-9]/.test(password) &&
+      /[!@#$%^&*(),.?":{}|<>]/.test(password)
+    )
+  }
+
   useEffect(() => {
     onPasswordChange(password)
   }, [password])
@@ -38,7 +47,11 @@ const PasswordCustomInput = ({
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="비밀번호 입력"
-          state={passwordError ? "error" : "default"}
+          state={
+            passwordError ? "error" : 
+            password && !validatePassword(password) ? "error" : 
+            "default"
+          }
           helperText={passwordError}
           iconRight={
             <button onClick={() => setShowPassword(!showPassword)}>
@@ -46,9 +59,20 @@ const PasswordCustomInput = ({
             </button>
           }
         />
-        <span className="text-12px text-gray-400 ml-2">
-          영문자, 숫자, 특수문자를 포함하여 8자리 이상
-        </span>
+        {!passwordError && password && (
+          <span
+            className={`text-12px ml-2 ${
+              validatePassword(password) ? "text-success" : "text-error"
+            }`}
+          >
+            영문자, 숫자, 특수문자를 포함하여 8자리 이상
+          </span>
+        )}
+        {!passwordError && !password && (
+          <span className="text-12px text-gray-400 ml-2">
+            영문자, 숫자, 특수문자를 포함하여 8자리 이상
+          </span>
+        )}
       </div>
 
       <div className="flex flex-col gap-1 mt-6">
@@ -58,7 +82,11 @@ const PasswordCustomInput = ({
           value={passwordConfirm}
           onChange={(e) => setPasswordConfirm(e.target.value)}
           placeholder="비밀번호 재입력"
-          state={passwordConfirmError ? "error" : "default"}
+          state={
+            passwordConfirmError ? "error" : 
+            password && passwordConfirm && password !== passwordConfirm ? "error" : 
+            "default"
+          }
           helperText={passwordConfirmError}
           iconRight={
             <button
@@ -68,9 +96,11 @@ const PasswordCustomInput = ({
             </button>
           }
         />
-        {password && passwordConfirm && (
+        {!passwordConfirmError && password && passwordConfirm && (
           <span
-            className={`text-12px ml-2 ${password === passwordConfirm ? "text-success" : "text-error"}`}
+            className={`text-12px ml-2 ${
+              password === passwordConfirm ? "text-success" : "text-error"
+            }`}
           >
             {password === passwordConfirm
               ? "비밀번호가 일치합니다"
