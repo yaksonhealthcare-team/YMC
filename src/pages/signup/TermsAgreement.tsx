@@ -251,7 +251,13 @@ const AgreementItem = ({
 }: AgreementItemProps) => {
   return (
     <div className="flex items-center gap-3">
-      <Checkbox checked={checked} onChange={onChange} />
+      <Checkbox
+        className="p-0 w-auto h-auto"
+        checked={checked}
+        onChange={onChange}
+        checkedIcon={<CheckFillCircleIcon />}
+        icon={<CheckFillCircleIcon color="#DDDDDD" />}
+      />
       <span className="text-14px text-[#212121]">{title}</span>
       <button onClick={onDetail} className="text-primary text-14px underline">
         상세보기
