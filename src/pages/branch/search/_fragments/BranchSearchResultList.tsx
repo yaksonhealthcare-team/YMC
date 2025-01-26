@@ -18,7 +18,7 @@ const BranchSearchResultList = ({
   const debouncedQuery = useDebounce(query, 300)
   const { location } = useGeolocation()
   const {
-    data: branches,
+    data: branchPages,
     isLoading,
     hasNextPage,
     fetchNextPage,
@@ -31,6 +31,8 @@ const BranchSearchResultList = ({
     search: debouncedQuery,
   })
 
+  const branches = branchPages?.pages.flatMap((page) => page.branches) || []
+
   const { observerTarget } = useIntersection({
     onIntersect: () => {
       if (hasNextPage && !isFetchingNextPage) {
@@ -39,19 +41,17 @@ const BranchSearchResultList = ({
     },
   })
 
-  if (!isLoading && branches?.pages.flatMap((page) => page).length === 0) {
+  if (!isLoading && branches.length === 0) {
     return <p className={"self-center mt-40"}>{"검색 결과가 없습니다."}</p>
   }
 
   return (
     <ul className={"divide-y divide-gray-100 px-5 overflow-y-scroll"}>
-      {(branches?.pages.flatMap(({ branches }) => branches) || []).map(
-        (branch, index) => (
-          <li key={index} className={"py-4"} onClick={() => onSelect(branch)}>
-            <BranchCard name={branch.name} address={branch.address} />
-          </li>
-        ),
-      )}
+      {branches.map((branch, index) => (
+        <li key={index} className={"py-4"} onClick={() => onSelect(branch)}>
+          <BranchCard name={branch.name} address={branch.address} />
+        </li>
+      ))}
       <div ref={observerTarget} className={"h-4"} />
     </ul>
   )

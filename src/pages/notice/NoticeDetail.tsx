@@ -4,12 +4,12 @@ import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useNotice } from "../../queries/useContentQueries.tsx"
 import { NoticeDetail as Notice } from "../../types/Content.ts"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
-import SplashScreen from "@components/Splash.tsx"
+import LoadingIndicator from "@components/LoadingIndicator.tsx"
 
 const NoticeDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { setHeader, setNavigation } = useLayout()
-  const { data: notice } = useNotice(id!)
+  const { data: notice, isLoading, isError } = useNotice(id!)
 
   useEffect(() => {
     setHeader({
@@ -20,13 +20,20 @@ const NoticeDetailPage: React.FC = () => {
     setNavigation({ display: false })
   }, [setHeader, setNavigation])
 
-  // TODO: Add loading indicator
-  if (!notice) {
-    return <SplashScreen />
+  if (isLoading) {
+    return <LoadingIndicator className="min-h-screen" />
+  }
+
+  if (isError || !notice) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-gray-500">공지사항을 불러올 수 없습니다.</p>
+      </div>
+    )
   }
 
   return (
-    <div className="h-screen max-h-full bg-white p-5">
+    <div className="min-h-screen bg-white p-5">
       <div className="flex flex-col gap-6">
         <NoticeHeader notice={notice} />
         <div className="w-full h-[1px] bg-[#ECECEC] rounded-[1px]"></div>
@@ -51,11 +58,24 @@ const NoticeHeader: React.FC<{ notice: Notice }> = ({ notice }) => {
 }
 
 const NoticeContent: React.FC<{ notice: Notice }> = ({ notice }) => {
+  if (!notice.contents) {
+    return null
+  }
+
   return (
     <div className="self-stretch flex flex-col gap-3">
       <div className="text-16px font-normal text-gray-900 leading-[26.88px] whitespace-pre-wrap">
         {notice.contents}
       </div>
+      {notice.files?.length > 0 && notice.files[0].fileurl && (
+        <div className="mt-4">
+          <img 
+            src={notice.files[0].fileurl} 
+            alt="공지사항 이미지" 
+            className="w-full rounded-lg"
+          />
+        </div>
+      )}
     </div>
   )
 }

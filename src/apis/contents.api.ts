@@ -45,7 +45,7 @@ export const fetchNotices = async (page: number = 1): Promise<Notice[]> => {
 }
 
 export const fetchNotice = async (code: string): Promise<NoticeDetail> => {
-  const { data } = await axiosClient.get<HTTPResponse<NoticeDetail>>(
+  const { data } = await axiosClient.get<HTTPResponse<NoticeDetail[]>>(
     "/contents/detail",
     {
       params: {
@@ -54,5 +54,8 @@ export const fetchNotice = async (code: string): Promise<NoticeDetail> => {
       },
     },
   )
-  return ContentMapper.toNoticeDetail(data.body)
+  if (!data.body || !data.body.length) {
+    throw new Error("Notice not found")
+  }
+  return ContentMapper.toNoticeDetail(data.body[0])
 }

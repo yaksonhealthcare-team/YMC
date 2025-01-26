@@ -39,5 +39,8 @@ export interface NoticeDetail {
   title: string
   regDate: string
   contents: string
-  files: string | null
+  files: Array<{
+    fileCode: string
+    fileurl: string
+  }>
 }
