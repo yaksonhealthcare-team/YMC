@@ -21,7 +21,7 @@ export const fetchBranches = async (
       search: filters.search,
     },
   })
-  return BranchMapper.toEntities(data.body)
+  return BranchMapper.toEntities(data)
 }
 
 export const fetchBranch = async (
