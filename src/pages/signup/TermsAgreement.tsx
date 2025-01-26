@@ -17,7 +17,7 @@ export const TermsAgreement = () => {
   const location = useLocation()
   const socialInfo = location.state?.social
   const { setHeader, setNavigation } = useLayout()
-  const { showAlert } = useOverlay()
+  const { openAlert } = useOverlay()
   const [agreements, setAgreements] = useState({
     all: false,
     terms: false,
@@ -70,7 +70,10 @@ export const TermsAgreement = () => {
       const { type, data, error } = event.data
 
       if (type === "PASS_VERIFICATION_FAILED") {
-        showAlert(error)
+        openAlert({
+          title: "오류",
+          description: error,
+        })
         return
       }
 
@@ -102,17 +105,19 @@ export const TermsAgreement = () => {
           navigate("/signup/profile")
         } catch (error) {
           const axiosError = error as AxiosError<{ resultMessage: string }>
-          showAlert(
-            axiosError.response?.data?.resultMessage ||
+          openAlert({
+            title: "오류",
+            description:
+              axiosError.response?.data?.resultMessage ||
               "본인인증에 실패했습니다.",
-          )
+          })
         }
       }
     }
 
     window.addEventListener("message", handlePassVerification)
     return () => window.removeEventListener("message", handlePassVerification)
-  }, [agreements.marketing, navigate, setSignupData, showAlert, socialInfo])
+  }, [agreements.marketing, navigate, setSignupData, openAlert, socialInfo])
 
   const handleAllCheck = () => {
     const newValue = !agreements.all
@@ -142,7 +147,10 @@ export const TermsAgreement = () => {
     )
 
     if (!popup) {
-      showAlert("팝업이 차단되었습니다.")
+      openAlert({
+        title: "알림",
+        description: "팝업이 차단되었습니다.",
+      })
       return
     }
 
