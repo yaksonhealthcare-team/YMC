@@ -21,9 +21,10 @@ import {
 import { updateUserProfile } from "../../apis/auth.api.ts"
 import PostcodeModal from "@components/modal/PostcodeModal.tsx"
 import { UpdateUserProfileRequest } from "../../types/User.ts"
+import { fetchUser } from "../../apis/auth.api.ts"
 
 const EditProfile = () => {
-  const { user } = useAuth()
+  const { user, login } = useAuth()
   const { setNavigation, setHeader } = useLayout()
   const { openBottomSheet, closeOverlay } = useOverlay()
   const navigate = useNavigate()
@@ -86,6 +87,14 @@ const EditProfile = () => {
       }
 
       await updateUserProfile(updatedData)
+      
+      // 최신 사용자 정보 가져오기
+      const token = localStorage.getItem("accessToken")
+      if (token) {
+        const updatedUser = await fetchUser(token)
+        login({ user: updatedUser, token: token.replace("Bearer ", "") })
+      }
+      
       alert("프로필이 성공적으로 수정되었습니다.")
     } catch (error) {
       console.error("프로필 수정 실패:", error)
