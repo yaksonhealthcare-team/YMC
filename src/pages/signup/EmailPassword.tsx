@@ -64,6 +64,25 @@ export const EmailPassword = () => {
     return ""
   }
 
+  const validateEmailField = (email: string) => {
+    if (!email) {
+      setErrors(prev => ({ ...prev, email: "이메일을 입력해주세요" }))
+      return false
+    }
+    if (!validateEmail(email)) {
+      setErrors(prev => ({ ...prev, email: "올바른 이메일 형식이 아닙니다" }))
+      return false
+    }
+    setErrors(prev => ({ ...prev, email: "" }))
+    return true
+  }
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newEmail = e.target.value
+    setForm(prev => ({ ...prev, email: newEmail }))
+    validateEmailField(newEmail)
+  }
+
   const validateForm = () => {
     const newErrors = {
       email: "",
@@ -72,23 +91,25 @@ export const EmailPassword = () => {
     }
 
     // 이메일 검증
-    if (!form.email) {
+    if (!validateEmailField(form.email)) {
       newErrors.email = "이메일을 입력해주세요"
-    } else if (!validateEmail(form.email)) {
-      newErrors.email = "올바른 이메일 형식이 아닙니다"
     }
 
     // 소셜 로그인이 아닌 경우에만 비밀번호 검증
     if (!isSocialSignup) {
       // 비밀번호 검증
-      const passwordError = validatePassword(form.password)
-      if (passwordError) {
-        newErrors.password = passwordError
+      if (!form.password) {
+        newErrors.password = "비밀번호를 입력해주세요"
+      } else {
+        const passwordError = validatePassword(form.password)
+        if (passwordError) {
+          newErrors.password = passwordError
+        }
       }
 
       // 비밀번호 확인 검증
       if (!form.passwordConfirm) {
-        newErrors.passwordConfirm = "비밀번호 확인을 입력해주세요"
+        newErrors.passwordConfirm = "비밀번호 재확인을 입력해주세요"
       } else if (form.password !== form.passwordConfirm) {
         newErrors.passwordConfirm = "비밀번호가 일치하지 않습니다"
       }
@@ -121,10 +142,7 @@ export const EmailPassword = () => {
         <CustomTextField
           label="이메일"
           value={form.email}
-          onChange={(e) => {
-            setForm({ ...form, email: e.target.value })
-            setErrors({ ...errors, email: "" })
-          }}
+          onChange={handleEmailChange}
           placeholder="이메일 계정 입력"
           state={errors.email ? "error" : "default"}
           helperText={errors.email}

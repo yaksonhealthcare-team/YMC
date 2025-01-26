@@ -132,7 +132,13 @@ const CustomTextField = forwardRef<HTMLInputElement, CustomTextFieldProps>(
         {button && <Button disabled={disabled} className="ml-1" />}
       </div>
       {helperText && (
-        <p className="font-m text-12px text-gray-400 mt-1 ml-2">{helperText}</p>
+        <p className={`font-m text-12px mt-1 ml-2 ${
+          state === "error" ? "text-error" : 
+          state === "success" ? "text-success" : 
+          "text-gray-400"
+        }`}>
+          {helperText}
+        </p>
       )}
     </div>
   ),
