@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { useMembershipCategories, useMembershipList } from "queries/useMembershipQueries"
 import { MembershipCategory } from "types/Membership"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { MembershipCard } from "../../../../pages/membership/_fragments/MembershipCard"
 import LoadingIndicator from "@components/LoadingIndicator"
 
@@ -26,10 +26,10 @@ const CareProgramTabItem = ({
       <img
         src={program.sc_pic}
         alt={"배경"}
-        className={"w-[68px] h-[68px] rounded-full object-cover"}
+        className={"w-[68px] h-[68px] rounded-full object-cover opacity-45 bg-[#212121]"}
       />
     ) : (
-      <div className={"w-[68px] h-[68px] rounded-full bg-gray-600"} />
+      <div className={"w-[68px] h-[68px] rounded-full bg-[rgba(33,33,33,0.45)]"} />
     )
   }
 
@@ -66,12 +66,19 @@ const ProgramList = ({ brandCode }: ProgramListProps) => {
     return null
   }
 
+  // 컴포넌트 마운트 시 첫 번째 카테고리 선택
+  useEffect(() => {
+    if (categoriesData?.body && categoriesData.body.length > 0 && !selectedProgram) {
+      setSelectedProgram(categoriesData.body[0])
+    }
+  }, [categoriesData?.body])
+
   const handleProgramSelect = (program: MembershipCategory) => {
     setSelectedProgram(program)
   }
 
   return (
-    <div className="flex flex-col gap-6 pt-6 ">
+    <div className="flex flex-col gap-6 pt-6">
       <ul className="flex gap-3 overflow-x-auto scrollbar-hide py-2 px-5 pr-10">
         {categoriesData.body.map((program) => (
           <CareProgramTabItem
