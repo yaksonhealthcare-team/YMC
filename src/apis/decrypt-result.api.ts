@@ -17,7 +17,7 @@ export interface DecryptResponse {
 }
 
 export const fetchDecryptResult = async (request: DecryptRequest) => {
-  const { data } = await axiosClient.post<HTTPResponse<DecryptResponse[]>>(
+  const { data } = await axiosClient.post<HTTPResponse<DecryptResponse>>(
     "/auth/decrypt/result.php",
     { ...request },
   )

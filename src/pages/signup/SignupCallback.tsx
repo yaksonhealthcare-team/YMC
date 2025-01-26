@@ -1,4 +1,3 @@
-import { DecryptRequest, fetchDecryptResult } from "apis/decrypt-result.api"
 import { useEffect } from "react"
 
 const SignupCallback = () => {
@@ -11,19 +10,34 @@ const SignupCallback = () => {
     const integrityValue = queryParams.get("integrity_value")
 
     if (!tokenVersionId || !encData || !integrityValue) {
+      if (window.opener) {
+        window.opener.postMessage(
+          {
+            type: "PASS_VERIFICATION_FAILED",
+            error: "본인인증에 실패했습니다.",
+          },
+          "*",
+        )
+      }
+      window.close()
       return
     }
 
-    const request: DecryptRequest = {
-      token_version_id: tokenVersionId,
-      enc_data: encData,
-      integrity_value: integrityValue,
+    // 본인인증 결과 데이터를 부모 창으로 전달
+    if (window.opener) {
+      window.opener.postMessage(
+        {
+          type: "PASS_VERIFICATION_DATA",
+          data: {
+            token_version_id: tokenVersionId,
+            enc_data: encData,
+            integrity_value: integrityValue,
+          },
+        },
+        "*",
+      )
     }
-
-    fetchDecryptResult(request).then((res) => {
-      console.log(res)
-      // TODO: 본인 인증 실패, 성공 처리 필요
-    })
+    window.close()
   }, [])
 
   return (

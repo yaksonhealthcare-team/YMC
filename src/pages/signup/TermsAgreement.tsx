@@ -6,6 +6,9 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { fetchEncryptDataForNice } from "../../apis/pass.api.ts"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useSignup } from "../../contexts/SignupContext.tsx"
+import { useOverlay } from "contexts/ModalContext"
+import { DecryptRequest, fetchDecryptResult } from "apis/decrypt-result.api"
+import { AxiosError } from "axios"
 
 window.name = "Parent_window"
 
@@ -14,6 +17,7 @@ export const TermsAgreement = () => {
   const location = useLocation()
   const socialInfo = location.state?.social
   const { setHeader, setNavigation } = useLayout()
+  const { showAlert } = useOverlay()
   const [agreements, setAgreements] = useState({
     all: false,
     terms: false,
@@ -60,6 +64,56 @@ export const TermsAgreement = () => {
     fetchNiceData()
   }, [])
 
+  // 본인인증 결과 메시지 처리
+  useEffect(() => {
+    const handlePassVerification = async (event: MessageEvent) => {
+      const { type, data, error } = event.data
+
+      if (type === "PASS_VERIFICATION_FAILED") {
+        showAlert(error)
+        return
+      }
+
+      if (type === "PASS_VERIFICATION_DATA") {
+        try {
+          const request: DecryptRequest = {
+            token_version_id: data.token_version_id,
+            enc_data: data.enc_data,
+            integrity_value: data.integrity_value,
+          }
+
+          const response = await fetchDecryptResult(request)
+          const userData = response.body
+
+          setSignupData((prev) => ({
+            ...prev,
+            name: userData.name,
+            mobileNumber: userData.hp,
+            birthDate: userData.birthdate,
+            gender: userData.sex === "M" ? "male" : "female",
+            marketingYn: agreements.marketing,
+            ...(socialInfo && {
+              social: {
+                provider: socialInfo.provider,
+                accessToken: socialInfo.accessToken,
+              },
+            }),
+          }))
+          navigate("/signup/profile")
+        } catch (error) {
+          const axiosError = error as AxiosError<{ resultMessage: string }>
+          showAlert(
+            axiosError.response?.data?.resultMessage ||
+              "본인인증에 실패했습니다.",
+          )
+        }
+      }
+    }
+
+    window.addEventListener("message", handlePassVerification)
+    return () => window.removeEventListener("message", handlePassVerification)
+  }, [agreements.marketing, navigate, setSignupData, showAlert, socialInfo])
+
   const handleAllCheck = () => {
     const newValue = !agreements.all
     setAgreements({
@@ -78,27 +132,6 @@ export const TermsAgreement = () => {
     })
   }
 
-  // const handleNavigateToNext = () => {
-  //   openPassPopup().then(() => {
-  //     setSignupData((prev) => ({
-  //       ...prev,
-  //       marketingYn: agreements.marketing,
-  //       ...(socialInfo && {
-  //         social: {
-  //           provider: socialInfo.provider,
-  //           accessToken: socialInfo.accessToken,
-  //         },
-  //       }),
-  //     }))
-
-  //     navigate("/signup/email", {
-  //       state: {
-  //         social: socialInfo,
-  //       },
-  //     })
-  //   })
-  // }
-
   const handleNavigateToNext = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
@@ -109,7 +142,7 @@ export const TermsAgreement = () => {
     )
 
     if (!popup) {
-      console.error("팝업이 차단되었습니다.")
+      showAlert("팝업이 차단되었습니다.")
       return
     }
 
