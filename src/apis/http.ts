@@ -1,8 +1,9 @@
 import axios from "axios"
 
 export interface HTTPResponse<T> {
-  code: string
-  message: string
+  resultCode: string
+  resultMessage: string
+  resultCount: number
   body: T
 }
 
