@@ -71,8 +71,8 @@ const ProgramList = ({ brandCode }: ProgramListProps) => {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <ul className="flex gap-4 overflow-x-auto scrollbar-hide py-2 px-5">
+    <div className="flex flex-col gap-6 pt-6 ">
+      <ul className="flex gap-3 overflow-x-auto scrollbar-hide py-2 px-5 pr-10">
         {categoriesData.body.map((program) => (
           <CareProgramTabItem
             key={program.sc_code}
