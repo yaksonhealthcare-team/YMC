@@ -8,6 +8,8 @@ import CheckIcon from "@components/icons/CheckIcon.tsx"
 import { useBranches } from "../../queries/useBranchQueries.tsx"
 import useIntersection from "../../hooks/useIntersection.tsx"
 import BranchItem from "./BranchItem.tsx"
+import { useGeolocation } from "../../hooks/useGeolocation.tsx"
+import { DEFAULT_COORDINATE } from "../../types/Coordinate.ts"
 
 interface SearchBranchListProps {
   selectedBranches: Branch[]
@@ -19,13 +21,16 @@ const Step1SearchBranchList = ({
   setSelectedBranches,
 }: SearchBranchListProps) => {
   const [searchText, setSearchText] = useState("")
+  const { location } = useGeolocation()
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useBranches({
       search: searchText || undefined,
+      latitude: location?.latitude || DEFAULT_COORDINATE.latitude,
+      longitude: location?.longitude || DEFAULT_COORDINATE.longitude,
     })
 
-  const branches = data?.pages.flatMap((page) => page) || []
+  const branches = data?.pages.flatMap(({ branches }) => branches) || []
 
   const { observerTarget } = useIntersection({
     onIntersect: () => {

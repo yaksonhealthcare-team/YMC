@@ -1,15 +1,40 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { Notice } from "@components/Notice"
 import { Button } from "@components/Button"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import CrownIcon from "@assets/icons/CrownIcon.svg?react"
 import PersonalCardIcon from "@assets/icons/PersonalCardIcon.svg?react"
 import InformationIcon from "@assets/icons/InformationIcon.svg?react"
 import PointIcon from "@assets/icons/PointIcon.svg?react"
+import BookmarkIcon from "@assets/icons/BookmarkIcon.svg?react"
+import PaymentIcon from "@assets/icons/PaymentIcon.svg?react"
+import ReviewIcon from "@assets/icons/ReviewIcon.svg?react"
+import InquiryIcon from "@assets/icons/InquiryIcon.svg?react"
+import EventIcon from "@assets/icons/EventIcon.svg?react"
+import NoticeIcon from "@assets/icons/NoticeIcon.svg?react"
+import NotificationIcon from "@assets/icons/NotificationIcon.svg?react"
+import CartIcon from "@assets/icons/CartIcon.svg?react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useAuth } from "../../contexts/AuthContext.tsx"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
+import NoticesSummarySlider from "@components/NoticesSummarySlider.tsx"
+import MegaPhoneIcon from "@assets/icons/MegaPhoneIcon.svg?react"
+
+interface CustomWindow extends Window {
+  ReactNativeWebView?: {
+    postMessage: (message: string) => void
+  }
+  webkit?: {
+    messageHandlers: {
+      openExternalLink: {
+        postMessage: (url: string) => void
+      }
+    }
+  }
+  Android?: {
+    openExternalLink: (url: string) => void
+  }
+}
 
 const MyPage = () => {
   const { user } = useAuth()
@@ -58,34 +83,131 @@ const MyPage = () => {
     openBottomSheet(
       <div className={"flex flex-col"}>
         <p className={"font-sb text-18px px-5 pt-4"}>회원등급 안내</p>
-        <p className={"py-6"}>{"회원등급 기획 미정"}</p>
-        <div className={"border-t border-gray-200 pt-3"}>
-          <Button className={"w-full"} onClick={closeOverlay}>
-            {"예약하기"}
-          </Button>
+        <div className={"px-7 py-6"}>
+          <table className={"w-full border-collapse"}>
+            <thead>
+              <tr className={"bg-system-bg"}>
+                <th
+                  className={
+                    "p-3 pl-5 text-16px font-medium text-gray-900 text-left w-[100px]"
+                  }
+                >
+                  등급
+                </th>
+                <th
+                  className={
+                    "p-3 text-16px font-medium text-gray-900 text-left"
+                  }
+                >
+                  최근 1년간 누적 결제 금액
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className={"border-b border-gray-100"}>
+                <td className={"p-3 pl-5 text-16px text-left w-[100px]"}>
+                  A등급
+                </td>
+                <td className={"p-3 text-16px text-left"}>1,000만원 이상</td>
+              </tr>
+              <tr className={"border-b border-gray-100"}>
+                <td className={"p-3 pl-5 text-16px text-left w-[100px]"}>
+                  B등급
+                </td>
+                <td className={"p-3 text-16px text-left"}>330만원 이상</td>
+              </tr>
+              <tr className={"border-b border-gray-100"}>
+                <td className={"p-3 pl-5 text-16px text-left w-[100px]"}>
+                  C등급
+                </td>
+                <td className={"p-3 text-16px text-left"}>150만원 이상</td>
+              </tr>
+              <tr className={"border-b border-gray-100"}>
+                <td className={"p-3 pl-5 text-16px text-left w-[100px]"}>
+                  D등급
+                </td>
+                <td className={"p-3 text-16px text-left"}>30만원 이상</td>
+              </tr>
+              <tr className={"border-b border-gray-100"}>
+                <td className={"p-3 pl-5 text-16px text-left w-[100px]"}>
+                  E등급
+                </td>
+                <td className={"p-3 text-16px text-left"}>기본 등급</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>,
     )
   }
 
   const menuItems = [
-    { id: "favorite", title: "즐겨찾는 지점", path: "/favorite" },
-    { id: "payment", title: "결제 내역", path: "/payment_history" },
-    { id: "review", title: "작성한 만족도", path: "/review" },
-    { id: "inquiry", title: "1:1 문의", path: "/inquiry" },
-    { id: "event", title: "이벤트", path: "/event" },
-    { id: "notice", title: "공지사항", path: "/notice" },
-    { id: "settings", title: "알림설정", path: "/settings/notifications" },
+    {
+      id: "favorite",
+      title: "즐겨찾는 지점",
+      path: "/favorite",
+      icon: BookmarkIcon,
+    },
+    {
+      id: "cart",
+      title: "장바구니",
+      path: "/cart",
+      icon: CartIcon,
+    },
+    {
+      id: "payment",
+      title: "결제 내역",
+      path: "/payment_history",
+      icon: PaymentIcon,
+    },
+    {
+      id: "review",
+      title: "작성한 만족도",
+      path: "/review",
+      icon: ReviewIcon,
+    },
+    {
+      id: "inquiry",
+      title: "1:1 문의",
+      path: "https://o33vp.channel.io",
+      external: true,
+      icon: InquiryIcon,
+    },
+    {
+      id: "event",
+      title: "이벤트",
+      path: "/event",
+      icon: EventIcon,
+    },
+    {
+      id: "notice",
+      title: "공지사항",
+      path: "/notice",
+      icon: NoticeIcon,
+    },
+    {
+      id: "settings",
+      title: "알림설정",
+      path: "/settings/notifications",
+      icon: NotificationIcon,
+    },
   ]
+
+  const customWindow = window as CustomWindow
 
   return (
     <>
       <div className="h-fit bg-[#F8F5F2] pb-8">
         {/* Notice */}
-        <div className="px-5 py-2 m-5 rounded-[20px] bg-white">
-          <Notice
-            title="9월 1일 회원권 변경사항 안내드립니다."
-            onClick={() => navigate("/notice/1")}
+        <div className="flex gap-[8px] items-center px-5 h-[40px] m-5 rounded-[20px] bg-white text-primary">
+          <MegaPhoneIcon className="min-w-5 h-5" />
+          <NoticesSummarySlider
+            className={
+              "w-full h-[21px] overflow-hidden text-ellipsis whitespace-nowrap"
+            }
+            right={
+              <CaretRightIcon className="flex-shrink-0 min-w-[4px] h-4 ml-auto" />
+            }
           />
         </div>
 
@@ -116,7 +238,9 @@ const MyPage = () => {
               </span>
               <div className="flex items-center">
                 <span className="font-sb text-14px text-gray-900">
-                  약손명가 강남구청역점 외 2개
+                  {user?.brands?.length
+                    ? `${user.brands[0].brandName}${user.brands.length > 1 ? ` 외 ${user.brands.length - 1}개` : ""}`
+                    : "이용중인 지점이 없습니다."}
                 </span>
                 <CaretRightIcon className="w-3 h-3 ml-1.5" />
               </div>
@@ -182,19 +306,48 @@ const MyPage = () => {
           </Button>
 
           {/* Menu List */}
-          <div className="bg-white rounded-[20px] border border-gray-100">
-            {menuItems.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => navigate(item.path)}
-                className="flex items-center h-12 px-5 gap-3 cursor-pointer"
-              >
-                <span className="flex-1 font-m text-16px text-gray-900">
-                  {item.title}
-                </span>
-                <CaretRightIcon className="w-3 h-3" />
-              </div>
-            ))}
+          <div className="bg-white rounded-[20px] border border-gray-100 p-5 space-y-4">
+            {menuItems.map((item) => {
+              const Icon = item.icon
+              return (
+                <div
+                  key={item.id}
+                  onClick={() => {
+                    if (item.external) {
+                      if (customWindow.ReactNativeWebView) {
+                        customWindow.ReactNativeWebView.postMessage(
+                          JSON.stringify({
+                            type: "OPEN_EXTERNAL_LINK",
+                            url: item.path,
+                          }),
+                        )
+                      } else if (
+                        customWindow.webkit?.messageHandlers?.openExternalLink
+                      ) {
+                        customWindow.webkit.messageHandlers.openExternalLink.postMessage(
+                          item.path,
+                        )
+                      } else if (customWindow.Android?.openExternalLink) {
+                        customWindow.Android.openExternalLink(item.path)
+                      } else {
+                        window.open(item.path, "_blank")
+                      }
+                    } else {
+                      navigate(item.path)
+                    }
+                  }}
+                  className="flex items-center justify-between h-12"
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon className="w-4 h-4 text-gray-900" />
+                    <span className="font-m text-16px text-gray-900">
+                      {item.title}
+                    </span>
+                  </div>
+                  <CaretRightIcon className="w-3 h-3 text-gray-900" />
+                </div>
+              )
+            })}
           </div>
 
           {/* Footer */}
@@ -215,6 +368,7 @@ const MyPage = () => {
               </span>
             </div>
             <span className="font-r text-12px text-gray-300">
+              {/* TODO: 실제 버전 표시 */}
               v.1.1.4 version
             </span>
           </div>

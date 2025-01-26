@@ -4,6 +4,7 @@ import { PointFilters } from "types/Point.ts"
 import { EventStatus } from "../types/Content.ts"
 import { ReservationStatusCode } from "types/Reservation.ts"
 import { BannerRequestType } from "../types/Banner.ts"
+import { ScheduleFilters } from "../types/Schedule.ts"
 
 export const queryKeys = {
   branches: {
@@ -12,6 +13,20 @@ export const queryKeys = {
       [...queryKeys.branches.all, filters] as const,
     detail: (id: string, coords: Coordinate) =>
       [...queryKeys.branches.all, id, coords] as const,
+    map: (coords: Coordinate, brandCode?: string, category?: string) => [
+      ...queryKeys.branches.all,
+      "maps",
+      coords,
+      brandCode,
+      category,
+    ],
+  },
+  schedules: {
+    all: ["schedules"] as const,
+    date: (filters: ScheduleFilters) =>
+      [...queryKeys.schedules.all, "date", filters] as const,
+    times: (filters: ScheduleFilters) =>
+      [...queryKeys.schedules.all, "times", filters] as const,
   },
   points: {
     all: ["points"] as const,
@@ -48,6 +63,8 @@ export const queryKeys = {
     ],
     myList: (status: string) =>
       [...queryKeys.memberships.all, "myList", status] as const,
+    additionalManagement: (membershipIdx: number | undefined) =>
+      [...queryKeys.memberships.all, "detail", membershipIdx] as const,
   },
   events: {
     all: ["events"] as const,
@@ -78,5 +95,15 @@ export const queryKeys = {
     all: ["banners"] as const,
     bannerType: (bannerRequestType: BannerRequestType) =>
       [...queryKeys.banners.all, { bannerRequestType }] as const,
+  },
+  notifications: {
+    all: ["notifications"] as const,
+    list: (filters: BranchFilters) =>
+      [...queryKeys.notifications.all, filters] as const,
+    detail: (id: string, coords: Coordinate) =>
+      [...queryKeys.notifications.all, id, coords] as const,
+  },
+  carts: {
+    all: ["carts"] as const,
   },
 } as const

@@ -1,14 +1,21 @@
-import { useInfiniteQuery } from "@tanstack/react-query"
-import { queryKeys } from "./query.keys.ts"
-import { fetchReviews } from "../apis/review.api.ts"
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
+import { fetchReviewDetail, fetchReviews } from "../apis/review.api.ts"
 
-export const useReviews = () =>
-  useInfiniteQuery({
-    initialPageParam: 1,
-    queryKey: queryKeys.reviews.list({ page: 1 }),
+export const useReviews = () => {
+  return useInfiniteQuery({
+    queryKey: ["reviews"],
     queryFn: ({ pageParam = 1 }) => fetchReviews(pageParam),
-    getNextPageParam: (lastPage, allPages) => {
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
       if (lastPage.length === 0) return undefined
-      return allPages.length + 1
+      return undefined // 페이지네이션이 필요없으므로 undefined를 반환하여 추가 요청을 방지
     },
   })
+}
+
+export const useReviewDetail = (reviewId: string) => {
+  return useQuery({
+    queryKey: ["review", reviewId],
+    queryFn: () => fetchReviewDetail(reviewId),
+  })
+}

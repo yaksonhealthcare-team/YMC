@@ -1,76 +1,84 @@
 import { Review } from "../../../types/Review.ts"
+import { formatDate } from "../../../utils/date.ts"
+import { getGradeLabel } from "../../../utils/grade.ts"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
-import { format } from "date-fns"
-import { ko } from "date-fns/locale"
-import { ReactNode } from "react"
-import { useNavigate } from "react-router-dom"
 
-const Chip = ({ children }: { children: ReactNode }) => (
-  <div
-    className={
-      "py-1 px-2 bg-tag-redBg text-12px text-primary font-m rounded-full"
-    }
-  >
-    {children}
-  </div>
-)
+interface ReviewListItemProps {
+  review: Review
+}
 
-const ReviewListItem = ({ review }: { review: Review }) => {
-  const navigate = useNavigate()
-
+export const ReviewListItem = ({ review }: ReviewListItemProps) => {
   return (
-    <div
-      className={"flex flex-col"}
-      onClick={() => navigate(`/review/${review.id}`)}
-    >
-      <div className={"flex gap-1.5 items-center text-gray-500 mx-5"}>
-        <CalendarIcon className={"w-3.5 h-3.5"} />
-        <p className={"text-14px"}>
-          {format(review.date, "yyyy년 M월 d일 (EEE)", { locale: ko })}
-        </p>
-      </div>
+    <div className="flex flex-col">
+      <div className="px-5 py-4">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-1.5">
+              <CalendarIcon className="w-3.5 h-3.5 text-primary" />
+              <span className="text-gray-500 text-sm font-medium">
+                {formatDate(review.date)}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-primary text-base font-bold">
+                {review.visit}회차
+              </span>
+              <span className="text-gray-900 text-base font-bold">
+                {review.programName} {review.totalCount}회
+              </span>
+            </div>
+          </div>
 
-      <div className={"font-b mt-2 flex gap-2 mx-5"}>
-        <p className={"text-primary"}>{`${review.visit}회차`}</p>
-        <p>{review.programName}</p>
-      </div>
+          <div className="flex items-center gap-1.5">
+            <StoreIcon className="w-3.5 h-3.5 text-gray-500" />
+            <span className="text-gray-500 text-sm font-medium">
+              {review.brandName}
+            </span>
+          </div>
 
-      <div className={"mt-3 text-gray-500 flex gap-1.5 items-center mx-5"}>
-        <StoreIcon className={"w-3.5 h-3.5"} />
-        <p className={"text-14px"}>{review.brandName}</p>
-      </div>
+          <div className="w-full h-px bg-gray-100" />
 
-      <div className={"h-[1px] bg-gray-100 mt-4 mx-5"} />
+          <div className="flex flex-col gap-4">
+            <div className="flex gap-1.5">
+              {Object.entries(review.grade).map(([key, value]) => (
+                <div
+                  key={key}
+                  className="bg-tag-redBg rounded-full py-[3px] px-2"
+                >
+                  <span className="text-primary text-xs font-medium">
+                    {getGradeLabel(key)} {value}
+                  </span>
+                </div>
+              ))}
+            </div>
 
-      <div className={"flex gap-1.5 mt-4 mx-5"}>
-        <Chip>{`만족 ${review.grade.high}`}</Chip>
-        <Chip>{`보통 ${review.grade.medium}`}</Chip>
-        <Chip>{`불만족 ${review.grade.low}`}</Chip>
-      </div>
+            {review.content && (
+              <p className="text-gray-900 text-sm leading-[23.52px]">
+                {review.content}
+              </p>
+            )}
 
-      {review.content.length > 0 && (
-        <div className={"mt-4 mx-5"}>
-          <p className={"line-clamp-2 text-14px"}>{review.content}</p>
+            {review.imageUrls && review.imageUrls.length > 0 && (
+              <div className="flex gap-2 overflow-x-auto no-scrollbar touch-pan-x">
+                {review.imageUrls.map((image, index) => (
+                  <div
+                    key={index}
+                    className="shrink-0 w-20 h-20 rounded-lg border border-gray-100"
+                  >
+                    <img
+                      src={image}
+                      alt={`리뷰 이미지 ${index + 1}`}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      )}
-
-      {review.imageUrls.length > 0 && (
-        <div
-          className={
-            "w-full overflow-x-scroll mt-4 px-5 flex gap-2 scrollbar-hide"
-          }
-        >
-          {review.imageUrls.map((url, index) => (
-            <img
-              key={index}
-              src={url}
-              alt={"Image"}
-              className={"w-20 h-20 rounded-xl"}
-            />
-          ))}
-        </div>
-      )}
+      </div>
+      <div className="w-full h-2 bg-gray-50" />
     </div>
   )
 }

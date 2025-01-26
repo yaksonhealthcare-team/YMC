@@ -4,6 +4,7 @@ export interface User {
   username: string
   email: string
   level?: string
+  levelName?: string
   phone: string
   postalCode: string
   address: {
@@ -19,12 +20,14 @@ export interface User {
     brandName: string
     address: string
   }[]
+  gender: "M" | "F"
 }
 
 export interface UserResponse {
   id: string
   name: string
   level?: string
+  level_name?: string
   email: string
   hp: string
   post: string
@@ -34,6 +37,7 @@ export interface UserResponse {
   point: number
   profileURL?: string
   thirdPartyType: string
+  sex: "M" | "F"
   brands: {
     b_idx: string
     b_name: string
@@ -86,4 +90,13 @@ export interface UserUpdateRequest {
   addr2: string
   marketing_yn: string
   // TODO: API Request에 gender 필드 추가되면 여기도 추가할 것
+}
+
+export interface UpdateUserProfileRequest {
+  postalCode: string
+  address1: string
+  address2: string
+  sex: "M" | "F"
+  profileUrl: string
+  marketingAgreed: boolean
 }

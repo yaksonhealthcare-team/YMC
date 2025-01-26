@@ -1,79 +1,132 @@
-import Home from "../pages/home/Home.tsx"
-import Login from "../pages/login/Login.tsx"
-
-import Membership from "../pages/membership/Membership.tsx"
-import Store from "../pages/store/Store.tsx"
-import MyPage from "../pages/myPage/MyPage.tsx"
-import Logout from "../pages/logout/Logout.tsx"
 import { ReactNode } from "react"
-import Dev from "../pages/DevPage.tsx"
-import Branch from "../pages/branch/Branch.tsx"
-import { Notification } from "../pages/home/Notification.tsx"
-import BranchDetail from "../pages/branch/[id]/BranchDetail.tsx"
-import FavoritePage from "../pages/favorite/FavoritePage.tsx"
-import PaymentHistoryPage from "../pages/payment/PaymentHistoryPage.tsx"
-import ReviewPage from "../pages/review/ReviewPage.tsx"
-import InquiryPage from "../pages/inquiry/InquiryPage.tsx"
-import EventPage from "../pages/event/EventPage.tsx"
-import NoticePage from "../pages/notice/NoticePage.tsx"
-import SettingsPage from "../pages/settings/SettingsPage.tsx"
-import PointPage from "../pages/point/PointPage.tsx"
-import EventDetailPage from "../pages/event/EventDetailPage.tsx"
-import NoticeDetailPage from "../pages/notice/NoticeDetail.tsx"
-import LocationSettings from "../pages/branch/_fragments/LocationSettings.tsx"
-import MembershipDetailPage from "../pages/membership/MembershipDetailPage.tsx"
-import EmailLogin from "../pages/login/EmailLogin.tsx"
 import { Navigate } from "react-router-dom"
-import TermsAgreement from "../pages/signup/TermsAgreement.tsx"
-import EmailPassword from "../pages/signup/EmailPassword.tsx"
-import ProfileSetup from "../pages/signup/ProfileSetup.tsx"
-import SignupComplete from "../pages/signup/SignupComplete.tsx"
-import ReservationDetailPage from "pages/reservation/ReservationDetailPage.tsx"
-import ReservationCancelPage from "pages/reservation/ReservationCancelPage.tsx"
-import MembershipUsageHistory from "pages/membership/MembershipUsageHistory.tsx"
-import ReservationFormPage from "pages/reservation/ReservationFormPage.tsx"
-import BranchSearch from "../pages/branch/search/BranchSearch.tsx"
-import ResetPasswordComplete from "@components/resetPassword/ResetPasswordComplete.tsx"
-import ReviewFormPage from "pages/review/ReviewFormPage.tsx"
-import ReviewDetailPage from "pages/review/ReviewDetailPage.tsx"
-import ActiveBranch from "../pages/myPage/activeBranch/ActiveBranch.tsx"
-import EditProfile from "../pages/editProfile/EditProfile.tsx"
-import Questionnaire from "pages/questionnaire/Questionnaire.tsx"
-import QuestionnaireComplete from "pages/questionnaire/QusetionnaireComplete.tsx"
-import GeneralQuestionnaireHistory from "../pages/myPage/questionnaire/GeneralQuestionnaireHistory.tsx"
-import ReservationQuestionnaireHistory from "../pages/myPage/questionnaire/ReservationQuestionnaireHistory.tsx"
-import FindAccount from "../pages/findAccount/FindAccount.tsx"
-import FindEmail from "../pages/findAccount/FindEmail.tsx"
-import ProfileResetPassword from "../pages/editProfile/ProfileResetPassword.tsx"
-import FindAccountResetPassword from "../pages/findAccount/FindAccountResetPassword.tsx"
-import CartPage from "../pages/cart/CartPage.tsx"
-import TermsPage from "../pages/terms/TermsPage.tsx"
-import ServiceTermsPage from "../pages/terms/ServiceTermsPage.tsx"
-import PrivacyTermsPage from "../pages/terms/PrivacyTermsPage.tsx"
-import LocationTermsPage from "../pages/terms/LocationTermsPage.tsx"
-import MarketingTermsPage from "../pages/terms/MarketingTermsPage.tsx"
-import PaymentPage from "../pages/payment/PaymentPage.tsx"
-import AddUsingBranch from "../pages/addUsingBranch/AddUsingBranch.tsx"
-import PaymentHistoryDetailPage from "../pages/payment/PaymentHistoryDetailPage.tsx"
-import PaymentCancelPage from "../pages/payment/PaymentCancelPage.tsx"
-import PaymentCancelCompletePage from "../pages/payment/PaymentCancelCompletePage.tsx"
-import ReservationHistory from "pages/memberHistory/ReservationHistory.tsx"
-import MembershipHistory from "pages/memberHistory/MembershipHistory.tsx"
-import MembershipSelectBranchPage from "../pages/membership/MembershipBranchSelectPage.tsx"
-import ProfileChangePhoneNumber from "../pages/editProfile/ProfileChangePhoneNumber.tsx"
-import PaymentCompletePage from "../pages/payment/PaymentCompletePage.tsx"
-import { BrandDetailPage } from "../pages/brand/BrandDetail.tsx"
-import OAuthCallback from "../pages/oauth/OAuthCallback"
-import SignupCallback from "../pages/signup/SignupCallback.tsx"
+import { lazy } from "react"
+import WithdrawalPage from "../pages/profile/WithdrawalPage"
 
-interface RouteConfig {
+export interface RouteConfig {
   path: string
   element: ReactNode
   auth?: boolean
   children?: RouteConfig[]
 }
 
-const routeConfig: RouteConfig[] = [
+const Home = lazy(() => import("../pages/home/Home"))
+const Login = lazy(() => import("../pages/login/Login"))
+const Membership = lazy(() => import("../pages/membership/Membership"))
+const Store = lazy(() => import("../pages/store/Store"))
+const MyPage = lazy(() => import("../pages/myPage/MyPage"))
+const Logout = lazy(() => import("../pages/logout/Logout"))
+const Dev = lazy(() => import("../pages/DevPage"))
+const Notification = lazy(() => import("../pages/home/Notification"))
+const MembershipDetailPage = lazy(
+  () => import("../pages/membership/MembershipDetailPage"),
+)
+const EmailLogin = lazy(() => import("../pages/login/EmailLogin"))
+const TermsAgreement = lazy(() => import("../pages/signup/TermsAgreement"))
+const EmailPassword = lazy(() => import("../pages/signup/EmailPassword"))
+const ProfileSetup = lazy(() => import("../pages/signup/ProfileSetup"))
+const SignupComplete = lazy(() => import("../pages/signup/SignupComplete"))
+const PointPage = lazy(() => import("../pages/point/PointPage"))
+const Branch = lazy(() => import("../pages/branch/Branch"))
+const BranchDetail = lazy(() => import("../pages/branch/[id]/BranchDetail"))
+const FavoritePage = lazy(() => import("../pages/favorite/FavoritePage"))
+const PaymentHistoryPage = lazy(
+  () => import("../pages/payment/PaymentHistoryPage"),
+)
+const ReviewPage = lazy(() => import("../pages/review/ReviewPage"))
+const InquiryPage = lazy(() => import("../pages/inquiry/InquiryPage"))
+const EventPage = lazy(() => import("../pages/event/EventPage"))
+const NoticePage = lazy(() => import("../pages/notice/NoticePage"))
+const SettingsPage = lazy(() => import("../pages/settings/SettingsPage"))
+const EventDetailPage = lazy(() => import("../pages/event/EventDetailPage"))
+const NoticeDetailPage = lazy(() => import("../pages/notice/NoticeDetail"))
+const LocationSettings = lazy(
+  () => import("../pages/branch/_fragments/LocationSettings"),
+)
+const ReservationDetailPage = lazy(
+  () => import("../pages/reservation/ReservationDetailPage"),
+)
+const ReservationCancelPage = lazy(
+  () => import("../pages/reservation/ReservationCancelPage"),
+)
+const MembershipUsageHistory = lazy(
+  () => import("../pages/membership/MembershipUsageHistory"),
+)
+const ReservationFormPage = lazy(
+  () => import("../pages/reservation/ReservationFormPage"),
+)
+const BranchSearch = lazy(() => import("../pages/branch/search/BranchSearch"))
+const ResetPasswordComplete = lazy(
+  () => import("@components/resetPassword/ResetPasswordComplete"),
+)
+const ReviewFormPage = lazy(() => import("../pages/review/ReviewFormPage"))
+const ReviewDetailPage = lazy(() => import("../pages/review/ReviewDetailPage"))
+const ActiveBranch = lazy(
+  () => import("../pages/myPage/activeBranch/ActiveBranch"),
+)
+const EditProfile = lazy(() => import("../pages/editProfile/EditProfile"))
+const Questionnaire = lazy(() => import("../pages/questionnaire/Questionnaire"))
+const QuestionnaireComplete = lazy(
+  () => import("../pages/questionnaire/QusetionnaireComplete"),
+)
+const GeneralQuestionnaireHistory = lazy(
+  () => import("../pages/myPage/questionnaire/GeneralQuestionnaireHistory"),
+)
+const ReservationQuestionnaireHistory = lazy(
+  () => import("../pages/myPage/questionnaire/ReservationQuestionnaireHistory"),
+)
+const FindAccount = lazy(() => import("../pages/findAccount/FindAccount"))
+const FindEmail = lazy(() => import("../pages/findAccount/FindEmail"))
+const ProfileResetPassword = lazy(
+  () => import("../pages/editProfile/ProfileResetPassword"),
+)
+const FindAccountResetPassword = lazy(
+  () => import("../pages/findAccount/FindAccountResetPassword"),
+)
+const CartPage = lazy(() => import("../pages/cart/CartPage"))
+const TermsPage = lazy(() => import("../pages/terms/TermsPage"))
+const ServiceTermsPage = lazy(() => import("../pages/terms/ServiceTermsPage"))
+const PrivacyTermsPage = lazy(() => import("../pages/terms/PrivacyTermsPage"))
+const LocationTermsPage = lazy(() => import("../pages/terms/LocationTermsPage"))
+const MarketingTermsPage = lazy(
+  () => import("../pages/terms/MarketingTermsPage"),
+)
+const PaymentPage = lazy(() => import("../pages/payment/PaymentPage"))
+const AddUsingBranch = lazy(
+  () => import("../pages/addUsingBranch/AddUsingBranch"),
+)
+const PaymentHistoryDetailPage = lazy(
+  () => import("../pages/payment/PaymentHistoryDetailPage"),
+)
+const PaymentCancelPage = lazy(
+  () => import("../pages/payment/PaymentCancelPage"),
+)
+const PaymentCancelCompletePage = lazy(
+  () => import("../pages/payment/PaymentCancelCompletePage"),
+)
+const ReservationHistory = lazy(
+  () => import("../pages/memberHistory/ReservationHistory"),
+)
+const MembershipHistory = lazy(
+  () => import("../pages/memberHistory/MembershipHistory"),
+)
+const MembershipSelectBranchPage = lazy(
+  () => import("../pages/membership/MembershipBranchSelectPage"),
+)
+const ProfileChangePhoneNumber = lazy(
+  () => import("../pages/editProfile/ProfileChangePhoneNumber"),
+)
+const PaymentCompletePage = lazy(
+  () => import("../pages/payment/PaymentCompletePage"),
+)
+const BrandDetailPage = lazy(() => import("../pages/brand/BrandDetail"))
+const OAuthCallback = lazy(() => import("../pages/oauth/OAuthCallback"))
+const LocationPickerMap = lazy(
+  () => import("../pages/branch/_fragments/LocationPickerMap"),
+)
+const SignupCallback = lazy(() => import("../pages/signup/SignupCallback"))
+
+export const routeConfig: RouteConfig[] = [
   {
     path: "/dev",
     element: <Dev />,
@@ -95,7 +148,6 @@ const routeConfig: RouteConfig[] = [
     path: "/brand/:brandCode",
     element: <BrandDetailPage />,
   },
-
   //로그인, 로그아웃
   {
     path: "/login",
@@ -109,7 +161,6 @@ const routeConfig: RouteConfig[] = [
     path: "/logout",
     element: <Logout />,
   },
-
   // 회원가입
   {
     path: "/signup",
@@ -139,7 +190,6 @@ const routeConfig: RouteConfig[] = [
     path: "/signup/branch",
     element: <AddUsingBranch />,
   },
-
   // 비밀번호 찾기, 이메일 찾기
   {
     path: "/find-account",
@@ -171,9 +221,12 @@ const routeConfig: RouteConfig[] = [
     element: <QuestionnaireComplete />,
     auth: true,
   },
-
   //구매, 스토어, 예약
-  { path: "/membership", element: <Membership />, auth: true },
+  {
+    path: "/membership",
+    element: <Membership />,
+    auth: true,
+  },
   {
     path: "/membership/select-branch",
     element: <MembershipSelectBranchPage />,
@@ -189,7 +242,11 @@ const routeConfig: RouteConfig[] = [
     element: <MembershipUsageHistory />,
     auth: true,
   },
-  { path: "/store", element: <Store />, auth: false },
+  {
+    path: "/store",
+    element: <Store />,
+    auth: false,
+  },
   {
     path: "/member-history/reservation",
     element: <ReservationHistory />,
@@ -215,7 +272,6 @@ const routeConfig: RouteConfig[] = [
     element: <ReservationFormPage />,
     auth: true,
   },
-
   //마이페이지
   {
     path: "/mypage",
@@ -262,13 +318,11 @@ const routeConfig: RouteConfig[] = [
     element: <FavoritePage />,
     auth: true,
   },
-
   {
     path: "/cart",
     element: <CartPage />,
     auth: true,
   },
-
   //결제
   {
     path: "/payment",
@@ -277,17 +331,6 @@ const routeConfig: RouteConfig[] = [
   {
     path: "/payment/complete",
     element: <PaymentCompletePage />,
-  },
-
-  {
-    path: "/payment",
-    element: <PaymentHistoryPage />,
-    auth: true,
-  },
-  {
-    path: "/payment/cancel/complete",
-    element: <PaymentCancelCompletePage />,
-    auth: true,
   },
   {
     path: "/payment/:id/cancel",
@@ -300,6 +343,12 @@ const routeConfig: RouteConfig[] = [
     auth: true,
   },
   {
+    path: "/payment/cancel/complete",
+    element: <PaymentCancelCompletePage />,
+    auth: true,
+  },
+  //리뷰
+  {
     path: "/review",
     element: <ReviewPage />,
     auth: true,
@@ -310,10 +359,11 @@ const routeConfig: RouteConfig[] = [
     auth: true,
   },
   {
-    path: "/review/:id",
+    path: "/review/:reviewId",
     element: <ReviewDetailPage />,
     auth: true,
   },
+  //이벤트, 공지사항
   {
     path: "/event",
     element: <EventPage />,
@@ -330,11 +380,13 @@ const routeConfig: RouteConfig[] = [
     path: "/notice/:id",
     element: <NoticeDetailPage />,
   },
+  //설정
   {
     path: "/settings/notifications",
     element: <SettingsPage />,
     auth: true,
   },
+  //약관
   {
     path: "/terms",
     element: <TermsPage />,
@@ -355,6 +407,7 @@ const routeConfig: RouteConfig[] = [
     path: "/terms/marketing",
     element: <MarketingTermsPage />,
   },
+  //프로필
   {
     path: "/profile",
     element: <EditProfile />,
@@ -371,6 +424,10 @@ const routeConfig: RouteConfig[] = [
     path: "/profile/change-phone",
     element: <ProfileChangePhoneNumber />,
   },
+  {
+    path: "/profile/withdrawal",
+    element: <WithdrawalPage />,
+  },
   //지점 찾기, 지점 상세보기
   {
     path: "/branch",
@@ -381,6 +438,10 @@ const routeConfig: RouteConfig[] = [
     element: <LocationSettings />,
   },
   {
+    path: "/branch/location/picker",
+    element: <LocationPickerMap />,
+  },
+  {
     path: "/branch/search",
     element: <BranchSearch />,
   },
@@ -388,7 +449,6 @@ const routeConfig: RouteConfig[] = [
     path: "/branch/:id",
     element: <BranchDetail />,
   },
-
   // OAuth 콜백
   {
     path: "/oauth/callback/:provider",

@@ -1,6 +1,6 @@
 import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
-import { User, UserResponse, UserUpdateRequest } from "../types/User.ts"
+import { User, UserResponse, UpdateUserProfileRequest } from "../types/User.ts"
 import { UserMapper } from "../mappers/UserMapper.ts"
 
 export const loginWithEmail = async ({
@@ -48,22 +48,25 @@ export const resetPassword = async (
   })
 }
 
-export const updateUserProfile = async (request: UserUpdateRequest) => {
-  await axiosClient.patch("/auth/me", {
-    ...request,
-  })
+export const updateUserProfile = async (data: UpdateUserProfileRequest) => {
+  const requestData = UserMapper.toUpdateProfileRequest(data)
+  const response = await axiosClient.patch("/auth/me", requestData)
+  return response.data
 }
 
 export const loginWithSocial = async ({
   provider,
   accessToken,
+  socialId,
 }: {
   provider: "K" | "N" | "G" | "A"
   accessToken: string
+  socialId: string
 }) => {
   const { data } = await axiosClient.post("/auth/signin/social", {
     thirdPartyType: provider,
     SocialAccessToken: accessToken,
+    socialId: socialId,
     device_token: "TODO: FCM 토큰 추가",
     device_type: "TODO: 디바이스 타입 추가",
   })
@@ -94,35 +97,23 @@ export const loginWithNaver = async ({
 
 export const signupWithSocial = async ({
   provider,
-  accessToken,
   userInfo,
 }: {
   provider: string
-  accessToken: string
-  userInfo: {
-    name: string
-    email: string
-    mobileno: string
-    birthdate: string
-    gender: "M" | "F"
-    post: string
-    addr1: string
-    addr2: string
-    marketing_yn: "Y" | "N"
-    brand_code: string[]
-    nationalinfo: string
-    di: string
-    token_version_id: string
-    enc_data: string
-    integrity_value: string
-  }
+  userInfo: Record<string, unknown>
 }) => {
   const response = await axiosClient.post("/auth/signup/social", {
     thirdPartyType: provider,
-    SocialAccessToken: accessToken,
     ...userInfo,
   })
-  return response.data
+
+  // BOM 제거
+  const cleanedData = response.data.replace(/^\uFEFF/, "")
+
+  // JSON 파싱
+  const parsedData = JSON.parse(cleanedData)
+
+  return parsedData
 }
 
 export const signup = async (userData: {
@@ -138,6 +129,34 @@ export const signup = async (userData: {
   marketing_yn: "Y" | "N"
   brand_code?: string[]
 }) => {
-  const { data } = await axiosClient.post("/auth/signup/email", userData)
+  const { data } = await axiosClient.post("/auth/signup/email", {
+    ...userData,
+    di: "1MC0GCCqGSIb3DQIJAyEA49h5LJv8y1FbAELUTG6NXvNbtYoxQPonjGbQNPzMJFM=",
+  })
   return data
+}
+
+export const signinWithSocial = async ({
+  SocialAccessToken,
+  socialId,
+  provider,
+}: {
+  SocialAccessToken: string
+  socialId: string
+  provider: "K" | "N" | "G" | "A"
+}): Promise<string> => {
+  const { data } = await axiosClient.post("/auth/signin/social", {
+    thirdPartyType: provider,
+    socialId: socialId,
+    device_token: "TODO: FCM 토큰 추가",
+    device_type: "TODO: 디바이스 타입 추가",
+    SocialAccessToken: SocialAccessToken,
+  })
+
+  return data.body[0].accessToken
+}
+
+export const withdrawal = async () => {
+  const response = await axiosClient.delete(`/auth/withdrawal`)
+  return response.data
 }

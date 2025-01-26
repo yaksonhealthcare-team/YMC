@@ -5,6 +5,8 @@ export interface Banner {
   prior: string
   fileCode: string
   fileUrl: string
+  startDate?: string
+  endDate?: string
 }
 
 export interface BannerResponse {
@@ -14,6 +16,8 @@ export interface BannerResponse {
   prior: string
   fileCode: string
   fileurl: string
+  sdate: string
+  edate: string
 }
 
 export enum BannerRequestType {

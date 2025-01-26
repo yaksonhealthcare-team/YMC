@@ -1,5 +1,6 @@
 import {
-  Membership,
+  AdditionalManagement,
+  AdditionalManagementResponse,
   MembershipDetail,
   MembershipDetailResponse,
   MembershipOption,
@@ -13,15 +14,82 @@ import {
   ServiceCourseResponse,
 } from "types/Membership"
 
+export const toServiceCategory = (
+  dto: ServiceCategoryResponse,
+): ServiceCategory => {
+  return {
+    sc_idx: dto.sc_idx,
+    sc_name: dto.sc_name,
+    sc_min: dto.sc_min,
+    prior: dto.prior,
+    brandCode: dto.brand_code,
+    serviceCategoryCode: dto.sc_code,
+    serviceCategoryName: dto.sc_name,
+    serviceCategoryImageUrl: dto.sc_pic,
+  }
+}
+
+export const toServiceCourse = (dto: ServiceCourseResponse): ServiceCourse => {
+  return {
+    sc_idx: dto.sc_idx,
+    sc_name: dto.sc_name,
+    sc_min: dto.sc_min,
+    prior: dto.prior,
+  }
+}
+
+export const toMembershipOption = (dto: MembershipOption): MembershipOption => {
+  return {
+    ss_idx: dto.ss_idx,
+    ss_count: dto.ss_count,
+    ss_price: dto.ss_price,
+    original_price: dto.original_price,
+  }
+}
+
+export const toMyMembership = (dto: MyMembershipResponse): MyMembership => {
+  return {
+    mp_idx: dto.mp_idx,
+    status: dto.status,
+    service_name: dto.service_name,
+    s_type: dto.s_type,
+    remain_amount: dto.remain_amount,
+    buy_amount: dto.buy_amount,
+    pay_date: dto.pay_date,
+    expiration_date: dto.expiration_date,
+    reservations: dto.reservations,
+  }
+}
+
+export const toMembershipDetail = (
+  dto: MembershipDetailResponse,
+): MembershipDetail => {
+  return {
+    s_name: dto.s_name,
+    brand_name: dto.brand_name || "",
+    s_content: dto.s_content,
+    s_time: dto.s_time,
+    s_type: dto.s_type,
+    courses: dto.courses,
+    pictures: dto.pictures,
+    options: dto.options,
+  }
+}
+
+export const toAdditionalManagement = (
+  dto: AdditionalManagementResponse,
+): AdditionalManagement => {
+  return {
+    am_idx: dto.am_idx,
+    s_name: dto.s_name,
+    s_time: dto.s_time,
+    options: dto.options,
+  }
+}
+
 export class ServiceCategoryMapper {
   static toEntity(dto: ServiceCategoryResponse): ServiceCategory {
-    return {
-      brandCode: dto.brand_code,
-      serviceCategoryCode: dto.sc_code,
-      serviceCategoryName: dto.sc_name,
-      serviceCategoryImageUrl: dto.sc_pic,
-      priorirty: dto.prior,
-    }
+    return toServiceCategory(dto)
   }
 
   static toEntities(dtos: ServiceCategoryResponse[]): ServiceCategory[] {
@@ -31,12 +99,7 @@ export class ServiceCategoryMapper {
 
 export class ServiceCourseMapper {
   static toEntity(dto: ServiceCourseResponse): ServiceCourse {
-    return {
-      serviceCourseIndex: dto.sc_idx,
-      serviceCourseName: dto.sc_name,
-      serviceCourseMinutes: dto.sc_min,
-      priority: dto.prior,
-    }
+    return toServiceCourse(dto)
   }
 
   static toEntities(dtos: ServiceCourseResponse[]): ServiceCourse[] {
@@ -46,12 +109,7 @@ export class ServiceCourseMapper {
 
 export class MembershipOptionMapper {
   static toEntity(dto: MembershipOptionResponse): MembershipOption {
-    return {
-      subscriptionIndex: dto.ss_idx,
-      subscriptionCount: dto.ss_count,
-      subscriptionOriginalPrice: dto.original_price,
-      subscriptionPrice: dto.ss_price,
-    }
+    return toMembershipOption(dto)
   }
 
   static toEntities(dtos: MembershipOptionResponse[]): MembershipOption[] {
@@ -60,52 +118,48 @@ export class MembershipOptionMapper {
 }
 
 export class MembershipMapper {
-  static toEntity(dto: MembershipResponse): Membership {
+  static toEntity(dto: MembershipResponse): MyMembership {
     return {
-      serviceIndex: dto.s_idx,
-      serviceName: dto.s_name,
-      brandName: dto.brand_name,
-      serviceTime: dto.s_time,
-      serviceType: dto.s_type,
-      options: MembershipOptionMapper.toEntities(dto.options),
+      mp_idx: dto.s_idx,
+      service_name: dto.s_name,
+      s_type: dto.s_type,
+      status: "T",
+      remain_amount: "0",
+      buy_amount: "0",
+      pay_date: "",
+      expiration_date: "",
     }
   }
 
-  static toEntities(dtos: MembershipResponse[]): Membership[] {
+  static toEntities(dtos: MembershipResponse[]): MyMembership[] {
     return dtos.map(this.toEntity)
   }
 }
 
 export class MembershipDetailMapper {
   static toEntity(dto: MembershipDetailResponse): MembershipDetail {
-    return {
-      serviceName: dto.s_name,
-      brandName: dto.brand_name || "",
-      serviceContent: dto.s_content || "",
-      serviceTime: dto.s_time,
-      serviceType: dto.s_type,
-      courses: ServiceCourseMapper.toEntities(dto.courses),
-      pictures: dto.pictures,
-      options: MembershipOptionMapper.toEntities(dto.options),
-    }
+    return toMembershipDetail(dto)
   }
 }
 
 export class MyMembershipMapper {
   static toEntity(dto: MyMembershipResponse): MyMembership {
-    return {
-      id: dto.mp_idx,
-      serviceName: dto.service_name,
-      serviceType: dto.s_type,
-      remainCount: parseInt(dto.remain_amount),
-      totalCount: parseInt(dto.buy_amount),
-      purchaseDate: dto.pay_date,
-      expirationDate: dto.expiration_date,
-      status: dto.status,
-    }
+    return toMyMembership(dto)
   }
 
   static toEntities(dtos: MyMembershipResponse[]): MyMembership[] {
+    return dtos.map(this.toEntity)
+  }
+}
+
+export class AdditionalManagementMapper {
+  static toEntity(dto: AdditionalManagementResponse): AdditionalManagement {
+    return toAdditionalManagement(dto)
+  }
+
+  static toEntities(
+    dtos: AdditionalManagementResponse[],
+  ): AdditionalManagement[] {
     return dtos.map(this.toEntity)
   }
 }

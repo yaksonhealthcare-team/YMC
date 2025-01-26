@@ -17,7 +17,7 @@ import {
   useSubmitQuestionnaire,
 } from "queries/useQuestionnaireQueries"
 import FixedButtonContainer from "@components/FixedButtonContainer"
-import SplashScreen from "@components/Splash"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 const getFieldName = (question: Question): QuestionFieldName => {
   return `${question.cssq_idx}_${
@@ -48,12 +48,13 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
   const navigate = useNavigate()
   const location = useLocation()
   const { setHeader, setNavigation } = useLayout()
-  const { showAlert } = useOverlay()
+  const { showToast, openBottomSheet, closeOverlay } = useOverlay()
   const { data: questions, isLoading } = useQuestionnaire(type)
   const submitMutation = useSubmitQuestionnaire(type)
 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isCurrentValid, setIsCurrentValid] = useState(false)
+  const [hasChanges, setHasChanges] = useState(false)
 
   const { returnPath = "/", returnText = "메인 홈으로" } = location.state || {}
 
@@ -61,15 +62,46 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
     setIsCurrentValid(isValid)
   }
 
+  const handleBack = () => {
+    if (hasChanges) {
+      openBottomSheet(
+        <div className="p-5">
+          <h2 className="text-lg font-semibold mb-2">작성을 취소할까요?</h2>
+          <p className="text-gray-500 mb-5">
+            지금 나가면 작성하신 내용이 저장되지 않아요
+          </p>
+          <div className="flex flex-col gap-2">
+            <Button
+              variantType="primary"
+              sizeType="l"
+              onClick={() => {
+                closeOverlay()
+                navigate(-1)
+              }}
+            >
+              나가기
+            </Button>
+            <Button variantType="line" sizeType="l" onClick={closeOverlay}>
+              계속 작성하기
+            </Button>
+          </div>
+        </div>,
+      )
+    } else {
+      navigate(-1)
+    }
+  }
+
   useEffect(() => {
     setHeader({
       display: true,
       title: "문진작성",
       left: "back",
+      onClickBack: handleBack,
       backgroundColor: "white",
     })
     setNavigation({ display: false })
-  }, [setHeader, setNavigation])
+  }, [setHeader, setNavigation, handleBack])
 
   const formik = useFormik<QuestionnaireFormValues>({
     initialValues: {} as QuestionnaireFormValues,
@@ -83,10 +115,18 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
           },
         })
       } catch (error) {
-        showAlert("문진 제출에 실패했습니다")
+        showToast("문진 제출에 실패했습니다")
       }
     },
   })
+
+  // 폼 값이 변경될 때마다 hasChanges를 true로 설정
+  useEffect(() => {
+    const hasValues = Object.values(formik.values).some((value) =>
+      Array.isArray(value) ? value.length > 0 : Boolean(value),
+    )
+    setHasChanges(hasValues)
+  }, [formik.values])
 
   const handleNext = () => {
     if (!questions) return
@@ -104,9 +144,8 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
     }
   }
 
-  // TODO: Add loading indicator
   if (isLoading || !questions) {
-    return <SplashScreen />
+    return <LoadingIndicator className="min-h-screen" />
   }
 
   const currentQuestion = questions[currentIndex]
@@ -120,12 +159,22 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
       </p>
 
       {currentQuestion && (
-        <QuestionItem
-          question={currentQuestion}
-          formik={formik}
-          fieldName={getFieldName(currentQuestion)}
-          onValidationChange={handleValidationChange}
-        />
+        <>
+          <h2 className="text-primary text-xl font-bold mb-3">
+            {currentQuestion.question_text}
+          </h2>
+          {currentQuestion.options.length > 1 && (
+            <p className="text-gray-500 text-sm font-medium mb-10">
+              * 복수 선택 가능
+            </p>
+          )}
+          <QuestionItem
+            question={currentQuestion}
+            formik={formik}
+            fieldName={getFieldName(currentQuestion)}
+            onValidationChange={handleValidationChange}
+          />
+        </>
       )}
 
       <FixedButtonContainer className="bg-white flex gap-2">

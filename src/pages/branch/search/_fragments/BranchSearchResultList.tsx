@@ -1,7 +1,7 @@
 import BranchCard from "@components/BranchCard.tsx"
 import useDebounce from "../../../../hooks/useDebounce.tsx"
 import { useBranches } from "../../../../queries/useBranchQueries.tsx"
-import useGeolocation from "../../../../hooks/useGeolocation.tsx"
+import { useGeolocation } from "../../../../hooks/useGeolocation.tsx"
 import { DEFAULT_COORDINATE } from "../../../../types/Coordinate.ts"
 import useIntersection from "../../../../hooks/useIntersection.tsx"
 import { Branch } from "../../../../types/Branch.ts"
@@ -25,8 +25,8 @@ const BranchSearchResultList = ({
     isFetchingNextPage,
   } = useBranches({
     page: 1,
-    latitude: location.latitude ?? DEFAULT_COORDINATE.latitude!,
-    longitude: location.longitude ?? DEFAULT_COORDINATE.longitude!,
+    latitude: location?.latitude || DEFAULT_COORDINATE.latitude,
+    longitude: location?.longitude || DEFAULT_COORDINATE.longitude,
     brandCode: "",
     search: debouncedQuery,
   })
@@ -45,11 +45,13 @@ const BranchSearchResultList = ({
 
   return (
     <ul className={"divide-y divide-gray-100 px-5 overflow-y-scroll"}>
-      {(branches?.pages.flatMap((page) => page) || []).map((branch, index) => (
-        <li key={index} className={"py-4"} onClick={() => onSelect(branch)}>
-          <BranchCard name={branch.name} address={branch.address} />
-        </li>
-      ))}
+      {(branches?.pages.flatMap(({ branches }) => branches) || []).map(
+        (branch, index) => (
+          <li key={index} className={"py-4"} onClick={() => onSelect(branch)}>
+            <BranchCard name={branch.name} address={branch.address} />
+          </li>
+        ),
+      )}
       <div ref={observerTarget} className={"h-4"} />
     </ul>
   )

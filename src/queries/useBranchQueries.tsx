@@ -1,14 +1,33 @@
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query"
-import { queryKeys } from "./query.keys.ts"
 import {
-  bookmarkBranch,
-  fetchBranch,
+  useInfiniteQuery,
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query"
+import {
   fetchBranches,
-  unbookmarkBranch,
+  getBranchBookmarks,
+  fetchBranch,
+  addBranchBookmark,
+  removeBranchBookmark,
 } from "../apis/branch.api.ts"
 import { Coordinate } from "../types/Coordinate.ts"
-import { queryClient } from "./clients.ts"
-import { BranchFilters } from "types/Branch.ts"
+
+interface BranchFilters {
+  page?: number
+  latitude: number
+  longitude: number
+  brandCode?: string
+  category?: string
+  search?: string
+}
+
+const queryKeys = {
+  branches: {
+    list: (filters: BranchFilters) => ["branches", filters],
+    detail: (id: string, coords: Coordinate) => ["branch", id, coords],
+  },
+}
 
 export const useBranches = (filters: BranchFilters) =>
   useInfiniteQuery({
@@ -17,7 +36,7 @@ export const useBranches = (filters: BranchFilters) =>
     queryFn: ({ pageParam = 1 }) =>
       fetchBranches({ ...filters, page: pageParam }),
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === 0) return undefined
+      if (lastPage.branches.length === 0) return undefined
       return allPages.length + 1
     },
   })
@@ -28,22 +47,37 @@ export const useBranch = (id: string, coords: Coordinate) =>
     queryFn: () => fetchBranch(id, coords),
   })
 
-export const useBranchBookmarkMutation = () =>
-  useMutation({
-    mutationFn: (branchId: string) => bookmarkBranch(branchId),
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.branches.all,
-      })
-    },
+export const useBranchBookmarksQuery = (coords?: Coordinate) => {
+  return useQuery({
+    queryKey: ["branchBookmarks", coords],
+    queryFn: () => getBranchBookmarks(coords),
+    enabled: !!coords,
   })
+}
 
-export const useBranchUnbookmarkMutation = () =>
-  useMutation({
-    mutationFn: (branchId: string) => unbookmarkBranch(branchId),
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.branches.all,
-      })
+export const useBranchDetailQuery = (id: string) => {
+  return useQuery({
+    queryKey: ["branchDetail", id],
+    queryFn: () => fetchBranch(id, { latitude: 0, longitude: 0 }),
+  })
+}
+
+export const useBranchBookmarkMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (branchId: string) => addBranchBookmark(branchId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["branchBookmarks"] })
     },
   })
+}
+
+export const useBranchUnbookmarkMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (branchId: string) => removeBranchBookmark(branchId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["branchBookmarks"] })
+    },
+  })
+}

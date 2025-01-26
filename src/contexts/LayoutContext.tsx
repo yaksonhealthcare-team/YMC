@@ -26,11 +26,12 @@ type FullHeaderConfig = BaseHeaderConfig & {
 
 type HeaderConfig = DetailedHeaderConfig | FullHeaderConfig
 
-interface LayoutContextValue {
-  navigation: NavigationConfig
-  setNavigation: (navigation: NavigationConfig) => void
+export interface LayoutContextValue {
   header: HeaderConfig
   setHeader: (header: HeaderConfig) => void
+  navigation: NavigationConfig
+  setNavigation: (navigation: NavigationConfig) => void
+  setTitle: (title: string) => void
 }
 
 const LayoutContext = createContext<LayoutContextValue | null>({
@@ -38,6 +39,7 @@ const LayoutContext = createContext<LayoutContextValue | null>({
   setNavigation: () => {},
   header: { display: false },
   setHeader: () => {},
+  setTitle: () => {},
 })
 
 interface LayoutProviderProps {
@@ -52,6 +54,13 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
     display: true,
     title: "THERAPIST",
   })
+
+  const setTitle = (title: string) => {
+    setHeader((prev) => ({
+      ...prev,
+      title,
+    }))
+  }
 
   const renderHeader = () => {
     if (!header.display) return null
@@ -77,7 +86,11 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
         >
           <Header
             type={
-              headerConfig.left === "back" ? "back_title" : "title_right_icon"
+              headerConfig.left === "back" && headerConfig.right
+                ? "back_title_right_icon"
+                : headerConfig.left === "back"
+                  ? "back_title"
+                  : "title_right_icon"
             }
             title={headerConfig.title as string}
             onClickBack={
@@ -102,6 +115,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
         setNavigation,
         header,
         setHeader,
+        setTitle,
       }}
     >
       <PageContainer>

@@ -8,6 +8,7 @@ import {
   useBranchBookmarkMutation,
   useBranchUnbookmarkMutation,
 } from "../../../queries/useBranchQueries.tsx"
+import { useOverlay } from "../../../contexts/ModalContext.tsx"
 
 interface BranchFilterListProps {
   branches: Branch[]
@@ -17,6 +18,7 @@ interface BranchFilterListProps {
 const BranchFilterList = ({ branches, onIntersect }: BranchFilterListProps) => {
   const navigate = useNavigate()
   const { observerTarget } = useIntersection({ onIntersect })
+  const { showToast } = useOverlay()
 
   const { mutate: addBookmark } = useBranchBookmarkMutation()
   const { mutate: removeBookmark } = useBranchUnbookmarkMutation()
@@ -37,8 +39,10 @@ const BranchFilterList = ({ branches, onIntersect }: BranchFilterListProps) => {
             onClickFavorite={() => {
               if (branch.isFavorite) {
                 removeBookmark(branch.id)
+                showToast("즐겨찾기에서 삭제했어요.")
               } else {
                 addBookmark(branch.id)
+                showToast("즐겨찾기에 추가했어요.")
               }
             }}
           />

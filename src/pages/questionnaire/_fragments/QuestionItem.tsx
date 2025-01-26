@@ -1,5 +1,5 @@
 import { FormikProps } from "formik"
-import { RadioGroup, TextField } from "@mui/material"
+import { TextField } from "@mui/material"
 import {
   OptionValue,
   Question,
@@ -20,6 +20,7 @@ interface QuestionItemProps {
   fieldName: QuestionFieldName
   onValidationChange: (isValid: boolean) => void
 }
+
 export const QuestionItem = ({
   question,
   formik,
@@ -34,8 +35,8 @@ export const QuestionItem = ({
   const checkValidation = () => {
     const currentValue = formik.values[fieldName]
 
-    // 생년월일 질문
-    if (question.cssq_idx === "1") {
+    // 생년월일 입력 검증 (cssq_idx가 1이거나 contents_type이 4인 경우)
+    if (question.cssq_idx === "1" || question.contents_type === "4") {
       if (!currentValue || typeof currentValue !== "string") return false
 
       const year = currentValue.substring(0, 4)
@@ -62,6 +63,14 @@ export const QuestionItem = ({
       const date = new Date(yearNum, monthNum - 1, dayNum)
       if (date.getMonth() !== monthNum - 1) return false
 
+      return true
+    }
+
+    // 숫자 입력 검증
+    if (question.contents_type === "3") {
+      if (!currentValue) return false
+      const numValue = Number(currentValue)
+      if (isNaN(numValue) || numValue < 0) return false
       return true
     }
 
@@ -98,11 +107,32 @@ export const QuestionItem = ({
         return Array.isArray(currentValue) && currentValue.length > 0
 
       case "T":
+        if (question.contents_type === "3") {
+          // 숫자 입력인 경우는 이미 위에서 검증됨
+          return true
+        }
         return (
           !!currentValue &&
           typeof currentValue === "string" &&
           currentValue.trim().length > 0
         )
+
+      case "C": {
+        // 객관식 + 주관식
+        if (!Array.isArray(currentValue) || currentValue.length !== 1)
+          return false
+
+        // 선택된 옵션이 주관식(option_type: "2")인 경우 텍스트 입력 확인
+        const selectedOption = question.options.find(
+          (opt) => opt.csso_idx === currentValue[0].csso_idx,
+        )
+        if (selectedOption?.option_type === "2") {
+          const textValue = formik.values[`${fieldName}_text`] as string
+          return !!textValue && textValue.trim().length > 0
+        }
+
+        return true
+      }
 
       default:
         return false
@@ -110,7 +140,10 @@ export const QuestionItem = ({
   }
 
   const handleTextChange = (value: string) => {
-    formik.setFieldValue(`${fieldName}_text`, value)
+    // 100자를 초과하는 입력 방지
+    if (value.length <= 100) {
+      formik.setFieldValue(`${fieldName}_text`, value)
+    }
   }
 
   const handleOptionChange = (optionIdx: string, checked: boolean) => {
@@ -149,7 +182,7 @@ export const QuestionItem = ({
               "flex flex-col justify-center items-center gap-[15px] aspect-square border rounded-[16px] p-3 cursor-pointer",
               totalOptionCount === 2
                 ? "w-[calc(50%-4px)]"
-                : "w-[calc(33.33%-8px)]",
+                : "w-[calc(33.333%-5.333px)]",
               checked
                 ? "border-primary bg-primary bg-opacity-10"
                 : "border-gray-100",
@@ -237,148 +270,115 @@ export const QuestionItem = ({
     )
   }
 
-  const renderQuestion = () => {
-    const hasImage = hasOptionImage(question.options)
-    switch (question.answer_type) {
-      case "S":
-        if (question.cssq_idx === "1") {
-          // 생년월일 질문
-          return (
-            <BirthDateInput
-              value={(formik.values[fieldName] as string) || ""}
-              onChange={(value) => formik.setFieldValue(fieldName, value)}
-            />
-          )
-        }
-        if (question.options.length === 0) {
-          return (
-            <TextField
-              name={fieldName}
-              value={(formik.values[fieldName] as string) || ""}
-              onChange={formik.handleChange}
-              placeholder="입력해 주세요"
-              fullWidth
-              variant="outlined"
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "12px",
-                  "& fieldset": {
-                    borderColor: COLORS.BORDER,
-                  },
-                  "&:hover fieldset": {
-                    borderColor: COLORS.BORDER,
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderWidth: 1,
-                    borderColor: COLORS.FOCUSED_BORDER,
-                  },
-                  "& input": {
-                    padding: "16px",
-                    fontSize: "14px",
-                  },
-                  "& input::placeholder": {
-                    color: COLORS.PLACEHOLDER,
-                    opacity: 1,
-                  },
-                },
-              }}
-            />
-          )
-        }
-        return (
-          <RadioGroup
-            name={fieldName}
-            value={
-              (formik.values[fieldName] as OptionValue[])?.[0]?.csso_idx || ""
-            }
-            onChange={(e) => handleOptionChange(e.target.value, true)}
-            className={"flex gap-2"}
-            sx={{
-              flexDirection: hasImage ? "column" : "row",
-            }}
-          >
-            {question.options.map((option) =>
-              renderOptionItem(
-                option,
-                hasImage,
-                isOptionSelected(option.csso_idx),
-                handleOptionChange,
-                handleTextChange,
-                question.options.length,
-              ),
-            )}
-          </RadioGroup>
-        )
-
-      case "M":
-        return (
-          <div className="flex flex-col gap-1">
-            {question.options.map((option) =>
-              renderOptionItem(
-                option,
-                hasImage,
-                isOptionSelected(option.csso_idx),
-                handleOptionChange,
-                handleTextChange,
-                question.options.length,
-              ),
-            )}
-          </div>
-        )
-
-      case "T":
-        return (
-          <TextField
-            name={fieldName}
-            value={(formik.values[fieldName] as string) || ""}
-            onChange={formik.handleChange}
-            placeholder="입력해 주세요"
-            multiline
-            rows={4}
-            fullWidth
-            variant="outlined"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "12px",
-                "& fieldset": {
-                  borderColor: COLORS.BORDER,
-                },
-                "&:hover fieldset": {
-                  borderColor: COLORS.BORDER,
-                },
-                "&.Mui-focused fieldset": {
-                  borderWidth: 1,
-                  borderColor: COLORS.FOCUSED_BORDER,
-                },
-                "& textarea": {
-                  padding: "16px",
-                  fontSize: "14px",
-                  minHeight: "120px",
-                },
-                "& textarea::placeholder": {
-                  color: COLORS.PLACEHOLDER,
-                  opacity: 1,
-                },
-              },
-            }}
-          />
-        )
-
-      default:
-        return null
-    }
-  }
-
   useEffect(() => {
     const isValid = checkValidation()
     onValidationChange(isValid)
-  }, [formik.values[fieldName], formik.values[`${fieldName}_text`]])
+  }, [formik.values, fieldName])
+
+  const renderQuestion = () => {
+    const hasImage = hasOptionImage(question.options)
+
+    // 생년월일 입력 (cssq_idx가 1이거나 contents_type이 4인 경우)
+    if (question.cssq_idx === "1" || question.contents_type === "4") {
+      return (
+        <BirthDateInput
+          value={(formik.values[fieldName] as string) || ""}
+          onChange={(value) => formik.setFieldValue(fieldName, value)}
+        />
+      )
+    }
+
+    // 숫자 입력
+    if (question.contents_type === "3") {
+      return (
+        <TextField
+          name={fieldName}
+          value={formik.values[fieldName] || ""}
+          onChange={(e) => {
+            const value = e.target.value
+            formik.setFieldValue(fieldName, value === "" ? "" : value)
+          }}
+          placeholder="숫자를 입력해 주세요"
+          type="number"
+          inputProps={{ min: 0 }}
+          fullWidth
+          variant="outlined"
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "12px",
+              "& fieldset": {
+                borderColor: COLORS.BORDER,
+              },
+              "&:hover fieldset": {
+                borderColor: COLORS.BORDER,
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: COLORS.PRIMARY,
+              },
+            },
+          }}
+        />
+      )
+    }
+
+    // 객관식 문항
+    if (question.options.length > 0) {
+      return (
+        <div
+          className={clsx(
+            "flex flex-wrap gap-2",
+            hasImage ? "justify-between" : "flex-col",
+          )}
+        >
+          {question.options.map((option) => {
+            const checked = isOptionSelected(option.csso_idx)
+            return renderOptionItem(
+              option,
+              hasImage,
+              checked,
+              handleOptionChange,
+              handleTextChange,
+              question.options.length,
+            )
+          })}
+        </div>
+      )
+    }
+
+    // 일반 텍스트 입력
+    return (
+      <TextField
+        name={fieldName}
+        value={(formik.values[fieldName] as string) || ""}
+        onChange={formik.handleChange}
+        placeholder="입력해 주세요"
+        fullWidth
+        variant="outlined"
+        multiline={question.answer_type === "T"}
+        rows={question.answer_type === "T" ? 4 : 1}
+        sx={{
+          "& .MuiOutlinedInput-root": {
+            borderRadius: "12px",
+            "& fieldset": {
+              borderColor: COLORS.BORDER,
+            },
+            "&:hover fieldset": {
+              borderColor: COLORS.BORDER,
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: COLORS.PRIMARY,
+            },
+          },
+        }}
+      />
+    )
+  }
 
   return (
-    <div className="mb-8">
-      <div className="text-primary text-xl font-b leading-[29.6px] mb-10">
+    <div className="flex flex-col gap-4">
+      <p className="text-base font-semibold text-gray-700">
         {question.question_text}
-      </div>
+      </p>
       {renderQuestion()}
     </div>
   )

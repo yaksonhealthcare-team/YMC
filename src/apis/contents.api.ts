@@ -1,38 +1,39 @@
 import { axiosClient } from "../queries/clients.ts"
-import { HTTPResponse } from "../types/HTTPResponse.ts"
-import { Event, EventDetail, Notice, NoticeDetail } from "../types/Content.ts"
+import { HTTPResponse } from "./http.ts"
+import { Event, EventDetail } from "types/Event"
+import { Notice, NoticeDetail } from "../types/Content.ts"
+import { ContentMapper } from "mappers/ContentMapper"
 
-export const fetchEvents = async (
-  status: "ALL" | "ING" | "END" | "TBD",
-  page: number,
-): Promise<Event[]> => {
+export const fetchEvents = async (): Promise<Event[]> => {
   const { data } = await axiosClient.get<HTTPResponse<Event[]>>(
     "/contents/contents",
     {
-      params: { gubun: "E01", page, status },
+      params: {
+        gubun: "E01",
+        page: 1,
+        status: "ALL",
+      },
     },
   )
-
-  return data.body
+  return ContentMapper.toEvents(data.body)
 }
 
-export const fetchEvent = async (id: string): Promise<EventDetail> => {
+export const fetchEventDetail = async (code: string): Promise<EventDetail> => {
   const { data } = await axiosClient.get<HTTPResponse<EventDetail[]>>(
     "/contents/detail",
     {
       params: {
         gubun: "E01",
-        code: id,
+        code,
       },
     },
   )
-
-  return data.body[0]
+  return ContentMapper.toEventDetail(data.body[0])
 }
 
-export const fetchNotices = async (page: number): Promise<Notice[]> => {
+export const fetchNotices = async (page: number = 1): Promise<Notice[]> => {
   const { data } = await axiosClient.get<HTTPResponse<Notice[]>>(
-    "/contents/contents/",
+    "/contents/contents",
     {
       params: {
         gubun: "N01",
@@ -40,20 +41,18 @@ export const fetchNotices = async (page: number): Promise<Notice[]> => {
       },
     },
   )
-
-  return data.body
+  return ContentMapper.toNotices(data.body)
 }
 
-export const fetchNotice = async (id: string): Promise<NoticeDetail> => {
-  const { data } = await axiosClient.get<HTTPResponse<NoticeDetail[]>>(
-    "/contents/detail/",
+export const fetchNotice = async (code: string): Promise<NoticeDetail> => {
+  const { data } = await axiosClient.get<HTTPResponse<NoticeDetail>>(
+    "/contents/detail",
     {
       params: {
         gubun: "N01",
-        code: id,
+        code,
       },
     },
   )
-
-  return data.body[0]
+  return ContentMapper.toNoticeDetail(data.body)
 }

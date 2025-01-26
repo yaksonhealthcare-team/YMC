@@ -20,6 +20,7 @@ import {
 } from "./_fragments/ProfileFormComponents.tsx"
 import { updateUserProfile } from "../../apis/auth.api.ts"
 import PostcodeModal from "@components/modal/PostcodeModal.tsx"
+import { UpdateUserProfileRequest } from "../../types/User.ts"
 
 const EditProfile = () => {
   const { user } = useAuth()
@@ -27,7 +28,9 @@ const EditProfile = () => {
   const { openBottomSheet, closeOverlay } = useOverlay()
   const navigate = useNavigate()
 
-  const [gender, setGender] = useState<"male" | "female">("female")
+  const [gender, setGender] = useState<"male" | "female">(
+    user?.gender === "M" ? "male" : "female",
+  )
   const [address, setAddress] = useState({
     ...user!.address,
     postalCode: user!.postalCode,
@@ -38,22 +41,26 @@ const EditProfile = () => {
 
   useEffect(() => {
     setHeader({
-      left: (
-        <button onClick={handleClickBackButton}>
-          <CaretLeftIcon />
-        </button>
-      ),
+      left: "back",
       title: "내 정보 수정",
-      right: (
-        <button
-          className={
-            "font-m text-gray-500 disabled:text-gray-300 disabled:cursor-default"
-          }
-          disabled={address.detail.length === 0}
-          onClick={handleSubmit}
-        >
-          <p>{"저장"}</p>
-        </button>
+      component: (
+        <div className="h-12 flex items-center justify-between px-5 bg-white relative">
+          <button onClick={handleClickBackButton} className="absolute left-5">
+            <CaretLeftIcon />
+          </button>
+          <span className="font-sb text-18px flex-1 text-center">
+            내 정보 수정
+          </span>
+          <button
+            className={
+              "font-m text-gray-500 disabled:text-gray-300 disabled:cursor-default absolute right-5"
+            }
+            disabled={address.detail.length === 0}
+            onClick={handleSubmit}
+          >
+            <p>{"저장"}</p>
+          </button>
+        </div>
       ),
       backgroundColor: "bg-white",
       display: true,
@@ -66,20 +73,30 @@ const EditProfile = () => {
   }
 
   const handleSubmit = async () => {
-    await updateUserProfile({
-      post: address.postalCode,
-      addr1: address.road,
-      addr2: address.detail,
-      marketing_yn: marketingAgreed ? "Y" : "N",
-    })
+    if (!user) return
+
+    try {
+      const updatedData: UpdateUserProfileRequest = {
+        postalCode: address.postalCode,
+        address1: address.road,
+        address2: address.detail,
+        sex: gender === "male" ? "M" : "F",
+        profileUrl: user.profileURL || "",
+        marketingAgreed: marketingAgreed,
+      }
+
+      await updateUserProfile(updatedData)
+      alert("프로필이 성공적으로 수정되었습니다.")
+    } catch (error) {
+      console.error("프로필 수정 실패:", error)
+      alert("프로필 수정에 실패했습니다.")
+    }
   }
 
   const handleChangeGender = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value === "female") {
-      setGender("female")
-    } else {
-      setGender("male")
-    }
+    const newGender = event.target.value as "male" | "female"
+    console.log("성별 변경:", newGender)
+    setGender(newGender)
   }
 
   const handleClickBackButton = () => {
@@ -109,7 +126,10 @@ const EditProfile = () => {
         content={"탈퇴 시 적립금은 소멸되며, 계정 복구가 불가합니다."}
         confirmOptions={{
           text: "탈퇴하기",
-          onClick: () => {},
+          onClick: () => {
+            closeOverlay()
+            navigate("/profile/withdrawal")
+          },
         }}
         cancelOptions={{
           text: "취소하기",
@@ -172,10 +192,10 @@ const EditProfile = () => {
           <LabeledForm label={"성별"}>
             <RadioGroup value={gender} onChange={handleChangeGender}>
               <div className={"flex gap-2 items-center"}>
-                <RadioCard checked={gender === "female"} value={"female"}>
+                <RadioCard value={"female"} checked={gender === "female"}>
                   <p>{"여자"}</p>
                 </RadioCard>
-                <RadioCard checked={gender === "male"} value={"male"}>
+                <RadioCard value={"male"} checked={gender === "male"}>
                   <p>{"남자"}</p>
                 </RadioCard>
               </div>

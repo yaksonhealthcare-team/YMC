@@ -8,18 +8,31 @@ interface MembershipTagProps {
 const MembershipTag = ({ status }: MembershipTagProps) => {
   const getTagType = (): TagType => {
     switch (status) {
-      case MembershipStatus.AVAILABLE:
-        return "red"
-      case MembershipStatus.COMPLETED:
+      case MembershipStatus.ACTIVE:
+        return "unused"
+      case MembershipStatus.INACTIVE:
         return "used"
       case MembershipStatus.EXPIRED:
         return "used"
       default:
-        return "red"
+        return "unused"
     }
   }
 
-  return <Tag type={getTagType()} title={status} className="!rounded" />
+  const getStatusText = () => {
+    switch (status) {
+      case MembershipStatus.ACTIVE:
+        return "사용가능"
+      case MembershipStatus.INACTIVE:
+        return "사용완료"
+      case MembershipStatus.EXPIRED:
+        return "만료됨"
+      default:
+        return ""
+    }
+  }
+
+  return <Tag type={getTagType()} title={getStatusText()} />
 }
 
 export default MembershipTag

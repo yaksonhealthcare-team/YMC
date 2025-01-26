@@ -4,11 +4,13 @@ import {
   usePaymentHistory,
 } from "../../queries/usePaymentQueries.tsx"
 import { useEffect, useState } from "react"
-import SplashScreen from "@components/Splash.tsx"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { Button } from "@components/Button.tsx"
 import { PaymentHistoryItem } from "../../types/Payment.ts"
 import CheckIcon from "@components/icons/CheckIcon.tsx"
+import { useOverlay } from "../../contexts/ModalContext.tsx"
+import { AxiosError } from "axios"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 const PaymentCancelItemCard = ({
   item,
@@ -56,6 +58,7 @@ const PaymentCancelPage = () => {
   const { mutateAsync: cancelPayment } = usePaymentCancel()
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
+  const { showToast } = useOverlay()
 
   const [step, setStep] = useState<"select" | "form">("select")
   const [selectedItems, setSelectedItems] = useState<string[]>([])
@@ -71,7 +74,8 @@ const PaymentCancelPage = () => {
     setNavigation({ display: false })
   }, [])
 
-  if (!payment || isLoading) return <SplashScreen />
+  if (!payment || isLoading)
+    return <LoadingIndicator className="min-h-screen" />
 
   switch (step) {
     case "select":
@@ -158,13 +162,29 @@ const PaymentCancelPage = () => {
             <Button
               className={"w-full"}
               onClick={async () => {
-                await cancelPayment({
-                  orderId: payment.id,
-                  paymentIds: selectedItems,
-                  reason: reason,
-                })
-
-                navigate("/payment/cancel/complete")
+                try {
+                  await cancelPayment({
+                    orderId: payment.id,
+                    paymentIds: selectedItems,
+                    reason: reason,
+                  })
+                  navigate("/payment/cancel/complete")
+                } catch (error) {
+                  if (error instanceof AxiosError) {
+                    const errorMessage = error.response?.data?.message
+                    if (errorMessage?.includes("already used")) {
+                      showToast("이미 사용 중이거나 사용 완료된 회원권입니다")
+                    } else if (errorMessage?.includes("expired")) {
+                      showToast("만료된 회원권입니다")
+                    } else if (errorMessage?.includes("not found")) {
+                      showToast("존재하지 않는 결제 내역입니다")
+                    } else {
+                      showToast(errorMessage || "결제 취소 요청에 실패했습니다")
+                    }
+                  } else {
+                    showToast("결제 취소 요청에 실패했습니다")
+                  }
+                }
               }}
               disabled={
                 reason.length < MIN_REASON_LENGTH ||

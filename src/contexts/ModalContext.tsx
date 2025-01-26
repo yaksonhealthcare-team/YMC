@@ -31,18 +31,20 @@ interface OverlayState {
 /**
  * 오버레이 컨텍스트의 값을 정의하는 인터페이스
  */
-interface OverlayContextValue {
+export interface OverlayContextValue {
   overlayState: OverlayState
   closeOverlay: () => void
   openMessageBox: (
     message: string,
     options?: Record<string, unknown> | undefined,
   ) => void
-  openBottomSheet: (
-    content: ReactNode,
-    options?: Record<string, unknown> | undefined,
-  ) => void
-  showAlert: (message: string, options?: Record<string, unknown>) => void
+  openBottomSheet: (content: ReactNode) => void
+  showToast: (message: string) => void
+  openAlert: (props: {
+    title: string
+    description: string
+    onClose?: () => void
+  }) => void
 }
 
 // 오버레이 컨텍스트 생성
@@ -82,17 +84,32 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
     content: null,
     options: {},
   })
+  const [toastMessage, setToastMessage] = useState("")
+  const [bottomSheetContent, setBottomSheetContent] =
+    useState<ReactNode | null>(null)
+  const [alertProps, setAlertProps] = useState<{
+    title: string
+    description: string
+    onClose?: () => void
+  } | null>(null)
 
   const openOverlay = (
     type: OverlayTypes,
     content: ReactNode,
     options: Record<string, unknown> = {},
   ) => {
-    setOverlayState({ isOpen: true, type, content, options })
+    setOverlayState({
+      isOpen: true,
+      type,
+      content,
+      options,
+    })
   }
 
   const closeOverlay = () => {
     setOverlayState({ isOpen: false, type: null, content: null, options: {} })
+    setBottomSheetContent(null)
+    setAlertProps(null)
   }
 
   const openMessageBox = (
@@ -102,20 +119,24 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
     openOverlay(OverlayTypes.MESSAGE_BOX, message, options)
   }
 
-  const openBottomSheet = (
-    content: ReactNode,
-    options: BottomSheetOptions = {},
-  ) => {
-    openOverlay(OverlayTypes.BOTTOM_SHEET, content, options)
+  const openBottomSheet = (content: ReactNode) => {
+    setBottomSheetContent(content)
+    openOverlay(OverlayTypes.BOTTOM_SHEET, content)
   }
 
-  const showAlert = (
-    message: string,
-    options: Record<string, unknown> = {},
-  ) => {
-    openOverlay(OverlayTypes.ALERT, message, options)
-    // 2초 후에 자동으로 닫기
-    setTimeout(closeOverlay, 2000)
+  const showToast = (message: string) => {
+    setToastMessage(message)
+    setTimeout(() => {
+      setToastMessage("")
+    }, 2000)
+  }
+
+  const openAlert = (props: {
+    title: string
+    description: string
+    onClose?: () => void
+  }) => {
+    setAlertProps(props)
   }
 
   return (
@@ -125,10 +146,40 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
         closeOverlay,
         openMessageBox,
         openBottomSheet,
-        showAlert,
+        showToast,
+        openAlert,
       }}
     >
       {children}
+      {toastMessage && (
+        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg z-50">
+          {toastMessage}
+        </div>
+      )}
+      {bottomSheetContent && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+          <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl">
+            {bottomSheetContent}
+          </div>
+        </div>
+      )}
+      {alertProps && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-5 mx-5 w-full max-w-sm">
+            <h2 className="text-lg font-semibold mb-2">{alertProps.title}</h2>
+            <p className="text-gray-600 mb-5">{alertProps.description}</p>
+            <button
+              className="w-full py-3 bg-primary text-white rounded-lg font-medium"
+              onClick={() => {
+                closeOverlay()
+                alertProps.onClose?.()
+              }}
+            >
+              확인
+            </button>
+          </div>
+        </div>
+      )}
       <OverlayContainer />
     </OverlayContext.Provider>
   )
@@ -209,7 +260,7 @@ const OverlayContainer: React.FC = () => {
           }}
         >
           <DialogContent className={"p-0"}>
-            <div className="p-3 flex flex-col items-center">
+            <div className="flex flex-col items-center">
               {(options?.title as string) && (
                 <h2 className="text-xl font-bold mb-4 text-center">
                   {options?.title as string}
@@ -219,23 +270,36 @@ const OverlayContainer: React.FC = () => {
             </div>
             <Divider className={"border-[#F8F8F8"} />
             {(options as BottomSheetOptions)?.buttons && (
-              <div className="w-full flex flex-col space-y-2 p-3 mb-7">
-                {(options as BottomSheetOptions)?.buttons?.map(
-                  (button, index) => (
-                    <Button
-                      key={index}
-                      onClick={() => {
-                        button.onClick()
-                        closeOverlay()
-                      }}
-                      variant={button.variant || "contained"}
-                      fullWidth
-                      className="py-3"
-                    >
-                      {button.text}
-                    </Button>
-                  ),
-                )}
+              <div className="w-full p-5">
+                <div className="flex gap-5">
+                  {(options as BottomSheetOptions)?.buttons?.map(
+                    (button, index) => (
+                      <Button
+                        key={index}
+                        onClick={() => {
+                          button.onClick()
+                          closeOverlay()
+                        }}
+                        variant={button.variant || "contained"}
+                        fullWidth
+                        className={`h-[52px] rounded-xl font-bold text-base px-5 ${
+                          button.variant === "outlined"
+                            ? "border-primary text-primary hover:border-primary"
+                            : "bg-primary text-white hover:bg-primary"
+                        }`}
+                        sx={{
+                          textTransform: "none",
+                          boxShadow: "none",
+                          "&:hover": {
+                            boxShadow: "none",
+                          },
+                        }}
+                      >
+                        {button.text}
+                      </Button>
+                    ),
+                  )}
+                </div>
               </div>
             )}
           </DialogContent>

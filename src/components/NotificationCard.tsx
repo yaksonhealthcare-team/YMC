@@ -1,5 +1,6 @@
 import clsx from "clsx"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
+import { Notification, ReadStatus } from "../types/Notification.ts"
 
 const STYLES = {
   container:
@@ -38,25 +39,13 @@ const STYLES = {
 } as const
 
 interface NotificationCardProps {
-  read?: boolean
-  store: string
-  title: string
-  date: string
-  time: string
-  reserveTitle: string
-  reserveDate: string
+  notification: Notification
   onClick?: () => void
   className?: string
 }
 
 export const NotificationCard = ({
-  read = false,
-  store,
-  title,
-  date,
-  time,
-  reserveTitle,
-  reserveDate,
+  notification,
   onClick,
   className,
 }: NotificationCardProps) => (
@@ -66,47 +55,51 @@ export const NotificationCard = ({
         <span
           className={clsx(
             STYLES.header.title.text.base,
-            read
+            notification.readStatus === ReadStatus.READ
               ? STYLES.header.title.text.read
               : STYLES.header.title.text.unread,
           )}
         >
-          {reserveTitle}
+          {notification.subCategory}
         </span>
-        {!read && <div className={STYLES.header.title.dot} />}
+        {!notification.readStatus && (
+          <div className={STYLES.header.title.dot} />
+        )}
       </div>
-      <span className={STYLES.header.date}>{reserveDate}</span>
+      <span className={STYLES.header.date}>{notification.pushDate}</span>
     </div>
 
     <span
       className={clsx(
         STYLES.store.base,
-        read ? STYLES.store.read : STYLES.store.unread,
+        notification.readStatus ? STYLES.store.read : STYLES.store.unread,
       )}
     >
-      {store}
+      {notification.brandName}
     </span>
 
     <span
       className={clsx(
         STYLES.title.base,
-        read ? STYLES.title.read : STYLES.title.unread,
+        notification.readStatus ? STYLES.title.read : STYLES.title.unread,
       )}
     >
-      {title}
+      {notification.title}
     </span>
 
-    <div
-      className={clsx(
-        STYLES.footer.wrapper,
-        read ? STYLES.footer.read : STYLES.footer.unread,
-      )}
-    >
-      <CalendarIcon className={STYLES.footer.icon} />
-      <span className={STYLES.footer.date}>{date}</span>
-      <div className={STYLES.footer.divider} />
-      <span>{time}</span>
-    </div>
+    {notification.reservationDate && (
+      <div
+        className={clsx(
+          STYLES.footer.wrapper,
+          notification.readStatus ? STYLES.footer.read : STYLES.footer.unread,
+        )}
+      >
+        <CalendarIcon className={STYLES.footer.icon} />
+        <span className={STYLES.footer.date}>
+          {notification.reservationDate}
+        </span>
+      </div>
+    )}
   </div>
 )
 

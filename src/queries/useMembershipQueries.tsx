@@ -1,50 +1,69 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
-import { queryKeys } from "./query.keys"
+import { useQuery, UseQueryOptions } from "@tanstack/react-query"
 import {
+  fetchMembershipList,
   fetchMembershipDetail,
-  fetchMemberships,
-  fetchMyMemberships,
-  fetchServiceCategories,
-} from "apis/membership.api"
-import { ServiceCategory } from "types/Membership"
+  fetchMembershipCategories,
+  fetchUserMemberships,
+  fetchAdditionalManagement,
+  ListResponse,
+} from "../apis/membership.api"
+import { MyMembership } from "../types/Membership"
 
-export const useServiceCategories = (brandCode: string) => {
-  return useQuery<ServiceCategory[]>({
-    queryKey: queryKeys.memberships.serviceCategories(brandCode),
-    queryFn: () => fetchServiceCategories(brandCode),
-    enabled: !!brandCode,
-  })
-}
-
-export const useMemberships = (brandCode: string, scCode: string) => {
-  return useInfiniteQuery({
-    initialPageParam: 1,
-    queryKey: queryKeys.memberships.list(brandCode, scCode),
-    queryFn: ({ pageParam = 1 }) =>
-      fetchMemberships(brandCode, scCode, pageParam),
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === 0) return undefined
-      return allPages.length + 1
-    },
-  })
-}
-
-export const useMembershipDetail = (serviceIndex: string) => {
+export const useMembershipList = (brandCode: string, scCode?: string) => {
   return useQuery({
-    queryKey: queryKeys.memberships.detail(serviceIndex),
-    queryFn: async () => fetchMembershipDetail(serviceIndex),
-    enabled: !!serviceIndex,
+    queryKey: ["memberships", "list", brandCode, scCode],
+    queryFn: () => fetchMembershipList(brandCode, scCode),
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   })
 }
 
-export const useMembershipList = (status: string) => {
-  return useInfiniteQuery({
-    queryKey: queryKeys.memberships.myList(status),
-    initialPageParam: 1,
-    queryFn: ({ pageParam = 1 }) => fetchMyMemberships(status, pageParam),
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === 0) return undefined
-      return allPages.length + 1
+export const useMembershipDetail = (sIdx: string) => {
+  return useQuery({
+    queryKey: ["memberships", "detail", sIdx],
+    queryFn: () => fetchMembershipDetail(sIdx),
+    enabled: !!sIdx,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  })
+}
+
+export const useMembershipCategories = (brandCode: string) => {
+  return useQuery({
+    queryKey: ["memberships", "categories", brandCode],
+    queryFn: () => fetchMembershipCategories(brandCode),
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  })
+}
+
+export const useUserMemberships = (
+  searchType?: string,
+  options?: Omit<
+    UseQueryOptions<ListResponse<MyMembership>, Error>,
+    "queryKey" | "queryFn"
+  >,
+) => {
+  return useQuery({
+    queryKey: ["memberships", "user", searchType],
+    queryFn: () => fetchUserMemberships(searchType),
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    ...options,
+  })
+}
+
+export const useAdditionalManagement = (membershipIdx?: string) => {
+  return useQuery({
+    queryKey: ["memberships", "additional", membershipIdx],
+    queryFn: () => {
+      if (!membershipIdx) {
+        throw new Error("membershipIdx is required")
+      }
+      return fetchAdditionalManagement(membershipIdx)
     },
+    enabled: !!membershipIdx,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   })
 }

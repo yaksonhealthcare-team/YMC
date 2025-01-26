@@ -1,228 +1,133 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { Coordinate, DEFAULT_COORDINATE } from "../types/Coordinate.ts"
 import CrosshairIcon from "@assets/icons/CrosshairIcon.svg?react"
 import { Branch } from "../types/Branch.ts"
-import { INITIAL_CENTER } from "@constants/LocationConstants.ts"
-import { createMarkerIcon } from "../utils/createMarkerIcon.ts"
+import { useNaverMapBranchMarkers } from "../hooks/useNaverMapBranchMarkers.tsx"
+import { getCurrentLocation } from "../utils/getCurrentLocation.ts"
+import clsx from "clsx"
 
 interface MapViewProps {
-  defaultCenter?: {
-    lat: number
-    lng: number
-  }
-  initialZoom?: number
+  center?: Coordinate
   branches?: Branch[]
-  onSelectBranch?: (branch: Branch | null) => void
-  preventUpdateToCurrentLocation?: boolean
-  showCurrentLocationButton?: boolean
+  options?: {
+    showCurrentLocationButton?: boolean
+    showCurrentLocation?: boolean
+    onSelectBranch?: (branch: Branch | null) => void
+    onMoveMap?: (center: Coordinate) => void
+    currentLocationButtonClassName?: string
+  }
 }
 
+/**
+ * NOTE @Seyoung
+ * Please add `branches={[]}` to MapView's props explicitly if you encounter an infinite call of useEffect
+ *
+ * example:
+ * ```tsx
+ * <MapView />
+ * //to
+ * <MapView branches={[]} />
+ * ```
+ */
 const MapView = ({
-  defaultCenter = INITIAL_CENTER,
-  initialZoom = 14,
+  center,
   branches = [],
-  onSelectBranch,
-  preventUpdateToCurrentLocation = false,
-  showCurrentLocationButton = true,
+  options = { showCurrentLocationButton: true },
 }: MapViewProps) => {
+  const { naver } = window
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstance = useRef<naver.maps.Map | null>(null)
-  const markerInstances = useRef<
-    Array<{
-      marker: naver.maps.Marker
-      branch: Branch
-    }>
-  >([])
-  const currentLocationMarker = useRef<naver.maps.Marker | null>(null)
-  const selectedMarker = useRef<naver.maps.Marker | null>(null)
-  const [initialCenter, setInitialCenter] = useState(defaultCenter)
-  const [isInitialized, setIsInitialized] = useState(false)
+  const [_, setIsMapMoved] = useState(false)
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
-
-  const updateCurrentLocationMarker = useCallback(
-    (latitude: number, longitude: number) => {
-      if (!mapInstance.current) return
-
-      if (currentLocationMarker.current) {
-        currentLocationMarker.current.setMap(null)
-      }
-
-      const position = new window.naver.maps.LatLng(latitude, longitude)
-
-      currentLocationMarker.current = new window.naver.maps.Marker({
-        position,
-        map: mapInstance.current,
-        icon: createMarkerIcon(null, "current-location"),
-      })
-    },
-    [],
+  const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(
+    null,
   )
 
-  const getCurrentLocation = useCallback((): Promise<{
-    lat: number
-    lng: number
-  }> => {
-    return new Promise((resolve, reject) => {
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            resolve({
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            })
-          },
-          (error) => {
-            console.warn("위치 정보를 가져올 수 없습니다:", error)
-            reject(error)
-          },
-          { timeout: 5000 },
-        )
-      } else {
-        reject(new Error("Geolocation is not supported"))
-      }
-    })
-  }, [])
+  const { updateCurrentLocationMarker } = useNaverMapBranchMarkers({
+    map: mapInstance.current,
+    branches,
+    selectedBranchId: selectedBranch?.id,
+    options: {
+      showCurrentLocationMarker: options?.showCurrentLocation,
+      onClickMarker: (branch) => {
+        setSelectedBranch(branch)
+        options?.onSelectBranch?.(branch)
 
-  const moveToCurrentLocation = useCallback(async () => {
-    if (!mapInstance.current) return
-
-    try {
-      const { lat, lng } = await getCurrentLocation()
-      const location = new window.naver.maps.LatLng(lat, lng)
-      mapInstance.current.setCenter(location)
-      mapInstance.current.setZoom(15)
-      updateCurrentLocationMarker(lat, lng)
-    } catch (error) {
-      console.warn("현재 위치로 이동할 수 없습니다:", error)
-      alert("현재 위치를 가져올 수 없습니다.")
-    }
-  }, [getCurrentLocation, updateCurrentLocationMarker])
-
-  useEffect(() => {
-    if (isInitialized || preventUpdateToCurrentLocation) return
-
-    getCurrentLocation()
-      .then((position) => {
-        setInitialCenter(position)
-        updateCurrentLocationMarker(position.lat, position.lng)
-      })
-      .catch(() => {
-        setInitialCenter(defaultCenter)
-      })
-      .finally(() => {
-        setIsInitialized(true)
-      })
-  }, [
-    defaultCenter,
-    getCurrentLocation,
-    isInitialized,
-    preventUpdateToCurrentLocation,
-    updateCurrentLocationMarker,
-  ])
-
-  useEffect(() => {
-    const initializeMap = () => {
-      if (!mapRef.current) return
-
-      const mapOptions = {
-        center: new window.naver.maps.LatLng(
-          initialCenter.lat,
-          initialCenter.lng,
-        ),
-        zoom: initialZoom,
-      }
-
-      mapInstance.current = new window.naver.maps.Map(
-        mapRef.current,
-        mapOptions,
-      )
-
-      // 기존 마커들 제거
-      markerInstances.current.forEach(({ marker }) => marker.setMap(null))
-      markerInstances.current = []
-
-      branches.forEach((branch) => {
-        const markerIcon = createMarkerIcon(branch, "default")
-
-        const marker = new window.naver.maps.Marker({
-          position: new window.naver.maps.LatLng(
-            branch.latitude,
-            branch.longitude,
-          ),
-          map: mapInstance.current ?? undefined,
-          title: branch.name,
-          icon: markerIcon,
-        })
-
-        if (onSelectBranch) {
-          window.naver.maps.Event.addListener(marker, "click", () => {
-            onSelectBranch(branch)
-            setSelectedBranch(branch)
-          })
+        if (mapInstance.current) {
+          mapInstance.current.setCenter(
+            new naver.maps.LatLng(branch.latitude, branch.longitude),
+          )
         }
+      },
+      onMove: (center) => {
+        setIsMapMoved(true)
+        options?.onMoveMap?.(center)
+      },
+    },
+  })
 
-        markerInstances.current.push({ marker, branch })
-      })
+  useEffect(() => {
+    if (!mapRef.current) return
 
-      window.naver.maps.Event.addListener(mapInstance.current, "click", () => {
-        onSelectBranch?.(null)
-        setSelectedBranch(null)
+    mapInstance.current = new naver.maps.Map("map", {
+      center: new naver.maps.LatLng(
+        center?.latitude || DEFAULT_COORDINATE.latitude,
+        center?.longitude || DEFAULT_COORDINATE.longitude,
+      ),
+      zoom: 14,
+    })
+
+    if (options?.showCurrentLocation) {
+      getCurrentLocation({
+        onSuccess: (coords) => {
+          setIsMapMoved((prevIsMoved) => {
+            if (!prevIsMoved && mapInstance.current) {
+              mapInstance.current.setCenter(
+                new naver.maps.LatLng(coords.latitude, coords.longitude),
+              )
+              mapInstance.current.setZoom(15)
+            }
+            setCurrentLocation(coords)
+
+            return prevIsMoved
+          })
+        },
       })
     }
-
-    const script = document.createElement("script")
-    script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${import.meta.env.VITE_NAVER_MAP_CLIENT_ID}`
-    script.async = true
-    script.onload = initializeMap
-    document.head.appendChild(script)
 
     return () => {
-      markerInstances.current.forEach(({ marker }) => marker.setMap(null))
-      if (currentLocationMarker.current) {
-        currentLocationMarker.current.setMap(null)
-      }
-      document.head.removeChild(script)
+      mapInstance.current = null
     }
-  }, [initialCenter, initialZoom, branches, isInitialized, onSelectBranch])
+  }, [])
 
   useEffect(() => {
-    if (!markerInstances.current.length) return
+    if (currentLocation) updateCurrentLocationMarker(currentLocation)
+  }, [currentLocation])
 
-    // 이전에 선택된 마커가 있다면 원래 아이콘으로 되돌리기
-    if (selectedMarker.current) {
-      const prevMarkerInfo = markerInstances.current.find(
-        ({ marker }) => marker === selectedMarker.current,
-      )
-
-      if (prevMarkerInfo) {
-        const defaultIcon = createMarkerIcon(prevMarkerInfo.branch, "default")
-        prevMarkerInfo.marker.setIcon(defaultIcon)
-      }
-    }
-
-    // 새로 선택된 마커의 아이콘 변경
-    if (selectedBranch) {
-      const newMarkerInfo = markerInstances.current.find(
-        ({ branch }) => branch.id === selectedBranch.id,
-      )
-
-      if (newMarkerInfo) {
-        const selectedIcon = createMarkerIcon(selectedBranch, "active")
-        newMarkerInfo.marker.setIcon(selectedIcon)
-        selectedMarker.current = newMarkerInfo.marker
-      }
-    } else {
-      selectedMarker.current = null
-    }
-  }, [selectedBranch])
+  const moveToCurrentLocation = () => {
+    getCurrentLocation({
+      onSuccess: (coords) => {
+        if (!mapInstance.current) return
+        mapInstance.current.setCenter(
+          new naver.maps.LatLng(coords.latitude, coords.longitude),
+        )
+        mapInstance.current.setZoom(15)
+        setCurrentLocation(coords)
+        updateCurrentLocationMarker(coords)
+        options?.onMoveMap?.(coords)
+      },
+    })
+  }
 
   return (
-    <div className="relative flex-1">
-      <div className="w-full h-full" ref={mapRef} />
-      {showCurrentLocationButton && (
+    <div id={"map"} ref={mapRef} className={"relative w-full h-full"}>
+      {options?.showCurrentLocationButton && (
         <button
+          className={clsx(
+            `absolute right-5 bottom-10 z-10 w-10 h-10 bg-white rounded-full items-center justify-center flex shadow-xl ${selectedBranch ? "transition-transform -translate-y-32 duration-300" : "transition-transform translate-y-0 duration-300"}`,
+            options.currentLocationButtonClassName || "",
+          )}
           onClick={moveToCurrentLocation}
-          className={`absolute bottom-10 right-4 bg-white p-2 rounded-full shadow-floatingButton hover:bg-gray-50 flex items-center gap-2 
-            ${selectedBranch ? "transition-transform -translate-y-32 duration-300" : "transition-transform translate-y-0 duration-300"}`}
         >
           <CrosshairIcon />
         </button>

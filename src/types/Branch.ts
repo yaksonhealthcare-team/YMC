@@ -7,7 +7,13 @@ export interface Branch {
   canBookToday: boolean
   distanceInMeters: string | null
   isFavorite: boolean
+  brandCode: string
   brand: "therapist" | "dalia" | "diet"
+}
+
+export interface BranchesWithCurrentAddress {
+  branches: Branch[]
+  address: string
 }
 
 export interface BranchDetail {
@@ -68,6 +74,7 @@ export interface Profile {
   name: string
   profileImageUrl?: string
   description?: string
+  grade: string
 }
 
 export interface BranchFilters {
@@ -79,18 +86,32 @@ export interface BranchFilters {
   search?: string
 }
 
+export interface BranchSearchResponse {
+  resultCode: string
+  resultMessage: string
+  resultCount: string
+  total_count: number
+  total_page_count: number
+  current_page: number
+  body: {
+    current_addr: string
+    result: BranchResponse[]
+  }
+}
+
 export interface BranchResponse {
-  current_addr: string
-  result: {
-    b_idx: string
-    b_name: string
-    b_addr: string
-    b_lat: string
-    b_lon: string
-    reserve: string
-    distance: string
-    b_bookmark: string
-  }[]
+  brand_code: string
+  b_idx: string
+  b_name: string
+  b_addr: string
+  b_lat: string
+  b_lon: string
+  reserve: string
+  distance: string
+  b_bookmark: string
+  lat?: string
+  lon?: string
+  addr?: string
 }
 
 export interface BranchDetailResponse {

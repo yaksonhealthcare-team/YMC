@@ -31,7 +31,7 @@ interface MembershipProps {
   count: string
   date: string
   status: MembershipStatus
-  serviceType: string
+  serviceType?: string
   showReserveButton?: boolean
   showHistoryButton?: boolean
   className?: string
@@ -51,14 +51,14 @@ export const MembershipCard = ({
   const navigate = useNavigate()
 
   const showReservationButton =
-    showReserveButton && status === MembershipStatus.AVAILABLE
+    showReserveButton && status === MembershipStatus.ACTIVE
 
   return (
     <div className={clsx(STYLES.container, className)}>
       <div className={STYLES.content}>
         <div className={STYLES.tags}>
           <MembershipTag status={status} />
-          <Tag type="rect" title={serviceType} />
+          {serviceType && <Tag type="rect" title={serviceType} />}
         </div>
 
         <span className={STYLES.title}>{title}</span>

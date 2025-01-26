@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react"
 import { Button } from "@components/Button"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams, useLocation } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
 import OptionsBottomSheetContent from "./_fragments/OptionsBottomSheetContent.tsx"
@@ -16,100 +16,119 @@ import "swiper/swiper-bundle.css"
 import MembershipPlaceholderImage from "@assets/images/MembershipPlaceholderImage.jpg"
 import CartIcon from "@components/icons/CartIcon.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 const MembershipDetailPage = () => {
-  const { id } = useParams<{ id: string }>()
-  const { setHeader, setNavigation } = useLayout()
-  const { openBottomSheet, closeOverlay } = useOverlay()
+  const { id } = useParams()
+  const location = useLocation()
   const navigate = useNavigate()
-
+  const { setHeader, setNavigation } = useLayout()
+  const { data: membership } = useMembershipDetail(id!)
+  const { openBottomSheet, closeOverlay } = useOverlay()
   const {
-    shouldOpenBottomSheet,
-    setShouldOpenBottomSheet,
-    clear: clearMembershipOptions,
+    currentPath,
+    isBottomSheetOpen,
+    setCurrentPath,
+    setSelectedOptions,
+    setIsBottomSheetOpen,
+    clear
   } = useMembershipOptionsStore()
-  const { data: membership, isLoading } = useMembershipDetail(id || "")
-  const sortedOptions = useMemo(
-    () =>
-      membership?.options.sort(
-        (a, b) => Number(a.subscriptionIndex) - Number(b.subscriptionIndex),
-      ),
-    [membership?.options],
-  )
 
-  const firstOption = sortedOptions?.[0]
+  useEffect(() => {
+    if (currentPath !== location.pathname) {
+      clear()
+      closeOverlay()
+      setCurrentPath(location.pathname)
+    }
+  }, [location.pathname])
+
+  const optionsBottomSheetContent = useMemo(
+    () => (
+      <OptionsBottomSheetContent
+        key={location.pathname}
+        serviceType={membership?.s_type}
+        options={membership?.options || []}
+        membershipId={id!}
+        onClickBranchSelect={() => {
+          closeOverlay()
+          navigate("/membership/select-branch", {
+            state: { returnPath: location.pathname }
+          })
+        }}
+        onAddToCartSuccess={() => {
+          closeOverlay()
+          setSelectedOptions([])
+          navigate("/cart")
+        }}
+      />
+    ),
+    [membership, location.pathname]
+  )
 
   useEffect(() => {
     setHeader({
       display: true,
-      title: "",
-      left: (
-        <div
-          onClick={() => {
-            clearMembershipOptions()
-            navigate(-1)
-          }}
-        >
-          <CaretLeftIcon className="w-5 h-5" />
+      component: (
+        <div className={"flex items-center justify-between px-5 py-3 h-[48px]"}>
+          <div
+            onClick={() => {
+              if (location.state?.fromBranchSelect) {
+                navigate("/membership", { replace: true })
+              } else {
+                navigate(-1)
+              }
+            }}
+          >
+            <CaretLeftIcon className={"w-5 h-5"} />
+          </div>
+          <CartIcon />
         </div>
       ),
-      right: <CartIcon />,
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
-
-    if (shouldOpenBottomSheet) {
-      handleOpenOptionsBottomSheet()
-    }
   }, [])
 
-  if (isLoading || !membership) return <div>Loading...</div>
+  useEffect(() => {
+    if (isBottomSheetOpen) {
+      openBottomSheet(optionsBottomSheetContent)
+      setIsBottomSheetOpen(false)
+    }
+  }, [isBottomSheetOpen])
 
-  const handleOpenOptionsBottomSheet = () => {
-    openBottomSheet(
-      <OptionsBottomSheetContent
-        serviceType={membership.serviceType}
-        options={sortedOptions || []}
-        onClickBranchSelect={() => {
-          closeOverlay()
-          setShouldOpenBottomSheet(true)
-          navigate(`/membership/select-branch`)
-        }}
-      />,
-    )
-  }
+  if (!membership) return <LoadingIndicator className="min-h-screen" />
 
   const MembershipInfo = () => (
     <div className="flex flex-col px-5 py-6 gap-4">
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1">
           <span className="text-primary font-sb text-14px">
-            {membership.brandName}
+            {membership.brand_name || "약손명가"}
           </span>
           <h1 className="text-gray-900 font-sb text-16px">
-            {membership.serviceName}
+            {membership.s_name || "데이터가 없습니다"}
           </h1>
         </div>
-        {firstOption && (
-          <div className="flex items-end gap-2">
-            {membership.options[0].subscriptionOriginalPrice && (
+        {membership.options?.length > 0 && (
+          <div className="flex items-baseline gap-2">
+            {membership.options[0].original_price && (
               <span className="text-primary font-b text-18px">
                 {calculateDiscountRate(
-                  membership.options[0].subscriptionPrice,
-                  membership.options[0].subscriptionOriginalPrice,
+                  Number(membership.options[0].ss_price.replace(/,/g, "")),
+                  Number(membership.options[0].original_price.replace(/,/g, "")),
                 )}
                 %
               </span>
             )}
             <div className="flex items-baseline gap-1">
               <span className="text-gray-900 font-b text-18px">
-                {membership.options[0].subscriptionPrice}원
+                {membership.options[0].ss_price}원
               </span>
               <span className="text-gray-900 font-r text-12px">부터~</span>
             </div>
-            {membership.options[0].subscriptionOriginalPrice && (
-              <span className="text-gray-400 font-r text-14px line-through">
-                {membership.options[0].subscriptionOriginalPrice}원
+            {membership.options[0].original_price && (
+              <span className="text-gray-400 font-r text-14px line-through translate-y-[0.5px]">
+                {membership.options[0].original_price}원
               </span>
             )}
           </div>
@@ -117,7 +136,7 @@ const MembershipDetailPage = () => {
       </div>
       <div className="h-px bg-gray-100" />
       <p className="text-gray-900 font-r text-14px leading-[24px]">
-        {membership.serviceContent}
+        {membership.s_content || membership.s_name || "상품 설명이 없습니다"}
       </p>
     </div>
   )
@@ -125,9 +144,9 @@ const MembershipDetailPage = () => {
   const MembershipDetail = () => {
     const sortedCourses = useMemo(
       () =>
-        membership?.courses.sort(
-          (a, b) => Number(a.priority) - Number(b.priority),
-        ),
+        membership?.courses?.sort(
+          (a, b) => Number(a.prior) - Number(b.prior),
+        ) || [],
       [membership?.courses],
     )
 
@@ -138,41 +157,39 @@ const MembershipDetailPage = () => {
           <div className="flex items-center gap-2">
             <StoreIcon className="text-primary" />
             <span className="text-gray-800 font-m text-14px">
-              {membership.serviceType}
+              {membership.s_type || "회원권 유형 정보가 없습니다"}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <ClockIcon className="text-primary" />
             <span className="text-gray-800 font-m text-14px">
-              {membership.serviceTime}분 소요
+              {membership.s_time
+                ? `${membership.s_time}분 소요`
+                : "소요 시간 정보가 없습니다"}
             </span>
           </div>
-          {sortedCourses.length > 0 && (
-            <>
-              <div className="flex items-center gap-2">
-                <NoteIcon className="text-primary " />
-                <span className="text-gray-800 font-m text-14px">
-                  관리 코스
-                </span>
-              </div>
-              <div className="inline">
-                {sortedCourses.map((course) => (
-                  <div
-                    key={course.serviceCourseIndex}
-                    className={"inline-flex items-center"}
-                  >
-                    <p className="inline font-r text-14px whitespace-nowrap">
-                      {course.serviceCourseName} ({course.serviceCourseMinutes}
-                      분)
-                    </p>
-                    {sortedCourses.indexOf(course) !==
-                      sortedCourses.length - 1 && (
-                      <CaretRightIcon className="w-4 h-4 inline text-gray-400 mx-1.5" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </>
+          <div className="flex items-center gap-2">
+            <NoteIcon className="text-primary" />
+            <span className="text-gray-800 font-m text-14px">관리 코스</span>
+          </div>
+          {sortedCourses.length > 0 ? (
+            <div className="inline">
+              {sortedCourses.map((course) => (
+                <div key={course.sc_idx} className={"inline-flex items-center"}>
+                  <p className="inline font-r text-14px whitespace-nowrap">
+                    {course.sc_name} ({course.sc_min}분)
+                  </p>
+                  {sortedCourses.indexOf(course) !==
+                    sortedCourses.length - 1 && (
+                    <CaretRightIcon className="w-4 h-4 inline text-gray-400 mx-1.5" />
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-gray-400 font-r text-14px">
+              관리 코스 정보가 없습니다
+            </div>
           )}
         </div>
       </div>
@@ -182,12 +199,12 @@ const MembershipDetailPage = () => {
   return (
     <div className="pb-[94px]">
       <Swiper className="w-full h-[280px]">
-        {membership.pictures.length > 0 ? (
+        {membership?.pictures?.length > 0 ? (
           membership.pictures.map((imageUrl, index) => (
             <SwiperSlide key={index}>
               <img
                 src={imageUrl || MembershipPlaceholderImage}
-                alt={`${membership.serviceName} 이미지 ${index + 1}`}
+                alt={`${membership.s_name} 이미지 ${index + 1}`}
                 className="w-full h-full object-cover"
               />
             </SwiperSlide>
@@ -196,7 +213,7 @@ const MembershipDetailPage = () => {
           <SwiperSlide>
             <img
               src={MembershipPlaceholderImage}
-              alt={`${membership.serviceName} 기본 이미지`}
+              alt={`${membership.s_name || "회원권"} 기본 이미지`}
               className="w-full h-full object-cover"
             />
           </SwiperSlide>
@@ -214,7 +231,7 @@ const MembershipDetailPage = () => {
       <div className="fixed bottom-0 left-0 right-0 h-[94px] bg-white border-t border-gray-50">
         <div className="px-5 pt-3">
           <Button
-            onClick={handleOpenOptionsBottomSheet}
+            onClick={() => openBottomSheet(optionsBottomSheetContent)}
             variantType="primary"
             sizeType="l"
             className="w-full"

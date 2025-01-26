@@ -1,22 +1,23 @@
-import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useEffect, useState } from "react"
-import { useBranches } from "../../queries/useBranchQueries.tsx"
-import { DEFAULT_COORDINATE } from "../../types/Coordinate.ts"
-import { SearchField } from "@components/SearchField.tsx"
-import ActiveBranchList from "../branch/search/_fragments/ActiveBranchList.tsx"
-import useIntersection from "../../hooks/useIntersection.tsx"
-import BranchPlaceholderImage from "@assets/images/BranchPlaceholderImage.png"
-import useGeolocation from "../../hooks/useGeolocation.tsx"
-import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
+import { useLayout } from "../../contexts/LayoutContext"
+import { useGeolocation } from "../../hooks/useGeolocation"
+import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
+import { useBranches } from "../../queries/useBranchQueries"
+import { DEFAULT_COORDINATE } from "../../types/Coordinate"
+import { Branch, BranchResponse } from "../../types/Branch"
+import { SearchField } from "../../components/SearchField"
+import useIntersection from "../../hooks/useIntersection"
+import BranchPlaceholderImage from "../../assets/images/BranchPlaceholderImage.png"
+import { MembershipActiveBranchList } from "./_fragments/MembershipActiveBranchList"
 
 const MembershipBranchSelectPage = () => {
   const [query, setQuery] = useState("")
-
   const navigate = useNavigate()
+  const location = useLocation()
   const { setHeader, setNavigation } = useLayout()
-  const { location } = useGeolocation()
-  const { setSelectedBranch } = useMembershipOptionsStore()
+  const { location: geolocationLocation } = useGeolocation()
+  const { setSelectedBranch, setIsBottomSheetOpen } = useMembershipOptionsStore()
 
   const {
     data: branchPages,
@@ -24,12 +25,12 @@ const MembershipBranchSelectPage = () => {
     fetchNextPage,
     isFetchingNextPage,
   } = useBranches({
-    latitude: location.latitude ?? DEFAULT_COORDINATE.latitude!,
-    longitude: location.longitude ?? DEFAULT_COORDINATE.longitude!,
+    latitude: geolocationLocation?.latitude || DEFAULT_COORDINATE.latitude,
+    longitude: geolocationLocation?.longitude || DEFAULT_COORDINATE.longitude,
     search: query,
   })
 
-  const branches = (branchPages?.pages || []).flatMap((page) => page)
+  const branches = branchPages?.pages.flatMap((page) => page.body.result) || []
 
   const { observerTarget } = useIntersection({
     onIntersect: () => {
@@ -49,6 +50,30 @@ const MembershipBranchSelectPage = () => {
     setNavigation({ display: false })
   }, [])
 
+  const handleBranchSelect = (branch: BranchResponse | Branch) => {
+    const branchData: Branch = 'b_idx' in branch ? {
+      id: branch.b_idx,
+      name: branch.b_name,
+      address: branch.b_addr,
+      latitude: Number(branch.b_lat),
+      longitude: Number(branch.b_lon),
+      canBookToday: branch.reserve === "Y",
+      distanceInMeters: branch.distance,
+      isFavorite: branch.b_bookmark === "Y",
+      brandCode: branch.brand_code,
+      brand: "therapist",
+    } : branch
+
+    setSelectedBranch(branchData)
+    setIsBottomSheetOpen(true)
+    
+    const returnPath = location.state?.returnPath || "/membership"
+    navigate(returnPath, { 
+      replace: true,
+      state: { fromBranchSelect: true }
+    })
+  }
+
   return (
     <div className={"flex flex-col overflow-y-hidden"}>
       <div className={"px-5 pt-5 pb-6 border-b-8 border-gray-50"}>
@@ -59,32 +84,30 @@ const MembershipBranchSelectPage = () => {
         />
       </div>
       {query.length === 0 ? (
-        // TODO: Active branch list 수정되면 변경할 것
-        <ActiveBranchList />
+        <MembershipActiveBranchList onBranchSelect={handleBranchSelect} />
+      ) : branches.length === 0 ? (
+        <div className="p-4 text-center text-gray-500">
+          검색 결과가 없습니다.
+        </div>
       ) : (
         <ul className={"overflow-y-scroll h-full divide-y divide-gray-100"}>
           {branches.map((branch) => (
-            <li key={branch.id}>
+            <li key={branch.b_idx}>
               <div
                 className={"w-full px-5 py-4 gap-4 flex items-stretch"}
-                onClick={() => {
-                  setSelectedBranch(branch)
-                  navigate(-1)
-                }}
+                onClick={() => handleBranchSelect(branch)}
               >
                 <img
-                  className={
-                    "border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"
-                  }
+                  className={"border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"}
                   src={BranchPlaceholderImage}
                   alt={"지점 사진"}
                 />
                 <div className={"w-full flex flex-col"}>
                   <div className={"mt-0.5"}>
-                    <p className={"font-b text-16px"}>{branch.name}</p>
+                    <p className={"font-b text-16px"}>{branch.b_name}</p>
                   </div>
                   <div className={"flex items-center gap-[2.5px]"}>
-                    {branch.canBookToday && (
+                    {branch.reserve === "Y" && (
                       <>
                         <p className={"font-r text-12px text-tag-green"}>
                           {"당일 예약 가능"}
@@ -92,14 +115,14 @@ const MembershipBranchSelectPage = () => {
                         <div className={"w-0.5 h-0.5 rounded-xl bg-gray-400"} />
                       </>
                     )}
-                    {branch.distanceInMeters && (
+                    {branch.distance && (
                       <p className={"font-r text-12px text-gray-400"}>
-                        {branch.distanceInMeters}
+                        {branch.distance}
                       </p>
                     )}
                   </div>
                   <p className={"font-r text-14px text-start"}>
-                    {branch.address}
+                    {branch.b_addr}
                   </p>
                 </div>
               </div>

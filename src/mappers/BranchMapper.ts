@@ -1,8 +1,9 @@
 import {
-  Branch,
   BranchDetail,
   BranchDetailResponse,
+  BranchesWithCurrentAddress,
   BranchResponse,
+  BranchSearchResponse,
 } from "types/Branch"
 
 export class BranchMapper {
@@ -23,26 +24,32 @@ export class BranchMapper {
     name: string
     profileImageUrl?: string
     description?: string
+    grade: string
   } {
     return {
-      name: `${dto.bs_name_ko} ${dto.bs_grade}`,
+      name: dto.bs_name_ko,
       profileImageUrl: dto.bs_image.length > 0 ? dto.bs_image : undefined,
       description: dto.profile,
+      grade: dto.bs_grade,
     }
   }
 
-  static toEntities(dto: BranchResponse): Branch[] {
-    return dto.result.map((item) => ({
-      id: item.b_idx,
-      name: item.b_name,
-      address: item.b_addr,
-      latitude: Number(item.b_lat),
-      longitude: Number(item.b_lon),
-      canBookToday: item.reserve === "Y",
-      distanceInMeters: item.distance,
-      isFavorite: item.b_bookmark === "Y",
-      brand: this.toBrand(item.b_name),
-    }))
+  static toEntities(dto: BranchSearchResponse): BranchesWithCurrentAddress {
+    return {
+      branches: dto.body.result.map((item: BranchResponse) => ({
+        id: item.b_idx,
+        name: item.b_name,
+        address: item.b_addr,
+        latitude: Number(item.b_lat),
+        longitude: Number(item.b_lon),
+        canBookToday: item.reserve === "Y",
+        distanceInMeters: item.distance,
+        isFavorite: item.b_bookmark === "Y",
+        brand: this.toBrand(item.b_name),
+        brandCode: item.brand_code,
+      })),
+      address: dto.body.current_addr,
+    }
   }
 
   static toDetailEntity(dto: BranchDetailResponse): BranchDetail {

@@ -15,7 +15,8 @@ import BranchInformation from "./_fragments/BranchInformation.tsx"
 import ProfileCard from "@components/ProfileCard.tsx"
 import BranchDetailBottomActionBar from "./_fragments/BranchDetailBottomActionBar.tsx"
 import { useBranch } from "../../../queries/useBranchQueries.tsx"
-import { INITIAL_CENTER } from "@constants/LocationConstants.ts"
+import { DEFAULT_COORDINATE } from "../../../types/Coordinate.ts"
+import LoadingIndicator from "@components/LoadingIndicator.tsx"
 
 const branchDetailTabs = ["therapists", "programs", "information"] as const
 type BranchDetailTab = (typeof branchDetailTabs)[number]
@@ -33,8 +34,8 @@ const BranchDetail = () => {
   const [selectedTab, setSelectedTab] = useState<string>("therapists")
   // TODO: INITIAL_CENTER에 현재위치 반영하기
   const { data: branch, isLoading } = useBranch(id!, {
-    latitude: INITIAL_CENTER.lat,
-    longitude: INITIAL_CENTER.lng,
+    latitude: DEFAULT_COORDINATE.latitude,
+    longitude: DEFAULT_COORDINATE.longitude,
   })
 
   useEffect(() => {
@@ -43,7 +44,28 @@ const BranchDetail = () => {
   }, [])
 
   if (!branch || isLoading) {
-    return <></>
+    return <LoadingIndicator className="min-h-screen" />
+  }
+
+  const handleShare = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: branch.name,
+          text: `${branch.brand} ${branch.name}\n${branch.location.address}`,
+          url: window.location.href,
+        })
+      } else {
+        await navigator.clipboard.writeText(window.location.href)
+        alert("주소가 복사되었습니다.")
+      }
+    } catch (error) {
+      console.error("공유하기 실패:", error)
+    }
+  }
+
+  const handleMembershipBannerClick = () => {
+    navigate(`/membership?brand=${branch.brandCode}`)
   }
 
   const renderTab = () => {
@@ -91,8 +113,15 @@ const BranchDetail = () => {
 
                 {branch.staffs.length > 0 && (
                   <StaffSection
-                    directorCount={1}
-                    staffCount={branch.staffs.length}
+                    directorCount={
+                      branch.staffs.filter((staff) => staff.grade === "원장")
+                        .length
+                    }
+                    staffCount={
+                      branch.staffs.filter(
+                        (staff) => staff.grade === "테라피스트",
+                      ).length
+                    }
                   />
                 )}
                 {branch.director && (
@@ -106,7 +135,7 @@ const BranchDetail = () => {
               className={
                 "flex w-10 h-10 rounded-full bg-primary justify-center items-center text-white shadow-md"
               }
-              onClick={() => alert(`share branch ${id}`)}
+              onClick={handleShare}
             >
               <ShareIcon className={"w-6 h-6"} />
             </button>
@@ -115,11 +144,7 @@ const BranchDetail = () => {
         {branch.availableMembershipCount > 0 && (
           <MembershipAvailableBanner
             availableMembershipCount={branch.availableMembershipCount}
-            onClick={() =>
-              alert(
-                `Available membership count: ${branch.availableMembershipCount}`,
-              )
-            }
+            onClick={handleMembershipBannerClick}
           />
         )}
       </div>
