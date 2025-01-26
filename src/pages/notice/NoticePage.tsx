@@ -50,14 +50,14 @@ const NoticePage: React.FC = () => {
   return (
     <div className="flex flex-col gap-6 pb-[100px]">
       {notices && notices.length > 0 ? (
-        <div className="flex flex-col gap-3 px-5">
+        <div className="flex flex-col px-5">
           {notices.map((notice: Notice) => (
             <div
               key={notice.code}
-              className="flex flex-col gap-4 bg-white pb-4 rounded-[20px] border border-gray-100"
+              className="flex flex-col gap-4 bg-white py-4 border-b border-gray-100"
               onClick={() => navigate(`/notice/${notice.code}`)}
             >
-              <div className="flex flex-col px-5 gap-1.5">
+              <div className="flex flex-col gap-1.5">
                 <span className="font-b text-16px text-gray-700">
                   {notice.title}
                 </span>
