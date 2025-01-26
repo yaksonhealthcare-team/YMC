@@ -36,14 +36,14 @@ export class ContentMapper {
     }))
   }
 
-  static toNoticeDetail(dto: NoticeDetail): NoticeDetail {
+  static toNoticeDetail(dto: any): NoticeDetail {
     return {
       code: dto.code,
       gubun: dto.gubun,
       title: dto.title,
       regDate: dto.regDate,
       contents: dto.contents,
-      files: dto.files,
+      files: dto.files || [],
     }
   }
 }
