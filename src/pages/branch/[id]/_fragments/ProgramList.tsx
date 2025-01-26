@@ -62,10 +62,6 @@ const ProgramList = ({ brandCode }: ProgramListProps) => {
     selectedProgram?.sc_code
   )
 
-  if (!categoriesData?.body || categoriesData.body.length === 0) {
-    return null
-  }
-
   // 컴포넌트 마운트 시 첫 번째 카테고리 선택
   useEffect(() => {
     if (categoriesData?.body && categoriesData.body.length > 0 && !selectedProgram) {
@@ -75,6 +71,10 @@ const ProgramList = ({ brandCode }: ProgramListProps) => {
 
   const handleProgramSelect = (program: MembershipCategory) => {
     setSelectedProgram(program)
+  }
+
+  if (!categoriesData?.body || categoriesData.body.length === 0) {
+    return null
   }
 
   return (
