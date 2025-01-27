@@ -2,6 +2,7 @@ import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
 import { User, UserResponse, UpdateUserProfileRequest } from "../types/User.ts"
 import { UserMapper } from "../mappers/UserMapper.ts"
+import { DecryptRequest } from "../types/Verification.ts"
 
 export const loginWithEmail = async ({
   username,
@@ -159,12 +160,6 @@ export const signinWithSocial = async ({
 export const withdrawal = async () => {
   const response = await axiosClient.delete(`/auth/withdrawal`)
   return response.data
-}
-
-export interface DecryptRequest {
-  token_version_id: string
-  enc_data: string
-  integrity_value: string
 }
 
 export const fetchDecryptResult = async (request: DecryptRequest) => {

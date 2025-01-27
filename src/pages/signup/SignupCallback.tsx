@@ -1,12 +1,7 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { fetchDecryptResult } from "../../apis/auth.api"
-
-interface DecryptRequest {
-  token_version_id: string
-  enc_data: string
-  integrity_value: string
-}
+import { DecryptRequest, VerificationData, VerificationError } from "../../types/Verification"
 
 const SignupCallback = () => {
   const navigate = useNavigate()
@@ -23,7 +18,7 @@ const SignupCallback = () => {
           {
             type: "PASS_VERIFICATION_FAILED",
             error: "리다이렉션 경로가 지정되지 않았습니다.",
-          },
+          } as VerificationError,
           "*",
         )
         window.close()
@@ -47,7 +42,7 @@ const SignupCallback = () => {
           {
             type: "PASS_VERIFICATION_FAILED",
             error: "본인인증에 실패했습니다.",
-          },
+          } as VerificationError,
           "*",
         )
         window.close()
@@ -70,7 +65,7 @@ const SignupCallback = () => {
         }
 
         const response = await fetchDecryptResult(request)
-        const verificationData = {
+        const verificationData: VerificationData = {
           type: "PASS_VERIFICATION_DATA",
           data: {
             ...request,
@@ -95,7 +90,7 @@ const SignupCallback = () => {
             {
               type: "PASS_VERIFICATION_FAILED",
               error: "본인인증 처리 중 오류가 발생했습니다.",
-            },
+            } as VerificationError,
             "*",
           )
           window.close()
