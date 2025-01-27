@@ -18,6 +18,7 @@ import { signupWithSocial } from "../../apis/auth.api.ts"
 import { UserSignup } from "../../types/User.ts"
 import { loginWithSocial } from "../../apis/auth.api.ts"
 import { AxiosError } from "axios"
+import { validateBirthDate } from "../../utils/birthDateValidator"
 
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -30,6 +31,7 @@ export const ProfileSetup = () => {
   const isSocialSignup = !!sessionStorage.getItem("socialSignupInfo")
 
   const [nameError, setNameError] = useState("")
+  const [birthDateError, setBirthDateError] = useState("")
 
   useEffect(() => {
     setHeader({
@@ -109,6 +111,15 @@ export const ProfileSetup = () => {
       ...prev,
       profileImage: null,
     }))
+  }
+
+  const handleBirthDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 8)
+    const { isValid, errorMessage } = validateBirthDate(value)
+    setBirthDateError(errorMessage)
+    if (isValid) {
+      setSignupData({ ...signupData, birthDate: value })
+    }
   }
 
   const handleSignupSubmit = async () => {
@@ -378,10 +389,12 @@ export const ProfileSetup = () => {
         <CustomTextField
           label="생년월일"
           value={signupData.birthDate}
-          onChange={(e) =>
-            setSignupData({ ...signupData, birthDate: e.target.value })
-          }
+          onChange={handleBirthDateChange}
           placeholder="YYYYMMDD"
+          maxLength={8}
+          type="tel"
+          state={birthDateError ? "error" : "default"}
+          helperText={birthDateError}
         />
 
         {/* 주소 */}
