@@ -124,6 +124,7 @@ const OAuthCallback = lazy(() => import("../pages/oauth/OAuthCallback"))
 const LocationPickerMap = lazy(
   () => import("../pages/branch/_fragments/LocationPickerMap"),
 )
+const SignupCallback = lazy(() => import("../pages/signup/SignupCallback"))
 
 export const routeConfig: RouteConfig[] = [
   {
@@ -176,6 +177,10 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/signup/profile",
     element: <ProfileSetup />,
+  },
+  {
+    path: "/signup/callback",
+    element: <SignupCallback />,
   },
   {
     path: "/signup/complete",
