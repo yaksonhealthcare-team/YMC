@@ -297,6 +297,7 @@ export const ProfileSetup = () => {
             placeholder="이름 입력"
             state={nameError ? "error" : "default"}
             helperText={nameError}
+            disabled={true}
           />
         </div>
 
@@ -311,6 +312,7 @@ export const ProfileSetup = () => {
           placeholder="- 없이 입력"
           maxLength={11}
           type="tel"
+          disabled={true}
         />
 
         {/* 성별 */}
@@ -318,23 +320,24 @@ export const ProfileSetup = () => {
           <span className="text-14px font-medium text-[#212121]">성별</span>
           <div className="flex gap-2">
             <button
-              className={`flex-1 h-[52px] px-5 rounded-xl border flex justify-between items-center ${
+              className={`flex-1 h-[52px] px-5 rounded-xl border flex justify-between items-center cursor-not-allowed opacity-75 ${
                 signupData.gender === "female"
                   ? "bg-[#FEF2F1] border-primary"
-                  : "border-[#ECECEC]"
+                  : "border-[#ECECEC] bg-gray-50"
               }`}
               onClick={() => setSignupData({ ...signupData, gender: "female" })}
+              disabled={true}
             >
               <span
-                className={`text-16px ${signupData.gender === "female" ? "font-semibold" : ""}`}
+                className={`text-16px ${signupData.gender === "female" ? "font-semibold" : "text-gray-500"}`}
               >
                 여자
               </span>
               <div
                 className={`w-5 h-5 rounded-full ${
                   signupData.gender === "female"
-                    ? "bg-primary flex items-center justify-center"
-                    : "border-2 border-[#DDDDDD]"
+                    ? "bg-primary flex items-center justify-center opacity-75"
+                    : "border-2 border-[#DDDDDD] bg-gray-100"
                 }`}
               >
                 {signupData.gender === "female" && (
@@ -343,23 +346,24 @@ export const ProfileSetup = () => {
               </div>
             </button>
             <button
-              className={`flex-1 h-[52px] px-5 rounded-xl border flex justify-between items-center ${
+              className={`flex-1 h-[52px] px-5 rounded-xl border flex justify-between items-center cursor-not-allowed opacity-75 ${
                 signupData.gender === "male"
                   ? "bg-[#FEF2F1] border-primary"
-                  : "border-[#ECECEC]"
+                  : "border-[#ECECEC] bg-gray-50"
               }`}
               onClick={() => setSignupData({ ...signupData, gender: "male" })}
+              disabled={true}
             >
               <span
-                className={`text-16px ${signupData.gender === "male" ? "font-semibold" : ""}`}
+                className={`text-16px ${signupData.gender === "male" ? "font-semibold" : "text-gray-500"}`}
               >
                 남자
               </span>
               <div
                 className={`w-5 h-5 rounded-full ${
                   signupData.gender === "male"
-                    ? "bg-primary flex items-center justify-center"
-                    : "border-2 border-[#DDDDDD]"
+                    ? "bg-primary flex items-center justify-center opacity-75"
+                    : "border-2 border-[#DDDDDD] bg-gray-100"
                 }`}
               >
                 {signupData.gender === "male" && (
