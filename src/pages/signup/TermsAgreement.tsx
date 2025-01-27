@@ -157,6 +157,11 @@ export const TermsAgreement = () => {
     e.currentTarget.submit()
   }
 
+  const handleDetailClick = (path: string) => (e: React.MouseEvent) => {
+    e.preventDefault()
+    navigate(path)
+  }
+
   return (
     <form
       action="https://nice.checkplus.co.kr/CheckPlusSafeModel/service.cb"
@@ -198,25 +203,25 @@ export const TermsAgreement = () => {
               title="서비스 이용약관 (필수)"
               checked={agreements.terms}
               onChange={() => handleAgreement("terms")}
-              onDetail={() => navigate("/terms")}
+              onDetail={handleDetailClick("/terms")}
             />
             <AgreementItem
               title="개인정보 수집 이용 (필수)"
               checked={agreements.privacy}
               onChange={() => handleAgreement("privacy")}
-              onDetail={() => navigate("/privacy")}
+              onDetail={handleDetailClick("/privacy")}
             />
             <AgreementItem
               title="위치기반 서비스 이용약관 (필수)"
               checked={agreements.location}
               onChange={() => handleAgreement("location")}
-              onDetail={() => navigate("/location")}
+              onDetail={handleDetailClick("/location")}
             />
             <AgreementItem
               title="마케팅 정보 수신 동의 (선택)"
               checked={agreements.marketing}
               onChange={() => handleAgreement("marketing")}
-              onDetail={() => navigate("/marketing")}
+              onDetail={handleDetailClick("/marketing")}
             />
           </div>
         </div>
@@ -240,7 +245,7 @@ type AgreementItemProps = {
   title: string
   checked: boolean
   onChange: () => void
-  onDetail: () => void
+  onDetail: (e: React.MouseEvent) => void
 }
 
 const AgreementItem = ({
