@@ -1,9 +1,6 @@
 import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
 
 const SignupCallback = () => {
-  const navigate = useNavigate()
-
   useEffect(() => {
     // URL에서 쿼리 파라미터 가져오기
     const queryParams = new URLSearchParams(window.location.search)
@@ -23,38 +20,43 @@ const SignupCallback = () => {
           "*",
         )
         window.close()
-      } else {
-        // 일반 페이지인 경우
-        navigate("/signup", {
-          state: { error: "본인인증에 실패했습니다." },
-          replace: true,
-        })
       }
       return
     }
 
-    // 본인인증 결과 데이터 처리
-    const verificationData = {
-      type: "PASS_VERIFICATION_DATA",
-      data: {
-        token_version_id: tokenVersionId,
-        enc_data: encData,
-        integrity_value: integrityValue,
-      },
+    const handleVerification = async () => {
+      try {
+
+        // 팝업인 경우
+        if (window.opener) {
+          window.opener.postMessage(
+            {
+              type: "PASS_VERIFICATION_DATA",
+              data: {
+                token_version_id: tokenVersionId,
+                enc_data: encData,
+                integrity_value: integrityValue,
+              },
+            },
+            "*",
+          )
+        }
+      } catch (error) {
+        if (window.opener) {
+          window.opener.postMessage(
+            {
+              type: "PASS_VERIFICATION_FAILED",
+              error: "본인인증 처리 중 오류가 발생했습니다.",
+            },
+            "*",
+          )
+        }
+      }
     }
 
-    // 팝업인 경우
-    if (window.opener) {
-      window.opener.postMessage(verificationData, "*")
-      window.close()
-    } else {
-      // 일반 페이지인 경우
-      navigate("/signup/terms", {
-        state: { verificationData },
-        replace: true,
-      })
-    }
-  }, [navigate])
+    handleVerification()
+    window.close()
+  }, [])
 
   return (
     <div className="flex items-center justify-center min-h-screen">
