@@ -160,3 +160,14 @@ export const withdrawal = async () => {
   const response = await axiosClient.delete(`/auth/withdrawal`)
   return response.data
 }
+
+export interface DecryptRequest {
+  token_version_id: string
+  enc_data: string
+  integrity_value: string
+}
+
+export const fetchDecryptResult = async (request: DecryptRequest) => {
+  const { data } = await axiosClient.post("/auth/decrypt/result.php", request)
+  return data
+}

@@ -1,5 +1,12 @@
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { fetchDecryptResult } from "../../apis/auth.api"
+
+interface DecryptRequest {
+  token_version_id: string
+  enc_data: string
+  integrity_value: string
+}
 
 const SignupCallback = () => {
   const navigate = useNavigate()
@@ -7,6 +14,27 @@ const SignupCallback = () => {
   useEffect(() => {
     // URL에서 쿼리 파라미터 가져오기
     const queryParams = new URLSearchParams(window.location.search)
+    const returnPath = queryParams.get("return_path")
+
+    if (!returnPath) {
+      // 리다이렉션 경로가 없는 경우 에러 처리
+      if (window.opener) {
+        window.opener.postMessage(
+          {
+            type: "PASS_VERIFICATION_FAILED",
+            error: "리다이렉션 경로가 지정되지 않았습니다.",
+          },
+          "*",
+        )
+        window.close()
+      } else {
+        navigate("/", {
+          state: { error: "리다이렉션 경로가 지정되지 않았습니다." },
+          replace: true,
+        })
+      }
+      return
+    }
 
     const tokenVersionId = queryParams.get("token_version_id")
     const encData = queryParams.get("enc_data")
@@ -25,7 +53,7 @@ const SignupCallback = () => {
         window.close()
       } else {
         // 일반 페이지인 경우
-        navigate("/signup", {
+        navigate("/", {
           state: { error: "본인인증에 실패했습니다." },
           replace: true,
         })
@@ -33,27 +61,54 @@ const SignupCallback = () => {
       return
     }
 
-    // 본인인증 결과 데이터 처리
-    const verificationData = {
-      type: "PASS_VERIFICATION_DATA",
-      data: {
-        token_version_id: tokenVersionId,
-        enc_data: encData,
-        integrity_value: integrityValue,
-      },
+    const handleVerification = async () => {
+      try {
+        const request: DecryptRequest = {
+          token_version_id: tokenVersionId,
+          enc_data: encData,
+          integrity_value: integrityValue,
+        }
+
+        const response = await fetchDecryptResult(request)
+        const verificationData = {
+          type: "PASS_VERIFICATION_DATA",
+          data: {
+            ...request,
+            userData: response.body,
+          },
+        }
+
+        // 팝업인 경우
+        if (window.opener) {
+          window.opener.postMessage(verificationData, "*")
+          window.close()
+        } else {
+          // 일반 페이지인 경우
+          navigate(returnPath, {
+            state: { verificationData },
+            replace: true,
+          })
+        }
+      } catch (error) {
+        if (window.opener) {
+          window.opener.postMessage(
+            {
+              type: "PASS_VERIFICATION_FAILED",
+              error: "본인인증 처리 중 오류가 발생했습니다.",
+            },
+            "*",
+          )
+          window.close()
+        } else {
+          navigate("/", {
+            state: { error: "본인인증 처리 중 오류가 발생했습니다." },
+            replace: true,
+          })
+        }
+      }
     }
 
-    // 팝업인 경우
-    if (window.opener) {
-      window.opener.postMessage(verificationData, "*")
-      window.close()
-    } else {
-      // 일반 페이지인 경우
-      navigate("/signup/terms", {
-        state: { verificationData },
-        replace: true,
-      })
-    }
+    handleVerification()
   }, [navigate])
 
   return (

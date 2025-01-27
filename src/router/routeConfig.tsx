@@ -165,30 +165,36 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/signup",
     element: <Navigate to="/signup/terms" />,
-  },
-  {
-    path: "/signup/terms",
-    element: <TermsAgreement />,
-  },
-  {
-    path: "/signup/email",
-    element: <EmailPassword />,
-  },
-  {
-    path: "/signup/profile",
-    element: <ProfileSetup />,
-  },
-  {
-    path: "/signup/callback",
-    element: <SignupCallback />,
-  },
-  {
-    path: "/signup/complete",
-    element: <SignupComplete />,
-  },
-  {
-    path: "/signup/branch",
-    element: <AddUsingBranch />,
+    children: [
+      {
+        path: "",
+        element: <Navigate to="/signup/terms" />,
+      },
+      {
+        path: "terms",
+        element: <TermsAgreement />,
+      },
+      {
+        path: "callback",
+        element: <SignupCallback />,
+      },
+      {
+        path: "email",
+        element: <EmailPassword />,
+      },
+      {
+        path: "profile",
+        element: <ProfileSetup />,
+      },
+      {
+        path: "complete",
+        element: <SignupComplete />,
+      },
+      {
+        path: "branch",
+        element: <AddUsingBranch />,
+      },
+    ],
   },
   // 비밀번호 찾기, 이메일 찾기
   {
