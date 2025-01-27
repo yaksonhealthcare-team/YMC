@@ -2,7 +2,6 @@ import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
 import { User, UserResponse, UpdateUserProfileRequest } from "../types/User.ts"
 import { UserMapper } from "../mappers/UserMapper.ts"
-import { DecryptRequest } from "../types/Verification.ts"
 
 export const loginWithEmail = async ({
   username,
@@ -160,9 +159,4 @@ export const signinWithSocial = async ({
 export const withdrawal = async () => {
   const response = await axiosClient.delete(`/auth/withdrawal`)
   return response.data
-}
-
-export const fetchDecryptResult = async (request: DecryptRequest) => {
-  const { data } = await axiosClient.post("/auth/decrypt/result.php", request)
-  return data
 }

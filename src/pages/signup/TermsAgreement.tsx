@@ -102,7 +102,9 @@ export const TermsAgreement = () => {
               },
             }),
           }))
-          navigate("/signup/profile")
+          
+          // 소셜 로그인인 경우 프로필 설정 페이지로, 아닌 경우 이메일/비밀번호 입력 페이지로 이동
+          navigate(socialInfo ? "/signup/profile" : "/signup/email")
         } catch (error) {
           const axiosError = error as AxiosError<{ resultMessage: string }>
           openAlert({
