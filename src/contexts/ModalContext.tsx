@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useContext, useState } from "react"
+import React, { createContext, ReactNode, useContext, useState, useEffect } from "react"
 import {
   Button,
   Dialog,
@@ -93,6 +93,24 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
     onClose?: () => void
   } | null>(null)
 
+  useEffect(() => {
+    if (overlayState.isOpen && overlayState.type === OverlayTypes.BOTTOM_SHEET) {
+      window.history.pushState({ bottomSheet: true }, "")
+
+      const handlePopState = () => {
+        setOverlayState({ isOpen: false, type: null, content: null, options: {} })
+        setBottomSheetContent(null)
+        setAlertProps(null)
+      }
+
+      window.addEventListener("popstate", handlePopState)
+
+      return () => {
+        window.removeEventListener("popstate", handlePopState)
+      }
+    }
+  }, [overlayState.isOpen, overlayState.type])
+
   const openOverlay = (
     type: OverlayTypes,
     content: ReactNode,
@@ -107,6 +125,14 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
   }
 
   const closeOverlay = () => {
+    if (overlayState.type === OverlayTypes.BOTTOM_SHEET) {
+      const currentState = window.history.state
+      if (currentState?.bottomSheet) {
+        window.history.back()
+        return
+      }
+    }
+
     setOverlayState({ isOpen: false, type: null, content: null, options: {} })
     setBottomSheetContent(null)
     setAlertProps(null)
