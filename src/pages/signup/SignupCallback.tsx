@@ -26,7 +26,6 @@ const SignupCallback = () => {
 
     const handleVerification = async () => {
       try {
-
         // 팝업인 경우
         if (window.opener) {
           window.opener.postMessage(
