@@ -160,3 +160,21 @@ export const withdrawal = async () => {
   const response = await axiosClient.delete(`/auth/withdrawal`)
   return response.data
 }
+
+export const findEmail = async ({
+  name,
+  mobileNumber,
+  birthDate,
+}: {
+  name: string
+  mobileNumber: string
+  birthDate: string
+}): Promise<string> => {
+  const { data } = await axiosClient.post<HTTPResponse<{ email: string }[]>>("/auth/find-account", {
+    name,
+    mobileno: mobileNumber,
+    birthdate: birthDate,
+  })
+
+  return data.body[0].email
+}

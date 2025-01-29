@@ -1,12 +1,18 @@
 import { Button } from "@components/Button.tsx"
 import { useEffect, useState } from "react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
+import { findEmail } from "../../apis/auth.api.ts"
+import { useOverlay } from "../../contexts/ModalContext"
 
 const FindEmail = () => {
-  const [email, setEmail] = useState<string>()
   const { setHeader } = useLayout()
   const navigate = useNavigate()
+  const location = useLocation()
+  const verifiedData = location.state?.verifiedData
+  const { openAlert } = useOverlay()
+  const [email, setEmail] = useState<string>("")
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     setHeader({
@@ -14,14 +20,48 @@ const FindEmail = () => {
       left: "back",
       backgroundColor: "bg-white",
     })
-  }, [])
 
-  useEffect(() => {
-    setEmail("leolap@naver.com")
-  }, [])
+    // 본인인증 데이터가 없으면 계정찾기 페이지로 이동
+    if (!verifiedData) {
+      navigate("/find-account")
+      return
+    }
+
+    // 본인인증 데이터로 이메일 찾기
+    const fetchEmail = async () => {
+      try {
+        const foundEmail = await findEmail({
+          name: verifiedData.name,
+          mobileNumber: verifiedData.mobileNumber,
+          birthDate: verifiedData.birthDate,
+        })
+        setEmail(foundEmail)
+      } catch (error) {
+        openAlert({
+          title: "오류",
+          description: "이메일을 찾을 수 없습니다.",
+        })
+        navigate("/login")
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchEmail()
+  }, [verifiedData, navigate, openAlert])
 
   const navigateToLogin = () => {
     navigate("/login")
+  }
+
+  if (isLoading) {
+    return (
+      <div className="px-[20px] mt-[28px]">
+        <p className="flex flex-col justify-center items-center font-[600] text-20px text-[#212121]">
+          이메일을 찾고 있습니다...
+        </p>
+      </div>
+    )
   }
 
   return (
