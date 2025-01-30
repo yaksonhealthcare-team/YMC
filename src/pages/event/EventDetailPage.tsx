@@ -1,27 +1,31 @@
 import { useParams } from "react-router-dom"
 import { useEventDetail } from "queries/useEventQueries"
-import { Swiper, SwiperSlide } from "swiper/react"
 import { EmptyCard } from "@components/EmptyCard"
 import { useLayout } from "contexts/LayoutContext"
 import { useEffect } from "react"
+import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
+import LoadingIndicator from "@components/LoadingIndicator"
+import { EventDetail } from "types/Event"
 
 const EventDetailPage = () => {
   const { id } = useParams<{ id: string }>()
-  console.log("Event ID:", id)
-  const { data: event } = useEventDetail(id!)
+  const { data: event, isLoading, isError } = useEventDetail(id!)
   const { setHeader, setNavigation } = useLayout()
 
   useEffect(() => {
     setHeader({
       display: true,
-      title: event?.title || "이벤트",
       left: "back",
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
-  }, [setHeader, setNavigation, event?.title])
+  }, [setHeader, setNavigation])
 
-  if (!event) {
+  if (isLoading) {
+    return <LoadingIndicator className="min-h-screen" />
+  }
+
+  if (isError || !event) {
     return (
       <EmptyCard
         title={`이벤트 정보를 불러올 수 없어요.\n잠시 후 다시 시도해주세요.`}
@@ -30,36 +34,48 @@ const EventDetailPage = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6 pb-[100px] pt-4 mx-auto w-full max-w-[768px]">
-      {event.files.length > 0 && (
-        <div className="px-5">
-          <Swiper
-            spaceBetween={10}
-            slidesPerView={1}
-            style={{ overflow: "visible" }}
-          >
-            {event.files.map(({ fileurl }, index) => (
-              <SwiperSlide key={index}>
-                <img
-                  src={fileurl}
-                  alt={event.title}
-                  className="w-full object-contain"
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+    <div className="min-h-screen bg-white p-5">
+      <div className="flex flex-col gap-6">
+        <EventHeader event={event} />
+        <div className="w-full h-[1px] bg-[#ECECEC] rounded-[1px]"></div>
+        <EventContent event={event} />
+      </div>
+    </div>
+  )
+}
+
+const EventHeader = ({ event }: { event: EventDetail }) => {
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="text-18px font-bold text-gray-900">{event.title}</div>
+      <div className="flex items-center gap-2">
+        <CalendarIcon className={"w-[14px] h-[14px]"} />
+        <div className="text-14px font-medium text-gray-500">
+          {event.sdate} ~ {event.edate}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const EventContent = ({ event }: { event: EventDetail }) => {
+  if (!event.contents) {
+    return null
+  }
+
+  return (
+    <div className="self-stretch flex flex-col gap-3">
+      {event.files?.length > 0 && event.files[0].fileurl && (
+        <div className="mb-4">
+          <img 
+            src={event.files[0].fileurl} 
+            alt={event.title} 
+            className="w-full rounded-lg"
+          />
         </div>
       )}
-
-      <div className="flex flex-col px-5 gap-1.5">
-        <span className="font-b text-20px text-gray-700">{event.title}</span>
-        <span className="font-r text-14px text-gray-600">
-          {event.sdate} ~ {event.edate}
-        </span>
-      </div>
-
-      <div
-        className="px-5 font-r text-14px text-gray-700"
+      <div 
+        className="text-16px font-normal text-gray-900 leading-[26.88px]"
         dangerouslySetInnerHTML={{ __html: event.contents }}
       />
     </div>
