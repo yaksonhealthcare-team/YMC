@@ -80,7 +80,6 @@ const Home = () => {
             </div>
           }
           contents={[
-            <div className="pt-2">
               <div className="flex justify-between items-center bg-primary-300 rounded-2xl p-4">
                 <div className="flex gap-2 flex-col text-white">
                   <Typography className={"font-b"}>
@@ -98,8 +97,7 @@ const Home = () => {
                 >
                   예약하기
                 </div>
-              </div>
-            </div>,
+              </div>,
             <div className="mt-4">
               <Swiper
                 modules={[Pagination]}
