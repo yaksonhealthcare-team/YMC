@@ -19,10 +19,6 @@ const EventPage = () => {
     }, 100)
   }, [])
 
-  if (isLoading) {
-    return <LoadingIndicator className="min-h-screen" />
-  }
-
   return (
     <div className="absolute inset-0 flex flex-col bg-gray-50">
       <div className="sticky top-0 z-10 bg-white">
@@ -73,8 +69,10 @@ const EventPage = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto bg-white">
-        {events && events.length > 0 ? (
+      <div className="flex-1 overflow-auto bg-white relative">
+        {isLoading ? (
+          <LoadingIndicator className="absolute inset-0" />
+        ) : events && events.length > 0 ? (
           <div className="flex flex-col divide-y divide-gray-100">
             {events.map((event: Event) => (
               <div
