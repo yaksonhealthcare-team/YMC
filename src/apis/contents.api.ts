@@ -4,6 +4,7 @@ import { Event, EventDetail } from "types/Event"
 import { Notice, NoticeDetail } from "../types/Content.ts"
 import { ContentMapper } from "mappers/ContentMapper"
 import { Tab } from "types/Event"
+
 export const fetchEvents = async (status: Tab = "ALL"): Promise<Event[]> => {
   const { data } = await axiosClient.get<HTTPResponse<Event[]>>(
     "/contents/contents",
@@ -15,7 +16,7 @@ export const fetchEvents = async (status: Tab = "ALL"): Promise<Event[]> => {
       },
     },
   )
-  return ContentMapper.toEvents(data.body)
+  return ContentMapper.toEvents(data.body || [])
 }
 
 export const fetchEventDetail = async (code: string): Promise<EventDetail> => {
