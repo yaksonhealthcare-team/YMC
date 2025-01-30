@@ -3,15 +3,15 @@ import { HTTPResponse } from "./http.ts"
 import { Event, EventDetail } from "types/Event"
 import { Notice, NoticeDetail } from "../types/Content.ts"
 import { ContentMapper } from "mappers/ContentMapper"
-
-export const fetchEvents = async (): Promise<Event[]> => {
+import { Tab } from "types/Event"
+export const fetchEvents = async (status: Tab = "ALL"): Promise<Event[]> => {
   const { data } = await axiosClient.get<HTTPResponse<Event[]>>(
     "/contents/contents",
     {
       params: {
         gubun: "E01",
         page: 1,
-        status: "ALL",
+        status,
       },
     },
   )

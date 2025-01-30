@@ -10,7 +10,7 @@ import clsx from "clsx"
 const EventPage = () => {
   const navigate = useNavigate()
   const [selectedTab, setSelectedTab] = useState<Tab>("ALL")
-  const { data: events, isLoading } = useEvents()
+  const { data: events, isLoading } = useEvents(selectedTab)
 
   useLayoutEffect(() => {
     window.scrollTo(0, 0)
@@ -59,14 +59,14 @@ const EventPage = () => {
           <button
             className={clsx(
               "flex-1 py-3 font-sb text-16px relative",
-              selectedTab === "ENDED"
+              selectedTab === "END"
                 ? "text-primary"
                 : "text-gray-700"
             )}
-            onClick={() => setSelectedTab("ENDED")}
+            onClick={() => setSelectedTab("END")}
           >
             종료
-            {selectedTab === "ENDED" && (
+            {selectedTab === "END" && (
               <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary" />
             )}
           </button>

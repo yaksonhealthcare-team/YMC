@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query"
 import { fetchEvents, fetchEventDetail } from "apis/contents.api"
+import { Tab } from "types/Event"
 
-export const useEvents = () => {
+export const useEvents = (status: Tab = "ALL") => {
   return useQuery({
-    queryKey: ["events"],
-    queryFn: () => fetchEvents(),
+    queryKey: ["events", status],
+    queryFn: () => fetchEvents(status),
     staleTime: 5 * 60 * 1000, // 5분
     gcTime: 10 * 60 * 1000, // 10분
   })
