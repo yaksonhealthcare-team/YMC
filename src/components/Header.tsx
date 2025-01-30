@@ -44,7 +44,10 @@ const LeftSection = ({
   onClickLeft,
   onClickBack,
 }: HeaderProps) => (
-  <button onClick={type.startsWith("back") ? onClickBack : onClickLeft}>
+  <button 
+    onClick={type.startsWith("back") ? onClickBack : onClickLeft}
+    className="flex items-center h-full"
+  >
     {type === "two_icon" ? (
       cloneElement(iconLeft!, ICON_DIMENSIONS)
     ) : type === "title_right_icon" ? (
