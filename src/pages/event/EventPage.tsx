@@ -27,13 +27,13 @@ const EventPage = () => {
     <div className="absolute inset-0 flex flex-col bg-gray-50">
       <div className="sticky top-0 z-10 bg-white">
         <Header type="back_title" title="이벤트" onClickBack={() => navigate(-1)} />
-        <div className="flex border-b border-gray-200">
+        <div className="flex px-5">
           <button
             className={clsx(
               "flex-1 py-3 font-sb text-16px relative",
               selectedTab === "ALL"
                 ? "text-primary"
-                : "text-gray-400"
+                : "text-gray-700"
             )}
             onClick={() => setSelectedTab("ALL")}
           >
@@ -47,7 +47,7 @@ const EventPage = () => {
               "flex-1 py-3 font-sb text-16px relative",
               selectedTab === "ONGOING"
                 ? "text-primary"
-                : "text-gray-400"
+                : "text-gray-700"
             )}
             onClick={() => setSelectedTab("ONGOING")}
           >
@@ -61,7 +61,7 @@ const EventPage = () => {
               "flex-1 py-3 font-sb text-16px relative",
               selectedTab === "ENDED"
                 ? "text-primary"
-                : "text-gray-400"
+                : "text-gray-700"
             )}
             onClick={() => setSelectedTab("ENDED")}
           >
