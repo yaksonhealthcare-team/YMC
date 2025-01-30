@@ -73,28 +73,31 @@ const EventPage = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto bg-white">
         {events && events.length > 0 ? (
-          <div className="flex flex-col gap-3 px-5 py-4 pb-[100px]">
+          <div className="flex flex-col divide-y divide-gray-100">
             {events.map((event: Event) => (
               <div
                 key={event.code}
-                className="flex flex-col gap-4 bg-white pb-4 rounded-[20px] border border-gray-100"
+                className="bg-white p-5"
                 onClick={() => navigate(`/event/${event.code}`)}
               >
-                {event.files.length > 0 && (
-                  <div
-                    style={{ backgroundImage: `url(${event.files[0].fileurl})` }}
-                    className="w-full h-[190px] bg-cover bg-center rounded-t-[20px]"
-                  ></div>
-                )}
-                <div className="flex flex-col px-5 gap-1.5">
-                  <span className="font-b text-16px text-gray-700">
-                    {event.title}
-                  </span>
-                  <span className="font-r text-12px text-gray-600">
-                    {event.sdate} ~ {event.edate}
-                  </span>
+                <div className="flex gap-4">
+                  {event.files.length > 0 && (
+                    <img
+                      src={event.files[0].fileurl}
+                      alt={event.title}
+                      className="w-[88px] h-[88px] rounded-lg border border-gray-100 object-cover flex-shrink-0"
+                    />
+                  )}
+                  <div className="flex flex-col flex-1">
+                    <span className="font-b text-16px text-gray-900 line-clamp-2">
+                      {event.title}
+                    </span>
+                    <span className="mt-2 font-r text-12px text-gray-500">
+                      {event.sdate} ~ {event.edate}
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}
