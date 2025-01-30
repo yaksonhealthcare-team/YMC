@@ -6,18 +6,21 @@ import { EmptyCard } from "@components/EmptyCard"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import Header from "@components/Header"
 import clsx from "clsx"
+import { useLayout } from "../../contexts/LayoutContext"
 
 const EventPage = () => {
   const navigate = useNavigate()
   const [selectedTab, setSelectedTab] = useState<Tab>("ALL")
   const { data: events, isLoading } = useEvents(selectedTab)
+  const { setNavigation } = useLayout()
 
   useLayoutEffect(() => {
     window.scrollTo(0, 0)
     setTimeout(() => {
       window.scrollTo(0, 0)
     }, 100)
-  }, [])
+    setNavigation({ display: false })
+  }, [setNavigation])
 
   return (
     <div className="absolute inset-0 flex flex-col bg-gray-50">
