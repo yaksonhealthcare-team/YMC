@@ -2,8 +2,8 @@ import { Button } from "@components/Button.tsx"
 import { useEffect, useState } from "react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useNavigate, useLocation } from "react-router-dom"
-import { findEmail } from "../../apis/auth.api.ts"
 import { useOverlay } from "../../contexts/ModalContext"
+import { findEmailWithDecryptData } from "../../apis/decrypt-result.api"
 
 const FindEmail = () => {
   const { setHeader } = useLayout()
@@ -11,7 +11,10 @@ const FindEmail = () => {
   const location = useLocation()
   const verifiedData = location.state?.verifiedData
   const { openAlert } = useOverlay()
-  const [email, setEmail] = useState<string>("")
+  const [loginInfo, setLoginInfo] = useState<{
+    thirdPartyType?: string
+    email?: string
+  } | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -30,16 +33,16 @@ const FindEmail = () => {
     // 본인인증 데이터로 이메일 찾기
     const fetchEmail = async () => {
       try {
-        const foundEmail = await findEmail({
-          name: verifiedData.name,
-          mobileNumber: verifiedData.mobileNumber,
-          birthDate: verifiedData.birthDate,
+        const result = await findEmailWithDecryptData({
+          token_version_id: verifiedData.tokenVersionId,
+          enc_data: verifiedData.encData,
+          integrity_value: verifiedData.integrityValue
         })
-        setEmail(foundEmail)
+        setLoginInfo(result)
       } catch (error) {
         openAlert({
           title: "오류",
-          description: "이메일을 찾을 수 없습니다.",
+          description: "계정을 찾을 수 없습니다.",
         })
         navigate("/login")
       } finally {
@@ -58,7 +61,7 @@ const FindEmail = () => {
     return (
       <div className="px-[20px] mt-[28px]">
         <p className="flex flex-col justify-center items-center font-[600] text-20px text-[#212121]">
-          이메일을 찾고 있습니다...
+          계정을 찾고 있습니다...
         </p>
       </div>
     )
@@ -67,14 +70,18 @@ const FindEmail = () => {
   return (
     <div className="px-[20px] mt-[28px]">
       <p className="flex flex-col justify-center items-center font-[600] text-20px text-[#212121]">
-        가입하신 이메일 계정입니다.
+        {loginInfo?.thirdPartyType === "email" 
+          ? "가입하신 이메일 계정입니다."
+          : `${loginInfo?.thirdPartyType} 계정으로 가입되어 있습니다.`}
       </p>
 
-      <div className="flex justify-center items-center mt-[40px] h-[80px] w-full bg-[#FEF1F0] rounded-xl">
-        <span className="font-[500]m text-16px text-primary-300">
-          {email}
-        </span>
-      </div>
+      {loginInfo?.thirdPartyType === "email" && loginInfo.email && (
+        <div className="flex justify-center items-center mt-[40px] h-[80px] w-full bg-[#FEF1F0] rounded-xl">
+          <span className="font-[500]m text-16px text-primary-300">
+            {loginInfo.email}
+          </span>
+        </div>
+      )}
 
       <Button
         variantType="primary"

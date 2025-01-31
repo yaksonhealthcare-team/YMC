@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom"
 import { Button } from "@components/Button.tsx"
 import { fetchEncryptDataForNice } from "../../apis/pass.api.ts"
 import { useOverlay } from "../../contexts/ModalContext"
-import { DecryptRequest, fetchDecryptResult } from "../../apis/decrypt-result.api"
 import { AxiosError } from "axios"
 
 window.name = "Parent_window"
@@ -64,22 +63,13 @@ const FindAccount = () => {
 
       if (type === "PASS_VERIFICATION_DATA") {
         try {
-          const request: DecryptRequest = {
-            token_version_id: data.token_version_id,
-            enc_data: data.enc_data,
-            integrity_value: data.integrity_value,
-          }
-
-          const response = await fetchDecryptResult(request)
-          const userData = response.body
-
           // 본인인증 성공 후 선택된 탭에 따라 이동
           navigate(`/find-account/${tab}`, { 
             state: { 
               verifiedData: {
-                name: userData.name,
-                mobileNumber: userData.hp,
-                birthDate: userData.birthdate,
+                tokenVersionId: data.token_version_id,
+                encData: data.enc_data,
+                integrityValue: data.integrity_value
               }
             }
           })
