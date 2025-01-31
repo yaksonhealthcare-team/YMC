@@ -1,6 +1,6 @@
 import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
-import { User, UserResponse, UpdateUserProfileRequest, UserSignupRequest } from "../types/User.ts"
+import { User, UserResponse, UpdateUserProfileRequest } from "../types/User.ts"
 import { UserMapper } from "../mappers/UserMapper.ts"
 
 export const loginWithEmail = async ({
