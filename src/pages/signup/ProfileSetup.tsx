@@ -188,19 +188,31 @@ export const ProfileSetup = () => {
           }
         }
       } else {
-        await signup({
-          email: signupData.email,
-          password: signupData.password!,
-          name: signupData.name,
-          mobileno: signupData.mobileNumber,
-          birthdate: signupData.birthDate,
-          gender: signupData.gender === "male" ? "M" : "F",
-          post: signupData.postCode,
-          addr1: signupData.address1,
-          addr2: signupData.address2,
-          marketing_yn: signupData.marketingYn ? "Y" : "N",
-          brand_code: signupData.brandCodes,
-        })
+        // 일반 회원가입
+        const signupFormData = {
+          userInfo: {
+            name: signupData.name,
+            email: signupData.email,
+            password: signupData.password!,
+            mobileno: signupData.mobileNumber,
+            birthdate: signupData.birthDate,
+            gender: signupData.gender === "male" ? "M" : "F",
+            addr1: signupData.address1,
+            addr2: signupData.address2 || "",
+            marketing_yn: signupData.marketingYn,
+            post: signupData.postCode,
+            nationalinfo: "0",
+            brand_code: signupData.brandCodes || []
+          },
+          authData: {
+            di: signupData.di
+          },
+          optional: {
+            recom: signupData.referralCode
+          }
+        }
+
+        await signup(signupFormData)
 
         const { accessToken } = await loginWithEmail({
           username: signupData.email,
@@ -209,10 +221,9 @@ export const ProfileSetup = () => {
 
         const user = await fetchUser(accessToken)
         login({ user, token: accessToken })
+        cleanup()
+        navigate("/signup/complete")
       }
-
-      cleanup()
-      navigate("/signup/complete")
     } catch (error) {
       if (error instanceof AxiosError) {
         const errorMessage = error.response?.data?.message

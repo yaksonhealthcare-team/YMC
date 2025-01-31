@@ -1,6 +1,6 @@
 import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
-import { User, UserResponse, UpdateUserProfileRequest } from "../types/User.ts"
+import { User, UserResponse, UpdateUserProfileRequest, UserSignupRequest } from "../types/User.ts"
 import { UserMapper } from "../mappers/UserMapper.ts"
 
 export const loginWithEmail = async ({
@@ -102,9 +102,15 @@ export const signupWithSocial = async ({
   provider: string
   userInfo: Record<string, unknown>
 }) => {
+  // di 값의 + 문자를 %2B로 변환
+  const processedUserInfo = {
+    ...userInfo,
+    di: typeof userInfo.di === 'string' ? userInfo.di.replace(/\+/g, '%2B') : userInfo.di
+  }
+
   const response = await axiosClient.post("/auth/signup/social", {
     thirdPartyType: provider,
-    ...userInfo,
+    ...processedUserInfo,
   })
 
   // BOM 제거
@@ -116,23 +122,49 @@ export const signupWithSocial = async ({
   return parsedData
 }
 
-export const signup = async (userData: {
-  email: string
-  password: string
-  name: string
-  mobileno: string
-  birthdate: string
-  gender: string
-  post: string
-  addr1: string
-  addr2?: string
-  marketing_yn: "Y" | "N"
-  brand_code?: string[]
-}) => {
-  const { data } = await axiosClient.post("/auth/signup/email", {
-    ...userData,
-    di: "1MC0GCCqGSIb3DQIJAyEA49h5LJv8y1FbAELUTG6NXvNbtYoxQPonjGbQNPzMJFM=",
-  })
+interface SignupFormData {
+  userInfo: {
+    name: string
+    email: string
+    password: string
+    mobileno: string
+    birthdate: string
+    gender: string
+    addr1: string
+    addr2?: string
+    marketing_yn: boolean
+    post: string
+    nationalinfo: string
+    brand_code?: string[]
+  }
+  authData: {
+    di: string
+  }
+  optional?: {
+    recom?: string
+  }
+}
+
+const createSignupRequest = ({
+  userInfo,
+  authData,
+  optional = {}
+}: SignupFormData) => {
+  const requestData = {
+    ...userInfo,
+    marketing_yn: userInfo.marketing_yn ? 'Y' : 'N',
+    di: authData.di.replace(/\+/g, '%2B'),
+    ...(optional.recom && { recom: optional.recom })
+  }
+
+  return requestData
+}
+
+export const signup = async (signupData: SignupFormData) => {
+  const requestData = createSignupRequest(signupData)
+
+  const { data } = await axiosClient.post("/auth/signup/email", requestData)
+
   return data
 }
 
