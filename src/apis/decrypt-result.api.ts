@@ -14,6 +14,7 @@ export interface DecryptResponse {
   sex: string
   nationalitytype: string
   tokenversion_id: string
+  di: string
 }
 
 export interface FindEmailResponse {

@@ -95,6 +95,7 @@ export const TermsAgreement = () => {
             birthDate: userData.birthdate,
             gender: userData.sex === "M" ? "male" : "female",
             marketingYn: agreements.marketing,
+            di: userData.di,
             ...(socialInfo && {
               social: {
                 provider: socialInfo.provider,
