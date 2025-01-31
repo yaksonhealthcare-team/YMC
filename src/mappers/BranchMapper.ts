@@ -2,8 +2,10 @@ import {
   BranchDetail,
   BranchDetailResponse,
   BranchesWithCurrentAddress,
-  BranchResponse,
   BranchSearchResponse,
+  BranchSearchResult,
+  BranchBookmarkResponse,
+  BranchBookmarkResult,
 } from "types/Branch"
 
 export class BranchMapper {
@@ -36,7 +38,7 @@ export class BranchMapper {
 
   static toEntities(dto: BranchSearchResponse): BranchesWithCurrentAddress {
     return {
-      branches: dto.body.result.map((item: BranchResponse) => ({
+      branches: dto.body.result.map((item: BranchSearchResult) => ({
         id: item.b_idx,
         name: item.b_name,
         address: item.b_addr,
@@ -49,6 +51,24 @@ export class BranchMapper {
         brandCode: item.brand_code,
       })),
       address: dto.body.current_addr,
+    }
+  }
+
+  static toBookmarkEntities(dto: BranchBookmarkResponse): BranchesWithCurrentAddress {
+    return {
+      branches: dto.body.map((item: BranchBookmarkResult) => ({
+        id: item.b_idx,
+        name: item.b_name,
+        address: item.b_addr || "",
+        latitude: 0,
+        longitude: 0,
+        canBookToday: item.is_reserve === "Y",
+        distanceInMeters: item.distance,
+        isFavorite: true,
+        brand: this.toBrand(item.b_name),
+        brandCode: "",
+      })),
+      address: "",
     }
   }
 
