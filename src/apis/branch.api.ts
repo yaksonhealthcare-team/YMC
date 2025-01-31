@@ -5,8 +5,7 @@ import {
 } from "../types/Branch.ts"
 import { axiosClient } from "../queries/clients.ts"
 import { Coordinate } from "../types/Coordinate.ts"
-import { BranchMapper } from "mappers/BranchMapper.ts"
-import { Branch } from "../types/Branch.ts"
+import { BranchMapper } from "../mappers/BranchMapper"
 
 export const fetchBranches = async (
   filters: BranchFilters,
@@ -51,19 +50,17 @@ export const unbookmarkBranch = async (id: string): Promise<void> => {
 }
 
 // 즐겨찾는 지점 목록 조회
-export const getBranchBookmarks = async (
-  coords?: Coordinate,
-): Promise<Branch[]> => {
-  if (!coords) return []
+export const getBranchBookmarks = async (coords?: Coordinate) => {
+  if (!coords) return { branches: [], address: "" }
 
-  const { data } = await axiosClient.get("/bookmarks/bookmarks", {
+  const response = await axiosClient.get("/bookmarks/bookmarks", {
     params: {
       page: 1,
       nowlat: coords.latitude,
       nowlon: coords.longitude,
     },
   })
-  return data.body || []
+  return BranchMapper.toBookmarkEntities(response.data)
 }
 
 // 즐겨찾기 추가

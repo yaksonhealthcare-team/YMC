@@ -87,20 +87,13 @@ export interface BranchFilters {
 }
 
 export interface BranchSearchResponse {
-  resultCode: string
-  resultMessage: string
-  resultCount: string
-  total_count: number
-  total_page_count: number
-  current_page: number
   body: {
     current_addr: string
-    result: BranchResponse[]
+    result: BranchSearchResult[]
   }
 }
 
-export interface BranchResponse {
-  brand_code: string
+export interface BranchSearchResult {
   b_idx: string
   b_name: string
   b_addr: string
@@ -109,9 +102,27 @@ export interface BranchResponse {
   reserve: string
   distance: string
   b_bookmark: string
-  lat?: string
-  lon?: string
-  addr?: string
+  brand_code: string
+}
+
+export interface BranchBookmarkResponse {
+  resultCode: string
+  resultMessage: string
+  resultCount: number
+  total_count: number
+  total_page_count: number
+  current_page: number
+  body: BranchBookmarkResult[]
+}
+
+export interface BranchBookmarkResult {
+  b_idx: string
+  b_name: string
+  b_addr: string
+  csbms_idx: string
+  distance: string
+  times: string
+  is_reserve: string
 }
 
 export interface BranchDetailResponse {

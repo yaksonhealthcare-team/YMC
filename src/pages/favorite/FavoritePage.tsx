@@ -4,19 +4,23 @@ import { Branch } from "../../types/Branch.ts"
 import { BranchFilterListItem } from "../branch/_fragments/BranchFilterList.tsx"
 import {
   useBranchBookmarksQuery,
-  useBranchBookmarkMutation,
   useBranchUnbookmarkMutation,
 } from "../../queries/useBranchQueries.tsx"
 import { useNavigate } from "react-router-dom"
 import { useGeolocation } from "../../hooks/useGeolocation.tsx"
+import { useOverlay } from "../../contexts/ModalContext.tsx"
+import LoadingIndicator from "../../components/LoadingIndicator.tsx"
+import { EmptyCard } from "../../components/EmptyCard.tsx"
 
-const FavoritePage: React.FC = () => {
+const FavoritePage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const { location, loading, error } = useGeolocation()
-  const { data: favoriteBranches = [] } = useBranchBookmarksQuery(location)
-  const { mutate: addBookmark } = useBranchBookmarkMutation()
+  const { location, loading: locationLoading, error: locationError } = useGeolocation()
+  const { data, isLoading: branchesLoading } = useBranchBookmarksQuery(location)
   const { mutate: removeBookmark } = useBranchUnbookmarkMutation()
+  const { showToast } = useOverlay()
+
+  const favoriteBranches = data?.branches || []
 
   useEffect(() => {
     setHeader({
@@ -28,53 +32,63 @@ const FavoritePage: React.FC = () => {
     setNavigation({ display: false })
   }, [setHeader, setNavigation])
 
-  function handleBranchClick(branch: Branch) {
+  const handleBranchClick = (branch: Branch) => {
     navigate(`/branch/${branch.id}`)
   }
 
-  function handleToggleFavorite(branch: Branch) {
-    if (branch.isFavorite) {
-      removeBookmark(branch.id)
-    } else {
-      addBookmark(branch.id)
-    }
+  const handleToggleFavorite = (branch: Branch) => {
+    removeBookmark(branch.id)
+    showToast("즐겨찾기에서 삭제했어요.")
   }
 
-  if (loading) {
+  if (locationLoading || branchesLoading) {
     return (
-      <div className="h-screen max-h-full bg-white p-5">
-        <p>위치 정보를 불러오는 중입니다...</p>
+      <div className="h-screen flex items-center justify-center bg-white">
+        <LoadingIndicator />
       </div>
     )
   }
 
-  if (error) {
+  if (locationError) {
     return (
-      <div className="h-screen max-h-full bg-white p-5">
-        <p>위치 정보를 불러올 수 없습니다.</p>
-        <p className="text-gray-500 text-sm mt-2">{error}</p>
+      <div className="h-screen bg-white p-5">
+        <EmptyCard
+          title={`위치 정보를 불러올 수 없습니다.\n${locationError}`}
+        />
+      </div>
+    )
+  }
+
+  if (!favoriteBranches.length) {
+    return (
+      <div className="h-screen bg-white p-5">
+        <EmptyCard
+          title="관심있는 지점을 즐겨찾기에 추가해보세요"
+        />
       </div>
     )
   }
 
   return (
-    <>
-      <div className="h-screen max-h-full bg-white p-5">
-        <div className="py-2 ">
-          총 {favoriteBranches.length}개의 즐겨찾는 지점이 있습니다.
-        </div>
-        <div className="space-y-1">
+    <div className="h-screen max-h-full bg-white">
+      <div className="px-5 mt-4 overflow-hidden">
+        <p className="font-m text-14px">
+          {"총 "}
+          <span>{favoriteBranches.length}</span>
+          {"개의 즐겨찾는 지점이 있습니다."}
+        </p>
+        <ul className="divide-y">
           {favoriteBranches.map((branch) => (
             <BranchFilterListItem
               key={branch.id}
               branch={branch}
-              onClick={(branch) => handleBranchClick(branch)}
-              onClickFavorite={(branch) => handleToggleFavorite(branch)}
+              onClick={handleBranchClick}
+              onClickFavorite={handleToggleFavorite}
             />
           ))}
-        </div>
+        </ul>
       </div>
-    </>
+    </div>
   )
 }
 
