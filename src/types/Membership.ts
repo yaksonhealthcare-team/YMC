@@ -1,8 +1,20 @@
 export enum MembershipStatus {
-  ACTIVE = "사용가능",
-  INACTIVE = "사용완료",
-  EXPIRED = "만료됨"
+  ACTIVE = "T",
+  INACTIVE = "F",
+  EXPIRED = "E"
 }
+
+export const membershipStatusToKorean = {
+  [MembershipStatus.ACTIVE]: "사용가능",
+  [MembershipStatus.INACTIVE]: "사용완료",
+  [MembershipStatus.EXPIRED]: "만료됨"
+} as const
+
+export const koreanToMembershipStatus = {
+  "사용가능": MembershipStatus.ACTIVE,
+  "사용완료": MembershipStatus.INACTIVE,
+  "만료됨": MembershipStatus.EXPIRED
+} as const
 
 export interface MembershipCategory {
   brand_code: string

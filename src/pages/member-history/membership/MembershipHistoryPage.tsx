@@ -5,11 +5,29 @@ import useIntersection from "../../../hooks/useIntersection"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useNavigate } from "react-router-dom"
 import { MembershipCard } from "@components/MembershipCard"
-import { MembershipStatus, myMembershipFilters, MyMembershipFilterItem } from "../../../types/Membership"
+import { 
+  MembershipStatus, 
+  myMembershipFilters, 
+  MyMembershipFilterItem,
+  membershipStatusToKorean
+} from "../../../types/Membership"
 import MainTabs from "../../memberHistory/_fragments/MainTabs"
 import { Button } from "@components/Button"
 import clsx from "clsx"
 import ReservationIcon from "@assets/icons/ReservationIcon.svg?react"
+
+const getStatusFromString = (status: string): MembershipStatus => {
+  switch (status) {
+    case "사용가능":
+      return MembershipStatus.ACTIVE
+    case "사용완료":
+      return MembershipStatus.INACTIVE
+    case "만료됨":
+      return MembershipStatus.EXPIRED
+    default:
+      return MembershipStatus.ACTIVE
+  }
+}
 
 const MembershipContent = ({ filterId }: { filterId: string }) => {
   const navigate = useNavigate()
@@ -52,7 +70,7 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
                 title={membership.service_name || '회원권 이름'}
                 count={`${membership.remain_amount}회 / ${membership.buy_amount}회`}
                 date={`${membership.pay_date.split(" ")[0]} - ${membership.expiration_date.split(" ")[0]}`}
-                status={membership.status as MembershipStatus}
+                status={getStatusFromString(membership.status)}
                 showReserveButton={true}
                 serviceType={membership.s_type.replace('회원권', '').trim()}
               />

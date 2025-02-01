@@ -1,4 +1,4 @@
-import { MembershipStatus } from "types/Membership"
+import { MembershipStatus, membershipStatusToKorean } from "../types/Membership"
 import { Tag, TagType } from "./Tag"
 
 interface MembershipTagProps {
@@ -19,20 +19,7 @@ const MembershipTag = ({ status }: MembershipTagProps) => {
     }
   }
 
-  const getStatusText = () => {
-    switch (status) {
-      case MembershipStatus.ACTIVE:
-        return "사용가능"
-      case MembershipStatus.INACTIVE:
-        return "사용완료"
-      case MembershipStatus.EXPIRED:
-        return "만료됨"
-      default:
-        return ""
-    }
-  }
-
-  return <Tag type={getTagType()} title={getStatusText()} />
+  return <Tag type={getTagType()} title={membershipStatusToKorean[status]} />
 }
 
 export default MembershipTag
