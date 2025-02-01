@@ -34,7 +34,7 @@ const Home = () => {
     staleTime: 5 * 60 * 1000, // 5분
     gcTime: 10 * 60 * 1000, // 10분
   })
-  const { data: reservations } = useReservations("001")
+  
   const { data: memberships, isLoading: membershipLoading } =
     useUserMemberships("T", {
       staleTime: 30 * 1000,
@@ -45,7 +45,6 @@ const Home = () => {
   const navigate = useNavigate()
   const { clear } = useMembershipOptionsStore()
 
-  const upcomingReservations = reservations || []
 
   const availableMemberships = useMemo(() => {
     if (!memberships?.body) return []
