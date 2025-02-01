@@ -21,11 +21,12 @@ import { useBanner } from "queries/useBannerQueries"
 import { BannerRequestType } from "types/Banner"
 import NoticesSummarySlider from "@components/NoticesSummarySlider.tsx"
 import { useAuth } from "../../contexts/AuthContext.tsx"
-import { MyMembership, MembershipStatus } from "types/Membership"
+import { MyMembership } from "types/Membership"
 import { useEvents } from "queries/useEventQueries"
 import { Event } from "types/Event"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
+import { getStatusFromString } from "../../utils/membership"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -236,7 +237,7 @@ const MembershipCardSection = ({
                 title={membership.service_name || '회원권 이름'}
                 count={`${membership.remain_amount}회 / ${membership.buy_amount}회`}
                 date={`${membership.pay_date.split(" ")[0]} - ${membership.expiration_date.split(" ")[0]}`}
-                status={membership.status as MembershipStatus}
+                status={getStatusFromString(membership.status)}
                 showReserveButton={true}
                 serviceType={membership.s_type.replace('회원권', '').trim()}
               />

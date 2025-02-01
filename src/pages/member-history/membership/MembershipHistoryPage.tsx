@@ -9,25 +9,12 @@ import {
   MembershipStatus, 
   myMembershipFilters, 
   MyMembershipFilterItem,
-  membershipStatusToKorean
 } from "../../../types/Membership"
 import MainTabs from "../../memberHistory/_fragments/MainTabs"
 import { Button } from "@components/Button"
 import clsx from "clsx"
 import ReservationIcon from "@assets/icons/ReservationIcon.svg?react"
-
-const getStatusFromString = (status: string): MembershipStatus => {
-  switch (status) {
-    case "사용가능":
-      return MembershipStatus.ACTIVE
-    case "사용완료":
-      return MembershipStatus.INACTIVE
-    case "만료됨":
-      return MembershipStatus.EXPIRED
-    default:
-      return MembershipStatus.ACTIVE
-  }
-}
+import { getStatusFromString } from "../../../utils/membership"
 
 const MembershipContent = ({ filterId }: { filterId: string }) => {
   const navigate = useNavigate()
