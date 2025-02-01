@@ -13,7 +13,7 @@ import { FloatingButton } from "@components/FloatingButton.tsx"
 import { EmptyCard } from "@components/EmptyCard.tsx"
 import { ReserveCard } from "@components/ReserveCard.tsx"
 import { Reservation } from "types/Reservation.ts"
-import { useReservations } from "queries/useReservationQueries"
+import { useReservations, useUpcomingReservations } from "queries/useReservationQueries"
 import { useUserMemberships } from "queries/useMembershipQueries"
 import SplashScreen from "@components/Splash.tsx"
 import { SwiperBrandCard } from "@components/SwiperBrandCard.tsx"
@@ -155,7 +155,7 @@ const Home = () => {
           }
         />
 
-        <ReserveCardSection reservations={upcomingReservations} />
+        <ReserveCardSection />
         <MembershipCardSection
           memberships={availableMemberships}
           isLoading={membershipLoading}
@@ -175,48 +175,32 @@ const Home = () => {
   )
 }
 
-const ReserveCardSection = ({
-  reservations,
-}: {
-  reservations: Reservation[]
-}) => {
-  const navigate = useNavigate()
+const ReserveCardSection = () => {
+  const { data: upcomingReservations } = useUpcomingReservations()
+  
+  if (!upcomingReservations || upcomingReservations.length === 0) {
+    return (
+      <EmptyCard
+        title={`예정된 예약이 없어요.\n예약을 통해 관리를 받아보세요.`}
+      />
+    )
+  }
 
   return (
     <div className="mt-6">
-      <Title
-        type="arrow"
-        title="예정된 예약"
-        count={`${reservations.length}건`}
-        onClick={() => navigate("/member-history/reservation")}
-      />
-      {reservations.length > 0 ? (
-        <Swiper
-          spaceBetween={10}
-          slidesPerView={1}
-          style={{ overflow: "visible" }}
-          className="mt-2"
-        >
-          {reservations.map((reservation: Reservation) => (
-            <SwiperSlide key={reservation.id} className="mr-2">
-              <ReserveCard
-                id={reservation.id}
-                status={reservation.status}
-                store={reservation.store}
-                title={reservation.programName}
-                count={reservation.visit}
-                date={reservation.date}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      ) : (
-        <EmptyCard
-          title={`예정된 예약이 없어요.\n나만을 위한 힐링을 시작해보세요!`}
-          button="예약하러 가기"
-          onClick={() => navigate("/reservation/form")}
-        />
-      )}
+      <Title title="예약 내역" />
+      <Swiper
+        spaceBetween={10}
+        slidesPerView={1.1}
+        style={{ overflow: "visible" }}
+        className="mt-2"
+      >
+        {upcomingReservations.map((reservation) => (
+          <SwiperSlide key={reservation.id}>
+            <ReserveCard reservation={reservation} />
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   )
 }
