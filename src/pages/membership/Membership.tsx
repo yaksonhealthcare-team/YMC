@@ -13,6 +13,7 @@ import {
 import { ListResponse } from "../../apis/membership.api"
 import { fetchCartCount } from "../../apis/cart.api"
 import LoadingIndicator from "@components/LoadingIndicator"
+import useIntersection from "../../hooks/useIntersection"
 
 const MembershipPage = () => {
   const navigate = useNavigate()
@@ -26,11 +27,21 @@ const MembershipPage = () => {
       data: ListResponse<MembershipCategory> | undefined
       isLoading: boolean
     }
-  const { data: membershipsData, isLoading: isMembershipsLoading } =
-    useMembershipList(brandCode, selectedCategory) as {
-      data: ListResponse<MembershipItem> | undefined
-      isLoading: boolean
-    }
+  const {
+    data: membershipsData,
+    isLoading: isMembershipsLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useMembershipList(brandCode, selectedCategory)
+
+  const { observerTarget } = useIntersection({
+    onIntersect: () => {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage()
+      }
+    },
+  })
 
   useEffect(() => {
     fetchCartCount().then((count) => setCartCount(count))
@@ -52,7 +63,7 @@ const MembershipPage = () => {
     isCategoriesLoading ||
     isMembershipsLoading ||
     !categoriesData?.body ||
-    !membershipsData?.body
+    !membershipsData?.pages[0].body
   ) {
     return <LoadingIndicator className="min-h-screen" />
   }
@@ -160,19 +171,25 @@ const MembershipPage = () => {
       <div className="pt-[185px] pb-[96px] bg-system-bg">
         <div className="max-w-[500px] min-w-[375px] mx-auto">
           <div className="px-5 py-6">
-            {membershipsData.body.length === 0 ? (
+            {membershipsData.pages[0].body.length === 0 ? (
               <div className="flex justify-center items-center h-[200px] text-gray-600">
                 준비중 입니다
               </div>
             ) : (
               <div className="space-y-4">
-                {membershipsData.body.map((membership: MembershipItem) => (
-                  <MembershipCard
-                    key={membership.s_idx}
-                    membership={membership}
-                    onClick={() => navigate(`/membership/${membership.s_idx}`)}
-                  />
-                ))}
+                {membershipsData.pages.map((page) =>
+                  page.body.map((membership: MembershipItem) => (
+                    <MembershipCard
+                      key={membership.s_idx}
+                      membership={membership}
+                      onClick={() => navigate(`/membership/${membership.s_idx}`)}
+                    />
+                  )),
+                )}
+                <div ref={observerTarget} className="h-4" />
+                {isFetchingNextPage && (
+                  <LoadingIndicator className="min-h-[100px]" />
+                )}
               </div>
             )}
           </div>

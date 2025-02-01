@@ -1,20 +1,23 @@
-import { useQuery, UseQueryOptions } from "@tanstack/react-query"
+import { useQuery, UseQueryOptions, useInfiniteQuery } from "@tanstack/react-query"
 import {
-  fetchMembershipList,
   fetchMembershipDetail,
   fetchMembershipCategories,
   fetchUserMemberships,
   fetchAdditionalManagement,
+  fetchMembershipList,
   ListResponse,
 } from "../apis/membership.api"
-import { MyMembership } from "../types/Membership"
+import { MyMembership, MembershipItem } from "../types/Membership"
 
 export const useMembershipList = (brandCode: string, scCode?: string) => {
-  return useQuery({
-    queryKey: ["memberships", "list", brandCode, scCode],
-    queryFn: () => fetchMembershipList(brandCode, scCode),
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
+  return useInfiniteQuery<ListResponse<MembershipItem>>({
+    queryKey: ["memberships", brandCode, scCode],
+    initialPageParam: 1,
+    queryFn: ({ pageParam }) => fetchMembershipList(brandCode, scCode, Number(pageParam)),
+    getNextPageParam: (lastPage) => {
+      if (!lastPage.body || lastPage.body.length === 0) return undefined
+      return lastPage.current_page + 1
+    },
   })
 }
 
@@ -37,19 +40,15 @@ export const useMembershipCategories = (brandCode: string) => {
   })
 }
 
-export const useUserMemberships = (
-  searchType?: string,
-  options?: Omit<
-    UseQueryOptions<ListResponse<MyMembership>, Error>,
-    "queryKey" | "queryFn"
-  >,
-) => {
-  return useQuery({
+export const useUserMemberships = (searchType?: string) => {
+  return useInfiniteQuery<ListResponse<MyMembership>>({
     queryKey: ["memberships", "user", searchType],
-    queryFn: () => fetchUserMemberships(searchType),
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    ...options,
+    initialPageParam: 1,
+    queryFn: ({ pageParam }) => fetchUserMemberships(searchType, Number(pageParam)),
+    getNextPageParam: (lastPage) => {
+      if (!lastPage.body || lastPage.body.length === 0) return undefined
+      return lastPage.current_page + 1
+    },
   })
 }
 
