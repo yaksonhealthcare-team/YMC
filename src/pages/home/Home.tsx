@@ -12,8 +12,7 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import { FloatingButton } from "@components/FloatingButton.tsx"
 import { EmptyCard } from "@components/EmptyCard.tsx"
 import { ReserveCard } from "@components/ReserveCard.tsx"
-import { Reservation } from "types/Reservation.ts"
-import { useReservations } from "queries/useReservationQueries"
+import { useUpcomingReservations } from "queries/useReservationQueries"
 import { useUserMemberships } from "queries/useMembershipQueries"
 import SplashScreen from "@components/Splash.tsx"
 import { SwiperBrandCard } from "@components/SwiperBrandCard.tsx"
@@ -22,11 +21,12 @@ import { useBanner } from "queries/useBannerQueries"
 import { BannerRequestType } from "types/Banner"
 import NoticesSummarySlider from "@components/NoticesSummarySlider.tsx"
 import { useAuth } from "../../contexts/AuthContext.tsx"
-import { MyMembership, MembershipStatus } from "types/Membership"
+import { MyMembership } from "types/Membership"
 import { useEvents } from "queries/useEventQueries"
 import { Event } from "types/Event"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
+import { getStatusFromString } from "../../utils/membership"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -34,22 +34,15 @@ const Home = () => {
     staleTime: 5 * 60 * 1000, // 5분
     gcTime: 10 * 60 * 1000, // 10분
   })
-  const { data: reservations } = useReservations("001")
-  const { data: memberships, isLoading: membershipLoading } =
-    useUserMemberships("T", {
-      staleTime: 30 * 1000,
-      gcTime: 1 * 60 * 1000,
-    })
+  const { data: memberships, isLoading: membershipLoading } = useUserMemberships("T")
   const { user } = useAuth()
 
   const navigate = useNavigate()
   const { clear } = useMembershipOptionsStore()
 
-  const upcomingReservations = reservations || []
-
   const availableMemberships = useMemo(() => {
-    if (!memberships?.body) return []
-    return memberships.body
+    if (!memberships?.pages[0]?.body) return []
+    return memberships.pages[0].body
   }, [memberships])
 
   useEffect(() => {
@@ -155,7 +148,7 @@ const Home = () => {
           }
         />
 
-        <ReserveCardSection reservations={upcomingReservations} />
+        <ReserveCardSection />
         <MembershipCardSection
           memberships={availableMemberships}
           isLoading={membershipLoading}
@@ -175,48 +168,38 @@ const Home = () => {
   )
 }
 
-const ReserveCardSection = ({
-  reservations,
-}: {
-  reservations: Reservation[]
-}) => {
+const ReserveCardSection = () => {
+  const { data: upcomingReservations } = useUpcomingReservations()
   const navigate = useNavigate()
+  
+  if (!upcomingReservations || upcomingReservations.length === 0) {
+    return (
+      <EmptyCard
+        title={`예정된 예약이 없어요.\n예약을 통해 관리를 받아보세요.`}
+      />
+    )
+  }
 
   return (
     <div className="mt-6">
       <Title
         type="arrow"
         title="예정된 예약"
-        count={`${reservations.length}건`}
+        count={`${upcomingReservations.length}건`}
         onClick={() => navigate("/member-history/reservation")}
       />
-      {reservations.length > 0 ? (
-        <Swiper
-          spaceBetween={10}
-          slidesPerView={1}
-          style={{ overflow: "visible" }}
-          className="mt-2"
-        >
-          {reservations.map((reservation: Reservation) => (
-            <SwiperSlide key={reservation.id} className="mr-2">
-              <ReserveCard
-                id={reservation.id}
-                status={reservation.status}
-                store={reservation.store}
-                title={reservation.programName}
-                count={reservation.visit}
-                date={reservation.date}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      ) : (
-        <EmptyCard
-          title={`예정된 예약이 없어요.\n나만을 위한 힐링을 시작해보세요!`}
-          button="예약하러 가기"
-          onClick={() => navigate("/reservation/form")}
-        />
-      )}
+      <Swiper
+        spaceBetween={10}
+        slidesPerView={1}
+        style={{ overflow: "visible" }}
+        className="mt-2"
+      >
+        {upcomingReservations.map((reservation) => (
+          <SwiperSlide key={reservation.id}>
+            <ReserveCard reservation={reservation} />
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   )
 }
@@ -251,11 +234,12 @@ const MembershipCardSection = ({
             <SwiperSlide key={membership.mp_idx} className="mr-2">
               <MembershipCard
                 id={parseInt(membership.mp_idx)}
-                title={membership.service_name}
-                count={`${membership.remain_amount}회`}
-                date={`${membership.pay_date} - ${membership.expiration_date}`}
-                status={membership.status as MembershipStatus}
+                title={membership.service_name || '회원권 이름'}
+                count={`${membership.remain_amount}회 / ${membership.buy_amount}회`}
+                date={`${membership.pay_date.split(" ")[0]} - ${membership.expiration_date.split(" ")[0]}`}
+                status={getStatusFromString(membership.status)}
                 showReserveButton={true}
+                serviceType={membership.s_type.replace('회원권', '').trim()}
               />
             </SwiperSlide>
           ))}

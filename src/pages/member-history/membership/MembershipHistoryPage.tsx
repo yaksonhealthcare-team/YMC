@@ -1,68 +1,74 @@
-import MainTabs from "./_fragments/MainTabs"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useLayout } from "../../../contexts/LayoutContext"
+import { useCallback, useEffect, useState } from "react"
+import { useUserMemberships } from "../../../queries/useMembershipQueries"
+import useIntersection from "../../../hooks/useIntersection"
+import LoadingIndicator from "@components/LoadingIndicator"
+import { useNavigate } from "react-router-dom"
+import { MembershipCard } from "@components/MembershipCard"
+import { 
+  MembershipStatus, 
+  myMembershipFilters, 
+  MyMembershipFilterItem,
+} from "../../../types/Membership"
+import MainTabs from "../../memberHistory/_fragments/MainTabs"
 import { Button } from "@components/Button"
 import clsx from "clsx"
-import { MembershipCard } from "@components/MembershipCard"
-import { useNavigate } from "react-router-dom"
 import ReservationIcon from "@assets/icons/ReservationIcon.svg?react"
-import { useLayout } from "contexts/LayoutContext"
-import { useUserMemberships } from "queries/useMembershipQueries"
-import {
-  MyMembershipFilterItem,
-  myMembershipFilters,
-  MembershipStatus,
-} from "types/Membership"
-import LoadingIndicator from "@components/LoadingIndicator"
+import { getStatusFromString } from "../../../utils/membership"
 
 const MembershipContent = ({ filterId }: { filterId: string }) => {
+  const navigate = useNavigate()
   const {
     data: memberships,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     isLoading,
-    isError,
-    error,
   } = useUserMemberships(filterId === "-" ? "" : filterId)
 
-  const flattenedMemberships = useMemo(() => {
-    if (!memberships?.body) return []
-    return memberships.body
-  }, [memberships])
+  const { observerTarget } = useIntersection({
+    onIntersect: () => {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage()
+      }
+    },
+  })
 
-  if (isLoading) return <LoadingIndicator className="flex-1" />
-  if (isError)
-    return (
-      <div className="p-5 text-red-500">
-        에러가 발생했습니다:{" "}
-        {error instanceof Error ? error.message : "알 수 없는 에러"}
-      </div>
-    )
+  if (isLoading) {
+    return <LoadingIndicator className="flex-1" />
+  }
 
   return (
     <div className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto scrollbar-hide">
-      {!memberships?.body?.length ? (
+      {!memberships?.pages[0].body?.length ? (
         <div className="flex justify-center items-center p-4">
           회원권 내역이 없습니다.
         </div>
       ) : (
-        <div className="space-y-3">
-          {flattenedMemberships.map((membership) => (
-            <MembershipCard
+      <div className="space-y-3">
+        {memberships.pages.map((page) =>
+          page.body.map((membership) => (
+            <div
               key={membership.mp_idx}
-              id={parseInt(membership.mp_idx)}
-              status={
-                membership.status === "사용가능"
-                  ? MembershipStatus.ACTIVE
-                  : membership.status === "사용완료"
-                    ? MembershipStatus.INACTIVE
-                    : MembershipStatus.EXPIRED
-              }
-              title={membership.s_type}
-              count={`${membership.remain_amount}회 / ${membership.buy_amount}회`}
-              date={`${membership.pay_date.split(" ")[0]} - ${membership.expiration_date.split(" ")[0]}`}
-              showReserveButton={false}
-              serviceType={membership.service_name || membership.s_type}
-            />
-          ))}
-        </div>
+              onClick={() => navigate(`/membership/usage/${membership.mp_idx}`)}
+            >
+              <MembershipCard
+                id={parseInt(membership.mp_idx)}
+                title={membership.service_name || '회원권 이름'}
+                count={`${membership.remain_amount}회 / ${membership.buy_amount}회`}
+                date={`${membership.pay_date.split(" ")[0]} - ${membership.expiration_date.split(" ")[0]}`}
+                status={getStatusFromString(membership.status)}
+                showReserveButton={true}
+                serviceType={membership.s_type.replace('회원권', '').trim()}
+              />
+            </div>
+          ))
+        )}
+        <div ref={observerTarget} className="h-4" />
+        {isFetchingNextPage && (
+          <LoadingIndicator className="min-h-[100px]" />
+        )}
+      </div>
       )}
     </div>
   )
@@ -99,11 +105,12 @@ const FilterContent = ({
   )
 }
 
-const MembershipHistory = () => {
+const MembershipHistoryPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
-  const [membershipFilter, setMembershipFilter] =
-    useState<MyMembershipFilterItem>(myMembershipFilters[0])
+  const [membershipFilter, setMembershipFilter] = useState<MyMembershipFilterItem>(
+    myMembershipFilters[0],
+  )
 
   const handleFilterChange = useCallback((filter: MyMembershipFilterItem) => {
     setMembershipFilter(filter)
@@ -114,7 +121,7 @@ const MembershipHistory = () => {
       display: false,
     })
     setNavigation({ display: true })
-  }, [setHeader, setNavigation])
+  }, [])
 
   return (
     <div className="flex flex-col bg-system-bg min-h-[calc(100vh-82px)]">
@@ -128,7 +135,6 @@ const MembershipHistory = () => {
       />
 
       <MembershipContent filterId={membershipFilter.id} />
-
       <button
         className="fixed bottom-[98px] right-5 w-14 h-14 bg-primary-300 text-white rounded-full shadow-lg hover:bg-primary-400 focus:outline-none focus:bg-primary-500 focus:ring-opacity-50 transition-colors duration-200 z-10"
         onClick={() => navigate("/membership")}
@@ -139,4 +145,4 @@ const MembershipHistory = () => {
   )
 }
 
-export default MembershipHistory
+export default MembershipHistoryPage

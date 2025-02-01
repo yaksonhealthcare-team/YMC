@@ -10,35 +10,53 @@ import { useReservations } from "queries/useReservationQueries"
 import { FilterItem, reservationFilters } from "types/Reservation"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
+import useIntersection from "../../hooks/useIntersection"
 
 const ReservationContent = ({ filterId }: { filterId: string }) => {
-  const { data: reservations, isLoading } = useReservations(filterId)
+  const {
+    data: reservations,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useReservations(filterId)
+
+  const { observerTarget } = useIntersection({
+    onIntersect: () => {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage()
+      }
+    },
+  })
 
   if (isLoading) {
     return <LoadingIndicator className="flex-1" />
   }
 
+  if (!reservations || reservations.pages[0].length === 0) {
+    return (
+      <div className="flex justify-center items-center p-4">
+        예약 내역이 없습니다.
+      </div>
+    )
+  }
+
   return (
     <div className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto scrollbar-hide">
-      {!reservations || reservations.length === 0 ? (
-        <div className="flex justify-center items-center p-4">
-          예약 내역이 없습니다.
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {reservations.map((reservation) => (
+      <div className="space-y-3">
+        {reservations.pages.map((page) =>
+          page.map((reservation) => (
             <ReserveCard
               key={reservation.id}
-              id={reservation.id}
-              status={reservation.status}
-              store={reservation.store}
-              title={reservation.programName}
-              count={reservation.visit}
-              date={reservation.date}
+              reservation={reservation}
             />
-          ))}
-        </div>
-      )}
+          )),
+        )}
+        <div ref={observerTarget} className="h-4" />
+        {isFetchingNextPage && (
+          <LoadingIndicator className="min-h-[100px]" />
+        )}
+      </div>
     </div>
   )
 }

@@ -116,7 +116,7 @@ const EditProfile = () => {
           text: "나가기",
           onClick: () => {
             closeOverlay()
-            navigate(-1)
+            navigate('/mypage')
           },
         }}
         cancelOptions={{

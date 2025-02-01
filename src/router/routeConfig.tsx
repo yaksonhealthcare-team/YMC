@@ -107,8 +107,8 @@ const PaymentCancelCompletePage = lazy(
 const ReservationHistory = lazy(
   () => import("../pages/memberHistory/ReservationHistory"),
 )
-const MembershipHistory = lazy(
-  () => import("../pages/memberHistory/MembershipHistory"),
+const MembershipHistoryPage = lazy(
+  () => import("../pages/member-history/membership/MembershipHistoryPage"),
 )
 const MembershipSelectBranchPage = lazy(
   () => import("../pages/membership/MembershipBranchSelectPage"),
@@ -254,7 +254,7 @@ export const routeConfig: RouteConfig[] = [
   },
   {
     path: "/member-history/membership",
-    element: <MembershipHistory />,
+    element: <MembershipHistoryPage />,
     auth: true,
   },
   {
