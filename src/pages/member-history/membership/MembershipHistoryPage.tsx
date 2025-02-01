@@ -7,19 +7,6 @@ import { useNavigate } from "react-router-dom"
 import { MembershipCard } from "@components/MembershipCard"
 import { MembershipStatus } from "../../../types/Membership"
 
-const getMembershipStatusText = (status: MembershipStatus) => {
-  switch (status) {
-    case MembershipStatus.ACTIVE:
-      return "사용가능"
-    case MembershipStatus.INACTIVE:
-      return "사용완료"
-    case MembershipStatus.EXPIRED:
-      return "만료됨"
-    default:
-      return status
-  }
-}
-
 const MembershipHistoryPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
