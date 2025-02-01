@@ -92,9 +92,9 @@ const ProgramList = ({ brandCode }: ProgramListProps) => {
 
       {isLoading ? (
         <LoadingIndicator />
-      ) : memberships?.body && memberships.body.length > 0 ? (
+      ) : memberships?.pages[0]?.body && memberships?.pages[0]?.body.length > 0 ? (
         <div className="px-5 space-y-3">
-          {memberships.body.map((membership) => (
+          {memberships?.pages[0]?.body.map((membership) => (
             <MembershipCard
               key={membership.s_idx}
               membership={membership}

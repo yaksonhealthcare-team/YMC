@@ -6,7 +6,6 @@ import LoadingIndicator from "@components/LoadingIndicator"
 import { useNavigate } from "react-router-dom"
 import { MembershipCard } from "@components/MembershipCard"
 import { 
-  MembershipStatus, 
   myMembershipFilters, 
   MyMembershipFilterItem,
 } from "../../../types/Membership"

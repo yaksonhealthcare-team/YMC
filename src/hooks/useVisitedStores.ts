@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react"
 import { fetchVisitedStores } from "../apis/user.api"
-import { BranchResponse } from "../types/Branch"
+import { BranchSearchResult } from "../types/Branch"
 import { ListResponse } from "../types/Common"
 
 export const useVisitedStores = () => {
-  const [data, setData] = useState<ListResponse<BranchResponse> | null>(null)
+  const [data, setData] = useState<ListResponse<BranchSearchResult> | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 

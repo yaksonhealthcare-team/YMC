@@ -5,7 +5,7 @@ import { useGeolocation } from "../../hooks/useGeolocation"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import { useBranches } from "../../queries/useBranchQueries"
 import { DEFAULT_COORDINATE } from "../../types/Coordinate"
-import { Branch, BranchResponse } from "../../types/Branch"
+import { Branch, BranchSearchResult } from "../../types/Branch"
 import { SearchField } from "../../components/SearchField"
 import useIntersection from "../../hooks/useIntersection"
 import BranchPlaceholderImage from "../../assets/images/BranchPlaceholderImage.png"
@@ -50,7 +50,7 @@ const MembershipBranchSelectPage = () => {
     setNavigation({ display: false })
   }, [])
 
-  const handleBranchSelect = (branch: BranchResponse | Branch) => {
+  const handleBranchSelect = (branch: BranchSearchResult | Branch) => {
     const branchData: Branch = 'b_idx' in branch ? {
       id: branch.b_idx,
       name: branch.b_name,
