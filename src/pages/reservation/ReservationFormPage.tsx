@@ -150,7 +150,7 @@ const ReservationFormPage = () => {
               </div>
             </RadioCard>
           </div>
-          {!isMembershipsLoading && membershipsData?.body && (
+          {!isMembershipsLoading && membershipsData?.pages[0]?.body && (
             <Box className="w-full">
               <Swiper
                 modules={[Pagination]}
@@ -175,7 +175,7 @@ const ReservationFormPage = () => {
                     }
                   `}
                 </style>
-                {membershipsData.body.map((membership) => (
+                {membershipsData.pages[0].body.map((membership) => (
                   <SwiperSlide key={membership.s_idx}>
                     <div>
                       <MembershipRadioCard
