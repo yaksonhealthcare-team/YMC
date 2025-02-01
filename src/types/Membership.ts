@@ -1,7 +1,7 @@
 export enum MembershipStatus {
-  ACTIVE = "T",
-  INACTIVE = "F",
-  EXPIRED = "E",
+  ACTIVE = "사용가능",
+  INACTIVE = "사용완료",
+  EXPIRED = "만료됨"
 }
 
 export interface MembershipCategory {
