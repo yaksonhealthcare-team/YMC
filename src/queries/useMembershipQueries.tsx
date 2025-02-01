@@ -1,4 +1,4 @@
-import { useQuery, UseQueryOptions, useInfiniteQuery } from "@tanstack/react-query"
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query"
 import {
   fetchMembershipDetail,
   fetchMembershipCategories,
@@ -49,6 +49,8 @@ export const useUserMemberships = (searchType?: string) => {
       if (!lastPage.body || lastPage.body.length === 0) return undefined
       return lastPage.current_page + 1
     },
+    staleTime: 30 * 1000, // 30초
+    gcTime: 1 * 60 * 1000, // 1분
   })
 }
 

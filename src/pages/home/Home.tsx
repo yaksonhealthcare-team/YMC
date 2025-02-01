@@ -12,8 +12,7 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import { FloatingButton } from "@components/FloatingButton.tsx"
 import { EmptyCard } from "@components/EmptyCard.tsx"
 import { ReserveCard } from "@components/ReserveCard.tsx"
-import { Reservation } from "types/Reservation.ts"
-import { useReservations, useUpcomingReservations } from "queries/useReservationQueries"
+import { useUpcomingReservations } from "queries/useReservationQueries"
 import { useUserMemberships } from "queries/useMembershipQueries"
 import SplashScreen from "@components/Splash.tsx"
 import { SwiperBrandCard } from "@components/SwiperBrandCard.tsx"
@@ -34,21 +33,15 @@ const Home = () => {
     staleTime: 5 * 60 * 1000, // 5분
     gcTime: 10 * 60 * 1000, // 10분
   })
-  
-  const { data: memberships, isLoading: membershipLoading } =
-    useUserMemberships("T", {
-      staleTime: 30 * 1000,
-      gcTime: 1 * 60 * 1000,
-    })
+  const { data: memberships, isLoading: membershipLoading } = useUserMemberships("T")
   const { user } = useAuth()
 
   const navigate = useNavigate()
   const { clear } = useMembershipOptionsStore()
 
-
   const availableMemberships = useMemo(() => {
-    if (!memberships?.body) return []
-    return memberships.body
+    if (!memberships?.pages[0]?.body) return []
+    return memberships.pages[0].body
   }, [memberships])
 
   useEffect(() => {

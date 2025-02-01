@@ -4,6 +4,7 @@ import { useUserMemberships } from "../../../queries/useMembershipQueries"
 import useIntersection from "../../../hooks/useIntersection"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useNavigate } from "react-router-dom"
+import { MembershipCard } from "@components/MembershipCard"
 import { MembershipStatus } from "../../../types/Membership"
 
 const getMembershipStatusText = (status: MembershipStatus) => {
@@ -52,7 +53,7 @@ const MembershipHistoryPage = () => {
     return <LoadingIndicator className="min-h-screen" />
   }
 
-  if (!memberships) return null
+  if (!memberships?.pages) return null
 
   return (
     <div className="flex flex-col">
@@ -61,26 +62,19 @@ const MembershipHistoryPage = () => {
           <div
             key={membership.mp_idx}
             className="flex flex-col gap-4 p-5 border-b border-gray-100"
-            onClick={() => navigate(`/membership/${membership.mp_idx}`)}
+            onClick={() => navigate(`/membership/usage/${membership.mp_idx}`)}
           >
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600 text-14px">
-                {membership.service_name || membership.s_type}
-              </span>
-              <span className="text-primary font-m text-14px">
-                {getMembershipStatusText(membership.status as MembershipStatus)}
-              </span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="font-b text-16px">
-                잔여 {membership.remain_amount}회
-              </span>
-              <span className="text-gray-600 text-14px">
-                {membership.pay_date} ~ {membership.expiration_date}
-              </span>
-            </div>
+            <MembershipCard
+              id={parseInt(membership.mp_idx)}
+              title={membership.service_name || '회원권 이름'}
+              count={`${membership.remain_amount}회 / ${membership.buy_amount}회`}
+              date={`${membership.pay_date.split(" ")[0]} - ${membership.expiration_date.split(" ")[0]}`}
+              status={getMembershipStatusText(membership.status as MembershipStatus)}
+              showReserveButton={true}
+              serviceType={membership.s_type.replace('회원권', '').trim()}
+            />
           </div>
-        )),
+        ))
       )}
       <div ref={observerTarget} className="h-4" />
       {isFetchingNextPage && (
