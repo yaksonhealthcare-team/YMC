@@ -69,7 +69,7 @@ const MembershipHistoryPage = () => {
               title={membership.service_name || '회원권 이름'}
               count={`${membership.remain_amount}회 / ${membership.buy_amount}회`}
               date={`${membership.pay_date.split(" ")[0]} - ${membership.expiration_date.split(" ")[0]}`}
-              status={getMembershipStatusText(membership.status as MembershipStatus)}
+              status={membership.status as MembershipStatus}
               showReserveButton={true}
               serviceType={membership.s_type.replace('회원권', '').trim()}
             />
