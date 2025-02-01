@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 import {
   Reservation,
   ReservationResponse as ApiResponse,
@@ -7,8 +7,44 @@ import {
 import { axiosClient } from "./clients"
 
 export const useReservations = (status: string = "000") => {
-  return useQuery<Reservation[]>({
+  return useInfiniteQuery<Reservation[]>({
     queryKey: ["reservations", status],
+    initialPageParam: 1,
+    queryFn: async ({ pageParam = 1 }) => {
+      const { data } = await axiosClient.get("/reservation/reservations", {
+        params: {
+          r_status: status,
+          page: pageParam,
+        },
+      })
+
+      if (data.resultCode !== "00" || !data.body || !Array.isArray(data.body)) {
+        return []
+      }
+
+      return data.body.map((item: ApiResponse) => ({
+        id: item.r_idx || "",
+        status: item.r_status || "예약완료",
+        store: item.b_name || "",
+        programName: item.ps_name || "",
+        visit: parseInt(item.visit) || 0,
+        date: item.r_date
+          ? new Date(item.r_date.replace(/-/g, "/"))
+          : new Date(),
+        remainingDays: item.remaining_days || 0,
+        duration: parseInt(item.r_take_time) || 60,
+      }))
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length === 0) return undefined
+      return allPages.length + 1
+    },
+  })
+}
+
+export const useUpcomingReservations = (status: string = "001") => {
+  return useQuery<Reservation[]>({
+    queryKey: ["reservations", "upcoming", status],
     queryFn: async () => {
       const { data } = await axiosClient.get("/reservation/reservations", {
         params: {
@@ -34,12 +70,6 @@ export const useReservations = (status: string = "000") => {
         duration: parseInt(item.r_take_time) || 60,
       }))
     },
-    staleTime: Infinity,
-    gcTime: 1000 * 60 * 10, // 10분
-    retry: 0,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
   })
 }
 

@@ -1,25 +1,18 @@
-import clsx from "clsx"
 import { ReservationStatus } from "types/Reservation"
 import ReserveTag from "./ReserveTag"
 import { Button } from "./Button"
 import { ReactNode } from "react"
 import { useNavigate } from "react-router-dom"
-import DateAndTime from "./DateAndTime"
+import { Reservation } from "../types/Reservation"
 
 interface ReserveCardProps {
-  id: string
-  status: ReservationStatus
-  store: string
-  title: string
-  count: number
-  date: Date
+  reservation: Reservation
   className?: string
 }
 
-export const ReserveCard = (props: ReserveCardProps) => {
-  const { id, status, store, title, count, date, className } = props
-
+export const ReserveCard = ({ reservation, className = "" }: ReserveCardProps) => {
   const navigate = useNavigate()
+
   const classifyReservationStatus = (status: ReservationStatus) => {
     const statusGroups = {
       upcoming: [
@@ -49,7 +42,7 @@ export const ReserveCard = (props: ReserveCardProps) => {
       progressing: "방문 완료",
     }
 
-    const statusType = classifyReservationStatus(status)
+    const statusType = classifyReservationStatus(reservation.status)
 
     if (!statusType || statusType === "upcoming") return null
     if (!statusType || statusType === "cancelled") return null
@@ -62,32 +55,31 @@ export const ReserveCard = (props: ReserveCardProps) => {
   }
 
   return (
-    <>
-      <div
-        className={clsx(
-          `flex justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px]`,
-          className,
-        )}
-        onClick={() => navigate(`/reservation/${id}`)}
-      >
-        <div>
-          <span className="font-b text-16px text-gray-700">{store}</span>
-          <div className="mt-1">
-            <span className="font-r text-14px text-gray-700">{title}</span>
-            <span className="ml-1.5 font-sb text-14px text-primary">
-              {count}회차
-            </span>
-          </div>
-          <DateAndTime date={date} className="mt-3" />
-        </div>
-        <div className="flex flex-col justify-between items-end">
-          <ReserveTag
-            status={classifyReservationStatus(status)}
-            reservationDate={date}
-          />
-          {getButton()}
-        </div>
+    <div
+      className={`flex flex-col gap-4 bg-white p-5 rounded-[20px] border border-gray-100 ${className}`}
+      onClick={() => navigate(`/reservation/${reservation.id}`)}
+    >
+      <div className="flex justify-between items-center">
+        <span className="text-gray-600 text-14px">{reservation.store}</span>
+        <span className="text-primary font-m text-14px">
+          {reservation.status}
+        </span>
       </div>
-    </>
+      <div className="flex flex-col gap-1">
+        <span className="font-b text-16px">{reservation.programName}</span>
+        <span className="text-gray-600 text-14px">
+          {reservation.date.toLocaleDateString()} {reservation.duration}분 ({reservation.visit}회차)
+        </span>
+      </div>
+      <div className="flex flex-col justify-between items-end">
+        <ReserveTag
+          status={classifyReservationStatus(reservation.status)}
+          reservationDate={reservation.date}
+        />
+        {getButton()}
+      </div>
+    </div>
   )
 }
+
+export type { ReserveCardProps }
