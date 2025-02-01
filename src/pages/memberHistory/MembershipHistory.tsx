@@ -48,18 +48,12 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
             <MembershipCard
               key={membership.mp_idx}
               id={parseInt(membership.mp_idx)}
-              status={
-                membership.status === "사용가능"
-                  ? MembershipStatus.ACTIVE
-                  : membership.status === "사용완료"
-                    ? MembershipStatus.INACTIVE
-                    : MembershipStatus.EXPIRED
-              }
-              title={membership.s_type}
+              title={membership.service_name || '회원권 이름'}
               count={`${membership.remain_amount}회 / ${membership.buy_amount}회`}
               date={`${membership.pay_date.split(" ")[0]} - ${membership.expiration_date.split(" ")[0]}`}
-              showReserveButton={false}
-              serviceType={membership.service_name || membership.s_type}
+              status={membership.status as MembershipStatus}
+              showReserveButton={true}
+              serviceType={membership.s_type.replace('회원권', '').trim()}
             />
           ))}
         </div>
