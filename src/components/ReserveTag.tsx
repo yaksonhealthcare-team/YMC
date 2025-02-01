@@ -6,7 +6,7 @@ type StatusType = "upcoming" | "completed" | "cancelled" | "progressing" | null
 const TAG_VARIANTS = {
   upcoming: {
     type: "red",
-    title: (date: Date) => `D${calculateDday(date)}`,
+    title: (date: Date) => `D-${calculateDday(date)}`,
   },
   completed: {
     type: "used",

@@ -1,9 +1,11 @@
+import clsx from "clsx"
 import { ReservationStatus } from "types/Reservation"
 import ReserveTag from "./ReserveTag"
 import { Button } from "./Button"
 import { ReactNode } from "react"
 import { useNavigate } from "react-router-dom"
 import { Reservation } from "../types/Reservation"
+import DateAndTime from "./DateAndTime"
 
 interface ReserveCardProps {
   reservation: Reservation
@@ -56,28 +58,29 @@ export const ReserveCard = ({ reservation, className = "" }: ReserveCardProps) =
 
   return (
     <div
-      className={`flex flex-col gap-4 bg-white p-5 rounded-[20px] border border-gray-100 ${className}`}
+    className={clsx(
+      `flex justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px]`,
+      className,
+    )}
       onClick={() => navigate(`/reservation/${reservation.id}`)}
     >
-      <div className="flex justify-between items-center">
-        <span className="text-gray-600 text-14px">{reservation.store}</span>
-        <span className="text-primary font-m text-14px">
-          {reservation.status}
-        </span>
-      </div>
-      <div className="flex flex-col gap-1">
-        <span className="font-b text-16px">{reservation.programName}</span>
-        <span className="text-gray-600 text-14px">
-          {reservation.date.toLocaleDateString()} {reservation.duration}분 ({reservation.visit}회차)
-        </span>
-      </div>
-      <div className="flex flex-col justify-between items-end">
-        <ReserveTag
-          status={classifyReservationStatus(reservation.status)}
-          reservationDate={reservation.date}
-        />
-        {getButton()}
-      </div>
+      <div>
+          <span className="font-b text-16px text-gray-700">{reservation.store}</span>
+          <div className="mt-1">
+            <span className="font-r text-14px text-gray-700">{reservation.programName}</span>
+            <span className="ml-1.5 font-sb text-14px text-primary">
+              {reservation.visit}회차
+            </span>
+          </div>
+          <DateAndTime date={reservation.date} className="mt-3" />
+        </div>
+        <div className="flex flex-col justify-between items-end">
+          <ReserveTag
+            status={classifyReservationStatus(reservation.status as ReservationStatus)}
+            reservationDate={reservation.date}
+          />
+          {getButton()}
+        </div>
     </div>
   )
 }

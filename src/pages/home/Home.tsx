@@ -177,6 +177,7 @@ const Home = () => {
 
 const ReserveCardSection = () => {
   const { data: upcomingReservations } = useUpcomingReservations()
+  const navigate = useNavigate()
   
   if (!upcomingReservations || upcomingReservations.length === 0) {
     return (
@@ -188,10 +189,15 @@ const ReserveCardSection = () => {
 
   return (
     <div className="mt-6">
-      <Title title="예약 내역" />
+      <Title
+        type="arrow"
+        title="예정된 예약"
+        count={`${upcomingReservations.length}건`}
+        onClick={() => navigate("/member-history/reservation")}
+      />
       <Swiper
         spaceBetween={10}
-        slidesPerView={1.1}
+        slidesPerView={1}
         style={{ overflow: "visible" }}
         className="mt-2"
       >
