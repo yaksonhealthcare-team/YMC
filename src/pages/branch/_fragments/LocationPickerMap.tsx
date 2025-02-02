@@ -9,7 +9,7 @@ import { Button } from "@components/Button.tsx"
 const LocationPickerMap = () => {
   const { naver } = window
   const { setHeader, setNavigation } = useLayout()
-  const { location, loading, error } = useGeolocation()
+  const { location, loading } = useGeolocation()
   const [center, setCenter] = useState<Coordinate | null>(null)
   const [address, setAddress] = useState({
     jibun: "",
@@ -59,14 +59,6 @@ const LocationPickerMap = () => {
     return (
       <div className="flex items-center justify-center w-full h-full">
         <div className="text-gray-500">현재 위치를 불러오는 중...</div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center w-full h-full">
-        <div className="text-gray-500">위치 정보를 가져올 수 없습니다.</div>
       </div>
     )
   }
