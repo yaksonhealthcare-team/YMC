@@ -2,6 +2,7 @@ import { ReactNode } from "react"
 import { Navigate } from "react-router-dom"
 import { lazy } from "react"
 import WithdrawalPage from "../pages/profile/WithdrawalPage"
+import Store from "../pages/Store"
 
 export interface RouteConfig {
   path: string
@@ -13,7 +14,6 @@ export interface RouteConfig {
 const Home = lazy(() => import("../pages/home/Home"))
 const Login = lazy(() => import("../pages/login/Login"))
 const Membership = lazy(() => import("../pages/membership/Membership"))
-const Store = lazy(() => import("../pages/store/Store"))
 const MyPage = lazy(() => import("../pages/myPage/MyPage"))
 const Logout = lazy(() => import("../pages/logout/Logout"))
 const Dev = lazy(() => import("../pages/DevPage"))
@@ -245,7 +245,6 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/store",
     element: <Store />,
-    auth: false,
   },
   {
     path: "/member-history/reservation",

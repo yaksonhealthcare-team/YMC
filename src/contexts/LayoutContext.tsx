@@ -125,7 +125,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
           <div>
             <div className={"h-[82px]"} />
             <div
-              className="flex fixed bottom-0 w-full max-w-[500px] min-w-[375px] h-[82px] z-10 bg-white"
+              className="flex fixed bottom-0 w-full max-w-[500px] min-w-[375px] h-[82px] z-10 bg-white justify-between"
               style={{
                 boxShadow: "0px -2px 16px 0px #2E2B2914",
               }}
@@ -136,12 +136,12 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
                 title={"홈"}
                 link={"/"}
               />
-              <NavButton
+              {/* <NavButton
                 activeIcon={"/assets/navIcon/membership_active.png"}
                 inactiveIcon={"/assets/navIcon/membership_inactive.png"}
                 title={"회원권 구매"}
                 link={"/membership"}
-              />
+              /> */}
               <NavButton
                 activeIcon={"/assets/navIcon/store_active.png"}
                 inactiveIcon={"/assets/navIcon/store_inactive.png"}
@@ -191,12 +191,16 @@ const NavButton = ({
   const active = isActive(path)
   const navigate = useNavigate()
 
+  const handleClick = () => {
+    navigate(link)
+  }
+
   return (
     <div
       className={
         "p-3 w-[calc(100%/5)] flex flex-col gap-1 items-center cursor-pointer shrink-0"
       }
-      onClick={() => navigate(link)}
+      onClick={handleClick}
       style={{ color: active ? "#F37165" : "#BDBDBD" }}
     >
       <img src={active ? activeIcon : inactiveIcon} width={32} />
