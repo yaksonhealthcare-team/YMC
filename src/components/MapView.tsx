@@ -61,7 +61,7 @@ const MapView = ({
       const map = mapInstance.current
       naver.maps.Event.addListener(map, "dragend", () => {
         const center = map.getCenter()
-        options.onMoveMap({
+        options?.onMoveMap?.({
           latitude: center.y,
           longitude: center.x,
         })
