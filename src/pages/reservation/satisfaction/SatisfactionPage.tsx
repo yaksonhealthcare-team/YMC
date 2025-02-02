@@ -2,8 +2,12 @@ import { useEffect } from "react"
 import { useLayout } from "contexts/LayoutContext"
 import { useNavigate, useParams } from "react-router-dom"
 
+type SatisfactionPageParams = {
+  id: string
+}
+
 const SatisfactionPage = () => {
-  const { id } = useParams()
+  const { id } = useParams<SatisfactionPageParams>()
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
 
@@ -15,7 +19,7 @@ const SatisfactionPage = () => {
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
-  }, [setHeader, setNavigation])
+  }, [setHeader, setNavigation, navigate])
 
   return (
     <div className="flex flex-col min-h-screen bg-white p-5">
@@ -23,6 +27,7 @@ const SatisfactionPage = () => {
         관리는 어떠셨나요?
       </h1>
       {/* TODO: 만족도 작성 폼 구현 */}
+      <div key={id} className="flex flex-col gap-3"></div>
     </div>
   )
 }

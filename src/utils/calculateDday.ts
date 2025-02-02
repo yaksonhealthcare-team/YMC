@@ -1,3 +1,6 @@
+const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24
+const TODAY_STATUS = "Day"
+
 /**
  * 주어진 날짜와 현재 날짜 사이의 D-Day를 계산합니다.
  * 시간은 무시하고 날짜만 비교하여 계산됩니다.
@@ -18,13 +21,14 @@
 const calculateDday = (date: Date): number | string => {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
+  
   const targetDate = new Date(date)
   targetDate.setHours(0, 0, 0, 0)
 
   const diffTime = targetDate.getTime() - today.getTime()
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  const diffDays = Math.ceil(diffTime / MILLISECONDS_PER_DAY)
 
-  if (diffDays === 0) return "Day"
+  if (diffDays === 0) return TODAY_STATUS
   return Math.abs(diffDays)
 }
 
