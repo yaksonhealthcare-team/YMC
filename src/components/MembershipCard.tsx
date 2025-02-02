@@ -53,6 +53,16 @@ export const MembershipCard = ({
   const showReservationButton =
     showReserveButton && status === MembershipStatus.ACTIVE
 
+  const handleHistoryClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    navigate(`/membership/usage/${id}`)
+  }
+
+  const handleReservationClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    navigate("/reservation/form")
+  }
+
   return (
     <div className={clsx(STYLES.container, className)}>
       <div className={STYLES.content}>
@@ -74,7 +84,7 @@ export const MembershipCard = ({
         {showHistoryButton && (
           <div
             className={STYLES.actions.history}
-            onClick={() => navigate(`/membership/usage/${id}`)}
+            onClick={handleHistoryClick}
           >
             <span className={STYLES.actions.historyText}>이용내역</span>
             <CaretRightIcon className={STYLES.actions.historyIcon} />
@@ -85,7 +95,7 @@ export const MembershipCard = ({
           <Button
             variantType="primary"
             sizeType="xs"
-            onClick={() => navigate("/reservation/form")}
+            onClick={handleReservationClick}
           >
             예약하기
           </Button>

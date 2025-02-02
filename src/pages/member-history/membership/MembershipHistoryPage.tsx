@@ -37,6 +37,12 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
     return <LoadingIndicator className="flex-1" />
   }
 
+  const handleCardClick = (membershipId: string) => {
+    navigate(`/membership/usage/${membershipId}`, {
+      state: { from: "/member-history/membership" }
+    })
+  }
+
   return (
     <div className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto scrollbar-hide">
       {!memberships?.pages[0].body?.length ? (
@@ -49,7 +55,13 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
           page.body.map((membership) => (
             <div
               key={membership.mp_idx}
-              onClick={() => navigate(`/membership/usage/${membership.mp_idx}`)}
+              onClick={(e) => {
+                if ((e.target as HTMLElement).closest('button')) {
+                  e.stopPropagation()
+                  return
+                }
+                handleCardClick(membership.mp_idx)
+              }}
             >
               <MembershipCard
                 id={parseInt(membership.mp_idx)}
