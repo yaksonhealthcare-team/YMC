@@ -24,8 +24,8 @@ const calculateDday = (date: Date): number | string => {
   const diffTime = targetDate.getTime() - today.getTime()
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
-  if (diffDays === 0) return "-Day"
-  return diffDays
+  if (diffDays === 0) return "Day"
+  return Math.abs(diffDays)
 }
 
 export default calculateDday
