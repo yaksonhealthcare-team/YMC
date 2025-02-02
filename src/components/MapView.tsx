@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { Coordinate, DEFAULT_COORDINATE } from "../types/Coordinate.ts"
+import { Coordinate } from "../types/Coordinate.ts"
 import CrosshairIcon from "@assets/icons/CrosshairIcon.svg?react"
 import { Branch } from "../types/Branch.ts"
 import { useNaverMapBranchMarkers } from "../hooks/useNaverMapBranchMarkers.tsx"
@@ -39,9 +39,7 @@ const MapView = ({
   const mapInstance = useRef<naver.maps.Map | null>(null)
   const [_, setIsMapMoved] = useState(false)
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
-  const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(
-    null,
-  )
+  const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(null)
 
   const { updateCurrentLocationMarker } = useNaverMapBranchMarkers({
     map: mapInstance.current,
@@ -67,13 +65,10 @@ const MapView = ({
   })
 
   useEffect(() => {
-    if (!mapRef.current) return
+    if (!mapRef.current || !center) return
 
     mapInstance.current = new naver.maps.Map("map", {
-      center: new naver.maps.LatLng(
-        center?.latitude || DEFAULT_COORDINATE.latitude,
-        center?.longitude || DEFAULT_COORDINATE.longitude,
-      ),
+      center: new naver.maps.LatLng(center.latitude, center.longitude),
       zoom: 14,
     })
 

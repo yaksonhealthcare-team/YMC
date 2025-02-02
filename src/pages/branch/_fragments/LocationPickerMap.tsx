@@ -3,16 +3,14 @@ import { useLayout } from "../../../contexts/LayoutContext.tsx"
 import MapView from "@components/MapView.tsx"
 import { useGeolocation } from "../../../hooks/useGeolocation.tsx"
 import LocationSelectorPin from "@assets/icons/pin/LocationSelectorPin.svg?react"
-import { Coordinate, DEFAULT_COORDINATE } from "../../../types/Coordinate.ts"
+import { Coordinate } from "../../../types/Coordinate.ts"
 import { Button } from "@components/Button.tsx"
 
 const LocationPickerMap = () => {
   const { naver } = window
   const { setHeader, setNavigation } = useLayout()
-  const { location } = useGeolocation()
-  const [center, setCenter] = useState<Coordinate>(
-    location || DEFAULT_COORDINATE,
-  )
+  const { location, loading, error } = useGeolocation()
+  const [center, setCenter] = useState<Coordinate | null>(null)
   const [address, setAddress] = useState({
     jibun: "",
     road: "",
@@ -29,11 +27,17 @@ const LocationPickerMap = () => {
   }, [])
 
   useEffect(() => {
+    if (location) {
+      setCenter(location)
+    }
+  }, [location])
+
+  useEffect(() => {
+    if (!center) return
     setAddressFromCoords(center)
   }, [center])
 
   const setAddressFromCoords = (coords: Coordinate) => {
-    setCenter(coords)
     naver.maps.Service.reverseGeocode(
       {
         coords: new naver.maps.LatLng(coords.latitude, coords.longitude),
@@ -51,10 +55,26 @@ const LocationPickerMap = () => {
     )
   }
 
+  if (loading || !center) {
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        <div className="text-gray-500">현재 위치를 불러오는 중...</div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        <div className="text-gray-500">위치 정보를 가져올 수 없습니다.</div>
+      </div>
+    )
+  }
+
   return (
     <div className={"relative w-full h-full"}>
       <MapView
-        center={location}
+        center={center}
         branches={[]}
         options={{
           showCurrentLocation: false,
