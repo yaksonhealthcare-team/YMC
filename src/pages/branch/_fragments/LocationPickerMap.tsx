@@ -5,12 +5,15 @@ import { useGeolocation } from "../../../hooks/useGeolocation.tsx"
 import LocationSelectorPin from "@assets/icons/pin/LocationSelectorPin.svg?react"
 import { Coordinate } from "../../../types/Coordinate.ts"
 import { Button } from "@components/Button.tsx"
+import { fetchBranches } from "../../../apis/branch.api.ts"
+import { Branch } from "../../../types/Branch.ts"
 
 const LocationPickerMap = () => {
   const { naver } = window
   const { setHeader, setNavigation } = useLayout()
   const { location, loading } = useGeolocation()
   const [center, setCenter] = useState<Coordinate | null>(null)
+  const [branches, setBranches] = useState<Branch[]>([])
   const [address, setAddress] = useState({
     jibun: "",
     road: "",
@@ -35,6 +38,7 @@ const LocationPickerMap = () => {
   useEffect(() => {
     if (!center) return
     setAddressFromCoords(center)
+    fetchBranchesNearby(center)
   }, [center])
 
   const setAddressFromCoords = (coords: Coordinate) => {
@@ -55,6 +59,19 @@ const LocationPickerMap = () => {
     )
   }
 
+  const fetchBranchesNearby = async (coords: Coordinate) => {
+    try {
+      const result = await fetchBranches({
+        page: 1,
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+      })
+      setBranches(result.branches)
+    } catch (error) {
+      console.error("Failed to fetch branches:", error)
+    }
+  }
+
   if (loading || !center) {
     return (
       <div className="flex items-center justify-center w-full h-full">
@@ -67,12 +84,14 @@ const LocationPickerMap = () => {
     <div className={"relative w-full h-full"}>
       <MapView
         center={center}
-        branches={[]}
+        branches={branches}
         options={{
           showCurrentLocation: false,
           showCurrentLocationButton: true,
           currentLocationButtonClassName: "!bottom-52",
-          onMoveMap: setCenter,
+          onMoveMap: (newCenter) => {
+            setCenter(newCenter)
+          },
         }}
       />
       <div
