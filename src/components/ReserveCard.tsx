@@ -49,8 +49,15 @@ export const ReserveCard = ({ reservation, className = "" }: ReserveCardProps) =
     if (!statusType || statusType === "upcoming") return null
     if (!statusType || statusType === "cancelled") return null
 
+    const handleClick = (e: React.MouseEvent) => {
+      e.stopPropagation()
+      if (statusType === "completed") {
+        navigate(`/reservation/${reservation.id}/satisfaction`)
+      }
+    }
+
     return (
-      <Button variantType="primary" sizeType="xs">
+      <Button variantType="primary" sizeType="xs" onClick={handleClick}>
         {buttonTexts[statusType]}
       </Button>
     )
