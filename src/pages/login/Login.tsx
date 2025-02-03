@@ -124,11 +124,6 @@ const Login = () => {
           </button>
         </div>
       </div>
-
-      {/* 하단 바 */}
-      <div className="w-full h-[42px] border-t border-[#F8F8F8] flex justify-center items-end pb-5">
-        <div className="w-[130px] h-[5px] bg-[#131313] rounded-[2px]" />
-      </div>
     </div>
   )
 }
