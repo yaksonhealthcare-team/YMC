@@ -31,7 +31,7 @@ const MembershipDetailPage = () => {
     setCurrentPath,
     setSelectedOptions,
     setIsBottomSheetOpen,
-    clear
+    clear,
   } = useMembershipOptionsStore()
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const MembershipDetailPage = () => {
         onClickBranchSelect={() => {
           closeOverlay()
           navigate("/membership/select-branch", {
-            state: { returnPath: location.pathname }
+            state: { returnPath: location.pathname },
           })
         }}
         onAddToCartSuccess={() => {
@@ -62,7 +62,7 @@ const MembershipDetailPage = () => {
         }}
       />
     ),
-    [membership, location.pathname]
+    [membership, location.pathname],
   )
 
   useEffect(() => {
@@ -115,7 +115,9 @@ const MembershipDetailPage = () => {
               <span className="text-primary font-b text-18px">
                 {calculateDiscountRate(
                   Number(membership.options[0].ss_price.replace(/,/g, "")),
-                  Number(membership.options[0].original_price.replace(/,/g, "")),
+                  Number(
+                    membership.options[0].original_price.replace(/,/g, ""),
+                  ),
                 )}
                 %
               </span>

@@ -12,7 +12,10 @@ const Logout = () => {
   const { setHeader, setNavigation } = useLayout()
 
   useEffect(() => {
-    setHeader({ display: false })
+    setHeader({
+      display: false,
+      backgroundColor: "bg-system-bg",
+    })
     setNavigation({ display: false })
   }, [])
 

@@ -43,7 +43,10 @@ const MyPage = () => {
   const { openBottomSheet, closeOverlay } = useOverlay()
 
   useEffect(() => {
-    setHeader({ display: false })
+    setHeader({
+      display: false,
+      backgroundColor: "bg-system-bg",
+    })
     setNavigation({ display: true })
   }, [navigate])
 

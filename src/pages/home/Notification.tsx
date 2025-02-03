@@ -35,6 +35,7 @@ export const Notification = () => {
       ),
       left: "back",
       onClickBack: () => navigate(-1),
+      backgroundColor: "bg-system-bg",
     })
     setNavigation({ display: false })
   }, [])

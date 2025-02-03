@@ -5,8 +5,8 @@ import useIntersection from "../../../hooks/useIntersection"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useNavigate } from "react-router-dom"
 import { MembershipCard } from "@components/MembershipCard"
-import { 
-  myMembershipFilters, 
+import {
+  myMembershipFilters,
   MyMembershipFilterItem,
 } from "../../../types/Membership"
 import MainTabs from "../../memberHistory/_fragments/MainTabs"
@@ -16,7 +16,15 @@ import ReservationIcon from "@assets/icons/ReservationIcon.svg?react"
 import { getStatusFromString } from "../../../utils/membership"
 
 const MembershipContent = ({ filterId }: { filterId: string }) => {
+  const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    setHeader({
+      backgroundColor: "bg-white",
+    })
+    setNavigation({ display: false })
+  }, [setHeader, setNavigation])
   const {
     data: memberships,
     fetchNextPage,
@@ -44,39 +52,39 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
           회원권 내역이 없습니다.
         </div>
       ) : (
-      <div className="space-y-3">
-        {memberships.pages.map((page) =>
-          page.body.map((membership) => (
-            <div
-              key={membership.mp_idx}
-              onClick={() => navigate(`/membership/usage/${membership.mp_idx}`)}
-            >
-              <MembershipCard
-                id={parseInt(membership.mp_idx)}
-                title={membership.service_name || '회원권 이름'}
-                count={`${membership.remain_amount}회 / ${membership.buy_amount}회`}
-                date={`${membership.pay_date.split(" ")[0]} - ${membership.expiration_date.split(" ")[0]}`}
-                status={getStatusFromString(membership.status)}
-                showReserveButton={true}
-                serviceType={membership.s_type.replace('회원권', '').trim()}
-              />
-            </div>
-          ))
-        )}
-        <div ref={observerTarget} className="h-4" />
-        {isFetchingNextPage && (
-          <LoadingIndicator className="min-h-[100px]" />
-        )}
-      </div>
+        <div className="space-y-3">
+          {memberships.pages.map((page) =>
+            page.body.map((membership) => (
+              <div
+                key={membership.mp_idx}
+                onClick={() =>
+                  navigate(`/membership/usage/${membership.mp_idx}`)
+                }
+              >
+                <MembershipCard
+                  id={parseInt(membership.mp_idx)}
+                  title={membership.service_name || "회원권 이름"}
+                  count={`${membership.remain_amount}회 / ${membership.buy_amount}회`}
+                  date={`${membership.pay_date.split(" ")[0]} - ${membership.expiration_date.split(" ")[0]}`}
+                  status={getStatusFromString(membership.status)}
+                  showReserveButton={true}
+                  serviceType={membership.s_type.replace("회원권", "").trim()}
+                />
+              </div>
+            )),
+          )}
+          <div ref={observerTarget} className="h-4" />
+          {isFetchingNextPage && <LoadingIndicator className="min-h-[100px]" />}
+        </div>
       )}
     </div>
   )
 }
 
-const FilterContent = ({ 
-  membershipFilter, 
-  onFilterChange 
-}: { 
+const FilterContent = ({
+  membershipFilter,
+  onFilterChange,
+}: {
   membershipFilter: MyMembershipFilterItem
   onFilterChange: (filter: MyMembershipFilterItem) => void
 }) => {
@@ -107,9 +115,8 @@ const FilterContent = ({
 const MembershipHistoryPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
-  const [membershipFilter, setMembershipFilter] = useState<MyMembershipFilterItem>(
-    myMembershipFilters[0],
-  )
+  const [membershipFilter, setMembershipFilter] =
+    useState<MyMembershipFilterItem>(myMembershipFilters[0])
 
   const handleFilterChange = useCallback((filter: MyMembershipFilterItem) => {
     setMembershipFilter(filter)
@@ -128,9 +135,9 @@ const MembershipHistoryPage = () => {
         <MainTabs />
       </div>
 
-      <FilterContent 
-        membershipFilter={membershipFilter} 
-        onFilterChange={handleFilterChange} 
+      <FilterContent
+        membershipFilter={membershipFilter}
+        onFilterChange={handleFilterChange}
       />
 
       <MembershipContent filterId={membershipFilter.id} />

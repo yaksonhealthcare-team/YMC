@@ -6,7 +6,7 @@ import { useOverlay } from "../../contexts/ModalContext"
 import { findEmailWithDecryptData } from "../../apis/decrypt-result.api"
 
 const FindEmail = () => {
-  const { setHeader } = useLayout()
+  const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const location = useLocation()
   const verifiedData = location.state?.verifiedData
@@ -24,6 +24,8 @@ const FindEmail = () => {
       backgroundColor: "bg-white",
     })
 
+    setNavigation({ display: false })
+
     // 본인인증 데이터가 없으면 계정찾기 페이지로 이동
     if (!verifiedData) {
       navigate("/find-account")
@@ -36,7 +38,7 @@ const FindEmail = () => {
         const result = await findEmailWithDecryptData({
           token_version_id: verifiedData.tokenVersionId,
           enc_data: verifiedData.encData,
-          integrity_value: verifiedData.integrityValue
+          integrity_value: verifiedData.integrityValue,
         })
         setLoginInfo(result)
       } catch (error) {
@@ -70,7 +72,7 @@ const FindEmail = () => {
   return (
     <div className="px-[20px] mt-[28px]">
       <p className="flex flex-col justify-center items-center font-[600] text-20px text-[#212121]">
-        {loginInfo?.thirdPartyType === "email" 
+        {loginInfo?.thirdPartyType === "email"
           ? "가입하신 이메일 계정입니다."
           : `${loginInfo?.thirdPartyType} 계정으로 가입되어 있습니다.`}
       </p>

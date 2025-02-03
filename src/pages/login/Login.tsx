@@ -17,7 +17,10 @@ const Login = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    setHeader({ display: false })
+    setHeader({
+      display: false,
+      backgroundColor: "bg-system-bg",
+    })
     setNavigation({ display: false })
   }, [])
 

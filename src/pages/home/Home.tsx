@@ -34,7 +34,8 @@ const Home = () => {
     staleTime: 5 * 60 * 1000, // 5분
     gcTime: 10 * 60 * 1000, // 10분
   })
-  const { data: memberships, isLoading: membershipLoading } = useUserMemberships("T")
+  const { data: memberships, isLoading: membershipLoading } =
+    useUserMemberships("T")
   const { user } = useAuth()
 
   const navigate = useNavigate()
@@ -48,8 +49,9 @@ const Home = () => {
   useEffect(() => {
     setHeader({
       display: false,
+      backgroundColor: "bg-system-bg", // 상단 안전영역 흰색
     })
-    setNavigation({ display: true })
+    setNavigation({ display: true }) // 하단 안전영역 자동으로 흰색
   }, [])
 
   const handleReservationClick = () => {
@@ -73,24 +75,23 @@ const Home = () => {
             </div>
           }
           contents={[
-              <div className="flex justify-between items-center bg-primary-300 rounded-2xl p-4">
-                <div className="flex gap-2 flex-col text-white">
-                  <Typography className={"font-b"}>
-                    <span className={"text-18px"}>{user?.name}</span>{" "}
-                    반갑습니다.
-                  </Typography>
-                  <Typography className="font-m text-14px space-x-2">
-                    <span>{user?.levelName}</span>{" "}
-                    <span>{user && user.point ? user.point : 0} P</span>
-                  </Typography>
-                </div>
-                <div
-                  className="rounded-full bg-white text-primary-300 py-2 px-5 cursor-pointer"
-                  onClick={handleReservationClick}
-                >
-                  예약하기
-                </div>
-              </div>,
+            <div className="flex justify-between items-center bg-primary-300 rounded-2xl p-4">
+              <div className="flex gap-2 flex-col text-white">
+                <Typography className={"font-b"}>
+                  <span className={"text-18px"}>{user?.name}</span> 반갑습니다.
+                </Typography>
+                <Typography className="font-m text-14px space-x-2">
+                  <span>{user?.levelName}</span>{" "}
+                  <span>{user && user.point ? user.point : 0} P</span>
+                </Typography>
+              </div>
+              <div
+                className="rounded-full bg-white text-primary-300 py-2 px-5 cursor-pointer"
+                onClick={handleReservationClick}
+              >
+                예약하기
+              </div>
+            </div>,
             <div className="mt-4">
               <Swiper
                 modules={[Pagination]}
@@ -171,7 +172,7 @@ const Home = () => {
 const ReserveCardSection = () => {
   const { data: upcomingReservations } = useUpcomingReservations()
   const navigate = useNavigate()
-  
+
   if (!upcomingReservations || upcomingReservations.length === 0) {
     return (
       <EmptyCard
@@ -234,12 +235,12 @@ const MembershipCardSection = ({
             <SwiperSlide key={membership.mp_idx} className="mr-2">
               <MembershipCard
                 id={parseInt(membership.mp_idx)}
-                title={membership.service_name || '회원권 이름'}
+                title={membership.service_name || "회원권 이름"}
                 count={`${membership.remain_amount}회 / ${membership.buy_amount}회`}
                 date={`${membership.pay_date.split(" ")[0]} - ${membership.expiration_date.split(" ")[0]}`}
                 status={getStatusFromString(membership.status)}
                 showReserveButton={true}
-                serviceType={membership.s_type.replace('회원권', '').trim()}
+                serviceType={membership.s_type.replace("회원권", "").trim()}
               />
             </SwiperSlide>
           ))}

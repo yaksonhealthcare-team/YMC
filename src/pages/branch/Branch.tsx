@@ -122,6 +122,7 @@ const Branch = () => {
         </div>
       ),
       display: true,
+      backgroundColor: "bg-system-bg",
     })
     setNavigation({
       display: false,
