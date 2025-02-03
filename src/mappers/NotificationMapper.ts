@@ -1,4 +1,4 @@
-import { Notification, NotificationResponse } from "../types/Notification.ts"
+import { Notification, NotificationResponse, NotificationSettings, NotificationSettingsResponse } from "../types/Notification"
 
 export class NotificationMapper {
   static toNotification(dto: NotificationResponse): Notification {
@@ -16,5 +16,14 @@ export class NotificationMapper {
 
   static toNotifications(responses: NotificationResponse[]): Notification[] {
     return responses.map(this.toNotification)
+  }
+
+  static toNotificationSettings(response: NotificationSettingsResponse): NotificationSettings {
+    return {
+      reservations: response.reservation_yn === 'Y',
+      payments: response.payment_yn === 'Y',
+      points: response.point_yn === 'Y',
+      notices: response.notification_yn === 'Y',
+    }
   }
 }
