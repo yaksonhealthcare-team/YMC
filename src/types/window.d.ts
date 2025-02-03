@@ -12,4 +12,5 @@ interface Window {
   Android?: {
     openExternalLink: (url: string) => void
   }
+  setNativeSafeAreaColors?: (top: string, bottom: string) => void
 }
