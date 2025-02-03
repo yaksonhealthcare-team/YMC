@@ -26,4 +26,13 @@ export class NotificationMapper {
       notices: response.notification_yn === 'Y',
     }
   }
+
+  static toUpdateSettingsRequest(settings: Partial<NotificationSettings>): Partial<NotificationSettingsResponse> {
+    return {
+      reservation_yn: settings.reservations ? 'Y' : 'N',
+      payment_yn: settings.payments ? 'Y' : 'N',
+      point_yn: settings.points ? 'Y' : 'N',
+      notification_yn: settings.notices ? 'Y' : 'N',
+    }
+  }
 }

@@ -28,3 +28,11 @@ export const getNotificationSettings = async (): Promise<NotificationSettings> =
   )
   return NotificationMapper.toNotificationSettings(data.body[0])
 }
+
+export const updateNotificationSettings = async (settings: Partial<NotificationSettings>): Promise<NotificationSettings> => {
+  const { data } = await axiosClient.patch<HTTPResponse<NotificationSettingsResponse[]>>(
+    "/notifications/settings",
+    NotificationMapper.toUpdateSettingsRequest(settings),
+  )
+  return NotificationMapper.toNotificationSettings(data.body[0])
+}

@@ -1,11 +1,13 @@
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useEffect } from "react"
 import Switch from "@components/Switch.tsx"
-import { useNotificationSettings } from "../../queries/useNotificationQueries"
+import { useNotificationSettings, useUpdateNotificationSettings } from "../../queries/useNotificationQueries"
+import { NotificationSettings } from "../../types/Notification"
 
 const SettingsPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const { data: settings, isLoading } = useNotificationSettings()
+  const { mutate: updateSettings } = useUpdateNotificationSettings()
 
   useEffect(() => {
     setHeader({
@@ -30,15 +32,23 @@ const SettingsPage = () => {
     )
   }
 
+  const handleToggle = (key: keyof NotificationSettings, value: boolean) => {
+    if (!settings) return
+
+    updateSettings({
+      ...settings,
+      [key]: value,
+    })
+  }
+
   return (
     <div className={"flex flex-col px-5 divide-y divide-gray-100"}>
       <div className={"flex justify-between py-6"}>
         <p>{"예약 알림"}</p>
         <Switch.IOS
           checked={settings?.reservations ?? false}
-          onChange={() => {
-            // TODO: 알림 설정 변경 API 구현 필요
-            console.log("Toggle reservations")
+          onChange={(event) => {
+            handleToggle("reservations", event.target.checked)
           }}
         />
       </div>
@@ -47,9 +57,8 @@ const SettingsPage = () => {
         <p>{"결제 알림"}</p>
         <Switch.IOS
           checked={settings?.payments ?? false}
-          onChange={() => {
-            // TODO: 알림 설정 변경 API 구현 필요
-            console.log("Toggle payments")
+          onChange={(event) => {
+            handleToggle("payments", event.target.checked)
           }}
         />
       </div>
@@ -58,9 +67,8 @@ const SettingsPage = () => {
         <p>{"포인트 알림"}</p>
         <Switch.IOS
           checked={settings?.points ?? false}
-          onChange={() => {
-            // TODO: 알림 설정 변경 API 구현 필요
-            console.log("Toggle points")
+          onChange={(event) => {
+            handleToggle("points", event.target.checked)
           }}
         />
       </div>
@@ -69,9 +77,8 @@ const SettingsPage = () => {
         <p>{"공지 알림"}</p>
         <Switch.IOS
           checked={settings?.notices ?? false}
-          onChange={() => {
-            // TODO: 알림 설정 변경 API 구현 필요
-            console.log("Toggle notices")
+          onChange={(event) => {
+            handleToggle("notices", event.target.checked)
           }}
         />
       </div>
