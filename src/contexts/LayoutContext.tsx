@@ -247,7 +247,7 @@ const extractColor = (className: string): string => {
     case "bg-white":
       return "#FFFFFF"
     case "bg-system-bg":
-      return "#FFFFFF"
+      return "#F8F5F2"
     default:
       return "#FFFFFF"
   }
