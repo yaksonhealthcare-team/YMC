@@ -20,7 +20,7 @@ const Store = () => {
   return (
     <div className="w-full h-[calc(100vh-82px)]">
       <iframe
-        src="http://139.150.72.85:8081/"
+        src="https://devmall.yaksonhc.com/"
         className="w-full h-full border-none"
         title="스토어"
       />
