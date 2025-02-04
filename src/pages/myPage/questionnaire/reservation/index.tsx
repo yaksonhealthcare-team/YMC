@@ -8,7 +8,7 @@ const QuestionnaireReservationPage = () => {
   const { setHeader } = useLayout()
   const location = useLocation()
 
-  const { data, isLoading, refetch } = useUserReservationQuestionnaireResult()
+  const { isLoading, refetch } = useUserReservationQuestionnaireResult()
 
   useEffect(() => {
     // 페이지 진입할 때마다 강제로 refetch

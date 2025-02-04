@@ -1,12 +1,15 @@
 import { useQuery } from "@tanstack/react-query"
+import { fetchUserGeneralQuestionnaireResult } from "apis/questionnaire.api"
 
 const QuestionnaireGeneralPage = () => {
-  const { data, isLoading } = useQuery({
-    queryKey: ["questionnaire", "general"],
-    queryFn: fetchGeneralQuestionnaire,
-    staleTime: 0, // 항상 새로운 데이터를 가져오도록 설정
-    refetchOnMount: "always", // 컴포넌트가 마운트될 때마다 새로 불러오기
+  const { isLoading } = useQuery({
+    queryKey: ["questionnaires", "user_result", "general"],
+    queryFn: fetchUserGeneralQuestionnaireResult,
   })
 
-  // ... existing code ...
+  if (isLoading) return <div>Loading...</div>
+
+  return <div>{/* data 활용한 렌더링 */}</div>
 }
+
+export default QuestionnaireGeneralPage
