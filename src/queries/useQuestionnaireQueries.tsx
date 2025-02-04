@@ -46,4 +46,6 @@ export const useUserReservationQuestionnaireResult = () =>
   useQuery({
     queryKey: queryKeys.questionnaires.userResult("reservation"),
     queryFn: fetchUserReservationQuestionnaireResult,
+    staleTime: 0, // 항상 새로운 데이터를 가져오도록
+    cacheTime: 0, // 캐시 사용하지 않음
   })
