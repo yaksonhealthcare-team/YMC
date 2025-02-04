@@ -50,14 +50,14 @@ const Login = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8F5F2]">
+    <div className="flex flex-col min-h-screen max-h-[100vh] bg-[#F8F5F2]">
       {/* 로고 */}
-      <div className="mt-[159px] flex justify-center">
+      <div className="min-h-[180px] h-full flex justify-center items-center">
         <Logo text size={191} />
       </div>
 
       {/* 로그인 버튼 그룹과 회원가입 */}
-      <div className="flex-1 flex flex-col justify-end mt-[120px]">
+      <div className="flex-1 flex flex-col justify-end">
         {/* 로그인 버튼 그룹 */}
         <div className="px-5 flex flex-col gap-3">
           {/* 카카오 로그인 */}
