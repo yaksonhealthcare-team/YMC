@@ -152,12 +152,12 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
                 title={"홈"}
                 link={"/"}
               />
-              {/* <NavButton
+              <NavButton
                 activeIcon={"/assets/navIcon/membership_active.png"}
                 inactiveIcon={"/assets/navIcon/membership_inactive.png"}
                 title={"회원권 구매"}
                 link={"/membership"}
-              /> */}
+              />
               <NavButton
                 activeIcon={"/assets/navIcon/store_active.png"}
                 inactiveIcon={"/assets/navIcon/store_inactive.png"}
