@@ -48,9 +48,11 @@ const PasswordCustomInput = ({
           onChange={(e) => setPassword(e.target.value)}
           placeholder="비밀번호 입력"
           state={
-            passwordError ? "error" : 
-            password && !validatePassword(password) ? "error" : 
-            "default"
+            passwordError
+              ? "error"
+              : password && !validatePassword(password)
+                ? "error"
+                : "default"
           }
           helperText={passwordError}
           iconRight={
@@ -65,12 +67,12 @@ const PasswordCustomInput = ({
               validatePassword(password) ? "text-success" : "text-error"
             }`}
           >
-            영문자, 숫자, 특수문자를 포함하여 8자리 이상
+            영문자, 숫자, 특수문자를 포함하여 10자리 이상
           </span>
         )}
         {!passwordError && !password && (
           <span className="text-12px text-gray-400 ml-2">
-            영문자, 숫자, 특수문자를 포함하여 8자리 이상
+            영문자, 숫자, 특수문자를 포함하여 10자리 이상
           </span>
         )}
       </div>
@@ -83,9 +85,11 @@ const PasswordCustomInput = ({
           onChange={(e) => setPasswordConfirm(e.target.value)}
           placeholder="비밀번호 재입력"
           state={
-            passwordConfirmError ? "error" : 
-            password && passwordConfirm && password !== passwordConfirm ? "error" : 
-            "default"
+            passwordConfirmError
+              ? "error"
+              : password && passwordConfirm && password !== passwordConfirm
+                ? "error"
+                : "default"
           }
           helperText={passwordConfirmError}
           iconRight={
