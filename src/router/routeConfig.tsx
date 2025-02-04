@@ -2,7 +2,7 @@ import { ReactNode } from "react"
 import { Navigate } from "react-router-dom"
 import { lazy } from "react"
 import WithdrawalPage from "../pages/profile/WithdrawalPage"
-import Store from "../pages/Store"
+import Store from "../pages/store/Store"
 
 export interface RouteConfig {
   path: string
