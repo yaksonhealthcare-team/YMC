@@ -1,16 +1,31 @@
 import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLayout } from "../contexts/LayoutContext"
 
 const Store = () => {
-  const navigate = useNavigate()
+  const { setHeader } = useLayout()
 
   useEffect(() => {
-    window.open("http://139.150.72.85:8081/", "_blank", "noopener,noreferrer")
-    // 스토어 페이지를 새 창으로 연 후 이전 페이지로 돌아가기
-    navigate(-1)
-  }, [navigate])
+    setHeader({
+      display: true,
+      title: "스토어",
+      left: "back",
+      backgroundColor: "bg-white",
+    })
 
-  return null
+    return () => {
+      setHeader({ display: true })
+    }
+  }, [setHeader])
+
+  return (
+    <div className="w-full h-[calc(100vh-82px)]">
+      <iframe
+        src="http://139.150.72.85:8081/"
+        className="w-full h-full border-none"
+        title="스토어"
+      />
+    </div>
+  )
 }
 
 export default Store
