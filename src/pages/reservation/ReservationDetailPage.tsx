@@ -10,6 +10,7 @@ import MembershipUsage from "./_fragments/MembershipUsage"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 import { ReservationStatus } from "types/Reservation"
 import { Skeleton } from "@mui/material"
+import { isVisitTime } from "utils/date"
 
 const LoadingSkeleton = () => (
   <div className="flex-1 px-[20px] pt-[16px] pb-[150px] bg-system-bg">
@@ -73,6 +74,78 @@ const ReservationDetailPage = () => {
     setNavigation({ display: false })
   }, [navigate, setHeader, setNavigation])
 
+  const renderActionButtons = () => {
+    if (!reservation) return null
+
+    const isInVisitTime = isVisitTime(reservation.date, reservation.duration)
+
+    switch (reservation.status) {
+      case ReservationStatus.CONFIRMED:
+        return (
+          <Button
+            variantType="primary"
+            sizeType="l"
+            className="w-full"
+            onClick={() => navigate(`/reservation/${id}/cancel`)}
+          >
+            예약 취소하기
+          </Button>
+        )
+
+      case ReservationStatus.CUSTOMER_CANCELLED:
+      case ReservationStatus.STORE_CANCELLED:
+        return (
+          <Button
+            variantType="primary"
+            sizeType="l"
+            className="w-full"
+            onClick={() => navigate("/reservation")}
+          >
+            다시 예약하기
+          </Button>
+        )
+
+      case ReservationStatus.IN_PROGRESS:
+        return (
+          <Button
+            variantType="primary"
+            sizeType="l"
+            className="w-full"
+            onClick={() => {
+              // TODO: 방문 완료 API 호출
+            }}
+          >
+            방문 완료하기
+          </Button>
+        )
+
+      case ReservationStatus.COMPLETED:
+        return (
+          <div className="flex gap-[8px]">
+            <Button
+              variantType="line"
+              sizeType="l"
+              className="flex-1"
+              onClick={() => navigate("/reservation")}
+            >
+              다시 예약하기
+            </Button>
+            <Button
+              variantType="primary"
+              sizeType="l"
+              className="flex-1"
+              onClick={() => navigate(`/reservation/${id}/satisfaction`)}
+            >
+              만족도 작성
+            </Button>
+          </div>
+        )
+
+      default:
+        return null
+    }
+  }
+
   if (isLoading) return <LoadingSkeleton />
   if (isError)
     return (
@@ -103,16 +176,7 @@ const ReservationDetailPage = () => {
         remainingCount={reservation.remainingCount}
       />
       <FixedButtonContainer className="z-[200]">
-        {reservation.status === ReservationStatus.CONFIRMED && (
-          <Button
-            variantType="primary"
-            sizeType="l"
-            className="w-full"
-            onClick={() => navigate(`/reservation/${id}/cancel`)}
-          >
-            예약 취소하기
-          </Button>
-        )}
+        {renderActionButtons()}
       </FixedButtonContainer>
     </div>
   )

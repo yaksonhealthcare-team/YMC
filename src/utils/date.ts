@@ -24,3 +24,14 @@ export const formatDateRange = (
   if (start === "-" || end === "-") return "-"
   return `${start} - ${end}`
 }
+
+export const isVisitTime = (
+  reservationDate: Date,
+  duration: number,
+): boolean => {
+  const now = new Date()
+  const startTime = new Date(reservationDate)
+  const endTime = new Date(startTime.getTime() + duration * 60 * 1000)
+
+  return now >= startTime && now <= endTime
+}
