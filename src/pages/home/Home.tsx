@@ -27,6 +27,7 @@ import { Event } from "types/Event"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import { getStatusFromString } from "../../utils/membership"
+import { useUnreadNotificationsCount } from "../../queries/useNotificationQueries"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -40,6 +41,7 @@ const Home = () => {
 
   const navigate = useNavigate()
   const { clear } = useMembershipOptionsStore()
+  const { data: unreadCount = 0 } = useUnreadNotificationsCount()
 
   const availableMemberships = useMemo(() => {
     if (!memberships?.pages[0]?.body) return []
@@ -144,12 +146,21 @@ const Home = () => {
             </div>,
           ]}
           buttonArea={
-            <button
-              className="w-11 h-11 bg-primary-300 text-white rounded-full shadow-lg flex justify-center items-center"
-              onClick={() => navigate("/notification")}
-            >
-              <NotiIcon className="text-white w-6 h-6" />
-            </button>
+            <div className="relative">
+              <button
+                className="w-11 h-11 bg-primary-300 text-white rounded-full shadow-lg flex justify-center items-center"
+                onClick={() => navigate("/notification")}
+              >
+                <NotiIcon className="text-white w-6 h-6" />
+              </button>
+              {unreadCount > 0 && (
+                <div className="absolute -top-0.5 right-1 min-w-[18px] h-[18px] bg-white border border-primary rounded-full flex items-center justify-center px-1">
+                  <span className="text-primary text-[10px] leading-none font-m">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                </div>
+              )}
+            </div>
           }
         />
 
