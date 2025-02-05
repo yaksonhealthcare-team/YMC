@@ -3,8 +3,10 @@ import { HTTPResponse } from "../types/HTTPResponse.ts"
 import {
   NotificationFilters,
   NotificationResponse,
+  NotificationSettings,
+  NotificationSettingsResponse,
 } from "../types/Notification.ts"
-import { NotificationMapper } from "../mappers/NotificationMapper.ts"
+import { NotificationMapper } from "../mappers/NotificationMapper"
 
 export const fetchNotifications = async (filters: NotificationFilters) => {
   const { data } = await axiosClient.get<HTTPResponse<NotificationResponse[]>>(
@@ -18,4 +20,19 @@ export const fetchNotifications = async (filters: NotificationFilters) => {
   )
 
   return NotificationMapper.toNotifications(data.body)
+}
+
+export const getNotificationSettings = async (): Promise<NotificationSettings> => {
+  const { data } = await axiosClient.get<HTTPResponse<NotificationSettingsResponse[]>>(
+    "/notifications/settings"
+  )
+  return NotificationMapper.toNotificationSettings(data.body[0])
+}
+
+export const updateNotificationSettings = async (settings: Partial<NotificationSettings>): Promise<NotificationSettings> => {
+  const { data } = await axiosClient.patch<HTTPResponse<NotificationSettingsResponse[]>>(
+    "/notifications/settings",
+    NotificationMapper.toUpdateSettingsRequest(settings),
+  )
+  return NotificationMapper.toNotificationSettings(data.body[0])
 }
