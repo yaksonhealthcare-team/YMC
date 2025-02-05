@@ -1,4 +1,10 @@
-import React, { createContext, ReactNode, useContext, useState, useEffect } from "react"
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useState,
+  useEffect,
+} from "react"
 import {
   Button,
   Dialog,
@@ -85,8 +91,6 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
     options: {},
   })
   const [toastMessage, setToastMessage] = useState("")
-  const [bottomSheetContent, setBottomSheetContent] =
-    useState<ReactNode | null>(null)
   const [alertProps, setAlertProps] = useState<{
     title: string
     description: string
@@ -94,12 +98,19 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
   } | null>(null)
 
   useEffect(() => {
-    if (overlayState.isOpen && overlayState.type === OverlayTypes.BOTTOM_SHEET) {
+    if (
+      overlayState.isOpen &&
+      overlayState.type === OverlayTypes.BOTTOM_SHEET
+    ) {
       window.history.pushState({ bottomSheet: true }, "")
 
       const handlePopState = () => {
-        setOverlayState({ isOpen: false, type: null, content: null, options: {} })
-        setBottomSheetContent(null)
+        setOverlayState({
+          isOpen: false,
+          type: null,
+          content: null,
+          options: {},
+        })
         setAlertProps(null)
       }
 
@@ -134,7 +145,6 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
     }
 
     setOverlayState({ isOpen: false, type: null, content: null, options: {} })
-    setBottomSheetContent(null)
     setAlertProps(null)
   }
 
@@ -146,7 +156,6 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
   }
 
   const openBottomSheet = (content: ReactNode) => {
-    setBottomSheetContent(content)
     openOverlay(OverlayTypes.BOTTOM_SHEET, content)
   }
 
@@ -180,13 +189,6 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
       {toastMessage && (
         <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg z-50">
           {toastMessage}
-        </div>
-      )}
-      {bottomSheetContent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-          <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl">
-            {bottomSheetContent}
-          </div>
         </div>
       )}
       {alertProps && (
