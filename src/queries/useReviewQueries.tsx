@@ -4,6 +4,7 @@ import {
   createReview,
   fetchReviewDetail,
   fetchReviews,
+  fetchReservationReviewInfo,
 } from "../apis/review.api"
 import { useNavigate } from "react-router-dom"
 
@@ -48,5 +49,12 @@ export const useCreateReviewMutation = () => {
     onSuccess: () => {
       navigate("/reviews")
     },
+  })
+}
+
+export const useReservationReviewInfoQuery = (reservationId: string) => {
+  return useQuery({
+    queryKey: ["reservationReviewInfo", reservationId],
+    queryFn: () => fetchReservationReviewInfo(reservationId),
   })
 }

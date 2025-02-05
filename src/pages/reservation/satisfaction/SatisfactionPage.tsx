@@ -1,18 +1,30 @@
 import { useEffect, useState } from "react"
 import { useLayout } from "contexts/LayoutContext"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams, useLocation } from "react-router-dom"
 import { TextArea } from "@components/TextArea"
 import { Button } from "@components/Button"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import PlusIcon from "@assets/icons/PlusIcon.svg?react"
 import clsx from "clsx"
 import { useCreateReviewMutation } from "../../../queries/useReviewQueries"
+import { formatDate } from "../../../utils/date"
 
 type SatisfactionPageParams = {
   id: string
 }
 
 type Grade = "L" | "M" | "H"
+
+interface ReservationInfo {
+  r_idx: string
+  r_date: string
+  b_name: string
+  ps_name: string
+  review_items: Array<{
+    rs_idx: string
+    rs_type: string
+  }>
+}
 
 interface SatisfactionForm {
   upperBody: Grade | null
@@ -38,9 +50,11 @@ const EVALUATION_ITEMS = [
 
 const SatisfactionPage = () => {
   const { id } = useParams<SatisfactionPageParams>()
+  const location = useLocation()
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const createReviewMutation = useCreateReviewMutation()
+  const reservationInfo = location.state as ReservationInfo
   const [form, setForm] = useState<SatisfactionForm>({
     upperBody: null,
     lowerBody: null,
@@ -51,6 +65,11 @@ const SatisfactionPage = () => {
   })
 
   useEffect(() => {
+    if (!reservationInfo) {
+      navigate("/member-history/reservation")
+      return
+    }
+
     setHeader({
       display: true,
       title: "만족도 작성",
@@ -58,7 +77,7 @@ const SatisfactionPage = () => {
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
-  }, [setHeader, setNavigation])
+  }, [setHeader, setNavigation, navigate, reservationInfo])
 
   const handleGradeSelect = (
     key: keyof Omit<SatisfactionForm, "content" | "images">,
@@ -106,19 +125,11 @@ const SatisfactionPage = () => {
   }
 
   const handleSubmit = () => {
-    if (!id || !isFormValid()) return
+    if (!id || !isFormValid() || !reservationInfo) return
 
-    //TODO: 임시로 rs_idx를 생성하는 부분입니다. 실제로는 API에서 받아와야 합니다.
-    const reviewItems = [
-      { key: "upperBody", rs_idx: "24223807" },
-      { key: "lowerBody", rs_idx: "24223808" },
-      { key: "face", rs_idx: "24223809" },
-      { key: "finish", rs_idx: "24223810" },
-    ]
-
-    const review = reviewItems.map(({ key, rs_idx }) => ({
-      rs_idx,
-      rs_grade: form[key as keyof typeof form] as Grade,
+    const review = reservationInfo.review_items.map((item) => ({
+      rs_idx: item.rs_idx,
+      rs_grade: form[item.rs_type.toLowerCase() as keyof typeof form] as Grade,
     }))
 
     createReviewMutation.mutate({
@@ -129,6 +140,14 @@ const SatisfactionPage = () => {
     })
   }
 
+  if (!reservationInfo) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-gray-500">예약 정보를 찾을 수 없습니다.</p>
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-white">
       <div className="flex-1 p-5 pb-[120px] space-y-6 overflow-y-auto">
@@ -137,16 +156,16 @@ const SatisfactionPage = () => {
           <div className="space-y-2">
             <div className="flex items-center gap-1.5">
               <CalendarIcon className="w-3.5 h-3.5 text-gray-500" />
-              <span className="text-14px font-m text-gray-500">
-                2024년 10월 26일 (토)
+              <span className="text-14px font-medium text-gray-500">
+                {formatDate(new Date(reservationInfo.r_date))}
               </span>
             </div>
-            <h2 className="text-18px font-b text-gray-900">
-              약손명가 강남구청역점
+            <h2 className="text-18px font-bold text-gray-900">
+              {reservationInfo.b_name}
             </h2>
           </div>
-          <p className="text-14px font-m text-gray-500">
-            K-beauty 연예인 관리 A 코스
+          <p className="text-14px font-medium text-gray-500">
+            {reservationInfo.ps_name}
           </p>
         </div>
 
