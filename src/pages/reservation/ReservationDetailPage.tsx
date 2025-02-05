@@ -144,7 +144,21 @@ const ReservationDetailPage = () => {
               variantType="line"
               sizeType="l"
               className="flex-1"
-              onClick={() => navigate(`/reservation/${id}/satisfaction`)}
+              onClick={() =>
+                navigate(`/reservation/${id}/satisfaction`, {
+                  state: {
+                    r_idx: reservation.id,
+                    r_date: reservation.date.toISOString(),
+                    b_name: reservation.store,
+                    ps_name: reservation.programName,
+                    review_items: [
+                      { rs_idx: "1", rs_type: "시술만족도" },
+                      { rs_idx: "2", rs_type: "친절도" },
+                      { rs_idx: "3", rs_type: "청결도" },
+                    ],
+                  },
+                })
+              }
             >
               만족도 작성
             </Button>
