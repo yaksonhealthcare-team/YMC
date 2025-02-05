@@ -19,9 +19,9 @@ const STYLES = {
   },
   actions: {
     wrapper: "flex flex-col justify-between items-end",
-    history: "flex items-center cursor-pointer",
-    historyText: "font-r text-12px text-gray-500",
-    historyIcon: "w-3 h-3",
+    history: "inline-flex items-baseline gap-[2px] cursor-pointer",
+    historyText: "font-r text-12px text-gray-500 leading-[1]",
+    historyIcon: "w-[10px] h-[10px] relative top-[1px]",
   },
 } as const
 
@@ -82,10 +82,7 @@ export const MembershipCard = ({
 
       <div className={STYLES.actions.wrapper}>
         {showHistoryButton && (
-          <div
-            className={STYLES.actions.history}
-            onClick={handleHistoryClick}
-          >
+          <div className={STYLES.actions.history} onClick={handleHistoryClick}>
             <span className={STYLES.actions.historyText}>이용내역</span>
             <CaretRightIcon className={STYLES.actions.historyIcon} />
           </div>
