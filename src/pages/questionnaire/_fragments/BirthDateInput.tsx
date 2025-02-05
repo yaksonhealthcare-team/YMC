@@ -48,33 +48,37 @@ export const BirthDateInput = ({ value, onChange }: BirthDateInputProps) => {
 
   const handleChange = (type: "year" | "month" | "day", newValue: string) => {
     let sanitizedValue = newValue.replace(/\D/g, "")
-    let updatedYear = year
-    let updatedMonth = month
-    let updatedDay = day
 
     switch (type) {
       case "year":
         sanitizedValue = sanitizedValue.slice(0, 4)
-        updatedYear = sanitizedValue
         setYear(sanitizedValue)
         break
       case "month":
         sanitizedValue = sanitizedValue.slice(0, 2)
         if (parseInt(sanitizedValue) > 12) sanitizedValue = "12"
-        updatedMonth = sanitizedValue
         setMonth(sanitizedValue)
         break
       case "day":
         sanitizedValue = sanitizedValue.slice(0, 2)
         if (parseInt(sanitizedValue) > 31) sanitizedValue = "31"
-        updatedDay = sanitizedValue
         setDay(sanitizedValue)
         break
     }
 
-    const combinedValue = `${updatedYear}${updatedMonth}${updatedDay}`
-    onChange(combinedValue)
-    calculateAge(combinedValue)
+    // 변경된 필드의 값만 업데이트하여 조합
+    const updatedValue =
+      type === "year"
+        ? sanitizedValue + month + day
+        : type === "month"
+          ? year + sanitizedValue + day
+          : year + month + sanitizedValue
+
+    // 모든 필드가 채워져 있을 때만 onChange 호출
+    if (updatedValue.length === 8) {
+      onChange(updatedValue)
+      calculateAge(updatedValue)
+    }
   }
 
   return (
