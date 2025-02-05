@@ -14,9 +14,15 @@ import ProgramList from "./_fragments/ProgramList.tsx"
 import BranchInformation from "./_fragments/BranchInformation.tsx"
 import ProfileCard from "@components/ProfileCard.tsx"
 import BranchDetailBottomActionBar from "./_fragments/BranchDetailBottomActionBar.tsx"
-import { useBranch } from "../../../queries/useBranchQueries.tsx"
+import {
+  useBranch,
+  useBranchBookmarkMutation,
+  useBranchUnbookmarkMutation,
+} from "../../../queries/useBranchQueries.tsx"
 import { DEFAULT_COORDINATE } from "../../../types/Coordinate.ts"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
+import { useOverlay } from "../../../contexts/ModalContext.tsx"
+import { useQueryClient } from "@tanstack/react-query"
 
 const branchDetailTabs = ["therapists", "programs", "information"] as const
 type BranchDetailTab = (typeof branchDetailTabs)[number]
@@ -29,14 +35,18 @@ const BranchDetailTabs: Record<BranchDetailTab, string> = {
 
 const BranchDetail = () => {
   const { id } = useParams()
-  const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const [selectedTab, setSelectedTab] = useState<string>("therapists")
-  // TODO: INITIAL_CENTER에 현재위치 반영하기
-  const { data: branch, isLoading } = useBranch(id!, {
+  const { setHeader, setNavigation } = useLayout()
+  const { showToast } = useOverlay()
+  const queryClient = useQueryClient()
+  const { data: branch, isLoading } = useBranch(id || "", {
     latitude: DEFAULT_COORDINATE.latitude,
     longitude: DEFAULT_COORDINATE.longitude,
   })
+  const { mutate: addBookmark } = useBranchBookmarkMutation()
+  const { mutate: removeBookmark } = useBranchUnbookmarkMutation()
+  const [selectedTab, setSelectedTab] =
+    useState<keyof typeof BranchDetailTabs>("information")
 
   useEffect(() => {
     setHeader({
@@ -69,6 +79,29 @@ const BranchDetail = () => {
 
   const handleMembershipBannerClick = () => {
     navigate(`/membership?brand=${branch.brandCode}`)
+  }
+
+  const handleReservation = () => {
+    if (!branch) return
+    navigate(`/reservation/form?branchId=${branch.id}`)
+  }
+
+  const handleBookmark = () => {
+    if (!branch) return
+
+    if (branch.isBookmarked) {
+      removeBookmark(branch.id, {
+        onSuccess: () => {
+          showToast("즐겨찾기에서 삭제했어요.")
+        },
+      })
+    } else {
+      addBookmark(branch.id, {
+        onSuccess: () => {
+          showToast("즐겨찾기에 추가했어요.")
+        },
+      })
+    }
   }
 
   const renderTab = () => {
@@ -157,7 +190,9 @@ const BranchDetail = () => {
           value: value,
           label: label,
         }))}
-        onChange={setSelectedTab}
+        onChange={(value: string) =>
+          setSelectedTab(value as keyof typeof BranchDetailTabs)
+        }
         activeTab={selectedTab}
       />
       {renderTab()}
@@ -170,8 +205,8 @@ const BranchDetail = () => {
         <BranchDetailBottomActionBar
           isBookmarked={branch.isBookmarked || false}
           bookmarkCount={branch.favoriteCount}
-          onBookmark={() => {}}
-          onClickReservation={() => {}}
+          onBookmark={handleBookmark}
+          onClickReservation={handleReservation}
         />
       </div>
     </div>

@@ -67,9 +67,9 @@ export const useBranchBookmarkMutation = () => {
   return useMutation({
     mutationFn: (branchId: string) => addBranchBookmark(branchId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["branchBookmarks"] })
-      queryClient.invalidateQueries({ queryKey: ["branches"] })
       queryClient.invalidateQueries({ queryKey: ["branch"] })
+      queryClient.invalidateQueries({ queryKey: ["branches"] })
+      queryClient.invalidateQueries({ queryKey: ["branchBookmarks"] })
     },
   })
 }
@@ -79,9 +79,9 @@ export const useBranchUnbookmarkMutation = () => {
   return useMutation({
     mutationFn: (branchId: string) => removeBranchBookmark(branchId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["branchBookmarks"] })
-      queryClient.invalidateQueries({ queryKey: ["branches"] })
       queryClient.invalidateQueries({ queryKey: ["branch"] })
+      queryClient.invalidateQueries({ queryKey: ["branches"] })
+      queryClient.invalidateQueries({ queryKey: ["branchBookmarks"] })
     },
   })
 }
