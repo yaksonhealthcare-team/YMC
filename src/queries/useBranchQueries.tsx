@@ -68,6 +68,8 @@ export const useBranchBookmarkMutation = () => {
     mutationFn: (branchId: string) => addBranchBookmark(branchId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["branchBookmarks"] })
+      queryClient.invalidateQueries({ queryKey: ["branches"] })
+      queryClient.invalidateQueries({ queryKey: ["branch"] })
     },
   })
 }
@@ -78,6 +80,8 @@ export const useBranchUnbookmarkMutation = () => {
     mutationFn: (branchId: string) => removeBranchBookmark(branchId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["branchBookmarks"] })
+      queryClient.invalidateQueries({ queryKey: ["branches"] })
+      queryClient.invalidateQueries({ queryKey: ["branch"] })
     },
   })
 }

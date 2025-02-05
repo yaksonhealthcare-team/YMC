@@ -15,7 +15,11 @@ import { EmptyCard } from "../../components/EmptyCard.tsx"
 const FavoritePage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const { location, loading: locationLoading, error: locationError } = useGeolocation()
+  const {
+    location,
+    loading: locationLoading,
+    error: locationError,
+  } = useGeolocation()
   const { data, isLoading: branchesLoading } = useBranchBookmarksQuery(location)
   const { mutate: removeBookmark } = useBranchUnbookmarkMutation()
   const { showToast } = useOverlay()
@@ -37,8 +41,11 @@ const FavoritePage = () => {
   }
 
   const handleToggleFavorite = (branch: Branch) => {
-    removeBookmark(branch.id)
-    showToast("즐겨찾기에서 삭제했어요.")
+    removeBookmark(branch.id, {
+      onSuccess: () => {
+        showToast("즐겨찾기에서 삭제했어요.")
+      },
+    })
   }
 
   if (locationLoading || branchesLoading) {
@@ -62,9 +69,7 @@ const FavoritePage = () => {
   if (!favoriteBranches.length) {
     return (
       <div className="h-screen bg-white p-5">
-        <EmptyCard
-          title="관심있는 지점을 즐겨찾기에 추가해보세요"
-        />
+        <EmptyCard title="관심있는 지점을 즐겨찾기에 추가해보세요" />
       </div>
     )
   }
