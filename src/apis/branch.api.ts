@@ -73,7 +73,7 @@ export const addBranchBookmark = async (branchId: string) => {
 // 즐겨찾기 제거
 export const removeBranchBookmark = async (branchId: string) => {
   return axiosClient.delete("/bookmarks/bookmarks", {
-    data: {
+    params: {
       b_idx: branchId,
     },
   })
