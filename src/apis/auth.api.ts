@@ -105,7 +105,10 @@ export const signupWithSocial = async ({
   // di 값의 + 문자를 %2B로 변환
   const processedUserInfo = {
     ...userInfo,
-    di: typeof userInfo.di === 'string' ? userInfo.di.replace(/\+/g, '%2B') : userInfo.di
+    di:
+      typeof userInfo.di === "string"
+        ? userInfo.di.replace(/\+/g, "%2B")
+        : userInfo.di,
   }
 
   const response = await axiosClient.post("/auth/signup/social", {
@@ -148,13 +151,13 @@ interface SignupFormData {
 const createSignupRequest = ({
   userInfo,
   authData,
-  optional = {}
+  optional = {},
 }: SignupFormData) => {
   const requestData = {
     ...userInfo,
-    marketing_yn: userInfo.marketing_yn ? 'Y' : 'N',
-    di: authData.di.replace(/\+/g, '%2B'),
-    ...(optional.recom && { recom: optional.recom })
+    marketing_yn: userInfo.marketing_yn ? "Y" : "N",
+    di: authData.di.replace(/\+/g, "%2B"),
+    ...(optional.recom && { recom: optional.recom }),
   }
 
   return requestData
@@ -202,11 +205,14 @@ export const findEmail = async ({
   mobileNumber: string
   birthDate: string
 }): Promise<string> => {
-  const { data } = await axiosClient.post<HTTPResponse<{ email: string }[]>>("/auth/find-account", {
-    name,
-    mobileno: mobileNumber,
-    birthdate: birthDate,
-  })
+  const { data } = await axiosClient.post<HTTPResponse<{ email: string }[]>>(
+    "/auth/find-account",
+    {
+      name,
+      mobileno: mobileNumber,
+      birthdate: birthDate,
+    },
+  )
 
   return data.body[0].email
 }

@@ -38,6 +38,10 @@ const EditProfile = () => {
   })
   const [marketingAgreed, setMarketingAgreed] = useState(user!.marketingAgreed)
   const [openPostcode, setOpenPostcode] = useState(false)
+  const [profileImage, setProfileImage] = useState<File | null>(null)
+  const [profileImageUrl, setProfileImageUrl] = useState<string | undefined>(
+    user?.profileURL,
+  )
   const detailAddressFieldRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -56,7 +60,6 @@ const EditProfile = () => {
             className={
               "font-m text-gray-500 disabled:text-gray-300 disabled:cursor-default absolute right-5"
             }
-            disabled={address.detail.length === 0}
             onClick={handleSubmit}
           >
             <p>{"저장"}</p>
@@ -67,7 +70,7 @@ const EditProfile = () => {
       display: true,
     })
     setNavigation({ display: false })
-  }, [address, marketingAgreed, gender])
+  }, [address, marketingAgreed, gender, profileImageUrl])
 
   if (!user) {
     return <></>
@@ -82,7 +85,7 @@ const EditProfile = () => {
         address1: address.road,
         address2: address.detail,
         sex: gender === "male" ? "M" : "F",
-        profileUrl: user.profileURL || "",
+        profileUrl: profileImageUrl || "",
         marketingAgreed: marketingAgreed,
       }
 
@@ -99,6 +102,16 @@ const EditProfile = () => {
     } catch (error) {
       console.error("프로필 수정 실패:", error)
       alert("프로필 수정에 실패했습니다.")
+    }
+  }
+
+  const handleImageChange = (file: File | null) => {
+    setProfileImage(file)
+    if (file) {
+      const imageUrl = URL.createObjectURL(file)
+      setProfileImageUrl(imageUrl)
+    } else {
+      setProfileImageUrl(undefined)
     }
   }
 
@@ -165,7 +178,10 @@ const EditProfile = () => {
   return (
     <div className={"w-full h-full flex flex-col overflow-y-scroll"}>
       <div className={"self-center mt-5"}>
-        <ProfileImageButton profileImageUrl={user.profileURL} />
+        <ProfileImageButton
+          profileImageUrl={profileImageUrl}
+          onImageChange={handleImageChange}
+        />
       </div>
       <div className={"mx-5 mt-5"}>
         <div className={"flex flex-col gap-10 mb-10"}>
