@@ -163,7 +163,7 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
           <h2 className="text-primary text-xl font-bold mb-3">
             {currentQuestion.question_text}
           </h2>
-          {currentQuestion.options.length > 1 && (
+          {currentQuestion.answer_type === "M" && (
             <p className="text-gray-500 text-sm font-medium mb-10">
               * 복수 선택 가능
             </p>
