@@ -47,7 +47,7 @@ export const useCreateReviewMutation = () => {
   return useMutation({
     mutationFn: (request: CreateReviewRequest) => createReview(request),
     onSuccess: () => {
-      navigate("/reviews")
+      navigate("/review")
     },
   })
 }
