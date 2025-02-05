@@ -1,5 +1,11 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
-import { fetchReviewDetail, fetchReviews } from "../apis/review.api.ts"
+import { useInfiniteQuery, useQuery, useMutation } from "@tanstack/react-query"
+import {
+  CreateReviewRequest,
+  createReview,
+  fetchReviewDetail,
+  fetchReviews,
+} from "../apis/review.api"
+import { useNavigate } from "react-router-dom"
 
 export const useReviews = () => {
   return useInfiniteQuery({
@@ -17,5 +23,30 @@ export const useReviewDetail = (reviewId: string) => {
   return useQuery({
     queryKey: ["review", reviewId],
     queryFn: () => fetchReviewDetail(reviewId),
+  })
+}
+
+export const useReviewsQuery = (page: number) => {
+  return useQuery({
+    queryKey: ["reviews", page],
+    queryFn: () => fetchReviews(page),
+  })
+}
+
+export const useReviewDetailQuery = (reviewId: string) => {
+  return useQuery({
+    queryKey: ["review", reviewId],
+    queryFn: () => fetchReviewDetail(reviewId),
+  })
+}
+
+export const useCreateReviewMutation = () => {
+  const navigate = useNavigate()
+
+  return useMutation({
+    mutationFn: (request: CreateReviewRequest) => createReview(request),
+    onSuccess: () => {
+      navigate("/reviews")
+    },
   })
 }
