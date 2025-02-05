@@ -46,7 +46,7 @@ export const ReviewListItem = ({ review }: ReviewListItemProps) => {
                   key={key}
                   className="bg-tag-redBg rounded-full py-[3px] px-2"
                 >
-                  <span className="text-primary text-xs font-medium">
+                  <span className="text-primary text-xs font-medium flex items-center justify-center">
                     {getGradeLabel(key)} {value}
                   </span>
                 </div>
