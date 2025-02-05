@@ -61,7 +61,7 @@ const ReservationDetailPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { mutate: completeVisit } = useCompleteVisit()
-  const { openModal } = useOverlay()
+  const { openModal, openBottomSheet, closeOverlay } = useOverlay()
   const {
     data: reservation,
     isLoading,
@@ -96,6 +96,39 @@ const ReservationDetailPage = () => {
     })
   }
 
+  const handleCancelReservation = () => {
+    openBottomSheet(
+      <div className="flex flex-col">
+        <p className="mx-5 mt-5 font-sb text-18px">취소하시겠습니까?</p>
+        <p className="mx-5 mt-2 font-r text-16px text-gray-900">
+          예약 취소 시 차감된 상담 횟수는 복원됩니다.
+        </p>
+        <div className="mt-10 border-t border-gray-50 flex gap-2 pt-3 px-5">
+          <Button
+            className="w-full"
+            variantType="line"
+            onClick={() => {
+              closeOverlay()
+              navigate(`/reservation/${id}/cancel`)
+            }}
+          >
+            취소하기
+          </Button>
+          <Button
+            className="w-full"
+            variantType="primary"
+            onClick={(e) => {
+              e.preventDefault()
+              closeOverlay()
+            }}
+          >
+            돌아가기
+          </Button>
+        </div>
+      </div>,
+    )
+  }
+
   const renderActionButtons = () => {
     if (!reservation) return null
 
@@ -106,7 +139,7 @@ const ReservationDetailPage = () => {
             variantType="primary"
             sizeType="l"
             className="w-full"
-            onClick={() => navigate(`/reservation/${id}/cancel`)}
+            onClick={handleCancelReservation}
           >
             예약 취소하기
           </Button>
