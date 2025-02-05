@@ -130,7 +130,7 @@ const Step1SearchBranchList = ({
                   <BranchItem branch={branch} />
 
                   {selectedBranches.some((b) => b.id === branch.id) && (
-                    <CheckIcon />
+                    <CheckIcon htmlColor="#F37165" />
                   )}
                 </div>
               ))}
