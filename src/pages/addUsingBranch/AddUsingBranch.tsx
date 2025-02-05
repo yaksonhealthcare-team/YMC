@@ -13,14 +13,23 @@ const AddUsingBranch = () => {
   const [pageStep, setPageStep] = useState(1)
   const [selectedBranches, setSelectedBranches] = useState<Branch[]>([])
 
+  const handleBack = () => {
+    if (pageStep === 1) {
+      navigate(-1)
+    } else {
+      setPageStep(pageStep - 1)
+    }
+  }
+
   useEffect(() => {
     setHeader({
       display: true,
       left: "back",
+      onClickBack: handleBack,
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
-  }, [setHeader, setNavigation])
+  }, [setHeader, setNavigation, pageStep])
 
   const handleNextStep = () => {
     if (pageStep === 3) {
