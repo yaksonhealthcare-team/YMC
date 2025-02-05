@@ -63,7 +63,7 @@ const ReservationFormPage = () => {
   const { data: additionalManagements, isLoading: isAdditionalLoading } =
     useAdditionalManagement(data.item)
 
-  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null)
+  const [_, setSwiperInstance] = useState<SwiperType | null>(null)
   const [activeIndex, setActiveIndex] = useState(0)
 
   const handleOnChangeItem = (event: ChangeEvent<HTMLInputElement>) => {
