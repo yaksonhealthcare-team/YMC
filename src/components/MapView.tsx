@@ -27,7 +27,9 @@ const MapView = ({
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstance = useRef<naver.maps.Map | null>(null)
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
-  const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(null)
+  const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(
+    null,
+  )
 
   const { updateCurrentLocationMarker } = useNaverMapBranchMarkers({
     map: mapInstance.current,
@@ -71,11 +73,6 @@ const MapView = ({
     if (options?.showCurrentLocation) {
       getCurrentLocation({
         onSuccess: (coords) => {
-          if (!mapInstance.current) return
-          mapInstance.current.setCenter(
-            new naver.maps.LatLng(coords.latitude, coords.longitude),
-          )
-          mapInstance.current.setZoom(15)
           setCurrentLocation(coords)
         },
       })
