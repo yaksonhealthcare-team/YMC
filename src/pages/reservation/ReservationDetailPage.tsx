@@ -67,6 +67,7 @@ const ReservationDetailPage = () => {
     isLoading,
     isError,
     error,
+    refetch,
   } = useReservationDetail(id || "")
 
   useEffect(() => {
@@ -85,7 +86,11 @@ const ReservationDetailPage = () => {
       message: "방문을 완료하시겠습니까?",
       onConfirm: () => {
         if (id) {
-          completeVisit(id)
+          completeVisit(id, {
+            onSuccess: () => {
+              refetch()
+            },
+          })
         }
       },
     })
@@ -114,7 +119,7 @@ const ReservationDetailPage = () => {
             variantType="primary"
             sizeType="l"
             className="w-full"
-            onClick={() => navigate("/reservation")}
+            onClick={() => navigate("/reservation/form")}
           >
             다시 예약하기
           </Button>
@@ -139,17 +144,17 @@ const ReservationDetailPage = () => {
               variantType="line"
               sizeType="l"
               className="flex-1"
-              onClick={() => navigate("/reservation")}
+              onClick={() => navigate(`/reservation/${id}/satisfaction`)}
             >
-              다시 예약하기
+              만족도 작성
             </Button>
             <Button
               variantType="primary"
               sizeType="l"
               className="flex-1"
-              onClick={() => navigate(`/reservation/${id}/satisfaction`)}
+              onClick={() => navigate("/reservation/form")}
             >
-              만족도 작성
+              다시 예약하기
             </Button>
           </div>
         )
