@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { Coordinate, DEFAULT_COORDINATE } from "../types/Coordinate.ts"
+import { Coordinate } from "../types/Coordinate.ts"
 import CrosshairIcon from "@assets/icons/CrosshairIcon.svg?react"
 import { Branch } from "../types/Branch.ts"
 import { useNaverMapBranchMarkers } from "../hooks/useNaverMapBranchMarkers.tsx"
@@ -18,17 +18,6 @@ interface MapViewProps {
   }
 }
 
-/**
- * NOTE @Seyoung
- * Please add `branches={[]}` to MapView's props explicitly if you encounter an infinite call of useEffect
- *
- * example:
- * ```tsx
- * <MapView />
- * //to
- * <MapView branches={[]} />
- * ```
- */
 const MapView = ({
   center,
   branches = [],
@@ -37,11 +26,8 @@ const MapView = ({
   const { naver } = window
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstance = useRef<naver.maps.Map | null>(null)
-  const [_, setIsMapMoved] = useState(false)
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
-  const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(
-    null,
-  )
+  const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(null)
 
   const { updateCurrentLocationMarker } = useNaverMapBranchMarkers({
     map: mapInstance.current,
@@ -59,38 +45,38 @@ const MapView = ({
           )
         }
       },
-      onMove: (center) => {
-        setIsMapMoved(true)
-        options?.onMoveMap?.(center)
-      },
     },
   })
 
   useEffect(() => {
-    if (!mapRef.current) return
+    if (!mapRef.current || !center) return
 
     mapInstance.current = new naver.maps.Map("map", {
-      center: new naver.maps.LatLng(
-        center?.latitude || DEFAULT_COORDINATE.latitude,
-        center?.longitude || DEFAULT_COORDINATE.longitude,
-      ),
+      center: new naver.maps.LatLng(center.latitude, center.longitude),
       zoom: 14,
     })
+
+    // 드래그 종료 시에만 위치 업데이트
+    if (options?.onMoveMap && mapInstance.current) {
+      const map = mapInstance.current
+      naver.maps.Event.addListener(map, "dragend", () => {
+        const center = map.getCenter()
+        options?.onMoveMap?.({
+          latitude: center.y,
+          longitude: center.x,
+        })
+      })
+    }
 
     if (options?.showCurrentLocation) {
       getCurrentLocation({
         onSuccess: (coords) => {
-          setIsMapMoved((prevIsMoved) => {
-            if (!prevIsMoved && mapInstance.current) {
-              mapInstance.current.setCenter(
-                new naver.maps.LatLng(coords.latitude, coords.longitude),
-              )
-              mapInstance.current.setZoom(15)
-            }
-            setCurrentLocation(coords)
-
-            return prevIsMoved
-          })
+          if (!mapInstance.current) return
+          mapInstance.current.setCenter(
+            new naver.maps.LatLng(coords.latitude, coords.longitude),
+          )
+          mapInstance.current.setZoom(15)
+          setCurrentLocation(coords)
         },
       })
     }
@@ -98,7 +84,7 @@ const MapView = ({
     return () => {
       mapInstance.current = null
     }
-  }, [])
+  }, [center])
 
   useEffect(() => {
     if (currentLocation) updateCurrentLocationMarker(currentLocation)
@@ -118,6 +104,8 @@ const MapView = ({
       },
     })
   }
+
+  if (!center) return null
 
   return (
     <div id={"map"} ref={mapRef} className={"relative w-full h-full"}>

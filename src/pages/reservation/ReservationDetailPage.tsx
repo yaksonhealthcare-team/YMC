@@ -102,7 +102,7 @@ const ReservationDetailPage = () => {
         branchName={reservation.branchName}
         remainingCount={reservation.remainingCount}
       />
-      <FixedButtonContainer>
+      <FixedButtonContainer className="z-[200]">
         {reservation.status === ReservationStatus.CONFIRMED && (
           <Button
             variantType="primary"

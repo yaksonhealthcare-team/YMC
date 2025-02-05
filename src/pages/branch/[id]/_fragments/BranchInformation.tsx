@@ -125,16 +125,23 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
               </div>
             </IconSection>
           </LabelSection>
-          <LabelSection label={"일반 버스"} type={"title"}>
-            <div className={"flex flex-col gap-2"}>
-              <p>{branch.directions.bus.description}</p>
-              <div className={"flex flex-wrap gap-1"}>
-                {branch.directions.bus.routes.map((route, index) => (
-                  <Tag key={index} type={"rect"} title={route} />
-                ))}
+          {(branch.directions.bus.description || branch.directions.bus.routes.length > 0) && (
+            <LabelSection label={"일반 버스"} type={"title"}>
+              <div className={"flex flex-col gap-2"}>
+                {branch.directions.bus.description && (
+                  <p>{branch.directions.bus.description}</p>
+                )}
+                {branch.directions.bus.routes.length > 0 &&
+                  branch.directions.bus.routes[0] !== "" && (
+                    <div className={"flex flex-wrap gap-1"}>
+                      {branch.directions.bus.routes.map((route, index) => (
+                        <Tag key={index} type={"rect"} title={route} />
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
-          </LabelSection>
+            </LabelSection>
+          )}
           <LabelSection label={"지하철 안내"} type={"title"}>
             <p>{branch.directions.subway.description}</p>
           </LabelSection>

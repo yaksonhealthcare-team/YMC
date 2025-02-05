@@ -49,6 +49,9 @@ const ReservationDetailPage = lazy(
 const ReservationCancelPage = lazy(
   () => import("../pages/reservation/ReservationCancelPage"),
 )
+const SatisfactionPage = lazy(
+  () => import("../pages/reservation/satisfaction/SatisfactionPage"),
+)
 const MembershipUsageHistory = lazy(
   () => import("../pages/membership/MembershipUsageHistory"),
 )
@@ -264,6 +267,11 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/reservation/:id/cancel",
     element: <ReservationCancelPage />,
+    auth: true,
+  },
+  {
+    path: "/reservation/:id/satisfaction",
+    element: <SatisfactionPage />,
     auth: true,
   },
   {

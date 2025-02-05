@@ -1,7 +1,7 @@
-import { useInfiniteQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { queryKeys } from "./query.keys.ts"
 import { NotificationFilters } from "../types/Notification.ts"
-import { fetchNotifications } from "../apis/notifications.api.ts"
+import { fetchNotifications, getNotificationSettings, updateNotificationSettings } from "../apis/notifications.api.ts"
 
 export const useNotifications = (filters: NotificationFilters) =>
   useInfiniteQuery({
@@ -14,3 +14,21 @@ export const useNotifications = (filters: NotificationFilters) =>
       return allPages.length + 1
     },
   })
+
+export const useNotificationSettings = () => {
+  return useQuery({
+    queryKey: ["notificationSettings"],
+    queryFn: getNotificationSettings,
+  })
+}
+
+export const useUpdateNotificationSettings = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: updateNotificationSettings,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notificationSettings"] })
+    },
+  })
+}
