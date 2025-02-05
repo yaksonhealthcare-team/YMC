@@ -158,51 +158,61 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
   const isLastQuestion = currentIndex === questions.length - 1
 
   return (
-    <div className="p-5 pb-32">
-      <p className="font-medium text-gray-400 mb-3">
-        <span className="font-semibold text-primary">{currentIndex + 1}</span>/
-        {questions.length}
-      </p>
-
-      {currentQuestion && (
-        <>
-          <h2 className="text-primary text-xl font-bold mb-3">
-            {currentQuestion.question_text}
-          </h2>
-          {currentQuestion.answer_type === "M" && (
-            <p className="text-gray-500 text-sm font-medium mb-10">
-              * 복수 선택 가능
+    <div className="fixed inset-0 bg-white">
+      <div className="absolute inset-0 overflow-y-auto pb-[120px]">
+        <div className="max-w-[500px] min-w-[375px] mx-auto">
+          <div className="p-5">
+            <p className="font-medium text-gray-400 mb-3">
+              <span className="font-semibold text-primary">
+                {currentIndex + 1}
+              </span>
+              /{questions.length}
             </p>
-          )}
-          <QuestionItem
-            question={currentQuestion}
-            formik={formik}
-            fieldName={getFieldName(currentQuestion)}
-            onValidationChange={handleValidationChange}
-          />
-        </>
-      )}
 
-      <FixedButtonContainer className="bg-white flex gap-2">
-        <Button
-          className="flex-1"
-          variantType="line"
-          sizeType="l"
-          onClick={handlePrev}
-          disabled={currentIndex === 0}
-        >
-          이전
-        </Button>
-        <Button
-          className="flex-1"
-          variantType="primary"
-          sizeType="l"
-          onClick={handleNext}
-          disabled={!isCurrentValid}
-        >
-          {isLastQuestion ? "완료" : "다음"}
-        </Button>
-      </FixedButtonContainer>
+            {currentQuestion && (
+              <>
+                <h2 className="text-primary text-xl font-bold mb-3">
+                  {currentQuestion.question_text}
+                </h2>
+                {currentQuestion.answer_type === "M" && (
+                  <p className="text-gray-500 text-sm font-medium mb-10">
+                    * 복수 선택 가능
+                  </p>
+                )}
+                <QuestionItem
+                  question={currentQuestion}
+                  formik={formik}
+                  fieldName={getFieldName(currentQuestion)}
+                  onValidationChange={handleValidationChange}
+                />
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100">
+        <div className="max-w-[500px] min-w-[375px] mx-auto p-5 flex gap-2">
+          <Button
+            className="flex-1"
+            variantType="line"
+            sizeType="l"
+            onClick={handlePrev}
+            disabled={currentIndex === 0}
+          >
+            이전
+          </Button>
+          <Button
+            className="flex-1"
+            variantType="primary"
+            sizeType="l"
+            onClick={handleNext}
+            disabled={!isCurrentValid}
+          >
+            {isLastQuestion ? "완료" : "다음"}
+          </Button>
+        </div>
+      </div>
     </div>
   )
 }
