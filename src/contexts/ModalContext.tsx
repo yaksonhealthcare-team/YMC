@@ -39,7 +39,7 @@ interface OverlayState {
  */
 export interface OverlayContextValue {
   overlayState: OverlayState
-  closeOverlay: () => void
+  closeOverlay: (options?: { skipHistoryBack?: boolean }) => void
   openMessageBox: (
     message: string,
     options?: Record<string, unknown> | undefined,
@@ -135,8 +135,11 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
     })
   }
 
-  const closeOverlay = () => {
-    if (overlayState.type === OverlayTypes.BOTTOM_SHEET) {
+  const closeOverlay = (options?: { skipHistoryBack?: boolean }) => {
+    if (
+      overlayState.type === OverlayTypes.BOTTOM_SHEET &&
+      !options?.skipHistoryBack
+    ) {
       const currentState = window.history.state
       if (currentState?.bottomSheet) {
         window.history.back()

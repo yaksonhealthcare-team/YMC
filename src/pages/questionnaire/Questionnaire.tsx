@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useFormik } from "formik"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Button } from "@components/Button"
@@ -62,7 +62,7 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
     setIsCurrentValid(isValid)
   }
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     if (hasChanges) {
       openBottomSheet(
         <div className="p-5">
@@ -75,13 +75,19 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
               variantType="primary"
               sizeType="l"
               onClick={() => {
-                closeOverlay()
-                navigate(-1)
+                setHasChanges(false)
+                window.history.go(-2) // 모달의 history entry와 현재 페이지를 모두 뒤로가기
               }}
             >
               나가기
             </Button>
-            <Button variantType="line" sizeType="l" onClick={closeOverlay}>
+            <Button
+              variantType="line"
+              sizeType="l"
+              onClick={() => {
+                closeOverlay()
+              }}
+            >
               계속 작성하기
             </Button>
           </div>
@@ -90,7 +96,7 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
     } else {
       navigate(-1)
     }
-  }
+  }, [hasChanges, navigate, openBottomSheet, closeOverlay])
 
   useEffect(() => {
     setHeader({
