@@ -180,4 +180,5 @@ export interface BranchDetailResponse {
   }
   b_bookmarks_count: string
   membership_count: string
+  is_bookmarked: string
 }
