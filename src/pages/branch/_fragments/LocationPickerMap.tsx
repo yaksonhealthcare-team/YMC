@@ -7,11 +7,15 @@ import { Coordinate } from "../../../types/Coordinate.ts"
 import { Button } from "@components/Button.tsx"
 import { fetchBranches } from "../../../apis/branch.api.ts"
 import { Branch } from "../../../types/Branch.ts"
+import { useNavigate } from "react-router-dom"
+import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect.ts"
 
 const LocationPickerMap = () => {
   const { naver } = window
+  const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { location, loading } = useGeolocation()
+  const { setLocation } = useBranchLocationSelect()
   const [center, setCenter] = useState<Coordinate | null>(null)
   const [branches, setBranches] = useState<Branch[]>([])
   const [address, setAddress] = useState({
@@ -72,6 +76,23 @@ const LocationPickerMap = () => {
     }
   }
 
+  const handleSetLocation = () => {
+    if (!center || !address.road) return
+
+    setLocation({
+      address: address.road,
+      coords: center,
+    })
+    navigate("/branch", {
+      state: {
+        selectedLocation: {
+          address: address.road,
+          coords: center,
+        },
+      },
+    })
+  }
+
   if (loading || !center) {
     return (
       <div className="flex items-center justify-center w-full h-full">
@@ -121,7 +142,11 @@ const LocationPickerMap = () => {
         )}
         <div className={"w-full h-[1px] bg-gray-50 mt-6"} />
         <div className={"w-full px-5 mt-3"}>
-          <Button variantType={"primary"} className={"w-full"}>
+          <Button
+            variantType={"primary"}
+            className={"w-full"}
+            onClick={handleSetLocation}
+          >
             {"이 위치로 설정"}
           </Button>
         </div>
