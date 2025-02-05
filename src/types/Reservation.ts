@@ -11,6 +11,12 @@ export enum ReservationStatus {
   NO_SHOW = "미방문",
 }
 
+export enum ReservationType {
+  MANAGEMENT = "관리예약",
+  CONSULTATION = "상담예약",
+  OTHER = "기타예약",
+}
+
 export interface Reservation {
   id: string
   store: string
@@ -20,6 +26,7 @@ export interface Reservation {
   programName: string
   duration: number
   status: ReservationStatus
+  type: ReservationType
 }
 
 export interface ReservationResponse {
@@ -31,6 +38,7 @@ export interface ReservationResponse {
   visit: string
   ps_name: string
   r_take_time: string
+  r_gubun: string
 }
 
 export interface FilterItem {

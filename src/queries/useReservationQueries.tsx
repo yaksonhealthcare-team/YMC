@@ -9,6 +9,7 @@ import {
   ReservationResponse as ApiResponse,
   ReservationStatus,
   ReservationStatusCode,
+  ReservationType,
 } from "types/Reservation"
 import { axiosClient } from "./clients"
 import { completeVisit } from "apis/reservation.api"
@@ -117,6 +118,7 @@ export interface ReservationDetail {
   membershipName: string
   branchName: string
   remainingCount: string
+  type: ReservationType
 }
 
 export const useReservationDetail = (id: string) => {
@@ -164,6 +166,7 @@ export const useReservationDetail = (id: string) => {
         membershipName: body.membership_name || "",
         branchName: body.b_name || "",
         remainingCount: body.remaining_count || "",
+        type: (body.r_gubun as ReservationType) || ReservationType.MANAGEMENT,
       }
     },
     enabled: !!id,

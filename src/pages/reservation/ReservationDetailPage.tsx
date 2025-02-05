@@ -11,9 +11,8 @@ import ReservationSummary from "./_fragments/ReservationSummary"
 import Location from "./_fragments/Location"
 import MembershipUsage from "./_fragments/MembershipUsage"
 import FixedButtonContainer from "@components/FixedButtonContainer"
-import { ReservationStatus } from "types/Reservation"
+import { ReservationStatus, ReservationType } from "types/Reservation"
 import { Skeleton } from "@mui/material"
-import { isVisitTime } from "utils/date"
 import { useOverlay } from "contexts/ModalContext"
 
 const LoadingSkeleton = () => (
@@ -184,11 +183,13 @@ const ReservationDetailPage = () => {
       </Button>
       <Location reservation={reservation} />
       <Divider className="my-[24px] border-gray-100" />
-      <MembershipUsage
-        membershipName={reservation.membershipName}
-        branchName={reservation.branchName}
-        remainingCount={reservation.remainingCount}
-      />
+      {reservation.type === ReservationType.MANAGEMENT && (
+        <MembershipUsage
+          membershipName={reservation.membershipName}
+          branchName={reservation.branchName}
+          remainingCount={reservation.remainingCount}
+        />
+      )}
       <FixedButtonContainer className="z-[200]">
         {renderActionButtons()}
       </FixedButtonContainer>
