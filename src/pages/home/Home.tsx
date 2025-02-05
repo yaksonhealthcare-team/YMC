@@ -342,7 +342,7 @@ const EventSection = () => {
 
 const BusinessInfo = () => {
   return (
-    <div className="mt-12 px-5 pt-8 pb-10 flex flex-col gap-4 bg-white relative -mx-6 -my-4">
+    <div className="mt-12 px-6 pt-8 pb-10 flex flex-col gap-4 bg-white relative -mx-6 -my-4">
       <span className="font-b text-16px text-gray-600">
         (주) 약손명가 헬스케어
       </span>
