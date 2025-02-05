@@ -48,28 +48,31 @@ export const BirthDateInput = ({ value, onChange }: BirthDateInputProps) => {
 
   const handleChange = (type: "year" | "month" | "day", newValue: string) => {
     let sanitizedValue = newValue.replace(/\D/g, "")
+    let updatedYear = year
+    let updatedMonth = month
+    let updatedDay = day
 
     switch (type) {
       case "year":
         sanitizedValue = sanitizedValue.slice(0, 4)
+        updatedYear = sanitizedValue
         setYear(sanitizedValue)
         break
       case "month":
         sanitizedValue = sanitizedValue.slice(0, 2)
         if (parseInt(sanitizedValue) > 12) sanitizedValue = "12"
+        updatedMonth = sanitizedValue
         setMonth(sanitizedValue)
         break
       case "day":
         sanitizedValue = sanitizedValue.slice(0, 2)
         if (parseInt(sanitizedValue) > 31) sanitizedValue = "31"
+        updatedDay = sanitizedValue
         setDay(sanitizedValue)
         break
     }
 
-    const combinedValue = `${type === "year" ? sanitizedValue : year}${
-      type === "month" ? sanitizedValue : month
-    }${type === "day" ? sanitizedValue : day}`
-
+    const combinedValue = `${updatedYear}${updatedMonth}${updatedDay}`
     onChange(combinedValue)
     calculateAge(combinedValue)
   }
