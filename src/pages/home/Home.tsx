@@ -297,12 +297,15 @@ const EventSection = () => {
       {events && events.length > 0 ? (
         <Swiper
           spaceBetween={10}
-          slidesPerView={1.1}
+          slidesPerView={events.length === 1 ? 1 : 1.1}
           style={{ overflow: "visible" }}
           className="mt-2"
         >
           {events.map((event: Event) => (
-            <SwiperSlide key={event.code} className="mr-3">
+            <SwiperSlide
+              key={event.code}
+              className={events.length === 1 ? "" : "mr-3"}
+            >
               <div
                 className="flex flex-col gap-4 bg-white pb-4 rounded-[20px] border border-gray-100"
                 onClick={() => navigate(`/event/${event.code}`)}
