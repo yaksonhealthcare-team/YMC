@@ -100,7 +100,7 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
         <div className={"h-[1px] w-full bg-gray-200"} />
         <div className={"flex flex-col gap-6"}>
           <LabelSection label={"오시는 길"} type={"heading"}>
-            <div className={"w-full h-48 flex"}>
+            <div className={"w-full h-48 flex relative z-0"}>
               <MapView
                 center={{
                   latitude: branch.location.latitude,
@@ -125,7 +125,8 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
               </div>
             </IconSection>
           </LabelSection>
-          {(branch.directions.bus.description || branch.directions.bus.routes.length > 0) && (
+          {(branch.directions.bus.description ||
+            branch.directions.bus.routes.length > 0) && (
             <LabelSection label={"일반 버스"} type={"title"}>
               <div className={"flex flex-col gap-2"}>
                 {branch.directions.bus.description && (
@@ -136,9 +137,9 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
                     <div className={"flex flex-wrap gap-1"}>
                       {branch.directions.bus.routes.map((route, index) => (
                         <Tag key={index} type={"rect"} title={route} />
-                    ))}
-                  </div>
-                )}
+                      ))}
+                    </div>
+                  )}
               </div>
             </LabelSection>
           )}
