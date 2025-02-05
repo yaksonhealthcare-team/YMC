@@ -12,7 +12,7 @@ import {
   ReservationType,
 } from "types/Reservation"
 import { axiosClient } from "./clients"
-import { completeVisit } from "apis/reservation.api"
+import { completeVisit, cancelReservation } from "apis/reservation.api"
 
 const statusCodeToStatus: Record<ReservationStatusCode, string> = {
   "000": "전체",
@@ -184,6 +184,24 @@ export const useCompleteVisit = () => {
 
   return useMutation({
     mutationFn: completeVisit,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["reservations"] })
+      queryClient.invalidateQueries({ queryKey: ["reservation"] })
+    },
+  })
+}
+
+interface CancelReservationParams {
+  reservationId: string
+  cancelMemo: string
+}
+
+export const useCancelReservation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ reservationId, cancelMemo }: CancelReservationParams) =>
+      cancelReservation(reservationId, cancelMemo),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reservations"] })
       queryClient.invalidateQueries({ queryKey: ["reservation"] })

@@ -25,3 +25,15 @@ export const completeVisit = async (reservationId: string): Promise<void> => {
     r_idx: reservationId,
   })
 }
+
+export const cancelReservation = async (
+  reservationId: string,
+  cancelMemo: string,
+): Promise<void> => {
+  await axiosClient.delete(`/reservation/reservations`, {
+    params: {
+      r_idx: reservationId,
+      cancel_memo: cancelMemo,
+    },
+  })
+}

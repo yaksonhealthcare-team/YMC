@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate, useLocation } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useOverlay } from "../../contexts/ModalContext"
 import { TextArea } from "@components/TextArea"
@@ -7,6 +7,7 @@ import { Button } from "@components/Button"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 import ReservationCancelBottomSheetContent from "./_fragments/ReservationCancelBottomSheetContent"
 import { Divider } from "@mui/material"
+import { useCancelReservation } from "queries/useReservationQueries"
 
 interface ReservationDetail {
   branchName: string
@@ -20,11 +21,13 @@ interface ReservationDetail {
 const ReservationCancelPage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+
   const { setHeader, setNavigation } = useLayout()
   const { showToast, openBottomSheet } = useOverlay()
   const [cancelReason, setCancelReason] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [reservation, setReservation] = useState<ReservationDetail>()
+  const { mutate: cancelReservation } = useCancelReservation()
 
   useEffect(() => {
     setHeader({
@@ -39,12 +42,36 @@ const ReservationCancelPage = () => {
   const handleConfirmCancel = async () => {
     try {
       setIsLoading(true)
-
-      showToast("예약이 취소되었습니다")
-      navigate("/reservation/0")
+      if (id) {
+        cancelReservation(
+          {
+            reservationId: id,
+            cancelMemo: cancelReason,
+          },
+          {
+            onSuccess: () => {
+              const closeOverlay = document.querySelector(
+                '[aria-label="close"]',
+              )
+              if (closeOverlay instanceof HTMLElement) {
+                closeOverlay.click()
+              }
+              showToast("예약이 취소되었습니다")
+              navigate(`/reservation/${id}`)
+            },
+            onError: (error) => {
+              console.error("예약 취소 실패:", error)
+              showToast("예약 취소에 실패했습니다")
+            },
+            onSettled: () => {
+              setIsLoading(false)
+            },
+          },
+        )
+      }
     } catch (error) {
+      console.error("예약 취소 중 오류 발생:", error)
       showToast("예약 취소에 실패했습니다")
-    } finally {
       setIsLoading(false)
     }
   }

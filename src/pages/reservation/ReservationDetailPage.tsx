@@ -109,7 +109,14 @@ const ReservationDetailPage = () => {
             variantType="line"
             onClick={() => {
               closeOverlay()
-              navigate(`/reservation/${id}/cancel`)
+              navigate(`/reservation/${id}/cancel`, {
+                state: {
+                  r_idx: reservation?.id,
+                  r_date: reservation?.date.toISOString(),
+                  b_name: reservation?.store,
+                  ps_name: reservation?.programName,
+                },
+              })
             }}
           >
             취소하기
