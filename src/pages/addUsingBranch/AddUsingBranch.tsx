@@ -17,14 +17,6 @@ const AddUsingBranch = () => {
     setHeader({
       display: true,
       left: "back",
-      right: (
-        <button
-          className="font-medium text-gray-500 text-[16px]"
-          onClick={() => navigate("/")}
-        >
-          건너뛰기
-        </button>
-      ),
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
@@ -36,6 +28,10 @@ const AddUsingBranch = () => {
     }
 
     setPageStep(pageStep + 1)
+  }
+
+  const handleSkip = () => {
+    navigate("/")
   }
 
   return (
@@ -53,7 +49,10 @@ const AddUsingBranch = () => {
 
       <div className="w-full px-[20px] pt-[12px] pb-[30px] bg-[#FFFFFF] border-t border-[#F8F8F8]">
         {pageStep === 3 && (
-          <button className="w-full bg-transparent text-primary-300 mb-[8px] h-[48px] font-semibold text-[16px]">
+          <button
+            className="w-full bg-transparent text-primary-300 mb-[8px] h-[48px] font-semibold text-[16px]"
+            onClick={handleSkip}
+          >
             나중에 등록할래요
           </button>
         )}
