@@ -154,7 +154,7 @@ const Branch = () => {
   }
 
   return (
-    <div className={"relative flex flex-col flex-1 pt-12"}>
+    <div className={"relative flex flex-col flex-1 h-screen"}>
       {renderScreen()}
       <div
         className={`fixed bottom-10 left-1/2 -translate-x-1/2 ${selectedBranch ? "transition-transform -translate-y-32 duration-300" : "transition-transform translate-y-0 duration-300"}`}

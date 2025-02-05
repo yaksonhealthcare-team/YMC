@@ -63,6 +63,7 @@ const BranchMapSection = ({
   return (
     <div className={"relative flex flex-col flex-1 h-full overflow-hidden"}>
       <MapView
+        center={coords}
         branches={branches || []}
         options={{
           onSelectBranch: (branch) => {
