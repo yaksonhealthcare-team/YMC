@@ -1,19 +1,19 @@
 export enum MembershipStatus {
   ACTIVE = "T",
   INACTIVE = "F",
-  EXPIRED = "E"
+  EXPIRED = "E",
 }
 
 export const membershipStatusToKorean = {
   [MembershipStatus.ACTIVE]: "사용가능",
   [MembershipStatus.INACTIVE]: "사용완료",
-  [MembershipStatus.EXPIRED]: "만료됨"
+  [MembershipStatus.EXPIRED]: "만료됨",
 } as const
 
 export const koreanToMembershipStatus = {
   "사용가능": MembershipStatus.ACTIVE,
   "사용완료": MembershipStatus.INACTIVE,
-  "만료됨": MembershipStatus.EXPIRED
+  "만료됨": MembershipStatus.EXPIRED,
 } as const
 
 export interface MembershipCategory {
@@ -114,15 +114,14 @@ export interface AdditionalManagement {
 }
 
 export interface MembershipUsageHistory {
-  id: string
-  store: string
-  date: string
   r_idx: string
+  r_date: string
+  ps_name: string
 }
 
 export interface MembershipDetailWithHistory
   extends Omit<MyMembership, "reservations"> {
-  history: MembershipUsageHistory[]
+  reservations?: MembershipUsageHistory[]
 }
 
 export interface ServiceCategory {
