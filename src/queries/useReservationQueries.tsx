@@ -7,15 +7,11 @@ import {
 } from "types/Reservation"
 import { axiosClient } from "./clients"
 
-const statusTextToStatus: Record<string, ReservationStatus> = {
-  "관리완료": ReservationStatus.COMPLETED,
-  "관리중": ReservationStatus.IN_PROGRESS,
-  "예약완료": ReservationStatus.CONFIRMED,
-  "승인예약": ReservationStatus.APPROVED,
-  "대기예약": ReservationStatus.PENDING,
-  "고객취소": ReservationStatus.CUSTOMER_CANCELLED,
-  "매장취소": ReservationStatus.STORE_CANCELLED,
-  "미방문": ReservationStatus.NO_SHOW,
+const statusCodeToStatus: Record<ReservationStatusCode, string> = {
+  "000": "전체",
+  "001": "예약완료",
+  "002": "관리완료",
+  "003": "예약취소",
 }
 
 export const useReservations = (status: string = "000") => {
@@ -36,8 +32,7 @@ export const useReservations = (status: string = "000") => {
 
       return data.body.map((item: ApiResponse) => ({
         id: item.r_idx || "",
-        status:
-          statusTextToStatus[item.r_status] || ReservationStatus.CONFIRMED,
+        status: item.r_status || "예약완료",
         store: item.b_name || "",
         programName: item.ps_name || "",
         visit: parseInt(item.visit) || 0,

@@ -12,7 +12,10 @@ interface ReserveCardProps {
   className?: string
 }
 
-export const ReserveCard = ({ reservation, className = "" }: ReserveCardProps) => {
+export const ReserveCard = ({
+  reservation,
+  className = "",
+}: ReserveCardProps) => {
   const navigate = useNavigate()
 
   const classifyReservationStatus = (status: ReservationStatus) => {
@@ -39,55 +42,53 @@ export const ReserveCard = ({ reservation, className = "" }: ReserveCardProps) =
   }
 
   const getButton = (): ReactNode => {
-    const buttonTexts = {
-      completed: "만족도 작성",
-      progressing: "방문 완료",
-    }
-
     const statusType = classifyReservationStatus(reservation.status)
 
-    if (!statusType || statusType === "upcoming") return null
-    if (!statusType || statusType === "cancelled") return null
+    if (statusType !== "completed") return null
 
     const handleClick = (e: React.MouseEvent) => {
       e.stopPropagation()
-      if (statusType === "completed") {
-        navigate(`/reservation/${reservation.id}/satisfaction`)
-      }
+      navigate(`/reservation/${reservation.id}/satisfaction`)
     }
 
     return (
       <Button variantType="primary" sizeType="xs" onClick={handleClick}>
-        {buttonTexts[statusType]}
+        만족도 작성
       </Button>
     )
   }
 
   return (
     <div
-    className={clsx(
-      `flex justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px]`,
-      className,
-    )}
+      className={clsx(
+        `flex justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px]`,
+        className,
+      )}
       onClick={() => navigate(`/reservation/${reservation.id}`)}
     >
       <div>
-          <span className="font-b text-16px text-gray-700">{reservation.store}</span>
-          <div className="mt-1">
-            <span className="font-r text-14px text-gray-700">{reservation.programName}</span>
-            <span className="ml-1.5 font-sb text-14px text-primary">
-              {reservation.visit}회차
-            </span>
-          </div>
-          <DateAndTime date={reservation.date} className="mt-3" />
+        <span className="font-b text-16px text-gray-700">
+          {reservation.store}
+        </span>
+        <div className="mt-1">
+          <span className="font-r text-14px text-gray-700">
+            {reservation.programName}
+          </span>
+          <span className="ml-1.5 font-sb text-14px text-primary">
+            {reservation.visit}회차
+          </span>
         </div>
-        <div className="flex flex-col justify-between items-end">
-          <ReserveTag
-            status={classifyReservationStatus(reservation.status as ReservationStatus)}
-            reservationDate={reservation.date}
-          />
-          {getButton()}
-        </div>
+        <DateAndTime date={reservation.date} className="mt-3" />
+      </div>
+      <div className="flex flex-col justify-between items-end">
+        <ReserveTag
+          status={classifyReservationStatus(
+            reservation.status as ReservationStatus,
+          )}
+          reservationDate={reservation.date}
+        />
+        {getButton()}
+      </div>
     </div>
   )
 }
