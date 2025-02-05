@@ -25,6 +25,7 @@ import { Checkbox } from "@mui/material"
 import { useMembershipList } from "../../queries/useMembershipQueries.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
+import { useConsultationCount } from "../../queries/useConsultationQueries.ts"
 
 interface FormDataType {
   item: undefined | string
@@ -43,8 +44,8 @@ const ReservationFormPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const theme = useTheme()
-  const [consultationSlot] = useState(1)
   const { selectedBranch, clear } = useMembershipOptionsStore()
+  const { data: consultationCount = 0 } = useConsultationCount()
 
   const { data: membershipsData, isLoading: isMembershipsLoading } =
     useMembershipList(BRAND_CODE)
@@ -144,7 +145,9 @@ const ReservationFormPage = () => {
                 <div className="text-gray-700 text-16px font-sb">상담 예약</div>
                 <div className="px-2 py-0.5 bg-tag-greenBg rounded-[999px] justify-center items-center flex">
                   <div className="text-center text-tag-green text-12px font-m">
-                    {consultationSlot}회
+                    {consultationCount === 0
+                      ? "FREE"
+                      : `${consultationCount}/2`}
                   </div>
                 </div>
               </div>

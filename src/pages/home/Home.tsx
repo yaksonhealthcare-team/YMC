@@ -27,6 +27,7 @@ import { Event } from "types/Event"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import { getStatusFromString } from "../../utils/membership"
+import { useUnreadNotificationsCount } from "../../queries/useNotificationQueries"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -40,6 +41,7 @@ const Home = () => {
 
   const navigate = useNavigate()
   const { clear } = useMembershipOptionsStore()
+  const { data: unreadCount = 0 } = useUnreadNotificationsCount()
 
   const availableMemberships = useMemo(() => {
     if (!memberships?.pages[0]?.body) return []
@@ -78,15 +80,19 @@ const Home = () => {
             <div className="flex justify-between items-center bg-primary-300 rounded-2xl p-4">
               <div className="flex gap-2 flex-col text-white">
                 <Typography className={"font-b"}>
-                  <span className={"text-18px"}>{user?.name}</span> 반갑습니다.
+                  <span className={"text-18px"}>{user?.name}님</span>{" "}
+                  반갑습니다.
                 </Typography>
                 <Typography className="font-m text-14px space-x-2">
-                  <span>{user?.levelName}</span>{" "}
-                  <span>{user && user.point ? user.point : 0} P</span>
+                  <span className="font-b">{user?.levelName}</span>{" "}
+                  <span className="font-m">
+                    {user && user.point ? user.point : 0}
+                  </span>
+                  <span className="font-b">P</span>
                 </Typography>
               </div>
               <div
-                className="rounded-full bg-white text-primary-300 py-2 px-5 cursor-pointer"
+                className="rounded-full bg-white text-primary-300 py-2 px-5 cursor-pointer font-b"
                 onClick={handleReservationClick}
               >
                 예약하기
@@ -140,12 +146,21 @@ const Home = () => {
             </div>,
           ]}
           buttonArea={
-            <button
-              className="w-11 h-11 bg-primary-300 text-white rounded-full shadow-lg flex justify-center items-center"
-              onClick={() => navigate("/notification")}
-            >
-              <NotiIcon className="text-white w-6 h-6" />
-            </button>
+            <div className="relative">
+              <button
+                className="w-11 h-11 bg-primary-300 text-white rounded-full shadow-lg flex justify-center items-center"
+                onClick={() => navigate("/notification")}
+              >
+                <NotiIcon className="text-white w-6 h-6" />
+              </button>
+              {unreadCount > 0 && (
+                <div className="absolute -top-0.5 right-1 min-w-[18px] h-[18px] bg-white border border-primary rounded-full flex items-center justify-center px-1">
+                  <span className="text-primary text-[10px] leading-none font-m">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                </div>
+              )}
+            </div>
           }
         />
 
@@ -237,7 +252,8 @@ const MembershipCardSection = ({
                 id={parseInt(membership.mp_idx)}
                 title={membership.service_name || "회원권 이름"}
                 count={`${membership.remain_amount}회 / ${membership.buy_amount}회`}
-                date={`${membership.pay_date.split(" ")[0]} - ${membership.expiration_date.split(" ")[0]}`}
+                startDate={membership.pay_date}
+                endDate={membership.expiration_date}
                 status={getStatusFromString(membership.status)}
                 showReserveButton={true}
                 serviceType={membership.s_type.replace("회원권", "").trim()}
@@ -281,12 +297,15 @@ const EventSection = () => {
       {events && events.length > 0 ? (
         <Swiper
           spaceBetween={10}
-          slidesPerView={1.1}
+          slidesPerView={events.length === 1 ? 1 : 1.1}
           style={{ overflow: "visible" }}
           className="mt-2"
         >
           {events.map((event: Event) => (
-            <SwiperSlide key={event.code} className="mr-3">
+            <SwiperSlide
+              key={event.code}
+              className={events.length === 1 ? "" : "mr-3"}
+            >
               <div
                 className="flex flex-col gap-4 bg-white pb-4 rounded-[20px] border border-gray-100"
                 onClick={() => navigate(`/event/${event.code}`)}
@@ -323,7 +342,7 @@ const EventSection = () => {
 
 const BusinessInfo = () => {
   return (
-    <div className="mt-12 px-5 pt-8 pb-10 flex flex-col gap-4 bg-white relative -mx-6 -my-4">
+    <div className="mt-12 px-6 pt-8 pb-10 flex flex-col gap-4 bg-white relative -mx-6 -my-4">
       <span className="font-b text-16px text-gray-600">
         (주) 약손명가 헬스케어
       </span>

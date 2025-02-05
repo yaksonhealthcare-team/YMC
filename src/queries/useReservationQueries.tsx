@@ -1,10 +1,25 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
+import {
+  useInfiniteQuery,
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query"
 import {
   Reservation,
   ReservationResponse as ApiResponse,
   ReservationStatus,
+  ReservationStatusCode,
+  ReservationType,
 } from "types/Reservation"
 import { axiosClient } from "./clients"
+import { completeVisit } from "apis/reservation.api"
+
+const statusCodeToStatus: Record<ReservationStatusCode, string> = {
+  "000": "전체",
+  "001": "예약완료",
+  "002": "관리완료",
+  "003": "예약취소",
+}
 
 export const useReservations = (status: string = "000") => {
   return useInfiniteQuery<Reservation[]>({
@@ -103,6 +118,7 @@ export interface ReservationDetail {
   membershipName: string
   branchName: string
   remainingCount: string
+  type: ReservationType
 }
 
 export const useReservationDetail = (id: string) => {
@@ -150,6 +166,7 @@ export const useReservationDetail = (id: string) => {
         membershipName: body.membership_name || "",
         branchName: body.b_name || "",
         remainingCount: body.remaining_count || "",
+        type: (body.r_gubun as ReservationType) || ReservationType.MANAGEMENT,
       }
     },
     enabled: !!id,
@@ -159,5 +176,17 @@ export const useReservationDetail = (id: string) => {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
+  })
+}
+
+export const useCompleteVisit = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: completeVisit,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["reservations"] })
+      queryClient.invalidateQueries({ queryKey: ["reservation"] })
+    },
   })
 }

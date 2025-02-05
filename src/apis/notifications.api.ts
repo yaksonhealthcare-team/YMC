@@ -22,17 +22,36 @@ export const fetchNotifications = async (filters: NotificationFilters) => {
   return NotificationMapper.toNotifications(data.body)
 }
 
-export const getNotificationSettings = async (): Promise<NotificationSettings> => {
-  const { data } = await axiosClient.get<HTTPResponse<NotificationSettingsResponse[]>>(
-    "/notifications/settings"
-  )
-  return NotificationMapper.toNotificationSettings(data.body[0])
-}
+export const getNotificationSettings =
+  async (): Promise<NotificationSettings> => {
+    const { data } = await axiosClient.get<
+      HTTPResponse<NotificationSettingsResponse[]>
+    >("/notifications/settings")
+    return NotificationMapper.toNotificationSettings(data.body[0])
+  }
 
-export const updateNotificationSettings = async (settings: Partial<NotificationSettings>): Promise<NotificationSettings> => {
-  const { data } = await axiosClient.patch<HTTPResponse<NotificationSettingsResponse[]>>(
+export const updateNotificationSettings = async (
+  settings: Partial<NotificationSettings>,
+): Promise<NotificationSettings> => {
+  const { data } = await axiosClient.patch<
+    HTTPResponse<NotificationSettingsResponse[]>
+  >(
     "/notifications/settings",
     NotificationMapper.toUpdateSettingsRequest(settings),
   )
   return NotificationMapper.toNotificationSettings(data.body[0])
+}
+
+export const fetchUnreadNotificationsCount = async () => {
+  const { data } = await axiosClient.get<HTTPResponse<NotificationResponse[]>>(
+    "/notifications/notifications",
+    {
+      params: {
+        page: 1,
+      },
+    },
+  )
+
+  return data.body.filter((notification) => notification.is_read === "안읽음")
+    .length
 }

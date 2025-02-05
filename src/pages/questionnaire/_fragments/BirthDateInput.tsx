@@ -66,12 +66,19 @@ export const BirthDateInput = ({ value, onChange }: BirthDateInputProps) => {
         break
     }
 
-    const combinedValue = `${type === "year" ? sanitizedValue : year}${
-      type === "month" ? sanitizedValue : month
-    }${type === "day" ? sanitizedValue : day}`
+    // 변경된 필드의 값만 업데이트하여 조합
+    const updatedValue =
+      type === "year"
+        ? sanitizedValue + month + day
+        : type === "month"
+          ? year + sanitizedValue + day
+          : year + month + sanitizedValue
 
-    onChange(combinedValue)
-    calculateAge(combinedValue)
+    // 모든 필드가 채워져 있을 때만 onChange 호출
+    if (updatedValue.length === 8) {
+      onChange(updatedValue)
+      calculateAge(updatedValue)
+    }
   }
 
   return (

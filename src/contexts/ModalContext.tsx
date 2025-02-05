@@ -1,4 +1,10 @@
-import React, { createContext, ReactNode, useContext, useState, useEffect } from "react"
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useState,
+  useEffect,
+} from "react"
 import {
   Button,
   Dialog,
@@ -16,6 +22,7 @@ enum OverlayTypes {
   MESSAGE_BOX = "messageBox",
   BOTTOM_SHEET = "bottomSheet",
   ALERT = "alert",
+  MODAL = "modal",
 }
 
 /**
@@ -33,7 +40,7 @@ interface OverlayState {
  */
 export interface OverlayContextValue {
   overlayState: OverlayState
-  closeOverlay: () => void
+  closeOverlay: (options?: { skipHistoryBack?: boolean }) => void
   openMessageBox: (
     message: string,
     options?: Record<string, unknown> | undefined,
@@ -44,6 +51,12 @@ export interface OverlayContextValue {
     title: string
     description: string
     onClose?: () => void
+  }) => void
+  openModal: (props: {
+    title: string
+    message: string
+    onConfirm: () => void
+    onCancel?: () => void
   }) => void
 }
 
@@ -85,8 +98,6 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
     options: {},
   })
   const [toastMessage, setToastMessage] = useState("")
-  const [bottomSheetContent, setBottomSheetContent] =
-    useState<ReactNode | null>(null)
   const [alertProps, setAlertProps] = useState<{
     title: string
     description: string
@@ -94,12 +105,19 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
   } | null>(null)
 
   useEffect(() => {
-    if (overlayState.isOpen && overlayState.type === OverlayTypes.BOTTOM_SHEET) {
+    if (
+      overlayState.isOpen &&
+      overlayState.type === OverlayTypes.BOTTOM_SHEET
+    ) {
       window.history.pushState({ bottomSheet: true }, "")
 
       const handlePopState = () => {
-        setOverlayState({ isOpen: false, type: null, content: null, options: {} })
-        setBottomSheetContent(null)
+        setOverlayState({
+          isOpen: false,
+          type: null,
+          content: null,
+          options: {},
+        })
         setAlertProps(null)
       }
 
@@ -124,8 +142,11 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
     })
   }
 
-  const closeOverlay = () => {
-    if (overlayState.type === OverlayTypes.BOTTOM_SHEET) {
+  const closeOverlay = (options?: { skipHistoryBack?: boolean }) => {
+    if (
+      overlayState.type === OverlayTypes.BOTTOM_SHEET &&
+      !options?.skipHistoryBack
+    ) {
       const currentState = window.history.state
       if (currentState?.bottomSheet) {
         window.history.back()
@@ -134,7 +155,6 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
     }
 
     setOverlayState({ isOpen: false, type: null, content: null, options: {} })
-    setBottomSheetContent(null)
     setAlertProps(null)
   }
 
@@ -146,7 +166,6 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
   }
 
   const openBottomSheet = (content: ReactNode) => {
-    setBottomSheetContent(content)
     openOverlay(OverlayTypes.BOTTOM_SHEET, content)
   }
 
@@ -165,6 +184,15 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
     setAlertProps(props)
   }
 
+  const openModal = (props: {
+    title: string
+    message: string
+    onConfirm: () => void
+    onCancel?: () => void
+  }) => {
+    openOverlay(OverlayTypes.MODAL, props)
+  }
+
   return (
     <OverlayContext.Provider
       value={{
@@ -174,19 +202,13 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
         openBottomSheet,
         showToast,
         openAlert,
+        openModal,
       }}
     >
       {children}
       {toastMessage && (
         <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg z-50">
           {toastMessage}
-        </div>
-      )}
-      {bottomSheetContent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
-          <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl">
-            {bottomSheetContent}
-          </div>
         </div>
       )}
       {alertProps && (
@@ -196,13 +218,47 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
             <p className="text-gray-600 mb-5">{alertProps.description}</p>
             <button
               className="w-full py-3 bg-primary text-white rounded-lg font-medium"
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault()
                 closeOverlay()
-                alertProps.onClose?.()
               }}
             >
               확인
             </button>
+          </div>
+        </div>
+      )}
+      {overlayState.type === OverlayTypes.MODAL && overlayState.content && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-5 mx-5 w-full max-w-sm">
+            <h2 className="text-lg font-semibold mb-2">
+              {(overlayState.content as any).title}
+            </h2>
+            <p className="text-gray-600 mb-5">
+              {(overlayState.content as any).message}
+            </p>
+            <div className="flex gap-2">
+              {(overlayState.content as any).onCancel && (
+                <button
+                  className="flex-1 py-3 bg-gray-100 text-gray-900 rounded-lg font-medium"
+                  onClick={() => {
+                    ;(overlayState.content as any).onCancel?.()
+                    closeOverlay()
+                  }}
+                >
+                  취소
+                </button>
+              )}
+              <button
+                className="flex-1 py-3 bg-primary text-white rounded-lg font-medium"
+                onClick={() => {
+                  ;(overlayState.content as any).onConfirm()
+                  closeOverlay()
+                }}
+              >
+                확인
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -254,7 +310,13 @@ const OverlayContainer: React.FC = () => {
             </p>
           </DialogContent>
           <DialogActions>
-            <Button onClick={closeOverlay} color="primary">
+            <Button
+              onClick={(e) => {
+                e.preventDefault()
+                closeOverlay()
+              }}
+              color="primary"
+            >
               확인
             </Button>
           </DialogActions>
@@ -268,7 +330,7 @@ const OverlayContainer: React.FC = () => {
           keepMounted
           fullWidth
           maxWidth="sm"
-          className="z-50"
+          className="z-[9999]"
           PaperProps={{
             style: {
               position: "fixed",
@@ -335,9 +397,17 @@ const OverlayContainer: React.FC = () => {
       return (
         <Snackbar
           open={isOpen}
-          autoHideDuration={2000}
-          onClose={closeOverlay}
           message={content as string}
+          onClose={(
+            _event: Event | React.SyntheticEvent<Element>,
+            reason: string,
+          ) => {
+            if (reason === "clickaway") {
+              return
+            }
+            closeOverlay()
+          }}
+          autoHideDuration={2000}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
           className="z-50"
         />

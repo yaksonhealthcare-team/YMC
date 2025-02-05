@@ -70,9 +70,10 @@ const MembershipUsageHistory = () => {
         <div className="px-[20px] pt-[16px] pb-[100px] overflow-y-scroll min-h-[calc(100vh-82px)] bg-system-bg">
           <MembershipCard
             id={parseInt(memberShipDetail.mp_idx)}
-            title={memberShipDetail.service_name || "No Named"}
+            title={memberShipDetail.service_name || memberShipDetail.s_type}
             count={`${memberShipDetail.remain_amount}회 / ${memberShipDetail.buy_amount}회`}
-            date={`${memberShipDetail.pay_date.split(" ")[0]} - ${memberShipDetail.expiration_date.split(" ")[0]}`}
+            startDate={memberShipDetail.pay_date.split(" ")[0]}
+            endDate={memberShipDetail.expiration_date.split(" ")[0]}
             status={
               memberShipDetail.status === "사용가능"
                 ? MembershipStatus.ACTIVE
@@ -80,24 +81,24 @@ const MembershipUsageHistory = () => {
                   ? MembershipStatus.INACTIVE
                   : MembershipStatus.EXPIRED
             }
-            serviceType={memberShipDetail.s_type || "No Named"}
+            serviceType={memberShipDetail.s_type.replace("회원권", "").trim()}
             showReserveButton={false}
             showHistoryButton={false}
           />
           <div>
             <p className="text-[14px] font-sb mt-[40px] mb-[16px]">
               <span className="text-primary-300">
-                {memberShipDetail.history?.length || 0}건
+                {memberShipDetail.reservations?.length || 0}건
               </span>
               의 이용내역이 있습니다.
             </p>
           </div>
           <div className="flex flex-col gap-[12px]">
-            {memberShipDetail.history?.map((history) => (
+            {memberShipDetail.reservations?.map((history) => (
               <ReservationThumbnail
-                key={`history-${history.id}`}
-                title={history.store}
-                date={new Date(history.date)}
+                key={`history-${history.r_idx}`}
+                title={history.ps_name}
+                date={new Date(history.r_date)}
                 onClick={() => navigate(`/reservation/${history.r_idx}`)}
               />
             ))}

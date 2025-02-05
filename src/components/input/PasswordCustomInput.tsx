@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import CustomTextField from "../CustomTextField"
 import EyeIcon from "../../assets/icons/EyeIcon.svg?react"
 import EyeSlashIcon from "../../assets/icons/EyeSlashIcon.svg?react"
+import validatePassword from "../../utils/passwordValidator"
 
 interface props {
   onPasswordChange: (value: string) => void
@@ -20,15 +21,6 @@ const PasswordCustomInput = ({
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
   const [password, setPassword] = useState("")
   const [passwordConfirm, setPasswordConfirm] = useState("")
-
-  const validatePassword = (password: string) => {
-    return (
-      password.length >= 8 &&
-      /[a-z]/i.test(password) &&
-      /[0-9]/.test(password) &&
-      /[!@#$%^&*(),.?":{}|<>]/.test(password)
-    )
-  }
 
   useEffect(() => {
     onPasswordChange(password)
@@ -67,12 +59,12 @@ const PasswordCustomInput = ({
               validatePassword(password) ? "text-success" : "text-error"
             }`}
           >
-            영문자, 숫자, 특수문자를 포함하여 10자리 이상
+            영문, 숫자, 특수문자 중 2종류 이상을 조합하여 10자리 이상
           </span>
         )}
         {!passwordError && !password && (
           <span className="text-12px text-gray-400 ml-2">
-            영문자, 숫자, 특수문자를 포함하여 10자리 이상
+            영문, 숫자, 특수문자 중 2종류 이상을 조합하여 10자리 이상
           </span>
         )}
       </div>

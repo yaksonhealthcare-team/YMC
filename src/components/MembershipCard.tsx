@@ -5,6 +5,7 @@ import { Tag } from "@components/Tag"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import MembershipTag from "./MembershipTag"
 import { MembershipStatus } from "types/Membership"
+import { formatDateRange } from "../utils/date"
 
 const STYLES = {
   container:
@@ -19,9 +20,9 @@ const STYLES = {
   },
   actions: {
     wrapper: "flex flex-col justify-between items-end",
-    history: "flex items-center cursor-pointer",
-    historyText: "font-r text-12px text-gray-500",
-    historyIcon: "w-3 h-3",
+    history: "inline-flex items-baseline gap-[2px] cursor-pointer",
+    historyText: "font-r text-12px text-gray-500 leading-[1]",
+    historyIcon: "w-[10px] h-[10px] relative top-[1px]",
   },
 } as const
 
@@ -29,7 +30,8 @@ interface MembershipProps {
   id: number
   title: string
   count: string
-  date: string
+  startDate: string
+  endDate: string
   status: MembershipStatus
   serviceType?: string
   showReserveButton?: boolean
@@ -41,7 +43,8 @@ export const MembershipCard = ({
   id,
   title,
   count,
-  date,
+  startDate,
+  endDate,
   status,
   serviceType,
   showReserveButton = false,
@@ -76,16 +79,15 @@ export const MembershipCard = ({
         <div className={STYLES.info.wrapper}>
           <span className={STYLES.info.text}>{count}</span>
           <span className={STYLES.info.divider}>|</span>
-          <span className={STYLES.info.text}>{date}</span>
+          <span className={STYLES.info.text}>
+            {formatDateRange(startDate, endDate)}
+          </span>
         </div>
       </div>
 
       <div className={STYLES.actions.wrapper}>
         {showHistoryButton && (
-          <div
-            className={STYLES.actions.history}
-            onClick={handleHistoryClick}
-          >
+          <div className={STYLES.actions.history} onClick={handleHistoryClick}>
             <span className={STYLES.actions.historyText}>이용내역</span>
             <CaretRightIcon className={STYLES.actions.historyIcon} />
           </div>

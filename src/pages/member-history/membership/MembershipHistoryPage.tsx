@@ -47,7 +47,7 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
 
   const handleCardClick = (membershipId: string) => {
     navigate(`/membership/usage/${membershipId}`, {
-      state: { from: "/member-history/membership" }
+      state: { from: "/member-history/membership" },
     })
   }
 
@@ -64,7 +64,7 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
               <div
                 key={membership.mp_idx}
                 onClick={(e) => {
-                  if ((e.target as HTMLElement).closest('button')) {
+                  if ((e.target as HTMLElement).closest("button")) {
                     e.stopPropagation()
                     return
                   }
@@ -73,15 +73,16 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
               >
                 <MembershipCard
                   id={parseInt(membership.mp_idx)}
-                  title={membership.service_name || "회원권 이름"}
+                  title={membership.service_name || "No Named"}
                   count={`${membership.remain_amount}회 / ${membership.buy_amount}회`}
-                  date={`${membership.pay_date.split(" ")[0]} - ${membership.expiration_date.split(" ")[0]}`}
+                  startDate={membership.pay_date.split(" ")[0]}
+                  endDate={membership.expiration_date.split(" ")[0]}
                   status={getStatusFromString(membership.status)}
-                  showReserveButton={true}
+                  showReserveButton={membership.status === "사용가능"}
                   serviceType={membership.s_type.replace("회원권", "").trim()}
                 />
               </div>
-            ))
+            )),
           )}
           <div ref={observerTarget} className="h-4" />
           {isFetchingNextPage && <LoadingIndicator className="min-h-[100px]" />}
