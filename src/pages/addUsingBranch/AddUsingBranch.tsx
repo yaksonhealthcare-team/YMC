@@ -26,6 +26,15 @@ const AddUsingBranch = () => {
       display: true,
       left: "back",
       onClickBack: handleBack,
+      right:
+        pageStep !== 3 ? (
+          <button
+            className="font-medium text-gray-500 text-[16px]"
+            onClick={() => navigate("/")}
+          >
+            건너뛰기
+          </button>
+        ) : undefined,
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
