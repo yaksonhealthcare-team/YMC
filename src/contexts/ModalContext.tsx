@@ -201,9 +201,9 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
             <p className="text-gray-600 mb-5">{alertProps.description}</p>
             <button
               className="w-full py-3 bg-primary text-white rounded-lg font-medium"
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault()
                 closeOverlay()
-                alertProps.onClose?.()
               }}
             >
               확인
@@ -259,7 +259,13 @@ const OverlayContainer: React.FC = () => {
             </p>
           </DialogContent>
           <DialogActions>
-            <Button onClick={closeOverlay} color="primary">
+            <Button
+              onClick={(e) => {
+                e.preventDefault()
+                closeOverlay()
+              }}
+              color="primary"
+            >
               확인
             </Button>
           </DialogActions>
@@ -340,9 +346,17 @@ const OverlayContainer: React.FC = () => {
       return (
         <Snackbar
           open={isOpen}
-          autoHideDuration={2000}
-          onClose={closeOverlay}
           message={content as string}
+          onClose={(
+            _event: Event | React.SyntheticEvent<Element>,
+            reason: string,
+          ) => {
+            if (reason === "clickaway") {
+              return
+            }
+            closeOverlay()
+          }}
+          autoHideDuration={2000}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
           className="z-50"
         />

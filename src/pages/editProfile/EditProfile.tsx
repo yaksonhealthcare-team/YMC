@@ -38,7 +38,6 @@ const EditProfile = () => {
   })
   const [marketingAgreed, setMarketingAgreed] = useState(user!.marketingAgreed)
   const [openPostcode, setOpenPostcode] = useState(false)
-  const [profileImage, setProfileImage] = useState<File | null>(null)
   const [profileImageUrl, setProfileImageUrl] = useState<string | undefined>(
     user?.profileURL,
   )
@@ -106,7 +105,6 @@ const EditProfile = () => {
   }
 
   const handleImageChange = (file: File | null) => {
-    setProfileImage(file)
     if (file) {
       const imageUrl = URL.createObjectURL(file)
       setProfileImageUrl(imageUrl)

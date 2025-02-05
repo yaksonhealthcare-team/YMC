@@ -16,7 +16,6 @@ import {
   useQuestionnaire,
   useSubmitQuestionnaire,
 } from "queries/useQuestionnaireQueries"
-import FixedButtonContainer from "@components/FixedButtonContainer"
 import LoadingIndicator from "@components/LoadingIndicator"
 
 const getFieldName = (question: Question): QuestionFieldName => {

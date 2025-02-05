@@ -25,7 +25,7 @@ import { Checkbox } from "@mui/material"
 import { useMembershipList } from "../../queries/useMembershipQueries.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
-import { useConsultationCount } from "../../queries/useConsultationQueries"
+import { useConsultationCount } from "../../queries/useConsultationQueries.ts"
 
 interface FormDataType {
   item: undefined | string
@@ -44,7 +44,6 @@ const ReservationFormPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const theme = useTheme()
-  const [consultationSlot] = useState(1)
   const { selectedBranch, clear } = useMembershipOptionsStore()
   const { data: consultationCount = 0 } = useConsultationCount()
 
