@@ -39,6 +39,9 @@ export const useUserGeneralQuestionnaireResult = () =>
   useQuery({
     queryKey: queryKeys.questionnaires.userResult("general"),
     queryFn: fetchUserGeneralQuestionnaireResult,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   })
 
 // 사용자 예약 문진 결과 조회
@@ -46,4 +49,7 @@ export const useUserReservationQuestionnaireResult = () =>
   useQuery({
     queryKey: queryKeys.questionnaires.userResult("reservation"),
     queryFn: fetchUserReservationQuestionnaireResult,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   })

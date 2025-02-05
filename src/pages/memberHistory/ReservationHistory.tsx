@@ -46,25 +46,20 @@ const ReservationContent = ({ filterId }: { filterId: string }) => {
       <div className="space-y-3">
         {reservations.pages.map((page) =>
           page.map((reservation) => (
-            <ReserveCard
-              key={reservation.id}
-              reservation={reservation}
-            />
+            <ReserveCard key={reservation.id} reservation={reservation} />
           )),
         )}
         <div ref={observerTarget} className="h-4" />
-        {isFetchingNextPage && (
-          <LoadingIndicator className="min-h-[100px]" />
-        )}
+        {isFetchingNextPage && <LoadingIndicator className="min-h-[100px]" />}
       </div>
     </div>
   )
 }
 
-const FilterContent = ({ 
-  reservationFilter, 
-  onFilterChange 
-}: { 
+const FilterContent = ({
+  reservationFilter,
+  onFilterChange,
+}: {
   reservationFilter: FilterItem
   onFilterChange: (filter: FilterItem) => void
 }) => {
@@ -113,6 +108,7 @@ const ReservationHistory = () => {
   useEffect(() => {
     setHeader({
       display: false,
+      backgroundColor: "bg-system-bg",
     })
     setNavigation({ display: true })
   }, [])
@@ -123,9 +119,9 @@ const ReservationHistory = () => {
         <MainTabs />
       </div>
 
-      <FilterContent 
-        reservationFilter={reservationFilter} 
-        onFilterChange={handleFilterChange} 
+      <FilterContent
+        reservationFilter={reservationFilter}
+        onFilterChange={handleFilterChange}
       />
 
       <ReservationContent filterId={reservationFilter.id} />

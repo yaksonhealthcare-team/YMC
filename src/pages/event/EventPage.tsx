@@ -12,27 +12,32 @@ const EventPage = () => {
   const navigate = useNavigate()
   const [selectedTab, setSelectedTab] = useState<Tab>("ALL")
   const { data: events, isLoading } = useEvents(selectedTab)
-  const { setNavigation } = useLayout()
+  const { setNavigation, setHeader } = useLayout()
 
   useLayoutEffect(() => {
     window.scrollTo(0, 0)
     setTimeout(() => {
       window.scrollTo(0, 0)
     }, 100)
+    setHeader({
+      backgroundColor: "bg-white",
+    })
     setNavigation({ display: false })
-  }, [setNavigation])
+  }, [setNavigation, setHeader])
 
   return (
     <div className="absolute inset-0 flex flex-col bg-gray-50">
       <div className="sticky top-0 z-10 bg-white">
-        <Header type="back_title" title="이벤트" onClickBack={() => navigate(-1)} />
+        <Header
+          type="back_title"
+          title="이벤트"
+          onClickBack={() => navigate(-1)}
+        />
         <div className="flex px-5">
           <button
             className={clsx(
               "flex-1 py-3 font-sb text-16px relative",
-              selectedTab === "ALL"
-                ? "text-primary"
-                : "text-gray-700"
+              selectedTab === "ALL" ? "text-primary" : "text-gray-700",
             )}
             onClick={() => setSelectedTab("ALL")}
           >
@@ -44,9 +49,7 @@ const EventPage = () => {
           <button
             className={clsx(
               "flex-1 py-3 font-sb text-16px relative",
-              selectedTab === "ONGOING"
-                ? "text-primary"
-                : "text-gray-700"
+              selectedTab === "ONGOING" ? "text-primary" : "text-gray-700",
             )}
             onClick={() => setSelectedTab("ONGOING")}
           >
@@ -58,9 +61,7 @@ const EventPage = () => {
           <button
             className={clsx(
               "flex-1 py-3 font-sb text-16px relative",
-              selectedTab === "END"
-                ? "text-primary"
-                : "text-gray-700"
+              selectedTab === "END" ? "text-primary" : "text-gray-700",
             )}
             onClick={() => setSelectedTab("END")}
           >

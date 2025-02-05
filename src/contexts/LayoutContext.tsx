@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useState, useEffect } from "react"
 import PageContainer from "@components/PageContainer.tsx"
 import { Typography } from "@mui/material"
 import { useNavigate } from "react-router-dom"
@@ -55,6 +55,20 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
     title: "THERAPIST",
   })
 
+  // 안전영역 색상 설정
+  useEffect(() => {
+    if (
+      !("component" in header) &&
+      window.setNativeSafeAreaColors &&
+      header.backgroundColor
+    ) {
+      const topColor = extractColor(header.backgroundColor)
+      const bottomColor = navigation.display ? "#FFFFFF" : topColor
+
+      window.setNativeSafeAreaColors(topColor, bottomColor)
+    }
+  }, [header, navigation.display])
+
   const setTitle = (title: string) => {
     setHeader((prev) => ({
       ...prev,
@@ -81,7 +95,9 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
       <div className={"z-10"}>
         <div
           className={`fixed w-full max-w-[500px] min-w-[375px] ${
-            header.backgroundColor ? header.backgroundColor : "bg-system-bg"
+            headerConfig.backgroundColor
+              ? headerConfig.backgroundColor
+              : "bg-system-bg"
           }`}
         >
           <Header
@@ -136,12 +152,12 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
                 title={"홈"}
                 link={"/"}
               />
-              {/* <NavButton
+              <NavButton
                 activeIcon={"/assets/navIcon/membership_active.png"}
                 inactiveIcon={"/assets/navIcon/membership_inactive.png"}
                 title={"회원권 구매"}
                 link={"/membership"}
-              /> */}
+              />
               <NavButton
                 activeIcon={"/assets/navIcon/store_active.png"}
                 inactiveIcon={"/assets/navIcon/store_inactive.png"}
@@ -216,6 +232,25 @@ const NavButton = ({
       </Typography>
     </div>
   )
+}
+
+// Tailwind 클래스에서 실제 색상값 추출하는 유틸리티 함수
+const extractColor = (className: string): string => {
+  // bg-[#색상] 형식 처리
+  const colorMatch = className.match(/bg-\[(.*?)\]/)
+  if (colorMatch) {
+    return colorMatch[1]
+  }
+
+  // 기본 Tailwind 클래스 처리
+  switch (className) {
+    case "bg-white":
+      return "#FFFFFF"
+    case "bg-system-bg":
+      return "#F8F5F2"
+    default:
+      return "#FFFFFF"
+  }
 }
 
 const useLayout = () => {

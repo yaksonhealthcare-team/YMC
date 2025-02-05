@@ -87,14 +87,14 @@ const EditProfile = () => {
       }
 
       await updateUserProfile(updatedData)
-      
+
       // 최신 사용자 정보 가져오기
       const token = localStorage.getItem("accessToken")
       if (token) {
         const updatedUser = await fetchUser(token)
         login({ user: updatedUser, token: token.replace("Bearer ", "") })
       }
-      
+
       alert("프로필이 성공적으로 수정되었습니다.")
     } catch (error) {
       console.error("프로필 수정 실패:", error)
@@ -116,7 +116,7 @@ const EditProfile = () => {
           text: "나가기",
           onClick: () => {
             closeOverlay()
-            navigate('/mypage')
+            navigate("/mypage")
           },
         }}
         cancelOptions={{
@@ -198,21 +198,12 @@ const EditProfile = () => {
             <p>{"1999.01.09"}</p>
           </LabeledForm>
           <LabeledForm label={"성별"}>
-            <RadioGroup 
-              value={gender}
-              onChange={handleChangeGender}
-            >
+            <RadioGroup value={gender} onChange={handleChangeGender}>
               <div className={"flex gap-2 items-center"}>
-                <RadioCard 
-                  value={"female"}
-                  checked={gender === "female"}
-                >
+                <RadioCard value={"female"} checked={gender === "female"}>
                   <p>{"여자"}</p>
                 </RadioCard>
-                <RadioCard 
-                  value={"male"}
-                  checked={gender === "male"}
-                >
+                <RadioCard value={"male"} checked={gender === "male"}>
                   <p>{"남자"}</p>
                 </RadioCard>
               </div>

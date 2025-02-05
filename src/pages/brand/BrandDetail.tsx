@@ -15,7 +15,7 @@ export const BrandDetailPage = () => {
       display: true,
       title: brand ? brand.name : "Brand",
       left: "back",
-      backgroundColor: "bg-white",
+      backgroundColor: "bg-system-bg",
     })
     setNavigation({ display: false })
   }, [brand])

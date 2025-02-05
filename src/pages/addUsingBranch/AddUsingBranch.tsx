@@ -25,7 +25,7 @@ const AddUsingBranch = () => {
           건너뛰기
         </button>
       ),
-      backgroundColor: "white",
+      backgroundColor: "bg-system-bg",
     })
     setNavigation({ display: false })
   }, [setHeader, setNavigation])

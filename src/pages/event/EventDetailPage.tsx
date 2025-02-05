@@ -67,14 +67,14 @@ const EventContent = ({ event }: { event: EventDetail }) => {
     <div className="self-stretch flex flex-col gap-3">
       {event.files?.length > 0 && event.files[0].fileurl && (
         <div className="mb-4">
-          <img 
-            src={event.files[0].fileurl} 
-            alt={event.title} 
+          <img
+            src={event.files[0].fileurl}
+            alt={event.title}
             className="w-full rounded-lg"
           />
         </div>
       )}
-      <div 
+      <div
         className="text-16px font-normal text-gray-900 leading-[26.88px]"
         dangerouslySetInnerHTML={{ __html: event.contents }}
       />

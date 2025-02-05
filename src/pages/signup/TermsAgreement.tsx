@@ -103,7 +103,7 @@ export const TermsAgreement = () => {
               },
             }),
           }))
-          
+
           // 소셜 로그인인 경우 프로필 설정 페이지로, 아닌 경우 이메일/비밀번호 입력 페이지로 이동
           navigate(socialInfo ? "/signup/profile" : "/signup/email")
         } catch (error) {
@@ -134,9 +134,19 @@ export const TermsAgreement = () => {
   }
 
   const handleAgreement = (key: keyof typeof agreements) => {
-    setAgreements({
+    const newAgreements = {
       ...agreements,
       [key]: !agreements[key],
+    }
+
+    // 필수 약관(terms, privacy, location)과 선택 약관(marketing)이 모두 체크되어 있는지 확인
+    const allChecked = ["terms", "privacy", "location", "marketing"].every(
+      (k) => newAgreements[k as keyof typeof agreements],
+    )
+
+    setAgreements({
+      ...newAgreements,
+      all: allChecked,
     })
   }
 
