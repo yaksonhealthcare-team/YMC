@@ -78,15 +78,19 @@ const Home = () => {
             <div className="flex justify-between items-center bg-primary-300 rounded-2xl p-4">
               <div className="flex gap-2 flex-col text-white">
                 <Typography className={"font-b"}>
-                  <span className={"text-18px"}>{user?.name}</span> 반갑습니다.
+                  <span className={"text-18px"}>{user?.name}님</span>{" "}
+                  반갑습니다.
                 </Typography>
                 <Typography className="font-m text-14px space-x-2">
-                  <span>{user?.levelName}</span>{" "}
-                  <span>{user && user.point ? user.point : 0} P</span>
+                  <span className="font-b">{user?.levelName}</span>{" "}
+                  <span className="font-m">
+                    {user && user.point ? user.point : 0}
+                  </span>
+                  <span className="font-b">P</span>
                 </Typography>
               </div>
               <div
-                className="rounded-full bg-white text-primary-300 py-2 px-5 cursor-pointer"
+                className="rounded-full bg-white text-primary-300 py-2 px-5 cursor-pointer font-b"
                 onClick={handleReservationClick}
               >
                 예약하기
