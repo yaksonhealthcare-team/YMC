@@ -26,7 +26,7 @@ export interface ReservationResponse {
   r_idx: string
   b_name: string
   r_date: string
-  r_status: ReservationStatus
+  r_status: ReservationStatusCode
   remaining_days: string
   visit: string
   ps_name: string
