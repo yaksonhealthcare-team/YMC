@@ -32,14 +32,14 @@ const Location = ({ reservation }: LocationProps) => {
   const hasPhone = !!reservation.phone
 
   const branchLocation = {
-    latitude: reservation.latitude,
-    longitude: reservation.longitude,
+    latitude: reservation.latitude || 0,
+    longitude: reservation.longitude || 0,
   }
 
   const branch: Branch = {
     id: reservation.branchId,
     name: reservation.store,
-    address: reservation.address,
+    address: reservation.address || "",
     latitude: branchLocation.latitude,
     longitude: branchLocation.longitude,
     canBookToday: true,
@@ -57,7 +57,7 @@ const Location = ({ reservation }: LocationProps) => {
 
   const handleCopyPhone = async () => {
     if (!hasPhone) return
-    await copyToClipboard(reservation.phone)
+    await copyToClipboard(reservation.phone || "")
     showToast("전화번호가 복사되었습니다")
   }
 
@@ -67,7 +67,7 @@ const Location = ({ reservation }: LocationProps) => {
       <div className="aspect-[1.8] relative">
         {hasLocation ? (
           <MapView
-            center={branchLocation}
+            center={hasLocation ? branchLocation : undefined}
             branches={[branch]}
             options={{
               showCurrentLocationButton: false,

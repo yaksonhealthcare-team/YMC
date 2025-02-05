@@ -13,7 +13,8 @@ const ReservationSummary = ({ reservation }: ReservationSummaryProps) => {
   const hasStatus = !!reservation.status
   const hasProgramName = !!reservation.programName
   const hasDuration = !!reservation.duration
-  const hasAdditionalServices = reservation.additionalServices?.length > 0
+  const hasAdditionalServices =
+    (reservation.additionalServices || []).length > 0
   const hasRequest = !!reservation.request
 
   const formatDate = (date: Date) => {
@@ -73,13 +74,13 @@ const ReservationSummary = ({ reservation }: ReservationSummaryProps) => {
         {hasAdditionalServices ? (
           <>
             <p className="font-r text-[14px] text-gray-700 mt-[6px]">
-              {reservation.additionalServices
+              {(reservation.additionalServices || [])
                 .map((service) => service.name)
                 .join(" / ")}
             </p>
             <p className="text-gray-700 font-sb text-[14px] mt-[6px]">
               총{" "}
-              {reservation.additionalServices
+              {(reservation.additionalServices || [])
                 .reduce((sum, service) => sum + service.price, 0)
                 .toLocaleString()}
               원

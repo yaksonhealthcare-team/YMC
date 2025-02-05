@@ -28,10 +28,19 @@ enum OverlayTypes {
 /**
  * 오버레이 상태를 정의하는 인터페이스
  */
+interface ModalProps {
+  title: string
+  message: string
+  onConfirm: () => void
+  onCancel?: () => void
+}
+
+type OverlayContent = ReactNode | ModalProps
+
 interface OverlayState {
   isOpen: boolean
   type: OverlayTypes | null
-  content: ReactNode | null
+  content: OverlayContent | null
   options: Record<string, unknown>
 }
 
@@ -131,7 +140,7 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
 
   const openOverlay = (
     type: OverlayTypes,
-    content: ReactNode,
+    content: OverlayContent,
     options: Record<string, unknown> = {},
   ) => {
     setOverlayState({
@@ -232,17 +241,17 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
           <div className="bg-white rounded-lg p-5 mx-5 w-full max-w-sm">
             <h2 className="text-lg font-semibold mb-2">
-              {(overlayState.content as any).title}
+              {(overlayState.content as ModalProps).title}
             </h2>
             <p className="text-gray-600 mb-5">
-              {(overlayState.content as any).message}
+              {(overlayState.content as ModalProps).message}
             </p>
             <div className="flex gap-2">
-              {(overlayState.content as any).onCancel && (
+              {(overlayState.content as ModalProps).onCancel && (
                 <button
                   className="flex-1 py-3 bg-gray-100 text-gray-900 rounded-lg font-medium"
                   onClick={() => {
-                    ;(overlayState.content as any).onCancel?.()
+                    ;(overlayState.content as ModalProps).onCancel?.()
                     closeOverlay()
                   }}
                 >
@@ -252,7 +261,7 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
               <button
                 className="flex-1 py-3 bg-primary text-white rounded-lg font-medium"
                 onClick={() => {
-                  ;(overlayState.content as any).onConfirm()
+                  ;(overlayState.content as ModalProps).onConfirm()
                   closeOverlay()
                 }}
               >
@@ -354,7 +363,9 @@ const OverlayContainer: React.FC = () => {
                   {options?.title as string}
                 </h2>
               )}
-              <div className="w-full text-center mb-6">{content}</div>
+              <div className="w-full text-center mb-6">
+                {type === OverlayTypes.BOTTOM_SHEET && (content as ReactNode)}
+              </div>
             </div>
             <Divider className={"border-[#F8F8F8"} />
             {(options as BottomSheetOptions)?.buttons && (

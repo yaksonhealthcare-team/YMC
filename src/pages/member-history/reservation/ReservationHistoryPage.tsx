@@ -4,7 +4,6 @@ import { useReservations } from "../../../queries/useReservationQueries"
 import useIntersection from "../../../hooks/useIntersection"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useNavigate } from "react-router-dom"
-import { Reservation } from "types/Reservation"
 
 const ReservationHistoryPage = () => {
   const { setHeader, setNavigation } = useLayout()

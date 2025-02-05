@@ -16,6 +16,19 @@ export interface ReservationDetail extends Reservation {
     name: string
     price: number
   }>
+  additionalServices?: Array<{
+    name: string
+    price: number
+  }>
+  latitude?: number
+  longitude?: number
+  address?: string
+  phone?: string
+  branchId: string
+  branchName: string
+  membershipName: string
+  remainingCount: string
+  request?: string
 }
 
 export const useUpcomingReservations = () => {
@@ -40,10 +53,21 @@ export const useReservations = (status: ReservationStatusCode = "000") => {
 export const useReservationDetail = (reservationId: string) => {
   return useQuery({
     queryKey: ["reservation", reservationId],
-    queryFn: () =>
-      fetchReservations("000", 1).then((reservations) =>
-        reservations.find((r) => r.id === reservationId),
-      ),
+    queryFn: async () => {
+      const reservations = await fetchReservations("000", 1)
+      const reservation = reservations.find((r) => r.id === reservationId)
+      if (!reservation) return null
+
+      // ReservationDetail로 타입 확장
+      return {
+        ...reservation,
+        services: [], // API에서 받아와야 할 데이터
+        branchId: "", // API에서 받아와야 할 데이터
+        branchName: reservation.store,
+        membershipName: "", // API에서 받아와야 할 데이터
+        remainingCount: "0", // API에서 받아와야 할 데이터
+      } as ReservationDetail
+    },
   })
 }
 
@@ -57,13 +81,6 @@ export const useCompleteVisit = () => {
       queryClient.invalidateQueries({ queryKey: ["reservation"] })
     },
   })
-}
-
-const statusCodeToStatus: Record<ReservationStatusCode, string> = {
-  "000": "전체",
-  "001": "예약완료",
-  "002": "관리완료",
-  "003": "예약취소",
 }
 
 interface CancelReservationParams {

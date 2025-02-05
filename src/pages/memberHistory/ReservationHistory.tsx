@@ -7,12 +7,20 @@ import { useNavigate } from "react-router-dom"
 import ReservationIcon from "@assets/icons/ReservationIcon.svg?react"
 import { useLayout } from "contexts/LayoutContext"
 import { useReservations } from "queries/useReservationQueries"
-import { FilterItem, reservationFilters } from "types/Reservation"
+import {
+  FilterItem,
+  reservationFilters,
+  ReservationStatusCode,
+} from "types/Reservation"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import useIntersection from "../../hooks/useIntersection"
 
-const ReservationContent = ({ filterId }: { filterId: string }) => {
+const ReservationContent = ({
+  filterId,
+}: {
+  filterId: ReservationStatusCode
+}) => {
   const {
     data: reservations,
     isLoading,
