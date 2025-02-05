@@ -22,7 +22,6 @@ import {
 import { DEFAULT_COORDINATE } from "../../../types/Coordinate.ts"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useOverlay } from "../../../contexts/ModalContext.tsx"
-import { useQueryClient } from "@tanstack/react-query"
 
 const branchDetailTabs = ["therapists", "programs", "information"] as const
 type BranchDetailTab = (typeof branchDetailTabs)[number]
@@ -38,7 +37,6 @@ const BranchDetail = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { showToast } = useOverlay()
-  const queryClient = useQueryClient()
   const { data: branch, isLoading } = useBranch(id || "", {
     latitude: DEFAULT_COORDINATE.latitude,
     longitude: DEFAULT_COORDINATE.longitude,

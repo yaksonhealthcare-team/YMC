@@ -7,7 +7,6 @@ import { SearchField } from "@components/SearchField.tsx"
 import SavedLocationList from "./SavedLocationList.tsx"
 import LocationSearchResultList from "./LocationSearchResultList.tsx"
 import LocationSearchPlaceholder from "./LocationSearchPlaceholder.tsx"
-import { Location } from "../../../types/Location.ts"
 import { searchAddress } from "../../../apis/address.api.ts"
 import { useQuery } from "@tanstack/react-query"
 
@@ -134,9 +133,3 @@ const LocationSettings = () => {
 }
 
 export default LocationSettings
-
-// Test location data
-const locations: Location[] = Array.from({ length: 30 }, (_, index) => ({
-  title: `약손명가 ${index}점`,
-  address: "서울 강남구 테헤란로",
-}))

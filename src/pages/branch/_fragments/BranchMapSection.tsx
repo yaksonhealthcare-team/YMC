@@ -8,6 +8,7 @@ import {
   useBranchBookmarkMutation,
   useBranchUnbookmarkMutation,
 } from "../../../queries/useBranchQueries.tsx"
+import { useNavigate } from "react-router-dom"
 
 interface BranchMapSectionProps {
   brandCode?: string
@@ -20,6 +21,7 @@ const BranchMapSection = ({
   category,
   onSelectBranch,
 }: BranchMapSectionProps) => {
+  const navigate = useNavigate()
   const [branches, setBranches] = useState<Branch[]>([])
   const [coords, setCoords] = useState<Coordinate>(DEFAULT_COORDINATE)
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
@@ -79,7 +81,9 @@ const BranchMapSection = ({
         {selectedBranch && (
           <BranchFilterListItem
             branch={selectedBranch}
-            onClick={() => {}}
+            onClick={() => {
+              navigate(`/branch/${selectedBranch.id}`)
+            }}
             onClickFavorite={async (branch) => {
               if (branch.isFavorite) {
                 await removeBookmark(branch.id)
