@@ -26,14 +26,16 @@ export const fetchUserReservationQuestionnaireResult = async () => {
 export const submitCommonQuestionnaire = async (
   values: QuestionnaireFormValues,
 ) => {
-  await axiosClient.put("/consultations/common/common", values)
+  const { data } = await axiosClient.put<HTTPResponse<void>>("/consultations/common/common", values)
+  return data
 }
 
 // 예약 문진 제출
 export const submitReservationQuestionnaire = async (
   values: QuestionnaireFormValues,
 ) => {
-  await axiosClient.put("/consultations/reservation/reservation", values)
+  const { data } = await axiosClient.put<HTTPResponse<void>>("/consultations/reservation/reservation", values)
+  return data
 }
 
 // 공통 문진 질문 조회

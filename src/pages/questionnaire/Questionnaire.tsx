@@ -18,6 +18,7 @@ import {
 } from "queries/useQuestionnaireQueries"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 import LoadingIndicator from "@components/LoadingIndicator"
+import { AxiosError } from "axios"
 
 const getFieldName = (question: Question): QuestionFieldName => {
   return `${question.cssq_idx}_${
@@ -107,7 +108,12 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
     initialValues: {} as QuestionnaireFormValues,
     onSubmit: async (values) => {
       try {
-        await submitMutation.mutateAsync(values)
+        const response = await submitMutation.mutateAsync(values)
+        // resultCode가 "00"이 아닌 모든 경우를 에러로 처리
+        if (response.resultCode !== "00") {
+          showToast(response.resultMessage || "문진 제출에 실패했습니다")
+          return
+        }
         navigate("/questionnaire/complete", {
           state: {
             returnPath,
@@ -115,7 +121,12 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
           },
         })
       } catch (error) {
-        showToast("문진 제출에 실패했습니다")
+        // HTTP 에러 (4xx, 5xx)의 경우
+        if (error instanceof AxiosError && error.response?.data) {
+          showToast(error.response.data.resultMessage || "문진 제출에 실패했습니다")
+        } else {
+          showToast("문진 제출에 실패했습니다")
+        }
       }
     },
   })

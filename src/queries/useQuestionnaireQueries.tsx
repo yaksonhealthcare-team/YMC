@@ -5,6 +5,7 @@ import {
   QuestionnaireFormValues,
   QuestionnaireType,
 } from "../types/Questionnaire"
+import { HTTPResponse } from "../types/HTTPResponse"
 import {
   fetchUserGeneralQuestionnaireResult,
   fetchUserReservationQuestionnaireResult,
@@ -27,7 +28,7 @@ export const useQuestionnaire = (type: QuestionnaireType) =>
 
 // 문진 제출
 export const useSubmitQuestionnaire = (type: QuestionnaireType) =>
-  useMutation<void, Error, QuestionnaireFormValues>({
+  useMutation<HTTPResponse<void>, Error, QuestionnaireFormValues>({
     mutationFn:
       type === "common"
         ? submitCommonQuestionnaire

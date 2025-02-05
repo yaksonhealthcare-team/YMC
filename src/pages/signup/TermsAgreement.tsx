@@ -110,9 +110,7 @@ export const TermsAgreement = () => {
           const axiosError = error as AxiosError<{ resultMessage: string }>
           openAlert({
             title: "오류",
-            description:
-              axiosError.response?.data?.resultMessage ||
-              "본인인증에 실패했습니다.",
+            description: axiosError.response?.data?.resultMessage || "본인인증에 실패했습니다.",
           })
         }
       }

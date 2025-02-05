@@ -149,11 +149,11 @@ export const ProfileSetup = () => {
             !Array.isArray(response.body) ||
             response.body.length === 0
           ) {
-            throw new Error("회원가입 응답에 유효한 body가 없습니다")
+            throw new Error(response?.resultMessage || "회원가입 응답에 유효한 body가 없습니다")
           }
 
           if (!response.body[0]?.accessToken) {
-            throw new Error("회원가입 응답에 accessToken이 없습니다")
+            throw new Error(response?.resultMessage || "회원가입 응답에 accessToken이 없습니다")
           }
 
           const { accessToken } = await loginWithSocial({
@@ -170,59 +170,68 @@ export const ProfileSetup = () => {
         } catch (error: unknown) {
           if (error instanceof AxiosError) {
             showToast(
-              error.response?.data?.message || "회원가입에 실패했습니다",
+              error.response?.data?.resultMessage || "회원가입에 실패했습니다",
             )
+          } else if (error instanceof Error) {
+            showToast(error.message || "회원가입에 실패했습니다")
           } else {
             showToast("회원가입에 실패했습니다")
           }
         }
       } else {
         // 일반 회원가입
-        const signupFormData = {
-          userInfo: {
-            name: signupData.name,
-            email: signupData.email,
+        try {
+          const signupFormData = {
+            userInfo: {
+              name: signupData.name,
+              email: signupData.email,
+              password: signupData.password!,
+              mobileno: signupData.mobileNumber,
+              birthdate: signupData.birthDate,
+              gender: signupData.gender === "male" ? "M" : "F",
+              addr1: signupData.address1,
+              addr2: signupData.address2 || "",
+              marketing_yn: signupData.marketingYn,
+              post: signupData.postCode,
+              nationalinfo: "0",
+              brand_code: signupData.brandCodes || [],
+            },
+            authData: {
+              di: signupData.di,
+            },
+            optional: {
+              recom: signupData.referralCode,
+            },
+          }
+
+          await signup(signupFormData)
+
+          const { accessToken } = await loginWithEmail({
+            username: signupData.email,
             password: signupData.password!,
-            mobileno: signupData.mobileNumber,
-            birthdate: signupData.birthDate,
-            gender: signupData.gender === "male" ? "M" : "F",
-            addr1: signupData.address1,
-            addr2: signupData.address2 || "",
-            marketing_yn: signupData.marketingYn,
-            post: signupData.postCode,
-            nationalinfo: "0",
-            brand_code: signupData.brandCodes || [],
-          },
-          authData: {
-            di: signupData.di,
-          },
-          optional: {
-            recom: signupData.referralCode,
-          },
+          })
+
+          const user = await fetchUser(accessToken)
+          login({ user, token: accessToken })
+          cleanup()
+          navigate("/signup/complete")
+        } catch (error: unknown) {
+          if (error instanceof AxiosError) {
+            const errorMessage = error.response?.data?.resultMessage
+            showToast(errorMessage || "회원가입에 실패했습니다")
+          } else if (error instanceof Error) {
+            showToast(error.message || "회원가입에 실패했습니다")
+          } else {
+            showToast("회원가입에 실패했습니다")
+          }
         }
-
-        await signup(signupFormData)
-
-        const { accessToken } = await loginWithEmail({
-          username: signupData.email,
-          password: signupData.password!,
-        })
-
-        const user = await fetchUser(accessToken)
-        login({ user, token: accessToken })
-        cleanup()
-        navigate("/signup/complete")
       }
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        const errorMessage = error.response?.data?.message
-        if (errorMessage?.includes("already exists")) {
-          showToast("이미 가입된 이메일입니다")
-        } else if (errorMessage?.includes("Invalid mobile")) {
-          showToast("올바르지 않은 휴대폰 번호입니다")
-        } else {
-          showToast(errorMessage || "회원가입에 실패했습니다")
-        }
+        const errorMessage = error.response?.data?.resultMessage
+        showToast(errorMessage || "회원가입에 실패했습니다")
+      } else if (error instanceof Error) {
+        showToast(error.message || "회원가입에 실패했습니다")
       } else {
         showToast("회원가입에 실패했습니다")
       }
