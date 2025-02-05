@@ -26,6 +26,7 @@ import { useMembershipList } from "../../queries/useMembershipQueries.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useConsultationCount } from "../../queries/useConsultationQueries.ts"
+import type { Swiper as SwiperType } from 'swiper'
 
 interface FormDataType {
   item: undefined | string
@@ -61,6 +62,9 @@ const ReservationFormPage = () => {
 
   const { data: additionalManagements, isLoading: isAdditionalLoading } =
     useAdditionalManagement(data.item)
+
+  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null)
+  const [activeIndex, setActiveIndex] = useState(0)
 
   const handleOnChangeItem = (event: ChangeEvent<HTMLInputElement>) => {
     setData((prev) => ({
@@ -164,6 +168,9 @@ const ReservationFormPage = () => {
                 pagination={{
                   clickable: true,
                 }}
+                onSwiper={setSwiperInstance}
+                initialSlide={activeIndex}
+                onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
               >
                 <style>
                   {`
