@@ -48,7 +48,19 @@ export const ReserveCard = ({
 
     const handleClick = (e: React.MouseEvent) => {
       e.stopPropagation()
-      navigate(`/reservation/${reservation.id}/satisfaction`)
+      navigate(`/reservation/${reservation.id}/satisfaction`, {
+        state: {
+          r_idx: reservation.id,
+          r_date: reservation.date.toISOString(),
+          b_name: reservation.store,
+          ps_name: reservation.programName,
+          review_items: [
+            { rs_idx: "1", rs_type: "시술만족도" },
+            { rs_idx: "2", rs_type: "친절도" },
+            { rs_idx: "3", rs_type: "청결도" },
+          ],
+        },
+      })
     }
 
     return (

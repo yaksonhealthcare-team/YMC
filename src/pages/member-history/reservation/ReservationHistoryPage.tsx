@@ -62,7 +62,7 @@ const ReservationHistoryPage = () => {
                       onClick={(e) => {
                         e.stopPropagation()
                         navigate(
-                          `/reservation/satisfaction/${reservation.id}`,
+                          `/reservation/${reservation.id}/satisfaction`,
                           {
                             state: {
                               r_idx: reservation.id,
