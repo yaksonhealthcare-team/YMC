@@ -1,4 +1,9 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
+import {
+  useInfiniteQuery,
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query"
 import {
   Reservation,
   ReservationResponse as ApiResponse,
@@ -6,6 +11,7 @@ import {
   ReservationStatusCode,
 } from "types/Reservation"
 import { axiosClient } from "./clients"
+import { completeVisit } from "apis/reservation.api"
 
 const statusCodeToStatus: Record<ReservationStatusCode, string> = {
   "000": "전체",
@@ -167,5 +173,17 @@ export const useReservationDetail = (id: string) => {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
+  })
+}
+
+export const useCompleteVisit = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: completeVisit,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["reservations"] })
+      queryClient.invalidateQueries({ queryKey: ["reservation"] })
+    },
   })
 }

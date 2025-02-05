@@ -6,6 +6,8 @@ import { ReactNode } from "react"
 import { useNavigate } from "react-router-dom"
 import { Reservation } from "../types/Reservation"
 import DateAndTime from "./DateAndTime"
+import { useCompleteVisit } from "queries/useReservationQueries"
+import { useOverlay } from "contexts/ModalContext"
 
 interface ReserveCardProps {
   reservation: Reservation
@@ -17,6 +19,8 @@ export const ReserveCard = ({
   className = "",
 }: ReserveCardProps) => {
   const navigate = useNavigate()
+  const { mutate: completeVisit } = useCompleteVisit()
+  const { openModal } = useOverlay()
 
   const classifyReservationStatus = (status: ReservationStatus) => {
     const statusGroups = {
@@ -39,6 +43,17 @@ export const ReserveCard = ({
     if (statusGroups.cancelled.includes(status)) return "cancelled"
     if (statusGroups.progressing.includes(status)) return "progressing"
     return null
+  }
+
+  const handleCompleteVisit = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    openModal({
+      title: "방문 완료",
+      message: "방문을 완료하시겠습니까?",
+      onConfirm: () => {
+        completeVisit(reservation.id)
+      },
+    })
   }
 
   const getButton = (): ReactNode => {
@@ -76,10 +91,7 @@ export const ReserveCard = ({
           <Button
             variantType="primary"
             sizeType="xs"
-            onClick={(e) => {
-              e.stopPropagation()
-              // TODO: 방문 완료 API 호출
-            }}
+            onClick={handleCompleteVisit}
           >
             방문 완료
           </Button>

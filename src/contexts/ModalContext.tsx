@@ -22,6 +22,7 @@ enum OverlayTypes {
   MESSAGE_BOX = "messageBox",
   BOTTOM_SHEET = "bottomSheet",
   ALERT = "alert",
+  MODAL = "modal",
 }
 
 /**
@@ -50,6 +51,12 @@ export interface OverlayContextValue {
     title: string
     description: string
     onClose?: () => void
+  }) => void
+  openModal: (props: {
+    title: string
+    message: string
+    onConfirm: () => void
+    onCancel?: () => void
   }) => void
 }
 
@@ -177,6 +184,15 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
     setAlertProps(props)
   }
 
+  const openModal = (props: {
+    title: string
+    message: string
+    onConfirm: () => void
+    onCancel?: () => void
+  }) => {
+    openOverlay(OverlayTypes.MODAL, props)
+  }
+
   return (
     <OverlayContext.Provider
       value={{
@@ -186,6 +202,7 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
         openBottomSheet,
         showToast,
         openAlert,
+        openModal,
       }}
     >
       {children}
@@ -208,6 +225,40 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
             >
               확인
             </button>
+          </div>
+        </div>
+      )}
+      {overlayState.type === OverlayTypes.MODAL && overlayState.content && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-5 mx-5 w-full max-w-sm">
+            <h2 className="text-lg font-semibold mb-2">
+              {(overlayState.content as any).title}
+            </h2>
+            <p className="text-gray-600 mb-5">
+              {(overlayState.content as any).message}
+            </p>
+            <div className="flex gap-2">
+              {(overlayState.content as any).onCancel && (
+                <button
+                  className="flex-1 py-3 bg-gray-100 text-gray-900 rounded-lg font-medium"
+                  onClick={() => {
+                    ;(overlayState.content as any).onCancel?.()
+                    closeOverlay()
+                  }}
+                >
+                  취소
+                </button>
+              )}
+              <button
+                className="flex-1 py-3 bg-primary text-white rounded-lg font-medium"
+                onClick={() => {
+                  ;(overlayState.content as any).onConfirm()
+                  closeOverlay()
+                }}
+              >
+                확인
+              </button>
+            </div>
           </div>
         </div>
       )}

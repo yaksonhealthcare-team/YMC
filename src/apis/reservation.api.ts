@@ -19,3 +19,9 @@ export const fetchReservations = async (
 
   return ReservationMapper.toReservationEntities(parsedData.body)
 }
+
+export const completeVisit = async (reservationId: string): Promise<void> => {
+  await axiosClient.post(`/reservation/complete`, {
+    r_idx: reservationId,
+  })
+}

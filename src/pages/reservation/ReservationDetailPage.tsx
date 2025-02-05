@@ -3,7 +3,10 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useLayout } from "contexts/LayoutContext"
 import { Button } from "@components/Button"
 import Divider from "@mui/material/Divider"
-import { useReservationDetail } from "queries/useReservationQueries"
+import {
+  useReservationDetail,
+  useCompleteVisit,
+} from "queries/useReservationQueries"
 import ReservationSummary from "./_fragments/ReservationSummary"
 import Location from "./_fragments/Location"
 import MembershipUsage from "./_fragments/MembershipUsage"
@@ -11,6 +14,7 @@ import FixedButtonContainer from "@components/FixedButtonContainer"
 import { ReservationStatus } from "types/Reservation"
 import { Skeleton } from "@mui/material"
 import { isVisitTime } from "utils/date"
+import { useOverlay } from "contexts/ModalContext"
 
 const LoadingSkeleton = () => (
   <div className="flex-1 px-[20px] pt-[16px] pb-[150px] bg-system-bg">
@@ -57,6 +61,8 @@ const ReservationDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
+  const { mutate: completeVisit } = useCompleteVisit()
+  const { openModal } = useOverlay()
   const {
     data: reservation,
     isLoading,
@@ -74,10 +80,20 @@ const ReservationDetailPage = () => {
     setNavigation({ display: false })
   }, [navigate, setHeader, setNavigation])
 
+  const handleCompleteVisit = () => {
+    openModal({
+      title: "방문 완료",
+      message: "방문을 완료하시겠습니까?",
+      onConfirm: () => {
+        if (id) {
+          completeVisit(id)
+        }
+      },
+    })
+  }
+
   const renderActionButtons = () => {
     if (!reservation) return null
-
-    const isInVisitTime = isVisitTime(reservation.date, reservation.duration)
 
     switch (reservation.status) {
       case ReservationStatus.CONFIRMED:
@@ -111,9 +127,7 @@ const ReservationDetailPage = () => {
             variantType="primary"
             sizeType="l"
             className="w-full"
-            onClick={() => {
-              // TODO: 방문 완료 API 호출
-            }}
+            onClick={handleCompleteVisit}
           >
             방문 완료하기
           </Button>
