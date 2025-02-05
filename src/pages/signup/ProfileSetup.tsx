@@ -82,7 +82,7 @@ export const ProfileSetup = () => {
       const isSelected = brandCodes.includes(code)
 
       const updatedBrands = isSelected
-        ? brandCodes.filter((code) => code !== code)
+        ? brandCodes.filter((brandCode) => brandCode !== code)
         : [...brandCodes, code]
 
       return { ...prev, brandCodes: updatedBrands }
