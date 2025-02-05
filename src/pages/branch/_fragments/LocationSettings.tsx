@@ -8,6 +8,8 @@ import SavedLocationList from "./SavedLocationList.tsx"
 import LocationSearchResultList from "./LocationSearchResultList.tsx"
 import LocationSearchPlaceholder from "./LocationSearchPlaceholder.tsx"
 import { Location } from "../../../types/Location.ts"
+import { searchAddress } from "../../../apis/address.api.ts"
+import { useQuery } from "@tanstack/react-query"
 
 const LocationSettingsHeader = ({
   onClickBack,
@@ -64,6 +66,12 @@ const LocationSettings = () => {
   const [address, setAddress] = useState("")
   const [isEditing, setIsEditing] = useState(false)
 
+  const { data: searchResults = [] } = useQuery({
+    queryKey: ["addressSearch", address],
+    queryFn: () => searchAddress(address),
+    enabled: address.length > 0,
+  })
+
   const handleCloseButtonClicked = () => {
     if (location.state?.from === "/branch") {
       navigate(-1)
@@ -86,10 +94,20 @@ const LocationSettings = () => {
     if (address.length > 0) {
       return (
         <LocationSearchResultList
-          locations={locations.filter((location) =>
-            location.title.includes(address),
-          )}
-          onClick={() => {}}
+          locations={searchResults}
+          onClick={(location) => {
+            navigate("/branch", {
+              state: {
+                selectedLocation: {
+                  address: location.address,
+                  coords: {
+                    latitude: location.latitude,
+                    longitude: location.longitude,
+                  },
+                },
+              },
+            })
+          }}
         />
       )
     }
