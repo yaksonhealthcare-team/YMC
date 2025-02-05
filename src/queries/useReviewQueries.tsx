@@ -47,7 +47,10 @@ export const useCreateReviewMutation = () => {
   return useMutation({
     mutationFn: (request: CreateReviewRequest) => createReview(request),
     onSuccess: () => {
-      navigate("/review")
+      navigate("/review", {
+        replace: true,
+        state: { returnPath: "/mypage" },
+      })
     },
   })
 }

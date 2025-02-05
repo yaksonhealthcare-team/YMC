@@ -3,12 +3,13 @@ import { useEffect } from "react"
 import { useReviews } from "../../queries/useReviewQueries.tsx"
 import { ReviewListItem } from "./_fragments/ReviewListItem.tsx"
 import { useIntersection } from "../../hooks/useIntersection.tsx"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 
 const ReviewPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
+  const location = useLocation()
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useReviews()
 
@@ -16,6 +17,11 @@ const ReviewPage = () => {
     onIntersect: fetchNextPage,
     enabled: hasNextPage && !isFetchingNextPage,
   })
+
+  const handleBack = () => {
+    const returnPath = location.state?.returnPath || "/mypage"
+    navigate(returnPath, { replace: true })
+  }
 
   useEffect(() => {
     setHeader({
@@ -26,6 +32,16 @@ const ReviewPage = () => {
     })
     setNavigation({ display: false })
   }, [])
+
+  useEffect(() => {
+    const handlePopState = () => {
+      handleBack()
+    }
+    window.addEventListener("popstate", handlePopState)
+    return () => {
+      window.removeEventListener("popstate", handlePopState)
+    }
+  }, [location.state])
 
   if (isLoading) {
     return <LoadingIndicator className="min-h-screen" />
