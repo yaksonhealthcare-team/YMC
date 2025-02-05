@@ -260,6 +260,11 @@ export const routeConfig: RouteConfig[] = [
     auth: true,
   },
   {
+    path: "/reservation/form",
+    element: <ReservationFormPage />,
+    auth: true,
+  },
+  {
     path: "/reservation/:id",
     element: <ReservationDetailPage />,
     auth: true,
@@ -272,11 +277,6 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/reservation/:id/satisfaction",
     element: <SatisfactionPage />,
-    auth: true,
-  },
-  {
-    path: "/reservation/form",
-    element: <ReservationFormPage />,
     auth: true,
   },
   //마이페이지
