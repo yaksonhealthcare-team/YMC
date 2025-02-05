@@ -5,6 +5,7 @@ import { Tag } from "@components/Tag"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import MembershipTag from "./MembershipTag"
 import { MembershipStatus } from "types/Membership"
+import { formatDateRange } from "../utils/date"
 
 const STYLES = {
   container:
@@ -29,7 +30,8 @@ interface MembershipProps {
   id: number
   title: string
   count: string
-  date: string
+  startDate: string
+  endDate: string
   status: MembershipStatus
   serviceType?: string
   showReserveButton?: boolean
@@ -41,7 +43,8 @@ export const MembershipCard = ({
   id,
   title,
   count,
-  date,
+  startDate,
+  endDate,
   status,
   serviceType,
   showReserveButton = false,
@@ -76,7 +79,9 @@ export const MembershipCard = ({
         <div className={STYLES.info.wrapper}>
           <span className={STYLES.info.text}>{count}</span>
           <span className={STYLES.info.divider}>|</span>
-          <span className={STYLES.info.text}>{date}</span>
+          <span className={STYLES.info.text}>
+            {formatDateRange(startDate, endDate)}
+          </span>
         </div>
       </div>
 
