@@ -15,6 +15,10 @@ const ResetPassword = ({ requestPasswordChange }: ResetPasswordProps) => {
     password: "",
     passwordConfirm: "",
   })
+  const [errors, setErrors] = useState({
+    password: "",
+    passwordConfirm: "",
+  })
 
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
@@ -24,16 +28,39 @@ const ResetPassword = ({ requestPasswordChange }: ResetPasswordProps) => {
     setNavigation({ display: false })
   }, [])
 
+  const validateForm = () => {
+    const newErrors = {
+      password: "",
+      passwordConfirm: "",
+    }
+
+    if (!validatePassword(form.password)) {
+      newErrors.password =
+        "비밀번호는 영문, 숫자, 특수문자 중 2종류 이상을 조합하여 10자리 이상이어야 합니다"
+    }
+
+    if (form.password !== form.passwordConfirm) {
+      newErrors.passwordConfirm = "비밀번호가 일치하지 않습니다"
+    }
+
+    setErrors(newErrors)
+    return !Object.values(newErrors).some((error) => error !== "")
+  }
+
   const submitPasswordChange = () => {
-    requestPasswordChange(form.password)
+    if (validateForm()) {
+      requestPasswordChange(form.password)
+    }
   }
 
   const handlePasswordChange = (value: string) => {
     setForm((prev) => ({ ...prev, password: value }))
+    setErrors((prev) => ({ ...prev, password: "" }))
   }
 
   const handlePasswordConfirmChange = (value: string) => {
     setForm((prev) => ({ ...prev, passwordConfirm: value }))
+    setErrors((prev) => ({ ...prev, passwordConfirm: "" }))
   }
 
   return (
@@ -52,6 +79,8 @@ const ResetPassword = ({ requestPasswordChange }: ResetPasswordProps) => {
           <PasswordCustomInput
             onPasswordChange={handlePasswordChange}
             onPasswordConfirmChange={handlePasswordConfirmChange}
+            passwordError={errors.password}
+            passwordConfirmError={errors.passwordConfirm}
           />
         </div>
 
@@ -61,8 +90,9 @@ const ResetPassword = ({ requestPasswordChange }: ResetPasswordProps) => {
           sizeType="l"
           disabled={
             !form.password ||
-            form.password !== form.passwordConfirm ||
-            !validatePassword(form.password)
+            !form.passwordConfirm ||
+            !validatePassword(form.password) ||
+            form.password !== form.passwordConfirm
           }
           onClick={submitPasswordChange}
         >
