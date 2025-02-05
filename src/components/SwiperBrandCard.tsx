@@ -1,4 +1,3 @@
-import { Swiper, SwiperSlide } from "swiper/react"
 import { BrandCard } from "@components/BrandCard.tsx"
 import { useBrands } from "../queries/useBrandQueries.tsx"
 
@@ -16,11 +15,11 @@ export const SwiperBrandCard = ({
   const { data: brands } = useBrands()
 
   return (
-    <div className={`overflow-x-auto ${className}`}>
-      <Swiper spaceBetween={16} slidesPerView={"auto"} className="gap-4">
+    <div className={`w-full overflow-x-auto scrollbar-hide ${className}`}>
+      <div className="flex gap-4 px-5 pb-2">
         {brands &&
           brands.map((brand) => (
-            <SwiperSlide key={brand.code} className="!w-auto">
+            <div key={brand.code}>
               <BrandCard
                 name={brand.name}
                 brandSrc={brand.imageUrl || ""}
@@ -31,9 +30,9 @@ export const SwiperBrandCard = ({
                     : false
                 }
               />
-            </SwiperSlide>
+            </div>
           ))}
-      </Swiper>
+      </div>
     </div>
   )
 }
