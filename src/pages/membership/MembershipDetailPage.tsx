@@ -60,7 +60,11 @@ const MembershipDetailPage = () => {
             message:
               "선택하신 상품이 장바구니에 담겼습니다.\n장바구니로 이동하시겠습니까?",
             onConfirm: () => {
-              navigate("/cart", { replace: true })
+              closeOverlay()
+              window.location.href = "/cart"
+            },
+            onCancel: () => {
+              closeOverlay()
             },
           })
         }}
