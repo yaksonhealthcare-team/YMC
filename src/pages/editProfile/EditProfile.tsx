@@ -194,6 +194,7 @@ const EditProfile = () => {
             <FieldWithButton
               fieldValue={"********"}
               buttonLabel={"변경하기"}
+              buttonClassName="px-5 py-3.5 font-bold rounded-[12px]"
               onClick={() => {
                 navigate("/profile/reset-password")
               }}
@@ -203,22 +204,33 @@ const EditProfile = () => {
             <FieldWithButton
               fieldValue={user.phone}
               buttonLabel={"변경하기"}
+              buttonClassName="px-5 py-3.5 font-bold rounded-[12px]"
               onClick={() => {
                 navigate("/profile/change-phone")
               }}
             />
           </LabeledForm>
           <LabeledForm label={"생년월일"}>
-            <p>{"1999.01.09"}</p>
+            <p className="text-[18px] font-medium text-gray-900">
+              {"1999.01.09"}
+            </p>
           </LabeledForm>
           <LabeledForm label={"성별"}>
             <RadioGroup value={gender} onChange={handleChangeGender}>
               <div className={"flex gap-2 items-center"}>
-                <RadioCard value={"female"} checked={gender === "female"}>
-                  <p>{"여자"}</p>
+                <RadioCard
+                  value={"female"}
+                  checked={gender === "female"}
+                  className="!h-[52px] !p-4 !rounded-[12px]"
+                >
+                  <p className="text-[16px] font-semibold">{"여자"}</p>
                 </RadioCard>
-                <RadioCard value={"male"} checked={gender === "male"}>
-                  <p>{"남자"}</p>
+                <RadioCard
+                  value={"male"}
+                  checked={gender === "male"}
+                  className="!h-[52px] !p-4 !rounded-[12px]"
+                >
+                  <p className="text-[16px] font-semibold">{"남자"}</p>
                 </RadioCard>
               </div>
             </RadioGroup>
@@ -227,11 +239,12 @@ const EditProfile = () => {
             <FieldWithButton
               fieldValue={address.postalCode}
               buttonLabel={"우편번호 검색"}
+              buttonClassName="px-[20px] py-3.5 font-bold whitespace-nowrap min-w-[140px] rounded-[12px]"
               onClick={() => setOpenPostcode(true)}
             />
             <div
               className={
-                "px-3.5 py-[16.5px] outline outline-1 outline-gray-100 rounded-xl"
+                "px-4 py-3 outline outline-1 outline-gray-100 rounded-[12px] flex items-center"
               }
             >
               <p className={"font-r text-[16px] leading-[23px]"}>

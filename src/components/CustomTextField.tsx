@@ -17,6 +17,13 @@ const TEXT_FIELD_STYLES = {
   input: {
     "& .MuiOutlinedInput-root": {
       borderRadius: "12px",
+      height: "52px",
+      "& input": {
+        padding: "0 16px",
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+      },
       "& fieldset": {
         borderColor: (state: keyof typeof STATE_COLORS) => STATE_COLORS[state],
       },
@@ -65,6 +72,7 @@ interface CustomTextFieldProps {
   button?: ReactNode
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   maxLength?: number
+  className?: string
 }
 
 const CustomTextField = forwardRef<HTMLInputElement, CustomTextFieldProps>(
@@ -83,6 +91,7 @@ const CustomTextField = forwardRef<HTMLInputElement, CustomTextFieldProps>(
       button,
       onChange,
       maxLength,
+      className,
     },
     ref,
   ) => (
@@ -99,7 +108,7 @@ const CustomTextField = forwardRef<HTMLInputElement, CustomTextFieldProps>(
           onChange={onChange}
           variant="outlined"
           fullWidth
-          inputProps={{ maxLength }}
+          inputProps={{ maxLength, className }}
           InputProps={{
             startAdornment: iconLeft && (
               <InputAdornment position="start">{iconLeft}</InputAdornment>
@@ -132,11 +141,15 @@ const CustomTextField = forwardRef<HTMLInputElement, CustomTextFieldProps>(
         {button && <Button disabled={disabled} className="ml-1" />}
       </div>
       {helperText && (
-        <p className={`font-m text-12px mt-1 ml-2 ${
-          state === "error" ? "text-error" : 
-          state === "success" ? "text-success" : 
-          "text-gray-400"
-        }`}>
+        <p
+          className={`font-m text-12px mt-1 ml-2 ${
+            state === "error"
+              ? "text-error"
+              : state === "success"
+                ? "text-success"
+                : "text-gray-400"
+          }`}
+        >
           {helperText}
         </p>
       )}

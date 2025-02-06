@@ -21,18 +21,29 @@ export const FieldWithButton = ({
   fieldValue,
   buttonLabel,
   onClick,
+  buttonClassName = "",
+  fieldClassName = "",
 }: {
   fieldValue: string
   buttonLabel: string
   onClick: () => void
+  buttonClassName?: string
+  fieldClassName?: string
 }) => (
-  <div className={"flex items-center gap-1 h-14"}>
+  <div className={"flex items-center gap-1 h-[52px]"}>
     <div
-      className={"border border-gray-100 px-4 py-3.5 rounded-xl w-full h-full"}
+      className={clsx(
+        "border border-gray-100 px-4 rounded-[12px] w-full h-full flex items-center",
+        fieldClassName,
+      )}
     >
       <p className={"text-16px font-r"}>{fieldValue}</p>
     </div>
-    <Button className={"px-5 h-full"} variantType={"primary"} onClick={onClick}>
+    <Button
+      className={clsx("h-full rounded-[12px]", buttonClassName)}
+      variantType={"primary"}
+      onClick={onClick}
+    >
       <p className={"text-nowrap"}>{buttonLabel}</p>
     </Button>
   </div>
