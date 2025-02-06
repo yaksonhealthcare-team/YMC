@@ -46,7 +46,7 @@ const MembershipDetailPage = () => {
 
   // 지점 선택 버튼 클릭 시 모달 열기
   const handleBranchSelect = () => {
-    closeOverlay() // 바텀시트 닫기
+    closeOverlay({ skipHistoryBack: true }) // 바텀시트 닫기 시 history back 스킵
     setIsModalOpen(true)
   }
 
@@ -81,6 +81,11 @@ const MembershipDetailPage = () => {
   useEffect(() => {
     if (!overlayState.isOpen && overlayState.type === null) {
       setIsBottomSheetOpen(false)
+      // history stack 정리
+      const currentState = window.history.state
+      if (currentState?.bottomSheet) {
+        window.history.back()
+      }
     }
   }, [overlayState])
 
