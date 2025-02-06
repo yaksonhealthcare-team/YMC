@@ -1,56 +1,58 @@
 import { memo, ReactNode, useEffect, useRef, useState } from "react"
 
-const DynamicHomeHeaderBackground = ({
-  header,
-  content,
-  contents,
-  buttonArea,
-}: {
-  header: ReactNode
-  content?: ReactNode
-  contents?: ReactNode[]
-  buttonArea: ReactNode
-}) => {
-  const ContentNode = memo(({ content }: { content: ReactNode }) => {
-    return (
-      <div
-        className="relative w-full bg-cover bg-center px-8"
-        style={{
-          backgroundImage: `url("/assets/home_card_mid.png")`,
-        }}
-      >
-        {content}
-      </div>
-    )
-  })
-
+const ContentNode = memo(({ content }: { content: ReactNode }) => {
   return (
     <div
-      className="relative flex flex-col"
+      className="relative w-full bg-cover bg-center px-8"
       style={{
-        width: "calc(100% + 20px)",
-        marginLeft: "-10px",
+        backgroundImage: `url("/assets/home_card_mid.png")`,
       }}
     >
-      <div className="relative w-full">
-        <img src="/assets/home_card_top.png" alt="" className="w-full" />
-        <div className="absolute top-3 left-3 w-full h-24">
-          <div className="flex justify-between w-full">
-            <div className={"px-5 pt-5 w-full max-w-[84%]"}>{header}</div>
-            <DynamicSquareContainer>{buttonArea}</DynamicSquareContainer>
-          </div>
-        </div>
-      </div>
-
-      {content && <ContentNode content={content} />}
-
-      {contents &&
-        contents.map((item, i) => <ContentNode key={i} content={item} />)}
-
-      <img src="/assets/home_card_bottom.png" alt="" className="w-full" />
+      {content}
     </div>
   )
-}
+})
+
+const DynamicHomeHeaderBackground = memo(
+  ({
+    header,
+    content,
+    contents,
+    buttonArea,
+  }: {
+    header: ReactNode
+    content?: ReactNode
+    contents?: ReactNode[]
+    buttonArea: ReactNode
+  }) => {
+    return (
+      <div
+        className="relative flex flex-col"
+        style={{
+          width: "calc(100% + 20px)",
+          marginLeft: "-10px",
+        }}
+      >
+        <div className="relative w-full">
+          <img src="/assets/home_card_top.png" alt="" className="w-full" />
+          <div className="absolute top-3 left-3 w-full h-24">
+            <div className="flex justify-between w-full">
+              <div className={"px-5 pt-5 w-full max-w-[84%]"}>{header}</div>
+              <DynamicSquareContainer>{buttonArea}</DynamicSquareContainer>
+            </div>
+          </div>
+        </div>
+
+        {content && <ContentNode content={content} />}
+
+        {contents &&
+          contents.map((item, i) => <ContentNode key={i} content={item} />)}
+
+        <img src="/assets/home_card_bottom.png" alt="" className="w-full" />
+      </div>
+    )
+  },
+)
 
 interface DynamicSquareContainerProps {
   children: ReactNode

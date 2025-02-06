@@ -1,6 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { useLayout } from "../../../contexts/LayoutContext.tsx"
-import { ReactNode, useEffect, useState } from "react"
+import {
+  ReactNode,
+  useEffect,
+  useState,
+  useMemo,
+  memo,
+  useCallback,
+} from "react"
 import DynamicHomeHeaderBackground from "../../home/_fragments/DynamicHomeHeaderBackground.tsx"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import PinIcon from "@assets/icons/PinIcon.svg?react"
@@ -22,6 +29,7 @@ import {
 import { DEFAULT_COORDINATE } from "../../../types/Coordinate.ts"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useOverlay } from "../../../contexts/ModalContext.tsx"
+import { BranchDetail as BranchDetailType } from "../../../types/Branch.ts"
 
 const branchDetailTabs = ["therapists", "programs", "information"] as const
 type BranchDetailTab = (typeof branchDetailTabs)[number]
@@ -32,34 +40,119 @@ const BranchDetailTabs: Record<BranchDetailTab, string> = {
   "information": "기본정보",
 }
 
+interface BranchHeaderProps {
+  branch: BranchDetailType
+  onShare: () => void
+  onBack: () => void
+}
+
+const BranchStaffInfo = memo(({ branch }: { branch: BranchDetailType }) => {
+  if (!branch.staffs.length && !branch.director) return null
+
+  return (
+    <div className={"flex flex-col gap-4 -mb-4 py-4"}>
+      <div className={"w-full h-[1px] bg-gray-200 rounded-sm"} />
+      {branch.staffs.length > 0 && (
+        <StaffSection
+          directorCount={
+            branch.staffs.filter((staff) => staff.grade === "원장").length
+          }
+          staffCount={
+            branch.staffs.filter((staff) => staff.grade === "테라피스트").length
+          }
+        />
+      )}
+      {branch.director && <ProfileCard type={"primary"} {...branch.director} />}
+    </div>
+  )
+})
+
+const BranchHeaderContent = memo(({ branch }: { branch: BranchDetailType }) => {
+  return (
+    <>
+      <div className={"flex flex-row items-center gap-1 mt-1.5"}>
+        <IconLabel
+          icon={<StoreIcon className={"text-gray-500"} />}
+          label={branch.brand}
+        />
+        {branch.location.distance && (
+          <IconLabel
+            icon={<PinIcon className={"text-gray-500"} />}
+            label={branch.location.distance}
+          />
+        )}
+      </div>
+    </>
+  )
+})
+
+const BranchHeader = memo(({ branch, onShare, onBack }: BranchHeaderProps) => {
+  return (
+    <DynamicHomeHeaderBackground
+      header={
+        <>
+          <div className={"flex flex-row items-center gap-2"}>
+            <div onClick={onBack}>
+              <CaretLeftIcon className="w-5 h-5" />
+            </div>
+            <p className={"font-b text-20px"}>{branch.name}</p>
+          </div>
+          <BranchHeaderContent branch={branch} />
+        </>
+      }
+      content={<BranchStaffInfo branch={branch} />}
+      buttonArea={
+        <button
+          className={
+            "flex w-10 h-10 rounded-full bg-primary justify-center items-center text-white shadow-md"
+          }
+          onClick={onShare}
+        >
+          <ShareIcon className={"w-6 h-6"} />
+        </button>
+      }
+    />
+  )
+})
+
+const TabContent = memo(
+  ({
+    selectedTab,
+    branch,
+  }: {
+    selectedTab: BranchDetailTab
+    branch: BranchDetailType
+  }) => {
+    switch (selectedTab) {
+      case "therapists":
+        return <TherapistList therapists={branch.staffs} />
+      case "programs":
+        return <ProgramList brandCode={branch.brandCode} />
+      case "information":
+      default:
+        return <BranchInformation branch={branch} />
+    }
+  },
+)
+
 const BranchDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { showToast } = useOverlay()
+  const [selectedTab, setSelectedTab] =
+    useState<keyof typeof BranchDetailTabs>("information")
+
   const { data: branch, isLoading } = useBranch(id || "", {
     latitude: DEFAULT_COORDINATE.latitude,
     longitude: DEFAULT_COORDINATE.longitude,
   })
   const { mutate: addBookmark } = useBranchBookmarkMutation()
   const { mutate: removeBookmark } = useBranchUnbookmarkMutation()
-  const [selectedTab, setSelectedTab] =
-    useState<keyof typeof BranchDetailTabs>("information")
 
-  useEffect(() => {
-    setHeader({
-      display: false,
-      backgroundColor: "bg-system-bg",
-    })
-    setNavigation({ display: false })
-  }, [])
-
-  if (!branch || isLoading) {
-    return <LoadingIndicator className="min-h-screen" />
-  }
-
-  const handleShare = async () => {
+  const handleShare = useCallback(async () => {
     try {
+      if (!branch) return
       if (navigator.share) {
         await navigator.share({
           title: branch.name,
@@ -73,18 +166,33 @@ const BranchDetail = () => {
     } catch (error) {
       console.error("공유하기 실패:", error)
     }
-  }
+  }, [branch])
 
-  const handleMembershipBannerClick = () => {
+  const handleBack = useCallback(() => navigate(-1), [navigate])
+
+  const memoizedHeader = useMemo(
+    () =>
+      branch ? (
+        <BranchHeader
+          branch={branch}
+          onShare={handleShare}
+          onBack={handleBack}
+        />
+      ) : null,
+    [branch, handleShare, handleBack],
+  )
+
+  const handleMembershipBannerClick = useCallback(() => {
+    if (!branch) return
     navigate(`/membership?brand=${branch.brandCode}`)
-  }
+  }, [branch, navigate])
 
-  const handleReservation = () => {
+  const handleReservation = useCallback(() => {
     if (!branch) return
     navigate(`/reservation/form?branchId=${branch.id}`)
-  }
+  }, [branch, navigate])
 
-  const handleBookmark = () => {
+  const handleBookmark = useCallback(() => {
     if (!branch) return
 
     if (branch.isBookmarked) {
@@ -100,81 +208,24 @@ const BranchDetail = () => {
         },
       })
     }
-  }
+  }, [branch, addBookmark, removeBookmark, showToast])
 
-  const renderTab = () => {
-    switch (selectedTab) {
-      case "therapists":
-        return <TherapistList therapists={branch.staffs} />
-      case "programs":
-        return <ProgramList brandCode={branch.brandCode} />
-      case "information":
-      default:
-        return <BranchInformation branch={branch} />
-    }
+  useEffect(() => {
+    setHeader({
+      display: false,
+      backgroundColor: "bg-system-bg",
+    })
+    setNavigation({ display: false })
+  }, [setHeader, setNavigation])
+
+  if (!branch || isLoading) {
+    return <LoadingIndicator className="min-h-screen" />
   }
 
   return (
     <div className={"relative flex-grow w-full bg-system-bg overflow-x-hidden"}>
       <div className={"flex flex-col gap-3 p-5"}>
-        <DynamicHomeHeaderBackground
-          header={
-            <>
-              <div className={"flex flex-row items-center gap-2"}>
-                <div onClick={() => navigate(-1)}>
-                  <CaretLeftIcon className="w-5 h-5" />
-                </div>
-                <p className={"font-b text-20px"}>{branch.name}</p>
-              </div>
-              <div className={"flex flex-row items-center gap-1 mt-1.5"}>
-                <IconLabel
-                  icon={<StoreIcon className={"text-gray-500"} />}
-                  label={branch.brand}
-                />
-                {branch.location.distance && (
-                  <IconLabel
-                    icon={<PinIcon className={"text-gray-500"} />}
-                    label={branch.location.distance}
-                  />
-                )}
-              </div>
-            </>
-          }
-          content={
-            (branch.staffs.length > 0 || branch.director) && (
-              <div className={"flex flex-col gap-4 -mb-4 py-4"}>
-                <div className={"w-full h-[1px] bg-gray-200 rounded-sm"} />
-
-                {branch.staffs.length > 0 && (
-                  <StaffSection
-                    directorCount={
-                      branch.staffs.filter((staff) => staff.grade === "원장")
-                        .length
-                    }
-                    staffCount={
-                      branch.staffs.filter(
-                        (staff) => staff.grade === "테라피스트",
-                      ).length
-                    }
-                  />
-                )}
-                {branch.director && (
-                  <ProfileCard type={"primary"} {...branch.director} />
-                )}
-              </div>
-            )
-          }
-          buttonArea={
-            <button
-              className={
-                "flex w-10 h-10 rounded-full bg-primary justify-center items-center text-white shadow-md"
-              }
-              onClick={handleShare}
-            >
-              <ShareIcon className={"w-6 h-6"} />
-            </button>
-          }
-        />
+        {memoizedHeader}
         {branch.availableMembershipCount > 0 && (
           <MembershipAvailableBanner
             availableMembershipCount={branch.availableMembershipCount}
@@ -193,7 +244,7 @@ const BranchDetail = () => {
         }
         activeTab={selectedTab}
       />
-      {renderTab()}
+      <TabContent selectedTab={selectedTab} branch={branch} />
       <div className={"h-20"} />
       <div
         className={
