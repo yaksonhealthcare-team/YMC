@@ -37,18 +37,22 @@ const theme = createTheme({
   },
 })
 
-function App() {
+function AppContent() {
   const { showToast } = useOverlay()
 
   useEffect(() => {
     setGlobalShowToast(showToast)
   }, [showToast])
 
+  return <AppRouter />
+}
+
+function App() {
   return (
     <ThemeProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
         <OverlayProvider>
-          <AppRouter />
+          <AppContent />
         </OverlayProvider>
       </QueryClientProvider>
     </ThemeProvider>
