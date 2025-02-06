@@ -26,7 +26,7 @@ import { fetchUser } from "../../apis/auth.api.ts"
 const EditProfile = () => {
   const { user, login } = useAuth()
   const { setNavigation, setHeader } = useLayout()
-  const { openBottomSheet, closeOverlay } = useOverlay()
+  const { openBottomSheet, closeOverlay, showToast } = useOverlay()
   const navigate = useNavigate()
 
   const [gender, setGender] = useState<"male" | "female">(
@@ -95,12 +95,12 @@ const EditProfile = () => {
       if (token) {
         const updatedUser = await fetchUser(token)
         login({ user: updatedUser, token: token.replace("Bearer ", "") })
+        showToast("프로필이 성공적으로 수정되었습니다.")
+        navigate("/mypage")
       }
-
-      alert("프로필이 성공적으로 수정되었습니다.")
     } catch (error) {
       console.error("프로필 수정 실패:", error)
-      alert("프로필 수정에 실패했습니다.")
+      showToast("프로필 수정에 실패했습니다.")
     }
   }
 
