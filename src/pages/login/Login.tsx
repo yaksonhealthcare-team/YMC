@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext"
 import Logo from "@components/Logo"
@@ -12,9 +12,26 @@ import GoogleIcon from "../../assets/icons/GoogleIcon.svg?react"
 import { getGoogleLoginUrl } from "../../libs/google"
 import { getAppleLoginUrl } from "../../libs/apple"
 
+declare global {
+  interface Window {
+    osType?: 'ios' | 'android';
+  }
+}
+
 const Login = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
+  const [osType, _setOsType] = useState<'ios' | 'android' | undefined>(() => {
+    const savedOsType = localStorage.getItem('osType')
+    if (window.osType) {
+      localStorage.setItem('osType', window.osType)
+      return window.osType
+    }
+    if (savedOsType === 'ios' || savedOsType === 'android') {
+      return savedOsType
+    }
+    return undefined
+  })
 
   useEffect(() => {
     setHeader({
@@ -23,6 +40,12 @@ const Login = () => {
     })
     setNavigation({ display: false })
   }, [])
+
+  useEffect(() => {
+    if (osType) {
+      localStorage.setItem('osType', osType)
+    }
+  }, [osType])
 
   const handleSocialLogin = async (
     provider: "kakao" | "naver" | "google" | "apple",
@@ -82,27 +105,31 @@ const Login = () => {
             <span className="flex-1 text-center">네이버로 로그인</span>
           </Button>
 
-          {/* TODO: iOS에서만 애플 로그인 버튼 표시 */}
-          <Button
-            onClick={() => handleSocialLogin("apple")}
-            fullCustom
-            sizeType="l"
-            className="bg-[#000000] border-black text-white font-b flex items-center px-3 py-4"
-          >
-            <AppleIcon className="w-6 h-6 text-white" />
-            <span className="flex-1 text-center">Apple로 로그인</span>
-          </Button>
+          {/* 애플 로그인 (iOS에서만 표시) */}
+          {osType === 'ios' && (
+            <Button
+              onClick={() => handleSocialLogin("apple")}
+              fullCustom
+              sizeType="l"
+              className="bg-[#000000] border-black text-white font-b flex items-center px-3 py-4"
+            >
+              <AppleIcon className="w-6 h-6 text-white" />
+              <span className="flex-1 text-center">Apple로 로그인</span>
+            </Button>
+          )}
 
-          {/* 구글 로그인 */}
-          <Button
-            onClick={() => handleSocialLogin("google")}
-            fullCustom
-            sizeType="l"
-            className="bg-white border-[#DDDDDD] text-[#212121] font-b flex items-center px-3 py-4"
-          >
-            <GoogleIcon className="w-6 h-6" />
-            <span className="flex-1 text-center">Google로 로그인</span>
-          </Button>
+          {/* 구글 로그인 (Android에서만 표시) */}
+          {osType === 'android' && (
+            <Button
+              onClick={() => handleSocialLogin("google")}
+              fullCustom
+              sizeType="l"
+              className="bg-white border-[#DDDDDD] text-[#212121] font-b flex items-center px-3 py-4"
+            >
+              <GoogleIcon className="w-6 h-6" />
+              <span className="flex-1 text-center">Google로 로그인</span>
+            </Button>
+          )}
 
           {/* 이메일 로그인 */}
           <Button
