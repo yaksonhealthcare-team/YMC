@@ -197,7 +197,7 @@ const BranchDetail = () => {
       <div className={"h-20"} />
       <div
         className={
-          "fixed left-1/2 -translate-x-1/2 min-w-[375px] max-w-[500px] w-full bottom-0 bg-system-bg border-t border-gray-100 py-3 px-5"
+          "z-10 fixed left-1/2 -translate-x-1/2 min-w-[375px] max-w-[500px] w-full bottom-0 bg-system-bg border-t border-gray-100 py-3 px-5"
         }
       >
         <BranchDetailBottomActionBar
