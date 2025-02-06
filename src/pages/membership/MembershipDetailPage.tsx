@@ -26,7 +26,7 @@ const MembershipDetailPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { data: membership } = useMembershipDetail(id!)
-  const { openBottomSheet, closeOverlay } = useOverlay()
+  const { openBottomSheet, closeOverlay, overlayState } = useOverlay()
   const {
     currentPath,
     isBottomSheetOpen,
@@ -76,6 +76,13 @@ const MembershipDetailPage = () => {
       )
     }
   }, [isBottomSheetOpen, membership, id])
+
+  // 바텀시트가 닫힐 때 상태 초기화
+  useEffect(() => {
+    if (!overlayState.isOpen && overlayState.type === null) {
+      setIsBottomSheetOpen(false)
+    }
+  }, [overlayState])
 
   useEffect(() => {
     setHeader({
