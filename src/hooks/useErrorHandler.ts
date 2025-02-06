@@ -2,11 +2,6 @@ import { AxiosError } from "axios"
 import { useOverlay } from "../contexts/ModalContext"
 import { getErrorMessage } from "../types/Error"
 
-interface ErrorResponse {
-  resultCode: string
-  resultMessage: string
-}
-
 export const useErrorHandler = () => {
   const { showToast } = useOverlay()
 
