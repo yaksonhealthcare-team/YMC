@@ -1,7 +1,14 @@
 import { useEffect, useRef } from "react"
+import { useLayout } from "contexts/LayoutContext"
 
 const Store = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null)
+  const { setHeader, setNavigation } = useLayout()
+
+  useEffect(() => {
+    setHeader({ display: false })
+    setNavigation({ display: true })
+  }, [])
 
   useEffect(() => {
     // iframe이 로드된 후에 메시지 전송
