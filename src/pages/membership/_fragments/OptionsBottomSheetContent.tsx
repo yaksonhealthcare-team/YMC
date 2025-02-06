@@ -117,8 +117,9 @@ export const OptionsBottomSheetContent = ({
   }
 
   return (
-    <div className="flex flex-col h-[610px]">
-      <div className="flex flex-1 flex-col items-center p-3 pt-6">
+    <div className="flex flex-col max-h-[610px] min-h-[500px]">
+      {/* 콘텐츠 영역 */}
+      <div className="flex-1 p-5">
         {serviceType?.includes("지점") && (
           <button
             className={
@@ -135,7 +136,7 @@ export const OptionsBottomSheetContent = ({
           </button>
         )}
 
-        <div className="w-full mx-auto relative flex-1">
+        <div className="w-full relative">
           <button
             className={clsx(
               "w-full h-[52px] px-4 py-3 bg-white flex justify-between items-center",
@@ -161,7 +162,7 @@ export const OptionsBottomSheetContent = ({
                 <button
                   key={option.ss_idx}
                   className={`w-full px-4 py-3.5 text-left text-[#212121] text-sm font-normal border-b border-[#ebebeb] hover:bg-gray-50 
-            ${index === options.length - 1 ? "rounded-b-xl border-b-0" : ""}`}
+                  ${index === options.length - 1 ? "rounded-b-xl border-b-0" : ""}`}
                   onClick={() => {
                     handleSelectOption(option)
                     setIsDropdownOpen(false)
@@ -172,8 +173,11 @@ export const OptionsBottomSheetContent = ({
               ))}
             </div>
           )}
+        </div>
 
-          <div className="flex flex-col gap-4 mt-5 px-3">
+        {/* 선택된 옵션들 */}
+        <div className="mt-5">
+          <div className="flex flex-col gap-4">
             {selectedOptions.map(({ option, count }, index) => (
               <div key={option.ss_idx} className="flex flex-col gap-4">
                 <div className="flex justify-between items-center">
@@ -210,7 +214,7 @@ export const OptionsBottomSheetContent = ({
                   </div>
                 </div>
                 {index !== selectedOptions.length - 1 && (
-                  <Divider className={"border-[#F8F8F8"} />
+                  <Divider className={"border-[#F8F8F8]"} />
                 )}
               </div>
             ))}
@@ -218,42 +222,45 @@ export const OptionsBottomSheetContent = ({
         </div>
       </div>
 
-      <div className="mt-5 px-5 py-5 border-t border-gray-100">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-1">
-            <span className="font-r text-16px text-gray-900">총</span>
-            <span className="font-b text-18px text-primary">
-              {selectedOptions.length}개
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="font-r text-16px text-gray-900">총</span>
-            <span className="font-b text-18px text-primary">
-              {totalPrice.toLocaleString()}원
-            </span>
+      {/* 하단 고정 영역 */}
+      <div className="border-t border-gray-100">
+        <div className="px-5 py-5">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-1">
+              <span className="font-r text-16px text-gray-900">총</span>
+              <span className="font-b text-18px text-primary">
+                {selectedOptions.length}개
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="font-r text-16px text-gray-900">총</span>
+              <span className="font-b text-18px text-primary">
+                {totalPrice.toLocaleString()}원
+              </span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="px-5 pt-3">
-        <div className="flex gap-2">
-          <Button
-            variantType="line"
-            sizeType="l"
-            className="flex-1"
-            disabled={selectedOptions.length === 0}
-            onClick={handleAddToCart}
-          >
-            장바구니 담기
-          </Button>
-          <Button
-            variantType="primary"
-            sizeType="l"
-            className="flex-1"
-            disabled={selectedOptions.length === 0}
-          >
-            바로구매
-          </Button>
+        <div className="px-5 pb-5">
+          <div className="flex gap-2">
+            <Button
+              variantType="line"
+              sizeType="l"
+              className="flex-1"
+              disabled={selectedOptions.length === 0}
+              onClick={handleAddToCart}
+            >
+              장바구니 담기
+            </Button>
+            <Button
+              variantType="primary"
+              sizeType="l"
+              className="flex-1"
+              disabled={selectedOptions.length === 0}
+            >
+              바로구매
+            </Button>
+          </div>
         </div>
       </div>
     </div>
