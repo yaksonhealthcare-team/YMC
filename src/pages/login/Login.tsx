@@ -14,21 +14,21 @@ import { getAppleLoginUrl } from "../../libs/apple"
 
 declare global {
   interface Window {
-    osType?: 'ios' | 'android';
-    fcmToken?: string;
+    osType?: "ios" | "android"
+    fcmToken?: string
   }
 }
 
 const Login = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const [osType, _setOsType] = useState<'ios' | 'android' | undefined>(() => {
-    const savedOsType = localStorage.getItem('osType')
+  const [osType, _setOsType] = useState<"ios" | "android" | undefined>(() => {
+    const savedOsType = localStorage.getItem("osType")
     if (window.osType) {
-      localStorage.setItem('osType', window.osType)
+      localStorage.setItem("osType", window.osType)
       return window.osType
     }
-    if (savedOsType === 'ios' || savedOsType === 'android') {
+    if (savedOsType === "ios" || savedOsType === "android") {
       return savedOsType
     }
     return undefined
@@ -44,7 +44,7 @@ const Login = () => {
 
   useEffect(() => {
     if (osType) {
-      localStorage.setItem('osType', osType)
+      localStorage.setItem("osType", osType)
     }
   }, [osType])
 
@@ -106,21 +106,8 @@ const Login = () => {
             <span className="flex-1 text-center">네이버로 로그인</span>
           </Button>
 
-          {/* 애플 로그인 (iOS에서만 표시) */}
-          {osType === 'ios' && (
-            <Button
-              onClick={() => handleSocialLogin("apple")}
-              fullCustom
-              sizeType="l"
-              className="bg-[#000000] border-black text-white font-b flex items-center px-3 py-4"
-            >
-              <AppleIcon className="w-6 h-6 text-white" />
-              <span className="flex-1 text-center">Apple로 로그인</span>
-            </Button>
-          )}
-
-          {/* 구글 로그인 (Android에서만 표시) */}
-          {osType === 'android' && (
+          {/* 구글 로그인 (웹 또는 Android에서만 표시) */}
+          {(!osType || osType === "android") && (
             <Button
               onClick={() => handleSocialLogin("google")}
               fullCustom
@@ -129,6 +116,19 @@ const Login = () => {
             >
               <GoogleIcon className="w-6 h-6" />
               <span className="flex-1 text-center">Google로 로그인</span>
+            </Button>
+          )}
+
+          {/* 애플 로그인 (웹 또는 iOS에서만 표시) */}
+          {(!osType || osType === "ios") && (
+            <Button
+              onClick={() => handleSocialLogin("apple")}
+              fullCustom
+              sizeType="l"
+              className="bg-[#000000] border-black text-white font-b flex items-center px-3 py-4"
+            >
+              <AppleIcon className="w-6 h-6 text-white" />
+              <span className="flex-1 text-center">Apple로 로그인</span>
             </Button>
           )}
 
