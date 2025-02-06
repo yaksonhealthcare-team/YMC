@@ -341,6 +341,8 @@ const EventSection = () => {
 }
 
 const BusinessInfo = () => {
+  const navigate = useNavigate()
+
   return (
     <div className="mt-12 px-6 pt-8 pb-10 flex flex-col gap-4 bg-white relative -mx-6 -my-4">
       <span className="font-b text-16px text-gray-600">
@@ -359,11 +361,19 @@ const BusinessInfo = () => {
         </span>
       </div>
       <div className="flex items-center gap-3">
-        <span className="font-sb text-14px text-gray-400">
+        <span
+          className="font-sb text-14px text-gray-400 cursor-pointer hover:text-gray-600"
+          onClick={() => navigate("/terms/privacy")}
+        >
           개인정보처리방침
         </span>
         <div className="h-3.5 border-l border-gray-300"></div>
-        <span className="font-sb text-14px text-gray-400">이용약관</span>
+        <span
+          className="font-sb text-14px text-gray-400 cursor-pointer hover:text-gray-600"
+          onClick={() => navigate("/terms")}
+        >
+          이용약관
+        </span>
       </div>
       <span className="font-r text-12px text-gray-300">
         © 2024. yaksonhouse. All Rights Reserved.
