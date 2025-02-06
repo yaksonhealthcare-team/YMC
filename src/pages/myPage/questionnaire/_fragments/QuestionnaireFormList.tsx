@@ -7,8 +7,8 @@ const QuestionnaireFormList = ({
 }) => {
   return (
     <ul className={"space-y-8 pb-32"}>
-      {questions.map((item) => (
-        <li key={item.index}>
+      {questions.map((item, i) => (
+        <li key={"item.index_" + i}>
           <div className={"flex flex-col gap-4"}>
             <div className={"flex items-start gap-1 text-primary font-sb"}>
               <p>{"Q."}</p>
