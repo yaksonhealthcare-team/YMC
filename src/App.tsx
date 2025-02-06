@@ -5,6 +5,7 @@ import { QueryClientProvider } from "@tanstack/react-query"
 import { queryClient } from "./queries/clients.ts"
 import { useEffect } from "react"
 import { setGlobalShowToast } from "./queries/clients"
+import ErrorBoundary from "./components/ErrorBoundary"
 
 const theme = createTheme({
   // MUI 테마 설정
@@ -49,13 +50,15 @@ function AppContent() {
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
-        <OverlayProvider>
-          <AppContent />
-        </OverlayProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <OverlayProvider>
+            <AppContent />
+          </OverlayProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   )
 }
 

@@ -64,7 +64,7 @@ const Home = () => {
   if (!user) return <SplashScreen />
 
   return (
-    <>
+    <div className="pb-[70px]">
       <Container className="relative w-full bg-system-bg py-4 overflow-x-hidden scrollbar-hide">
         <DynamicHomeHeaderBackground
           header={
@@ -180,7 +180,7 @@ const Home = () => {
           }}
         />
       </Container>
-    </>
+    </div>
   )
 }
 

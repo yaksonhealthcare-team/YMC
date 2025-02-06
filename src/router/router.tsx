@@ -10,6 +10,7 @@ import { LayoutProvider } from "../contexts/LayoutContext.tsx"
 import { routeConfig, RouteConfig } from "./routeConfig"
 import { SignupProvider } from "../contexts/SignupContext.tsx"
 import LoadingIndicator from "@components/LoadingIndicator"
+import ErrorPage from "@components/ErrorPage"
 
 export const createRoutes = () => {
   const mapRoutes = (routes: RouteConfig[]): RouteObject[] => {
@@ -33,6 +34,7 @@ export const createRoutes = () => {
             {element}
           </Suspense>
         ),
+        errorElement: <ErrorPage />,
         children: route.children ? mapRoutes(route.children) : undefined,
       }
     })
