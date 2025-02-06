@@ -19,6 +19,7 @@ import { useAuth } from "../../contexts/AuthContext.tsx"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
 import NoticesSummarySlider from "@components/NoticesSummarySlider.tsx"
 import MegaPhoneIcon from "@assets/icons/MegaPhoneIcon.svg?react"
+import { Divider } from "@mui/material"
 
 interface CustomWindow extends Window {
   ReactNativeWebView?: {
@@ -202,12 +203,10 @@ const MyPage = () => {
     <>
       <div className="h-fit bg-[#F8F5F2] pb-8">
         {/* Notice */}
-        <div className="flex gap-[8px] items-center px-5 h-[40px] m-5 rounded-[20px] bg-white text-primary">
+        <div className="flex gap-2 items-center px-5 h-[40px] mx-5 my-5 rounded-[8px] bg-white text-primary">
           <MegaPhoneIcon className="min-w-5 h-5" />
           <NoticesSummarySlider
-            className={
-              "w-full h-[21px] overflow-hidden text-ellipsis whitespace-nowrap"
-            }
+            className="w-full h-[21px] overflow-hidden text-ellipsis whitespace-nowrap"
             right={
               <CaretRightIcon className="flex-shrink-0 min-w-[4px] h-4 ml-auto" />
             }
@@ -229,128 +228,129 @@ const MyPage = () => {
         </div>
 
         {/* Info Cards */}
-        <div className="px-5 space-y-5">
-          {/* Branch Info */}
-          <div
-            className="p-5 bg-white rounded-2xl border border-gray-100"
-            onClick={() => navigate("/mypage/active-branch")}
-          >
-            <div className="flex justify-between items-center">
-              <span className="font-m text-14px text-gray-500">
-                이용 중인 지점
-              </span>
-              <div className="flex items-center">
-                <span className="font-sb text-14px text-gray-900">
-                  {user?.brands?.length
-                    ? `${user.brands[0].brandName}${user.brands.length > 1 ? ` 외 ${user.brands.length - 1}개` : ""}`
-                    : "이용중인 지점이 없습니다."}
-                </span>
-                <CaretRightIcon className="w-3 h-3 ml-1.5" />
-              </div>
-            </div>
-          </div>
-
-          {/* Points & Membership */}
-          <div className="flex gap-2">
+        <div className="px-5 space-y-8">
+          <div className="space-y-5">
+            {/* Branch Info */}
             <div
-              className="w-[101px] h-24 bg-white rounded-2xl border border-gray-100 flex flex-col items-center justify-center"
-              onClick={handleOpenQuestionnaire}
+              className="p-5 bg-white rounded-2xl border border-gray-100"
+              onClick={() => navigate("/mypage/active-branch")}
             >
-              <PersonalCardIcon />
-              <span className="font-m text-14px text-gray-500 mt-1">
-                내 문진
-              </span>
-            </div>
-            <div className="flex-1 p-3 bg-white rounded-2xl border border-gray-100">
-              <div
-                className="flex justify-between items-center mb-3"
-                onClick={() => navigate("/point")}
-              >
-                <div className="flex items-center gap-2">
-                  <PointIcon />
-                  <span className="font-m text-14px text-gray-500">포인트</span>
-                </div>
+              <div className="flex justify-between items-center">
+                <span className="font-m text-14px text-gray-500">
+                  이용 중인 지점
+                </span>
                 <div className="flex items-center">
-                  <span className="font-sb text-16px text-gray-900">
-                    {`${user?.point ?? 0}P`}
+                  <span className="font-sb text-14px text-gray-900">
+                    {user?.brands?.length
+                      ? `${user.brands[0].brandName}${user.brands.length > 1 ? ` 외 ${user.brands.length - 1}개` : ""}`
+                      : "이용중인 지점이 없습니다."}
                   </span>
                   <CaretRightIcon className="w-3 h-3 ml-1.5" />
                 </div>
               </div>
-              <div className="w-full h-[1px] bg-gray-100 my-3" />
+            </div>
+
+            {/* Points & Membership */}
+            <div className="flex gap-2">
               <div
-                className="flex justify-between items-center"
-                onClick={handleOpenUserLevel}
+                className="w-[101px] h-24 bg-white rounded-2xl border border-gray-100 flex flex-col items-center justify-center gap-2"
+                onClick={handleOpenQuestionnaire}
               >
-                <div className="flex items-center gap-2">
-                  <CrownIcon />
-                  <span className="font-m text-14px text-gray-500">
-                    회원등급
-                  </span>
+                <PersonalCardIcon className="w-6 h-6" />
+                <span className="font-m text-14px text-gray-500">내 문진</span>
+              </div>
+              <div className="flex-1 h-24 px-5 py-3 bg-white rounded-2xl border border-gray-100 flex flex-col justify-center gap-3">
+                <div
+                  className="flex justify-between items-center"
+                  onClick={() => navigate("/point")}
+                >
+                  <div className="flex items-center gap-2">
+                    <PointIcon className="w-4 h-4" />
+                    <span className="font-m text-14px text-gray-500">
+                      포인트
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-sb text-16px text-gray-900">
+                      {`${user?.point ?? 0}P`}
+                    </span>
+                    <CaretRightIcon className="w-3 h-3" />
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-sb text-16px text-gray-900">
-                    {user?.level ?? ""}
-                  </span>
-                  <InformationIcon className={"w-4 h-4 text-gray-500"} />
+                <Divider className="border-gray-100" />
+                <div
+                  className="flex justify-between items-center"
+                  onClick={handleOpenUserLevel}
+                >
+                  <div className="flex items-center gap-2">
+                    <CrownIcon className="w-4 h-4" />
+                    <span className="font-m text-14px text-gray-500">
+                      회원등급
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-sb text-16px text-gray-900">
+                      {user?.level ?? ""}
+                    </span>
+                    <InformationIcon className="w-3 h-3 text-gray-500" />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Profile Edit Button */}
-          <Button
-            variantType="primary"
-            sizeType="m"
-            onClick={() => navigate("/profile")}
-            className="w-full"
-          >
-            프로필 수정
-          </Button>
+            {/* Profile Edit Button */}
+            <Button
+              variantType="primary"
+              sizeType="m"
+              onClick={() => navigate("/profile")}
+              className="w-full"
+            >
+              프로필 수정
+            </Button>
+          </div>
 
           {/* Menu List */}
           <div className="bg-white rounded-[20px] border border-gray-100 p-5 space-y-4">
-            {menuItems.map((item) => {
-              const Icon = item.icon
-              return (
-                <div
-                  key={item.id}
-                  onClick={() => {
-                    if (item.external) {
-                      if (customWindow.ReactNativeWebView) {
-                        customWindow.ReactNativeWebView.postMessage(
-                          JSON.stringify({
-                            type: "OPEN_EXTERNAL_LINK",
-                            url: item.path,
-                          }),
-                        )
-                      } else if (
-                        customWindow.webkit?.messageHandlers?.openExternalLink
-                      ) {
-                        customWindow.webkit.messageHandlers.openExternalLink.postMessage(
-                          item.path,
-                        )
-                      } else if (customWindow.Android?.openExternalLink) {
-                        customWindow.Android.openExternalLink(item.path)
-                      } else {
-                        window.open(item.path, "_blank")
-                      }
+            {menuItems.map((item) => (
+              <div
+                key={item.id}
+                onClick={() => {
+                  if (item.external) {
+                    if (customWindow.ReactNativeWebView) {
+                      customWindow.ReactNativeWebView.postMessage(
+                        JSON.stringify({
+                          type: "OPEN_EXTERNAL_LINK",
+                          payload: { url: item.path },
+                        }),
+                      )
+                    } else if (
+                      customWindow.webkit?.messageHandlers.openExternalLink
+                    ) {
+                      customWindow.webkit.messageHandlers.openExternalLink.postMessage(
+                        item.path,
+                      )
+                    } else if (customWindow.Android?.openExternalLink) {
+                      customWindow.Android.openExternalLink(item.path)
                     } else {
-                      navigate(item.path)
+                      window.open(item.path, "_blank")
                     }
-                  }}
-                  className="flex items-center justify-between h-12"
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon className="w-4 h-4 text-gray-900" />
-                    <span className="font-m text-16px text-gray-900">
-                      {item.title}
-                    </span>
-                  </div>
-                  <CaretRightIcon className="w-3 h-3 text-gray-900" />
+                  } else {
+                    navigate(item.path)
+                  }
+                }}
+                className="flex items-center justify-between h-12"
+              >
+                <div className="flex items-center gap-3">
+                  <item.icon className="w-4 h-4 text-gray-900" />
+                  <span
+                    className={`text-16px text-gray-900 ${item.id === "notice" ? "font-semibold" : "font-m"}`}
+                  >
+                    {item.title}
+                  </span>
                 </div>
-              )
-            })}
+                <CaretRightIcon className="w-3 h-3 text-gray-900" />
+              </div>
+            ))}
           </div>
 
           {/* Footer */}
@@ -371,7 +371,6 @@ const MyPage = () => {
               </span>
             </div>
             <span className="font-r text-12px text-gray-300">
-              {/* TODO: 실제 버전 표시 */}
               v.1.1.4 version
             </span>
           </div>
