@@ -45,8 +45,11 @@ const MyPage = () => {
 
   useEffect(() => {
     setHeader({
-      display: false,
+      display: true,
+      title: "마이페이지",
       backgroundColor: "bg-system-bg",
+      left: "back",
+      onClickBack: () => navigate(-1),
     })
     setNavigation({ display: true })
   }, [navigate])
