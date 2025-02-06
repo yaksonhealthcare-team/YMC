@@ -17,7 +17,7 @@ export const MembershipCard = ({
 
   return (
     <div
-      className="p-5 rounded-xl cursor-pointer bg-white shadow-[0_2px_16px_0px_rgba(46,43,41,0.08)] hover:shadow-[0_2px_16px_0px_rgba(243,113,101,0.16)]"
+      className="p-5 rounded-xl cursor-pointer bg-white shadow-[0_2px_8px_0px_rgba(46,43,41,0.15)]"
       onClick={onClick}
     >
       <div className="flex flex-col gap-2">
