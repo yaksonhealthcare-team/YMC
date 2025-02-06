@@ -15,6 +15,7 @@ import { getAppleLoginUrl } from "../../libs/apple"
 declare global {
   interface Window {
     osType?: 'ios' | 'android';
+    fcmToken?: string;
   }
 }
 

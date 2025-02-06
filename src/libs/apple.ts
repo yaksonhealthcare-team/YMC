@@ -15,12 +15,11 @@ export const getAppleLoginUrl = () => {
 }
 
 export const getAppleToken = async (code: string) => {
-  // TODO: 백엔드에서 애플 토큰 처리 방식 확인 필요
   const { data } = await axiosClient.post("/auth/signin/social", {
     thirdPartyType: "A",
     SocialAccessToken: code,
-    device_token: "TODO: FCM 토큰 추가",
-    device_type: "TODO: 디바이스 타입 추가",
+    device_token: window.fcmToken || '',
+    device_type: window.osType || 'android'
   })
 
   return data.body[0].accessToken
