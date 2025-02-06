@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react"
+import { useMemo, useState } from "react"
 import XCircleIcon from "@components/icons/XCircleIcon.tsx"
 import { MembershipOption } from "../../../types/Membership"
 import clsx from "clsx"
@@ -11,34 +11,32 @@ import { Divider } from "@mui/material"
 import { addCart } from "../../../apis/cart.api"
 import { queryClient } from "../../../queries/clients"
 import { queryKeys } from "../../../queries/query.keys"
-import { useLayout } from "../../../contexts/LayoutContext"
+import { useOverlay } from "../../../contexts/ModalContext"
+import { MembershipBranchSelectModal } from "./MembershipBranchSelectModal.tsx"
+import { Branch } from "types/Branch.ts"
 
 interface Props {
   serviceType?: string
   options: MembershipOption[]
-  onClickBranchSelect: () => void
-  onAddToCartSuccess: () => void
   membershipId: string
 }
 
 export const OptionsBottomSheetContent = ({
   serviceType,
   options,
-  onClickBranchSelect,
-  onAddToCartSuccess,
   membershipId,
 }: Props) => {
-  const { selectedOptions, setSelectedOptions, selectedBranch } =
-    useMembershipOptionsStore()
+  const {
+    selectedOptions,
+    setSelectedOptions,
+    selectedBranch,
+    setSelectedBranch,
+    setIsBottomSheetOpen,
+  } = useMembershipOptionsStore()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const { setHeader } = useLayout()
+  const { openModal, closeOverlay } = useOverlay()
 
-  useEffect(() => {
-    setHeader({
-      left: "back",
-      title: "옵션 선택",
-    })
-  }, [])
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleSelectOption = (option: MembershipOption) => {
     const existingOption = selectedOptions.find(
@@ -107,7 +105,19 @@ export const OptionsBottomSheetContent = ({
 
       await addCart(cartItems)
       await queryClient.refetchQueries({ queryKey: queryKeys.carts.all })
-      onAddToCartSuccess()
+
+      openModal({
+        title: "장바구니 담기 완료",
+        message:
+          "선택하신 상품이 장바구니에 담겼습니다.\n장바구니로 이동하시겠습니까?",
+        onConfirm: () => {
+          closeOverlay()
+          window.location.href = "/cart"
+        },
+        onCancel: () => {
+          closeOverlay()
+        },
+      })
     } catch (error) {
       alert("장바구니 담기에 실패했습니다. 다시 시도해주세요.")
     }
@@ -125,7 +135,8 @@ export const OptionsBottomSheetContent = ({
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
-              onClickBranchSelect()
+              setIsBottomSheetOpen(false)
+              setIsModalOpen(true)
             }}
           >
             <span
@@ -264,6 +275,16 @@ export const OptionsBottomSheetContent = ({
           </div>
         </div>
       </div>
+
+      {isModalOpen && (
+        <MembershipBranchSelectModal
+          onBranchSelect={(branch: Branch) => {
+            setSelectedBranch(branch)
+            setIsBottomSheetOpen(true)
+          }}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   )
 }

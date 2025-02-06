@@ -19,85 +19,10 @@ import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { Branch } from "../../types/Branch"
 import { MembershipBranchSelectModal } from "./_fragments/MembershipBranchSelectModal"
+import { MembershipDetail } from "types/Membership.ts"
 
-const MembershipDetailPage = () => {
-  const { id } = useParams()
-  const location = useLocation()
-  const navigate = useNavigate()
-  const { setHeader, setNavigation } = useLayout()
-  const { data: membership } = useMembershipDetail(id!)
-  const { openBottomSheet, closeOverlay, openModal } = useOverlay()
-  const { setCurrentPath, setIsBottomSheetOpen, setSelectedBranch, clear } =
-    useMembershipOptionsStore()
-
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
-  // 페이지 진입 시 초기화
-  useEffect(() => {
-    clear()
-    closeOverlay()
-    setCurrentPath(location.pathname)
-  }, []) // 컴포넌트 마운트 시 한번만 실행
-
-  // 구매하기 버튼 클릭 시 바텀시트 열기
-  const handlePurchaseClick = () => {
-    openBottomSheet(
-      <OptionsBottomSheetContent
-        key={location.pathname}
-        serviceType={membership?.s_type}
-        options={membership?.options || []}
-        membershipId={id!}
-        onClickBranchSelect={handleBranchSelect}
-        onAddToCartSuccess={() => {
-          openModal({
-            title: "장바구니 담기 완료",
-            message:
-              "선택하신 상품이 장바구니에 담겼습니다.\n장바구니로 이동하시겠습니까?",
-            onConfirm: () => {
-              closeOverlay()
-              window.location.href = "/cart"
-            },
-            onCancel: () => {
-              closeOverlay()
-            },
-          })
-        }}
-      />,
-    )
-  }
-
-  // 지점 선택 버튼 클릭 시 모달 열기
-  const handleBranchSelect = () => {
-    setIsModalOpen(true)
-  }
-
-  useEffect(() => {
-    setHeader({
-      display: true,
-      component: (
-        <div className={"flex items-center justify-between px-5 py-3 h-[48px]"}>
-          <div
-            onClick={() => {
-              if (location.state?.fromBranchSelect) {
-                navigate("/membership", { replace: true })
-              } else {
-                navigate(-1)
-              }
-            }}
-          >
-            <CaretLeftIcon className={"w-5 h-5"} />
-          </div>
-          <CartIcon />
-        </div>
-      ),
-      backgroundColor: "bg-white",
-    })
-    setNavigation({ display: false })
-  }, [location.state, navigate, setHeader, setNavigation])
-
-  if (!membership) return <LoadingIndicator className="min-h-screen" />
-
-  const MembershipInfo = () => (
+const MembershipInfo = ({ membership }: { membership: MembershipDetail }) => {
+  return (
     <div className="flex flex-col px-5 py-6 gap-4">
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1">
@@ -141,61 +66,112 @@ const MembershipDetailPage = () => {
       </p>
     </div>
   )
+}
 
-  const MembershipDetail = () => {
-    const sortedCourses = useMemo(
-      () =>
-        membership?.courses?.sort(
-          (a, b) => Number(a.prior) - Number(b.prior),
-        ) || [],
-      [membership?.courses],
-    )
+const MembershipDetailContent = ({
+  membership,
+}: {
+  membership: MembershipDetail
+}) => {
+  const sortedCourses = useMemo(
+    () =>
+      membership?.courses?.sort((a, b) => Number(a.prior) - Number(b.prior)) ||
+      [],
+    [membership?.courses],
+  )
 
-    return (
-      <div className="flex flex-col px-5 py-6 gap-4">
-        <h2 className="text-gray-800 font-b text-16px">상세정보</h2>
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-2">
-            <StoreIcon className="text-primary" />
-            <span className="text-gray-800 font-m text-14px">
-              {membership.s_type || "회원권 유형 정보가 없습니다"}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <ClockIcon className="text-primary" />
-            <span className="text-gray-800 font-m text-14px">
-              {membership.s_time
-                ? `${membership.s_time}분 소요`
-                : "소요 시간 정보가 없습니다"}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <NoteIcon className="text-primary" />
-            <span className="text-gray-800 font-m text-14px">관리 코스</span>
-          </div>
-          {sortedCourses.length > 0 ? (
-            <div className="inline">
-              {sortedCourses.map((course) => (
-                <div key={course.sc_idx} className={"inline-flex items-center"}>
-                  <p className="inline font-r text-14px whitespace-nowrap">
-                    {course.sc_name} ({course.sc_min}분)
-                  </p>
-                  {sortedCourses.indexOf(course) !==
-                    sortedCourses.length - 1 && (
-                    <CaretRightIcon className="w-4 h-4 inline text-gray-400 mx-1.5" />
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-gray-400 font-r text-14px">
-              관리 코스 정보가 없습니다
-            </div>
-          )}
+  return (
+    <div className="flex flex-col px-5 py-6 gap-4">
+      <h2 className="text-gray-800 font-b text-16px">상세정보</h2>
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center gap-2">
+          <StoreIcon className="text-primary" />
+          <span className="text-gray-800 font-m text-14px">
+            {membership.s_type || "회원권 유형 정보가 없습니다"}
+          </span>
         </div>
+        <div className="flex items-center gap-2">
+          <ClockIcon className="text-primary" />
+          <span className="text-gray-800 font-m text-14px">
+            {membership.s_time
+              ? `${membership.s_time}분 소요`
+              : "소요 시간 정보가 없습니다"}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <NoteIcon className="text-primary" />
+          <span className="text-gray-800 font-m text-14px">관리 코스</span>
+        </div>
+        {sortedCourses.length > 0 ? (
+          <div className="inline">
+            {sortedCourses.map((course) => (
+              <div key={course.sc_idx} className={"inline-flex items-center"}>
+                <p className="inline font-r text-14px whitespace-nowrap">
+                  {course.sc_name} ({course.sc_min}분)
+                </p>
+                {sortedCourses.indexOf(course) !== sortedCourses.length - 1 && (
+                  <CaretRightIcon className="w-4 h-4 inline text-gray-400 mx-1.5" />
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-gray-400 font-r text-14px">
+            관리 코스 정보가 없습니다
+          </div>
+        )}
       </div>
+    </div>
+  )
+}
+
+const MembershipDetailPage = () => {
+  const { id } = useParams()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { setHeader, setNavigation } = useLayout()
+  const { data: membership } = useMembershipDetail(id!)
+  const { openBottomSheet } = useOverlay()
+  const { clear } = useMembershipOptionsStore()
+
+  // 구매하기 버튼 클릭 시 바텀시트 열기
+  const handlePurchaseClick = () => {
+    openBottomSheet(
+      <OptionsBottomSheetContent
+        key={location.pathname}
+        serviceType={membership?.s_type}
+        options={membership?.options || []}
+        membershipId={id!}
+      />,
     )
   }
+
+  useEffect(() => {
+    clear()
+    setHeader({
+      display: true,
+      component: (
+        <div className={"flex items-center justify-between px-5 py-3 h-[48px]"}>
+          <div
+            onClick={() => {
+              if (location.state?.fromBranchSelect) {
+                navigate("/membership", { replace: true })
+              } else {
+                navigate(-1)
+              }
+            }}
+          >
+            <CaretLeftIcon className={"w-5 h-5"} />
+          </div>
+          <CartIcon />
+        </div>
+      ),
+      backgroundColor: "bg-white",
+    })
+    setNavigation({ display: false })
+  }, [])
+
+  if (!membership) return <LoadingIndicator className="min-h-screen" />
 
   return (
     <div className="pb-[94px]">
@@ -221,14 +197,13 @@ const MembershipDetailPage = () => {
         )}
       </Swiper>
 
-      <MembershipInfo />
+      <MembershipInfo membership={membership} />
 
       <div className="w-full h-2 bg-gray-50" />
 
-      <MembershipDetail />
+      <MembershipDetailContent membership={membership} />
 
       {/* Bottom Fixed Button */}
-
       <div className="fixed bottom-0 left-0 right-0 h-[94px] bg-white border-t border-gray-50">
         <div className="px-5 pt-3">
           <Button
@@ -241,16 +216,6 @@ const MembershipDetailPage = () => {
           </Button>
         </div>
       </div>
-
-      {isModalOpen && (
-        <MembershipBranchSelectModal
-          onBranchSelect={(branch: Branch) => {
-            setSelectedBranch(branch)
-            setIsBottomSheetOpen(true)
-          }}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
     </div>
   )
 }
