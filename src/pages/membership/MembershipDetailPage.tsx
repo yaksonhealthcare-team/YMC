@@ -26,15 +26,9 @@ const MembershipDetailPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { data: membership } = useMembershipDetail(id!)
-  const { openBottomSheet, closeOverlay, overlayState, openModal } =
-    useOverlay()
-  const {
-    currentPath,
-    setCurrentPath,
-    setIsBottomSheetOpen,
-    setSelectedBranch,
-    clear,
-  } = useMembershipOptionsStore()
+  const { openBottomSheet, closeOverlay, openModal } = useOverlay()
+  const { setCurrentPath, setIsBottomSheetOpen, setSelectedBranch, clear } =
+    useMembershipOptionsStore()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
 

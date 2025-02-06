@@ -9,7 +9,6 @@ import { Button } from "@components/Button"
 import { useMembershipOptionsStore } from "../../../hooks/useMembershipOptions.ts"
 import { Divider } from "@mui/material"
 import { addCart } from "../../../apis/cart.api"
-import { useOverlay } from "../../../contexts/ModalContext"
 import { queryClient } from "../../../queries/clients"
 import { queryKeys } from "../../../queries/query.keys"
 import { useLayout } from "../../../contexts/LayoutContext"
@@ -29,7 +28,6 @@ export const OptionsBottomSheetContent = ({
   onAddToCartSuccess,
   membershipId,
 }: Props) => {
-  const { closeOverlay } = useOverlay()
   const { selectedOptions, setSelectedOptions, selectedBranch } =
     useMembershipOptionsStore()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
