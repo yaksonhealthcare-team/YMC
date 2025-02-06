@@ -26,10 +26,10 @@ const MembershipDetailPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { data: membership } = useMembershipDetail(id!)
-  const { openBottomSheet, closeOverlay, overlayState } = useOverlay()
+  const { openBottomSheet, closeOverlay, overlayState, openAlert } =
+    useOverlay()
   const {
     currentPath,
-    isBottomSheetOpen,
     setCurrentPath,
     setSelectedOptions,
     setIsBottomSheetOpen,
@@ -41,7 +41,28 @@ const MembershipDetailPage = () => {
 
   // 구매하기 버튼 클릭 시 바텀시트 열기
   const handlePurchaseClick = () => {
-    setIsBottomSheetOpen(true)
+    openBottomSheet(
+      <OptionsBottomSheetContent
+        key={location.pathname}
+        serviceType={membership?.s_type}
+        options={membership?.options || []}
+        membershipId={id!}
+        onClickBranchSelect={handleBranchSelect}
+        onAddToCartSuccess={() => {
+          setSelectedOptions([])
+          setIsBottomSheetOpen(false)
+          closeOverlay({ skipHistoryBack: true })
+          openAlert({
+            title: "장바구니 담기 완료",
+            description:
+              "선택하신 상품이 장바구니에 담겼습니다.\n장바구니로 이동하시겠습니까?",
+            onClose: () => {
+              navigate("/cart", { replace: true })
+            },
+          })
+        }}
+      />,
+    )
   }
 
   // 지점 선택 버튼 클릭 시 모달 열기
@@ -58,32 +79,13 @@ const MembershipDetailPage = () => {
     }
   }, [location.pathname, location.state])
 
-  useEffect(() => {
-    if (isBottomSheetOpen) {
-      openBottomSheet(
-        <OptionsBottomSheetContent
-          key={location.pathname}
-          serviceType={membership?.s_type}
-          options={membership?.options || []}
-          membershipId={id!}
-          onClickBranchSelect={handleBranchSelect}
-          onAddToCartSuccess={() => {
-            closeOverlay()
-            setSelectedOptions([])
-            navigate("/cart")
-          }}
-        />,
-      )
-    }
-  }, [isBottomSheetOpen, membership, id])
-
   // 바텀시트가 닫힐 때 상태 초기화
   useEffect(() => {
     if (!overlayState.isOpen && overlayState.type === null) {
       setIsBottomSheetOpen(false)
-      // history stack 정리
+      // history stack 정리 (장바구니로 이동하는 경우는 제외)
       const currentState = window.history.state
-      if (currentState?.bottomSheet) {
+      if (currentState?.bottomSheet && !currentState?.skipHistoryBack) {
         window.history.back()
       }
     }
