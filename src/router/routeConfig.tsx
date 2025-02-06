@@ -293,7 +293,7 @@ export const routeConfig: RouteConfig[] = [
     auth: true,
   },
   {
-    path: "/mypage/questionnaire/general",
+    path: "/mypage/questionnaire/common",
     element: <GeneralQuestionnaireHistory />,
     auth: true,
   },

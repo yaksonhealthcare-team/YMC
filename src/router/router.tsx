@@ -9,6 +9,7 @@ import { AuthProvider } from "../contexts/AuthContext.tsx"
 import { LayoutProvider } from "../contexts/LayoutContext.tsx"
 import { routeConfig, RouteConfig } from "./routeConfig"
 import { SignupProvider } from "../contexts/SignupContext.tsx"
+import { OverlayProvider } from "../contexts/ModalContext.tsx"
 import LoadingIndicator from "@components/LoadingIndicator"
 import ErrorPage from "@components/ErrorPage"
 
@@ -25,7 +26,11 @@ export const createRoutes = () => {
         element = <ProtectedRoute>{element}</ProtectedRoute>
       }
 
-      element = <LayoutProvider>{element}</LayoutProvider>
+      element = (
+        <LayoutProvider>
+          <OverlayProvider>{element}</OverlayProvider>
+        </LayoutProvider>
+      )
 
       return {
         path: route.path,

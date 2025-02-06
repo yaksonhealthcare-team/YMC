@@ -53,9 +53,7 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
-          <OverlayProvider>
-            <AppContent />
-          </OverlayProvider>
+          <AppRouter />
         </QueryClientProvider>
       </ThemeProvider>
     </ErrorBoundary>

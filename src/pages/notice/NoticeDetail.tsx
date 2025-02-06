@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useNotice } from "../../queries/useContentQueries.tsx"
 import { NoticeDetail as Notice } from "../../types/Content.ts"
@@ -8,6 +8,7 @@ import LoadingIndicator from "@components/LoadingIndicator.tsx"
 
 const NoticeDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { data: notice, isLoading, isError } = useNotice(id!)
 
@@ -16,9 +17,10 @@ const NoticeDetailPage: React.FC = () => {
       display: true,
       left: "back",
       backgroundColor: "bg-white",
+      onClickBack: () => navigate(-1),
     })
     setNavigation({ display: false })
-  }, [setHeader, setNavigation])
+  }, [setHeader, setNavigation, navigate])
 
   if (isLoading) {
     return <LoadingIndicator className="min-h-screen" />
@@ -69,9 +71,9 @@ const NoticeContent: React.FC<{ notice: Notice }> = ({ notice }) => {
       </div>
       {notice.files?.length > 0 && notice.files[0].fileurl && (
         <div className="mt-4">
-          <img 
-            src={notice.files[0].fileurl} 
-            alt="공지사항 이미지" 
+          <img
+            src={notice.files[0].fileurl}
+            alt="공지사항 이미지"
             className="w-full rounded-lg"
           />
         </div>
