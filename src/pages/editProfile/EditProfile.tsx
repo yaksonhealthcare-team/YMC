@@ -67,6 +67,7 @@ const EditProfile = () => {
       ),
       backgroundColor: "bg-white",
       display: true,
+      onClickBack: handleClickBackButton,
     })
     setNavigation({ display: false })
   }, [address, marketingAgreed, gender, profileImageUrl])
@@ -96,7 +97,7 @@ const EditProfile = () => {
         const updatedUser = await fetchUser(token)
         login({ user: updatedUser, token: token.replace("Bearer ", "") })
         showToast("프로필이 성공적으로 수정되었습니다.")
-        navigate("/mypage")
+        navigate(-1)
       }
     } catch (error) {
       console.error("프로필 수정 실패:", error)
@@ -126,8 +127,8 @@ const EditProfile = () => {
         confirmOptions={{
           text: "나가기",
           onClick: () => {
+            navigate(-1)
             closeOverlay()
-            navigate("/mypage")
           },
         }}
         cancelOptions={{
