@@ -338,7 +338,7 @@ const OverlayContainer: React.FC = () => {
           keepMounted
           fullWidth
           maxWidth="sm"
-          className="z-[9999]"
+          className="z-50"
           PaperProps={{
             style: {
               position: "fixed",

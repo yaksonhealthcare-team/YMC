@@ -11,7 +11,7 @@ export const MembershipBranchSelectModal = ({
   onClose,
 }: Props) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-[1000]">
       <div className="bg-white h-full">
         <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-lg font-semibold">지점 선택</h2>

@@ -26,18 +26,24 @@ const MembershipDetailPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { data: membership } = useMembershipDetail(id!)
-  const { openBottomSheet, closeOverlay, overlayState, openAlert } =
+  const { openBottomSheet, closeOverlay, overlayState, openModal } =
     useOverlay()
   const {
     currentPath,
     setCurrentPath,
-    setSelectedOptions,
     setIsBottomSheetOpen,
     setSelectedBranch,
     clear,
   } = useMembershipOptionsStore()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  // 페이지 진입 시 초기화
+  useEffect(() => {
+    clear()
+    closeOverlay()
+    setCurrentPath(location.pathname)
+  }, []) // 컴포넌트 마운트 시 한번만 실행
 
   // 구매하기 버튼 클릭 시 바텀시트 열기
   const handlePurchaseClick = () => {
@@ -49,14 +55,11 @@ const MembershipDetailPage = () => {
         membershipId={id!}
         onClickBranchSelect={handleBranchSelect}
         onAddToCartSuccess={() => {
-          setSelectedOptions([])
-          setIsBottomSheetOpen(false)
-          closeOverlay({ skipHistoryBack: true })
-          openAlert({
+          openModal({
             title: "장바구니 담기 완료",
-            description:
+            message:
               "선택하신 상품이 장바구니에 담겼습니다.\n장바구니로 이동하시겠습니까?",
-            onClose: () => {
+            onConfirm: () => {
               navigate("/cart", { replace: true })
             },
           })
@@ -67,29 +70,8 @@ const MembershipDetailPage = () => {
 
   // 지점 선택 버튼 클릭 시 모달 열기
   const handleBranchSelect = () => {
-    closeOverlay({ skipHistoryBack: true }) // 바텀시트 닫기 시 history back 스킵
     setIsModalOpen(true)
   }
-
-  useEffect(() => {
-    if (currentPath !== location.pathname) {
-      clear()
-      closeOverlay()
-      setCurrentPath(location.pathname)
-    }
-  }, [location.pathname, location.state])
-
-  // 바텀시트가 닫힐 때 상태 초기화
-  useEffect(() => {
-    if (!overlayState.isOpen && overlayState.type === null) {
-      setIsBottomSheetOpen(false)
-      // history stack 정리 (장바구니로 이동하는 경우는 제외)
-      const currentState = window.history.state
-      if (currentState?.bottomSheet && !currentState?.skipHistoryBack) {
-        window.history.back()
-      }
-    }
-  }, [overlayState])
 
   useEffect(() => {
     setHeader({

@@ -110,7 +110,6 @@ export const OptionsBottomSheetContent = ({
       await addCart(cartItems)
       await queryClient.refetchQueries({ queryKey: queryKeys.carts.all })
       onAddToCartSuccess()
-      closeOverlay()
     } catch (error) {
       alert("장바구니 담기에 실패했습니다. 다시 시도해주세요.")
     }
