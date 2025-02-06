@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo } from "react"
 import { Button } from "@components/Button"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useNavigate, useParams, useLocation } from "react-router-dom"
@@ -17,8 +17,6 @@ import MembershipPlaceholderImage from "@assets/images/MembershipPlaceholderImag
 import CartIcon from "@components/icons/CartIcon.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
 import LoadingIndicator from "@components/LoadingIndicator"
-import { Branch } from "../../types/Branch"
-import { MembershipBranchSelectModal } from "./_fragments/MembershipBranchSelectModal"
 import { MembershipDetail } from "types/Membership.ts"
 
 const MembershipInfo = ({ membership }: { membership: MembershipDetail }) => {

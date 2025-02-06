@@ -1,10 +1,7 @@
 import { AppRouter } from "./router/router.tsx"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
-import { OverlayProvider, useOverlay } from "./contexts/ModalContext.tsx"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { queryClient } from "./queries/clients.ts"
-import { useEffect } from "react"
-import { setGlobalShowToast } from "./queries/clients"
 import ErrorBoundary from "./components/ErrorBoundary"
 
 const theme = createTheme({
@@ -37,16 +34,6 @@ const theme = createTheme({
     fontFamily: "Pretendard, sans-serif", // Pretendard 폰트 설정
   },
 })
-
-function AppContent() {
-  const { showToast } = useOverlay()
-
-  useEffect(() => {
-    setGlobalShowToast(showToast)
-  }, [showToast])
-
-  return <AppRouter />
-}
 
 function App() {
   return (

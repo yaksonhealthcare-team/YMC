@@ -64,7 +64,7 @@ const MyPage = () => {
           <div className="px-5 flex gap-3">
             <Link
               to="/mypage/questionnaire/reservation"
-              onClick={(e) => {
+              onClick={() => {
                 closeOverlay()
               }}
               className="w-full"
@@ -75,7 +75,7 @@ const MyPage = () => {
             </Link>
             <Link
               to="/mypage/questionnaire/common"
-              onClick={(e) => {
+              onClick={() => {
                 closeOverlay()
               }}
               className="w-full"
