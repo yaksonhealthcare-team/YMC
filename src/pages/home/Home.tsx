@@ -79,16 +79,16 @@ const Home = () => {
           contents={[
             <div className="flex justify-between items-center bg-primary-300 rounded-2xl p-4">
               <div className="flex gap-2 flex-col text-white">
-                <Typography className={"font-b"}>
-                  <span className={"text-18px"}>{user?.name}님</span>{" "}
+                <Typography>
+                  <span className={"text-18px font-b"}>{user?.name}님</span>{" "}
                   반갑습니다.
                 </Typography>
                 <Typography className="font-m text-14px space-x-2">
-                  <span className="font-b">{user?.levelName}</span>{" "}
-                  <span className="font-m">
+                  <span>{user?.levelName}</span>{" "}
+                  <span className="font-b">
                     {user && user.point ? user.point : 0}
                   </span>
-                  <span className="font-b">P</span>
+                  <span>P</span>
                 </Typography>
               </div>
               <div
