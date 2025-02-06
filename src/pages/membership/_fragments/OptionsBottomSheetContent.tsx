@@ -120,12 +120,16 @@ export const OptionsBottomSheetContent = ({
     <div className="flex flex-col max-h-[610px] min-h-[500px]">
       {/* 콘텐츠 영역 */}
       <div className="flex-1 p-5">
-        {serviceType?.includes("지점") && (
+        {(!serviceType || serviceType?.includes("지점")) && (
           <button
             className={
               "w-full border border-gray-100 rounded-xl px-4 py-3 flex justify-between mb-3 items-center"
             }
-            onClick={onClickBranchSelect}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              onClickBranchSelect()
+            }}
           >
             <span
               className={`${selectedBranch ? "" : "text-[#bdbdbd]"} text-base font-normal leading-normal`}

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { useNavigate, useLocation } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useGeolocation } from "../../hooks/useGeolocation"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
@@ -11,13 +10,17 @@ import useIntersection from "../../hooks/useIntersection"
 import BranchPlaceholderImage from "../../assets/images/BranchPlaceholderImage.png"
 import { MembershipActiveBranchList } from "./_fragments/MembershipActiveBranchList"
 
-const MembershipBranchSelectPage = () => {
+interface Props {
+  onSelect?: (branch: Branch) => void
+  onClose: () => void
+}
+
+export const MembershipBranchSelectPage = ({ onSelect, onClose }: Props) => {
   const [query, setQuery] = useState("")
-  const navigate = useNavigate()
-  const location = useLocation()
   const { setHeader, setNavigation } = useLayout()
   const { location: geolocationLocation } = useGeolocation()
-  const { setSelectedBranch, setIsBottomSheetOpen } = useMembershipOptionsStore()
+  const { setSelectedBranch, setIsBottomSheetOpen } =
+    useMembershipOptionsStore()
 
   const {
     data: branchPages,
@@ -46,32 +49,40 @@ const MembershipBranchSelectPage = () => {
       title: "지점 선택",
       backgroundColor: "bg-white",
       display: true,
+      onClickBack: onClose,
     })
     setNavigation({ display: false })
-  }, [])
+
+    return () => {
+      setHeader({ display: false })
+      setNavigation({ display: true })
+    }
+  }, [setHeader, setNavigation, onClose])
 
   const handleBranchSelect = (branch: BranchSearchResult | Branch) => {
-    const branchData: Branch = 'b_idx' in branch ? {
-      id: branch.b_idx,
-      name: branch.b_name,
-      address: branch.b_addr,
-      latitude: Number(branch.b_lat),
-      longitude: Number(branch.b_lon),
-      canBookToday: branch.reserve === "Y",
-      distanceInMeters: branch.distance,
-      isFavorite: branch.b_bookmark === "Y",
-      brandCode: branch.brand_code,
-      brand: "therapist",
-    } : branch
+    const branchData: Branch =
+      "b_idx" in branch
+        ? {
+            id: branch.b_idx,
+            name: branch.b_name,
+            address: branch.b_addr,
+            latitude: Number(branch.b_lat),
+            longitude: Number(branch.b_lon),
+            canBookToday: branch.reserve === "Y",
+            distanceInMeters: branch.distance,
+            isFavorite: branch.b_bookmark === "Y",
+            brandCode: branch.brand_code,
+            brand: "therapist",
+          }
+        : branch
 
-    setSelectedBranch(branchData)
-    setIsBottomSheetOpen(true)
-    
-    const returnPath = location.state?.returnPath || "/membership"
-    navigate(returnPath, { 
-      replace: true,
-      state: { fromBranchSelect: true }
-    })
+    if (onSelect) {
+      onSelect(branchData)
+    } else {
+      setSelectedBranch(branchData)
+      setIsBottomSheetOpen(true)
+    }
+    onClose()
   }
 
   return (
@@ -98,7 +109,9 @@ const MembershipBranchSelectPage = () => {
                 onClick={() => handleBranchSelect(branch)}
               >
                 <img
-                  className={"border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"}
+                  className={
+                    "border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"
+                  }
                   src={BranchPlaceholderImage}
                   alt={"지점 사진"}
                 />
@@ -134,5 +147,3 @@ const MembershipBranchSelectPage = () => {
     </div>
   )
 }
-
-export default MembershipBranchSelectPage

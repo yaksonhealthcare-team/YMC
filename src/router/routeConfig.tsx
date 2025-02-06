@@ -113,9 +113,6 @@ const ReservationHistory = lazy(
 const MembershipHistoryPage = lazy(
   () => import("../pages/member-history/membership/MembershipHistoryPage"),
 )
-const MembershipSelectBranchPage = lazy(
-  () => import("../pages/membership/MembershipBranchSelectPage"),
-)
 const ProfileChangePhoneNumber = lazy(
   () => import("../pages/editProfile/ProfileChangePhoneNumber"),
 )
@@ -231,18 +228,13 @@ export const routeConfig: RouteConfig[] = [
     auth: true,
   },
   {
-    path: "/membership/select-branch",
-    element: <MembershipSelectBranchPage />,
+    path: "/membership/usage/:id",
+    element: <MembershipUsageHistory />,
     auth: true,
   },
   {
     path: "/membership/:id",
     element: <MembershipDetailPage />,
-    auth: true,
-  },
-  {
-    path: "/membership/usage/:id",
-    element: <MembershipUsageHistory />,
     auth: true,
   },
   {

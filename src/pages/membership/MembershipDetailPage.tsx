@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Button } from "@components/Button"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useNavigate, useParams, useLocation } from "react-router-dom"
@@ -17,6 +17,8 @@ import MembershipPlaceholderImage from "@assets/images/MembershipPlaceholderImag
 import CartIcon from "@components/icons/CartIcon.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
 import LoadingIndicator from "@components/LoadingIndicator"
+import { Branch } from "../../types/Branch"
+import { MembershipBranchSelectModal } from "./_fragments/MembershipBranchSelectModal"
 
 const MembershipDetailPage = () => {
   const { id } = useParams()
@@ -31,8 +33,22 @@ const MembershipDetailPage = () => {
     setCurrentPath,
     setSelectedOptions,
     setIsBottomSheetOpen,
+    setSelectedBranch,
     clear,
   } = useMembershipOptionsStore()
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  // 구매하기 버튼 클릭 시 바텀시트 열기
+  const handlePurchaseClick = () => {
+    setIsBottomSheetOpen(true)
+  }
+
+  // 지점 선택 버튼 클릭 시 모달 열기
+  const handleBranchSelect = () => {
+    closeOverlay() // 바텀시트 닫기
+    setIsModalOpen(true)
+  }
 
   useEffect(() => {
     if (currentPath !== location.pathname) {
@@ -40,30 +56,26 @@ const MembershipDetailPage = () => {
       closeOverlay()
       setCurrentPath(location.pathname)
     }
-  }, [location.pathname])
+  }, [location.pathname, location.state])
 
-  const optionsBottomSheetContent = useMemo(
-    () => (
-      <OptionsBottomSheetContent
-        key={location.pathname}
-        serviceType={membership?.s_type}
-        options={membership?.options || []}
-        membershipId={id!}
-        onClickBranchSelect={() => {
-          closeOverlay()
-          navigate("/membership/select-branch", {
-            state: { returnPath: location.pathname },
-          })
-        }}
-        onAddToCartSuccess={() => {
-          closeOverlay()
-          setSelectedOptions([])
-          navigate("/cart")
-        }}
-      />
-    ),
-    [membership, location.pathname],
-  )
+  useEffect(() => {
+    if (isBottomSheetOpen) {
+      openBottomSheet(
+        <OptionsBottomSheetContent
+          key={location.pathname}
+          serviceType={membership?.s_type}
+          options={membership?.options || []}
+          membershipId={id!}
+          onClickBranchSelect={handleBranchSelect}
+          onAddToCartSuccess={() => {
+            closeOverlay()
+            setSelectedOptions([])
+            navigate("/cart")
+          }}
+        />,
+      )
+    }
+  }, [isBottomSheetOpen, membership, id])
 
   useEffect(() => {
     setHeader({
@@ -87,14 +99,7 @@ const MembershipDetailPage = () => {
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
-  }, [])
-
-  useEffect(() => {
-    if (isBottomSheetOpen) {
-      openBottomSheet(optionsBottomSheetContent)
-      setIsBottomSheetOpen(false)
-    }
-  }, [isBottomSheetOpen])
+  }, [location.state, navigate, setHeader, setNavigation])
 
   if (!membership) return <LoadingIndicator className="min-h-screen" />
 
@@ -233,7 +238,7 @@ const MembershipDetailPage = () => {
       <div className="fixed bottom-0 left-0 right-0 h-[94px] bg-white border-t border-gray-50">
         <div className="px-5 pt-3">
           <Button
-            onClick={() => openBottomSheet(optionsBottomSheetContent)}
+            onClick={handlePurchaseClick}
             variantType="primary"
             sizeType="l"
             className="w-full"
@@ -242,6 +247,16 @@ const MembershipDetailPage = () => {
           </Button>
         </div>
       </div>
+
+      {isModalOpen && (
+        <MembershipBranchSelectModal
+          onBranchSelect={(branch: Branch) => {
+            setSelectedBranch(branch)
+            setIsBottomSheetOpen(true)
+          }}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   )
 }
