@@ -206,7 +206,7 @@ export const findEmail = async ({
   birthDate: string
 }): Promise<string> => {
   const { data } = await axiosClient.post<HTTPResponse<{ email: string }[]>>(
-    "/auth/find-account",
+    "/auth/account/find-account",
     {
       name,
       mobileno: mobileNumber,

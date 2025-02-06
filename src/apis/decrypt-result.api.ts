@@ -33,7 +33,7 @@ export const fetchDecryptResult = async (request: DecryptRequest) => {
 
 export const findEmailWithDecryptData = async (request: DecryptRequest): Promise<FindEmailResponse> => {
   const { data } = await axiosClient.post<HTTPResponse<FindEmailResponse>>(
-    "/auth/find_acount",
+    "/auth/account/find-account",
     { ...request },
   )
   return data.body
