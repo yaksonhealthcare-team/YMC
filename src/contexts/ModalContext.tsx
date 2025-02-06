@@ -345,8 +345,8 @@ const OverlayContainer: React.FC = () => {
               position: "fixed",
               bottom: 0,
               margin: 0,
-              borderTopLeftRadius: 16,
-              borderTopRightRadius: 16,
+              borderTopLeftRadius: 24,
+              borderTopRightRadius: 24,
               maxHeight:
                 (options as BottomSheetOptions)?.height === "large"
                   ? "90vh"
@@ -358,49 +358,16 @@ const OverlayContainer: React.FC = () => {
         >
           <DialogContent className={"p-0"}>
             <div className="flex flex-col items-center">
+              <div className="w-[52px] h-[4px] bg-[#ECECEC] rounded-full mt-3 mb-4" />
               {(options?.title as string) && (
-                <h2 className="text-xl font-bold mb-4 text-center">
+                <h2 className="text-[18px] font-semibold mb-4 text-center">
                   {options?.title as string}
                 </h2>
               )}
-              <div className="w-full text-center mb-6">
+              <div className="w-full text-center">
                 {type === OverlayTypes.BOTTOM_SHEET && (content as ReactNode)}
               </div>
             </div>
-            <Divider className={"border-[#F8F8F8"} />
-            {(options as BottomSheetOptions)?.buttons && (
-              <div className="w-full p-5">
-                <div className="flex gap-5">
-                  {(options as BottomSheetOptions)?.buttons?.map(
-                    (button, index) => (
-                      <Button
-                        key={index}
-                        onClick={() => {
-                          button.onClick()
-                          closeOverlay()
-                        }}
-                        variant={button.variant || "contained"}
-                        fullWidth
-                        className={`h-[52px] rounded-xl font-bold text-base px-5 ${
-                          button.variant === "outlined"
-                            ? "border-primary text-primary hover:border-primary"
-                            : "bg-primary text-white hover:bg-primary"
-                        }`}
-                        sx={{
-                          textTransform: "none",
-                          boxShadow: "none",
-                          "&:hover": {
-                            boxShadow: "none",
-                          },
-                        }}
-                      >
-                        {button.text}
-                      </Button>
-                    ),
-                  )}
-                </div>
-              </div>
-            )}
           </DialogContent>
         </Dialog>
       )

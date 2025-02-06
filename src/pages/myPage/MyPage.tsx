@@ -56,31 +56,31 @@ const MyPage = () => {
 
   const handleOpenQuestionnaire = () => {
     openBottomSheet(
-      <div className={"flex flex-col"}>
-        <p className={"mx-5 mt-5 font-sb text-18px"}>
-          {"보고 싶은 문진 종류를 선택해주세요."}
-        </p>
-        <div className={"mt-10 border-t border-gray-50 flex gap-2 pt-3 px-5"}>
-          <Button
-            className={"w-full"}
-            variantType={"line"}
-            onClick={() => {
-              closeOverlay()
-              navigate("/mypage/questionnaire/reservation")
-            }}
-          >
-            {"예약 문진 보기"}
-          </Button>
-          <Button
-            className={"w-full"}
-            variantType={"primary"}
-            onClick={() => {
-              closeOverlay()
-              navigate("/mypage/questionnaire/general")
-            }}
-          >
-            {"공통 문진 보기"}
-          </Button>
+      <div className="flex flex-col">
+        <div className="px-5 pt-4 pb-6 flex flex-col gap-2">
+          <div className="text-center text-18px font-sb text-gray-900">
+            {"보고 싶은 문진 종류를 선택해주세요."}
+          </div>
+          <div className="text-center text-16px font-r text-gray-900">
+            {
+              "지점 및 회원권 이동은 현재 이용 지점에\n유선으로 문의하여 주세요."
+            }
+          </div>
+        </div>
+        <div className="pt-3 pb-[30px] border-t border-gray-50">
+          <div className="px-5">
+            <Button
+              className="w-full"
+              variantType="primary"
+              sizeType="l"
+              onClick={() => {
+                closeOverlay()
+                navigate("/mypage/questionnaire/reservation")
+              }}
+            >
+              {"예약하기"}
+            </Button>
+          </div>
         </div>
       </div>,
     )
