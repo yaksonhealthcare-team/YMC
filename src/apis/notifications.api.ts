@@ -55,3 +55,15 @@ export const fetchUnreadNotificationsCount = async () => {
   return data.body.filter((notification) => notification.is_read === "안읽음")
     .length
 }
+
+export const updateNotificationReadStatus = async (
+  notificationIds: number[],
+) => {
+  const { data } = await axiosClient.patch<HTTPResponse<any>>(
+    "/notifications/read-status",
+    {
+      notification_ids: notificationIds,
+    },
+  )
+  return data
+}

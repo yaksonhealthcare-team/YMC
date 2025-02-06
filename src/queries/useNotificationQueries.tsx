@@ -11,6 +11,7 @@ import {
   getNotificationSettings,
   updateNotificationSettings,
   fetchUnreadNotificationsCount,
+  updateNotificationReadStatus,
 } from "../apis/notifications.api.ts"
 
 export const useNotifications = (filters: NotificationFilters) =>
@@ -43,12 +44,26 @@ export const useUpdateNotificationSettings = () => {
   })
 }
 
+export const useUpdateNotificationReadStatus = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: updateNotificationReadStatus,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.notifications.list({}),
+      })
+      queryClient.invalidateQueries({ queryKey: ["unreadNotificationsCount"] })
+    },
+  })
+}
+
 export const useUnreadNotificationsCount = () => {
   return useQuery({
     queryKey: ["unreadNotificationsCount"],
     queryFn: fetchUnreadNotificationsCount,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60, // 1분
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    staleTime: 1000 * 30, // 30초
   })
 }

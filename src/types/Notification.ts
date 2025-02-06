@@ -1,4 +1,5 @@
 export interface Notification {
+  id: number
   readStatus: ReadStatus
   mainCategory: string
   subCategory?: string
@@ -10,6 +11,7 @@ export interface Notification {
 }
 
 export interface NotificationResponse {
+  id: number
   is_read: ReadStatus
   main_category: string
   sub_category: string
@@ -70,8 +72,8 @@ export interface NotificationSettings {
 }
 
 export interface NotificationSettingsResponse {
-  reservation_yn: 'Y' | 'N'
-  payment_yn: 'Y' | 'N'
-  point_yn: 'Y' | 'N'
-  notification_yn: 'Y' | 'N'
+  reservation_yn: "Y" | "N"
+  payment_yn: "Y" | "N"
+  point_yn: "Y" | "N"
+  notification_yn: "Y" | "N"
 }
