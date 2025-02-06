@@ -112,14 +112,22 @@ export const Notification = () => {
       </div>
 
       <ul>
-        {(notifications?.pages.flatMap((page) => page) || []).map(
-          (notification, index) => (
-            <li key={index} className={`${index && "mt-4"}`}>
-              <NotificationCard notification={notification} />
-            </li>
-          ),
+        {(notifications?.pages.flatMap((page) => page) || []).length === 0 ? (
+          <div className="flex justify-center items-center h-[200px] text-gray-400 font-r text-14px">
+            알림이 없습니다
+          </div>
+        ) : (
+          <>
+            {(notifications?.pages.flatMap((page) => page) || []).map(
+              (notification, index) => (
+                <li key={index} className={`${index && "mt-4"}`}>
+                  <NotificationCard notification={notification} />
+                </li>
+              ),
+            )}
+            <div ref={observerTarget} className={"h-4"} />
+          </>
         )}
-        <div ref={observerTarget} className={"h-4"} />
       </ul>
     </Container>
   )
