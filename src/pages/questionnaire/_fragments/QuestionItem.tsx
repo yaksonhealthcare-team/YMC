@@ -376,15 +376,15 @@ export const QuestionItem = ({
 
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-primary text-xl font-bold mb-3">
+      <p className="text-primary text-xl font-bold">
         {question.question_text}
       </p>
       {question.answer_type === "M" && (
-        <p className="text-gray-400 text-sm font-medium mb-10">
+        <p className="text-gray-400 text-sm font-medium">
           * 복수 선택 가능
         </p>
       )}
-      {renderQuestion()}
+      <div className="mt-[28px]">{renderQuestion()}</div>
     </div>
   )
 }
