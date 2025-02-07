@@ -38,3 +38,12 @@ export const earnPoints = async (paymentId: string) => {
     p_idx: paymentId,
   })
 }
+
+export const fetchPoints = async () => {
+  const { data } =
+    await axiosClient.get<HTTPResponse<{ total_point: string }>>(
+      "/points/points",
+    )
+
+  return Number(data.body.total_point.replace(/,/g, ""))
+}

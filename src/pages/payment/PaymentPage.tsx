@@ -7,10 +7,11 @@ import FixedButtonContainer from "@components/FixedButtonContainer.tsx"
 import { Radio } from "@components/Radio.tsx"
 import { useNavigate } from "react-router-dom"
 import { usePaymentStore } from "../../hooks/usePaymentStore.ts"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { CartItemOption } from "../../types/Cart.ts"
+import { fetchPoints } from "../../apis/points.api.ts"
 
 interface OrderResponse {
   orderId: string
@@ -38,7 +39,16 @@ const PaymentPage = () => {
   >("naver")
   const [point, setPoint] = useState<string>("")
   const [isAgreed, setIsAgreed] = useState(false)
-  const [availablePoint] = useState<number>(2000) // TODO: API로 사용 가능한 포인트 조회
+
+  // 포인트 조회
+  const { data: availablePoint = 0, isLoading: isPointLoading } = useQuery({
+    queryKey: ["points"],
+    queryFn: fetchPoints,
+    staleTime: 1000 * 60 * 5, // 5분
+    gcTime: 1000 * 60 * 30, // 30분
+    suspense: false,
+    retry: 1,
+  })
 
   const navigate = useNavigate()
 
@@ -213,7 +223,7 @@ const PaymentPage = () => {
     }
   }
 
-  if (isLoading) {
+  if (isLoading || isPointLoading) {
     return <LoadingIndicator className="min-h-screen" />
   }
 
