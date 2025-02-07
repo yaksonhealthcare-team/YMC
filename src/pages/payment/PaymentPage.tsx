@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import CartCard from "@components/CartCard.tsx"
+import PaymentCard from "@components/PaymentCard.tsx"
 import { Divider } from "@mui/material"
 import { Button } from "@components/Button.tsx"
 import FixedButtonContainer from "@components/FixedButtonContainer.tsx"
@@ -107,7 +107,7 @@ const PaymentPage = () => {
   const renderItems = () => {
     if (type === "membership") {
       return items.map((item) => (
-        <CartCard
+        <PaymentCard
           key={item.id}
           {...item}
           onCountChange={(optionIndex, newCount) =>
