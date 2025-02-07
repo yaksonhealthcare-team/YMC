@@ -126,6 +126,7 @@ const MembershipPage = () => {
                   "&::-webkit-scrollbar": { display: "none" },
                 },
                 "& .MuiTab-root": {
+                  minWidth:'unset',
                   minHeight: 48,
                   padding: "14px 0",
                   marginRight: "24px",
@@ -134,6 +135,12 @@ const MembershipPage = () => {
                   color: "#9E9E9E",
                   "&.Mui-selected": {
                     color: "#212121",
+                  },
+                  "&:first-of-type": {
+                    marginLeft: "20px",
+                  },
+                  "&:last-of-type": {
+                    marginRight: "20px",
                   },
                 },
               }}
@@ -155,7 +162,7 @@ const MembershipPage = () => {
                 !selectedCategory ? "bg-primary" : "bg-[rgba(33,33,33,0.45)]"
               }`}
             >
-              <span className="text-white text-12px font-medium leading-[15.36px]">
+              <span className="text-white text-12px font-medium leading-[12px]">
                 전체
               </span>
             </button>
@@ -169,7 +176,7 @@ const MembershipPage = () => {
                     : "bg-[rgba(33,33,33,0.45)]"
                 }`}
               >
-                <span className="text-white text-12px font-medium leading-[15.36px] px-1">
+                <span className="text-white text-12px font-medium leading-[1.4] px-1">
                   {category.sc_name}
                 </span>
               </button>

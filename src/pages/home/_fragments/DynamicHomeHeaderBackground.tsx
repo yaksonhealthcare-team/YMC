@@ -27,7 +27,7 @@ const DynamicHomeHeaderBackground = memo(
   }) => {
     return (
       <div
-        className="relative flex flex-col"
+        className="relative flex flex-col px-5"
         style={{
           width: "calc(100% + 20px)",
           marginLeft: "-10px",

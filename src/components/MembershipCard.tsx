@@ -12,7 +12,7 @@ const STYLES = {
     "flex justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px]",
   content: "flex flex-col gap-1.5",
   tags: "flex gap-1.5",
-  title: "font-b text-16px text-gray-700",
+  title: "font-sb text-16px text-gray-700",
   info: {
     wrapper: "flex items-center",
     text: "font-r text-12px text-gray-600",
@@ -22,7 +22,7 @@ const STYLES = {
     wrapper: "flex flex-col justify-between items-end",
     history: "inline-flex items-baseline gap-[2px] cursor-pointer",
     historyText: "font-r text-12px text-gray-500 leading-[1]",
-    historyIcon: "w-[10px] h-[10px] relative top-[1px]",
+    historyIcon: "w-[12px] h-[12px] relative top-[1px]",
   },
 } as const
 
@@ -98,6 +98,7 @@ export const MembershipCard = ({
             variantType="primary"
             sizeType="xs"
             onClick={handleReservationClick}
+           className="text-[14px]"
           >
             예약하기
           </Button>

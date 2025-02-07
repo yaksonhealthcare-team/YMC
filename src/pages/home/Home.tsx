@@ -64,8 +64,8 @@ const Home = () => {
   if (!user) return <SplashScreen />
 
   return (
-    <div className="pb-[70px]">
-      <Container className="relative w-full bg-system-bg py-4 overflow-x-hidden scrollbar-hide">
+    <div>
+      <Container className="relative w-full bg-system-bg pt-4 overflow-x-hidden scrollbar-hide px-0">
         <DynamicHomeHeaderBackground
           header={
             <div className={"space-y-2"}>
@@ -92,13 +92,13 @@ const Home = () => {
                 </Typography>
               </div>
               <div
-                className="rounded-full bg-white text-primary-300 py-2 px-5 cursor-pointer font-b"
+                className="rounded-full bg-white text-primary-300 py-2 px-5 cursor-pointer font-sb"
                 onClick={handleReservationClick}
               >
                 예약하기
               </div>
             </div>,
-            <div className="mt-4">
+            <div className="mt-3">
               <Swiper
                 modules={[Pagination]}
                 pagination={{
@@ -187,35 +187,41 @@ const Home = () => {
 const ReserveCardSection = () => {
   const { data: upcomingReservations } = useUpcomingReservations()
   const navigate = useNavigate()
+  const { clear } = useMembershipOptionsStore()
 
-  if (!upcomingReservations || upcomingReservations.length === 0) {
-    return (
-      <EmptyCard
-        title={`예정된 예약이 없어요.\n예약을 통해 관리를 받아보세요.`}
-      />
-    )
+  const handleReservationClick = () => {
+    clear()
+    navigate("/reservation/form")
   }
 
   return (
-    <div className="mt-6">
+    <div className="mt-6 px-5">
       <Title
         type="arrow"
         title="예정된 예약"
-        count={`${upcomingReservations.length}건`}
+        count={upcomingReservations?.length ? `${upcomingReservations.length}건` : "0건"}
         onClick={() => navigate("/member-history/reservation")}
       />
-      <Swiper
-        spaceBetween={10}
-        slidesPerView={1}
-        style={{ overflow: "visible" }}
-        className="mt-2"
-      >
-        {upcomingReservations.map((reservation) => (
-          <SwiperSlide key={reservation.id}>
-            <ReserveCard reservation={reservation} />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      {!upcomingReservations || upcomingReservations.length === 0 ? (
+        <EmptyCard
+          title={`예정된 예약이 없어요.\n예약을 통해 관리를 받아보세요.`}
+          button="예약하러 가기"
+          onClick={handleReservationClick}
+        />
+      ) : (
+        <Swiper
+          spaceBetween={10}
+          slidesPerView={1}
+          style={{ overflow: "visible" }}
+          className="mt-2"
+        >
+          {upcomingReservations.map((reservation) => (
+            <SwiperSlide key={reservation.id}>
+              <ReserveCard reservation={reservation} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      )}
     </div>
   )
 }
@@ -230,7 +236,7 @@ const MembershipCardSection = ({
   const navigate = useNavigate()
 
   return (
-    <div className="mt-6">
+    <div className="mt-6 px-5">
       <Title
         type="arrow"
         title="보유 회원권"
@@ -281,8 +287,8 @@ const BrandSection = () => {
 
   return (
     <div className="mt-6">
-      <Title title="브랜드 관" />
-      <SwiperBrandCard className="mt-2" onBrandClick={handleBrandClick} />
+      <Title className="px-5" title="브랜드 관" />
+      <SwiperBrandCard className="mt-2 px-5" onBrandClick={handleBrandClick} />
     </div>
   )
 }
@@ -292,7 +298,7 @@ const EventSection = () => {
   const navigate = useNavigate()
 
   return (
-    <div className="mt-6">
+    <div className="mt-6 px-5">
       <Title title="이벤트 프로모션" />
       {events && events.length > 0 ? (
         <Swiper
@@ -344,7 +350,7 @@ const BusinessInfo = () => {
   const navigate = useNavigate()
 
   return (
-    <div className="mt-12 px-6 pt-8 pb-10 flex flex-col gap-4 bg-white relative -mx-6 -my-4">
+    <div className="mt-12 px-6 pt-8 pb-10 flex flex-col gap-4 bg-white relative">
       <span className="font-b text-16px text-gray-600">
         (주) 약손명가 헬스케어
       </span>

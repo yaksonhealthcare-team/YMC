@@ -158,7 +158,7 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
 
   return (
     <div className="fixed inset-0 bg-white">
-      <div className="absolute inset-0 overflow-y-auto pb-[120px]">
+      <div className="absolute inset-0 overflow-y-auto pb-[120px] pt-[48px]">
         <div className="max-w-[500px] min-w-[375px] mx-auto">
           <div className="p-5">
             <p className="font-medium text-gray-400 mb-3">
@@ -169,22 +169,12 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
             </p>
 
             {currentQuestion && (
-              <>
-                <h2 className="text-primary text-xl font-bold mb-3">
-                  {currentQuestion.question_text}
-                </h2>
-                {currentQuestion.answer_type === "M" && (
-                  <p className="text-gray-500 text-sm font-medium mb-10">
-                    * 복수 선택 가능
-                  </p>
-                )}
-                <QuestionItem
-                  question={currentQuestion}
-                  formik={formik}
-                  fieldName={getFieldName(currentQuestion)}
-                  onValidationChange={handleValidationChange}
-                />
-              </>
+              <QuestionItem
+                question={currentQuestion}
+                formik={formik}
+                fieldName={getFieldName(currentQuestion)}
+                onValidationChange={handleValidationChange}
+              />
             )}
           </div>
         </div>
@@ -193,7 +183,7 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100">
         <div className="max-w-[500px] min-w-[375px] mx-auto p-5 flex gap-2">
           <Button
-            className="flex-1"
+            className="flex-1 !px-5 !py-3.5"
             variantType="line"
             sizeType="l"
             onClick={handlePrev}
@@ -202,7 +192,7 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
             이전
           </Button>
           <Button
-            className="flex-1"
+            className="flex-1 !px-5 !py-3.5"
             variantType="primary"
             sizeType="l"
             onClick={handleNext}
