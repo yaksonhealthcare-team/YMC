@@ -162,7 +162,7 @@ const MembershipPage = () => {
                 !selectedCategory ? "bg-primary" : "bg-[rgba(33,33,33,0.45)]"
               }`}
             >
-              <span className="text-white text-12px font-medium leading-[15.36px]">
+              <span className="text-white text-12px font-medium leading-[12px]">
                 전체
               </span>
             </button>
@@ -176,7 +176,7 @@ const MembershipPage = () => {
                     : "bg-[rgba(33,33,33,0.45)]"
                 }`}
               >
-                <span className="text-white text-12px font-medium leading-[15.36px] px-1">
+                <span className="text-white text-12px font-medium leading-[1.4] px-1">
                   {category.sc_name}
                 </span>
               </button>
