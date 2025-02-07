@@ -51,6 +51,15 @@ const Login = () => {
   const handleSocialLogin = async (
     provider: "kakao" | "naver" | "google" | "apple",
   ) => {
+    if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({
+          type: "socialLogin",
+          provider,
+        }),
+      )
+      return
+    }
     let url = ""
 
     switch (provider) {
