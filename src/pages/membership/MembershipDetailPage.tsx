@@ -134,12 +134,17 @@ const MembershipDetailPage = () => {
 
   // 구매하기 버튼 클릭 시 바텀시트 열기
   const handlePurchaseClick = () => {
+    if (!membership) return
+
     openBottomSheet(
       <OptionsBottomSheetContent
         key={location.pathname}
-        serviceType={membership?.s_type}
-        options={membership?.options || []}
+        serviceType={membership.s_type}
+        options={membership.options || []}
         membershipId={id!}
+        brand={membership.brand_name}
+        title={membership.s_name}
+        duration={parseInt(membership.s_time || "0")}
       />,
     )
   }

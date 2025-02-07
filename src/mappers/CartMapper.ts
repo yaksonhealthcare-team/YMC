@@ -47,6 +47,8 @@ export class CartMapper {
       title: dto.membership.s_name,
       duration: Number(dto.membership.s_time),
       options: [this.createOption(dto)],
+      branchId: dto.branch.b_idx,
+      brandCode: dto.branch.brand_code,
     }
   }
 
@@ -62,12 +64,16 @@ export class CartMapper {
     if (existingOptionIndex === -1) {
       return {
         ...item,
+        branchId: dto.branch.b_idx,
+        brandCode: dto.branch.brand_code,
         options: [...item.options, this.createOption(dto)],
       }
     }
 
     return {
       ...item,
+      branchId: dto.branch.b_idx,
+      brandCode: dto.branch.brand_code,
       options: item.options.map((option, index) =>
         index === existingOptionIndex
           ? {

@@ -7,7 +7,7 @@ import FixedButtonContainer from "@components/FixedButtonContainer.tsx"
 import { Radio } from "@components/Radio.tsx"
 import { useNavigate } from "react-router-dom"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
-import { useCartItems } from "../../queries/useCartQueries.tsx"
+import { usePaymentStore } from "../../hooks/usePaymentStore.ts"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 
@@ -22,8 +22,11 @@ interface OrderResponse {
 
 const PaymentPage = () => {
   const { setHeader, setNavigation } = useLayout()
-  const [type] = useState<"membership" | "additional">("additional")
-  const { data: cartWithSummary, isLoading } = useCartItems()
+  const {
+    items: paymentItems,
+    selectedBranch,
+    clear: clearPayment,
+  } = usePaymentStore()
   const [selectedPayment, setSelectedPayment] = useState<
     "card" | "simple" | "virtual"
   >("card")
@@ -42,7 +45,7 @@ const PaymentPage = () => {
       const response = await axios.post<OrderResponse>(
         "/api/orders/memberships",
         {
-          membershipId: items[0]?.id,
+          membershipId: paymentItems[0]?.s_idx,
           point: pointAmount,
         },
       )
@@ -60,66 +63,34 @@ const PaymentPage = () => {
     setNavigation({
       display: false,
     })
+
+    // 결제 정보가 없으면 이전 페이지로 이동
+    if (paymentItems.length === 0 || !selectedBranch) {
+      navigate(-1)
+    }
+
+    // 언마운트 시 결제 정보 초기화
+    return () => {
+      clearPayment()
+    }
   }, [])
 
-  if (isLoading) {
-    return <LoadingIndicator className="min-h-screen" />
-  }
-
-  const items = cartWithSummary?.items || []
-
   const calculateTotalAmount = () => {
-    if (type === "membership") {
-      return items.reduce((total, item) => {
-        return (
-          total +
-          item.options.reduce(
-            (subTotal, option) =>
-              subTotal + option.price * option.items[0].count,
-            0,
-          )
-        )
-      }, 0)
-    } else {
-      return 0
-    }
+    return paymentItems.reduce(
+      (total, item) => total + item.price * item.amount,
+      0,
+    )
   }
 
   const totalAmount = calculateTotalAmount()
-  const discountAmount = type === "membership" ? 825600 : 0
-  const pointAmount = point ? parseInt(point) : 0
-  const finalAmount = totalAmount - discountAmount - pointAmount
-
-  const handleDelete = (id: string) => {
-    // TODO: 삭제 로직 구현
-    console.log("삭제:", id)
-  }
-
-  const handleCountChange = (
-    itemId: string,
-    optionIndex: string,
-    newCount: number,
-  ) => {
-    // TODO: 수량 변경 로직 구현
-    console.log("수량 변경:", itemId, optionIndex, newCount)
-  }
-
-  const renderItems = () => {
-    if (type === "membership") {
-      return items.map((item) => (
-        <PaymentCard
-          key={item.id}
-          {...item}
-          onCountChange={(optionIndex, newCount) =>
-            handleCountChange(item.id, optionIndex, newCount)
-          }
-          onDelete={() => handleDelete(item.id)}
-        />
-      ))
+  const discountAmount = paymentItems.reduce((total, item) => {
+    if (item.originalPrice) {
+      return total + (item.originalPrice - item.price) * item.amount
     }
-
-    return []
-  }
+    return total
+  }, 0)
+  const pointAmount = point ? parseInt(point) : 0
+  const finalAmount = totalAmount - pointAmount
 
   const handlePointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -168,7 +139,7 @@ const PaymentPage = () => {
     appendInput("P_MID", orderData.pgMid)
     appendInput("P_OID", orderData.orderId)
     appendInput("P_AMT", orderData.amount.toString())
-    appendInput("P_GOODS", items[0]?.title || "약손한의원 회원권")
+    appendInput("P_GOODS", paymentItems[0]?.title || "약손한의원 회원권")
     appendInput("P_UNAME", "회원")
     appendInput("P_NEXT_URL", orderData.returnUrl)
     appendInput("P_NOTI", `${orderData.orderId},${pointAmount}`)
@@ -222,14 +193,40 @@ const PaymentPage = () => {
         {/* 상품 목록 섹션 */}
         <div className="p-5">
           <div className="flex items-center gap-1 mb-4">
-            <span className="text-gray-700 font-sb text-16px">
-              {type === "membership" ? "담은 회원권" : "추가 관리"}
-            </span>
+            <span className="text-gray-700 font-sb text-16px">담은 회원권</span>
             <span className="text-primary font-sb text-16px">
-              {items.length}개
+              {paymentItems.length}개
             </span>
           </div>
-          {renderItems()}
+          {paymentItems.map((item) => (
+            <PaymentCard
+              key={item.ss_idx}
+              brand={item.brand}
+              branchType={item.branchType}
+              title={item.title}
+              duration={item.duration}
+              options={[
+                {
+                  ss_idx: item.ss_idx.toString(),
+                  ss_price: item.price.toLocaleString(),
+                  original_price: item.originalPrice?.toLocaleString(),
+                  ss_count: item.sessions.toString(),
+                  items: [
+                    {
+                      cartId: item.ss_idx.toString(),
+                      count: item.amount,
+                    },
+                  ],
+                },
+              ]}
+              onCountChange={(_, newCount) => {
+                // 바로구매에서는 수량 변경 불가
+              }}
+              onDelete={() => {
+                // 바로구매에서는 삭제 불가
+              }}
+            />
+          ))}
         </div>
 
         {/* 포인트 섹션 */}

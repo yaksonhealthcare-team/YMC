@@ -10,6 +10,7 @@ import {
   useUpdateCartItemMutation,
 } from "../../queries/useCartQueries.tsx"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
+import { usePaymentStore } from "../../hooks/usePaymentStore.ts"
 
 const CartPage = () => {
   const navigate = useNavigate()
@@ -17,6 +18,7 @@ const CartPage = () => {
   const { data: cartWithSummary, isLoading } = useCartItems()
   const { mutate: removeCartItems } = useDeleteCartItemsMutation()
   const { mutate: updateCartItem } = useUpdateCartItemMutation()
+  const { setItems: setPaymentItems } = usePaymentStore()
 
   const items = cartWithSummary?.items || []
   const summary = cartWithSummary?.summary
@@ -49,6 +51,32 @@ const CartPage = () => {
 
   const getTotalItemCount = () =>
     items.reduce((prev, acc) => prev + acc.options.length, 0)
+
+  const handlePayment = () => {
+    if (!items.length) return
+
+    // 장바구니 아이템을 PaymentStore 형식으로 변환
+    const paymentItems = items.flatMap((item) =>
+      item.options.map((option) => ({
+        s_idx: parseInt(item.id),
+        ss_idx: parseInt(option.items[0].cartId),
+        b_idx: parseInt(item.branchId),
+        brand_code: item.brandCode,
+        amount: option.items[0].count,
+        b_type: "지정지점" as const,
+        title: item.title,
+        brand: item.brand,
+        branchType: item.branchType,
+        duration: item.duration,
+        price: option.price,
+        originalPrice: option.originalPrice,
+        sessions: option.sessions,
+      })),
+    )
+
+    setPaymentItems(paymentItems)
+    navigate("/payment")
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -140,7 +168,7 @@ const CartPage = () => {
         <Button
           variantType="primary"
           sizeType="l"
-          onClick={() => navigate("/payment")}
+          onClick={handlePayment}
           className={"w-full"}
           disabled={getTotalItemCount() === 0}
         >

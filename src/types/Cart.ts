@@ -10,6 +10,8 @@ export interface CartItem {
   title: string
   duration: number
   options: CartItemOption[]
+  branchId: string
+  brandCode: string
 }
 
 export interface CartItemOption {

@@ -7,6 +7,7 @@ import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { Button } from "@components/Button"
 import { useMembershipOptionsStore } from "../../../hooks/useMembershipOptions.ts"
+import { usePaymentStore } from "../../../hooks/usePaymentStore.ts"
 import { Divider } from "@mui/material"
 import { addCart } from "../../../apis/cart.api"
 import { queryClient } from "../../../queries/clients"
@@ -20,12 +21,18 @@ interface Props {
   serviceType?: string
   options: MembershipOption[]
   membershipId: string
+  brand: string
+  title: string
+  duration: number
 }
 
 export const OptionsBottomSheetContent = ({
   serviceType,
   options,
   membershipId,
+  brand,
+  title,
+  duration,
 }: Props) => {
   const navigate = useNavigate()
   const {
@@ -39,6 +46,9 @@ export const OptionsBottomSheetContent = ({
   const { openModal, closeOverlay } = useOverlay()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const { setItems: setPaymentItems, setBranch: setPaymentBranch } =
+    usePaymentStore()
 
   const handleSelectOption = (option: MembershipOption) => {
     const existingOption = selectedOptions.find(
@@ -131,18 +141,33 @@ export const OptionsBottomSheetContent = ({
       return
     }
 
+    if (selectedOptions.length === 0) {
+      alert("회차를 선택해주세요")
+      return
+    }
+
     try {
-      const cartItems = selectedOptions.map(({ option, count }) => ({
+      // 결제 스토어에 선택한 정보 저장
+      const paymentItems = selectedOptions.map(({ option, count }) => ({
         s_idx: parseInt(membershipId),
         ss_idx: parseInt(option.ss_idx),
         b_idx: parseInt(selectedBranch.id),
         brand_code: selectedBranch.brandCode,
         amount: count,
         b_type: "지정지점" as const,
+        title,
+        brand,
+        branchType: serviceType?.includes("지점") ? "지정 지점" : "전지점",
+        duration,
+        price: parseInt(option.ss_price.replace(/,/g, "")),
+        originalPrice: option.original_price
+          ? parseInt(option.original_price.replace(/,/g, ""))
+          : undefined,
+        sessions: parseInt(option.ss_count),
       }))
 
-      await addCart(cartItems)
-      await queryClient.refetchQueries({ queryKey: queryKeys.carts.all })
+      setPaymentItems(paymentItems)
+      setPaymentBranch(selectedBranch)
 
       navigate("/payment")
       closeOverlay()
