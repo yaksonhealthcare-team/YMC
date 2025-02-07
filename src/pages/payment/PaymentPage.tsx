@@ -27,12 +27,6 @@ const PaymentPage = () => {
     clear: clearPayment,
   } = usePaymentStore()
 
-  // TODO: 결제 정보 관리 개선 필요
-  // 1. 스토어의 결제 정보가 새로고침 시 초기화되는 문제
-  // 2. 결제 정보 영속성 관리 (localStorage 또는 queryClient 활용 검토)
-  // 3. 잘못된 접근 시 예외 처리 (직접 URL 입력 등)
-  // 4. 결제 완료/취소 시 스토어 상태 관리 방안 수립
-
   const [selectedPayment, setSelectedPayment] = useState<
     "card" | "simple" | "virtual"
   >("card")
@@ -74,19 +68,27 @@ const PaymentPage = () => {
     if (paymentItems.length === 0 || !selectedBranch) {
       navigate(-1)
     }
-
-    // 언마운트 시 결제 정보 초기화
-    return () => {
-      clearPayment()
-    }
   }, [])
 
+  // 뒤로가기 버튼 처리
   useEffect(() => {
-    // 결제 정보가 없으면 이전 페이지로 이동
-    if (paymentItems.length === 0 || !selectedBranch) {
-      navigate(-1)
+    const handlePopState = () => {
+      clearPayment()
     }
-  }, [paymentItems, selectedBranch])
+    window.addEventListener("popstate", handlePopState)
+    return () => window.removeEventListener("popstate", handlePopState)
+  }, [])
+
+  // TODO: 결제 완료/취소 시 처리 함수
+  const handlePaymentComplete = () => {
+    clearPayment()
+    // TODO: 결제 완료 페이지로 이동
+  }
+
+  const handlePaymentCancel = () => {
+    clearPayment()
+    navigate(-1)
+  }
 
   const calculateTotalAmount = () => {
     return paymentItems.reduce(

@@ -28,7 +28,13 @@ interface PaymentStore {
 export const usePaymentStore = create<PaymentStore>((set) => ({
   items: [],
   selectedBranch: null,
-  setItems: (items) => set({ items }),
-  setBranch: (branch) => set({ selectedBranch: branch }),
-  clear: () => set({ items: [], selectedBranch: null }),
+  setItems: (items) => {
+    set({ items })
+  },
+  setBranch: (branch) => {
+    set({ selectedBranch: branch })
+  },
+  clear: () => {
+    set({ items: [], selectedBranch: null })
+  },
 }))
