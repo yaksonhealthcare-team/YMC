@@ -46,7 +46,6 @@ const PaymentPage = () => {
     queryFn: fetchPoints,
     staleTime: 1000 * 60 * 5, // 5분
     gcTime: 1000 * 60 * 30, // 30분
-    suspense: false,
     retry: 1,
   })
 
@@ -276,7 +275,7 @@ const PaymentPage = () => {
               type="number"
               value={point}
               onChange={handlePointChange}
-              placeholder={`${availablePoint.toLocaleString()}`}
+              placeholder="0"
               className="flex-1 p-3 border border-gray-100 rounded-xl font-r text-16px"
             />
             <Button
