@@ -98,7 +98,7 @@ const Home = () => {
                 예약하기
               </div>
             </div>,
-            <div className="mt-4">
+            <div className="mt-3">
               <Swiper
                 modules={[Pagination]}
                 pagination={{
