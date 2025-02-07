@@ -134,11 +134,13 @@ const Login = () => {
 
           {/* 이메일 로그인 */}
           <Button
-            variantType="primary"
+            fullCustom
             sizeType="l"
+            className="bg-primary border-primary text-white font-b flex items-center px-3 py-4"
             onClick={() => navigate("/login/email")}
           >
-            이메일로 로그인
+            <div className="w-6 h-6" />
+            <span className="flex-1 text-center">이메일로 로그인</span>
           </Button>
         </div>
 
