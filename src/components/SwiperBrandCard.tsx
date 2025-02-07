@@ -16,10 +16,10 @@ export const SwiperBrandCard = ({
 
   return (
     <div className={`w-full overflow-x-auto scrollbar-hide ${className}`}>
-      <div className="flex gap-4 px-5 pb-2">
+      <div className="flex gap-4 pb-2 pr-5">
         {brands &&
-          brands.map((brand) => (
-            <div key={brand.code}>
+          brands.map((brand, index) => (
+            <div key={brand.code} className={index === brands.length - 1 ? 'pr-5' : ''}>
               <BrandCard
                 name={brand.name}
                 brandSrc={brand.imageUrl || ""}
