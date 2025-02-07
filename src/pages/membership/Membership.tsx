@@ -88,7 +88,7 @@ const MembershipPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-system-bg">
+    <div className="min-h-screen bg-system-bg scrollbar-hide overflow-y-scroll">
       {/* 고정 영역 */}
       <div className="fixed top-[48px] left-0 right-0 z-10">
         {/* 안내 메시지 */}
