@@ -94,7 +94,7 @@ const Login = () => {
             className="bg-[#FEE500] border-[#FEE500] text-[#262626] font-b flex items-center px-5 py-[13.75px]"
           >
             <KakaoIcon className="w-6 h-6" />
-            <span className="flex-1 text-center text">카카오톡으로 로그인</span>
+            <span className="flex-1 text-center text-16px">카카오톡으로 로그인</span>
           </Button>
 
           {/* 네이버 로그인 */}
@@ -105,7 +105,7 @@ const Login = () => {
             className="bg-[#03C75A] border-[#03C75A] text-white font-b flex items-center px-5 h-[52px]"
           >
             <NaverIcon className="w-6 h-6 text-white" />
-            <span className="flex-1 text-center">네이버로 로그인</span>
+            <span className="flex-1 text-center text-16px">네이버로 로그인</span>
           </Button>
 
           {/* 구글 로그인 (웹 또는 Android에서만 표시) */}
@@ -117,7 +117,7 @@ const Login = () => {
               className="bg-white border-[#DDDDDD] text-[#212121] font-b flex items-center px-5 h-[52px]"
             >
               <GoogleIcon className="w-6 h-6" />
-              <span className="flex-1 text-center">Google로 로그인</span>
+              <span className="flex-1 text-center text-16px">Google로 로그인</span>
             </Button>
           )}
 
@@ -130,7 +130,7 @@ const Login = () => {
               className="bg-[#000000] border-black text-white font-b flex items-center px-5 h-[52px]"
             >
               <AppleIcon className="w-6 h-6 text-white" />
-              <span className="flex-1 text-center">Apple로 로그인</span>
+              <span className="flex-1 text-center text-16px">Apple로 로그인</span>
             </Button>
           )}
 
@@ -142,12 +142,12 @@ const Login = () => {
             onClick={() => navigate("/login/email")}
           >
             <div className="w-6 h-6" />
-            <span className="flex-1 text-center">이메일로 로그인</span>
+            <span className="flex-1 text-center text-16px">이메일로 로그인</span>
           </Button>
         </div>
 
         {/* 회원가입 */}
-        <div className="mt-[60px] mb-[60px] flex justify-center items-center gap-5">
+        <div className="mt-[94px] mb-[60px] flex justify-center items-center gap-5">
           <Typography className="text-gray-500 font-sb text-16px">
             처음이신가요?
           </Typography>
