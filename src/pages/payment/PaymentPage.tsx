@@ -99,17 +99,6 @@ const PaymentPage = () => {
     return () => window.removeEventListener("popstate", handlePopState)
   }, [])
 
-  // TODO: 결제 완료/취소 시 처리 함수
-  const handlePaymentComplete = () => {
-    clearPayment()
-    // TODO: 결제 완료 페이지로 이동
-  }
-
-  const handlePaymentCancel = () => {
-    clearPayment()
-    navigate(-1)
-  }
-
   const calculateTotalAmount = () => {
     return paymentItems.reduce(
       (total, item) => total + item.price * item.amount,
