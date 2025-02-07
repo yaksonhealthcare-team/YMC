@@ -32,6 +32,7 @@ const PaymentPage = () => {
   >("naver")
   const [point, setPoint] = useState<string>("")
   const [isAgreed, setIsAgreed] = useState(false)
+  const [availablePoint] = useState<number>(2000) // TODO: API로 사용 가능한 포인트 조회
 
   const navigate = useNavigate()
 
@@ -118,6 +119,34 @@ const PaymentPage = () => {
     }
 
     return []
+  }
+
+  const handlePointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    const numValue = value === "" ? 0 : parseInt(value)
+
+    // 숫자가 아닌 경우
+    if (isNaN(numValue)) {
+      return
+    }
+
+    // 음수인 경우
+    if (numValue < 0) {
+      setPoint("0")
+      return
+    }
+
+    // 사용 가능한 포인트보다 큰 경우
+    if (numValue > availablePoint) {
+      setPoint(availablePoint.toString())
+      return
+    }
+
+    setPoint(value)
+  }
+
+  const handleUseAllPoints = () => {
+    setPoint(availablePoint.toString())
   }
 
   // 이니시스 결제 요청
@@ -210,14 +239,15 @@ const PaymentPage = () => {
             <input
               type="number"
               value={point}
-              onChange={(e) => setPoint(e.target.value)}
-              placeholder="2,000"
+              onChange={handlePointChange}
+              placeholder={`${availablePoint.toLocaleString()}`}
               className="flex-1 p-3 border border-gray-100 rounded-xl font-r text-16px"
             />
             <Button
               variantType="secondary"
               sizeType="m"
-              onClick={() => setPoint("2000")}
+              onClick={handleUseAllPoints}
+              disabled={availablePoint === 0}
             >
               전액 사용
             </Button>
@@ -226,7 +256,9 @@ const PaymentPage = () => {
             <span className="text-gray-400 text-14px font-m">
               사용 가능 포인트
             </span>
-            <span className="text-primary text-14px font-m">2,000P</span>
+            <span className="text-primary text-14px font-m">
+              {availablePoint.toLocaleString()}P
+            </span>
           </div>
         </div>
 
