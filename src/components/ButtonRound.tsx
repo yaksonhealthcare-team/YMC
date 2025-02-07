@@ -10,7 +10,7 @@ export const ButtonRound = (props: ButtonRoundProps) => {
     <>
       <button
         onClick={onClick}
-        className="h-9 px-3 bg-primary rounded-full font-sb text-12px text-white"
+        className="h-9 px-4 bg-primary rounded-full font-sb text-12px text-white"
       >
         {title}
       </button>
