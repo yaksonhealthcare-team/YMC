@@ -18,7 +18,7 @@ const CartPage = () => {
   const { data: cartWithSummary, isLoading } = useCartItems()
   const { mutate: removeCartItems } = useDeleteCartItemsMutation()
   const { mutate: updateCartItem } = useUpdateCartItemMutation()
-  const { setItems: setPaymentItems } = usePaymentStore()
+  const { setItems: setPaymentItems, setBranch } = usePaymentStore()
 
   const items = cartWithSummary?.items || []
   const summary = cartWithSummary?.summary
@@ -74,7 +74,23 @@ const CartPage = () => {
       })),
     )
 
+    // 첫 번째 아이템의 지점 정보로 selectedBranch 설정
+    const firstItem = items[0]
+    const selectedBranch = {
+      id: firstItem.branchId,
+      brandCode: firstItem.brandCode,
+      name: firstItem.brand,
+      address: "", // 장바구니 API에서는 지점 주소를 제공하지 않음
+      latitude: 0, // 장바구니 API에서는 위도를 제공하지 않음
+      longitude: 0, // 장바구니 API에서는 경도를 제공하지 않음
+      canBookToday: false,
+      distanceInMeters: null,
+      isFavorite: false,
+      brand: "therapist" as const,
+    }
+
     setPaymentItems(paymentItems)
+    setBranch(selectedBranch)
     navigate("/payment")
   }
 
