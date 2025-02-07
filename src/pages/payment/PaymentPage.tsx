@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom"
 import { usePaymentStore } from "../../hooks/usePaymentStore.ts"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
+import LoadingIndicator from "@components/LoadingIndicator.tsx"
 
 interface OrderResponse {
   orderId: string
@@ -26,6 +27,7 @@ const PaymentPage = () => {
     selectedBranch,
     clear: clearPayment,
   } = usePaymentStore()
+  const [isLoading, setIsLoading] = useState(true)
 
   const [selectedPayment, setSelectedPayment] = useState<
     "card" | "simple" | "virtual"
@@ -67,7 +69,15 @@ const PaymentPage = () => {
     // 결제 정보가 없으면 이전 페이지로 이동
     if (paymentItems.length === 0 || !selectedBranch) {
       navigate(-1)
+      return
     }
+
+    // 0.5초 동안 로딩 화면 표시
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 500)
+
+    return () => clearTimeout(timer)
   }, [])
 
   // 뒤로가기 버튼 처리
@@ -200,6 +210,10 @@ const PaymentPage = () => {
       console.error("결제 요청 중 오류 발생:", error)
       alert("결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.")
     }
+  }
+
+  if (isLoading) {
+    return <LoadingIndicator className="min-h-screen" />
   }
 
   return (
