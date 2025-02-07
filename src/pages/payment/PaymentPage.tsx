@@ -6,7 +6,6 @@ import { Button } from "@components/Button.tsx"
 import FixedButtonContainer from "@components/FixedButtonContainer.tsx"
 import { Radio } from "@components/Radio.tsx"
 import { useNavigate } from "react-router-dom"
-import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { usePaymentStore } from "../../hooks/usePaymentStore.ts"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
@@ -230,9 +229,9 @@ const PaymentPage = () => {
                   sessions: item.sessions,
                   price: item.price,
                   originalPrice: item.originalPrice || item.price,
-                },
+                } as any, // FIXME: 임시로 타입 에러 해결, 추후 타입 리팩토링 필요
               ]}
-              onCountChange={(_, newCount) => {
+              onCountChange={() => {
                 // 바로구매에서는 수량 변경 불가
               }}
               onDelete={() => {

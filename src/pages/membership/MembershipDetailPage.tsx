@@ -142,8 +142,8 @@ const MembershipDetailPage = () => {
         serviceType={membership.s_type}
         options={membership.options || []}
         membershipId={id!}
-        brand={membership.brand_name}
-        title={membership.s_name}
+        brand={membership.brand_name || "No Name"}
+        title={membership.s_name || "No Name"}
         duration={parseInt(membership.s_time || "0")}
       />,
     )
