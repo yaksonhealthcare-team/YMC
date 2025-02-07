@@ -92,7 +92,7 @@ const Home = () => {
                 </Typography>
               </div>
               <div
-                className="rounded-full bg-white text-primary-300 py-2 px-5 cursor-pointer font-b"
+                className="rounded-full bg-white text-primary-300 py-2 px-5 cursor-pointer font-sb"
                 onClick={handleReservationClick}
               >
                 예약하기
