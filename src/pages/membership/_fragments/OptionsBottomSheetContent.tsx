@@ -14,6 +14,7 @@ import { queryKeys } from "../../../queries/query.keys"
 import { useOverlay } from "../../../contexts/ModalContext"
 import { MembershipBranchSelectModal } from "./MembershipBranchSelectModal.tsx"
 import { Branch } from "types/Branch.ts"
+import { useNavigate } from "react-router-dom"
 
 interface Props {
   serviceType?: string
@@ -26,6 +27,7 @@ export const OptionsBottomSheetContent = ({
   options,
   membershipId,
 }: Props) => {
+  const navigate = useNavigate()
   const {
     selectedOptions,
     setSelectedOptions,
@@ -120,6 +122,32 @@ export const OptionsBottomSheetContent = ({
       })
     } catch (error) {
       alert("장바구니 담기에 실패했습니다. 다시 시도해주세요.")
+    }
+  }
+
+  const handlePurchase = async () => {
+    if (!selectedBranch) {
+      alert("지점을 선택해주세요")
+      return
+    }
+
+    try {
+      const cartItems = selectedOptions.map(({ option, count }) => ({
+        s_idx: parseInt(membershipId),
+        ss_idx: parseInt(option.ss_idx),
+        b_idx: parseInt(selectedBranch.id),
+        brand_code: selectedBranch.brandCode,
+        amount: count,
+        b_type: "지정지점" as const,
+      }))
+
+      await addCart(cartItems)
+      await queryClient.refetchQueries({ queryKey: queryKeys.carts.all })
+
+      navigate("/payment")
+      closeOverlay()
+    } catch (error) {
+      alert("결제 진행 중 오류가 발생했습니다. 다시 시도해주세요.")
     }
   }
 
@@ -237,7 +265,7 @@ export const OptionsBottomSheetContent = ({
       {/* 하단 고정 영역 */}
       <div className="border-t border-gray-100">
         <div className="px-5 py-5">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mb-3">
             <div className="flex items-center gap-1">
               <span className="font-r text-16px text-gray-900">총</span>
               <span className="font-b text-18px text-primary">
@@ -251,22 +279,20 @@ export const OptionsBottomSheetContent = ({
               </span>
             </div>
           </div>
-        </div>
-
-        <div className="px-5 pb-5">
           <div className="flex gap-2">
             <Button
-              variantType="line"
+              variantType="grayLine"
               sizeType="l"
+              onClick={handleAddToCart}
               className="flex-1"
               disabled={selectedOptions.length === 0}
-              onClick={handleAddToCart}
             >
               장바구니 담기
             </Button>
             <Button
               variantType="primary"
               sizeType="l"
+              onClick={handlePurchase}
               className="flex-1"
               disabled={selectedOptions.length === 0}
             >

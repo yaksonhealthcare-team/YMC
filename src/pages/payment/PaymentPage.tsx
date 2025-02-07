@@ -8,6 +8,17 @@ import { Radio } from "@components/Radio.tsx"
 import { useNavigate } from "react-router-dom"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useCartItems } from "../../queries/useCartQueries.tsx"
+import { useMutation } from "@tanstack/react-query"
+import axios from "axios"
+
+interface OrderResponse {
+  orderId: string
+  pgMid: string
+  timestamp: string
+  signature: string
+  returnUrl: string
+  amount: number
+}
 
 const PaymentPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -23,6 +34,20 @@ const PaymentPage = () => {
   const [isAgreed, setIsAgreed] = useState(false)
 
   const navigate = useNavigate()
+
+  // 주문서 발행 API 호출
+  const createOrder = useMutation({
+    mutationFn: async () => {
+      const response = await axios.post<OrderResponse>(
+        "/api/orders/memberships",
+        {
+          membershipId: items[0]?.id,
+          point: pointAmount,
+        },
+      )
+      return response.data
+    },
+  })
 
   useEffect(() => {
     setHeader({
@@ -95,17 +120,71 @@ const PaymentPage = () => {
     return []
   }
 
-  const handlePayment = () => {
-    // TODO: 실제 결제 처리 로직 구현
+  // 이니시스 결제 요청
+  const requestPayment = async (orderData: OrderResponse) => {
+    const paymentForm = document.createElement("form")
+    paymentForm.method = "POST"
+    paymentForm.action = "https://mobile.inicis.com/smart/payment/"
+    paymentForm.acceptCharset = "UTF-8"
 
-    // 결제 완료 후 완료 페이지로 이동
-    navigate("/payment/complete", {
-      state: {
-        amount: finalAmount,
-        type: type,
-        items: items,
-      },
-    })
+    const appendInput = (name: string, value: string) => {
+      const input = document.createElement("input")
+      input.type = "hidden"
+      input.name = name
+      input.value = value
+      paymentForm.appendChild(input)
+    }
+
+    // 필수 파라미터
+    appendInput("P_MID", orderData.pgMid)
+    appendInput("P_OID", orderData.orderId)
+    appendInput("P_AMT", orderData.amount.toString())
+    appendInput("P_GOODS", items[0]?.title || "약손한의원 회원권")
+    appendInput("P_UNAME", "회원")
+    appendInput("P_NEXT_URL", orderData.returnUrl)
+    appendInput("P_NOTI", `${orderData.orderId},${pointAmount}`)
+    appendInput("P_RESERVED", "centerCd=Y")
+
+    // 결제수단별 파라미터
+    switch (selectedPayment) {
+      case "card":
+        appendInput("P_INI_PAYMENT", "CARD")
+        break
+      case "simple":
+        switch (simplePayment) {
+          case "naver":
+            appendInput("P_INI_PAYMENT", "NAVERPAY")
+            break
+          case "kakao":
+            appendInput("P_INI_PAYMENT", "KAKAOPAY")
+            break
+          case "payco":
+            appendInput("P_INI_PAYMENT", "PAYCO")
+            break
+        }
+        break
+      case "virtual":
+        appendInput("P_INI_PAYMENT", "VBANK")
+        break
+    }
+
+    document.body.appendChild(paymentForm)
+    paymentForm.submit()
+  }
+
+  const handlePayment = async () => {
+    if (!isAgreed) {
+      alert("결제 진행 동의가 필요합니다.")
+      return
+    }
+
+    try {
+      const orderData = await createOrder.mutateAsync()
+      await requestPayment(orderData)
+    } catch (error) {
+      console.error("결제 요청 중 오류 발생:", error)
+      alert("결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.")
+    }
   }
 
   return (
