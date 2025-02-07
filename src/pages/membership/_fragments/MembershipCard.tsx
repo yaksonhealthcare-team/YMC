@@ -20,8 +20,8 @@ export const MembershipCard = ({
       className="p-5 rounded-xl cursor-pointer bg-white shadow-[0_2px_8px_0px_rgba(46,43,41,0.15)]"
       onClick={onClick}
     >
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-between items-center">
+      <div className="flex flex-col">
+        <div className="flex justify-between items-center mb-3">
           <Tag 
             type="rect" 
             title={membership.s_type?.replace("회원권", "").trim()} 
@@ -33,7 +33,7 @@ export const MembershipCard = ({
             </div>
           )}
         </div>
-        <span className="text-primary font-sb text-14px">
+        <span className="text-14px mb-1">
           {membership.brand_name}
         </span>
         <div className="flex justify-between items-start">
