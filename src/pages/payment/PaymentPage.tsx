@@ -10,6 +10,7 @@ import { usePaymentStore } from "../../hooks/usePaymentStore.ts"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
+import { CartItemOption } from "../../types/Cart.ts"
 
 interface OrderResponse {
   orderId: string
@@ -245,7 +246,7 @@ const PaymentPage = () => {
                   sessions: item.sessions,
                   price: item.price,
                   originalPrice: item.originalPrice || item.price,
-                } as any, // FIXME: 임시로 타입 에러 해결, 추후 타입 리팩토링 필요
+                } satisfies CartItemOption,
               ]}
               onCountChange={() => {
                 // 바로구매에서는 수량 변경 불가
