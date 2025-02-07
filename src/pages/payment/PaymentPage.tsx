@@ -27,6 +27,13 @@ const PaymentPage = () => {
     selectedBranch,
     clear: clearPayment,
   } = usePaymentStore()
+
+  // TODO: 결제 정보 관리 개선 필요
+  // 1. 스토어의 결제 정보가 새로고침 시 초기화되는 문제
+  // 2. 결제 정보 영속성 관리 (localStorage 또는 queryClient 활용 검토)
+  // 3. 잘못된 접근 시 예외 처리 (직접 URL 입력 등)
+  // 4. 결제 완료/취소 시 스토어 상태 관리 방안 수립
+
   const [selectedPayment, setSelectedPayment] = useState<
     "card" | "simple" | "virtual"
   >("card")
@@ -74,6 +81,13 @@ const PaymentPage = () => {
       clearPayment()
     }
   }, [])
+
+  useEffect(() => {
+    // 결제 정보가 없으면 이전 페이지로 이동
+    if (paymentItems.length === 0 || !selectedBranch) {
+      navigate(-1)
+    }
+  }, [paymentItems, selectedBranch])
 
   const calculateTotalAmount = () => {
     return paymentItems.reduce(
@@ -207,16 +221,15 @@ const PaymentPage = () => {
               duration={item.duration}
               options={[
                 {
-                  ss_idx: item.ss_idx.toString(),
-                  ss_price: item.price.toLocaleString(),
-                  original_price: item.originalPrice?.toLocaleString(),
-                  ss_count: item.sessions.toString(),
                   items: [
                     {
                       cartId: item.ss_idx.toString(),
                       count: item.amount,
                     },
                   ],
+                  sessions: item.sessions,
+                  price: item.price,
+                  originalPrice: item.originalPrice || item.price,
                 },
               ]}
               onCountChange={(_, newCount) => {

@@ -40,7 +40,6 @@ export const OptionsBottomSheetContent = ({
     setSelectedOptions,
     selectedBranch,
     setSelectedBranch,
-    setIsBottomSheetOpen,
   } = useMembershipOptionsStore()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const { openModal, closeOverlay } = useOverlay()
@@ -166,11 +165,20 @@ export const OptionsBottomSheetContent = ({
         sessions: parseInt(option.ss_count),
       }))
 
-      setPaymentItems(paymentItems)
-      setPaymentBranch(selectedBranch)
+      await Promise.all([
+        new Promise<void>((resolve) => {
+          setPaymentItems(paymentItems)
+          setPaymentBranch(selectedBranch)
+          navigate("/payment")
+          resolve()
+        }),
+        new Promise<void>((resolve) => {
+          closeOverlay()
+          resolve()
+        }),
+      ])
 
       navigate("/payment")
-      closeOverlay()
     } catch (error) {
       alert("결제 진행 중 오류가 발생했습니다. 다시 시도해주세요.")
     }
@@ -188,7 +196,6 @@ export const OptionsBottomSheetContent = ({
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
-              setIsBottomSheetOpen(false)
               setIsModalOpen(true)
             }}
           >
@@ -331,7 +338,6 @@ export const OptionsBottomSheetContent = ({
         <MembershipBranchSelectModal
           onBranchSelect={(branch: Branch) => {
             setSelectedBranch(branch)
-            setIsBottomSheetOpen(true)
           }}
           onClose={() => setIsModalOpen(false)}
         />
