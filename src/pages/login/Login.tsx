@@ -1,16 +1,16 @@
+import { Button } from "@components/Button"
+import Logo from "@components/Logo"
+import { Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useLayout } from "../../contexts/LayoutContext"
-import Logo from "@components/Logo"
-import { Button } from "@components/Button"
-import { Typography } from "@mui/material"
+import AppleIcon from "../../assets/icons/AppleIcon.svg?react"
+import GoogleIcon from "../../assets/icons/GoogleIcon.svg?react"
 import KakaoIcon from "../../assets/icons/KakaoIcon.svg?react"
 import NaverIcon from "../../assets/icons/NaverIcon.svg?react"
-import AppleIcon from "../../assets/icons/AppleIcon.svg?react"
-import { getNaverLoginUrl } from "../../libs/naver"
-import GoogleIcon from "../../assets/icons/GoogleIcon.svg?react"
-import { getGoogleLoginUrl } from "../../libs/google"
+import { useLayout } from "../../contexts/LayoutContext"
 import { getAppleLoginUrl } from "../../libs/apple"
+import { getGoogleLoginUrl } from "../../libs/google"
+import { getNaverLoginUrl } from "../../libs/naver"
 
 declare global {
   interface Window {
@@ -63,14 +63,16 @@ const Login = () => {
       case "apple":
         url = getAppleLoginUrl()
         break
+      case "kakao":
+        url = getKakaoLoginUrl()
+        break
     }
 
     if (url) window.location.href = url
   }
 
-  const handleKakaoLogin = () => {
-    const kakaoAuthUrl = `https://devapi.yaksonhc.com/api/auth/kakao_login?scope=account_email`
-    window.location.href = kakaoAuthUrl
+  const getKakaoLoginUrl = () => {
+    return `https://devapi.yaksonhc.com/api/auth/kakao_login?scope=account_email`
   }
 
   return (
@@ -86,7 +88,7 @@ const Login = () => {
         <div className="px-5 flex flex-col gap-3">
           {/* 카카오 로그인 */}
           <Button
-            onClick={handleKakaoLogin}
+            onClick={() => handleSocialLogin("kakao")}
             fullCustom
             sizeType="l"
             className="bg-[#FEE500] border-[#FEE500] text-[#262626] font-b flex items-center px-3 py-4"
