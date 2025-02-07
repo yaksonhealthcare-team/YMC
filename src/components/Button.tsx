@@ -25,7 +25,7 @@ const SIZE_STYLES = {
   xs: "px-[8.5px] py-3 font-sb text-12px",
   s: "px-[9.5px] py-3 font-sb text-14px",
   m: "px-3 py-4 font-sb text-16px",
-  l: "px-[14.px] py-5 font-b text-16px",
+  l: "px-[14.px] py-[14px] font-b text-16px",
 } as const
 
 const ICON_SIZES = {
