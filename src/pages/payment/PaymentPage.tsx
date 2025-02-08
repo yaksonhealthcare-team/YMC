@@ -28,6 +28,7 @@ const PaymentPage = () => {
     items: paymentItems,
     selectedBranch,
     clear: clearPayment,
+    setItems: setPaymentItems,
   } = usePaymentStore()
   const [isLoading, setIsLoading] = useState(true)
 
@@ -144,6 +145,38 @@ const PaymentPage = () => {
     setPoint(availablePoint.toString())
   }
 
+  const handleCountChange = (cartId: string, newCount: number) => {
+    if (newCount === 0) {
+      handleDelete(cartId);
+      return;
+    }
+    
+    const updatedItems = paymentItems.map(item => {
+      if (item.ss_idx.toString() === cartId) {
+        return {
+          ...item,
+          amount: newCount
+        };
+      }
+      return item;
+    });
+    
+    setPaymentItems(updatedItems);
+  };
+
+  const handleDelete = (cartId: string) => {
+    const updatedItems = paymentItems.filter(
+      item => item.ss_idx.toString() !== cartId
+    );
+    
+    if (updatedItems.length === 0) {
+      navigate(-1);
+      return;
+    }
+    
+    setPaymentItems(updatedItems);
+  };
+
   // 이니시스 결제 요청
   const requestPayment = async (orderData: OrderResponse) => {
     const paymentForm = document.createElement("form")
@@ -248,12 +281,9 @@ const PaymentPage = () => {
                       originalPrice: item.originalPrice || item.price,
                     } satisfies CartItemOption,
                   ]}
-                  onCountChange={() => {
-                    // 바로구매에서는 수량 변경 불가
-                  }}
-                  onDelete={() => {
-                    // 바로구매에서는 삭제 불가
-                  }}
+                  onCountChange={(cartId, newCount) => handleCountChange(cartId, newCount)}
+                  onDelete={() => handleDelete(item.ss_idx.toString())}
+                  onDeleteOption={(cartIds) => cartIds.forEach(cartId => handleDelete(cartId))}
                 />
               ))}
             </div>
