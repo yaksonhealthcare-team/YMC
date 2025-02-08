@@ -24,6 +24,7 @@ import { Divider } from "@mui/material"
 interface CustomWindow extends Window {
   ReactNativeWebView?: {
     postMessage: (message: string) => void
+    onMessage: (value: string) => void
   }
   webkit?: {
     messageHandlers: {
