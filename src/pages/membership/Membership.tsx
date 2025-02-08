@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useLayout } from "contexts/LayoutContext"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import CartIcon from "@components/icons/CartIcon"
 import { Tab, Tabs } from "@mui/material"
@@ -18,9 +18,17 @@ import useIntersection from "../../hooks/useIntersection"
 const MembershipPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
-  const [brandCode, setBrandCode] = useState("001") // 약손명가
+  const [searchParams, setSearchParams] = useSearchParams()
+  const brandCode = searchParams.get("brand_code") || "001" // 약손명가
   const [selectedCategory, setSelectedCategory] = useState<string>()
   const [cartCount, setCartCount] = useState(0)
+
+  // 초기 브랜드 코드 설정
+  useEffect(() => {
+    if (!searchParams.get("brand_code")) {
+      setSearchParams({ brand_code: "001" })
+    }
+  }, [])
 
   const { data: categoriesData, isLoading: isCategoriesLoading } =
     useMembershipCategories(brandCode) as {
@@ -61,7 +69,7 @@ const MembershipPage = () => {
 
   // 브랜드 변경 시
   const handleBrandChange = (_: React.SyntheticEvent, value: string) => {
-    setBrandCode(value)
+    setSearchParams({ brand_code: value })
     setSelectedCategory(undefined)
     const container = document.querySelector(".max-w-\\[500px\\]")
     if (container) {
@@ -201,7 +209,7 @@ const MembershipPage = () => {
                       key={membership.s_idx}
                       membership={membership}
                       onClick={() =>
-                        navigate(`/membership/${membership.s_idx}`)
+                        navigate(`/membership/${membership.s_idx}?brand_code=${brandCode}`)
                       }
                     />
                   )),

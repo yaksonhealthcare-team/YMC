@@ -64,8 +64,12 @@ export interface CartSummary {
 }
 
 /**
- * 장바구니에 아이템을 추가하는 API body 타입입니다.
- * TODO: 앱전용 회원권일 경우 b_idx가 존재하지 않아서, 백엔드 측에 문의해놓은 상태입니다.
+ * TODO: API 값 통일 필요
+ * 현재:
+ * - 회원권 상세(/api/memberships/detail): serviceType = "앱전용 회원권" | "지점 회원권"
+ * - 장바구니 담기(/api/memberships/carts): b_type = "전지점" | "지정지점"
+ * 
+ * 백엔드와 협의하여 둘 중 하나의 포맷으로 통일 필요
  */
 export interface CartItemPostRequest {
   s_idx: number
@@ -73,5 +77,5 @@ export interface CartItemPostRequest {
   b_idx: number
   brand_code: string
   amount: number
-  b_type: "지정지점" | "앱전용" // 지점 타입
+  b_type: "전지점" | "지정지점" // 지점 타입
 }
