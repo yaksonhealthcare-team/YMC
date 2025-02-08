@@ -1,6 +1,7 @@
 interface Window {
   ReactNativeWebView?: {
-    postMessage: (message: string) => void
+    postMessage: (message: string): void
+    onMessage(value: string): void
   }
   webkit?: {
     messageHandlers: {
