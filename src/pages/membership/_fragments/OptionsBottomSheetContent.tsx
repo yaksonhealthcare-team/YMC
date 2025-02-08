@@ -329,7 +329,7 @@ export const OptionsBottomSheetContent = ({
               variantType={selectedOptions.length === 0 ? "grayLine" : "line"}
               sizeType="l"
               onClick={handleCartButtonClick}
-              className={clsx("flex-1", selectedOptions.length === 0 && "!text-gray-300")}
+              className={clsx("flex-1", selectedOptions.length === 0 && "!text-[#BDBDBD]")}
               disabled={selectedOptions.length === 0}
             >
               {selectedOptions.length === 0 ? "닫기" : "장바구니 담기"}
