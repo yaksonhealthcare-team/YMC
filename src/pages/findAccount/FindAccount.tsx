@@ -64,14 +64,14 @@ const FindAccount = () => {
       if (type === "PASS_VERIFICATION_DATA") {
         try {
           // 본인인증 성공 후 선택된 탭에 따라 이동
-          navigate(`/find-account/${tab}`, { 
-            state: { 
+          navigate(`/find-account/${tab}`, {
+            state: {
               verifiedData: {
                 tokenVersionId: data.token_version_id,
                 encData: data.enc_data,
-                integrityValue: data.integrity_value
-              }
-            }
+                integrityValue: data.integrity_value,
+              },
+            },
           })
         } catch (error) {
           const axiosError = error as AxiosError<{ resultMessage: string }>
@@ -129,9 +129,7 @@ const FindAccount = () => {
           <div
             onClick={() => handleTabClick("find-email")}
             className={`flex-1 text-center cursor-pointer w-[] ${
-              tab === "find-email"
-                ? "text-[#212121]"
-                : "text-[#9E9E9E]"
+              tab === "find-email" ? "text-[#212121]" : "text-[#9E9E9E]"
             }`}
           >
             이메일 찾기
@@ -140,9 +138,7 @@ const FindAccount = () => {
           <div
             onClick={() => handleTabClick("reset-password")}
             className={`flex-1 text-center cursor-pointer ${
-              tab === "reset-password"
-                ? "text-[#212121]"
-                : "text-[#9E9E9E]"
+              tab === "reset-password" ? "text-[#212121]" : "text-[#9E9E9E]"
             }`}
           >
             비밀번호 찾기
@@ -150,7 +146,9 @@ const FindAccount = () => {
 
           <div
             className={`absolute bottom-0 h-[2px] bg-black transition-transform duration-300 ease-in-out ${
-              tab === "reset-password" ? "translate-x-[calc(100%+8px)]" : "translate-x-0"
+              tab === "reset-password"
+                ? "translate-x-[calc(100%+8px)]"
+                : "translate-x-0"
             } w-[calc(50%-4px)]`}
           />
         </div>
