@@ -165,20 +165,13 @@ export const OptionsBottomSheetContent = ({
         return
       }
 
-      await Promise.all([
-        new Promise<void>((resolve) => {
-          setPaymentItems(paymentItems)
-          setPaymentBranch(selectedBranch!)
-          navigate("/payment")
-          resolve()
-        }),
-        new Promise<void>((resolve) => {
-          closeOverlay()
-          resolve()
-        }),
-      ])
-
+      setPaymentItems(paymentItems)
+      setPaymentBranch(selectedBranch!)
+   
       navigate("/payment")
+      setTimeout(() => {
+        closeOverlay()
+      }, 100)
     } catch (error) {
       alert("결제 진행 중 오류가 발생했습니다. 다시 시도해주세요.")
     }
@@ -196,7 +189,6 @@ export const OptionsBottomSheetContent = ({
     }
   }
 
-  // 버튼 disabled 상태 계산
   const isButtonDisabled = useMemo(() => {
     if (selectedOptions.length === 0) return true
     if (serviceType === "지점 회원권") {
