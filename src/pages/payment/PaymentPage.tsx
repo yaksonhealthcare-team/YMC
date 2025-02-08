@@ -217,7 +217,7 @@ const PaymentPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="flex flex-col flex-1 border-b-8 border-gray-50">
+      <div className="flex flex-col flex-1 border-gray-50 pb-[88px]">
         {/* 상품 목록 섹션 */}
         <div className="p-5">
           <div className="flex items-center gap-1 mb-4">
@@ -226,34 +226,37 @@ const PaymentPage = () => {
               {paymentItems.length}개
             </span>
           </div>
-          {paymentItems.map((item) => (
-            <PaymentCard
-              key={item.ss_idx}
-              brand={item.brand}
-              branchType={item.branchType}
-              title={item.title}
-              duration={item.duration}
-              options={[
-                {
-                  items: [
+          
+            <div className="flex flex-col gap-4">
+              {paymentItems.map((item) => (
+                <PaymentCard
+                  key={item.ss_idx}
+                  brand={item.brand}
+                  branchType={item.branchType}
+                  title={item.title}
+                  duration={item.duration}
+                  options={[
                     {
-                      cartId: item.ss_idx.toString(),
-                      count: item.amount,
-                    },
-                  ],
-                  sessions: item.sessions,
-                  price: item.price,
-                  originalPrice: item.originalPrice || item.price,
-                } satisfies CartItemOption,
-              ]}
-              onCountChange={() => {
-                // 바로구매에서는 수량 변경 불가
-              }}
-              onDelete={() => {
-                // 바로구매에서는 삭제 불가
-              }}
-            />
-          ))}
+                      items: [
+                        {
+                          cartId: item.ss_idx.toString(),
+                          count: item.amount,
+                        },
+                      ],
+                      sessions: item.sessions,
+                      price: item.price,
+                      originalPrice: item.originalPrice || item.price,
+                    } satisfies CartItemOption,
+                  ]}
+                  onCountChange={() => {
+                    // 바로구매에서는 수량 변경 불가
+                  }}
+                  onDelete={() => {
+                    // 바로구매에서는 삭제 불가
+                  }}
+                />
+              ))}
+            </div>
         </div>
 
         {/* 포인트 섹션 */}
@@ -269,9 +272,10 @@ const PaymentPage = () => {
             />
             <Button
               variantType="secondary"
-              sizeType="m"
+              sizeType="s"
               onClick={handleUseAllPoints}
               disabled={availablePoint === 0}
+              className="!px-[20px] shrink-0 h-[52px] text-[16px]"
             >
               전액 사용
             </Button>
@@ -422,7 +426,7 @@ const PaymentPage = () => {
             들어가는 곳입니다.
           </p>
         </div>
-        <div className="w-full h-[96px]" />
+        {/* <div className="w-full h-[96px]" /> */}
       </div>
 
       {/* 하단 결제 버튼 */}
