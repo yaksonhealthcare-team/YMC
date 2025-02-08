@@ -24,6 +24,7 @@ interface Props {
   brand: string
   title: string
   duration: number
+  brandCode: string
 }
 
 export const OptionsBottomSheetContent = ({
@@ -33,6 +34,7 @@ export const OptionsBottomSheetContent = ({
   brand,
   title,
   duration,
+  brandCode,
 }: Props) => {
   const navigate = useNavigate()
   const {
@@ -99,19 +101,23 @@ export const OptionsBottomSheetContent = ({
   const totalPrice = useMemo(() => calculateTotalPrice(), [selectedOptions])
 
   const handleAddToCart = async () => {
-    if (!selectedBranch) {
-      alert("지점을 선택해주세요")
-      return
-    }
-
     try {
+      let branchType: "전지점" | "지정지점"
+      if (serviceType === "앱전용 회원권") {
+        branchType = "전지점"
+      } else if (serviceType === "지점 회원권") {
+        branchType = "지정지점"
+      } else {
+        branchType = "지정지점"
+      }
+
       const cartItems = selectedOptions.map(({ option, count }) => ({
         s_idx: parseInt(membershipId),
         ss_idx: parseInt(option.ss_idx),
-        b_idx: parseInt(selectedBranch.id),
-        brand_code: selectedBranch.brandCode,
+        b_idx: selectedBranch ? parseInt(selectedBranch.id) : 0,
+        brand_code: brandCode,
         amount: count,
-        b_type: "지정지점" as const,
+        b_type: branchType,
       }))
 
       await addCart(cartItems)
@@ -135,28 +141,18 @@ export const OptionsBottomSheetContent = ({
   }
 
   const handlePurchase = async () => {
-    if (!selectedBranch) {
-      alert("지점을 선택해주세요")
-      return
-    }
-
-    if (selectedOptions.length === 0) {
-      alert("회차를 선택해주세요")
-      return
-    }
-
     try {
       // 결제 스토어에 선택한 정보 저장
       const paymentItems = selectedOptions.map(({ option, count }) => ({
         s_idx: parseInt(membershipId),
         ss_idx: parseInt(option.ss_idx),
-        b_idx: parseInt(selectedBranch.id),
-        brand_code: selectedBranch.brandCode,
+        b_idx: selectedBranch ? parseInt(selectedBranch.id) : 0,
+        brand_code: brandCode,
         amount: count,
         b_type: "지정지점" as const,
         title,
         brand,
-        branchType: serviceType?.includes("지점") ? "지정 지점" : "전지점",
+        branchType: serviceType === "앱전용 회원권" ? "전지점" : "지정 지점",
         duration,
         price: parseInt(option.ss_price.replace(/,/g, "")),
         originalPrice: option.original_price
@@ -165,10 +161,14 @@ export const OptionsBottomSheetContent = ({
         sessions: parseInt(option.ss_count),
       }))
 
+      if (!selectedBranch && serviceType === "지점 회원권") {
+        return
+      }
+
       await Promise.all([
         new Promise<void>((resolve) => {
           setPaymentItems(paymentItems)
-          setPaymentBranch(selectedBranch)
+          setPaymentBranch(selectedBranch!)
           navigate("/payment")
           resolve()
         }),
@@ -184,11 +184,32 @@ export const OptionsBottomSheetContent = ({
     }
   }
 
+  const handleClose = () => {
+    closeOverlay()
+  }
+
+  const handleCartButtonClick = () => {
+    if (selectedOptions.length === 0) {
+      handleClose()
+    } else {
+      handleAddToCart()
+    }
+  }
+
+  // 버튼 disabled 상태 계산
+  const isButtonDisabled = useMemo(() => {
+    if (selectedOptions.length === 0) return true
+    if (serviceType === "지점 회원권") {
+      return !selectedBranch
+    }
+    return false
+  }, [selectedOptions.length, serviceType, selectedBranch])
+
   return (
     <div className="flex flex-col max-h-[610px] min-h-[500px]">
       {/* 콘텐츠 영역 */}
       <div className="flex-1 p-5">
-        {(!serviceType || serviceType?.includes("지점")) && (
+        {serviceType === "지점 회원권" && (
           <button
             className={
               "w-full border border-gray-100 rounded-xl px-4 py-3 flex justify-between mb-3 items-center"
@@ -313,20 +334,20 @@ export const OptionsBottomSheetContent = ({
           </div>
           <div className="flex gap-2">
             <Button
-              variantType="grayLine"
+              variantType={selectedOptions.length === 0 ? "grayLine" : "line"}
               sizeType="l"
-              onClick={handleAddToCart}
-              className="flex-1"
+              onClick={handleCartButtonClick}
+              className={clsx("flex-1", selectedOptions.length === 0 && "!text-gray-300")}
               disabled={selectedOptions.length === 0}
             >
-              장바구니 담기
+              {selectedOptions.length === 0 ? "닫기" : "장바구니 담기"}
             </Button>
             <Button
               variantType="primary"
               sizeType="l"
               onClick={handlePurchase}
               className="flex-1"
-              disabled={selectedOptions.length === 0}
+              disabled={isButtonDisabled}
             >
               바로구매
             </Button>

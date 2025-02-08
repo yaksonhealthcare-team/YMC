@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react"
 import { Button } from "@components/Button"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useNavigate, useParams, useLocation } from "react-router-dom"
+import { useNavigate, useParams, useLocation, useSearchParams } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
 import OptionsBottomSheetContent from "./_fragments/OptionsBottomSheetContent.tsx"
@@ -127,6 +127,8 @@ const MembershipDetailPage = () => {
   const { id } = useParams()
   const location = useLocation()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const brandCode = searchParams.get("brand_code") || "001"
   const { setHeader, setNavigation } = useLayout()
   const { data: membership } = useMembershipDetail(id!)
   const { openBottomSheet } = useOverlay()
@@ -145,6 +147,7 @@ const MembershipDetailPage = () => {
         brand={membership.brand_name || "No Name"}
         title={membership.s_name || "No Name"}
         duration={parseInt(membership.s_time || "0")}
+        brandCode={brandCode}
       />,
     )
   }
@@ -160,7 +163,7 @@ const MembershipDetailPage = () => {
               if (location.state?.fromBranchSelect) {
                 navigate("/membership", { replace: true })
               } else {
-                navigate(-1)
+                navigate(`/membership?brand_code=${brandCode}`)
               }
             }}
           >
