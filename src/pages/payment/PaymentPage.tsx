@@ -312,7 +312,7 @@ const PaymentPage = () => {
                   }
                   sizeType="s"
                   onClick={() => setSimplePayment("naver")}
-                  className={simplePayment === "naver" ? "font-m" : "font-r"}
+                  className={`h-[40px] text-14px ${simplePayment === "naver" ? "font-[500]" : "font-[400]"}`}
                 >
                   네이버 페이
                 </Button>
@@ -322,7 +322,7 @@ const PaymentPage = () => {
                   }
                   sizeType="s"
                   onClick={() => setSimplePayment("kakao")}
-                  className={simplePayment === "kakao" ? "font-m" : "font-r"}
+                  className={`h-[40px] text-14px ${simplePayment === "kakao" ? "font-[500]" : "font-[400]"}`}
                 >
                   카카오페이
                 </Button>
@@ -332,7 +332,7 @@ const PaymentPage = () => {
                   }
                   sizeType="s"
                   onClick={() => setSimplePayment("payco")}
-                  className={simplePayment === "payco" ? "font-m" : "font-r"}
+                  className={`h-[40px] text-14px ${simplePayment === "payco" ? "font-[500]" : "font-[400]"}`}
                 >
                   페이코
                 </Button>
