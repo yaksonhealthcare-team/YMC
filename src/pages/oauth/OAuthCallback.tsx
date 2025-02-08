@@ -55,13 +55,13 @@ const OAuthCallback = () => {
 
         // 이미 가입된 회원 (next_action_type === "signin")
         try {
-          const accessToken = await signinWithSocial({
-            SocialAccessToken: socialData.SocialAccessToken,
+          const result = await signinWithSocial({
+            socialAccessToken: socialData.SocialAccessToken,
             socialId: socialData.socialId,
             provider: getProviderCode(provider),
           })
-          const user = await fetchUser(accessToken)
-          login({ user, token: accessToken })
+          const user = await fetchUser(result.accessToken)
+          login({ user, token: result.accessToken })
           navigate("/", { replace: true })
           return
         } catch (error) {

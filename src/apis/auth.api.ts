@@ -54,29 +54,6 @@ export const updateUserProfile = async (data: UpdateUserProfileRequest) => {
   return response.data
 }
 
-export const loginWithSocial = async ({
-  provider,
-  accessToken,
-  socialId,
-}: {
-  provider: "K" | "N" | "G" | "A"
-  accessToken: string
-  socialId: string
-}) => {
-  const { data } = await axiosClient.post("/auth/signin/social", {
-    thirdPartyType: provider,
-    SocialAccessToken: accessToken,
-    socialId: socialId,
-    device_token: "TODO: FCM 토큰 추가",
-    device_type: "TODO: 디바이스 타입 추가",
-  })
-
-  return {
-    refreshToken: data.Header?.[0]?.refreshToken || "",
-    accessToken: data.body[0].accessToken,
-  }
-}
-
 export const loginWithNaver = async ({
   accessToken,
 }: {
@@ -172,23 +149,29 @@ export const signup = async (signupData: SignupFormData) => {
 }
 
 export const signinWithSocial = async ({
-  SocialAccessToken,
+  socialAccessToken,
   socialId,
   provider,
 }: {
-  SocialAccessToken: string
+  socialAccessToken: string
   socialId: string
   provider: "K" | "N" | "G" | "A"
-}): Promise<string> => {
+}): Promise<{
+  refreshToken: string
+  accessToken: string
+}> => {
   const { data } = await axiosClient.post("/auth/signin/social", {
     thirdPartyType: provider,
     socialId: socialId,
     device_token: "TODO: FCM 토큰 추가",
     device_type: "TODO: 디바이스 타입 추가",
-    SocialAccessToken: SocialAccessToken,
+    SocialAccessToken: socialAccessToken,
   })
 
-  return data.body[0].accessToken
+  return {
+    refreshToken: data.Header?.[0]?.refreshToken || "",
+    accessToken: data.body[0].accessToken,
+  }
 }
 
 export const withdrawal = async () => {

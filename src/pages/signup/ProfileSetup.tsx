@@ -9,14 +9,13 @@ import { Address } from "react-daum-postcode/lib/loadPostcode"
 import Profile from "@assets/icons/Profile.svg?react"
 import SettingIcon from "@assets/icons/SettingIcon.svg?react"
 import { SwiperBrandCard } from "@components/SwiperBrandCard.tsx"
-import { signup } from "../../apis/auth.api.ts"
+import { signinWithSocial, signup } from "../../apis/auth.api.ts"
 import { loginWithEmail } from "../../apis/auth.api.ts"
 import { fetchUser } from "../../apis/auth.api.ts"
 import { useAuth } from "../../contexts/AuthContext.tsx"
 import { useOverlay } from "../../contexts/ModalContext"
 import { signupWithSocial } from "../../apis/auth.api.ts"
 import { UserSignup } from "../../types/User.ts"
-import { loginWithSocial } from "../../apis/auth.api.ts"
 import { AxiosError } from "axios"
 
 export const ProfileSetup = () => {
@@ -149,16 +148,22 @@ export const ProfileSetup = () => {
             !Array.isArray(response.body) ||
             response.body.length === 0
           ) {
-            throw new Error(response?.resultMessage || "회원가입 응답에 유효한 body가 없습니다")
+            throw new Error(
+              response?.resultMessage ||
+                "회원가입 응답에 유효한 body가 없습니다",
+            )
           }
 
           if (!response.body[0]?.accessToken) {
-            throw new Error(response?.resultMessage || "회원가입 응답에 accessToken이 없습니다")
+            throw new Error(
+              response?.resultMessage ||
+                "회원가입 응답에 accessToken이 없습니다",
+            )
           }
 
-          const { accessToken } = await loginWithSocial({
+          const { accessToken } = await signinWithSocial({
             provider: socialInfo.provider,
-            accessToken: response.body[0].accessToken,
+            socialAccessToken: response.body[0].accessToken,
             socialId: socialInfo.socialId,
           })
 
