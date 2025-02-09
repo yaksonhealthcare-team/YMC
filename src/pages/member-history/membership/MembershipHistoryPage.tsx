@@ -108,7 +108,7 @@ const FilterContent = ({
             key={filter.id}
             fullCustom
             className={clsx(
-              "min-w-0 whitespace-nowrap px-[12px] py-[5px] text-12px font-sb !rounded-full",
+              "min-w-0 whitespace-nowrap px-[12px] py-[5px] text-12px font-sb !rounded-[15px]",
               isSelected
                 ? "bg-primary-50 text-primary border border-solid border-primary"
                 : "bg-white text-gray-500 border border-solid border-gray-200",
