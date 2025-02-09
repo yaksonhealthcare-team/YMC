@@ -328,7 +328,7 @@ const ReservationFormPage = () => {
         )}
 
       <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 [&_p:first-child]:text-16px [&_p:first-child]:font-sb">
           <CustomInputButton
             label="지점 선택"
             value={selectedBranch ? selectedBranch.name : ""}
