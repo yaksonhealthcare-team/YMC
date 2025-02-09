@@ -29,7 +29,7 @@ const CustomInputButton = ({
         )}
       >
         <span className="flex-1 text-left text-gray-700">
-          {value || <span className="text-gray-400">{placeholder}</span>}
+          {value || <span className="text-gray-300">{placeholder}</span>}
         </span>
         {iconRight && <span>{iconRight}</span>}
       </button>
