@@ -78,7 +78,7 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
                   startDate={membership.pay_date.split(" ")[0]}
                   endDate={membership.expiration_date.split(" ")[0]}
                   status={getStatusFromString(membership.status)}
-                  showReserveButton={membership.status === "사용가능"}
+                  showReserveButton={false}
                   serviceType={membership.s_type.replace("회원권", "").trim()}
                 />
               </div>
