@@ -171,7 +171,7 @@ const Login = () => {
             처음이신가요?
           </Typography>
           <button
-            onClick={() => navigate("/signup")}
+            onClick={() => navigate("/signup/terms")}
             className="text-primary font-sb text-16px underline"
           >
             회원가입

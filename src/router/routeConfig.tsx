@@ -1,6 +1,4 @@
-import { ReactNode } from "react"
-import { Navigate } from "react-router-dom"
-import { lazy } from "react"
+import { lazy, ReactNode } from "react"
 import WithdrawalPage from "../pages/profile/WithdrawalPage"
 import Store from "../pages/store/Store"
 
@@ -162,10 +160,6 @@ export const routeConfig: RouteConfig[] = [
     element: <Logout />,
   },
   // 회원가입
-  {
-    path: "/signup",
-    element: <Navigate to="/signup/terms" />,
-  },
   {
     path: "/signup/terms",
     element: <TermsAgreement />,

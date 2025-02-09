@@ -49,7 +49,7 @@ const OAuthCallback = () => {
             "socialSignupInfo",
             JSON.stringify(socialSignupInfo),
           )
-          navigate("/signup", { replace: true })
+          navigate("/signup/terms", { replace: true })
           return
         }
 
