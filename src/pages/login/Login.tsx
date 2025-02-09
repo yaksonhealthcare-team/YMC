@@ -85,98 +85,87 @@ const Login = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen max-h-[100vh] bg-[#F8F5F2]">
+    <div className="flex flex-col min-h-[100vh] bg-[#F8F5F2]">
       {/* 로고 */}
-      <div className="min-h-[180px] h-full flex justify-center items-center">
+      <div className="mt-[30%] mb-[10%] flex justify-center">
         <Logo text size={191} />
       </div>
 
-      {/* 로그인 버튼 그룹과 회원가입 */}
-      <div className="flex-1 flex flex-col justify-end">
-        {/* 로그인 버튼 그룹 */}
-        <div className="px-5 flex flex-col gap-3">
-          {/* 카카오 로그인 */}
+      {/* 로그인 버튼 그룹 */}
+      <div className="flex flex-col gap-3 px-5 mt-auto mb-auto">
+        {/* 카카오 로그인 */}
+        <Button
+          onClick={() => handleSocialLogin("kakao")}
+          fullCustom
+          sizeType="l"
+          className="bg-[#FEE500] border-[#FEE500] text-[#262626] font-b flex items-center px-5 py-[13.75px]"
+        >
+          <KakaoIcon className="w-6 h-6" />
+          <span className="flex-1 text-center text-16px">
+            카카오톡으로 로그인
+          </span>
+        </Button>
+
+        {/* 네이버 로그인 */}
+        <Button
+          onClick={() => handleSocialLogin("naver")}
+          fullCustom
+          sizeType="l"
+          className="bg-[#03C75A] border-[#03C75A] text-white font-b flex items-center px-5 h-[52px]"
+        >
+          <NaverIcon className="w-6 h-6 text-white" />
+          <span className="flex-1 text-center text-16px">네이버로 로그인</span>
+        </Button>
+
+        {/* 구글 로그인 (웹 또는 Android에서만 표시) */}
+        {(!osType || osType === "android") && (
           <Button
-            onClick={() => handleSocialLogin("kakao")}
+            onClick={() => handleSocialLogin("google")}
             fullCustom
             sizeType="l"
-            className="bg-[#FEE500] border-[#FEE500] text-[#262626] font-b flex items-center px-5 py-[13.75px]"
+            className="bg-white border-[#DDDDDD] text-[#212121] font-b flex items-center px-5 h-[52px]"
           >
-            <KakaoIcon className="w-6 h-6" />
+            <GoogleIcon className="w-6 h-6" />
             <span className="flex-1 text-center text-16px">
-              카카오톡으로 로그인
+              Google로 로그인
             </span>
           </Button>
+        )}
 
-          {/* 네이버 로그인 */}
+        {/* 애플 로그인 (웹 또는 iOS에서만 표시) */}
+        {(!osType || osType === "ios") && (
           <Button
-            onClick={() => handleSocialLogin("naver")}
+            onClick={() => handleSocialLogin("apple")}
             fullCustom
             sizeType="l"
-            className="bg-[#03C75A] border-[#03C75A] text-white font-b flex items-center px-5 h-[52px]"
+            className="bg-[#000000] border-black text-white font-b flex items-center px-5 h-[52px]"
           >
-            <NaverIcon className="w-6 h-6 text-white" />
-            <span className="flex-1 text-center text-16px">
-              네이버로 로그인
-            </span>
+            <AppleIcon className="w-6 h-6 text-white" />
+            <span className="flex-1 text-center text-16px">Apple로 로그인</span>
           </Button>
+        )}
 
-          {/* 구글 로그인 (웹 또는 Android에서만 표시) */}
-          {(!osType || osType === "android") && (
-            <Button
-              onClick={() => handleSocialLogin("google")}
-              fullCustom
-              sizeType="l"
-              className="bg-white border-[#DDDDDD] text-[#212121] font-b flex items-center px-5 h-[52px]"
-            >
-              <GoogleIcon className="w-6 h-6" />
-              <span className="flex-1 text-center text-16px">
-                Google로 로그인
-              </span>
-            </Button>
-          )}
-
-          {/* 애플 로그인 (웹 또는 iOS에서만 표시) */}
-          {(!osType || osType === "ios") && (
-            <Button
-              onClick={() => handleSocialLogin("apple")}
-              fullCustom
-              sizeType="l"
-              className="bg-[#000000] border-black text-white font-b flex items-center px-5 h-[52px]"
-            >
-              <AppleIcon className="w-6 h-6 text-white" />
-              <span className="flex-1 text-center text-16px">
-                Apple로 로그인
-              </span>
-            </Button>
-          )}
-
-          {/* 이메일 로그인 */}
-          <Button
-            fullCustom
-            sizeType="l"
-            className="bg-primary border-primary text-white font-b flex items-center px-5 h-[52px]"
-            onClick={() => navigate("/login/email")}
-          >
-            <div className="w-6 h-6" />
-            <span className="flex-1 text-center text-16px">
-              이메일로 로그인
-            </span>
-          </Button>
-        </div>
-
-        {/* 회원가입 */}
-        <div className="mt-[94px] mb-[60px] flex justify-center items-center gap-5">
-          <Typography className="text-gray-500 font-sb text-16px">
-            처음이신가요?
-          </Typography>
-          <button
-            onClick={() => navigate("/signup/terms")}
-            className="text-primary font-sb text-16px underline"
-          >
-            회원가입
-          </button>
-        </div>
+        {/* 이메일 로그인 */}
+        <Button
+          fullCustom
+          sizeType="l"
+          className="bg-primary border-primary text-white font-b flex items-center px-5 h-[52px]"
+          onClick={() => navigate("/login/email")}
+        >
+          <div className="w-6 h-6" />
+          <span className="flex-1 text-center text-16px">이메일로 로그인</span>
+        </Button>
+      </div>
+      <div className="mb-[7%] flex justify-center items-center gap-5">
+        <Typography className="text-gray-500 font-sb text-16px">
+          처음이신가요?
+        </Typography>
+        <button
+          onClick={() => navigate("/signup/terms")}
+          className="text-primary font-sb text-16px underline"
+        >
+          회원가입
+        </button>
       </div>
     </div>
   )
