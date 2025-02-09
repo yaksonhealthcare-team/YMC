@@ -1,14 +1,14 @@
 import { Button } from "@components/Button"
 import CheckFillCircleIcon from "@components/icons/CheckFillCircleIcon.tsx"
 import { Checkbox } from "@mui/material"
+import { DecryptRequest, fetchDecryptResult } from "apis/decrypt-result.api"
+import { AxiosError } from "axios"
+import { useOverlay } from "contexts/ModalContext"
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { fetchEncryptDataForNice } from "../../apis/pass.api.ts"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useSignup } from "../../contexts/SignupContext.tsx"
-import { useOverlay } from "contexts/ModalContext"
-import { DecryptRequest, fetchDecryptResult } from "apis/decrypt-result.api"
-import { AxiosError } from "axios"
 
 window.name = "Parent_window"
 
@@ -153,20 +153,6 @@ export const TermsAgreement = () => {
   const handleNavigateToNext = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const popup = window.open(
-      "about:blank",
-      "popupChk",
-      "width=500, height=550, top=100, left=100, fullscreen=no, menubar=no, status=no, toolbar=no, titlebar=yes, location=no, scrollbar=no",
-    )
-
-    if (!popup) {
-      openAlert({
-        title: "알림",
-        description: "팝업이 차단되었습니다.",
-      })
-      return
-    }
-
     e.currentTarget.submit()
   }
 
@@ -177,8 +163,7 @@ export const TermsAgreement = () => {
 
   return (
     <form
-      action="https://nice.checkplus.co.kr/CheckPlusSafeModel/service.cb"
-      target="popupChk"
+      action="https://nice.checkplus.co.kr/CheckPlusSafeModel/checkplus.cb"
       onSubmit={handleNavigateToNext}
     >
       <input type="hidden" name="m" value={m} />
