@@ -123,7 +123,7 @@ const Login = () => {
             onClick={() => handleSocialLogin("google")}
             fullCustom
             sizeType="l"
-            className="bg-white border-[#DDDDDD] text-[#212121] font-b flex items-center px-5 h-[52px]"
+            className="bg-white border-[#ECECEC] text-[#212121] font-b flex items-center px-5 h-[52px] border border-solid"
           >
             <GoogleIcon className="w-6 h-6" />
             <span className="flex-1 text-center text-16px">
