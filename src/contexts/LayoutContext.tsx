@@ -142,9 +142,11 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
           <div>
             <div className={"h-[82px]"} />
             <div
-              className="flex fixed bottom-0 w-full max-w-[500px] min-w-[375px] h-[82px] z-10 bg-white justify-between"
+              className="flex fixed bottom-0 w-full max-w-[500px] h-[82px] z-10 bg-white justify-between"
               style={{
                 boxShadow: "0px -2px 16px 0px #2E2B2914",
+                width: "100%",
+                maxWidth: "inherit"
               }}
             >
               <NavButton
@@ -217,7 +219,7 @@ const NavButton = ({
   return (
     <div
       className={
-        "p-3 w-[calc(100%/5)] flex flex-col gap-1 items-center cursor-pointer shrink-0"
+        "py-3 flex-1 flex flex-col gap-1 items-center cursor-pointer"
       }
       onClick={handleClick}
       style={{ color: active ? "#F37165" : "#BDBDBD" }}
