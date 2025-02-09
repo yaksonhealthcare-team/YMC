@@ -85,13 +85,13 @@ const MembershipPage = () => {
     !categoriesData?.body ||
     !membershipsData?.pages[0].body
   ) {
-    return <LoadingIndicator className="min-h-screen" />
+    return <LoadingIndicator className="min-h-screen bg-system-bg" />
   }
 
   return (
-    <div className="min-h-screen bg-system-bg scrollbar-hide overflow-y-scroll">
+    <div className="min-h-screen bg-system-bg overflow-y-auto scrollbar-hide">
       {/* 고정 영역 */}
-      <div className="fixed top-[48px] left-0 right-0 z-10">
+      <div className="fixed top-[48px] left-0 right-0 z-10 bg-system-bg">
         {/* 안내 메시지 */}
         {cartCount === 0 && (
           <div className="w-full bg-[#92443D]">
@@ -106,7 +106,7 @@ const MembershipPage = () => {
         )}
 
         {/* 브랜드 선택 탭 */}
-        <div className="w-full bg-system-bg border-b border-gray-100">
+        <div className="w-full border-b border-gray-100">
           <div className="max-w-[500px] min-w-[375px] mx-auto">
             <Tabs
               value={brandCode}
@@ -122,6 +122,7 @@ const MembershipPage = () => {
               }}
               sx={{
                 minHeight: 48,
+                bgcolor: "#F8F5F2",
                 "& .MuiTabs-scroller": {
                   overflowX: "auto !important",
                   "&::-webkit-scrollbar": { display: "none" },
@@ -155,7 +156,7 @@ const MembershipPage = () => {
         </div>
 
         {/* 카테고리 선택 */}
-        <div className="w-full bg-system-bg max-w-[500px] min-w-[375px] mx-auto py-4">
+        <div className="w-full max-w-[500px] min-w-[375px] mx-auto py-4">
           <div className="flex gap-2 overflow-x-auto scrollbar-hide px-5">
             <button
               onClick={() => handleCategoryChange(undefined)}
@@ -187,11 +188,11 @@ const MembershipPage = () => {
       </div>
 
       {/* 회원권 목록 */}
-      <div className="pt-[145px] pb-[96px] bg-system-bg">
+      <div className="pt-[145px] pb-[96px]">
         <div className="max-w-[500px] min-w-[375px] mx-auto">
           <div className="px-5 py-6">
             {membershipsData.pages[0].body.length === 0 ? (
-              <div className="flex justify-center items-center h-[200px] text-gray-600">
+              <div className="flex justify-center items-center h-[200px] text-gray-600 bg-system-bg">
                 준비중 입니다
               </div>
             ) : (
@@ -211,7 +212,7 @@ const MembershipPage = () => {
                 )}
                 <div ref={observerTarget} className="h-4" />
                 {isFetchingNextPage && (
-                  <LoadingIndicator className="min-h-[100px]" />
+                  <LoadingIndicator className="min-h-[100px] bg-system-bg" />
                 )}
               </div>
             )}
