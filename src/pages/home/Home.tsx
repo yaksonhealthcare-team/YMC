@@ -83,16 +83,16 @@ const Home = () => {
                   <span className={"text-18px font-b"}>{user?.name}님</span>{" "}
                   반갑습니다.
                 </Typography>
-                <Typography className="font-m text-14px space-x-2">
-                  <span>{user?.levelName}</span>{" "}
-                  <span className="font-b">
+                <Typography className="font-m text-14px">
+                  <span className="mr-2">{user?.levelName}</span>{" "}
+                  <span className="font-b mr-[2px]">
                     {user && user.point ? user.point : 0}
                   </span>
                   <span>P</span>
                 </Typography>
               </div>
               <div
-                className="rounded-full bg-white text-primary-300 py-2 px-5 cursor-pointer font-sb"
+                className="rounded-full bg-white text-primary-300 py-2 px-5 cursor-pointer font-sb whitespace-nowrap text-14px"
                 onClick={handleReservationClick}
               >
                 예약하기
