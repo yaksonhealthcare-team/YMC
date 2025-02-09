@@ -390,7 +390,6 @@ const ReservationFormPage = () => {
                 request: value,
               }))
             }}
-            helperText={`${data.request.length}/100`}
           />
           <p className="text-gray-500 text-sm">
             * 예약 당일 취소, 노쇼의 경우 예약시 차감된 회원권 횟수가 반환되지
