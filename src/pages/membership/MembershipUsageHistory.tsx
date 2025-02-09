@@ -60,7 +60,10 @@ const MembershipUsageHistory = () => {
       left: "back",
       right: <CartIcon />,
     })
-    setNavigation({ display: false })
+    setNavigation({
+      display: true,
+      activeTab: "예약/회원권"
+    })
     fetchData()
   }, [setHeader, setNavigation, fetchData])
 
@@ -105,6 +108,7 @@ const MembershipUsageHistory = () => {
           </div>
         </div>
       )}
+      {/* Add bottom tab component here if needed */}
     </>
   )
 }
