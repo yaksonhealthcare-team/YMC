@@ -297,7 +297,7 @@ const MyPage = () => {
                   <span className="font-sb text-16px text-gray-900">
                     {user?.level ?? ""}
                   </span>
-                  <InformationIcon className="w-3 h-3 text-gray-500" />
+                  <InformationIcon className="w-4 h-4 text-gray-400" />
                 </div>
               </div>
             </div>
