@@ -156,7 +156,8 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
                 activeIcon={"/assets/navIcon/membership_active.png"}
                 inactiveIcon={"/assets/navIcon/membership_inactive.png"}
                 title={"회원권 구매"}
-                link={"/membership"}
+                link={"/membership?brand_code=001"}
+                isActive={(path) => path.startsWith("/membership")}
               />
               <NavButton
                 activeIcon={"/assets/navIcon/store_active.png"}

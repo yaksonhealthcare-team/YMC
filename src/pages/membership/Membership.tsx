@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react"
-import { useLayout } from "contexts/LayoutContext"
-import { useNavigate, useSearchParams } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import CartIcon from "@components/icons/CartIcon"
+import LoadingIndicator from "@components/LoadingIndicator"
 import { Tab, Tabs } from "@mui/material"
-import { MembershipCard } from "./_fragments/MembershipCard"
-import { MembershipCategory, MembershipItem } from "../../types/Membership"
+import { useLayout } from "contexts/LayoutContext"
+import { useEffect, useState } from "react"
+import { useNavigate, useSearchParams } from "react-router-dom"
+import { fetchCartCount } from "../../apis/cart.api"
+import { ListResponse } from "../../apis/membership.api"
+import useIntersection from "../../hooks/useIntersection"
 import {
   useMembershipCategories,
   useMembershipList,
 } from "../../queries/useMembershipQueries"
-import { ListResponse } from "../../apis/membership.api"
-import { fetchCartCount } from "../../apis/cart.api"
-import LoadingIndicator from "@components/LoadingIndicator"
-import useIntersection from "../../hooks/useIntersection"
+import { MembershipCategory, MembershipItem } from "../../types/Membership"
+import { MembershipCard } from "./_fragments/MembershipCard"
 
 const MembershipPage = () => {
   const navigate = useNavigate()
@@ -22,13 +22,6 @@ const MembershipPage = () => {
   const brandCode = searchParams.get("brand_code") || "001" // 약손명가
   const [selectedCategory, setSelectedCategory] = useState<string>()
   const [cartCount, setCartCount] = useState(0)
-
-  // 초기 브랜드 코드 설정
-  useEffect(() => {
-    if (!searchParams.get("brand_code")) {
-      setSearchParams({ brand_code: "001" })
-    }
-  }, [])
 
   const { data: categoriesData, isLoading: isCategoriesLoading } =
     useMembershipCategories(brandCode) as {
@@ -134,7 +127,7 @@ const MembershipPage = () => {
                   "&::-webkit-scrollbar": { display: "none" },
                 },
                 "& .MuiTab-root": {
-                  minWidth:'unset',
+                  minWidth: "unset",
                   minHeight: 48,
                   padding: "14px 0",
                   marginRight: "24px",
@@ -209,7 +202,9 @@ const MembershipPage = () => {
                       key={membership.s_idx}
                       membership={membership}
                       onClick={() =>
-                        navigate(`/membership/${membership.s_idx}?brand_code=${brandCode}`)
+                        navigate(
+                          `/membership/${membership.s_idx}?brand_code=${brandCode}`,
+                        )
                       }
                     />
                   )),
