@@ -98,9 +98,9 @@ const Login = () => {
           onClick={() => handleSocialLogin("kakao")}
           fullCustom
           sizeType="l"
-          className="bg-[#FEE500] border-[#FEE500] text-[#262626] font-b flex items-center px-5 py-[13.75px] rounded-[12px]"
+          className="bg-[#FEE500] border-[#FEE500] text-[#262626] font-b flex items-center px-5 py-[13.75px] rounded-[12px] relative"
         >
-          <KakaoIcon className="w-6 h-6" />
+          <KakaoIcon className="w-6 h-6 absolute left-5" />
           <span className="flex-1 text-center text-16px">
             카카오톡으로 로그인
           </span>
@@ -111,9 +111,9 @@ const Login = () => {
           onClick={() => handleSocialLogin("naver")}
           fullCustom
           sizeType="l"
-          className="bg-[#03C75A] border-[#03C75A] text-white font-b flex items-center px-5 h-[52px] rounded-[12px]"
+          className="bg-[#03C75A] border-[#03C75A] text-white font-b flex items-center px-5 h-[52px] rounded-[12px] relative"
         >
-          <NaverIcon className="w-6 h-6 text-white" />
+          <NaverIcon className="w-6 h-6 text-white absolute left-5" />
           <span className="flex-1 text-center text-16px">네이버로 로그인</span>
         </Button>
 
@@ -123,9 +123,9 @@ const Login = () => {
             onClick={() => handleSocialLogin("google")}
             fullCustom
             sizeType="l"
-            className="bg-white border-[#ECECEC] text-[#212121] font-b flex items-center px-5 h-[52px] border border-solid rounded-[12px]"
+            className="bg-white border-[#ECECEC] text-[#212121] font-b flex items-center px-5 h-[52px] border border-solid rounded-[12px] relative"
           >
-            <GoogleIcon className="w-6 h-6" />
+            <GoogleIcon className="w-6 h-6 absolute left-5" />
             <span className="flex-1 text-center text-16px">
               Google로 로그인
             </span>
@@ -138,9 +138,9 @@ const Login = () => {
             onClick={() => handleSocialLogin("apple")}
             fullCustom
             sizeType="l"
-            className="bg-[#000000] border-black text-white font-b flex items-center px-5 h-[52px] rounded-[12px]"
+            className="bg-[#000000] border-black text-white font-b flex items-center px-5 h-[52px] rounded-[12px] relative"
           >
-            <AppleIcon className="w-6 h-6 text-white" />
+            <AppleIcon className="w-6 h-6 text-white absolute left-5" />
             <span className="flex-1 text-center text-16px">Apple로 로그인</span>
           </Button>
         )}
@@ -149,10 +149,10 @@ const Login = () => {
         <Button
           fullCustom
           sizeType="l"
-          className="bg-primary border-primary text-white font-b flex items-center px-5 h-[52px] rounded-[12px]"
+          className="bg-primary border-primary text-white font-b flex items-center px-5 h-[52px] rounded-[12px] relative"
           onClick={() => navigate("/login/email")}
         >
-          <div className="w-6 h-6" />
+          <div className="w-6 h-6 absolute left-5" />
           <span className="flex-1 text-center text-16px">이메일로 로그인</span>
         </Button>
       </div>
