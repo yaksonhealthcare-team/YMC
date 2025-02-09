@@ -108,10 +108,10 @@ const FilterContent = ({
             key={filter.id}
             fullCustom
             className={clsx(
-              "min-w-0 whitespace-nowrap px-[12px] py-[5px] text-12px font-sb !rounded-[15px]",
+              "min-w-0 whitespace-nowrap px-[12px] py-[5px] text-14px !rounded-[15px]",
               isSelected
-                ? "bg-primary-50 text-primary border border-solid border-primary"
-                : "bg-white text-gray-500 border border-solid border-gray-200",
+                ? "bg-primary-50 text-primary border border-solid border-primary font-sb"
+                : "bg-white text-gray-500 border border-solid border-gray-200 font-r",
             )}
             onClick={() => onFilterChange(filter)}
           >
