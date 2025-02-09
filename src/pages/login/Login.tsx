@@ -98,7 +98,7 @@ const Login = () => {
           onClick={() => handleSocialLogin("kakao")}
           fullCustom
           sizeType="l"
-          className="bg-[#FEE500] border-[#FEE500] text-[#262626] font-b flex items-center px-5 py-[13.75px]"
+          className="bg-[#FEE500] border-[#FEE500] text-[#262626] font-b flex items-center px-5 py-[13.75px] rounded-[12px]"
         >
           <KakaoIcon className="w-6 h-6" />
           <span className="flex-1 text-center text-16px">
@@ -111,7 +111,7 @@ const Login = () => {
           onClick={() => handleSocialLogin("naver")}
           fullCustom
           sizeType="l"
-          className="bg-[#03C75A] border-[#03C75A] text-white font-b flex items-center px-5 h-[52px]"
+          className="bg-[#03C75A] border-[#03C75A] text-white font-b flex items-center px-5 h-[52px] rounded-[12px]"
         >
           <NaverIcon className="w-6 h-6 text-white" />
           <span className="flex-1 text-center text-16px">네이버로 로그인</span>
@@ -123,7 +123,7 @@ const Login = () => {
             onClick={() => handleSocialLogin("google")}
             fullCustom
             sizeType="l"
-            className="bg-white border-[#ECECEC] text-[#212121] font-b flex items-center px-5 h-[52px] border border-solid"
+            className="bg-white border-[#ECECEC] text-[#212121] font-b flex items-center px-5 h-[52px] border border-solid rounded-[12px]"
           >
             <GoogleIcon className="w-6 h-6" />
             <span className="flex-1 text-center text-16px">
@@ -138,7 +138,7 @@ const Login = () => {
             onClick={() => handleSocialLogin("apple")}
             fullCustom
             sizeType="l"
-            className="bg-[#000000] border-black text-white font-b flex items-center px-5 h-[52px]"
+            className="bg-[#000000] border-black text-white font-b flex items-center px-5 h-[52px] rounded-[12px]"
           >
             <AppleIcon className="w-6 h-6 text-white" />
             <span className="flex-1 text-center text-16px">Apple로 로그인</span>
@@ -149,7 +149,7 @@ const Login = () => {
         <Button
           fullCustom
           sizeType="l"
-          className="bg-primary border-primary text-white font-b flex items-center px-5 h-[52px]"
+          className="bg-primary border-primary text-white font-b flex items-center px-5 h-[52px] rounded-[12px]"
           onClick={() => navigate("/login/email")}
         >
           <div className="w-6 h-6" />
