@@ -6,6 +6,7 @@ import Header from "@components/Header.tsx"
 
 type NavigationConfig = {
   display?: boolean
+  activeTab?: string
 }
 
 type BaseHeaderConfig = {
@@ -205,7 +206,8 @@ const NavButton = ({
   isActive = (path) => defaultIsActive(path, link),
 }: NavButtonProps) => {
   const path = window.location.pathname
-  const active = isActive(path)
+  const { navigation } = useLayout()
+  const active = navigation.activeTab ? title === navigation.activeTab : isActive(path)
   const navigate = useNavigate()
 
   const handleClick = () => {
