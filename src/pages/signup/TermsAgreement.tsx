@@ -195,11 +195,13 @@ export const TermsAgreement = () => {
 
         <div className="flex flex-col gap-6">
           {/* 전체 동의 */}
-          <div className="h-[52px] px-4 flex items-center gap-3 bg-[rgba(243,113,101,0.1)] border border-primary rounded-xl">
+          <div
+            className="h-[52px] px-4 flex items-center gap-3 bg-[rgba(243,113,101,0.1)] border border-primary rounded-xl cursor-pointer"
+            onClick={handleAllCheck}
+          >
             <Checkbox
               className="p-0 w-auto h-auto"
               checked={agreements.all}
-              onChange={handleAllCheck}
               checkedIcon={<CheckFillCircleIcon />}
               icon={<CheckFillCircleIcon color="#DDDDDD" />}
             />
