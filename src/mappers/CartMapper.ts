@@ -43,9 +43,9 @@ export class CartMapper {
     return {
       id: dto.membership.s_idx,
       brand: dto.branch.brand_name,
-      branchType: dto.branch.b_type,
+      branchType: dto.branch.s_type,
       title: dto.membership.s_name,
-      duration: Number(dto.membership.s_time),
+      duration: Number(dto.membership.s_time) || 60,
       options: [this.createOption(dto)],
       branchId: dto.branch.b_idx,
       brandCode: dto.branch.brand_code,
@@ -92,11 +92,11 @@ export class CartMapper {
   }
 
   private static createOption(dto: CartItemResponse): CartItemOption {
-    const price = Number(dto.membership.ss_price)
+    const price = Number(dto.option.ss_unit_price)
     const originalPrice =
-      dto.membership.original_price === null
+      dto.option.original_price === null || dto.option.original_price === "0"
         ? price
-        : Number(dto.membership.original_price)
+        : Number(dto.option.original_price)
 
     return {
       items: [

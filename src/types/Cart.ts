@@ -40,11 +40,11 @@ export interface CartItemResponse {
     ss_price: string
   }
   branch: {
-    b_idx: string
-    b_name: string
+    s_type: string // "지점 회원권" | "앱전용 회원권"
     brand_name: string
     brand_code: string
-    b_type: string
+    b_idx: string
+    b_name: string
   }
   option: {
     ss_idx: string
@@ -68,7 +68,7 @@ export interface CartSummary {
  * 현재:
  * - 회원권 상세(/api/memberships/detail): serviceType = "앱전용 회원권" | "지점 회원권"
  * - 장바구니 담기(/api/memberships/carts): b_type = "전지점" | "지정지점"
- * 
+ *
  * 백엔드와 협의하여 둘 중 하나의 포맷으로 통일 필요
  */
 export interface CartItemPostRequest {

@@ -57,21 +57,25 @@ const CartPage = () => {
 
     // 장바구니 아이템을 PaymentStore 형식으로 변환
     const paymentItems = items.flatMap((item) =>
-      item.options.map((option) => ({
-        s_idx: parseInt(item.id),
-        ss_idx: parseInt(option.items[0].cartId),
-        b_idx: parseInt(item.branchId),
-        brand_code: item.brandCode,
-        amount: option.items[0].count,
-        b_type: "지정지점" as const,
-        title: item.title,
-        brand: item.brand,
-        branchType: item.branchType,
-        duration: item.duration,
-        price: option.price,
-        originalPrice: option.originalPrice,
-        sessions: option.sessions,
-      })),
+      item.options.map((option) => {
+        const b_type: "지정지점" | "전지점" =
+          item.branchType === "지점 회원권" ? "지정지점" : "전지점"
+        return {
+          s_idx: parseInt(item.id),
+          ss_idx: parseInt(option.items[0].cartId),
+          b_idx: parseInt(item.branchId),
+          brand_code: item.brandCode,
+          amount: option.items[0].count,
+          b_type,
+          title: item.title,
+          brand: item.brand,
+          branchType: item.branchType,
+          duration: item.duration,
+          price: option.price,
+          originalPrice: option.originalPrice,
+          sessions: option.sessions,
+        }
+      }),
     )
 
     // 첫 번째 아이템의 지점 정보로 selectedBranch 설정
