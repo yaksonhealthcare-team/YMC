@@ -94,3 +94,17 @@ export interface PaymentHistoryDetailResponse {
     },
   ]
 }
+
+export enum PaymentStatus {
+  PENDING = "PENDING",
+  SUCCESS = "SUCCESS",
+  FAILED = "FAILED",
+}
+
+export interface PaymentResult {
+  orderId: string
+  paymentKey?: string
+  amount: string
+  status: PaymentStatus
+  error?: string
+}

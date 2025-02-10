@@ -123,6 +123,9 @@ const LocationPickerMap = lazy(
   () => import("../pages/branch/_fragments/LocationPickerMap"),
 )
 const SignupCallback = lazy(() => import("../pages/signup/SignupCallback"))
+const PaymentCallbackPage = lazy(
+  () => import("../pages/payment/PaymentCallbackPage"),
+)
 
 export const routeConfig: RouteConfig[] = [
   {
@@ -446,6 +449,11 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/oauth/callback/:provider",
     element: <OAuthCallback />,
+  },
+  {
+    path: "/payment/callback",
+    element: <PaymentCallbackPage />,
+    auth: true,
   },
 ]
 
