@@ -144,7 +144,6 @@ const PaymentPage = () => {
 
       const requestData = {
         orders,
-        point: pointAmount,
       }
 
       console.log("주문서 발행 요청:", JSON.stringify(requestData, null, 2))
