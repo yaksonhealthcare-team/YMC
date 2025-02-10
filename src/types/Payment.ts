@@ -10,6 +10,25 @@ export interface PaymentHistory {
   items: PaymentHistoryItem[]
 }
 
+export interface PaymentItem {
+  id?: string
+  s_idx: number
+  ss_idx: number
+  b_idx: number
+  brand_code: string
+  amount: number
+  b_type: "지정지점" | "전지점"
+  title: string
+  brand: string
+  branchType: string
+  duration: number
+  price: number
+  originalPrice?: number
+  sessions: number
+  name?: string
+  quantity?: number
+}
+
 export interface PaymentHistoryItem {
   index: string
   status: string
