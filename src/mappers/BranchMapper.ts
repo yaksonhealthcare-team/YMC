@@ -39,7 +39,7 @@ export class BranchMapper {
   static toEntities(dto: BranchSearchResponse): BranchesWithCurrentAddress {
     return {
       branches: dto.body.result.map((item: BranchSearchResult) => ({
-        id: item.b_idx,
+        b_idx: item.b_idx,
         name: item.b_name,
         address: item.b_addr,
         latitude: Number(item.b_lat),
@@ -59,7 +59,7 @@ export class BranchMapper {
   ): BranchesWithCurrentAddress {
     return {
       branches: dto.body.map((item: BranchBookmarkResult) => ({
-        id: item.b_idx,
+        b_idx: item.b_idx,
         name: item.b_name,
         address: item.b_addr || "",
         latitude: 0,
@@ -82,7 +82,7 @@ export class BranchMapper {
     const director = directorDTO ? this.toProfile(directorDTO) : undefined
 
     return {
-      id: dto.b_idx,
+      b_idx: dto.b_idx,
       name: dto.b_name,
       brand: dto.brand_name,
       brandCode: dto.brand_code,

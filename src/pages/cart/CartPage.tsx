@@ -77,7 +77,7 @@ const CartPage = () => {
     // 첫 번째 아이템의 지점 정보로 selectedBranch 설정
     const firstItem = items[0]
     const selectedBranch = {
-      id: firstItem.branchId,
+      b_idx: firstItem.branchId,
       brandCode: firstItem.brandCode,
       name: firstItem.brand,
       address: "", // 장바구니 API에서는 지점 주소를 제공하지 않음

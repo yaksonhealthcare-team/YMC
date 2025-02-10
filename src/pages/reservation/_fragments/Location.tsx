@@ -37,7 +37,7 @@ const Location = ({ reservation }: LocationProps) => {
   }
 
   const branch: Branch = {
-    id: reservation.branchId,
+    b_idx: reservation.branchId,
     name: reservation.store,
     address: reservation.address || "",
     latitude: branchLocation.latitude,

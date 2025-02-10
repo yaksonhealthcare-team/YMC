@@ -17,7 +17,6 @@ export interface BranchesWithCurrentAddress {
 }
 
 export interface BranchDetail {
-  id: string
   b_idx: string
   name: string
   brand: string

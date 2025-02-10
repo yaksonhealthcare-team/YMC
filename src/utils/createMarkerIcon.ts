@@ -65,10 +65,10 @@ export const createMarkerIcon = (
       "bookmark": TherapistBookmarkPin,
       "active-bookmark": TherapistActiveBookmarkPin,
     },
-  }
+  } as const
 
-  const icon =
-    iconMap[branch.brand]?.[state] || iconMap[branch.brand]?.["default"]
+  const brandKey = branch.brand as keyof typeof iconMap
+  const icon = iconMap[brandKey]?.[state] || iconMap[brandKey]?.["default"]
 
   if (!icon) {
     throw new Error(

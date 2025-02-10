@@ -15,7 +15,7 @@ const ActiveBranchList = () => {
             key={index}
             className={"border border-gray-100 rounded-2xl p-5"}
             onClick={() => {
-              navigate(`/branch/${brand.id}`)
+              navigate(`/branch/${brand.b_idx}`)
             }}
           >
             <BranchCard name={brand.brandName} address={brand.address} />

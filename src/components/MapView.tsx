@@ -34,7 +34,7 @@ const MapView = ({
   const { updateCurrentLocationMarker } = useNaverMapBranchMarkers({
     map: mapInstance.current,
     branches,
-    selectedBranchId: selectedBranch?.id,
+    selectedBranchId: selectedBranch?.b_idx,
     options: {
       showCurrentLocationMarker: options?.showCurrentLocation,
       onClickMarker: (branch) => {
