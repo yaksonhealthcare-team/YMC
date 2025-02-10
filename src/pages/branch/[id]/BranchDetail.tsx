@@ -189,20 +189,20 @@ const BranchDetail = () => {
 
   const handleReservation = useCallback(() => {
     if (!branch) return
-    navigate(`/reservation/form?branchId=${branch.id}`)
+    navigate(`/reservation/form?branchId=${branch.b_idx}`)
   }, [branch, navigate])
 
   const handleBookmark = useCallback(() => {
     if (!branch) return
 
     if (branch.isBookmarked) {
-      removeBookmark(branch.id, {
+      removeBookmark(branch.b_idx, {
         onSuccess: () => {
           showToast("즐겨찾기에서 삭제했어요.")
         },
       })
     } else {
-      addBookmark(branch.id, {
+      addBookmark(branch.b_idx, {
         onSuccess: () => {
           showToast("즐겨찾기에 추가했어요.")
         },

@@ -27,7 +27,7 @@ export class UserMapper {
       thirdPartyType: response.thirdPartyType,
       gender: response.sex as "M" | "F",
       brands: response.brands.map((brand) => ({
-        id: brand.b_idx,
+        b_idx: brand.b_idx,
         brandName: brand.b_name,
         address: brand.addr,
       })),

@@ -29,7 +29,7 @@ const Step2SelectedBranchList = ({
         <div className="flex-auto h-[0px] min-h-[200px] px-[20px] overflow-y-auto mt-[40px]">
           {selectedBranches.map((branch, index) => (
             <div
-              key={branch.id}
+              key={branch.b_idx}
               className={`p-[20px] border border-primary-300 rounded-[20px] ${index !== 0 && "mt-[16px]"}`}
             >
               <BranchItem branch={branch} />

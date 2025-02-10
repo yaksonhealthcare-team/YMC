@@ -21,7 +21,7 @@ export const MembershipActiveBranchList = ({ onBranchSelect }: Props) => {
     <div className="flex flex-col gap-4 p-4">
       {user.brands.map((branch) => {
         const branchData: Branch = {
-          b_idx: branch.id,
+          b_idx: branch.b_idx,
           name: branch.brandName,
           address: branch.address || "",
           latitude: 0,
@@ -33,7 +33,7 @@ export const MembershipActiveBranchList = ({ onBranchSelect }: Props) => {
           brand: "therapist",
         }
         return (
-          <button key={branch.id} onClick={() => onBranchSelect(branchData)}>
+          <button key={branch.b_idx} onClick={() => onBranchSelect(branchData)}>
             <BranchCard
               name={branch.brandName}
               address={branch.address || ""}

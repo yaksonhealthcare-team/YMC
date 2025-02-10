@@ -33,7 +33,7 @@ export const useNaverMapBranchMarkers = ({
   }
 
   const getMarkerState = (branch: Branch): MarkerState => {
-    if (branch.id === selectedBranchId) {
+    if (branch.b_idx === selectedBranchId) {
       return branch.isFavorite ? "active-bookmark" : "active"
     }
     return branch.isFavorite ? "bookmark" : "default"
@@ -59,7 +59,7 @@ export const useNaverMapBranchMarkers = ({
         })
       }
 
-      newMarkers.set(branch.id, marker)
+      newMarkers.set(branch.b_idx, marker)
     })
     setMarkers(newMarkers)
 

@@ -50,8 +50,8 @@ const Step1SearchBranchList = ({
 
   const handleSelectBranch = (branch: Branch) => {
     setSelectedBranches((prevSelected) => {
-      if (prevSelected.some((b) => b.id === branch.id)) {
-        return prevSelected.filter((b) => b.id !== branch.id)
+      if (prevSelected.some((b) => b.b_idx === branch.b_idx)) {
+        return prevSelected.filter((b) => b.b_idx !== branch.b_idx)
       }
       return [...prevSelected, branch]
     })
@@ -123,13 +123,13 @@ const Step1SearchBranchList = ({
             <>
               {branches.map((branch) => (
                 <div
-                  key={branch.id}
+                  key={branch.b_idx}
                   className="flex justify-between py-[16px] cursor-pointer border-b border-b-[#ECECEC]"
                   onClick={() => handleSelectBranch(branch)}
                 >
                   <BranchItem branch={branch} />
 
-                  {selectedBranches.some((b) => b.id === branch.id) && (
+                  {selectedBranches.some((b) => b.b_idx === branch.b_idx) && (
                     <CheckIcon htmlColor="#F37165" />
                   )}
                 </div>

@@ -45,14 +45,15 @@ const BranchMapSection = ({
     setBranches((prev) => {
       return [
         ...prev.filter(
-          (branch) => !branches.some((newBranch) => newBranch.id === branch.id),
+          (branch) =>
+            !branches.some((newBranch) => newBranch.b_idx === branch.b_idx),
         ),
         ...branches,
       ]
     })
     if (selectedBranch) {
       const newBranch = branches.find(
-        (branch) => selectedBranch.id === branch.id,
+        (branch) => selectedBranch.b_idx === branch.b_idx,
       )
       if (newBranch) {
         setSelectedBranch(newBranch)
@@ -83,13 +84,13 @@ const BranchMapSection = ({
           <BranchFilterListItem
             branch={selectedBranch}
             onClick={() => {
-              navigate(`/branch/${selectedBranch.id}`)
+              navigate(`/branch/${selectedBranch.b_idx}`)
             }}
             onClickFavorite={async (branch) => {
               if (branch.isFavorite) {
-                await removeBookmark(branch.id)
+                await removeBookmark(branch.b_idx)
               } else {
-                await addBookmark(branch.id)
+                await addBookmark(branch.b_idx)
               }
               await fetchBranchesByCoords(coords)
             }}

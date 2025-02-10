@@ -37,11 +37,11 @@ const FavoritePage = () => {
   }, [setHeader, setNavigation])
 
   const handleBranchClick = (branch: Branch) => {
-    navigate(`/branch/${branch.id}`)
+    navigate(`/branch/${branch.b_idx}`)
   }
 
   const handleToggleFavorite = (branch: Branch) => {
-    removeBookmark(branch.id, {
+    removeBookmark(branch.b_idx, {
       onSuccess: () => {
         showToast("즐겨찾기에서 삭제했어요.")
       },
@@ -85,7 +85,7 @@ const FavoritePage = () => {
         <ul className="divide-y">
           {favoriteBranches.map((branch) => (
             <BranchFilterListItem
-              key={branch.id}
+              key={branch.b_idx}
               branch={branch}
               onClick={handleBranchClick}
               onClickFavorite={handleToggleFavorite}

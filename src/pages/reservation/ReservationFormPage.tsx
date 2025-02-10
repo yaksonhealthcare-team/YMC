@@ -26,7 +26,7 @@ import { useMembershipList } from "../../queries/useMembershipQueries.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useConsultationCount } from "../../queries/useConsultationQueries.ts"
-import type { Swiper as SwiperType } from 'swiper'
+import type { Swiper as SwiperType } from "swiper"
 
 interface FormDataType {
   item: undefined | string
@@ -93,7 +93,7 @@ const ReservationFormPage = () => {
         addServices={data.additionalServices.map((service) =>
           Number(service.am_idx),
         )}
-        b_idx={selectedBranch?.id || ""}
+        b_idx={selectedBranch?.b_idx || ""}
       />,
     )
   }
@@ -114,7 +114,7 @@ const ReservationFormPage = () => {
     if (selectedBranch) {
       setData((prev) => ({
         ...prev,
-        branch: selectedBranch.id,
+        branch: selectedBranch.b_idx,
       }))
     }
 

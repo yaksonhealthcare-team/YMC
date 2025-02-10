@@ -34,7 +34,7 @@ const BranchSearch = () => {
       ) : (
         <BranchSearchResultList
           query={query}
-          onSelect={(branch) => navigate(`/branch/${branch.id}`)}
+          onSelect={(branch) => navigate(`/branch/${branch.b_idx}`)}
         />
       )}
     </div>

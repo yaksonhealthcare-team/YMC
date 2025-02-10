@@ -16,7 +16,7 @@ export interface User {
   profileURL?: string
   thirdPartyType: string
   brands: {
-    id: string
+    b_idx: string
     brandName: string
     address: string
   }[]

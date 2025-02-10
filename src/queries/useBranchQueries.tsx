@@ -25,7 +25,7 @@ interface BranchFilters {
 const queryKeys = {
   branches: {
     list: (filters: BranchFilters) => ["branches", filters],
-    detail: (id: string, coords: Coordinate) => ["branch", id, coords],
+    detail: (b_idx: string, coords: Coordinate) => ["branch", b_idx, coords],
   },
 }
 
@@ -41,10 +41,10 @@ export const useBranches = (filters: BranchFilters) =>
     },
   })
 
-export const useBranch = (id: string, coords: Coordinate) =>
+export const useBranch = (b_idx: string, coords: Coordinate) =>
   useQuery({
-    queryKey: queryKeys.branches.detail(id, coords),
-    queryFn: () => fetchBranch(id, coords),
+    queryKey: queryKeys.branches.detail(b_idx, coords),
+    queryFn: () => fetchBranch(b_idx, coords),
   })
 
 export const useBranchBookmarksQuery = (coords?: Coordinate) => {
@@ -55,10 +55,10 @@ export const useBranchBookmarksQuery = (coords?: Coordinate) => {
   })
 }
 
-export const useBranchDetailQuery = (id: string) => {
+export const useBranchDetailQuery = (b_idx: string) => {
   return useQuery({
-    queryKey: ["branchDetail", id],
-    queryFn: () => fetchBranch(id, { latitude: 0, longitude: 0 }),
+    queryKey: ["branchDetail", b_idx],
+    queryFn: () => fetchBranch(b_idx, { latitude: 0, longitude: 0 }),
   })
 }
 

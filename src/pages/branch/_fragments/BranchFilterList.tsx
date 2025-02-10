@@ -33,15 +33,15 @@ const BranchFilterList = ({ branches, onIntersect }: BranchFilterListProps) => {
       <ul className={"divide-y"}>
         {branches.map((branch) => (
           <BranchFilterListItem
-            key={branch.id}
+            key={branch.b_idx}
             branch={branch}
-            onClick={(branch) => navigate(`/branch/${branch.id}`)}
+            onClick={(branch) => navigate(`/branch/${branch.b_idx}`)}
             onClickFavorite={() => {
               if (branch.isFavorite) {
-                removeBookmark(branch.id)
+                removeBookmark(branch.b_idx)
                 showToast("즐겨찾기에서 삭제했어요.")
               } else {
-                addBookmark(branch.id)
+                addBookmark(branch.b_idx)
                 showToast("즐겨찾기에 추가했어요.")
               }
             }}

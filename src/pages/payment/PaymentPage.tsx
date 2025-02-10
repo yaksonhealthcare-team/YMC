@@ -164,6 +164,15 @@ const PaymentPage = () => {
 
       return response.data
     },
+    retry: false, // 재시도 하지 않음
+    onError: (error) => {
+      console.error("결제 요청 중 오류 발생:", error)
+      if (error instanceof Error) {
+        alert(error.message)
+      } else {
+        alert("결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.")
+      }
+    },
   })
 
   useEffect(() => {
@@ -344,12 +353,8 @@ const PaymentPage = () => {
 
       await requestPayment(orderData)
     } catch (error) {
-      console.error("결제 요청 중 오류 발생:", error)
-      if (error instanceof Error) {
-        alert(error.message)
-      } else {
-        alert("결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.")
-      }
+      // mutation의 onError에서 이미 처리되므로 여기서는 추가 처리하지 않음
+      return
     }
   }
 

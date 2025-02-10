@@ -53,7 +53,10 @@ const ActiveBranch = () => {
     <div className="w-full h-full p-5">
       <ul className="space-y-3">
         {user.brands.map((branch) => (
-          <li key={branch.id} className="p-5 rounded-2xl border border-gray-100">
+          <li
+            key={branch.b_idx}
+            className="p-5 rounded-2xl border border-gray-100"
+          >
             <BranchCard name={branch.brandName} address={branch.address} />
           </li>
         ))}
@@ -63,4 +66,3 @@ const ActiveBranch = () => {
 }
 
 export default ActiveBranch
-
