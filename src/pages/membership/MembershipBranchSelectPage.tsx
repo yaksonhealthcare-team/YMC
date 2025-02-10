@@ -61,9 +61,9 @@ export const MembershipBranchSelectPage = ({ onSelect, onClose }: Props) => {
 
   const handleBranchSelect = (branch: BranchSearchResult | Branch) => {
     const branchData: Branch =
-      "b_idx" in branch
+      "b_idx" in branch && "b_name" in branch
         ? {
-            id: branch.b_idx,
+            b_idx: branch.b_idx,
             name: branch.b_name,
             address: branch.b_addr,
             latitude: Number(branch.b_lat),

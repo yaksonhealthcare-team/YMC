@@ -114,7 +114,7 @@ export const OptionsBottomSheetContent = ({
       const cartItems = selectedOptions.map(({ option, count }) => ({
         s_idx: parseInt(membershipId),
         ss_idx: parseInt(option.ss_idx),
-        b_idx: selectedBranch ? parseInt(selectedBranch.id) : 0,
+        b_idx: selectedBranch ? parseInt(selectedBranch.b_idx) : 0,
         brand_code: brandCode,
         amount: count,
         b_type: branchType,
@@ -146,7 +146,7 @@ export const OptionsBottomSheetContent = ({
       const paymentItems = selectedOptions.map(({ option, count }) => ({
         s_idx: parseInt(membershipId),
         ss_idx: parseInt(option.ss_idx),
-        b_idx: selectedBranch ? parseInt(selectedBranch.id) : 0,
+        b_idx: selectedBranch ? parseInt(selectedBranch.b_idx) : 0,
         brand_code: brandCode,
         amount: count,
         b_type: "지정지점" as const,
@@ -163,31 +163,32 @@ export const OptionsBottomSheetContent = ({
 
       // 지점 회원권이면서 selectedBranch가 없는 경우에만 return
       if (!selectedBranch && serviceType === "지점 회원권") {
-        return;
+        return
       }
 
-      setPaymentItems(paymentItems);
-      setPaymentBranch(selectedBranch || {
-        id: "0",
-        brandCode: brandCode,
-        name: brand,
-        address: "",
-        latitude: 0,
-        longitude: 0,
-        canBookToday: false,
-        distanceInMeters: null,
-        isFavorite: false,
-        brand: "therapist" as const,
-      });
-      
+      setPaymentItems(paymentItems)
+      setPaymentBranch(
+        selectedBranch || {
+          b_idx: "0",
+          brandCode: brandCode,
+          name: brand,
+          address: "",
+          latitude: 0,
+          longitude: 0,
+          canBookToday: false,
+          distanceInMeters: null,
+          isFavorite: false,
+          brand: "therapist" as const,
+        },
+      )
+
       // 스토어가 업데이트된 후에 네비게이션 실행
-      navigate("/payment", { replace: true });
-      
+      navigate("/payment", { replace: true })
+
       // 네비게이션이 완료된 후에 오버레이 닫기
-      closeOverlay();
-      
+      closeOverlay()
     } catch (error) {
-      alert("결제 진행 중 오류가 발생했습니다. 다시 시도해주세요.");
+      alert("결제 진행 중 오류가 발생했습니다. 다시 시도해주세요.")
     }
   }
 
@@ -343,7 +344,10 @@ export const OptionsBottomSheetContent = ({
               variantType={selectedOptions.length === 0 ? "grayLine" : "line"}
               sizeType="l"
               onClick={handleCartButtonClick}
-              className={clsx("flex-1", selectedOptions.length === 0 && "!text-[#BDBDBD]")}
+              className={clsx(
+                "flex-1",
+                selectedOptions.length === 0 && "!text-[#BDBDBD]",
+              )}
               disabled={selectedOptions.length === 0}
             >
               {selectedOptions.length === 0 ? "닫기" : "장바구니 담기"}

@@ -8,18 +8,58 @@ import { Radio } from "@components/Radio.tsx"
 import { useNavigate } from "react-router-dom"
 import { usePaymentStore } from "../../hooks/usePaymentStore.ts"
 import { useMutation, useQuery } from "@tanstack/react-query"
-import axios from "axios"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { CartItemOption } from "../../types/Cart.ts"
 import { fetchPoints } from "../../apis/points.api.ts"
+import { axiosClient } from "../../queries/clients.ts"
 
 interface OrderResponse {
-  orderId: string
-  pgMid: string
-  timestamp: string
-  signature: string
-  returnUrl: string
-  amount: number
+  resultCode: string
+  resultMessage: string
+  orderer: {
+    csm_idx: string
+    name: string
+    hp: string
+    email: string
+  }
+  orderSheet: {
+    orderid: string
+    items: Array<{
+      membership: {
+        s_idx: string
+        s_name: string
+        s_time: string
+      }
+      branch: {
+        b_idx: string
+        b_name: string
+      }
+      option: {
+        ss_idx: string
+        ss_count: string
+      }
+      origin_price: string
+      price: string
+      amount: number
+    }>
+  }
+  orderSummary: {
+    total_origin_price: number
+    total_price: number
+    total_count: number
+  }
+  pg_info: {
+    P_MID: string
+    P_OID: string
+    P_AMT: number
+    P_GOODS: string
+    P_UNAME: string
+    P_NEXT_URL: string
+    P_NOTI_URL: string
+    P_HPP_METHOD: string
+    P_RESERVED: string
+    P_TIMESTAMP: string
+  }
 }
 
 const PaymentPage = () => {
@@ -55,13 +95,73 @@ const PaymentPage = () => {
   // 주문서 발행 API 호출
   const createOrder = useMutation({
     mutationFn: async () => {
-      const response = await axios.post<OrderResponse>(
-        "/api/orders/memberships",
-        {
-          membershipId: paymentItems[0]?.s_idx,
-          point: pointAmount,
-        },
+      if (!selectedBranch) {
+        throw new Error("지점을 선택해주세요.")
+      }
+
+      // 데이터 유효성 검사
+      if (!paymentItems || paymentItems.length === 0) {
+        throw new Error("선택된 상품이 없습니다.")
+      }
+
+      const orders = paymentItems.map((item) => {
+        // 필수값 검사
+        if (
+          !item.s_idx ||
+          !item.ss_idx ||
+          !selectedBranch ||
+          !item.brand_code ||
+          !item.amount
+        ) {
+          console.error("필수값 누락:", { item, selectedBranch })
+          throw new Error("필수 데이터가 누락되었습니다.")
+        }
+
+        // 수량이 0 이하인 경우
+        if (item.amount <= 0) {
+          throw new Error("수량은 1개 이상이어야 합니다.")
+        }
+
+        // b_idx가 문자열인 경우 숫자로 변환
+        const b_idx =
+          typeof selectedBranch.b_idx === "string"
+            ? parseInt(selectedBranch.b_idx)
+            : selectedBranch.b_idx
+
+        if (isNaN(b_idx)) {
+          console.error("잘못된 b_idx 값:", { selectedBranch })
+          throw new Error("잘못된 지점 정보입니다.")
+        }
+
+        return {
+          s_idx: Number(item.s_idx),
+          ss_idx: Number(item.ss_idx),
+          b_idx: b_idx,
+          brand_code: item.brand_code,
+          amount: Number(item.amount),
+        }
+      })
+
+      const requestData = {
+        orders,
+        point: pointAmount,
+      }
+
+      console.log("주문서 발행 요청:", JSON.stringify(requestData, null, 2))
+
+      const response = await axiosClient.post<OrderResponse>(
+        "/orders/memberships",
+        requestData,
       )
+
+      console.log("주문서 발행 응답:", response.data)
+
+      if (response.data.resultCode !== "00") {
+        throw new Error(
+          response.data.resultMessage || "주문서 발행에 실패했습니다.",
+        )
+      }
+
       return response.data
     },
   })
@@ -147,35 +247,35 @@ const PaymentPage = () => {
 
   const handleCountChange = (cartId: string, newCount: number) => {
     if (newCount === 0) {
-      handleDelete(cartId);
-      return;
+      handleDelete(cartId)
+      return
     }
-    
-    const updatedItems = paymentItems.map(item => {
+
+    const updatedItems = paymentItems.map((item) => {
       if (item.ss_idx.toString() === cartId) {
         return {
           ...item,
-          amount: newCount
-        };
+          amount: newCount,
+        }
       }
-      return item;
-    });
-    
-    setPaymentItems(updatedItems);
-  };
+      return item
+    })
+
+    setPaymentItems(updatedItems)
+  }
 
   const handleDelete = (cartId: string) => {
     const updatedItems = paymentItems.filter(
-      item => item.ss_idx.toString() !== cartId
-    );
-    
+      (item) => item.ss_idx.toString() !== cartId,
+    )
+
     if (updatedItems.length === 0) {
-      navigate(-1);
-      return;
+      navigate(-1)
+      return
     }
-    
-    setPaymentItems(updatedItems);
-  };
+
+    setPaymentItems(updatedItems)
+  }
 
   // 이니시스 결제 요청
   const requestPayment = async (orderData: OrderResponse) => {
@@ -193,13 +293,13 @@ const PaymentPage = () => {
     }
 
     // 필수 파라미터
-    appendInput("P_MID", orderData.pgMid)
-    appendInput("P_OID", orderData.orderId)
-    appendInput("P_AMT", orderData.amount.toString())
-    appendInput("P_GOODS", paymentItems[0]?.title || "약손한의원 회원권")
-    appendInput("P_UNAME", "회원")
-    appendInput("P_NEXT_URL", orderData.returnUrl)
-    appendInput("P_NOTI", `${orderData.orderId},${pointAmount}`)
+    appendInput("P_MID", orderData.pg_info.P_MID)
+    appendInput("P_OID", orderData.pg_info.P_OID)
+    appendInput("P_AMT", orderData.pg_info.P_AMT.toString())
+    appendInput("P_GOODS", orderData.orderSheet.items[0].membership.s_name)
+    appendInput("P_UNAME", orderData.orderer.name)
+    appendInput("P_NEXT_URL", orderData.pg_info.P_NEXT_URL)
+    appendInput("P_NOTI", `${orderData.pg_info.P_OID},${pointAmount}`)
     appendInput("P_RESERVED", "centerCd=Y")
 
     // 결제수단별 파라미터
@@ -237,10 +337,19 @@ const PaymentPage = () => {
 
     try {
       const orderData = await createOrder.mutateAsync()
+
+      if (!orderData.pg_info) {
+        throw new Error("결제 정보가 없습니다.")
+      }
+
       await requestPayment(orderData)
     } catch (error) {
       console.error("결제 요청 중 오류 발생:", error)
-      alert("결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.")
+      if (error instanceof Error) {
+        alert(error.message)
+      } else {
+        alert("결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.")
+      }
     }
   }
 
@@ -259,34 +368,38 @@ const PaymentPage = () => {
               {paymentItems.length}개
             </span>
           </div>
-          
-            <div className="flex flex-col gap-4">
-              {paymentItems.map((item) => (
-                <PaymentCard
-                  key={item.ss_idx}
-                  brand={item.brand}
-                  branchType={item.branchType}
-                  title={item.title}
-                  duration={item.duration}
-                  options={[
-                    {
-                      items: [
-                        {
-                          cartId: item.ss_idx.toString(),
-                          count: item.amount,
-                        },
-                      ],
-                      sessions: item.sessions,
-                      price: item.price,
-                      originalPrice: item.originalPrice || item.price,
-                    } satisfies CartItemOption,
-                  ]}
-                  onCountChange={(cartId, newCount) => handleCountChange(cartId, newCount)}
-                  onDelete={() => handleDelete(item.ss_idx.toString())}
-                  onDeleteOption={(cartIds) => cartIds.forEach(cartId => handleDelete(cartId))}
-                />
-              ))}
-            </div>
+
+          <div className="flex flex-col gap-4">
+            {paymentItems.map((item) => (
+              <PaymentCard
+                key={item.ss_idx}
+                brand={item.brand}
+                branchType={item.branchType}
+                title={item.title}
+                duration={item.duration}
+                options={[
+                  {
+                    items: [
+                      {
+                        cartId: item.ss_idx.toString(),
+                        count: item.amount,
+                      },
+                    ],
+                    sessions: item.sessions,
+                    price: item.price,
+                    originalPrice: item.originalPrice || item.price,
+                  } satisfies CartItemOption,
+                ]}
+                onCountChange={(cartId, newCount) =>
+                  handleCountChange(cartId, newCount)
+                }
+                onDelete={() => handleDelete(item.ss_idx.toString())}
+                onDeleteOption={(cartIds) =>
+                  cartIds.forEach((cartId) => handleDelete(cartId))
+                }
+              />
+            ))}
+          </div>
         </div>
 
         {/* 포인트 섹션 */}

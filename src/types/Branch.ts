@@ -1,5 +1,5 @@
 export interface Branch {
-  id: string
+  b_idx: string
   name: string
   address: string
   latitude: number
@@ -8,7 +8,7 @@ export interface Branch {
   distanceInMeters: string | null
   isFavorite: boolean
   brandCode: string
-  brand: "therapist" | "dalia" | "diet"
+  brand: string
 }
 
 export interface BranchesWithCurrentAddress {
