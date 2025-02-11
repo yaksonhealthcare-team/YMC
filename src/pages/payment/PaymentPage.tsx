@@ -306,6 +306,13 @@ const PaymentPage = () => {
     appendInput("P_NOTI_URL", orderData.pg_info.P_NOTI_URL)
     appendInput("P_NOTI", `${orderData.pg_info.P_OID},${pointAmount}`)
 
+    // 결제 수단에 따른 파라미터 추가
+    if (selectedPayment === "card") {
+      appendInput("P_RESERVED", "centerCd=Y")
+    } else if (selectedPayment === "simple") {
+      appendInput("P_RESERVED", `${simplePayment}Pay,centerCd=Y`)
+    }
+
     document.body.appendChild(paymentForm)
     paymentForm.submit()
   }

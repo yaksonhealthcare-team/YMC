@@ -79,15 +79,30 @@ export default function PaymentCallbackPage() {
       console.log("결제 응답 데이터:", {
         결과코드: jsonData.resultCode,
         결과메시지: jsonData.resultMessage,
-        주문번호: jsonData.body.orderid,
-        결제정보: {
-          결제금액: jsonData.body.pay_info.amt,
-          결제수단: jsonData.body.pay_info.type,
-          카드사: jsonData.body.pay_info.cardname,
-          할부: jsonData.body.pay_info.quota,
-          승인번호: jsonData.body.pay_info.appno,
-        },
+        주문번호: jsonData.body?.orderid,
+        결제정보: jsonData.body?.pay_info
+          ? {
+              결제금액: jsonData.body.pay_info.amt,
+              결제수단: jsonData.body.pay_info.type,
+              카드사: jsonData.body.pay_info.cardname,
+              할부: jsonData.body.pay_info.quota,
+              승인번호: jsonData.body.pay_info.appno,
+            }
+          : null,
       })
+
+      // 결제 실패 또는 body가 null인 경우
+      if (jsonData.resultCode !== "00" || !jsonData.body) {
+        console.log("❌ 결제 실패:", jsonData.resultMessage)
+        setPaymentStatus(PaymentStatus.FAILED)
+        navigate("/payment/failed", {
+          state: {
+            error: jsonData.resultMessage || "결제에 실패했습니다.",
+            code: jsonData.resultCode,
+          },
+        })
+        return
+      }
 
       // P_NOTI 파싱 시도
       const notiValue = searchParams.get("P_NOTI") || ""
