@@ -114,7 +114,7 @@ export interface PaymentHistoryDetailResponse {
 }
 
 export interface PaymentCompleteState {
-  amount: number
+  orderId: string
   type: "membership" | "additional"
   items: PaymentItem[]
   paymentMethod: "card" | "simple" | "virtual"
@@ -123,7 +123,16 @@ export interface PaymentCompleteState {
     cardName: string
     installment: string
   }
-  pointAmount?: number
+  amount_info: {
+    total_amount: number
+    discount_amount: number
+    point_amount: number
+    payment_amount: number
+  }
+  point_info: {
+    used_point: number
+    remaining_point: number
+  }
   message?: string
 }
 

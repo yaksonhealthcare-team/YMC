@@ -144,21 +144,24 @@ export default function PaymentCallbackPage() {
         navigate("/payment/complete", {
           state: {
             orderId: jsonData.body?.orderid || "",
+            type: "membership",
             items:
               jsonData.body?.items?.map((item) => ({
                 id: item?.id || "",
                 title: item?.title || "상품명 없음",
                 sessions: item?.options?.[0]?.sessions || 0,
-                amount: item?.options?.[0]?.price || 0,
-                brand: {
-                  name: item?.brand || "브랜드명 없음",
-                  code: item?.branchType || "000",
-                },
-                branch: {
-                  name: jsonData.body?.items?.[0]?.brand || "지점명 없음",
-                  code: jsonData.body?.items?.[0]?.branchType || "0",
-                },
+                price: item?.options?.[0]?.price || 0,
+                amount: item?.options?.[0]?.count || 0,
+                brand: item?.brand || "브랜드명 없음",
+                branchType: item?.branchType || "지점 정보 없음",
               })) || [],
+            paymentMethod: (
+              jsonData.body?.pay_info?.type || "UNKNOWN"
+            ).toLowerCase(),
+            cardPaymentInfo: {
+              cardName: jsonData.body?.pay_info?.cardname || "카드사 정보 없음",
+              installment: jsonData.body?.pay_info?.quota || "0",
+            },
             amount_info: {
               total_amount: totalAmount || 0,
               discount_amount: jsonData.body?.discountAmount || 0,
@@ -171,21 +174,6 @@ export default function PaymentCallbackPage() {
                 0,
                 (availablePoint || 0) - (point || 0),
               ),
-            },
-            payment_info: {
-              method: (
-                jsonData.body?.pay_info?.type || "UNKNOWN"
-              ).toLowerCase(),
-              card_info: {
-                company:
-                  jsonData.body?.pay_info?.cardname || "카드사 정보 없음",
-                number: jsonData.body?.pay_info?.card_noinf || "",
-                installment_period: parseInt(
-                  jsonData.body?.pay_info?.quota || "0",
-                ),
-                approval_number: jsonData.body?.pay_info?.appno || "",
-                approval_date: jsonData.body?.pay_info?.paydate || "",
-              },
             },
           },
         })
@@ -199,21 +187,24 @@ export default function PaymentCallbackPage() {
         navigate("/payment/complete", {
           state: {
             orderId: jsonData.body?.orderid || "",
+            type: "membership",
             items:
               jsonData.body?.items?.map((item) => ({
                 id: item?.id || "",
                 title: item?.title || "상품명 없음",
                 sessions: item?.options?.[0]?.sessions || 0,
-                amount: item?.options?.[0]?.price || 0,
-                brand: {
-                  name: item?.brand || "브랜드명 없음",
-                  code: item?.branchType || "000",
-                },
-                branch: {
-                  name: jsonData.body?.items?.[0]?.brand || "지점명 없음",
-                  code: jsonData.body?.items?.[0]?.branchType || "0",
-                },
+                price: item?.options?.[0]?.price || 0,
+                amount: item?.options?.[0]?.count || 0,
+                brand: item?.brand || "브랜드명 없음",
+                branchType: item?.branchType || "지점 정보 없음",
               })) || [],
+            paymentMethod: (
+              jsonData.body?.pay_info?.type || "UNKNOWN"
+            ).toLowerCase(),
+            cardPaymentInfo: {
+              cardName: jsonData.body?.pay_info?.cardname || "카드사 정보 없음",
+              installment: jsonData.body?.pay_info?.quota || "0",
+            },
             amount_info: {
               total_amount: totalAmount || 0,
               discount_amount: jsonData.body?.discountAmount || 0,
@@ -226,11 +217,6 @@ export default function PaymentCallbackPage() {
                 0,
                 (availablePoint || 0) - (point || 0),
               ),
-            },
-            payment_info: {
-              method: (
-                jsonData.body?.pay_info?.type || "UNKNOWN"
-              ).toLowerCase(),
             },
           },
         })

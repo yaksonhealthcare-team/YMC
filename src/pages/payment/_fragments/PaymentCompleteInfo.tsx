@@ -64,7 +64,7 @@ const PaymentInfo = ({ state }: PaymentInfoProps) => {
         <div className="flex justify-between items-center">
           <span className="font-m text-16px text-gray-700">입금금액</span>
           <span className="font-b text-20px text-gray-700">
-            {state.amount.toLocaleString()}원
+            {state.amount_info.payment_amount.toLocaleString()}원
           </span>
         </div>
       </div>
