@@ -60,6 +60,7 @@ export default function PaymentCallbackPage() {
       if (jsonData.resultCode === "61") {
         console.log("ℹ️ 결제 취소됨")
         setPaymentStatus(PaymentStatus.CANCELED)
+        alert("결제가 취소되었습니다.")
         navigate("/payment", { replace: true })
         return
       }
