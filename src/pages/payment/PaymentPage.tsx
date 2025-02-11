@@ -63,6 +63,9 @@ interface OrderResponse {
 }
 
 const PaymentPage = () => {
+  console.group("💳 PaymentPage 렌더링")
+  console.log("컴포넌트 마운트")
+
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
 
@@ -70,9 +73,15 @@ const PaymentPage = () => {
     items: paymentItems,
     selectedBranch,
     setItems: setPaymentItems,
+    paymentStatus,
   } = usePaymentStore()
-  const [isLoading, setIsLoading] = useState(true)
+  console.log("PaymentStore 상태:", {
+    paymentItems,
+    selectedBranch,
+    paymentStatus,
+  })
 
+  const [isLoading, setIsLoading] = useState(true)
   const [selectedPayment, setSelectedPayment] = useState<
     "card" | "simple" | "virtual"
   >("card")
@@ -85,26 +94,37 @@ const PaymentPage = () => {
   // 포인트 조회
   const { data: availablePoint = 0, isLoading: isPointLoading } = useQuery({
     queryKey: ["points"],
-    queryFn: fetchPoints,
-    staleTime: 1000 * 60 * 5, // 5분
-    gcTime: 1000 * 60 * 30, // 30분
+    queryFn: () => {
+      console.log("🔍 포인트 조회 시작")
+      const result = fetchPoints()
+      console.log("포인트 조회 결과:", result)
+      return result
+    },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
     retry: 1,
   })
 
   // 주문서 발행 API 호출
   const createOrder = useMutation({
     mutationFn: async () => {
+      console.group("📝 주문서 발행 시작")
+      console.log("선택된 지점:", selectedBranch)
+      console.log("결제 아이템:", paymentItems)
+
       if (!selectedBranch) {
+        console.error("❌ 지점 미선택")
         throw new Error("지점을 선택해주세요.")
       }
 
-      // 데이터 유효성 검사
       if (!paymentItems || paymentItems.length === 0) {
+        console.error("❌ 상품 미선택")
         throw new Error("선택된 상품이 없습니다.")
       }
 
       const orders = paymentItems.map((item) => {
-        // 필수값 검사
+        console.log("주문 아이템 변환:", item)
+
         if (
           !item.s_idx ||
           !item.ss_idx ||
@@ -112,23 +132,22 @@ const PaymentPage = () => {
           !item.brand_code ||
           !item.amount
         ) {
-          console.error("필수값 누락:", { item, selectedBranch })
+          console.error("❌ 필수값 누락:", { item, selectedBranch })
           throw new Error("필수 데이터가 누락되었습니다.")
         }
 
-        // 수량이 0 이하인 경우
         if (item.amount <= 0) {
+          console.error("❌ 잘못된 수량:", item.amount)
           throw new Error("수량은 1개 이상이어야 합니다.")
         }
 
-        // b_idx가 문자열인 경우 숫자로 변환
         const b_idx =
           typeof selectedBranch.b_idx === "string"
             ? parseInt(selectedBranch.b_idx)
             : selectedBranch.b_idx
 
         if (isNaN(b_idx)) {
-          console.error("잘못된 b_idx 값:", { selectedBranch })
+          console.error("❌ 잘못된 b_idx 값:", { selectedBranch })
           throw new Error("잘못된 지점 정보입니다.")
         }
 
@@ -141,30 +160,28 @@ const PaymentPage = () => {
         }
       })
 
-      const requestData = {
-        orders,
-      }
-
+      const requestData = { orders }
       console.log("주문서 발행 요청:", JSON.stringify(requestData, null, 2))
 
       const response = await axiosClient.post<OrderResponse>(
         "/orders/memberships",
         requestData,
       )
-
       console.log("주문서 발행 응답:", response.data)
 
       if (response.data.resultCode !== "00") {
+        console.error("❌ 주문서 발행 실패:", response.data.resultMessage)
         throw new Error(
           response.data.resultMessage || "주문서 발행에 실패했습니다.",
         )
       }
 
+      console.groupEnd()
       return response.data
     },
-    retry: false, // 재시도 하지 않음
+    retry: false,
     onError: (error) => {
-      console.error("결제 요청 중 오류 발생:", error)
+      console.error("❌ 결제 요청 중 오류:", error)
       if (error instanceof Error) {
         alert(error.message)
       } else {
@@ -174,6 +191,14 @@ const PaymentPage = () => {
   })
 
   useEffect(() => {
+    console.group("🔄 PaymentPage useEffect")
+    console.log("현재 상태:", {
+      paymentItems,
+      selectedBranch,
+      isLoading,
+      paymentStatus,
+    })
+
     setHeader({
       display: true,
       title: "결제하기",
@@ -184,19 +209,21 @@ const PaymentPage = () => {
       display: false,
     })
 
-    // 결제 정보가 없으면 이전 페이지로 이동
     if (paymentItems.length === 0 || !selectedBranch) {
+      console.log("⚠️ 결제 정보 없음, 이전 페이지로 이동")
       navigate(-1)
       return
     }
 
-    // 0.5초 동안 로딩 화면 표시
     const timer = setTimeout(() => {
+      console.log("로딩 완료")
       setIsLoading(false)
     }, 500)
 
+    console.groupEnd()
     return () => {
       clearTimeout(timer)
+      console.log("🧹 PaymentPage cleanup")
     }
   }, [])
 
@@ -279,6 +306,9 @@ const PaymentPage = () => {
 
   // 이니시스 결제 요청
   const requestPayment = async (orderData: OrderResponse) => {
+    console.group("💳 이니시스 결제 요청")
+    console.log("주문 데이터:", orderData)
+
     const paymentForm = document.createElement("form")
     paymentForm.method = "POST"
     paymentForm.action = "https://mobile.inicis.com/smart/payment/"
@@ -286,6 +316,7 @@ const PaymentPage = () => {
     paymentForm.acceptCharset = "euc-kr"
 
     const appendInput = (name: string, value: string) => {
+      console.log(`폼 데이터 추가: ${name} = ${value}`)
       const input = document.createElement("input")
       input.type = "hidden"
       input.name = name
@@ -293,13 +324,20 @@ const PaymentPage = () => {
       paymentForm.appendChild(input)
     }
 
-    // 상품명 생성
     const goodsName =
       orderData.orderSheet.items.length > 1
         ? `${orderData.orderSheet.items[0].membership.s_name} 외 ${orderData.orderSheet.items.length - 1}건`
         : orderData.orderSheet.items[0].membership.s_name
 
-    // 필수 파라미터
+    console.log("결제 폼 데이터:", {
+      P_MID: orderData.pg_info.P_MID,
+      P_OID: orderData.pg_info.P_OID,
+      P_AMT: orderData.pg_info.P_AMT,
+      P_GOODS: goodsName,
+      selectedPayment,
+      simplePayment,
+    })
+
     appendInput("P_MID", orderData.pg_info.P_MID)
     appendInput("P_OID", orderData.pg_info.P_OID)
     appendInput("P_AMT", orderData.pg_info.P_AMT.toString())
@@ -309,7 +347,6 @@ const PaymentPage = () => {
     appendInput("P_NOTI", `${orderData.pg_info.P_OID},${pointAmount}`)
     appendInput("P_RESERVED", "centerCd=Y")
 
-    // 결제수단별 파라미터
     switch (selectedPayment) {
       case "card":
         appendInput("P_INI_PAYMENT", "CARD")
@@ -332,34 +369,49 @@ const PaymentPage = () => {
         break
     }
 
+    console.log("결제창 호출")
     document.body.appendChild(paymentForm)
     paymentForm.submit()
+    console.groupEnd()
   }
 
   const handlePayment = async () => {
+    console.group("🔄 결제 프로세스 시작")
+    console.log("결제 시작 상태:", {
+      isAgreed,
+      selectedPayment,
+      simplePayment,
+      point,
+    })
+
     if (!isAgreed) {
+      console.log("❌ 결제 동의 없음")
       alert("결제 진행 동의가 필요합니다.")
       return
     }
 
     try {
+      console.log("주문서 발행 요청")
       const orderData = await createOrder.mutateAsync()
 
       if (!orderData.pg_info) {
+        console.error("❌ PG 정보 없음")
         throw new Error("결제 정보가 없습니다.")
       }
 
+      console.log("결제창 호출 준비")
       await requestPayment(orderData)
     } catch (error) {
-      // mutation의 onError에서 이미 처리되므로 여기서는 추가 처리하지 않음
-      return
+      console.error("❌ 결제 프로세스 에러:", error)
     }
+    console.groupEnd()
   }
 
   if (isLoading || isPointLoading) {
     return <LoadingIndicator className="min-h-screen" />
   }
 
+  console.groupEnd()
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex flex-col flex-1 border-gray-50 pb-[88px]">
