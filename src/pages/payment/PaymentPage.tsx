@@ -74,6 +74,7 @@ const PaymentPage = () => {
     selectedBranch,
     setItems: setPaymentItems,
     paymentStatus,
+    clear: clearPayment,
   } = usePaymentStore()
   console.log("PaymentStore 상태:", {
     paymentItems,
@@ -190,13 +191,14 @@ const PaymentPage = () => {
     },
   })
 
+  // 초기 설정 useEffect
   useEffect(() => {
-    console.group("🔄 PaymentPage useEffect")
+    console.group("🔄 PaymentPage 초기화")
     console.log("현재 상태:", {
       paymentItems,
       selectedBranch,
-      isLoading,
       paymentStatus,
+      isLoading,
     })
 
     setHeader({
@@ -209,8 +211,14 @@ const PaymentPage = () => {
       display: false,
     })
 
-    if (paymentItems.length === 0 || !selectedBranch) {
-      console.log("⚠️ 결제 정보 없음, 이전 페이지로 이동")
+    // 결제 취소 상태이거나 결제 정보가 없는 경우 이전 페이지로 이동
+    if (
+      paymentStatus === "CANCELED" ||
+      paymentItems.length === 0 ||
+      !selectedBranch
+    ) {
+      console.log("⚠️ 결제 취소됨 또는 결제 정보 없음, 이전 페이지로 이동")
+      clearPayment()
       navigate(-1)
       return
     }
@@ -223,9 +231,20 @@ const PaymentPage = () => {
     console.groupEnd()
     return () => {
       clearTimeout(timer)
-      console.log("🧹 PaymentPage cleanup")
+      console.log("🧹 PaymentPage cleanup - 상태 초기화")
+      clearPayment()
     }
   }, [])
+
+  // 결제 상태 변경 감지 useEffect
+  useEffect(() => {
+    console.log("🔄 결제 상태 변경:", paymentStatus)
+    if (paymentStatus === "CANCELED") {
+      console.log("💫 결제 취소 상태 감지 - 상태 초기화 및 이동")
+      clearPayment()
+      navigate(-1)
+    }
+  }, [paymentStatus])
 
   const calculateTotalAmount = () => {
     return paymentItems.reduce(
@@ -411,7 +430,6 @@ const PaymentPage = () => {
     return <LoadingIndicator className="min-h-screen" />
   }
 
-  console.groupEnd()
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex flex-col flex-1 border-gray-50 pb-[88px]">
