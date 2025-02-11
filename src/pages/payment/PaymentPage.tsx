@@ -5,14 +5,13 @@ import { Divider } from "@mui/material"
 import { Button } from "@components/Button.tsx"
 import FixedButtonContainer from "@components/FixedButtonContainer.tsx"
 import { Radio } from "@components/Radio.tsx"
-import { useNavigate, useLocation } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { usePaymentStore } from "../../hooks/usePaymentStore.ts"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { CartItemOption } from "../../types/Cart.ts"
 import { fetchPoints } from "../../apis/points.api.ts"
 import { axiosClient } from "../../queries/clients.ts"
-import { useOverlay } from "../../contexts/ModalContext"
 
 interface OrderResponse {
   resultCode: string
@@ -65,7 +64,8 @@ interface OrderResponse {
 
 const PaymentPage = () => {
   const { setHeader, setNavigation } = useLayout()
-  const { openModal } = useOverlay()
+  const navigate = useNavigate()
+
   const {
     items: paymentItems,
     selectedBranch,
@@ -91,9 +91,6 @@ const PaymentPage = () => {
     gcTime: 1000 * 60 * 30, // 30분
     retry: 1,
   })
-
-  const navigate = useNavigate()
-  const location = useLocation()
 
   // 주문서 발행 API 호출
   const createOrder = useMutation({
