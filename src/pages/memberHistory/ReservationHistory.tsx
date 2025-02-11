@@ -1,5 +1,5 @@
 import MainTabs from "./_fragments/MainTabs"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Button } from "@components/Button"
 import clsx from "clsx"
 import { ReserveCard } from "@components/ReserveCard"
@@ -11,37 +11,43 @@ import {
   FilterItem,
   reservationFilters,
   ReservationStatusCode,
+  Reservation,
 } from "types/Reservation"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
-import useIntersection from "../../hooks/useIntersection"
 
 const ReservationContent = ({
   filterId,
 }: {
   filterId: ReservationStatusCode
 }) => {
-  const {
-    data: reservations,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useReservations(filterId)
+  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useReservations(filterId)
+  const reservations = data?.pages.flat() || []
+  const bottomRef = useRef<HTMLDivElement>(null)
 
-  const { observerTarget } = useIntersection({
-    onIntersect: () => {
-      if (hasNextPage && !isFetchingNextPage) {
-        fetchNextPage()
-      }
-    },
-  })
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage()
+        }
+      },
+      { threshold: 0.5 },
+    )
+
+    if (bottomRef.current) {
+      observer.observe(bottomRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [hasNextPage, fetchNextPage, isFetchingNextPage])
 
   if (isLoading) {
     return <LoadingIndicator className="flex-1" />
   }
 
-  if (!reservations || reservations.pages[0].length === 0) {
+  if (reservations.length === 0) {
     return (
       <div className="flex justify-center items-center p-4">
         예약 내역이 없습니다.
@@ -52,14 +58,16 @@ const ReservationContent = ({
   return (
     <div className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto scrollbar-hide">
       <div className="space-y-3">
-        {reservations.pages.map((page) =>
-          page.map((reservation) => (
-            <ReserveCard key={reservation.id} reservation={reservation} />
-          )),
-        )}
-        <div ref={observerTarget} className="h-4" />
-        {isFetchingNextPage && <LoadingIndicator className="min-h-[100px]" />}
+        {reservations.map((reservation: Reservation) => (
+          <ReserveCard key={reservation.id} reservation={reservation} />
+        ))}
       </div>
+      <div ref={bottomRef} className="h-4" />
+      {isFetchingNextPage && (
+        <div className="flex justify-center py-4">
+          <LoadingIndicator className="w-6 h-6" />
+        </div>
+      )}
     </div>
   )
 }

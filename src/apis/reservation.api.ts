@@ -11,18 +11,21 @@ export const fetchReservations = async (
   status: ReservationStatusCode,
   page: number,
 ): Promise<Reservation[]> => {
-  const { data } = await axiosClient.get("/reservation/reservations", {
-    params: {
-      r_status: status,
-      page,
+  const { data } = await axiosClient.get<HTTPResponse<ReservationResponse[]>>(
+    "/reservation/reservations",
+    {
+      params: {
+        r_status: status,
+        page,
+      },
     },
-  })
+  )
 
-  // BOM 문자 제거 후 파싱
-  const cleanData = data.replace(/^\uFEFF/, "")
-  const parsedData = JSON.parse(cleanData)
+  if (data.resultCode !== "00") {
+    throw new Error(data.resultMessage || "API 오류가 발생했습니다.")
+  }
 
-  return ReservationMapper.toReservationEntities(parsedData.body)
+  return ReservationMapper.toReservationEntities(data.body)
 }
 
 export const fetchReservationDetail = async (id: string) => {
