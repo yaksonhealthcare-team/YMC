@@ -52,7 +52,12 @@ interface PaymentCallbackData {
 export default function PaymentCallbackPage() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
-  const { setPaymentStatus, clear: clearPayment } = usePaymentStore()
+  const {
+    setPaymentStatus,
+    clear: clearPayment,
+    items: paymentItems,
+    selectedBranch,
+  } = usePaymentStore()
   const { openModal } = useOverlay()
   useEffect(() => {
     try {
@@ -91,6 +96,13 @@ export default function PaymentCallbackPage() {
       if (jsonData.resultCode === "00") {
         console.log("✅ 결제 성공")
         setPaymentStatus(PaymentStatus.SUCCESS)
+
+        // 할부 개월 수 표시 형식 변경
+        const installmentText =
+          jsonData.body.pay_info.quota === "00"
+            ? "일시불"
+            : `${parseInt(jsonData.body.pay_info.quota)}개월`
+
         navigate("/payment/complete", {
           state: {
             amount: Number(jsonData.body.pay_info.amt),
@@ -99,9 +111,9 @@ export default function PaymentCallbackPage() {
               {
                 id: jsonData.body.orderid,
                 brand: "약손명가",
-                branchType: "지점",
-                title: "멤버십",
-                sessions: 1,
+                branchType: selectedBranch?.name || "지점", // TODO: 실제 지점 정보 사용
+                title: paymentItems[0]?.name || "멤버십", // TODO: 실제 상품명 사용
+                sessions: paymentItems[0]?.sessions || 1,
                 price: Number(jsonData.body.pay_info.amt),
                 amount: 1,
               },
@@ -109,7 +121,7 @@ export default function PaymentCallbackPage() {
             paymentMethod: jsonData.body.pay_info.type.toLowerCase(),
             cardPaymentInfo: {
               cardName: jsonData.body.pay_info.cardname,
-              installment: jsonData.body.pay_info.quota,
+              installment: installmentText,
             },
             message: jsonData.resultMessage,
           },
