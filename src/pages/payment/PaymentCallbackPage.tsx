@@ -52,12 +52,7 @@ interface PaymentCallbackData {
 export default function PaymentCallbackPage() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
-  const {
-    setPaymentStatus,
-    clear: clearPayment,
-    items: paymentItems,
-    selectedBranch,
-  } = usePaymentStore()
+  const { setPaymentStatus, clear: clearPayment } = usePaymentStore()
   const { openModal } = useOverlay()
   useEffect(() => {
     try {
