@@ -199,7 +199,7 @@ const PaymentPage = () => {
     // 결제 취소 메시지 수신 처리
     const handleMessage = (event: MessageEvent) => {
       if (event.data.type === "PAYMENT_CANCELED") {
-        // 모달 제거
+        clearPayment() // 결제 정보 초기화
         navigate("/payment", { replace: true })
       }
     }
@@ -208,6 +208,7 @@ const PaymentPage = () => {
     return () => {
       clearTimeout(timer)
       window.removeEventListener("message", handleMessage)
+      clearPayment() // 컴포넌트 언마운트 시에도 결제 정보 초기화
     }
   }, [])
 
