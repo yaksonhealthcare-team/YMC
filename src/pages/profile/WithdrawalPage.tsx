@@ -66,7 +66,7 @@ const WithdrawalPage = () => {
       </div>
 
       <div className="flex flex-col gap-4">
-        <label className="flex items-start gap-3">
+        <label className="flex items-center gap-3">
           <input
             type="checkbox"
             checked={isAgreed}
