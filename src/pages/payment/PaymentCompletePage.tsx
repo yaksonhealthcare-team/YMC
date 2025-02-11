@@ -74,7 +74,7 @@ const PaymentCompletePage = () => {
             sizeType="m"
             onClick={() =>
               navigate(
-                isAdditional ? "/member-history?tab=resv" : "/reservation/list",
+                isAdditional ? "/member-history?tab=resv" : "/reservation/form",
               )
             }
             fullWidth
