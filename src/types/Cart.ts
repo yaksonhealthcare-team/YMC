@@ -22,6 +22,7 @@ export interface CartItemOption {
   sessions: number
   price: number
   originalPrice: number
+  ss_idx: string
 }
 
 /**

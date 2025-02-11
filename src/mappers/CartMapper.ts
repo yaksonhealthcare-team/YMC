@@ -108,6 +108,7 @@ export class CartMapper {
       sessions: Number(dto.option.ss_count),
       price,
       originalPrice,
+      ss_idx: dto.option.ss_idx,
     }
   }
 }

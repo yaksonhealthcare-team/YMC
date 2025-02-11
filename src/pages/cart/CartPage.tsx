@@ -62,7 +62,7 @@ const CartPage = () => {
           item.branchType === "지점 회원권" ? "지정지점" : "전지점"
         return {
           s_idx: parseInt(item.id),
-          ss_idx: parseInt(option.items[0].cartId),
+          ss_idx: parseInt(option.ss_idx),
           b_idx: parseInt(item.branchId),
           brand_code: item.brandCode,
           amount: option.items[0].count,
