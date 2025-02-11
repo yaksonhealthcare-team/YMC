@@ -290,7 +290,8 @@ const PaymentPage = () => {
     const paymentForm = document.createElement("form")
     paymentForm.method = "POST"
     paymentForm.action = "https://mobile.inicis.com/smart/payment/"
-    paymentForm.acceptCharset = "UTF-8"
+    paymentForm.charset = "euc-kr"
+    paymentForm.acceptCharset = "euc-kr"
 
     const appendInput = (name: string, value: string) => {
       const input = document.createElement("input")
@@ -300,11 +301,17 @@ const PaymentPage = () => {
       paymentForm.appendChild(input)
     }
 
+    // 상품명 생성
+    const goodsName =
+      orderData.orderSheet.items.length > 1
+        ? `${orderData.orderSheet.items[0].membership.s_name} 외 ${orderData.orderSheet.items.length - 1}건`
+        : orderData.orderSheet.items[0].membership.s_name
+
     // 필수 파라미터
     appendInput("P_MID", orderData.pg_info.P_MID)
     appendInput("P_OID", orderData.pg_info.P_OID)
     appendInput("P_AMT", orderData.pg_info.P_AMT.toString())
-    appendInput("P_GOODS", orderData.orderSheet.items[0].membership.s_name)
+    appendInput("P_GOODS", goodsName)
     appendInput("P_UNAME", orderData.orderer.name)
     appendInput("P_NEXT_URL", orderData.pg_info.P_NEXT_URL)
     appendInput("P_NOTI", `${orderData.pg_info.P_OID},${pointAmount}`)
