@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import PaymentCard from "@components/PaymentCard.tsx"
-import { Divider } from "@mui/material"
 import { Button } from "@components/Button.tsx"
 import FixedButtonContainer from "@components/FixedButtonContainer.tsx"
-import { Radio } from "@components/Radio.tsx"
 import { useNavigate } from "react-router-dom"
 import { usePaymentStore } from "../../hooks/usePaymentStore.ts"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
-import { CartItemOption } from "../../types/Cart.ts"
 import { fetchPoints } from "../../apis/points.api.ts"
 import { axiosClient } from "../../queries/clients.ts"
+import PaymentProductSection from "./_fragments/PaymentProductSection.tsx"
+import PaymentPointSection from "./_fragments/PaymentPointSection.tsx"
+import PaymentMethodSection from "./_fragments/PaymentMethodSection.tsx"
+import PaymentSummarySection from "./_fragments/PaymentSummarySection.tsx"
+import PaymentAgreementSection from "./_fragments/PaymentAgreementSection.tsx"
+import { PaymentStatus } from "../../types/Payment.ts"
 
 interface OrderResponse {
   resultCode: string
@@ -63,9 +65,6 @@ interface OrderResponse {
 }
 
 const PaymentPage = () => {
-  console.group("💳 PaymentPage 렌더링")
-  console.log("컴포넌트 마운트")
-
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
 
@@ -76,11 +75,6 @@ const PaymentPage = () => {
     paymentStatus,
     clear: clearPayment,
   } = usePaymentStore()
-  console.log("PaymentStore 상태:", {
-    paymentItems,
-    selectedBranch,
-    paymentStatus,
-  })
 
   const [isLoading, setIsLoading] = useState(true)
   const [selectedPayment, setSelectedPayment] = useState<
@@ -95,12 +89,7 @@ const PaymentPage = () => {
   // 포인트 조회
   const { data: availablePoint = 0, isLoading: isPointLoading } = useQuery({
     queryKey: ["points"],
-    queryFn: () => {
-      console.log("🔍 포인트 조회 시작")
-      const result = fetchPoints()
-      console.log("포인트 조회 결과:", result)
-      return result
-    },
+    queryFn: () => fetchPoints(),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,
     retry: 1,
@@ -109,23 +98,15 @@ const PaymentPage = () => {
   // 주문서 발행 API 호출
   const createOrder = useMutation({
     mutationFn: async () => {
-      console.group("📝 주문서 발행 시작")
-      console.log("선택된 지점:", selectedBranch)
-      console.log("결제 아이템:", paymentItems)
-
       if (!selectedBranch) {
-        console.error("❌ 지점 미선택")
         throw new Error("지점을 선택해주세요.")
       }
 
       if (!paymentItems || paymentItems.length === 0) {
-        console.error("❌ 상품 미선택")
         throw new Error("선택된 상품이 없습니다.")
       }
 
       const orders = paymentItems.map((item) => {
-        console.log("주문 아이템 변환:", item)
-
         if (
           !item.s_idx ||
           !item.ss_idx ||
@@ -133,12 +114,10 @@ const PaymentPage = () => {
           !item.brand_code ||
           !item.amount
         ) {
-          console.error("❌ 필수값 누락:", { item, selectedBranch })
           throw new Error("필수 데이터가 누락되었습니다.")
         }
 
         if (item.amount <= 0) {
-          console.error("❌ 잘못된 수량:", item.amount)
           throw new Error("수량은 1개 이상이어야 합니다.")
         }
 
@@ -148,7 +127,6 @@ const PaymentPage = () => {
             : selectedBranch.b_idx
 
         if (isNaN(b_idx)) {
-          console.error("❌ 잘못된 b_idx 값:", { selectedBranch })
           throw new Error("잘못된 지점 정보입니다.")
         }
 
@@ -161,28 +139,21 @@ const PaymentPage = () => {
         }
       })
 
-      const requestData = { orders }
-      console.log("주문서 발행 요청:", JSON.stringify(requestData, null, 2))
-
       const response = await axiosClient.post<OrderResponse>(
         "/orders/memberships",
-        requestData,
+        { orders },
       )
-      console.log("주문서 발행 응답:", response.data)
 
       if (response.data.resultCode !== "00") {
-        console.error("❌ 주문서 발행 실패:", response.data.resultMessage)
         throw new Error(
           response.data.resultMessage || "주문서 발행에 실패했습니다.",
         )
       }
 
-      console.groupEnd()
       return response.data
     },
     retry: false,
     onError: (error) => {
-      console.error("❌ 결제 요청 중 오류:", error)
       if (error instanceof Error) {
         alert(error.message)
       } else {
@@ -191,16 +162,7 @@ const PaymentPage = () => {
     },
   })
 
-  // 초기 설정 useEffect
   useEffect(() => {
-    console.group("🔄 PaymentPage 초기화")
-    console.log("현재 상태:", {
-      paymentItems,
-      selectedBranch,
-      paymentStatus,
-      isLoading,
-    })
-
     setHeader({
       display: true,
       title: "결제하기",
@@ -211,74 +173,55 @@ const PaymentPage = () => {
       display: false,
     })
 
-    // 결제 취소 상태이거나 결제 정보가 없는 경우 이전 페이지로 이동
-    if (
-      paymentStatus === "CANCELED" ||
-      paymentItems.length === 0 ||
-      !selectedBranch
-    ) {
-      console.log("⚠️ 결제 취소됨 또는 결제 정보 없음, 이전 페이지로 이동")
+    // 500ms 후에 로딩 상태를 해제
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 500)
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [])
+
+  // 결제 상태와 데이터 유효성 체크를 위한 별도의 useEffect
+  useEffect(() => {
+    if (paymentStatus === PaymentStatus.CANCELED) {
       clearPayment()
       navigate(-1)
       return
     }
 
-    const timer = setTimeout(() => {
-      console.log("로딩 완료")
-      setIsLoading(false)
-    }, 500)
-
-    console.groupEnd()
-    return () => {
-      clearTimeout(timer)
-      console.log("🧹 PaymentPage cleanup - 상태 초기화")
-      clearPayment()
-    }
-  }, [])
-
-  // 결제 상태 변경 감지 useEffect
-  useEffect(() => {
-    console.log("🔄 결제 상태 변경:", paymentStatus)
-    if (paymentStatus === "CANCELED") {
-      console.log("💫 결제 취소 상태 감지 - 상태 초기화 및 이동")
-      clearPayment()
+    if (!isLoading && (paymentItems.length === 0 || !selectedBranch)) {
       navigate(-1)
+      return
+    }
+  }, [paymentStatus, paymentItems, selectedBranch, isLoading])
+
+  // cleanup은 결제 완료 또는 취소 시에만 수행
+  useEffect(() => {
+    return () => {
+      if (
+        paymentStatus === PaymentStatus.SUCCESS ||
+        paymentStatus === PaymentStatus.CANCELED
+      ) {
+        clearPayment()
+      }
     }
   }, [paymentStatus])
-
-  const calculateTotalAmount = () => {
-    return paymentItems.reduce(
-      (total, item) => total + item.price * item.amount,
-      0,
-    )
-  }
-
-  const totalAmount = calculateTotalAmount()
-  const discountAmount = paymentItems.reduce((total, item) => {
-    if (item.originalPrice) {
-      return total + (item.originalPrice - item.price) * item.amount
-    }
-    return total
-  }, 0)
-  const pointAmount = point ? parseInt(point) : 0
-  const finalAmount = totalAmount - pointAmount
 
   const handlePointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     const numValue = value === "" ? 0 : parseInt(value)
 
-    // 숫자가 아닌 경우
     if (isNaN(numValue)) {
       return
     }
 
-    // 음수인 경우
     if (numValue < 0) {
       setPoint("0")
       return
     }
 
-    // 사용 가능한 포인트보다 큰 경우
     if (numValue > availablePoint) {
       setPoint(availablePoint.toString())
       return
@@ -323,11 +266,7 @@ const PaymentPage = () => {
     setPaymentItems(updatedItems)
   }
 
-  // 이니시스 결제 요청
   const requestPayment = async (orderData: OrderResponse) => {
-    console.group("💳 이니시스 결제 요청")
-    console.log("주문 데이터:", orderData)
-
     const paymentForm = document.createElement("form")
     paymentForm.method = "POST"
     paymentForm.action = "https://mobile.inicis.com/smart/payment/"
@@ -335,7 +274,6 @@ const PaymentPage = () => {
     paymentForm.acceptCharset = "euc-kr"
 
     const appendInput = (name: string, value: string) => {
-      console.log(`폼 데이터 추가: ${name} = ${value}`)
       const input = document.createElement("input")
       input.type = "hidden"
       input.name = name
@@ -347,15 +285,6 @@ const PaymentPage = () => {
       orderData.orderSheet.items.length > 1
         ? `${orderData.orderSheet.items[0].membership.s_name} 외 ${orderData.orderSheet.items.length - 1}건`
         : orderData.orderSheet.items[0].membership.s_name
-
-    console.log("결제 폼 데이터:", {
-      P_MID: orderData.pg_info.P_MID,
-      P_OID: orderData.pg_info.P_OID,
-      P_AMT: orderData.pg_info.P_AMT,
-      P_GOODS: goodsName,
-      selectedPayment,
-      simplePayment,
-    })
 
     appendInput("P_MID", orderData.pg_info.P_MID)
     appendInput("P_OID", orderData.pg_info.P_OID)
@@ -388,43 +317,45 @@ const PaymentPage = () => {
         break
     }
 
-    console.log("결제창 호출")
     document.body.appendChild(paymentForm)
     paymentForm.submit()
-    console.groupEnd()
   }
 
   const handlePayment = async () => {
-    console.group("🔄 결제 프로세스 시작")
-    console.log("결제 시작 상태:", {
-      isAgreed,
-      selectedPayment,
-      simplePayment,
-      point,
-    })
-
     if (!isAgreed) {
-      console.log("❌ 결제 동의 없음")
       alert("결제 진행 동의가 필요합니다.")
       return
     }
 
     try {
-      console.log("주문서 발행 요청")
       const orderData = await createOrder.mutateAsync()
 
       if (!orderData.pg_info) {
-        console.error("❌ PG 정보 없음")
         throw new Error("결제 정보가 없습니다.")
       }
 
-      console.log("결제창 호출 준비")
       await requestPayment(orderData)
     } catch (error) {
-      console.error("❌ 결제 프로세스 에러:", error)
+      console.error("결제 프로세스 에러:", error)
     }
-    console.groupEnd()
   }
+
+  const calculateTotalAmount = () => {
+    return paymentItems.reduce(
+      (total, item) => total + item.price * item.amount,
+      0,
+    )
+  }
+
+  const totalAmount = calculateTotalAmount()
+  const discountAmount = paymentItems.reduce((total, item) => {
+    if (item.originalPrice) {
+      return total + (item.originalPrice - item.price) * item.amount
+    }
+    return total
+  }, 0)
+  const pointAmount = point ? parseInt(point) : 0
+  const finalAmount = totalAmount - pointAmount
 
   if (isLoading || isPointLoading) {
     return <LoadingIndicator className="min-h-screen" />
@@ -433,220 +364,39 @@ const PaymentPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex flex-col flex-1 border-gray-50 pb-[88px]">
-        {/* 상품 목록 섹션 */}
-        <div className="p-5">
-          <div className="flex items-center gap-1 mb-4">
-            <span className="text-gray-700 font-sb text-16px">담은 회원권</span>
-            <span className="text-primary font-sb text-16px">
-              {paymentItems.length}개
-            </span>
-          </div>
+        <PaymentProductSection
+          paymentItems={paymentItems}
+          onCountChange={handleCountChange}
+          onDelete={handleDelete}
+        />
 
-          <div className="flex flex-col gap-4">
-            {paymentItems.map((item) => (
-              <PaymentCard
-                key={item.ss_idx}
-                brand={item.brand}
-                branchType={item.branchType}
-                title={item.title}
-                duration={item.duration}
-                options={[
-                  {
-                    items: [
-                      {
-                        cartId: item.ss_idx.toString(),
-                        count: item.amount,
-                      },
-                    ],
-                    sessions: item.sessions,
-                    price: item.price,
-                    originalPrice: item.originalPrice || item.price,
-                    ss_idx: item.ss_idx.toString(),
-                  } satisfies CartItemOption,
-                ]}
-                onCountChange={(cartId, newCount) =>
-                  handleCountChange(cartId, newCount)
-                }
-                onDelete={() => handleDelete(item.ss_idx.toString())}
-                onDeleteOption={(cartIds) =>
-                  cartIds.forEach((cartId) => handleDelete(cartId))
-                }
-              />
-            ))}
-          </div>
-        </div>
+        <PaymentPointSection
+          point={point}
+          availablePoint={availablePoint}
+          onPointChange={handlePointChange}
+          onUseAllPoints={handleUseAllPoints}
+        />
 
-        {/* 포인트 섹션 */}
-        <div className="p-5 border-b-8 border-gray-50">
-          <h2 className="text-gray-700 font-sb text-16px mb-4">포인트</h2>
-          <div className="flex gap-2 mb-2">
-            <input
-              type="number"
-              value={point}
-              onChange={handlePointChange}
-              placeholder="0"
-              className="flex-1 p-3 border border-gray-100 rounded-xl font-r text-16px"
-            />
-            <Button
-              variantType="secondary"
-              sizeType="s"
-              onClick={handleUseAllPoints}
-              disabled={availablePoint === 0}
-              className="!px-[20px] shrink-0 h-[52px] text-[16px]"
-            >
-              전액 사용
-            </Button>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-gray-400 text-14px font-m">
-              사용 가능 포인트
-            </span>
-            <span className="text-primary text-14px font-m">
-              {availablePoint.toLocaleString()}P
-            </span>
-          </div>
-        </div>
+        <PaymentMethodSection
+          selectedPayment={selectedPayment}
+          simplePayment={simplePayment}
+          onPaymentMethodChange={setSelectedPayment}
+          onSimplePaymentChange={setSimplePayment}
+        />
 
-        {/* 결제수단 섹션 */}
-        <div className="p-5 border-b-8 border-gray-50">
-          <h2 className="text-gray-700 font-sb text-16px mb-4">결제수단</h2>
-          <div className="flex flex-col">
-            <Radio
-              checked={selectedPayment === "card"}
-              onChange={() => setSelectedPayment("card")}
-              label="카드결제"
-              className="py-4 border-b border-[#ECEFF2]"
-            />
+        <PaymentSummarySection
+          totalAmount={totalAmount}
+          discountAmount={discountAmount}
+          pointAmount={pointAmount}
+          finalAmount={finalAmount}
+        />
 
-            <Radio
-              checked={selectedPayment === "simple"}
-              onChange={() => setSelectedPayment("simple")}
-              label="간편결제"
-              className="py-4"
-            />
-
-            {selectedPayment === "simple" && (
-              <div className="pb-4 pl-9 flex gap-2">
-                <Button
-                  variantType={
-                    simplePayment === "naver" ? "primary" : "grayLine"
-                  }
-                  sizeType="s"
-                  onClick={() => setSimplePayment("naver")}
-                  className={`h-[40px] text-14px ${simplePayment === "naver" ? "font-[500]" : "font-[400]"}`}
-                >
-                  네이버 페이
-                </Button>
-                <Button
-                  variantType={
-                    simplePayment === "kakao" ? "primary" : "grayLine"
-                  }
-                  sizeType="s"
-                  onClick={() => setSimplePayment("kakao")}
-                  className={`h-[40px] text-14px ${simplePayment === "kakao" ? "font-[500]" : "font-[400]"}`}
-                >
-                  카카오페이
-                </Button>
-                <Button
-                  variantType={
-                    simplePayment === "payco" ? "primary" : "grayLine"
-                  }
-                  sizeType="s"
-                  onClick={() => setSimplePayment("payco")}
-                  className={`h-[40px] text-14px ${simplePayment === "payco" ? "font-[500]" : "font-[400]"}`}
-                >
-                  페이코
-                </Button>
-              </div>
-            )}
-
-            <div className="border-b border-[#ECEFF2]" />
-
-            <Radio
-              checked={selectedPayment === "virtual"}
-              onChange={() => setSelectedPayment("virtual")}
-              label="가상계좌"
-              className="py-4"
-            />
-          </div>
-        </div>
-
-        {/* 결제 금액 섹션 */}
-        <div className="p-5 border-b-8 border-gray-50">
-          <h2 className="text-gray-700 font-sb text-16px mb-4">결제 금액</h2>
-          <div className="flex flex-col gap-3">
-            <div className="flex justify-between">
-              <span className="text-gray-500 text-14px font-m">상품 금액</span>
-              <span className="text-gray-700 font-sb text-14px">
-                {totalAmount.toLocaleString()}원
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-500 text-14px font-m">
-                상품할인금액
-              </span>
-              <span className="text-success font-sb text-14px">
-                -{discountAmount.toLocaleString()}원
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-500 text-14px font-m">
-                포인트 사용
-              </span>
-              <span className="text-success font-sb text-14px">
-                -{pointAmount.toLocaleString()}원
-              </span>
-            </div>
-          </div>
-          <Divider className="my-4" />
-          <div className="flex justify-between items-center">
-            <span className="text-gray-700 text-16px font-m">최종결제금액</span>
-            <span className="text-gray-700 font-b text-20px">
-              {finalAmount.toLocaleString()}원
-            </span>
-          </div>
-        </div>
-
-        {/* 동의 체크박스 */}
-        <div className="p-5">
-          <label className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              checked={isAgreed}
-              onChange={(e) => setIsAgreed(e.target.checked)}
-              className=""
-              style={{
-                appearance: "none",
-                width: "20px",
-                minWidth: "20px",
-                height: "20px",
-                borderRadius: "4px",
-                backgroundColor: isAgreed ? "#F37165" : "white",
-                border: isAgreed ? "1px solid #F37165" : "1px solid #DDDDDD",
-                backgroundImage: isAgreed
-                  ? `url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e")`
-                  : "none",
-              }}
-            />
-            <span className="text-black text-14px font-r">
-              상품, 가격, 할인정보, 유의사항 등을 확인하였으며 구매에
-              동의합니다. (필수)
-            </span>
-          </label>
-        </div>
-
-        {/* 유의사항 */}
-        <div className="px-5 py-3 bg-gray-50">
-          <p className="text-gray-500 text-12px font-m">
-            결제 유의사항이 들어가는 곳입니다. 결제 유의사항이 들어가는
-            곳입니다. 결제 유의사항이 들어가는 곳입니다. 결제 유의사항이
-            들어가는 곳입니다.
-          </p>
-        </div>
-        {/* <div className="w-full h-[96px]" /> */}
+        <PaymentAgreementSection
+          isAgreed={isAgreed}
+          onAgreementChange={setIsAgreed}
+        />
       </div>
 
-      {/* 하단 결제 버튼 */}
       <FixedButtonContainer className={"bg-white"}>
         <Button
           variantType="primary"
