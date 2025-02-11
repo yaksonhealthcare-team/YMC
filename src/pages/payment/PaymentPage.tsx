@@ -285,10 +285,10 @@ const PaymentPage = () => {
     console.group("💰 결제 요청 데이터")
     console.log("주문번호:", orderData.orderSheet.orderid)
     console.log("포인트 사용:", pointAmount)
-    console.log("P_NOTI 값:", `${orderData.orderSheet.orderid},${pointAmount}`)
+    console.log("P_NOTI 값:", `${orderData.pg_info.P_OID},${pointAmount}`)
     console.groupEnd()
 
-    appendInput("P_NOTI", `${orderData.orderSheet.orderid},${pointAmount}`)
+    appendInput("P_NOTI", `${orderData.pg_info.P_OID},${pointAmount}`)
     appendInput("P_RESERVED", "centerCd=Y")
 
     // 포인트 사용 금액이 있는 경우에만 전달

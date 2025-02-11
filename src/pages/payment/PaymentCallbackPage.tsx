@@ -93,13 +93,12 @@ export default function PaymentCallbackPage() {
       })
 
       // P_NOTI 파싱 시도
-      const [parsedOrderId, parsedPoints] = (jsonData.body.orderid || "").split(
-        ",",
-      )
+      const notiValue = searchParams.get("P_NOTI") || ""
+      const [orderId, pointAmount] = notiValue.split(",")
       console.log("P_NOTI 파싱 결과:", {
-        원본: jsonData.body.orderid,
-        주문번호: parsedOrderId,
-        포인트: parsedPoints,
+        원본: notiValue,
+        주문번호: orderId,
+        포인트: pointAmount,
       })
 
       // 결제 성공: 00
@@ -113,29 +112,23 @@ export default function PaymentCallbackPage() {
             ? "일시불"
             : `${parseInt(jsonData.body.pay_info.quota)}개월`
 
-        // 실제 결제된 금액
+        // 실제 결제된 금액과 포인트
         const paidAmount = Number(jsonData.body.pay_info.amt)
-
-        // 상품 정보
-        const item = paymentItems[0]
-        if (!item) {
-          throw new Error("상품 정보가 없습니다.")
-        }
+        const usedPoints = pointAmount ? Number(pointAmount) : 0
 
         navigate("/payment/complete", {
           state: {
-            amount: item.price * item.amount, // 원래 상품 금액
+            amount: paidAmount + usedPoints, // 원래 상품 금액 (결제금액 + 포인트)
             type: "membership",
             items: [
               {
                 id: jsonData.body.orderid,
                 brand: "약손명가",
-                branchType: selectedBranch?.name || "지점",
-                title: item.name,
-                sessions: item.sessions,
-                price: item.price,
-                amount: item.amount,
-                originalPrice: item.originalPrice,
+                branchType: "지점",
+                title: "멤버십",
+                sessions: 1,
+                price: paidAmount + usedPoints,
+                amount: 1,
               },
             ],
             paymentMethod: jsonData.body.pay_info.type.toLowerCase(),
@@ -143,7 +136,7 @@ export default function PaymentCallbackPage() {
               cardName: jsonData.body.pay_info.cardname,
               installment: installmentText,
             },
-            pointAmount: item.price * item.amount - paidAmount, // 포인트 사용 금액 (원래 금액 - 실제 결제 금액)
+            pointAmount: usedPoints, // 사용한 포인트
             message: jsonData.resultMessage,
           },
         })
