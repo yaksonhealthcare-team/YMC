@@ -274,49 +274,37 @@ const PaymentPage = () => {
         ? `${orderData.orderSheet.items[0].membership.s_name} 외 ${orderData.orderSheet.items.length - 1}건`
         : orderData.orderSheet.items[0].membership.s_name
 
+    // 결제 요청 로그
+    console.group("💰 결제 요청 데이터")
+    console.log("주문 정보:", {
+      주문번호: orderData.pg_info.P_OID,
+      상품명: goodsName,
+      결제금액: finalAmount,
+      포인트사용: pointAmount,
+    })
+    console.log("PG사 전송 파라미터:", {
+      P_MID: orderData.pg_info.P_MID,
+      P_OID: orderData.pg_info.P_OID,
+      P_AMT: finalAmount,
+      P_GOODS: goodsName,
+      P_UNAME: orderData.orderer.name,
+      P_NEXT_URL: orderData.pg_info.P_NEXT_URL,
+      P_NOTI_URL: orderData.pg_info.P_NOTI_URL,
+      P_NOTI: `${orderData.pg_info.P_OID},${pointAmount}`,
+      P_RESERVED: "centerCd=Y",
+      결제수단: selectedPayment,
+      간편결제: simplePayment,
+    })
+    console.groupEnd()
+
     appendInput("P_MID", orderData.pg_info.P_MID)
     appendInput("P_OID", orderData.pg_info.P_OID)
     appendInput("P_AMT", finalAmount.toString())
     appendInput("P_GOODS", goodsName)
     appendInput("P_UNAME", orderData.orderer.name)
     appendInput("P_NEXT_URL", orderData.pg_info.P_NEXT_URL)
-
-    // P_NOTI 로그 추가
-    console.group("💰 결제 요청 데이터")
-    console.log("주문번호:", orderData.orderSheet.orderid)
-    console.log("포인트 사용:", pointAmount)
-    console.log("P_NOTI 값:", `${orderData.pg_info.P_OID},${pointAmount}`)
-    console.groupEnd()
-
+    appendInput("P_NOTI_URL", orderData.pg_info.P_NOTI_URL)
     appendInput("P_NOTI", `${orderData.pg_info.P_OID},${pointAmount}`)
-    appendInput("P_RESERVED", "centerCd=Y")
-
-    // 포인트 사용 금액이 있는 경우에만 전달
-    if (pointAmount > 0) {
-      appendInput("P_POINT_AMOUNT", pointAmount.toString())
-    }
-
-    switch (selectedPayment) {
-      case "card":
-        appendInput("P_INI_PAYMENT", "CARD")
-        break
-      case "simple":
-        switch (simplePayment) {
-          case "naver":
-            appendInput("P_INI_PAYMENT", "NAVERPAY")
-            break
-          case "kakao":
-            appendInput("P_INI_PAYMENT", "KAKAOPAY")
-            break
-          case "payco":
-            appendInput("P_INI_PAYMENT", "PAYCO")
-            break
-        }
-        break
-      case "virtual":
-        appendInput("P_INI_PAYMENT", "VBANK")
-        break
-    }
 
     document.body.appendChild(paymentForm)
     paymentForm.submit()

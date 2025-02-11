@@ -76,24 +76,36 @@ export default function PaymentCallbackPage() {
       console.log("Decoded jsonData:", decodedStr)
 
       const jsonData: PaymentCallbackData = JSON.parse(decodedStr)
-      console.log("Parsed 결제 데이터:", {
-        resultCode: jsonData.resultCode,
-        resultMessage: jsonData.resultMessage,
-        body: jsonData.body,
-      })
-      console.log("결제 상세 정보:", {
-        orderid: jsonData.body.orderid,
-        pay_info: jsonData.body.pay_info,
-        mp_info: jsonData.body.mp_info,
+      console.log("결제 응답 데이터:", {
+        결과코드: jsonData.resultCode,
+        결과메시지: jsonData.resultMessage,
+        주문번호: jsonData.body.orderid,
+        결제정보: {
+          결제금액: jsonData.body.pay_info.amt,
+          결제수단: jsonData.body.pay_info.type,
+          카드사: jsonData.body.pay_info.cardname,
+          할부: jsonData.body.pay_info.quota,
+          승인번호: jsonData.body.pay_info.appno,
+        },
       })
 
       // P_NOTI 파싱 시도
       const notiValue = searchParams.get("P_NOTI") || ""
       const [orderId, pointAmount] = notiValue.split(",")
       console.log("P_NOTI 파싱 결과:", {
-        원본: notiValue,
+        원본데이터: notiValue,
         주문번호: orderId,
         포인트: pointAmount,
+        파싱성공여부: Boolean(orderId && pointAmount),
+      })
+
+      // URL 파라미터 전체 확인
+      console.log("전체 파라미터 목록:", {
+        P_STATUS: searchParams.get("P_STATUS"),
+        P_RMESG1: searchParams.get("P_RMESG1"),
+        P_TID: searchParams.get("P_TID"),
+        P_REQ_URL: searchParams.get("P_REQ_URL"),
+        P_NOTI: searchParams.get("P_NOTI"),
       })
 
       // 결제 성공: 00
@@ -110,20 +122,21 @@ export default function PaymentCallbackPage() {
 
           // 실제 결제된 금액과 포인트
           const paidAmount = Number(jsonData.body.pay_info.amt)
-          const usedPoints = pointAmount ? Number(pointAmount) : 0
+          const usedPoints = 0 // 포인트 사용 없음
+          const totalAmount = paidAmount // 총 금액은 실제 결제 금액과 동일
 
           navigate("/payment/complete", {
             state: {
-              amount: paidAmount + usedPoints,
+              amount: totalAmount,
               type: "membership",
               items: [
                 {
                   id: jsonData.body.orderid,
                   brand: "약손명가",
                   branchType: "지점",
-                  title: jsonData.body.pay_info.cardname,
+                  title: "약손명가 멤버십",
                   sessions: 1,
-                  price: paidAmount + usedPoints,
+                  price: totalAmount,
                   amount: 1,
                 },
               ],
@@ -132,7 +145,6 @@ export default function PaymentCallbackPage() {
                 cardName: jsonData.body.pay_info.cardname,
                 installment: installmentText,
               },
-              pointAmount: usedPoints,
               message: jsonData.resultMessage,
             },
           })
@@ -141,18 +153,22 @@ export default function PaymentCallbackPage() {
           console.error("⚠️ 결제 성공 후 데이터 처리 중 오류:", error)
 
           // 최소한의 정보로 결제 완료 페이지로 이동
+          const paidAmount = Number(jsonData.body.pay_info.amt)
+          const usedPoints = pointAmount ? Number(pointAmount) : 0
+          const totalAmount = paidAmount + usedPoints
+
           navigate("/payment/complete", {
             state: {
-              amount: Number(jsonData.body.pay_info.amt),
+              amount: totalAmount,
               type: "membership",
               items: [
                 {
                   id: jsonData.body.orderid,
                   brand: "약손명가",
                   branchType: "지점",
-                  title: "멤버십",
+                  title: "약손명가 멤버십",
                   sessions: 1,
-                  price: Number(jsonData.body.pay_info.amt),
+                  price: totalAmount,
                   amount: 1,
                 },
               ],
@@ -161,6 +177,7 @@ export default function PaymentCallbackPage() {
                 cardName: jsonData.body.pay_info.cardname,
                 installment: "일시불",
               },
+              pointAmount: usedPoints,
               message:
                 "결제가 완료되었습니다. 상세 정보 확인이 어려운 경우 고객센터로 문의해주세요.",
             },
