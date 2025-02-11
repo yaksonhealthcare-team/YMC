@@ -61,8 +61,7 @@ export default function PaymentCallbackPage() {
         console.log("ℹ️ 결제 취소됨")
         setPaymentStatus(PaymentStatus.CANCELED)
         alert("결제가 취소되었습니다.")
-        clearPayment() // 결제 데이터 삭제
-        navigate(-1)
+        navigate(-1) // 결제 페이지로 돌아가기
         return
       }
 

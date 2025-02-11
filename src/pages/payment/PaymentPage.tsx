@@ -12,6 +12,7 @@ import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { CartItemOption } from "../../types/Cart.ts"
 import { fetchPoints } from "../../apis/points.api.ts"
 import { axiosClient } from "../../queries/clients.ts"
+import { PaymentStatus } from "../../types/Payment.ts"
 
 interface OrderResponse {
   resultCode: string
@@ -71,6 +72,7 @@ const PaymentPage = () => {
     selectedBranch,
     clear: clearPayment,
     setItems: setPaymentItems,
+    paymentStatus,
   } = usePaymentStore()
   const [isLoading, setIsLoading] = useState(true)
 
@@ -196,27 +198,9 @@ const PaymentPage = () => {
       setIsLoading(false)
     }, 500)
 
-    // 결제 취소 메시지 수신 처리
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data.type === "PAYMENT_CANCELED") {
-        navigate(-1) // 이전 페이지로 이동
-      }
-    }
-    window.addEventListener("message", handleMessage)
-
     return () => {
       clearTimeout(timer)
-      window.removeEventListener("message", handleMessage)
     }
-  }, [])
-
-  // 뒤로가기 버튼 처리
-  useEffect(() => {
-    const handlePopState = () => {
-      clearPayment() // 뒤로가기 시에만 결제 정보 초기화
-    }
-    window.addEventListener("popstate", handlePopState)
-    return () => window.removeEventListener("popstate", handlePopState)
   }, [])
 
   const calculateTotalAmount = () => {
