@@ -92,6 +92,16 @@ export default function PaymentCallbackPage() {
         mp_info: jsonData.body.mp_info,
       })
 
+      // P_NOTI 파싱 시도
+      const [parsedOrderId, parsedPoints] = (jsonData.body.orderid || "").split(
+        ",",
+      )
+      console.log("P_NOTI 파싱 결과:", {
+        원본: jsonData.body.orderid,
+        주문번호: parsedOrderId,
+        포인트: parsedPoints,
+      })
+
       // 결제 성공: 00
       if (jsonData.resultCode === "00") {
         console.log("✅ 결제 성공")
@@ -103,18 +113,25 @@ export default function PaymentCallbackPage() {
             ? "일시불"
             : `${parseInt(jsonData.body.pay_info.quota)}개월`
 
+        // 원래 상품 금액 (포인트 사용 전)
+        const originalAmount = Number(jsonData.body.pay_info.amt)
+
+        // P_NOTI에서 포인트 사용 금액 파싱
+        const [orderId, usedPoints] = (jsonData.body.orderid || "").split(",")
+        const pointAmount = usedPoints ? Number(usedPoints) : 0
+
         navigate("/payment/complete", {
           state: {
-            amount: Number(jsonData.body.pay_info.amt),
+            amount: originalAmount + pointAmount, // 원래 상품 금액
             type: "membership",
             items: [
               {
-                id: jsonData.body.orderid,
+                id: orderId,
                 brand: "약손명가",
-                branchType: selectedBranch?.name || "지점", // TODO: 실제 지점 정보 사용
-                title: paymentItems[0]?.name || "멤버십", // TODO: 실제 상품명 사용
+                branchType: selectedBranch?.name || "지점",
+                title: paymentItems[0]?.name || "멤버십",
                 sessions: paymentItems[0]?.sessions || 1,
-                price: Number(jsonData.body.pay_info.amt),
+                price: originalAmount + pointAmount,
                 amount: 1,
               },
             ],
@@ -123,6 +140,7 @@ export default function PaymentCallbackPage() {
               cardName: jsonData.body.pay_info.cardname,
               installment: installmentText,
             },
+            pointAmount: pointAmount, // 포인트 사용 금액
             message: jsonData.resultMessage,
           },
         })
