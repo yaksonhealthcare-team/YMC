@@ -141,10 +141,84 @@ const PaymentPage = () => {
         }
       })
 
+      console.group("💰 주문서 요청")
+      console.log("선택된 지점:", {
+        지점명: selectedBranch.name,
+        지점코드: selectedBranch.b_idx,
+        브랜드코드: selectedBranch.brandCode,
+      })
+      console.log(
+        "선택된 상품:",
+        paymentItems.map((item) => ({
+          상품명: item.title,
+          상품코드: item.s_idx,
+          옵션코드: item.ss_idx,
+          수량: item.amount,
+          가격: item.price,
+          원가: item.originalPrice,
+        })),
+      )
+      console.log("포인트 사용:", {
+        사용가능_포인트: availablePoint,
+        사용_포인트: pointAmount,
+      })
+      console.log("결제 정보:", {
+        결제수단: selectedPayment,
+        간편결제_타입: selectedPayment === "simple" ? simplePayment : undefined,
+        총_상품금액: totalAmount,
+        할인금액: discountAmount,
+        포인트사용: pointAmount,
+        최종결제금액: finalAmount,
+      })
+      console.log("API 요청 데이터:", { orders })
+
       const response = await axiosClient.post<OrderResponse>(
         "/orders/memberships",
         { orders },
       )
+
+      console.log("API 응답 데이터:", {
+        결과코드: response.data.resultCode,
+        결과메시지: response.data.resultMessage,
+        주문번호: response.data.orderSheet?.orderid,
+        주문자정보: {
+          고객번호: response.data.orderer?.csm_idx,
+          이름: response.data.orderer?.name,
+          연락처: response.data.orderer?.hp,
+          이메일: response.data.orderer?.email,
+        },
+        상품정보: response.data.orderSheet?.items.map((item) => ({
+          상품명: item.membership.s_name,
+          상품코드: item.membership.s_idx,
+          지점명: item.branch.b_name,
+          지점코드: item.branch.b_idx,
+          옵션: {
+            코드: item.option.ss_idx,
+            수량: item.option.ss_count,
+          },
+          원가: item.origin_price,
+          판매가: item.price,
+          수량: item.amount,
+        })),
+        주문요약: {
+          총_원가: response.data.orderSummary?.total_origin_price,
+          총_판매가: response.data.orderSummary?.total_price,
+          총_수량: response.data.orderSummary?.total_count,
+        },
+        PG정보: {
+          상점아이디: response.data.pg_info?.P_MID,
+          주문번호: response.data.pg_info?.P_OID,
+          결제금액: response.data.pg_info?.P_AMT,
+          상품명: response.data.pg_info?.P_GOODS,
+          구매자: response.data.pg_info?.P_UNAME,
+          결제완료URL: response.data.pg_info?.P_NEXT_URL,
+          결제노티URL: response.data.pg_info?.P_NOTI_URL,
+          결제방법: response.data.pg_info?.P_HPP_METHOD,
+          부가정보: response.data.pg_info?.P_RESERVED,
+          타임스탬프: response.data.pg_info?.P_TIMESTAMP,
+        },
+      })
+      console.groupEnd()
 
       if (response.data.resultCode !== "00") {
         throw new Error(
@@ -254,6 +328,79 @@ const PaymentPage = () => {
     setPaymentItems(updatedItems)
   }
 
+  const handlePayment = async () => {
+    console.group("💰 결제 프로세스 시작")
+    console.log("결제 시작 시간:", new Date().toISOString())
+
+    try {
+      // 유효성 검사
+      if (!isAgreed) {
+        console.log("❌ 결제 실패: 결제 진행 동의 누락")
+        openMessageBox("결제 진행 동의가 필요합니다.")
+        return
+      }
+
+      // 포인트 사용 금액 검증
+      if (pointAmount > availablePoint) {
+        console.log("❌ 결제 실패: 포인트 초과 사용", {
+          사용시도: pointAmount,
+          사용가능: availablePoint,
+        })
+        openMessageBox("사용 가능한 포인트를 초과했습니다.")
+        return
+      }
+
+      if (pointAmount > totalAmount) {
+        console.log("❌ 결제 실패: 결제금액 초과 포인트 사용", {
+          사용시도: pointAmount,
+          총상품금액: totalAmount,
+        })
+        openMessageBox("결제 금액보다 많은 포인트를 사용할 수 없습니다.")
+        return
+      }
+
+      console.log("✅ 결제 전 유효성 검사 통과")
+
+      // 주문서 발행 시도
+      console.log("주문서 발행 시작...")
+      const orderData = await createOrder.mutateAsync()
+
+      if (!orderData.pg_info) {
+        console.error("❌ 결제 실패: PG 정보 누락")
+        throw new Error("결제 정보가 없습니다.")
+      }
+
+      if (!orderData.orderSheet?.orderid) {
+        console.error("❌ 결제 실패: 주문번호 누락")
+        throw new Error("주문번호가 없습니다.")
+      }
+
+      console.log("✅ 주문서 발행 완료")
+
+      // PG사 결제 요청
+      console.log("PG사 결제 요청 시작...")
+      await requestPayment(orderData)
+      console.log("✅ PG사 결제 요청 완료 (결제창 호출)")
+    } catch (error) {
+      console.group("❌ 결제 프로세스 에러")
+      console.error("에러 발생 시간:", new Date().toISOString())
+      console.error("에러 내용:", error)
+      if (error instanceof Error) {
+        console.error("에러 메시지:", error.message)
+        console.error("에러 스택:", error.stack)
+      }
+      console.groupEnd()
+
+      openMessageBox(
+        error instanceof Error
+          ? error.message
+          : "결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.",
+      )
+    } finally {
+      console.groupEnd()
+    }
+  }
+
   const requestPayment = async (orderData: OrderResponse) => {
     const goodsName =
       orderData.orderSheet.items.length > 1
@@ -261,14 +408,19 @@ const PaymentPage = () => {
         : orderData.orderSheet.items[0].membership.s_name
 
     // 결제 요청 로그
-    console.group("💰 결제 요청 데이터")
+    console.group("💰 PG사 결제 파라미터 세팅")
+    console.log("결제 요청 시간:", new Date().toISOString())
     console.log("주문 정보:", {
       주문번호: orderData.orderSheet.orderid,
       상품명: goodsName,
       결제금액: finalAmount,
       포인트사용: pointAmount,
+      최종결제금액: finalAmount,
+      결제수단: selectedPayment,
+      간편결제타입: selectedPayment === "simple" ? simplePayment : undefined,
     })
-    console.log("PG사 전송 파라미터:", {
+
+    const pgParams = {
       P_MID: orderData.pg_info.P_MID,
       P_OID: orderData.orderSheet.orderid,
       P_AMT: finalAmount,
@@ -281,8 +433,12 @@ const PaymentPage = () => {
         selectedPayment === "card"
           ? "centerCd=Y"
           : `${simplePayment}Pay,centerCd=Y`,
-      결제수단: selectedPayment,
-    })
+      P_CHARSET: "utf8",
+      P_HPP_METHOD: "2",
+      P_TIMESTAMP: orderData.pg_info.P_TIMESTAMP,
+    }
+
+    console.log("PG사 전송 파라미터:", pgParams)
     console.groupEnd()
 
     const paymentForm = document.createElement("form")
@@ -291,76 +447,39 @@ const PaymentPage = () => {
     paymentForm.charset = "euc-kr"
     paymentForm.acceptCharset = "euc-kr"
 
+    console.log("결제창 폼 생성:", {
+      method: paymentForm.method,
+      action: paymentForm.action,
+      charset: paymentForm.charset,
+    })
+
     const appendInput = (name: string, value: string) => {
       const input = document.createElement("input")
       input.type = "hidden"
       input.name = name
       input.value = value
       paymentForm.appendChild(input)
+      console.log(`폼 파라미터 추가: ${name}=${value}`)
     }
 
     // 필수 파라미터
-    appendInput("P_MID", orderData.pg_info.P_MID)
-    appendInput("P_OID", orderData.orderSheet.orderid)
-    appendInput("P_AMT", finalAmount.toString())
-    appendInput("P_GOODS", goodsName)
-    appendInput("P_UNAME", orderData.orderer.name)
-    appendInput("P_NEXT_URL", orderData.pg_info.P_NEXT_URL)
-    appendInput("P_NOTI_URL", orderData.pg_info.P_NOTI_URL)
-    appendInput("P_NOTI", `${orderData.orderSheet.orderid},${pointAmount}`)
-    appendInput("P_CHARSET", "utf8")
-    appendInput("P_HPP_METHOD", "2")
-    appendInput("P_TIMESTAMP", orderData.pg_info.P_TIMESTAMP)
+    Object.entries(pgParams).forEach(([key, value]) => {
+      appendInput(key, value.toString())
+    })
 
     // 결제 수단에 따른 파라미터 추가
     if (selectedPayment === "card") {
       appendInput("P_RESERVED", "centerCd=Y")
       appendInput("P_CARD_OPTION", "")
+      console.log("카드결제 전용 파라미터 추가 완료")
     } else if (selectedPayment === "simple") {
       appendInput("P_RESERVED", `${simplePayment}Pay,centerCd=Y`)
+      console.log("간편결제 전용 파라미터 추가 완료")
     }
 
     document.body.appendChild(paymentForm)
+    console.log("✅ 결제창 폼 DOM 추가 완료, 결제창 호출 시작")
     paymentForm.submit()
-  }
-
-  const handlePayment = async () => {
-    if (!isAgreed) {
-      openMessageBox("결제 진행 동의가 필요합니다.")
-      return
-    }
-
-    // 포인트 사용 금액 검증
-    if (pointAmount > availablePoint) {
-      openMessageBox("사용 가능한 포인트를 초과했습니다.")
-      return
-    }
-
-    if (pointAmount > totalAmount) {
-      openMessageBox("결제 금액보다 많은 포인트를 사용할 수 없습니다.")
-      return
-    }
-
-    try {
-      const orderData = await createOrder.mutateAsync()
-
-      if (!orderData.pg_info) {
-        throw new Error("결제 정보가 없습니다.")
-      }
-
-      if (!orderData.orderSheet?.orderid) {
-        throw new Error("주문번호가 없습니다.")
-      }
-
-      await requestPayment(orderData)
-    } catch (error) {
-      console.error("결제 프로세스 에러:", error)
-      openMessageBox(
-        error instanceof Error
-          ? error.message
-          : "결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.",
-      )
-    }
   }
 
   const calculateTotalAmount = () => {
