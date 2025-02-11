@@ -14,6 +14,7 @@ import PaymentMethodSection from "./_fragments/PaymentMethodSection.tsx"
 import PaymentSummarySection from "./_fragments/PaymentSummarySection.tsx"
 import PaymentAgreementSection from "./_fragments/PaymentAgreementSection.tsx"
 import { PaymentStatus } from "../../types/Payment.ts"
+import { useOverlay } from "../../contexts/ModalContext"
 
 interface OrderResponse {
   resultCode: string
@@ -67,6 +68,7 @@ interface OrderResponse {
 const PaymentPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
+  const { openMessageBox } = useOverlay()
 
   const {
     items: paymentItems,
@@ -278,7 +280,7 @@ const PaymentPage = () => {
     appendInput("P_GOODS", goodsName)
     appendInput("P_UNAME", orderData.orderer.name)
     appendInput("P_NEXT_URL", orderData.pg_info.P_NEXT_URL)
-    appendInput("P_NOTI", orderData.pg_info.P_OID)
+    appendInput("P_NOTI", `${orderData.orderSheet.orderid},${pointAmount}`)
     appendInput("P_RESERVED", "centerCd=Y")
 
     // 포인트 사용 금액이 있는 경우에만 전달
@@ -314,7 +316,18 @@ const PaymentPage = () => {
 
   const handlePayment = async () => {
     if (!isAgreed) {
-      alert("결제 진행 동의가 필요합니다.")
+      openMessageBox("결제 진행 동의가 필요합니다.")
+      return
+    }
+
+    // 포인트 사용 금액 검증
+    if (pointAmount > availablePoint) {
+      openMessageBox("사용 가능한 포인트를 초과했습니다.")
+      return
+    }
+
+    if (pointAmount > totalAmount) {
+      openMessageBox("결제 금액보다 많은 포인트를 사용할 수 없습니다.")
       return
     }
 
@@ -325,9 +338,18 @@ const PaymentPage = () => {
         throw new Error("결제 정보가 없습니다.")
       }
 
+      if (!orderData.orderSheet?.orderid) {
+        throw new Error("주문번호가 없습니다.")
+      }
+
       await requestPayment(orderData)
     } catch (error) {
       console.error("결제 프로세스 에러:", error)
+      openMessageBox(
+        error instanceof Error
+          ? error.message
+          : "결제 요청 중 오류가 발생했습니다. 다시 시도해주세요.",
+      )
     }
   }
 
