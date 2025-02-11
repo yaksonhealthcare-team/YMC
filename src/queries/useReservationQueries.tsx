@@ -37,22 +37,28 @@ export const useReservations = (status: string = "000") => {
         },
       })
 
-      if (data.resultCode !== "00" || !data.body || !Array.isArray(data.body)) {
+      const isValidResponse =
+        data.resultCode === "00" && Array.isArray(data.body)
+      if (!isValidResponse) {
         return []
       }
 
-      return data.body.map((item: ApiResponse) => ({
-        id: item.r_idx || "",
-        status: item.r_status || "예약완료",
-        store: item.b_name || "",
-        programName: item.ps_name || "",
-        visit: parseInt(item.visit) || 0,
-        date: item.r_date
+      return data.body.map((item: ApiResponse) => {
+        const date = item.r_date
           ? new Date(item.r_date.replace(/-/g, "/"))
-          : new Date(),
-        remainingDays: item.remaining_days || 0,
-        duration: parseInt(item.r_take_time) || 60,
-      }))
+          : new Date()
+
+        return {
+          id: item.r_idx || "",
+          status: item.r_status || "예약완료",
+          store: item.b_name || "",
+          programName: item.ps_name || "",
+          visit: parseInt(item.visit) || 0,
+          date,
+          remainingDays: item.remaining_days || 0,
+          duration: parseInt(item.r_take_time) || 60,
+        }
+      })
     },
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.length === 0) return undefined
