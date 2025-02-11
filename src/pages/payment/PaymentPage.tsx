@@ -75,6 +75,7 @@ const PaymentPage = () => {
     selectedBranch,
     setItems: setPaymentItems,
     paymentStatus,
+    setPaymentStatus,
     clear: clearPayment,
   } = usePaymentStore()
 
@@ -248,6 +249,9 @@ const PaymentPage = () => {
     setNavigation({
       display: false,
     })
+
+    // 결제 상태 초기화
+    setPaymentStatus(PaymentStatus.PENDING)
 
     // 500ms 후에 로딩 상태를 해제
     const timer = setTimeout(() => {
