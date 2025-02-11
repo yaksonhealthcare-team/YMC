@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import { ReservationStatus } from "types/Reservation"
+import { ReservationStatusCode } from "types/Reservation"
 import ReserveTag from "./ReserveTag"
 import { Button } from "./Button"
 import { ReactNode } from "react"
@@ -22,20 +22,12 @@ export const ReserveCard = ({
   const { mutate: completeVisit } = useCompleteVisit()
   const { openModal } = useOverlay()
 
-  const classifyReservationStatus = (status: ReservationStatus) => {
+  const classifyReservationStatus = (status: ReservationStatusCode) => {
     const statusGroups = {
-      upcoming: [
-        ReservationStatus.CONFIRMED,
-        ReservationStatus.APPROVED,
-        ReservationStatus.PENDING,
-      ],
-      completed: [ReservationStatus.COMPLETED],
-      cancelled: [
-        ReservationStatus.CUSTOMER_CANCELLED,
-        ReservationStatus.STORE_CANCELLED,
-        ReservationStatus.NO_SHOW,
-      ],
-      progressing: [ReservationStatus.IN_PROGRESS],
+      upcoming: ["001", "002"],
+      completed: ["000"],
+      cancelled: ["003"],
+      progressing: ["001"],
     }
 
     if (statusGroups.upcoming.includes(status)) return "upcoming"
@@ -127,7 +119,7 @@ export const ReserveCard = ({
       <div className="flex flex-col justify-between items-end">
         <ReserveTag
           status={classifyReservationStatus(
-            reservation.status as ReservationStatus,
+            reservation.status as ReservationStatusCode,
           )}
           reservationDate={reservation.date}
         />

@@ -11,7 +11,7 @@ import ReservationSummary from "./_fragments/ReservationSummary"
 import Location from "./_fragments/Location"
 import MembershipUsage from "./_fragments/MembershipUsage"
 import FixedButtonContainer from "@components/FixedButtonContainer"
-import { ReservationStatus, ReservationType } from "types/Reservation"
+import { ReservationType } from "types/Reservation"
 import { Skeleton } from "@mui/material"
 import { useOverlay } from "contexts/ModalContext"
 
@@ -140,7 +140,19 @@ const ReservationDetailPage = () => {
     if (!reservation) return null
 
     switch (reservation.status) {
-      case ReservationStatus.CONFIRMED:
+      case "001": // 예약완료
+        if (reservation.type === "관리중") {
+          return (
+            <Button
+              variantType="primary"
+              sizeType="l"
+              className="w-full"
+              onClick={handleCompleteVisit}
+            >
+              방문 완료하기
+            </Button>
+          )
+        }
         return (
           <Button
             variantType="primary"
@@ -152,8 +164,7 @@ const ReservationDetailPage = () => {
           </Button>
         )
 
-      case ReservationStatus.CUSTOMER_CANCELLED:
-      case ReservationStatus.STORE_CANCELLED:
+      case "003": // 예약취소
         return (
           <Button
             variantType="primary"
@@ -165,19 +176,7 @@ const ReservationDetailPage = () => {
           </Button>
         )
 
-      case ReservationStatus.IN_PROGRESS:
-        return (
-          <Button
-            variantType="primary"
-            sizeType="l"
-            className="w-full"
-            onClick={handleCompleteVisit}
-          >
-            방문 완료하기
-          </Button>
-        )
-
-      case ReservationStatus.COMPLETED:
+      case "000": // 관리완료
         return (
           <div className="flex gap-[8px]">
             <Button

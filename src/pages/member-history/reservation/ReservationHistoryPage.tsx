@@ -4,6 +4,7 @@ import { useReservations } from "../../../queries/useReservationQueries"
 import useIntersection from "../../../hooks/useIntersection"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useNavigate } from "react-router-dom"
+import { ReservationStatusLabel } from "../../../types/Reservation"
 
 const ReservationHistoryPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -52,9 +53,9 @@ const ReservationHistoryPage = () => {
                 </span>
                 <div className="flex items-center gap-2">
                   <span className="text-primary font-m text-14px">
-                    {reservation.status}
+                    {ReservationStatusLabel[reservation.status]}
                   </span>
-                  {reservation.status === "관리완료" && (
+                  {reservation.status === "000" && (
                     <button
                       type="button"
                       className="text-gray-500 font-m text-14px"

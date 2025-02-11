@@ -143,7 +143,7 @@ export const fetchAdditionalManagement = async (
     `/memberships/additional-managements`,
     {
       params: {
-        mp_idx: membershipIdx,
+        s_idx: membershipIdx,
         page,
       },
     },
