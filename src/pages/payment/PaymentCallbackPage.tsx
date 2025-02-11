@@ -138,30 +138,30 @@ export default function PaymentCallbackPage() {
         console.log("✅ 결제 성공")
         setPaymentStatus(PaymentStatus.SUCCESS)
 
-        const paymentAmount = parseInt(jsonData.body.pay_info.amt)
-        const totalAmount = paymentAmount + point // 실제 상품 금액은 결제금액 + 포인트
+        const paymentAmount = parseInt(jsonData.body.pay_info?.amt || "0")
+        const totalAmount = paymentAmount + (point || 0)
 
         navigate("/payment/complete", {
           state: {
-            orderId: jsonData.body.orderid,
+            orderId: jsonData.body?.orderid || "",
             items:
-              jsonData.body.items?.map((item) => ({
-                id: item.id,
-                title: item.title || "상품명 없음",
-                sessions: item.options?.[0]?.sessions || 0,
-                amount: item.options?.[0]?.price || 0,
+              jsonData.body?.items?.map((item) => ({
+                id: item?.id || "",
+                title: item?.title || "상품명 없음",
+                sessions: item?.options?.[0]?.sessions || 0,
+                amount: item?.options?.[0]?.price || 0,
                 brand: {
-                  name: item.brand || "브랜드명 없음",
-                  code: item.branchType || "000",
+                  name: item?.brand || "브랜드명 없음",
+                  code: item?.branchType || "000",
                 },
                 branch: {
-                  name: jsonData.body.items?.[0]?.brand || "지점명 없음",
-                  code: jsonData.body.items?.[0]?.branchType || "0",
+                  name: jsonData.body?.items?.[0]?.brand || "지점명 없음",
+                  code: jsonData.body?.items?.[0]?.branchType || "0",
                 },
               })) || [],
             amount_info: {
               total_amount: totalAmount || 0,
-              discount_amount: jsonData.body.discountAmount || 0,
+              discount_amount: jsonData.body?.discountAmount || 0,
               point_amount: point || 0,
               payment_amount: paymentAmount || 0,
             },
@@ -173,14 +173,18 @@ export default function PaymentCallbackPage() {
               ),
             },
             payment_info: {
-              method: (jsonData.body.pay_info?.type || "UNKNOWN").toLowerCase(),
+              method: (
+                jsonData.body?.pay_info?.type || "UNKNOWN"
+              ).toLowerCase(),
               card_info: {
-                company: jsonData.body.pay_info?.cardname || "카드사 정보 없음",
-                number: jsonData.body.pay_info?.card_noinf || "",
-                installment_period:
-                  parseInt(jsonData.body.pay_info?.quota) || 0,
-                approval_number: jsonData.body.pay_info?.appno || "",
-                approval_date: jsonData.body.pay_info?.paydate || "",
+                company:
+                  jsonData.body?.pay_info?.cardname || "카드사 정보 없음",
+                number: jsonData.body?.pay_info?.card_noinf || "",
+                installment_period: parseInt(
+                  jsonData.body?.pay_info?.quota || "0",
+                ),
+                approval_number: jsonData.body?.pay_info?.appno || "",
+                approval_date: jsonData.body?.pay_info?.paydate || "",
               },
             },
           },
@@ -189,30 +193,30 @@ export default function PaymentCallbackPage() {
         console.log("✅ 결제 성공 (카드 외 결제)")
         setPaymentStatus(PaymentStatus.SUCCESS)
 
-        const paymentAmount = parseInt(jsonData.body.pay_info.amt)
-        const totalAmount = paymentAmount + point // 실제 상품 금액은 결제금액 + 포인트
+        const paymentAmount = parseInt(jsonData.body?.pay_info?.amt || "0")
+        const totalAmount = paymentAmount + (point || 0)
 
         navigate("/payment/complete", {
           state: {
-            orderId: jsonData.body.orderid,
+            orderId: jsonData.body?.orderid || "",
             items:
-              jsonData.body.items?.map((item) => ({
-                id: item.id,
-                title: item.title || "상품명 없음",
-                sessions: item.options?.[0]?.sessions || 0,
-                amount: item.options?.[0]?.price || 0,
+              jsonData.body?.items?.map((item) => ({
+                id: item?.id || "",
+                title: item?.title || "상품명 없음",
+                sessions: item?.options?.[0]?.sessions || 0,
+                amount: item?.options?.[0]?.price || 0,
                 brand: {
-                  name: item.brand || "브랜드명 없음",
-                  code: item.branchType || "000",
+                  name: item?.brand || "브랜드명 없음",
+                  code: item?.branchType || "000",
                 },
                 branch: {
-                  name: jsonData.body.items?.[0]?.brand || "지점명 없음",
-                  code: jsonData.body.items?.[0]?.branchType || "0",
+                  name: jsonData.body?.items?.[0]?.brand || "지점명 없음",
+                  code: jsonData.body?.items?.[0]?.branchType || "0",
                 },
               })) || [],
             amount_info: {
               total_amount: totalAmount || 0,
-              discount_amount: jsonData.body.discountAmount || 0,
+              discount_amount: jsonData.body?.discountAmount || 0,
               point_amount: point || 0,
               payment_amount: paymentAmount || 0,
             },
@@ -224,7 +228,9 @@ export default function PaymentCallbackPage() {
               ),
             },
             payment_info: {
-              method: (jsonData.body.pay_info?.type || "UNKNOWN").toLowerCase(),
+              method: (
+                jsonData.body?.pay_info?.type || "UNKNOWN"
+              ).toLowerCase(),
             },
           },
         })
