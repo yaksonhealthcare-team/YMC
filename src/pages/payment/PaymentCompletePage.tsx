@@ -1,199 +1,35 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useNavigate, useLocation } from "react-router-dom"
 import { Button } from "@components/Button"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 import { XIcon } from "@components/icons/XIcon"
 import CheckCircleIcon from "@assets/icons/CheckCircle.svg?react"
-import { Divider } from "@mui/material"
-import { PaymentItem } from "../../types/Payment"
-
-interface PaymentCompleteState {
-  amount: number
-  type: "membership" | "additional"
-  items: PaymentItem[]
-  paymentMethod: "card" | "simple" | "virtual"
-  simplePaymentType?: "naver" | "kakao" | "payco"
-  cardPaymentInfo?: {
-    cardName: string
-    installment: string
-  }
-  discountAmount?: number
-  pointAmount?: number
-  message?: string
-}
+import { PaymentCompleteState } from "../../types/Payment"
+import PaymentItemCard from "./_fragments/PaymentCompleteItemCard"
+import PaymentInfo from "./_fragments/PaymentCompleteInfo"
+import PaymentSummary from "./_fragments/PaymentCompleteSummary"
 
 const PaymentCompletePage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const location = useLocation()
-  const [state] = useState<PaymentCompleteState>(() => {
-    if (!location.state) {
-      // 결제 정보가 없으면 결제 내역 페이지로 이동
-      navigate("/payment")
-      return {
-        amount: 0,
-        type: "membership",
-        items: [],
-        paymentMethod: "card",
-      }
-    }
-    return location.state as PaymentCompleteState
-  })
+  const state = location.state as PaymentCompleteState
 
   useEffect(() => {
+    if (!location.state) {
+      navigate("/payment")
+      return
+    }
+
     setHeader({
       display: true,
       title: "결제완료",
-      right: <XIcon onClick={handleClose} />,
+      right: <XIcon onClick={() => navigate("/")} />,
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
   }, [])
-
-  const handleClose = () => {
-    navigate("/")
-  }
-
-  const renderItems = () => {
-    return state.items.map((item) => (
-      <div
-        key={item.id}
-        className="p-5 bg-white rounded-[20px] border border-[#DDDDDD] flex flex-col gap-5"
-      >
-        <div className="flex flex-col gap-3">
-          <div className="text-primary text-14px font-m">결제완료</div>
-          <div className="flex flex-col gap-1.5">
-            <div className="text-gray-900 text-16px font-sb">{item.title}</div>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-gray-900 text-14px font-r">
-                {item.sessions}회
-              </span>
-              <span className="text-gray-900 text-14px font-b">
-                {(item.price * item.amount).toLocaleString()}원
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M1.75586 6.54492V9.16409C1.75586 11.7833 2.80586 12.8333 5.42503 12.8333H8.56919C11.1884 12.8333 12.2384 11.7833 12.2384 9.16409V6.54492"
-                stroke="#757575"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M6.99963 7.00033C8.06713 7.00033 8.85463 6.13116 8.74963 5.06366L8.36463 1.16699H5.64046L5.24963 5.06366C5.14463 6.13116 5.93213 7.00033 6.99963 7.00033Z"
-                stroke="#757575"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M10.681 7.00033C11.8593 7.00033 12.7226 6.04366 12.606 4.87116L12.4426 3.26699C12.2326 1.75033 11.6493 1.16699 10.121 1.16699H8.3418L8.75013 5.25616C8.8493 6.21866 9.71846 7.00033 10.681 7.00033Z"
-                stroke="#757575"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M3.29005 7.00033C4.25255 7.00033 5.12172 6.21866 5.21505 5.25616L5.34339 3.96699L5.62339 1.16699H3.84422C2.31589 1.16699 1.73255 1.75033 1.52255 3.26699L1.36505 4.87116C1.24839 6.04366 2.11172 7.00033 3.29005 7.00033Z"
-                stroke="#757575"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M7.00033 9.91699C6.02616 9.91699 5.54199 10.4012 5.54199 11.3753V12.8337H8.45866V11.3753C8.45866 10.4012 7.97449 9.91699 7.00033 9.91699Z"
-                stroke="#757575"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span className="text-gray-500 text-12px font-r">{item.brand}</span>
-            <div className="w-[1px] h-3 bg-[#DDDDDD] rotate-90" />
-            <span className="text-gray-500 text-12px font-r">
-              {item.branchType}
-            </span>
-          </div>
-        </div>
-      </div>
-    ))
-  }
-
-  const renderPaymentInfo = () => {
-    if (state.paymentMethod === "card") {
-      return (
-        <div className="px-5 py-6">
-          <p className="text-gray-700 font-sb text-16px">
-            카드결제 ({state.cardPaymentInfo?.cardName} /{" "}
-            {state.cardPaymentInfo?.installment})
-          </p>
-        </div>
-      )
-    }
-
-    if (state.paymentMethod === "simple") {
-      return (
-        <div className="px-5 py-6">
-          <p className="text-gray-700 font-sb text-16px">
-            간편결제 (
-            {state.simplePaymentType === "naver"
-              ? "네이버페이"
-              : state.simplePaymentType === "kakao"
-                ? "카카오페이"
-                : "페이코"}
-            )
-          </p>
-        </div>
-      )
-    }
-
-    if (state.paymentMethod === "virtual") {
-      return (
-        <>
-          <div className="px-5 py-6">
-            <p className="text-gray-700 font-sb text-16px">가상계좌</p>
-          </div>
-          <Divider />
-          <div className="px-5 py-6 flex flex-col gap-4">
-            <p className="text-center text-gray-700 font-sb text-16px">
-              입금 정보
-            </p>
-            <div className="py-5 px-4 bg-gray-50 rounded-[20px] flex flex-col gap-3">
-              <div className="flex justify-between">
-                <span className="font-m text-14px text-gray-500">입금은행</span>
-                <span className="font-sb text-14px text-gray-700">
-                  우리은행 1234123412342
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-m text-14px text-gray-500">예금주</span>
-                <span className="font-sb text-14px text-gray-700">
-                  주식회사 약손명가
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-m text-14px text-gray-500">입금기한</span>
-                <span className="font-sb text-14px text-error">
-                  2024-10-10 (목) 23시 59분까지
-                </span>
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="font-m text-16px text-gray-700">입금금액</span>
-              <span className="font-b text-20px text-gray-700">
-                {state.amount.toLocaleString()}원
-              </span>
-            </div>
-          </div>
-        </>
-      )
-    }
-  }
 
   const isAdditional = state.type === "additional"
   const isVirtual = state.paymentMethod === "virtual"
@@ -205,58 +41,25 @@ const PaymentCompletePage = () => {
         <p className="text-primary font-sb text-16px">결제가 완료되었습니다.</p>
       </div>
 
-      {/* 주문 내역 */}
-      <div className="p-5  border-b-8 border-gray-50">
+      <div className="p-5 border-b-8 border-gray-50">
         <div className="flex items-center gap-1 mb-4">
           <span className="text-gray-700 font-sb text-16px">주문내역</span>
           <span className="text-primary font-sb text-16px">
             {state.items.length}건
           </span>
         </div>
-        {renderItems()}
+        {state.items.map((item) => (
+          <PaymentItemCard key={item.id} item={item} />
+        ))}
       </div>
 
-      {/* 결제 정보 */}
-      <div className={"border-b-8 border-gray-50"}>{renderPaymentInfo()}</div>
-
-      {/* 결제 금액 내역 */}
-      <div className="p-5 flex flex-col gap-4">
-        <p className="font-sb text-16px text-gray-700">결제 내역</p>
-        <div className="flex flex-col gap-4 py-4 rounded-lg">
-          <div className="flex justify-between">
-            <span className="font-m text-14px text-gray-500">상품 금액</span>
-            <span className="font-sb text-14px text-gray-700">
-              {state.amount.toLocaleString()}원
-            </span>
-          </div>
-          {(state.pointAmount ?? 0) > 0 && (
-            <div className="flex justify-between">
-              <span className="font-m text-14px text-gray-500">
-                포인트 사용
-              </span>
-              <span className="font-sb text-14px text-success">
-                -{state.pointAmount?.toLocaleString()}원
-              </span>
-            </div>
-          )}
-          <Divider />
-          <div className="flex justify-between items-center">
-            <span className="font-m text-16px text-gray-700">
-              {isVirtual ? "입금금액" : "최종결제금액"}
-            </span>
-            <span className="font-b text-20px text-gray-700">
-              {(state.amount - (state.pointAmount ?? 0)).toLocaleString()}원
-            </span>
-          </div>
-          {isVirtual && (
-            <p className="self-end text-error font-sb text-14px">결제미완료</p>
-          )}
-        </div>
-        <div className="w-full h-[96px]" />
+      <div className="border-b-8 border-gray-50">
+        <PaymentInfo state={state} />
       </div>
 
-      {/* 하단 버튼 */}
-      <FixedButtonContainer className={"bg-white"}>
+      <PaymentSummary state={state} isVirtual={isVirtual} />
+
+      <FixedButtonContainer className="bg-white">
         <div className="flex gap-2 w-full">
           <Button
             variantType="line"

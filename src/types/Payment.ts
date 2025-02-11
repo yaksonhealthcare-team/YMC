@@ -26,7 +26,6 @@ export interface PaymentItem {
   originalPrice?: number
   sessions: number
   name?: string
-  quantity?: number
 }
 
 export interface PaymentHistoryItem {
@@ -114,10 +113,25 @@ export interface PaymentHistoryDetailResponse {
   ]
 }
 
+export interface PaymentCompleteState {
+  amount: number
+  type: "membership" | "additional"
+  items: PaymentItem[]
+  paymentMethod: "card" | "simple" | "virtual"
+  simplePaymentType?: "naver" | "kakao" | "payco"
+  cardPaymentInfo?: {
+    cardName: string
+    installment: string
+  }
+  pointAmount?: number
+  message?: string
+}
+
 export enum PaymentStatus {
   PENDING = "PENDING",
   SUCCESS = "SUCCESS",
   FAILED = "FAILED",
+  CANCELED = "CANCELED",
 }
 
 export interface PaymentResult {
