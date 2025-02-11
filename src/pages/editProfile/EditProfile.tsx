@@ -127,7 +127,7 @@ const EditProfile = () => {
         confirmOptions={{
           text: "나가기",
           onClick: () => {
-            navigate(-1)
+            navigate("/mypage")
             closeOverlay()
           },
         }}
