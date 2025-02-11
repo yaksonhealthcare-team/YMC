@@ -11,8 +11,14 @@ const ErrorPage = () => {
       <p className="text-gray-500 text-sm mb-6">
         {error?.message || "알 수 없는 오류가 발생했습니다."}
       </p>
-      <Button onClick={() => window.location.reload()}>페이지 새로고침</Button>
-      <Button onClick={() => navigate("/")}>홈으로 이동</Button>
+      <div className="flex gap-2">
+        <Button variantType="line" onClick={() => navigate("/")}>
+          홈으로 이동
+        </Button>
+        <Button onClick={() => window.location.reload()}>
+          페이지 새로고침
+        </Button>
+      </div>
     </div>
   )
 }
