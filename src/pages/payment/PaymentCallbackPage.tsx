@@ -113,26 +113,29 @@ export default function PaymentCallbackPage() {
             ? "일시불"
             : `${parseInt(jsonData.body.pay_info.quota)}개월`
 
-        // 원래 상품 금액 (포인트 사용 전)
-        const originalAmount = Number(jsonData.body.pay_info.amt)
+        // 실제 결제된 금액
+        const paidAmount = Number(jsonData.body.pay_info.amt)
 
-        // P_NOTI에서 포인트 사용 금액 파싱
-        const [orderId, usedPoints] = (jsonData.body.orderid || "").split(",")
-        const pointAmount = usedPoints ? Number(usedPoints) : 0
+        // 상품 정보
+        const item = paymentItems[0]
+        if (!item) {
+          throw new Error("상품 정보가 없습니다.")
+        }
 
         navigate("/payment/complete", {
           state: {
-            amount: originalAmount + pointAmount, // 원래 상품 금액
+            amount: item.price * item.amount, // 원래 상품 금액
             type: "membership",
             items: [
               {
-                id: orderId,
+                id: jsonData.body.orderid,
                 brand: "약손명가",
                 branchType: selectedBranch?.name || "지점",
-                title: paymentItems[0]?.name || "멤버십",
-                sessions: paymentItems[0]?.sessions || 1,
-                price: originalAmount + pointAmount,
-                amount: 1,
+                title: item.name,
+                sessions: item.sessions,
+                price: item.price,
+                amount: item.amount,
+                originalPrice: item.originalPrice,
               },
             ],
             paymentMethod: jsonData.body.pay_info.type.toLowerCase(),
@@ -140,7 +143,7 @@ export default function PaymentCallbackPage() {
               cardName: jsonData.body.pay_info.cardname,
               installment: installmentText,
             },
-            pointAmount: pointAmount, // 포인트 사용 금액
+            pointAmount: item.price * item.amount - paidAmount, // 포인트 사용 금액 (원래 금액 - 실제 결제 금액)
             message: jsonData.resultMessage,
           },
         })
