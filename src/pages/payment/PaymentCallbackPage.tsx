@@ -47,7 +47,7 @@ export default function PaymentCallbackPage() {
       if (jsonData.resultCode === "00") {
         console.log("✅ 결제 성공")
         setPaymentStatus(PaymentStatus.SUCCESS)
-        navigate("/payment/success", {
+        navigate("/payment/complete", {
           state: {
             ...jsonData.body,
             message: jsonData.resultMessage,
