@@ -126,6 +126,9 @@ const SignupCallback = lazy(() => import("../pages/signup/SignupCallback"))
 const PaymentCallbackPage = lazy(
   () => import("../pages/payment/PaymentCallbackPage"),
 )
+const PaymentFailedPage = lazy(
+  () => import("../pages/payment/PaymentFailedPage"),
+)
 
 export const routeConfig: RouteConfig[] = [
   {
@@ -341,6 +344,11 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/payment/cancel/complete",
     element: <PaymentCancelCompletePage />,
+    auth: true,
+  },
+  {
+    path: "/payment/failed",
+    element: <PaymentFailedPage />,
     auth: true,
   },
   //리뷰
