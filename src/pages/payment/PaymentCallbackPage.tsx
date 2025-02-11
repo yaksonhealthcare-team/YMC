@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { useNavigate, useSearchParams, useLocation } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { usePaymentStore } from "../../hooks/usePaymentStore"
 import { PaymentStatus } from "../../types/Payment"
 import { useOverlay } from "../../contexts/ModalContext"
@@ -57,7 +57,6 @@ export default function PaymentCallbackPage() {
   const navigate = useNavigate()
   const { openModal } = useOverlay()
   const { setPaymentStatus, clear: clearPayment } = usePaymentStore()
-  const searchParams = new URLSearchParams(location.search)
 
   // 포인트 조회
   const { data: availablePoint = 0 } = useQuery({
@@ -71,9 +70,9 @@ export default function PaymentCallbackPage() {
   useEffect(() => {
     console.group("💰 결제 콜백 데이터")
     console.log("전체 URL:", window.location.href)
-    console.log("전체 검색 파라미터:", Object.fromEntries(searchParams))
 
     // 이니시스 결제 응답 파라미터
+    const searchParams = new URLSearchParams(location.search)
     const inicisParams = {
       P_STATUS: searchParams.get("P_STATUS"),
       P_RMESG1: searchParams.get("P_RMESG1"),
@@ -146,38 +145,42 @@ export default function PaymentCallbackPage() {
           state: {
             orderId: jsonData.body.orderid,
             items:
-              jsonData.body.mp_info?.map((idx) => ({
-                id: idx.toString(),
-                title: "(바디) 피부 관리",
-                sessions: 1,
-                amount: totalAmount,
+              jsonData.body.items?.map((item) => ({
+                id: item.id,
+                title: item.title || "상품명 없음",
+                sessions: item.options?.[0]?.sessions || 0,
+                amount: item.options?.[0]?.price || 0,
                 brand: {
-                  name: "약손명가",
-                  code: "001",
+                  name: item.brand || "브랜드명 없음",
+                  code: item.branchType || "000",
                 },
                 branch: {
-                  name: "강남점",
-                  code: "6",
+                  name: jsonData.body.items?.[0]?.brand || "지점명 없음",
+                  code: jsonData.body.items?.[0]?.branchType || "0",
                 },
               })) || [],
             amount_info: {
-              total_amount: totalAmount,
-              discount_amount: 0,
-              point_amount: point,
-              payment_amount: paymentAmount,
+              total_amount: totalAmount || 0,
+              discount_amount: jsonData.body.discountAmount || 0,
+              point_amount: point || 0,
+              payment_amount: paymentAmount || 0,
             },
             point_info: {
-              used_point: point,
-              remaining_point: availablePoint - point, // 사용 가능 포인트에서 사용한 포인트를 뺀 값
+              used_point: point || 0,
+              remaining_point: Math.max(
+                0,
+                (availablePoint || 0) - (point || 0),
+              ),
             },
             payment_info: {
-              method: jsonData.body.pay_info.type.toLowerCase(),
+              method: (jsonData.body.pay_info?.type || "UNKNOWN").toLowerCase(),
               card_info: {
-                company: jsonData.body.pay_info.cardname || "카드사 정보 없음",
-                number: "",
-                installment_period: parseInt(jsonData.body.pay_info.quota) || 0,
-                approval_number: jsonData.body.pay_info.appno,
-                approval_date: jsonData.body.pay_info.paydate,
+                company: jsonData.body.pay_info?.cardname || "카드사 정보 없음",
+                number: jsonData.body.pay_info?.card_noinf || "",
+                installment_period:
+                  parseInt(jsonData.body.pay_info?.quota) || 0,
+                approval_number: jsonData.body.pay_info?.appno || "",
+                approval_date: jsonData.body.pay_info?.paydate || "",
               },
             },
           },
@@ -193,32 +196,35 @@ export default function PaymentCallbackPage() {
           state: {
             orderId: jsonData.body.orderid,
             items:
-              jsonData.body.mp_info?.map((idx) => ({
-                id: idx.toString(),
-                title: "(바디) 피부 관리",
-                sessions: 1,
-                amount: totalAmount,
+              jsonData.body.items?.map((item) => ({
+                id: item.id,
+                title: item.title || "상품명 없음",
+                sessions: item.options?.[0]?.sessions || 0,
+                amount: item.options?.[0]?.price || 0,
                 brand: {
-                  name: "약손명가",
-                  code: "001",
+                  name: item.brand || "브랜드명 없음",
+                  code: item.branchType || "000",
                 },
                 branch: {
-                  name: "강남점",
-                  code: "6",
+                  name: jsonData.body.items?.[0]?.brand || "지점명 없음",
+                  code: jsonData.body.items?.[0]?.branchType || "0",
                 },
               })) || [],
             amount_info: {
-              total_amount: totalAmount,
-              discount_amount: 0,
-              point_amount: point,
-              payment_amount: paymentAmount,
+              total_amount: totalAmount || 0,
+              discount_amount: jsonData.body.discountAmount || 0,
+              point_amount: point || 0,
+              payment_amount: paymentAmount || 0,
             },
             point_info: {
-              used_point: point,
-              remaining_point: availablePoint - point,
+              used_point: point || 0,
+              remaining_point: Math.max(
+                0,
+                (availablePoint || 0) - (point || 0),
+              ),
             },
             payment_info: {
-              method: jsonData.body.pay_info.type.toLowerCase(),
+              method: (jsonData.body.pay_info?.type || "UNKNOWN").toLowerCase(),
             },
           },
         })
@@ -237,7 +243,7 @@ export default function PaymentCallbackPage() {
 
     console.groupEnd()
   }, [
-    searchParams,
+    location,
     navigate,
     setPaymentStatus,
     openModal,
