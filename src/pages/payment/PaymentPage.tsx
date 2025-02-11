@@ -5,7 +5,7 @@ import { Divider } from "@mui/material"
 import { Button } from "@components/Button.tsx"
 import FixedButtonContainer from "@components/FixedButtonContainer.tsx"
 import { Radio } from "@components/Radio.tsx"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { usePaymentStore } from "../../hooks/usePaymentStore.ts"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
@@ -93,6 +93,7 @@ const PaymentPage = () => {
   })
 
   const navigate = useNavigate()
+  const location = useLocation()
 
   // 주문서 발행 API 호출
   const createOrder = useMutation({
@@ -201,11 +202,8 @@ const PaymentPage = () => {
     // 결제 취소 메시지 수신 처리
     const handleMessage = (event: MessageEvent) => {
       if (event.data.type === "PAYMENT_CANCELED") {
-        openModal({
-          title: "결제 취소",
-          message: "결제가 취소되었습니다.",
-          onConfirm: () => {},
-        })
+        // 모달 제거
+        navigate("/payment", { replace: true })
       }
     }
     window.addEventListener("message", handleMessage)

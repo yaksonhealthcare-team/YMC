@@ -60,15 +60,7 @@ export default function PaymentCallbackPage() {
       if (jsonData.resultCode === "61") {
         console.log("ℹ️ 결제 취소됨")
         setPaymentStatus(PaymentStatus.CANCELED)
-
-        // 결제창 닫기 시도
-        if (window.opener) {
-          window.opener.postMessage({ type: "PAYMENT_CANCELED" }, "*")
-          window.close()
-        } else {
-          // 모바일 브라우저에서는 history.back()으로 결제창 닫기
-          window.history.back()
-        }
+        navigate("/payment", { replace: true })
         return
       }
 
