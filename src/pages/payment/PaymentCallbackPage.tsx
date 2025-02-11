@@ -32,6 +32,20 @@ interface PaymentCallbackData {
     }>
     discountAmount?: number
     pointAmount?: number
+    pay_info: {
+      amt: string
+      type: string
+      cardname: string
+      quota: string
+      paydate: string
+      appno: string
+      cardcd: string
+      card_noinf: string
+    }
+    orderid: string
+    p_idx: string[]
+    mp_info: number[]
+    cahereceipt_info: null
   }
 }
 
@@ -67,6 +81,11 @@ export default function PaymentCallbackPage() {
         resultMessage: jsonData.resultMessage,
         body: jsonData.body,
       })
+      console.log("결제 상세 정보:", {
+        orderid: jsonData.body.orderid,
+        pay_info: jsonData.body.pay_info,
+        mp_info: jsonData.body.mp_info,
+      })
 
       // 결제 성공: 00
       if (jsonData.resultCode === "00") {
@@ -74,19 +93,24 @@ export default function PaymentCallbackPage() {
         setPaymentStatus(PaymentStatus.SUCCESS)
         navigate("/payment/complete", {
           state: {
-            amount: jsonData.body.P_AMT,
+            amount: Number(jsonData.body.pay_info.amt),
             type: "membership",
-            items: jsonData.body.items,
-            paymentMethod: jsonData.body.P_TYPE?.toLowerCase() || "card",
-            simplePaymentType: jsonData.body.P_SIMPLE_TYPE?.toLowerCase(),
-            cardPaymentInfo: jsonData.body.P_CARD_INFO
-              ? {
-                  cardName: jsonData.body.P_CARD_INFO.cardName,
-                  installment: jsonData.body.P_CARD_INFO.installment,
-                }
-              : undefined,
-            discountAmount: jsonData.body.discountAmount,
-            pointAmount: jsonData.body.pointAmount,
+            items: [
+              {
+                id: jsonData.body.orderid,
+                brand: "약손명가",
+                branchType: "지점",
+                title: "멤버십",
+                sessions: 1,
+                price: Number(jsonData.body.pay_info.amt),
+                amount: 1,
+              },
+            ],
+            paymentMethod: jsonData.body.pay_info.type.toLowerCase(),
+            cardPaymentInfo: {
+              cardName: jsonData.body.pay_info.cardname,
+              installment: jsonData.body.pay_info.quota,
+            },
             message: jsonData.resultMessage,
           },
         })
