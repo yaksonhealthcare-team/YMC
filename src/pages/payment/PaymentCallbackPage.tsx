@@ -122,7 +122,6 @@ export default function PaymentCallbackPage() {
 
           // 실제 결제된 금액과 포인트
           const paidAmount = Number(jsonData.body.pay_info.amt)
-          const usedPoints = 0 // 포인트 사용 없음
           const totalAmount = paidAmount // 총 금액은 실제 결제 금액과 동일
 
           navigate("/payment/complete", {
@@ -145,6 +144,7 @@ export default function PaymentCallbackPage() {
                 cardName: jsonData.body.pay_info.cardname,
                 installment: installmentText,
               },
+              pointAmount: pointAmount ? Number(pointAmount) : 0,
               message: jsonData.resultMessage,
             },
           })
