@@ -32,7 +32,7 @@ const PaymentCompletePage = () => {
   }, [])
 
   const isAdditional = state.type === "additional"
-  const isVirtual = state.paymentMethod === "virtual"
+  const isVirtual = state.paymentMethod === "vbank"
 
   return (
     <div className="flex flex-col min-h-screen">

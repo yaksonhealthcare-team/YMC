@@ -117,8 +117,7 @@ export interface PaymentCompleteState {
   orderId: string
   type: "membership" | "additional"
   items: PaymentItem[]
-  paymentMethod: "card" | "simple" | "virtual"
-  simplePaymentType?: "naver" | "kakao" | "payco"
+  paymentMethod: "card" | "bank" | "vbank"
   cardPaymentInfo?: {
     cardName: string
     installment: string

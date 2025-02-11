@@ -65,6 +65,24 @@ interface OrderResponse {
   }
 }
 
+/**
+ * TODO: 결제 연동 관련 확인사항
+ * 1. UI/UX 개선
+ *   - 결제수단별 아이콘 추가
+ *   - 결제수단 선택 UI 디자인 검토
+ *   - 모바일 웹/앱 대응 UI 확인
+ *
+ * 2. 결제수단 정책 확인
+ *   - 실시간계좌이체(BANK) 지원 여부 확인
+ *   - 각 결제수단별 테스트 계정 정보 확인
+ *   - 결제취소 정책 확인
+ *
+ * 3. 기술검토 사항
+ *   - P_RESERVED 파라미터 옵션 최적화
+ *   - 에러코드별 대응 방안 수립
+ *   - 모바일 앱 스키마 정책 확인
+ */
+
 const PaymentPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
@@ -81,11 +99,8 @@ const PaymentPage = () => {
 
   const [isLoading, setIsLoading] = useState(true)
   const [selectedPayment, setSelectedPayment] = useState<
-    "card" | "simple" | "virtual"
+    "card" | "bank" | "vbank"
   >("card")
-  const [simplePayment, setSimplePayment] = useState<
-    "naver" | "kakao" | "payco"
-  >("naver")
   const [point, setPoint] = useState<string>("")
   const [isAgreed, setIsAgreed] = useState(false)
 
@@ -165,7 +180,6 @@ const PaymentPage = () => {
       })
       console.log("결제 정보:", {
         결제수단: selectedPayment,
-        간편결제_타입: selectedPayment === "simple" ? simplePayment : undefined,
         총_상품금액: totalAmount,
         할인금액: discountAmount,
         포인트사용: pointAmount,
@@ -421,7 +435,6 @@ const PaymentPage = () => {
       포인트사용: pointAmount,
       최종결제금액: finalAmount,
       결제수단: selectedPayment,
-      간편결제타입: selectedPayment === "simple" ? simplePayment : undefined,
     })
 
     // 기존 폼이 있다면 제거
@@ -467,26 +480,40 @@ const PaymentPage = () => {
       P_TIMESTAMP: string
       P_RESERVED?: string
       P_CARD_OPTION?: string
+      P_VBANK_DT?: string
+      P_VBANK_TM?: string
+      P_MOBILE?: string
+      P_APP_BASE?: string
     }
 
     // 결제수단별 기본값 설정
     let paymentMethod = ""
+    let paymentReserved = "centerCd=Y" // 기본 옵션
+
     if (selectedPayment === "card") {
       paymentMethod = "CARD"
-    } else if (selectedPayment === "simple") {
-      switch (simplePayment) {
-        case "naver":
-          paymentMethod = "NAVERPAY"
-          break
-        case "kakao":
-          paymentMethod = "KAKAOPAY"
-          break
-        case "payco":
-          paymentMethod = "PAYCO"
-          break
-        default:
-          paymentMethod = "CARD"
-      }
+      paymentReserved +=
+        "&twotrs_isp=Y&block_isp=Y&twotrs_isp_noti=N&apprun_check=Y"
+    } else if (selectedPayment === "bank") {
+      paymentMethod = "BANK"
+    } else if (selectedPayment === "vbank") {
+      paymentMethod = "VBANK"
+      paymentReserved += "&vbank_receipt=Y&vbank_receipt_list=0"
+    }
+
+    // 모바일 앱 스키마 설정
+    const userAgent = navigator.userAgent.toLowerCase()
+    if (userAgent.includes("chrome")) {
+      paymentReserved += "&app_scheme=googlechromes://"
+    } else if (userAgent.includes("naver")) {
+      paymentReserved += "&app_scheme=naversearchapp://"
+    } else if (userAgent.includes("kakaotalk")) {
+      paymentReserved += "&app_scheme=kakaotalk://"
+    } else if (userAgent.includes("facebook")) {
+      paymentReserved += "&app_scheme=fb://"
+    } else {
+      // 기본 앱 스키마 설정 (웹뷰인 경우)
+      paymentReserved += "&app_scheme=therapist://"
     }
 
     const baseParams: BaseParams = {
@@ -502,15 +529,29 @@ const PaymentPage = () => {
       P_CHARSET: "utf8",
       P_HPP_METHOD: "2",
       P_TIMESTAMP: orderData.pg_info.P_TIMESTAMP,
+      P_RESERVED: paymentReserved,
+      P_MOBILE: "Y",
     }
 
-    // 결제 수단별 추가 파라미터
+    // 카드 결제인 경우에만 카드 옵션 추가
     if (selectedPayment === "card") {
-      baseParams.P_RESERVED =
-        "twotrs_isp=Y&block_isp=Y&twotrs_isp_noti=N&apprun_check=Y&centerCd=Y"
       baseParams.P_CARD_OPTION = ""
-    } else if (selectedPayment === "simple") {
-      baseParams.P_RESERVED = `${simplePayment}Pay,twotrs_isp=Y&block_isp=Y&twotrs_isp_noti=N&apprun_check=Y&centerCd=Y`
+    }
+
+    // 가상계좌인 경우 만료시간 설정 (기본 24시간)
+    if (selectedPayment === "vbank") {
+      const expireDate = new Date()
+      expireDate.setHours(expireDate.getHours() + 24)
+
+      const year = expireDate.getFullYear()
+      const month = String(expireDate.getMonth() + 1).padStart(2, "0")
+      const day = String(expireDate.getDate()).padStart(2, "0")
+      const hours = String(expireDate.getHours()).padStart(2, "0")
+      const minutes = String(expireDate.getMinutes()).padStart(2, "0")
+      const seconds = String(expireDate.getSeconds()).padStart(2, "0")
+
+      baseParams.P_VBANK_DT = `${year}${month}${day}`
+      baseParams.P_VBANK_TM = `${hours}${minutes}${seconds}`
     }
 
     // 파라미터 추가
@@ -571,9 +612,7 @@ const PaymentPage = () => {
 
         <PaymentMethodSection
           selectedPayment={selectedPayment}
-          simplePayment={simplePayment}
           onPaymentMethodChange={setSelectedPayment}
-          onSimplePaymentChange={setSimplePayment}
         />
 
         <PaymentSummarySection
