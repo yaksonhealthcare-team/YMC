@@ -3,7 +3,6 @@ import { useLayout } from "../../contexts/LayoutContext"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Button } from "@components/Button"
 import FixedButtonContainer from "@components/FixedButtonContainer"
-import ErrorIcon from "@assets/icons/ErrorIcon.svg?react"
 
 interface LocationState {
   error: string
@@ -39,7 +38,6 @@ const PaymentFailedPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex flex-col flex-1 items-center justify-center p-5">
-        <ErrorIcon className="w-16 h-16 text-error mb-4" />
         <h1 className="text-20px font-sb text-gray-700 mb-2">
           결제에 실패했습니다
         </h1>

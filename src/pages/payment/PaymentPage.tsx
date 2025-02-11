@@ -185,29 +185,15 @@ const PaymentPage = () => {
 
   // 결제 상태와 데이터 유효성 체크를 위한 별도의 useEffect
   useEffect(() => {
-    if (paymentStatus === PaymentStatus.CANCELED) {
-      clearPayment()
-      navigate(-1)
-      return
-    }
-
     if (!isLoading && (paymentItems.length === 0 || !selectedBranch)) {
       navigate(-1)
       return
     }
-  }, [paymentStatus, paymentItems, selectedBranch, isLoading])
 
-  // cleanup은 결제 완료 또는 취소 시에만 수행
-  useEffect(() => {
-    return () => {
-      if (
-        paymentStatus === PaymentStatus.SUCCESS ||
-        paymentStatus === PaymentStatus.CANCELED
-      ) {
-        clearPayment()
-      }
+    if (paymentStatus === PaymentStatus.SUCCESS) {
+      clearPayment()
     }
-  }, [paymentStatus])
+  }, [paymentStatus, paymentItems, selectedBranch, isLoading])
 
   const handlePointChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
