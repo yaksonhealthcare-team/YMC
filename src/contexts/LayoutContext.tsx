@@ -83,7 +83,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
     if ("component" in header && header.component) {
       return (
         <>
-          <div className={"fixed w-full max-w-[500px] min-w-[375px] z-10"}>
+          <div className={"fixed w-full max-w-[500px] z-10"}>
             {header.component}
           </div>
           <div className="min-h-12" />
@@ -95,7 +95,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
     return (
       <div className={"z-10"}>
         <div
-          className={`fixed w-full max-w-[500px] min-w-[375px] ${
+          className={`fixed w-full max-w-[500px] ${
             headerConfig.backgroundColor
               ? headerConfig.backgroundColor
               : "bg-system-bg"
@@ -146,7 +146,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
               style={{
                 boxShadow: "0px -2px 16px 0px #2E2B2914",
                 width: "100%",
-                maxWidth: "inherit"
+                maxWidth: "inherit",
               }}
             >
               <NavButton
@@ -209,7 +209,9 @@ const NavButton = ({
 }: NavButtonProps) => {
   const path = window.location.pathname
   const { navigation } = useLayout()
-  const active = navigation.activeTab ? title === navigation.activeTab : isActive(path)
+  const active = navigation.activeTab
+    ? title === navigation.activeTab
+    : isActive(path)
   const navigate = useNavigate()
 
   const handleClick = () => {
@@ -218,9 +220,7 @@ const NavButton = ({
 
   return (
     <div
-      className={
-        "py-3 flex-1 flex flex-col gap-1 items-center cursor-pointer"
-      }
+      className={"py-3 flex-1 flex flex-col gap-1 items-center cursor-pointer"}
       onClick={handleClick}
       style={{ color: active ? "#F37165" : "#BDBDBD" }}
     >
