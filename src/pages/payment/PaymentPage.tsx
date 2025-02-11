@@ -255,20 +255,6 @@ const PaymentPage = () => {
   }
 
   const requestPayment = async (orderData: OrderResponse) => {
-    const paymentForm = document.createElement("form")
-    paymentForm.method = "POST"
-    paymentForm.action = "https://mobile.inicis.com/smart/payment/"
-    paymentForm.charset = "euc-kr"
-    paymentForm.acceptCharset = "euc-kr"
-
-    const appendInput = (name: string, value: string) => {
-      const input = document.createElement("input")
-      input.type = "hidden"
-      input.name = name
-      input.value = value
-      paymentForm.appendChild(input)
-    }
-
     const goodsName =
       orderData.orderSheet.items.length > 1
         ? `${orderData.orderSheet.items[0].membership.s_name} 외 ${orderData.orderSheet.items.length - 1}건`
@@ -282,24 +268,6 @@ const PaymentPage = () => {
       결제금액: finalAmount,
       포인트사용: pointAmount,
     })
-
-    // 필수 파라미터
-    appendInput("P_MID", orderData.pg_info.P_MID)
-    appendInput("P_OID", orderData.orderSheet.orderid)
-    appendInput("P_AMT", finalAmount.toString())
-    appendInput("P_GOODS", goodsName)
-    appendInput("P_UNAME", orderData.orderer.name)
-    appendInput("P_NEXT_URL", orderData.pg_info.P_NEXT_URL)
-    appendInput("P_NOTI_URL", orderData.pg_info.P_NOTI_URL)
-    appendInput("P_NOTI", `${orderData.orderSheet.orderid},${pointAmount}`)
-
-    // 결제 수단에 따른 파라미터 추가
-    if (selectedPayment === "card") {
-      appendInput("P_RESERVED", "centerCd=Y")
-    } else if (selectedPayment === "simple") {
-      appendInput("P_RESERVED", `${simplePayment}Pay,centerCd=Y`)
-    }
-
     console.log("PG사 전송 파라미터:", {
       P_MID: orderData.pg_info.P_MID,
       P_OID: orderData.orderSheet.orderid,
@@ -316,6 +284,41 @@ const PaymentPage = () => {
       결제수단: selectedPayment,
     })
     console.groupEnd()
+
+    const paymentForm = document.createElement("form")
+    paymentForm.method = "POST"
+    paymentForm.action = "https://mobile.inicis.com/smart/payment/"
+    paymentForm.charset = "euc-kr"
+    paymentForm.acceptCharset = "euc-kr"
+
+    const appendInput = (name: string, value: string) => {
+      const input = document.createElement("input")
+      input.type = "hidden"
+      input.name = name
+      input.value = value
+      paymentForm.appendChild(input)
+    }
+
+    // 필수 파라미터
+    appendInput("P_MID", orderData.pg_info.P_MID)
+    appendInput("P_OID", orderData.orderSheet.orderid)
+    appendInput("P_AMT", finalAmount.toString())
+    appendInput("P_GOODS", goodsName)
+    appendInput("P_UNAME", orderData.orderer.name)
+    appendInput("P_NEXT_URL", orderData.pg_info.P_NEXT_URL)
+    appendInput("P_NOTI_URL", orderData.pg_info.P_NOTI_URL)
+    appendInput("P_NOTI", `${orderData.orderSheet.orderid},${pointAmount}`)
+    appendInput("P_CHARSET", "utf8")
+    appendInput("P_HPP_METHOD", "2")
+    appendInput("P_TIMESTAMP", orderData.pg_info.P_TIMESTAMP)
+
+    // 결제 수단에 따른 파라미터 추가
+    if (selectedPayment === "card") {
+      appendInput("P_RESERVED", "centerCd=Y")
+      appendInput("P_CARD_OPTION", "")
+    } else if (selectedPayment === "simple") {
+      appendInput("P_RESERVED", `${simplePayment}Pay,centerCd=Y`)
+    }
 
     document.body.appendChild(paymentForm)
     paymentForm.submit()
