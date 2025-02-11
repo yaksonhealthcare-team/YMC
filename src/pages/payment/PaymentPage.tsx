@@ -12,7 +12,6 @@ import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { CartItemOption } from "../../types/Cart.ts"
 import { fetchPoints } from "../../apis/points.api.ts"
 import { axiosClient } from "../../queries/clients.ts"
-import { PaymentStatus } from "../../types/Payment.ts"
 
 interface OrderResponse {
   resultCode: string
@@ -70,9 +69,7 @@ const PaymentPage = () => {
   const {
     items: paymentItems,
     selectedBranch,
-    clear: clearPayment,
     setItems: setPaymentItems,
-    paymentStatus,
   } = usePaymentStore()
   const [isLoading, setIsLoading] = useState(true)
 
