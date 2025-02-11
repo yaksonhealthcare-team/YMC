@@ -106,40 +106,71 @@ export default function PaymentCallbackPage() {
         console.log("✅ 결제 성공")
         setPaymentStatus(PaymentStatus.SUCCESS)
 
-        // 할부 개월 수 표시 형식 변경
-        const installmentText =
-          jsonData.body.pay_info.quota === "00"
-            ? "일시불"
-            : `${parseInt(jsonData.body.pay_info.quota)}개월`
+        try {
+          // 할부 개월 수 표시 형식 변경
+          const installmentText =
+            jsonData.body.pay_info.quota === "00"
+              ? "일시불"
+              : `${parseInt(jsonData.body.pay_info.quota)}개월`
 
-        // 실제 결제된 금액과 포인트
-        const paidAmount = Number(jsonData.body.pay_info.amt)
-        const usedPoints = pointAmount ? Number(pointAmount) : 0
+          // 실제 결제된 금액과 포인트
+          const paidAmount = Number(jsonData.body.pay_info.amt)
+          const usedPoints = pointAmount ? Number(pointAmount) : 0
 
-        navigate("/payment/complete", {
-          state: {
-            amount: paidAmount + usedPoints, // 원래 상품 금액 (결제금액 + 포인트)
-            type: "membership",
-            items: [
-              {
-                id: jsonData.body.orderid,
-                brand: "약손명가",
-                branchType: "지점",
-                title: "멤버십",
-                sessions: 1,
-                price: paidAmount + usedPoints,
-                amount: 1,
+          navigate("/payment/complete", {
+            state: {
+              amount: paidAmount + usedPoints,
+              type: "membership",
+              items: [
+                {
+                  id: jsonData.body.orderid,
+                  brand: "약손명가",
+                  branchType: "지점",
+                  title: jsonData.body.pay_info.cardname,
+                  sessions: 1,
+                  price: paidAmount + usedPoints,
+                  amount: 1,
+                },
+              ],
+              paymentMethod: jsonData.body.pay_info.type.toLowerCase(),
+              cardPaymentInfo: {
+                cardName: jsonData.body.pay_info.cardname,
+                installment: installmentText,
               },
-            ],
-            paymentMethod: jsonData.body.pay_info.type.toLowerCase(),
-            cardPaymentInfo: {
-              cardName: jsonData.body.pay_info.cardname,
-              installment: installmentText,
+              pointAmount: usedPoints,
+              message: jsonData.resultMessage,
             },
-            pointAmount: usedPoints, // 사용한 포인트
-            message: jsonData.resultMessage,
-          },
-        })
+          })
+        } catch (error) {
+          // 결제는 성공했지만 데이터 처리 중 오류가 발생한 경우
+          console.error("⚠️ 결제 성공 후 데이터 처리 중 오류:", error)
+
+          // 최소한의 정보로 결제 완료 페이지로 이동
+          navigate("/payment/complete", {
+            state: {
+              amount: Number(jsonData.body.pay_info.amt),
+              type: "membership",
+              items: [
+                {
+                  id: jsonData.body.orderid,
+                  brand: "약손명가",
+                  branchType: "지점",
+                  title: "멤버십",
+                  sessions: 1,
+                  price: Number(jsonData.body.pay_info.amt),
+                  amount: 1,
+                },
+              ],
+              paymentMethod: jsonData.body.pay_info.type.toLowerCase(),
+              cardPaymentInfo: {
+                cardName: jsonData.body.pay_info.cardname,
+                installment: "일시불",
+              },
+              message:
+                "결제가 완료되었습니다. 상세 정보 확인이 어려운 경우 고객센터로 문의해주세요.",
+            },
+          })
+        }
         return
       }
 
