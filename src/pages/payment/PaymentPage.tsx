@@ -420,37 +420,22 @@ const PaymentPage = () => {
       간편결제타입: selectedPayment === "simple" ? simplePayment : undefined,
     })
 
-    const pgParams = {
-      P_MID: orderData.pg_info.P_MID,
-      P_OID: orderData.orderSheet.orderid,
-      P_AMT: finalAmount,
-      P_GOODS: goodsName,
-      P_UNAME: orderData.orderer.name,
-      P_NEXT_URL: orderData.pg_info.P_NEXT_URL,
-      P_NOTI_URL: orderData.pg_info.P_NOTI_URL,
-      P_NOTI: `${orderData.orderSheet.orderid},${pointAmount}`,
-      P_RESERVED:
-        selectedPayment === "card"
-          ? "centerCd=Y"
-          : `${simplePayment}Pay,centerCd=Y`,
-      P_CHARSET: "utf8",
-      P_HPP_METHOD: "2",
-      P_TIMESTAMP: orderData.pg_info.P_TIMESTAMP,
+    // 기존 폼이 있다면 제거
+    const existingForm = document.getElementById("inicisPaymentForm")
+    if (existingForm) {
+      document.body.removeChild(existingForm)
     }
 
-    console.log("PG사 전송 파라미터:", pgParams)
-    console.groupEnd()
-
     const paymentForm = document.createElement("form")
+    paymentForm.id = "inicisPaymentForm"
     paymentForm.method = "POST"
     paymentForm.action = "https://mobile.inicis.com/smart/payment/"
-    paymentForm.charset = "euc-kr"
     paymentForm.acceptCharset = "euc-kr"
 
     console.log("결제창 폼 생성:", {
       method: paymentForm.method,
       action: paymentForm.action,
-      charset: paymentForm.charset,
+      charset: paymentForm.acceptCharset,
     })
 
     const appendInput = (name: string, value: string) => {
@@ -462,24 +447,85 @@ const PaymentPage = () => {
       console.log(`폼 파라미터 추가: ${name}=${value}`)
     }
 
-    // 필수 파라미터
-    Object.entries(pgParams).forEach(([key, value]) => {
-      appendInput(key, value.toString())
-    })
-
-    // 결제 수단에 따른 파라미터 추가
-    if (selectedPayment === "card") {
-      appendInput("P_RESERVED", "centerCd=Y")
-      appendInput("P_CARD_OPTION", "")
-      console.log("카드결제 전용 파라미터 추가 완료")
-    } else if (selectedPayment === "simple") {
-      appendInput("P_RESERVED", `${simplePayment}Pay,centerCd=Y`)
-      console.log("간편결제 전용 파라미터 추가 완료")
+    // 기본 파라미터
+    interface BaseParams {
+      P_INI_PAYMENT: string
+      P_MID: string
+      P_OID: string
+      P_AMT: string
+      P_GOODS: string
+      P_UNAME: string
+      P_NEXT_URL: string
+      P_NOTI_URL: string
+      P_NOTI: string
+      P_CHARSET: string
+      P_HPP_METHOD: string
+      P_TIMESTAMP: string
+      P_RESERVED?: string
+      P_CARD_OPTION?: string
     }
+
+    // 결제수단별 기본값 설정
+    let paymentMethod = ""
+    if (selectedPayment === "card") {
+      paymentMethod = "CARD"
+    } else if (selectedPayment === "simple") {
+      switch (simplePayment) {
+        case "naver":
+          paymentMethod = "NAVERPAY"
+          break
+        case "kakao":
+          paymentMethod = "KAKAOPAY"
+          break
+        case "payco":
+          paymentMethod = "PAYCO"
+          break
+        default:
+          paymentMethod = "CARD"
+      }
+    }
+
+    const baseParams: BaseParams = {
+      P_INI_PAYMENT: paymentMethod,
+      P_MID: orderData.pg_info.P_MID,
+      P_OID: orderData.orderSheet.orderid,
+      P_AMT: finalAmount.toString(),
+      P_GOODS: goodsName,
+      P_UNAME: orderData.orderer.name,
+      P_NEXT_URL: orderData.pg_info.P_NEXT_URL,
+      P_NOTI_URL: orderData.pg_info.P_NOTI_URL,
+      P_NOTI: `${orderData.orderSheet.orderid},${pointAmount}`,
+      P_CHARSET: "utf8",
+      P_HPP_METHOD: "2",
+      P_TIMESTAMP: orderData.pg_info.P_TIMESTAMP,
+    }
+
+    // 결제 수단별 추가 파라미터
+    if (selectedPayment === "card") {
+      baseParams.P_RESERVED =
+        "twotrs_isp=Y&block_isp=Y&twotrs_isp_noti=N&apprun_check=Y&centerCd=Y"
+      baseParams.P_CARD_OPTION = ""
+    } else if (selectedPayment === "simple") {
+      baseParams.P_RESERVED = `${simplePayment}Pay,twotrs_isp=Y&block_isp=Y&twotrs_isp_noti=N&apprun_check=Y&centerCd=Y`
+    }
+
+    // 파라미터 추가
+    Object.entries(baseParams).forEach(([key, value]) => {
+      if (value !== undefined) {
+        appendInput(key, value)
+      }
+    })
 
     document.body.appendChild(paymentForm)
     console.log("✅ 결제창 폼 DOM 추가 완료, 결제창 호출 시작")
-    paymentForm.submit()
+
+    try {
+      paymentForm.submit()
+      console.log("✅ 결제창 폼 제출 완료")
+    } catch (error) {
+      console.error("❌ 결제창 호출 실패:", error)
+      openMessageBox("결제창 호출에 실패했습니다. 다시 시도해주세요.")
+    }
   }
 
   const calculateTotalAmount = () => {
