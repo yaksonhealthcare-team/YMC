@@ -14,6 +14,7 @@ import EventIcon from "@assets/icons/EventIcon.svg?react"
 import NoticeIcon from "@assets/icons/NoticeIcon.svg?react"
 import NotificationIcon from "@assets/icons/NotificationIcon.svg?react"
 import CartIcon from "@assets/icons/CartIcon.svg?react"
+import Profile from "@assets/icons/Profile.svg?react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useAuth } from "../../contexts/AuthContext.tsx"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
@@ -222,12 +223,16 @@ const MyPage = () => {
 
       {/* Profile Section */}
       <div className="flex items-center gap-3 px-5 py-4">
-        <div className="w-12 h-12 rounded-full border border-gray-100 overflow-hidden">
-          <img
-            src={user?.profileURL || "/assets/profile_image.jpeg"}
-            alt="프로필"
-            className="w-full h-full object-cover"
-          />
+        <div className="w-12 h-12 rounded-full border border-gray-100 overflow-hidden bg-gray-50 flex items-center justify-center">
+          {user?.profileURL ? (
+            <img
+              src={user.profileURL}
+              alt="프로필"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <Profile className="w-8 h-8 text-gray-300" />
+          )}
         </div>
         <span className="font-b text-[20px] text-gray-900">
           {user?.username ?? ""}님
