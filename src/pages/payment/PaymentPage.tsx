@@ -12,6 +12,7 @@ import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { CartItemOption } from "../../types/Cart.ts"
 import { fetchPoints } from "../../apis/points.api.ts"
 import { axiosClient } from "../../queries/clients.ts"
+import { useOverlay } from "../../contexts/ModalContext"
 
 interface OrderResponse {
   resultCode: string
@@ -64,6 +65,7 @@ interface OrderResponse {
 
 const PaymentPage = () => {
   const { setHeader, setNavigation } = useLayout()
+  const { openModal } = useOverlay()
   const {
     items: paymentItems,
     selectedBranch,
@@ -196,7 +198,22 @@ const PaymentPage = () => {
       setIsLoading(false)
     }, 500)
 
-    return () => clearTimeout(timer)
+    // 결제 취소 메시지 수신 처리
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data.type === "PAYMENT_CANCELED") {
+        openModal({
+          title: "결제 취소",
+          message: "결제가 취소되었습니다.",
+          onConfirm: () => {},
+        })
+      }
+    }
+    window.addEventListener("message", handleMessage)
+
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener("message", handleMessage)
+    }
   }, [])
 
   // 뒤로가기 버튼 처리
