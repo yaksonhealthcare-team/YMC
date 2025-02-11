@@ -65,21 +65,24 @@ export const useReservationDetail = (reservationId: string) => {
         programName: data.ps_name,
         date: new Date(data.r_date),
         status: data.r_status,
-        duration: data.r_time,
-        visit: data.r_visit,
+        duration: data.r_take_time,
+        visit: Number(data.visit),
         type: data.r_gubun,
         services: [],
-        branchId: data.b_idx || "",
+        branchId: data.r_idx,
         branchName: data.b_name,
-        membershipName: data.mp_name || "",
-        remainingCount: data.mp_remain || "0",
+        membershipName: data.s_name,
+        remainingCount: data.remain_amount,
         request: data.r_memo,
         remainingDays: "0",
         additionalServices:
-          data.additional_services?.map((service) => ({
+          data.add_services?.map((service) => ({
             name: service.s_name,
             price: Number(service.s_price || 0),
           })) || [],
+        latitude: Number(data.b_lat),
+        longitude: Number(data.b_lon),
+        phone: data.b_tel,
       }
 
       return detail

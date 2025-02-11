@@ -31,18 +31,22 @@ export interface Reservation {
 
 export interface ReservationResponse {
   r_idx: string
-  b_name: string
-  ps_name: string
-  r_date: string
-  r_status: ReservationStatusCode
-  r_time: string
-  r_visit: number
   r_gubun: string
-  b_idx: string
-  mp_name?: string
-  mp_remain?: string
-  r_memo?: string
-  additional_services?: Array<{
+  b_name: string
+  b_lat: string
+  b_lon: string
+  b_tel: string
+  r_date: string
+  p_idx: string
+  ps_name: string
+  r_take_time: string
+  visit: string
+  r_status: ReservationStatusCode
+  r_memo: string
+  s_name: string
+  buy_amount: string
+  remain_amount: string
+  add_services: Array<{
     s_name: string
     s_price: string
   }>
