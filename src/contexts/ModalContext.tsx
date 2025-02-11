@@ -215,7 +215,7 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
     >
       {children}
       {toastMessage && (
-        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg z-50 min-w-[300px] max-w-[90%] text-center">
+        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg z-[9999] min-w-[300px] max-w-[90%] text-center">
           {toastMessage}
         </div>
       )}
