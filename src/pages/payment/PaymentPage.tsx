@@ -280,6 +280,14 @@ const PaymentPage = () => {
     appendInput("P_GOODS", goodsName)
     appendInput("P_UNAME", orderData.orderer.name)
     appendInput("P_NEXT_URL", orderData.pg_info.P_NEXT_URL)
+
+    // P_NOTI 로그 추가
+    console.group("💰 결제 요청 데이터")
+    console.log("주문번호:", orderData.orderSheet.orderid)
+    console.log("포인트 사용:", pointAmount)
+    console.log("P_NOTI 값:", `${orderData.orderSheet.orderid},${pointAmount}`)
+    console.groupEnd()
+
     appendInput("P_NOTI", `${orderData.orderSheet.orderid},${pointAmount}`)
     appendInput("P_RESERVED", "centerCd=Y")
 
