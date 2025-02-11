@@ -1,5 +1,5 @@
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useEffect, useState, useMemo } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import SettingIcon from "@assets/icons/SettingIcon.svg?react"
 import { Filter } from "@components/Filter.tsx"
@@ -9,12 +9,8 @@ import {
   getSearchType,
   NotificationFilter,
   NotificationSearchType,
-  ReadStatus,
 } from "../../types/Notification.ts"
-import {
-  useNotifications,
-  useUpdateNotificationReadStatus,
-} from "../../queries/useNotificationQueries.tsx"
+import { useNotifications } from "../../queries/useNotificationQueries.tsx"
 import useIntersection from "../../hooks/useIntersection.tsx"
 
 const filters = [
@@ -27,7 +23,7 @@ const filters = [
 
 export const Notification = () => {
   const { setHeader, setNavigation } = useLayout()
-  const { mutate: updateReadStatus } = useUpdateNotificationReadStatus()
+  const navigate = useNavigate()
 
   useEffect(() => {
     setHeader({
@@ -44,8 +40,6 @@ export const Notification = () => {
     })
     setNavigation({ display: false })
   }, [])
-
-  const navigate = useNavigate()
 
   const [activeFilter, setActiveFilter] = useState<NotificationFilter>(
     NotificationFilter.ALL,
@@ -66,22 +60,6 @@ export const Notification = () => {
       ? getSearchType(activeFilter)
       : NotificationSearchType.ALL,
   })
-
-  // 읽지 않은 알림 ID 목록 추출
-  const unreadNotificationIds = useMemo(() => {
-    if (!notifications?.pages) return []
-    return notifications.pages
-      .flatMap((page) => page)
-      .filter((notification) => notification.readStatus === ReadStatus.UN_READ)
-      .map((notification) => notification.id)
-  }, [notifications])
-
-  // 페이지 진입 시 읽지 않은 알림을 읽음 상태로 업데이트
-  useEffect(() => {
-    if (unreadNotificationIds.length > 0) {
-      updateReadStatus(unreadNotificationIds)
-    }
-  }, [unreadNotificationIds])
 
   const { observerTarget } = useIntersection({
     onIntersect: () => {

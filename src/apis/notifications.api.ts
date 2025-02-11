@@ -1,24 +1,25 @@
 import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
 import {
-  NotificationFilters,
   NotificationResponse,
   NotificationSettings,
   NotificationSettingsResponse,
 } from "../types/Notification.ts"
-import { NotificationMapper } from "../mappers/NotificationMapper"
+import { NotificationMapper } from "../mappers/NotificationMapper.ts"
 
-export const fetchNotifications = async (filters: NotificationFilters) => {
+export const fetchNotifications = async (params: {
+  page: number
+  searchType?: string
+}) => {
   const { data } = await axiosClient.get<HTTPResponse<NotificationResponse[]>>(
     "/notifications/notifications",
     {
       params: {
-        page: filters.page,
-        search_type: filters.searchType,
+        page: params.page,
+        search_type: params.searchType,
       },
     },
   )
-
   return NotificationMapper.toNotifications(data.body)
 }
 
@@ -43,27 +44,8 @@ export const updateNotificationSettings = async (
 }
 
 export const fetchUnreadNotificationsCount = async () => {
-  const { data } = await axiosClient.get<HTTPResponse<NotificationResponse[]>>(
-    "/notifications/notifications",
-    {
-      params: {
-        page: 1,
-      },
-    },
+  const { data } = await axiosClient.get<HTTPResponse<{ total_count: number }>>(
+    "/notifications/unread-count",
   )
-
-  return data.body.filter((notification) => notification.is_read === "안읽음")
-    .length
-}
-
-export const updateNotificationReadStatus = async (
-  notificationIds: number[],
-) => {
-  const { data } = await axiosClient.patch<HTTPResponse<any>>(
-    "/notifications/read-status",
-    {
-      notification_ids: notificationIds,
-    },
-  )
-  return data
+  return data.body.total_count
 }

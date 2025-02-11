@@ -11,20 +11,23 @@ import {
   getNotificationSettings,
   updateNotificationSettings,
   fetchUnreadNotificationsCount,
-  updateNotificationReadStatus,
 } from "../apis/notifications.api.ts"
 
-export const useNotifications = (filters: NotificationFilters) =>
-  useInfiniteQuery({
-    initialPageParam: 1,
+export const useNotifications = (filters: NotificationFilters) => {
+  return useInfiniteQuery({
     queryKey: queryKeys.notifications.list(filters),
     queryFn: ({ pageParam = 1 }) =>
-      fetchNotifications({ ...filters, page: pageParam }),
+      fetchNotifications({
+        page: pageParam,
+        searchType: filters.searchType,
+      }),
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.length === 0) return undefined
       return allPages.length + 1
     },
+    initialPageParam: 1,
   })
+}
 
 export const useNotificationSettings = () => {
   return useQuery({
@@ -40,20 +43,6 @@ export const useUpdateNotificationSettings = () => {
     mutationFn: updateNotificationSettings,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notificationSettings"] })
-    },
-  })
-}
-
-export const useUpdateNotificationReadStatus = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: updateNotificationReadStatus,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.notifications.list({}),
-      })
-      queryClient.invalidateQueries({ queryKey: ["unreadNotificationsCount"] })
     },
   })
 }

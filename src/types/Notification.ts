@@ -1,6 +1,5 @@
 export interface Notification {
   id: number
-  readStatus: ReadStatus
   mainCategory: string
   subCategory?: string
   title: string
@@ -12,7 +11,6 @@ export interface Notification {
 
 export interface NotificationResponse {
   id: number
-  is_read: ReadStatus
   main_category: string
   sub_category: string
   title: string
@@ -25,11 +23,6 @@ export interface NotificationResponse {
 export interface NotificationFilters {
   page?: number
   searchType?: NotificationSearchType
-}
-
-export enum ReadStatus {
-  READ = "읽음",
-  UN_READ = "안읽음",
 }
 
 export enum NotificationFilter {
