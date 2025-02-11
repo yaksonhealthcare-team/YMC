@@ -333,8 +333,6 @@ const PaymentPage = () => {
     appendInput("P_NEXT_URL", orderData.pg_info.P_NEXT_URL)
     appendInput("P_NOTI", `${orderData.pg_info.P_OID},${pointAmount}`)
     appendInput("P_RESERVED", "centerCd=Y")
-    appendInput("P_CANCEL_URL", window.location.origin + "/payment")
-    appendInput("P_CANCEL_TARGET", "_self")
 
     // 결제수단별 파라미터
     switch (selectedPayment) {

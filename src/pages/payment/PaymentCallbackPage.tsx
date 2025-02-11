@@ -61,15 +61,13 @@ export default function PaymentCallbackPage() {
         console.log("ℹ️ 결제 취소됨")
         setPaymentStatus(PaymentStatus.CANCELED)
 
-        // parent window로 결제 취소 메시지 전달
+        // 결제창 닫기 시도
         if (window.opener) {
           window.opener.postMessage({ type: "PAYMENT_CANCELED" }, "*")
           window.close()
         } else {
-          // 팝업이 아닌 경우 (모바일 브라우저 등)
-          navigate("/payment", {
-            replace: true,
-          })
+          // 모바일 브라우저에서는 history.back()으로 결제창 닫기
+          window.history.back()
         }
         return
       }
