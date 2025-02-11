@@ -26,6 +26,7 @@ interface PaymentCallbackData {
         count: number
         price: number
         originalPrice: number
+        ss_idx: string
       }>
       status: string
     }>

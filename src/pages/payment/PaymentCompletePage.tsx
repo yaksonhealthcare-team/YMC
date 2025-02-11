@@ -4,16 +4,14 @@ import { useNavigate, useLocation } from "react-router-dom"
 import { Button } from "@components/Button"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 import { XIcon } from "@components/icons/XIcon"
-import CheckCircle from "@assets/icons/CheckCircle.svg?react"
-import Divider from "@components/Divider"
-import OrderSummaryCard from "./_fragments/OrderSummaryCard"
-import AdditionalServiceCard from "./_fragments/AdditionalServiceCard"
-import { CartItem } from "../../types/Cart"
+import CheckCircleIcon from "@assets/icons/CheckCircle.svg?react"
+import { Divider } from "@mui/material"
+import { PaymentItem } from "../../types/Payment"
 
 interface PaymentCompleteState {
   amount: number
   type: "membership" | "additional"
-  items: CartItem[]
+  items: PaymentItem[]
   paymentMethod: "card" | "simple" | "virtual"
   simplePaymentType?: "naver" | "kakao" | "payco"
   cardPaymentInfo?: {
@@ -58,14 +56,22 @@ const PaymentCompletePage = () => {
   }
 
   const renderItems = () => {
-    if (state.type === "membership") {
-      return (state.items as CartItem[]).map((item) => (
-        <OrderSummaryCard key={item.id} {...item} />
-      ))
-    }
-
-    return (state.items as AdditionalItem[]).map((item) => (
-      <AdditionalServiceCard key={item.id} {...item} />
+    return state.items.map((item) => (
+      <div key={item.id} className="p-4 border rounded-lg mb-4">
+        <div className="flex justify-between mb-2">
+          <span className="font-sb text-16px">{item.title}</span>
+          <span className="text-primary">결제완료</span>
+        </div>
+        <div className="text-gray-500 text-14px">
+          {item.brand} | {item.branchType}
+        </div>
+        <div className="mt-2 text-14px">
+          <div className="flex justify-between">
+            <span>{item.sessions}회</span>
+            <span>{(item.price * item.amount).toLocaleString()}원</span>
+          </div>
+        </div>
+      </div>
     ))
   }
 
@@ -147,7 +153,7 @@ const PaymentCompletePage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="p-5 flex flex-col gap-4 items-center border-b-8 border-gray-50">
-        <img src={CheckCircle} />
+        <CheckCircleIcon />
         <p className="text-primary font-sb text-16px">결제가 완료되었습니다.</p>
       </div>
 
@@ -175,18 +181,26 @@ const PaymentCompletePage = () => {
               {state.amount.toLocaleString()}원
             </span>
           </div>
-          {isMembership && (
+          {state.discountAmount && state.discountAmount > 0 && (
             <div className="flex justify-between">
               <span className="font-m text-14px text-gray-500">
                 상품할인금액
               </span>
-              <span className="font-sb text-14px text-success">-825,600원</span>
+              <span className="font-sb text-14px text-success">
+                -{state.discountAmount.toLocaleString()}원
+              </span>
             </div>
           )}
-          <div className="flex justify-between">
-            <span className="font-m text-14px text-gray-500">포인트 사용</span>
-            <span className="font-sb text-14px text-success">-2,000원</span>
-          </div>
+          {state.pointAmount && state.pointAmount > 0 && (
+            <div className="flex justify-between">
+              <span className="font-m text-14px text-gray-500">
+                포인트 사용
+              </span>
+              <span className="font-sb text-14px text-success">
+                -{state.pointAmount.toLocaleString()}원
+              </span>
+            </div>
+          )}
           <Divider />
           <div className="flex justify-between items-center">
             <span className="font-m text-16px text-gray-700">
@@ -195,8 +209,8 @@ const PaymentCompletePage = () => {
             <span className="font-b text-20px text-gray-700">
               {(
                 state.amount -
-                (isMembership ? 825600 : 0) -
-                2000
+                (state.discountAmount || 0) -
+                (state.pointAmount || 0)
               ).toLocaleString()}
               원
             </span>
