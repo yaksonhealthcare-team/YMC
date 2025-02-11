@@ -559,12 +559,12 @@ const PaymentPage = () => {
 
         {/* 동의 체크박스 */}
         <div className="p-5">
-          <label className="flex items-start gap-3 items-center">
+          <label className="flex items-center gap-3">
             <input
               type="checkbox"
               checked={isAgreed}
               onChange={(e) => setIsAgreed(e.target.checked)}
-              className="mt-1"
+              className=""
               style={{
                 appearance: "none",
                 width: "20px",
