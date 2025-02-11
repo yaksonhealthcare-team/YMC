@@ -13,7 +13,7 @@ interface PaymentCallbackData {
 export default function PaymentCallbackPage() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
-  const { setPaymentStatus } = usePaymentStore()
+  const { setPaymentStatus, clear: clearPayment } = usePaymentStore()
   const { openModal } = useOverlay()
   useEffect(() => {
     try {
@@ -61,6 +61,7 @@ export default function PaymentCallbackPage() {
         console.log("ℹ️ 결제 취소됨")
         setPaymentStatus(PaymentStatus.CANCELED)
         alert("결제가 취소되었습니다.")
+        clearPayment() // 결제 데이터 삭제
         navigate(-1)
         return
       }
