@@ -1,94 +1,47 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { Button } from "@components/Button.tsx"
-import FixedButtonContainer from "@components/FixedButtonContainer.tsx"
-import { Divider } from "@mui/material"
-import CheckCircle from "@assets/icons/CheckCircle.svg"
-import AdditionalServiceCard from "@components/AdditionalServiceCard.tsx"
-import OrderSummaryCard from "@components/OrderSummaryCard.tsx"
-import { XIcon } from "@components/icons/XIcon.tsx"
-
-interface CartOption {
-  sessions: number
-  count: number
-  price: number
-  originalPrice: number
-}
-
-interface CartItem {
-  id: string
-  brand: string
-  branchType: "전지점" | "지정 지점"
-  title: string
-  duration: number
-  options: CartOption[]
-  status: "결제완료" | "결제미완료"
-}
-
-interface AdditionalItem {
-  id: string
-  title: string
-  duration: number
-  price: number
-}
+import { useLayout } from "../../contexts/LayoutContext"
+import { useNavigate, useLocation } from "react-router-dom"
+import { Button } from "@components/Button"
+import FixedButtonContainer from "@components/FixedButtonContainer"
+import { XIcon } from "@components/icons/XIcon"
+import CheckCircle from "@assets/icons/CheckCircle.svg?react"
+import Divider from "@components/Divider"
+import OrderSummaryCard from "./_fragments/OrderSummaryCard"
+import AdditionalServiceCard from "./_fragments/AdditionalServiceCard"
+import { CartItem } from "../../types/Cart"
 
 interface PaymentCompleteState {
   amount: number
   type: "membership" | "additional"
-  items: CartItem[] | AdditionalItem[]
+  items: CartItem[]
   paymentMethod: "card" | "simple" | "virtual"
   simplePaymentType?: "naver" | "kakao" | "payco"
   cardPaymentInfo?: {
     cardName: string
     installment: string
   }
+  discountAmount?: number
+  pointAmount?: number
+  message?: string
 }
 
 const PaymentCompletePage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const [state, setState] = useState<PaymentCompleteState>({
-    amount: 0,
-    type: "membership",
-    items: [],
-    paymentMethod: "card",
-  })
-
-  useEffect(() => {
-    // TODO: 실제 결제 정보를 받아와서 state에 설정
-    const dummyState: PaymentCompleteState = {
-      amount: 4953600,
-      type: "membership",
-      items: [
-        {
-          id: "1",
-          brand: "약손명가",
-          branchType: "전지점",
-          title: "K-BEAUTY 연예인관리",
-          duration: 120,
-          options: [
-            {
-              sessions: 30,
-              count: 1,
-              price: 1032000,
-              originalPrice: 1238400,
-            },
-            {
-              sessions: 10,
-              count: 2,
-              price: 1032000,
-              originalPrice: 1238400,
-            },
-          ],
-          status: "결제완료",
-        },
-      ],
-      paymentMethod: "simple",
-      simplePaymentType: "naver",
+  const location = useLocation()
+  const [state, setState] = useState<PaymentCompleteState>(() => {
+    if (!location.state) {
+      // 결제 정보가 없으면 결제 내역 페이지로 이동
+      navigate("/payment")
+      return {
+        amount: 0,
+        type: "membership",
+        items: [],
+        paymentMethod: "card",
+      }
     }
-    setState(dummyState)
-  }, [])
+    return location.state as PaymentCompleteState
+  })
 
   useEffect(() => {
     setHeader({
@@ -101,7 +54,6 @@ const PaymentCompletePage = () => {
   }, [])
 
   const handleClose = () => {
-    //TODO:
     navigate("/")
   }
 

@@ -7,7 +7,31 @@ import { useOverlay } from "../../contexts/ModalContext"
 interface PaymentCallbackData {
   resultCode: string
   resultMessage: string
-  body: Record<string, unknown>
+  body: {
+    P_AMT: number
+    P_TYPE?: string
+    P_SIMPLE_TYPE?: string
+    P_CARD_INFO?: {
+      cardName: string
+      installment: string
+    }
+    items: Array<{
+      id: string
+      brand: string
+      branchType: string
+      title: string
+      duration: number
+      options: Array<{
+        sessions: number
+        count: number
+        price: number
+        originalPrice: number
+      }>
+      status: string
+    }>
+    discountAmount?: number
+    pointAmount?: number
+  }
 }
 
 export default function PaymentCallbackPage() {
@@ -49,7 +73,19 @@ export default function PaymentCallbackPage() {
         setPaymentStatus(PaymentStatus.SUCCESS)
         navigate("/payment/complete", {
           state: {
-            ...jsonData.body,
+            amount: jsonData.body.P_AMT,
+            type: "membership",
+            items: jsonData.body.items,
+            paymentMethod: jsonData.body.P_TYPE?.toLowerCase() || "card",
+            simplePaymentType: jsonData.body.P_SIMPLE_TYPE?.toLowerCase(),
+            cardPaymentInfo: jsonData.body.P_CARD_INFO
+              ? {
+                  cardName: jsonData.body.P_CARD_INFO.cardName,
+                  installment: jsonData.body.P_CARD_INFO.installment,
+                }
+              : undefined,
+            discountAmount: jsonData.body.discountAmount,
+            pointAmount: jsonData.body.pointAmount,
             message: jsonData.resultMessage,
           },
         })
