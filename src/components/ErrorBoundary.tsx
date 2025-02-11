@@ -35,6 +35,9 @@ class ErrorBoundary extends Component<Props, State> {
           <h1 className="text-2xl font-bold mb-4">죄송합니다</h1>
           <p className="text-gray-600 mb-6">예상치 못한 오류가 발생했습니다.</p>
           <Button onClick={this.handleReload}>페이지 새로고침</Button>
+          <Button onClick={() => (window.location.href = "/")}>
+            홈으로 이동
+          </Button>
         </div>
       )
     }
