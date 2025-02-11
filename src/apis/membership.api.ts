@@ -156,20 +156,23 @@ export const fetchMembershipUsageHistory = async (
   page: number = 1,
   pageSize: number = 50,
 ) => {
-  const response = await axiosClient.get<HTTPResponse<MyMembership>>(
-    `/memberships/me/detail`,
-    {
-      params: {
-        mp_idx: membershipIdx,
-        page,
-        page_size: pageSize,
-      },
+  const response = await axiosClient.get<
+    HTTPResponse<MembershipDetailWithHistory>
+  >(`/memberships/me/detail`, {
+    params: {
+      mp_idx: membershipIdx,
+      page,
+      page_size: pageSize,
     },
-  )
+  })
 
-  const data = response.data.body
-  return {
-    ...data,
-    history: data.reservations || [],
-  } as MembershipDetailWithHistory
+  if (response.data.resultCode !== "00") {
+    throw new Error(response.data.resultMessage || "API 오류가 발생했습니다.")
+  }
+
+  if (!response.data.body) {
+    throw new Error("회원권 정보를 찾을 수 없습니다.")
+  }
+
+  return response.data.body
 }

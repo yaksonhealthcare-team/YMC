@@ -10,9 +10,13 @@ import {
   ReservationStatus,
   ReservationStatusCode,
   ReservationType,
-} from "types/Reservation"
+} from "../types/Reservation"
 import { axiosClient } from "./clients"
-import { completeVisit, cancelReservation } from "apis/reservation.api"
+import {
+  completeVisit,
+  cancelReservation,
+  fetchReservationDetail,
+} from "../apis/reservation.api"
 
 const statusCodeToStatus: Record<ReservationStatusCode, string> = {
   "000": "전체",
@@ -125,21 +129,7 @@ export const useReservationDetail = (id: string) => {
   return useQuery<ReservationDetail>({
     queryKey: ["reservation", "detail", id],
     queryFn: async () => {
-      const { data } = await axiosClient.get("/reservation/detail", {
-        params: {
-          r_idx: id,
-        },
-      })
-
-      if (data.resultCode !== "00") {
-        throw new Error(data.resultMessage || "API 오류가 발생했습니다.")
-      }
-
-      if (!data.body || !Array.isArray(data.body) || !data.body[0]) {
-        throw new Error("예약 정보를 찾을 수 없습니다.")
-      }
-
-      const body = data.body[0]
+      const body = await fetchReservationDetail(id)
       return {
         id: body.r_idx || id,
         status: body.r_status || ReservationStatus.CONFIRMED,

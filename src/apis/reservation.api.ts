@@ -1,6 +1,11 @@
 import { axiosClient } from "../queries/clients.ts"
 import { ReservationMapper } from "mappers/ReservationMapper.ts"
-import { Reservation, ReservationStatusCode } from "types/Reservation.ts"
+import {
+  Reservation,
+  ReservationStatusCode,
+  ReservationResponse,
+} from "types/Reservation.ts"
+import { HTTPResponse } from "../types/HTTPResponse.ts"
 
 export const fetchReservations = async (
   status: ReservationStatusCode,
@@ -18,6 +23,27 @@ export const fetchReservations = async (
   const parsedData = JSON.parse(cleanData)
 
   return ReservationMapper.toReservationEntities(parsedData.body)
+}
+
+export const fetchReservationDetail = async (id: string) => {
+  const { data } = await axiosClient.get<HTTPResponse<ReservationResponse[]>>(
+    "/reservation/detail",
+    {
+      params: {
+        r_idx: id,
+      },
+    },
+  )
+
+  if (data.resultCode !== "00") {
+    throw new Error(data.resultMessage || "API 오류가 발생했습니다.")
+  }
+
+  if (!data.body || !Array.isArray(data.body) || !data.body[0]) {
+    throw new Error("예약 정보를 찾을 수 없습니다.")
+  }
+
+  return data.body[0]
 }
 
 export const completeVisit = async (reservationId: string): Promise<void> => {
