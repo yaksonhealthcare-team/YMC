@@ -21,6 +21,50 @@ const CartPage = () => {
   const { setItems: setPaymentItems, setBranch } = usePaymentStore()
 
   const items = cartWithSummary?.items || []
+
+  // 상품 총 금액 계산 (할인 전)
+  const calculateTotalOriginalPrice = () => {
+    return items.reduce((total, item) => {
+      return (
+        total +
+        item.options.reduce((optionTotal, option) => {
+          return optionTotal + option.originalPrice * option.items[0].count
+        }, 0)
+      )
+    }, 0)
+  }
+
+  // 할인 금액 계산
+  const calculateDiscountAmount = () => {
+    return items.reduce((total, item) => {
+      return (
+        total +
+        item.options.reduce((optionTotal, option) => {
+          return (
+            optionTotal +
+            (option.originalPrice - option.price) * option.items[0].count
+          )
+        }, 0)
+      )
+    }, 0)
+  }
+
+  // 최종 결제 금액 계산
+  const calculateFinalPrice = () => {
+    return items.reduce((total, item) => {
+      return (
+        total +
+        item.options.reduce((optionTotal, option) => {
+          return optionTotal + option.price * option.items[0].count
+        }, 0)
+      )
+    }, 0)
+  }
+
+  const totalOriginalPrice = calculateTotalOriginalPrice()
+  const discountAmount = calculateDiscountAmount()
+  const finalPrice = calculateFinalPrice()
+
   const summary = cartWithSummary?.summary
 
   useEffect(() => {
@@ -155,7 +199,7 @@ const CartPage = () => {
             <div className="flex justify-between">
               <span className="text-gray-500 text-14px font-m">상품 금액</span>
               <span className="text-gray-700 text-14px font-sb">
-                {(summary?.total_origin_price || 0).toLocaleString()}원
+                {totalOriginalPrice.toLocaleString()}원
               </span>
             </div>
             <div className="flex justify-between">
@@ -163,10 +207,9 @@ const CartPage = () => {
                 상품할인금액
               </span>
               <span className="text-success text-14px font-sb">
-                {(
-                  (summary?.total_origin_price || 0) -
-                  (summary?.total_price || 0)
-                ).toLocaleString()}
+                {discountAmount > 0
+                  ? `-${discountAmount.toLocaleString()}`
+                  : "0"}
                 원
               </span>
             </div>
@@ -176,7 +219,7 @@ const CartPage = () => {
                 결제예정금액
               </span>
               <span className="text-gray-700 text-20px font-b">
-                {(summary?.total_price || 0).toLocaleString()}원
+                {finalPrice.toLocaleString()}원
               </span>
             </div>
           </div>

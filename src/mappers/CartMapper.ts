@@ -79,12 +79,15 @@ export class CartMapper {
           ? {
               ...option,
               items: [
-                ...option.items,
                 {
                   cartId: this.toValidId(dto.csc_idx),
                   count: Number(dto.amount),
                 },
               ],
+              price: Number(dto.option.ss_unit_price.replace(/,/g, "")),
+              originalPrice:
+                dto.origin_price ||
+                Number(dto.option.ss_unit_price.replace(/,/g, "")),
             }
           : option,
       ),
@@ -92,11 +95,8 @@ export class CartMapper {
   }
 
   private static createOption(dto: CartItemResponse): CartItemOption {
-    const price = Number(dto.option.ss_unit_price)
-    const originalPrice =
-      dto.option.original_price === null || dto.option.original_price === "0"
-        ? price
-        : Number(dto.option.original_price)
+    const price = Number(dto.option.ss_unit_price.replace(/,/g, ""))
+    const originalPrice = dto.origin_price || price
 
     return {
       items: [
