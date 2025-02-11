@@ -20,25 +20,32 @@ export enum ReservationType {
 export interface Reservation {
   id: string
   store: string
-  date: Date
-  remainingDays: string
-  visit: number
   programName: string
-  duration: number
-  status: ReservationStatus
-  type: ReservationType
+  date: Date
+  status: ReservationStatusCode
+  duration: string
+  visit: number
+  type: string
+  remainingDays?: string
 }
 
 export interface ReservationResponse {
   r_idx: string
   b_name: string
+  ps_name: string
   r_date: string
   r_status: ReservationStatusCode
-  remaining_days: string
-  visit: string
-  ps_name: string
-  r_take_time: string
+  r_time: string
+  r_visit: number
   r_gubun: string
+  b_idx: string
+  mp_name?: string
+  mp_remain?: string
+  r_memo?: string
+  additional_services?: Array<{
+    s_name: string
+    s_price: string
+  }>
 }
 
 export interface FilterItem {

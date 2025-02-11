@@ -28,7 +28,9 @@ export const fetchReservations = async (
   return ReservationMapper.toReservationEntities(data.body)
 }
 
-export const fetchReservationDetail = async (id: string) => {
+export const fetchReservationDetail = async (
+  id: string,
+): Promise<ReservationResponse> => {
   const { data } = await axiosClient.get<HTTPResponse<ReservationResponse[]>>(
     "/reservation/detail",
     {

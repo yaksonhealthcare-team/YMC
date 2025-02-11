@@ -8,6 +8,7 @@ import {
   completeVisit,
   cancelReservation,
   fetchReservations,
+  fetchReservationDetail,
 } from "apis/reservation.api"
 import { Reservation, ReservationStatusCode } from "types/Reservation"
 
@@ -29,6 +30,7 @@ export interface ReservationDetail extends Reservation {
   membershipName: string
   remainingCount: string
   request?: string
+  remainingDays?: string
 }
 
 export const useUpcomingReservations = () => {
@@ -53,20 +55,34 @@ export const useReservations = (status: ReservationStatusCode = "000") => {
 export const useReservationDetail = (reservationId: string) => {
   return useQuery({
     queryKey: ["reservation", reservationId],
-    queryFn: async () => {
-      const reservations = await fetchReservations("000", 1)
-      const reservation = reservations.find((r) => r.id === reservationId)
-      if (!reservation) return null
+    queryFn: () => fetchReservationDetail(reservationId),
+    select: (data) => {
+      if (!data) return null
 
-      // ReservationDetail로 타입 확장
-      return {
-        ...reservation,
-        services: [], // API에서 받아와야 할 데이터
-        branchId: "", // API에서 받아와야 할 데이터
-        branchName: reservation.store,
-        membershipName: "", // API에서 받아와야 할 데이터
-        remainingCount: "0", // API에서 받아와야 할 데이터
-      } as ReservationDetail
+      const detail: ReservationDetail = {
+        id: data.r_idx,
+        store: data.b_name,
+        programName: data.ps_name,
+        date: new Date(data.r_date),
+        status: data.r_status,
+        duration: data.r_time,
+        visit: data.r_visit,
+        type: data.r_gubun,
+        services: [],
+        branchId: data.b_idx || "",
+        branchName: data.b_name,
+        membershipName: data.mp_name || "",
+        remainingCount: data.mp_remain || "0",
+        request: data.r_memo,
+        remainingDays: "0",
+        additionalServices:
+          data.additional_services?.map((service) => ({
+            name: service.s_name,
+            price: Number(service.s_price || 0),
+          })) || [],
+      }
+
+      return detail
     },
   })
 }
