@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { usePaymentStore } from "../../hooks/usePaymentStore"
 import { PaymentStatus } from "../../types/Payment"
+import { useOverlay } from "../../contexts/ModalContext"
 
 interface PaymentCallbackData {
   resultCode: string
@@ -13,7 +14,7 @@ export default function PaymentCallbackPage() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const { setPaymentStatus } = usePaymentStore()
-
+  const { openModal } = useOverlay()
   useEffect(() => {
     try {
       // 전체 URL 로깅
@@ -59,8 +60,14 @@ export default function PaymentCallbackPage() {
       if (jsonData.resultCode === "61") {
         console.log("ℹ️ 결제 취소됨")
         setPaymentStatus(PaymentStatus.CANCELED)
-        navigate("/", {
-          replace: true,
+        openModal({
+          title: "결제 취소",
+          message: "결제가 취소되었습니다.",
+          onConfirm: () => {
+            navigate("/payment", {
+              replace: true,
+            })
+          },
         })
         return
       }
@@ -85,7 +92,7 @@ export default function PaymentCallbackPage() {
     } finally {
       console.groupEnd()
     }
-  }, [searchParams, navigate, setPaymentStatus])
+  }, [searchParams, navigate, setPaymentStatus, openModal])
 
   return (
     <div className="flex items-center justify-center min-h-screen">
