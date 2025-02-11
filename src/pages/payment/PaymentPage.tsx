@@ -274,12 +274,17 @@ const PaymentPage = () => {
 
     appendInput("P_MID", orderData.pg_info.P_MID)
     appendInput("P_OID", orderData.pg_info.P_OID)
-    appendInput("P_AMT", orderData.pg_info.P_AMT.toString())
+    appendInput("P_AMT", finalAmount.toString())
     appendInput("P_GOODS", goodsName)
     appendInput("P_UNAME", orderData.orderer.name)
     appendInput("P_NEXT_URL", orderData.pg_info.P_NEXT_URL)
-    appendInput("P_NOTI", `${orderData.pg_info.P_OID},${pointAmount}`)
+    appendInput("P_NOTI", orderData.pg_info.P_OID)
     appendInput("P_RESERVED", "centerCd=Y")
+
+    // 포인트 사용 금액이 있는 경우에만 전달
+    if (pointAmount > 0) {
+      appendInput("P_POINT_AMOUNT", pointAmount.toString())
+    }
 
     switch (selectedPayment) {
       case "card":
