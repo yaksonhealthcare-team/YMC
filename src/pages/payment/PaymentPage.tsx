@@ -399,6 +399,7 @@ const PaymentPage = () => {
                     sessions: item.sessions,
                     price: item.price,
                     originalPrice: item.originalPrice || item.price,
+                    ss_idx: item.ss_idx.toString(),
                   } satisfies CartItemOption,
                 ]}
                 onCountChange={(cartId, newCount) =>

@@ -55,6 +55,16 @@ export default function PaymentCallbackPage() {
         return
       }
 
+      // 결제 취소: 61
+      if (jsonData.resultCode === "61") {
+        console.log("ℹ️ 결제 취소됨")
+        setPaymentStatus(PaymentStatus.CANCELED)
+        navigate("/", {
+          replace: true,
+        })
+        return
+      }
+
       // 결제 실패
       console.log("❌ 결제 실패:", jsonData.resultMessage)
       setPaymentStatus(PaymentStatus.FAILED)
