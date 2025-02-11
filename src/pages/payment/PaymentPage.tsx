@@ -277,34 +277,21 @@ const PaymentPage = () => {
     // 결제 요청 로그
     console.group("💰 결제 요청 데이터")
     console.log("주문 정보:", {
-      주문번호: orderData.pg_info.P_OID,
+      주문번호: orderData.orderSheet.orderid,
       상품명: goodsName,
       결제금액: finalAmount,
       포인트사용: pointAmount,
     })
-    console.log("PG사 전송 파라미터:", {
-      P_MID: orderData.pg_info.P_MID,
-      P_OID: orderData.pg_info.P_OID,
-      P_AMT: finalAmount,
-      P_GOODS: goodsName,
-      P_UNAME: orderData.orderer.name,
-      P_NEXT_URL: orderData.pg_info.P_NEXT_URL,
-      P_NOTI_URL: orderData.pg_info.P_NOTI_URL,
-      P_NOTI: `${orderData.pg_info.P_OID},${pointAmount}`,
-      P_RESERVED: "centerCd=Y",
-      결제수단: selectedPayment,
-      간편결제: simplePayment,
-    })
-    console.groupEnd()
 
+    // 필수 파라미터
     appendInput("P_MID", orderData.pg_info.P_MID)
-    appendInput("P_OID", orderData.pg_info.P_OID)
+    appendInput("P_OID", orderData.orderSheet.orderid)
     appendInput("P_AMT", finalAmount.toString())
     appendInput("P_GOODS", goodsName)
     appendInput("P_UNAME", orderData.orderer.name)
     appendInput("P_NEXT_URL", orderData.pg_info.P_NEXT_URL)
     appendInput("P_NOTI_URL", orderData.pg_info.P_NOTI_URL)
-    appendInput("P_NOTI", `${orderData.pg_info.P_OID},${pointAmount}`)
+    appendInput("P_NOTI", `${orderData.orderSheet.orderid},${pointAmount}`)
 
     // 결제 수단에 따른 파라미터 추가
     if (selectedPayment === "card") {
@@ -312,6 +299,23 @@ const PaymentPage = () => {
     } else if (selectedPayment === "simple") {
       appendInput("P_RESERVED", `${simplePayment}Pay,centerCd=Y`)
     }
+
+    console.log("PG사 전송 파라미터:", {
+      P_MID: orderData.pg_info.P_MID,
+      P_OID: orderData.orderSheet.orderid,
+      P_AMT: finalAmount,
+      P_GOODS: goodsName,
+      P_UNAME: orderData.orderer.name,
+      P_NEXT_URL: orderData.pg_info.P_NEXT_URL,
+      P_NOTI_URL: orderData.pg_info.P_NOTI_URL,
+      P_NOTI: `${orderData.orderSheet.orderid},${pointAmount}`,
+      P_RESERVED:
+        selectedPayment === "card"
+          ? "centerCd=Y"
+          : `${simplePayment}Pay,centerCd=Y`,
+      결제수단: selectedPayment,
+    })
+    console.groupEnd()
 
     document.body.appendChild(paymentForm)
     paymentForm.submit()
