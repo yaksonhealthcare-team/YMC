@@ -86,7 +86,7 @@ export default function PaymentCallbackPage() {
     } finally {
       console.groupEnd()
     }
-  }, [searchParams, navigate, setPaymentStatus, openModal])
+  }, [searchParams, navigate, setPaymentStatus, openModal, clearPayment])
 
   return (
     <div className="flex items-center justify-center min-h-screen">
