@@ -2,7 +2,6 @@ import { useEffect } from "react"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Button } from "@components/Button"
-import FixedButtonContainer from "@components/FixedButtonContainer"
 
 interface LocationState {
   error: string
@@ -36,7 +35,7 @@ const PaymentFailedPage = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-full">
       <div className="flex flex-col flex-1 items-center justify-center p-5">
         <h1 className="text-20px font-sb text-gray-700 mb-2">
           결제에 실패했습니다
@@ -51,12 +50,12 @@ const PaymentFailedPage = () => {
         )}
       </div>
 
-      <FixedButtonContainer className="gap-3">
+      <div className="bg-white flex gap-1 p-5">
         <Button
           variantType="grayLine"
           sizeType="l"
           onClick={handleGoHome}
-          className="flex-1"
+          fullWidth
         >
           홈으로
         </Button>
@@ -64,11 +63,11 @@ const PaymentFailedPage = () => {
           variantType="primary"
           sizeType="l"
           onClick={handleRetry}
-          className="flex-1"
+          fullWidth
         >
           돌아가기
         </Button>
-      </FixedButtonContainer>
+      </div>
     </div>
   )
 }
