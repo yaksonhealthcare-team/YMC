@@ -27,7 +27,7 @@ const PaymentCompletePage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const location = useLocation()
-  const [state, setState] = useState<PaymentCompleteState>(() => {
+  const [state] = useState<PaymentCompleteState>(() => {
     if (!location.state) {
       // 결제 정보가 없으면 결제 내역 페이지로 이동
       navigate("/payment")
@@ -146,7 +146,6 @@ const PaymentCompletePage = () => {
     }
   }
 
-  const isMembership = state.type === "membership"
   const isAdditional = state.type === "additional"
   const isVirtual = state.paymentMethod === "virtual"
 
