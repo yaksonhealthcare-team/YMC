@@ -64,7 +64,7 @@ const PaymentCompletePage = () => {
               branchType:
                 item.branch.code === "0" ? "전지점 사용가능" : item.branch.name,
               duration: 0,
-              price: Number(item.amount),
+              price: Number(state.amount_info.total_amount),
               sessions: Number(item.sessions),
               name:
                 item.branch.code === "0" ? "전지점 사용가능" : item.branch.name,

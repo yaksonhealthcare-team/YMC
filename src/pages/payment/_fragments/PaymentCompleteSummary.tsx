@@ -20,7 +20,7 @@ const PaymentSummary = ({ state, isVirtual }: PaymentSummaryProps) => (
         <div className="flex justify-between">
           <span className="font-m text-14px text-gray-500">할인 금액</span>
           <span className="font-sb text-14px text-success">
-            -{state.amount_info.discount_amount.toLocaleString()}원
+            -{Number(state.amount_info.discount_amount).toLocaleString()}원
           </span>
         </div>
       )}
