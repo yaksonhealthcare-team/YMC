@@ -27,13 +27,6 @@ interface UploadedImage {
   preview: string
 }
 
-interface ReviewApiResponse {
-  resultCode: string
-  resultMessage: string
-  resultCount: number
-  body: ReviewSection[]
-}
-
 const RATING_OPTIONS = [
   { label: "아쉬워요", value: "L" },
   { label: "보통이에요", value: "M" },

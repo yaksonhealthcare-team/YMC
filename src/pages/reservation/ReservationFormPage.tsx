@@ -5,10 +5,7 @@ import CaretRigthIcon from "@assets/icons/CaretRightIcon.svg?react"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import { RadioCard } from "@components/RadioCard"
 import { MembershipRadioCard } from "./_fragments/MembershipRadioCard"
-import {
-  AdditionalManagement,
-  AdditionalManagementOption,
-} from "types/Membership"
+import { AdditionalManagement } from "types/Membership"
 import { Box, RadioGroup, useTheme } from "@mui/material"
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
@@ -405,7 +402,7 @@ const ReservationFormPage = () => {
         <p className="font-m text-14px mb-2 text-gray-700">결제 금액</p>
         <div className="flex flex-col gap-3 mt-4">
           {data.additionalServices.map((service) => (
-            <div key={service.am_idx} className="flex justify-between">
+            <div key={service.s_idx} className="flex justify-between">
               <p className="text-gray-400 text-sm font-medium">
                 {service.s_name}
               </p>

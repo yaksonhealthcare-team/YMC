@@ -80,7 +80,7 @@ export const toAdditionalManagement = (
   dto: AdditionalManagementResponse,
 ): AdditionalManagement => {
   return {
-    am_idx: dto.am_idx,
+    s_idx: dto.am_idx,
     s_name: dto.s_name,
     s_time: dto.s_time,
     options: dto.options,
