@@ -1,38 +1,18 @@
-import { BranchFilters } from "types/Branch.ts"
-import { Coordinate } from "../types/Coordinate.ts"
+import { payments } from "./keys/payments.keys"
+import { branches } from "./keys/branches.keys"
+import { createQueryKeyFactory } from "./queryKeyFactory"
 import { PointFilters } from "types/Point.ts"
 import { EventStatus } from "../types/Content.ts"
 import { ReservationStatusCode } from "types/Reservation.ts"
 import { BannerRequestType } from "../types/Banner.ts"
 import { ScheduleFilters } from "../types/Schedule.ts"
 
-const createQueryKeyFactory = (prefix: string) => ({
-  all: () => [prefix] as const,
-  detail: (id: string) => [prefix, id] as const,
-  list: (params: object) => [prefix, params] as const,
-})
-
-const paymentsKeys = createQueryKeyFactory("payments")
-const branchesKeys = createQueryKeyFactory("branches")
 const schedulesKeys = createQueryKeyFactory("schedules")
 const pointsKeys = createQueryKeyFactory("points")
 
 export const queryKeys = {
-  payments: {
-    all: paymentsKeys.all(),
-    histories: ({ page }: { page: number }) =>
-      paymentsKeys.list({ page, infinite: true }),
-    detail: (id: string) => paymentsKeys.detail(id),
-    banks: ["payments", "banks"] as const,
-  },
-  branches: {
-    all: branchesKeys.all(),
-    list: (filters: BranchFilters) => branchesKeys.list(filters),
-    detail: (id: string, coords: Coordinate) =>
-      [...branchesKeys.all(), id, coords] as const,
-    map: (coords: Coordinate, brandCode?: string, category?: string) =>
-      [...branchesKeys.all(), "maps", coords, brandCode, category] as const,
-  },
+  payments,
+  branches,
   schedules: {
     all: schedulesKeys.all(),
     date: (filters: ScheduleFilters) => schedulesKeys.list(filters),

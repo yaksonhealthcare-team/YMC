@@ -44,7 +44,7 @@ export const usePaymentCancel = () =>
 
 export const useBankList = () =>
   useQuery({
-    queryKey: queryKeys.payments.banks(),
+    queryKey: queryKeys.payments.banks,
     queryFn: () => fetchBankList(),
   })
 
