@@ -6,7 +6,7 @@ interface PaymentInfoProps {
 }
 
 const PaymentInfo = ({ state }: PaymentInfoProps) => {
-  if (state.paymentMethod === "card") {
+  if (state.paymentMethod === "CARD") {
     return (
       <div className="px-5 py-6">
         <p className="text-gray-700 font-sb text-16px">
@@ -17,7 +17,7 @@ const PaymentInfo = ({ state }: PaymentInfoProps) => {
     )
   }
 
-  if (state.paymentMethod === "bank") {
+  if (state.paymentMethod === "BANK") {
     return (
       <div className="px-5 py-6">
         <p className="text-gray-700 font-sb text-16px">실시간계좌이체</p>
@@ -25,7 +25,7 @@ const PaymentInfo = ({ state }: PaymentInfoProps) => {
     )
   }
 
-  if (state.paymentMethod === "vbank") {
+  if (state.paymentMethod === "VBANK") {
     return (
       <>
         <div className="px-5 py-6">

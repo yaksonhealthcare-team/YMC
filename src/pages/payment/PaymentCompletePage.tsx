@@ -32,7 +32,7 @@ const PaymentCompletePage = () => {
   }, [])
 
   const isAdditional = state.type === "additional"
-  const isVirtual = state.paymentMethod === "vbank"
+  const isVirtual = state.paymentMethod === "VBANK"
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -49,7 +49,24 @@ const PaymentCompletePage = () => {
           </span>
         </div>
         {state.items.map((item) => (
-          <PaymentItemCard key={item.id} item={item} />
+          <PaymentItemCard
+            key={item.p_idx}
+            item={{
+              id: item.p_idx,
+              s_idx: 0,
+              ss_idx: 0,
+              b_idx: 0,
+              brand_code: item.brand.code,
+              amount: Number(item.amount),
+              b_type: "지정지점",
+              title: item.title,
+              brand: item.brand.name,
+              branchType: "지정지점",
+              duration: 0,
+              price: Number(item.amount),
+              sessions: Number(item.sessions),
+            }}
+          />
         ))}
       </div>
 

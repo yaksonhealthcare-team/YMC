@@ -4,7 +4,6 @@ import {
   PaymentCancelRequest,
   PaymentResponse,
   PaymentRequest,
-  VirtualAccountInfo,
 } from "types/Payment.ts"
 import { PaymentMapper } from "../mappers/PaymentMapper.ts"
 import { axiosClient } from "../queries/clients.ts"

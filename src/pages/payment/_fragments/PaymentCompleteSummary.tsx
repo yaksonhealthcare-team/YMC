@@ -24,7 +24,7 @@ const PaymentSummary = ({ state, isVirtual }: PaymentSummaryProps) => (
           </span>
         </div>
       )}
-      {state.amount_info.point_amount > 0 && (
+      {Number(state.amount_info.point_amount) > 0 && (
         <div className="flex justify-between">
           <span className="font-m text-14px text-gray-500">포인트 사용</span>
           <span className="font-sb text-14px text-success">
