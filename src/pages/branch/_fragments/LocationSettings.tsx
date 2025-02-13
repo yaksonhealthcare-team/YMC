@@ -11,6 +11,7 @@ import {
   useAddressBookmarks,
   useAddressSearch,
 } from "../../../queries/useAddressQueries.ts"
+import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect"
 
 const LocationSettingsHeader = ({
   onClickBack,
@@ -66,6 +67,7 @@ const LocationSettings = () => {
   const location = useLocation()
   const [address, setAddress] = useState("")
   const [isEditing, setIsEditing] = useState(false)
+  const { setLocation } = useBranchLocationSelect()
 
   const { data: searchResults = [] } = useAddressSearch(address)
   useAddressBookmarks()
@@ -92,16 +94,22 @@ const LocationSettings = () => {
     if (address.length > 0) {
       return (
         <LocationSearchResultList
+          type="search"
           locations={searchResults}
           onClick={(location) => {
+            const coords = {
+              latitude: parseFloat(location.lat),
+              longitude: parseFloat(location.lon),
+            }
+            setLocation({
+              address: location.address,
+              coords,
+            })
             navigate("/branch", {
               state: {
                 selectedLocation: {
                   address: location.address,
-                  coords: {
-                    latitude: location.latitude,
-                    longitude: location.longitude,
-                  },
+                  coords,
                 },
               },
             })

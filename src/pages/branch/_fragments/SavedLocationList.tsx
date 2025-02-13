@@ -4,11 +4,13 @@ import {
 } from "../../../queries/useAddressQueries"
 import { useNavigate } from "react-router-dom"
 import LocationSearchResultList from "./LocationSearchResultList"
+import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect"
 
 const SavedLocationList = () => {
   const navigate = useNavigate()
   const { data: bookmarks = [] } = useAddressBookmarks()
   const { mutate: deleteBookmark } = useDeleteAddressBookmarkMutation()
+  const { setLocation } = useBranchLocationSelect()
 
   return (
     <div className={"flex flex-col py-6 h-full overflow-y-scroll"}>
@@ -18,14 +20,19 @@ const SavedLocationList = () => {
         locations={bookmarks}
         onDelete={deleteBookmark}
         onClick={(location) => {
+          const coords = {
+            latitude: parseFloat(location.lat),
+            longitude: parseFloat(location.lon),
+          }
+          setLocation({
+            address: location.address,
+            coords,
+          })
           navigate("/branch", {
             state: {
               selectedLocation: {
                 address: location.address,
-                coords: {
-                  latitude: parseFloat(location.lat),
-                  longitude: parseFloat(location.lon),
-                },
+                coords,
               },
             },
           })
