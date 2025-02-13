@@ -168,25 +168,7 @@ export default function PaymentCallbackPage() {
         state: {
           orderId: jsonData.body.orderid,
           type: "additional",
-          items: Array.isArray(jsonData.body.items)
-            ? jsonData.body.items.map((item) => ({
-                p_idx: item.p_idx,
-                title: item.title,
-                sessions: item.sessions,
-                amount: item.amount,
-                brand: item.brand,
-                branch: item.branch,
-              }))
-            : [
-                {
-                  p_idx: jsonData.body.items.p_idx,
-                  title: jsonData.body.items.title,
-                  sessions: jsonData.body.items.sessions,
-                  amount: jsonData.body.items.amount,
-                  brand: jsonData.body.items.brand,
-                  branch: jsonData.body.items.branch,
-                },
-              ],
+          items: jsonData.body.items,
           paymentMethod: jsonData.body.pay_info?.type,
           cardPaymentInfo:
             payInfo.type === "CARD"
