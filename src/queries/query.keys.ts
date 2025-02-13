@@ -34,7 +34,7 @@ const createQueryKeys = () => {
       histories: ({ page }: { page: number }) =>
         [...keys.payments.all, { page, infinite: true }] as const,
       detail: (id: string) => [...keys.payments.all, id] as const,
-      banks: ["payments", "banks"] as const,
+      banks: () => [...keys.payments.all, "banks"] as const,
     },
     questionnaires: {
       all: ["questionnaires"] as const,
