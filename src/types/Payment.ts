@@ -251,7 +251,7 @@ export interface PaymentResponse {
     pay_info: PaymentInfo
     cahereceipt_info: CashReceiptInfo | null
     mp_info: number[] | null
-    items: PaymentResponseItem
+    items: PaymentResponseItem[]
     amount_info: PaymentAmountInfo
     point_info: PaymentPointInfo
   }

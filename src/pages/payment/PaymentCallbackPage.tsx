@@ -6,6 +6,7 @@ import { useOverlay } from "../../contexts/ModalContext"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useQuery } from "@tanstack/react-query"
 import { fetchPoints } from "../../apis/points.api"
+import { queryClient } from "../../queries/clients"
 
 const CARD_CODE_MAP: { [key: string]: string } = {
   "01": "외환카드",
@@ -120,6 +121,22 @@ export default function PaymentCallbackPage() {
         결제정보: jsonData.body?.pay_info,
       })
 
+      // 필수 데이터 검증
+      if (
+        !jsonData.body?.orderid ||
+        !jsonData.body?.items ||
+        !jsonData.body?.pay_info
+      ) {
+        console.error("❌ 필수 결제 정보 누락:", { body: jsonData.body })
+        setPaymentStatus(PaymentStatus.FAILED)
+        navigate("/payment/failed", {
+          state: {
+            message: "결제 정보가 올바르지 않습니다.",
+          },
+        })
+        return
+      }
+
       // 결제 실패 처리
       if (jsonData.resultCode !== "00") {
         console.error("❌ 결제 실패:", jsonData.resultMessage)
@@ -136,6 +153,9 @@ export default function PaymentCallbackPage() {
       console.log("✅ 결제 성공")
       setPaymentStatus(PaymentStatus.SUCCESS)
 
+      // 결제 성공 시 포인트 정보 갱신
+      queryClient.invalidateQueries({ queryKey: ["points"] })
+
       const payInfo = jsonData.body.pay_info
       const cardName =
         payInfo.type === "CARD"
@@ -148,17 +168,26 @@ export default function PaymentCallbackPage() {
         state: {
           orderId: jsonData.body.orderid,
           type: "additional",
-          items: [
-            {
-              p_idx: jsonData.body.items.p_idx,
-              title: jsonData.body.items.title,
-              sessions: jsonData.body.items.sessions,
-              amount: jsonData.body.items.amount,
-              brand: jsonData.body.items.brand,
-              branch: jsonData.body.items.branch,
-            },
-          ],
-          paymentMethod: jsonData.body.pay_info.type,
+          items: Array.isArray(jsonData.body.items)
+            ? jsonData.body.items.map((item) => ({
+                p_idx: item.p_idx,
+                title: item.title,
+                sessions: item.sessions,
+                amount: item.amount,
+                brand: item.brand,
+                branch: item.branch,
+              }))
+            : [
+                {
+                  p_idx: jsonData.body.items.p_idx,
+                  title: jsonData.body.items.title,
+                  sessions: jsonData.body.items.sessions,
+                  amount: jsonData.body.items.amount,
+                  brand: jsonData.body.items.brand,
+                  branch: jsonData.body.items.branch,
+                },
+              ],
+          paymentMethod: jsonData.body.pay_info?.type,
           cardPaymentInfo:
             payInfo.type === "CARD"
               ? {
