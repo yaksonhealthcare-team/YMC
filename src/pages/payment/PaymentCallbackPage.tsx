@@ -1,56 +1,11 @@
 import { useEffect } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { usePaymentStore } from "../../hooks/usePaymentStore"
-import { PaymentStatus } from "../../types/Payment"
+import { PaymentStatus, PaymentResponse } from "../../types/Payment"
 import { useOverlay } from "../../contexts/ModalContext"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useQuery } from "@tanstack/react-query"
 import { fetchPoints } from "../../apis/points.api"
-
-interface PaymentCallbackData {
-  resultCode: string
-  resultMessage: string
-  body: {
-    P_AMT: number
-    P_TYPE?: string
-    P_SIMPLE_TYPE?: string
-    P_CARD_INFO?: {
-      cardName: string
-      installment: string
-    }
-    items: Array<{
-      id: string
-      brand: string
-      branchType: string
-      title: string
-      duration: number
-      options: Array<{
-        sessions: number
-        count: number
-        price: number
-        originalPrice: number
-        ss_idx: string
-      }>
-      status: string
-    }>
-    discountAmount?: number
-    pointAmount?: number
-    pay_info: {
-      amt: string
-      type: string
-      cardname: string
-      quota: string
-      paydate: string
-      appno: string
-      cardcd: string
-      card_noinf: string
-    }
-    orderid: string
-    p_idx: string[]
-    mp_info: number[]
-    cahereceipt_info: null
-  }
-}
 
 export default function PaymentCallbackPage() {
   const location = useLocation()
@@ -58,7 +13,6 @@ export default function PaymentCallbackPage() {
   const { openModal } = useOverlay()
   const { setPaymentStatus, clear: clearPayment } = usePaymentStore()
 
-  // 포인트 조회
   const { data: availablePoint = 0 } = useQuery({
     queryKey: ["points"],
     queryFn: () => fetchPoints(),
@@ -112,7 +66,7 @@ export default function PaymentCallbackPage() {
       console.log("Raw jsonData:", jsonDataStr)
       const decodedStr = decodeURIComponent(jsonDataStr)
       console.log("Decoded jsonData:", decodedStr)
-      const jsonData: PaymentCallbackData = JSON.parse(decodedStr)
+      const jsonData: PaymentResponse = JSON.parse(decodedStr)
 
       console.log("결제 응답 데이터:", {
         결과코드: jsonData.resultCode,
@@ -134,93 +88,48 @@ export default function PaymentCallbackPage() {
       }
 
       // 결제 성공 처리
-      if (jsonData.body?.pay_info?.type === "CARD") {
-        console.log("✅ 결제 성공")
-        setPaymentStatus(PaymentStatus.SUCCESS)
+      console.log("✅ 결제 성공")
+      setPaymentStatus(PaymentStatus.SUCCESS)
 
-        const paymentAmount = parseInt(jsonData.body.pay_info?.amt || "0")
-        const totalAmount = paymentAmount + (point || 0)
-
-        navigate("/payment/complete", {
-          state: {
-            orderId: jsonData.body?.orderid || "",
-            type: "membership",
-            items:
-              jsonData.body?.items?.map((item) => ({
-                id: item?.id || "",
-                title: item?.title || "상품명 없음",
-                sessions: item?.options?.[0]?.sessions || 0,
-                price: item?.options?.[0]?.price || 0,
-                amount: item?.options?.[0]?.count || 0,
-                brand: item?.brand || "브랜드명 없음",
-                branchType: item?.branchType || "지점 정보 없음",
-              })) || [],
-            paymentMethod: (
-              jsonData.body?.pay_info?.type || "UNKNOWN"
-            ).toLowerCase(),
-            cardPaymentInfo: {
-              cardName: jsonData.body?.pay_info?.cardname || "카드사 정보 없음",
-              installment: jsonData.body?.pay_info?.quota || "0",
+      navigate("/payment/complete", {
+        state: {
+          orderId: jsonData.body.orderid,
+          type: "additional",
+          items: [
+            {
+              p_idx: jsonData.body.items.p_idx,
+              title: jsonData.body.items.title,
+              sessions: jsonData.body.items.sessions,
+              amount: jsonData.body.items.amount,
+              brand: jsonData.body.items.brand,
+              branch: jsonData.body.items.branch,
             },
-            amount_info: {
-              total_amount: totalAmount || 0,
-              discount_amount: jsonData.body?.discountAmount || 0,
-              point_amount: point || 0,
-              payment_amount: paymentAmount || 0,
-            },
-            point_info: {
-              used_point: point || 0,
-              remaining_point: Math.max(
-                0,
-                (availablePoint || 0) - (point || 0),
-              ),
-            },
+          ],
+          paymentMethod: jsonData.body.pay_info.type,
+          cardPaymentInfo:
+            jsonData.body.pay_info.type === "CARD"
+              ? {
+                  cardName:
+                    jsonData.body.pay_info.cardname || "카드사 정보 없음",
+                  installment:
+                    jsonData.body.pay_info.quota === "00"
+                      ? "일시불"
+                      : `${jsonData.body.pay_info.quota}개월`,
+                }
+              : undefined,
+          amount_info: {
+            total_amount: jsonData.body.amount_info.total_amount,
+            discount_amount: jsonData.body.amount_info.discount_amount,
+            point_amount: jsonData.body.amount_info.point_amount,
+            payment_amount: jsonData.body.amount_info.payment_amount,
           },
-        })
-      } else {
-        console.log("✅ 결제 성공 (카드 외 결제)")
-        setPaymentStatus(PaymentStatus.SUCCESS)
-
-        const paymentAmount = parseInt(jsonData.body?.pay_info?.amt || "0")
-        const totalAmount = paymentAmount + (point || 0)
-
-        navigate("/payment/complete", {
-          state: {
-            orderId: jsonData.body?.orderid || "",
-            type: "membership",
-            items:
-              jsonData.body?.items?.map((item) => ({
-                id: item?.id || "",
-                title: item?.title || "상품명 없음",
-                sessions: item?.options?.[0]?.sessions || 0,
-                price: item?.options?.[0]?.price || 0,
-                amount: item?.options?.[0]?.count || 0,
-                brand: item?.brand || "브랜드명 없음",
-                branchType: item?.branchType || "지점 정보 없음",
-              })) || [],
-            paymentMethod: (
-              jsonData.body?.pay_info?.type || "UNKNOWN"
-            ).toLowerCase(),
-            cardPaymentInfo: {
-              cardName: jsonData.body?.pay_info?.cardname || "카드사 정보 없음",
-              installment: jsonData.body?.pay_info?.quota || "0",
-            },
-            amount_info: {
-              total_amount: totalAmount || 0,
-              discount_amount: jsonData.body?.discountAmount || 0,
-              point_amount: point || 0,
-              payment_amount: paymentAmount || 0,
-            },
-            point_info: {
-              used_point: point || 0,
-              remaining_point: Math.max(
-                0,
-                (availablePoint || 0) - (point || 0),
-              ),
-            },
+          point_info: {
+            used_point: jsonData.body.point_info.used_point,
+            remaining_point: jsonData.body.point_info.remaining_point,
           },
-        })
-      }
+          message: jsonData.resultMessage,
+        },
+      })
 
       clearPayment()
     } catch (error) {
