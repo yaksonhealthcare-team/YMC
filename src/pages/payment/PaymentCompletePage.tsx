@@ -9,12 +9,14 @@ import { PaymentCompleteState } from "../../types/Payment"
 import PaymentItemCard from "./_fragments/PaymentCompleteItemCard"
 import PaymentInfo from "./_fragments/PaymentCompleteInfo"
 import PaymentSummary from "./_fragments/PaymentCompleteSummary"
+import { useOverlay } from "../../contexts/ModalContext"
 
 const PaymentCompletePage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const location = useLocation()
   const state = location.state as PaymentCompleteState
+  const { openAlert } = useOverlay()
 
   useEffect(() => {
     if (!location.state) {
@@ -33,6 +35,22 @@ const PaymentCompletePage = () => {
 
   const isAdditional = state.type === "additional"
   const isVirtual = state.paymentMethod === "VBANK"
+
+  const handleNavigate = () => {
+    try {
+      if (isAdditional) {
+        navigate("/member-history/reservation")
+      } else {
+        navigate("/reservation/form")
+      }
+    } catch (error) {
+      openAlert({
+        title: "오류",
+        description: "페이지 이동 중 오류가 발생했습니다.",
+      })
+      console.error("Navigation error:", error)
+    }
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -92,13 +110,7 @@ const PaymentCompletePage = () => {
           <Button
             variantType="primary"
             sizeType="m"
-            onClick={() =>
-              navigate(
-                isAdditional
-                  ? "/member-history/reservation"
-                  : "/reservation/form",
-              )
-            }
+            onClick={handleNavigate}
             fullWidth
           >
             {isAdditional ? "예약내역 보기" : "예약하러 가기"}
