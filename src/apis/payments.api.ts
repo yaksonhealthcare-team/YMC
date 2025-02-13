@@ -62,5 +62,10 @@ export const requestPayment = async (paymentData: PaymentRequest) => {
     "/payments/request",
     paymentData,
   )
-  return data
+
+  if (data.resultCode !== "00") {
+    throw new Error(data.resultMessage)
+  }
+
+  return data.body
 }

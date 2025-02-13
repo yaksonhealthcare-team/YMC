@@ -116,21 +116,21 @@ export interface PaymentHistoryDetailResponse {
 export interface PaymentCompleteState {
   orderId: string
   type: "membership" | "additional"
-  items: PaymentItem[]
-  paymentMethod: "card" | "bank" | "vbank"
+  items: PaymentResponseItem[]
+  paymentMethod: "CARD" | "BANK" | "VBANK"
   cardPaymentInfo?: {
     cardName: string
     installment: string
   }
   amount_info: {
-    total_amount: number
+    total_amount: string
     discount_amount: number
-    point_amount: number
-    payment_amount: number
+    point_amount: string
+    payment_amount: string
   }
   point_info: {
-    used_point: number
-    remaining_point: number
+    used_point: string
+    remaining_point: string
   }
   message?: string
 }
