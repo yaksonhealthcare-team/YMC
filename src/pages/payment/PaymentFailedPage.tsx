@@ -27,7 +27,7 @@ const PaymentFailedPage = () => {
   }, [])
 
   const handleRetry = () => {
-    navigate(-3)
+    navigate("/cart")
   }
 
   const handleGoHome = () => {
