@@ -11,6 +11,9 @@ export interface ReviewResponse {
   review_memo: string
   imgList: string[]
   ss_count: string
+  total_count: number
+  total_page_count: number
+  current_page: number
 }
 
 export interface Review {
@@ -31,8 +34,16 @@ export interface Review {
   }[]
   content: string
   imageUrls: string[]
+  total_count: number
+  total_page_count: number
+  current_page: number
 }
 
 export interface ReviewDetail extends Review {
   additionalServices: string[]
+}
+
+export interface ReviewSection {
+  rs_idx: string
+  sc_name: string
 }

@@ -34,6 +34,9 @@ export class ReviewMapper {
       ],
       content: review.review_memo || "",
       imageUrls: review.imgList || [],
+      total_count: review.total_count,
+      total_page_count: review.total_page_count,
+      current_page: review.current_page,
     }
   }
 

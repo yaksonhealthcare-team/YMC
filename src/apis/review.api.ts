@@ -1,4 +1,9 @@
-import { Review, ReviewResponse, ReviewDetail } from "../types/Review.ts"
+import {
+  Review,
+  ReviewResponse,
+  ReviewDetail,
+  ReviewSection,
+} from "../types/Review.ts"
 import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
 import { ReviewMapper } from "../mappers/ReviewMapper.ts"
@@ -88,5 +93,11 @@ export const fetchReservationReviewInfo = async (
     `/reviews/reviews/info/${reservationId}`,
   )
 
+  return data.body
+}
+
+export const fetchReviewSections = async (): Promise<ReviewSection[]> => {
+  const { data } =
+    await axiosClient.get<HTTPResponse<ReviewSection[]>>("/reviews/sections")
   return data.body
 }

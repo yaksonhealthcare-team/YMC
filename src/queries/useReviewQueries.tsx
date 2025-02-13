@@ -5,17 +5,21 @@ import {
   fetchReviewDetail,
   fetchReviews,
   fetchReservationReviewInfo,
+  fetchReviewSections,
 } from "../apis/review.api"
 import { useNavigate } from "react-router-dom"
+import { reviews } from "./keys/reviews.keys"
 
 export const useReviews = () => {
   return useInfiniteQuery({
     queryKey: ["reviews"],
     queryFn: ({ pageParam = 1 }) => fetchReviews(pageParam),
     initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
+    getNextPageParam: (lastPage, allPages) => {
       if (lastPage.length === 0) return undefined
-      return undefined // 페이지네이션이 필요없으므로 undefined를 반환하여 추가 요청을 방지
+      const totalPages = lastPage[0].total_page_count
+      const nextPage = allPages.length + 1
+      return nextPage <= totalPages ? nextPage : undefined
     },
   })
 }
@@ -59,5 +63,12 @@ export const useReservationReviewInfoQuery = (reservationId: string) => {
   return useQuery({
     queryKey: ["reservationReviewInfo", reservationId],
     queryFn: () => fetchReservationReviewInfo(reservationId),
+  })
+}
+
+export const useReviewSections = () => {
+  return useQuery({
+    queryKey: reviews.sections,
+    queryFn: fetchReviewSections,
   })
 }

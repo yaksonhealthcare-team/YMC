@@ -9,6 +9,7 @@ import { TextArea } from "@components/TextArea"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 import XCircleIcon from "@components/icons/XCircleIcon"
 import LoadingIndicator from "@components/LoadingIndicator"
+import { useReviewSections } from "../../queries/useReviewQueries"
 
 interface ReviewSection {
   rs_idx: string
@@ -42,12 +43,11 @@ const RATING_OPTIONS = [
 const ReviewFormPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
+  const { data: reviewSections, isLoading } = useReviewSections()
 
-  const [reviewSections, setReviewSections] = useState<ReviewSection[]>([])
   const [ratings, setRatings] = useState<ReviewRating[]>([])
   const [review, setReview] = useState("")
   const [images, setImages] = useState<UploadedImage[]>([])
-  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     setHeader({
@@ -62,46 +62,21 @@ const ReviewFormPage = () => {
     })
     setNavigation({ display: false })
 
-    const fetchReviewSections = async () => {
-      try {
-        const mockResponse: ReviewApiResponse = {
-          resultCode: "00",
-          resultMessage: "SUCCESS",
-          resultCount: 8,
-          body: [
-            { rs_idx: "24223470", sc_name: "클렌징" },
-            { rs_idx: "24223471", sc_name: "등또는가슴복부" },
-            { rs_idx: "24223472", sc_name: "두상" },
-            { rs_idx: "24223473", sc_name: "데콜테" },
-            { rs_idx: "24223474", sc_name: "피부" },
-            { rs_idx: "24223475", sc_name: "얼굴팩" },
-            { rs_idx: "24223476", sc_name: "팔관리" },
-            { rs_idx: "24223477", sc_name: "마무리" },
-          ],
-        }
-
-        if (mockResponse.resultCode === "00") {
-          setReviewSections(mockResponse.body)
-          setRatings(
-            mockResponse.body.map((section) => ({
-              rs_idx: section.rs_idx,
-              rs_grade: "",
-            })),
-          )
-        }
-      } catch (error) {
-        console.error("Failed to fetch review sections:", error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchReviewSections()
-
     return () => {
       images.forEach((image) => URL.revokeObjectURL(image.preview))
     }
   }, [])
+
+  useEffect(() => {
+    if (reviewSections) {
+      setRatings(
+        reviewSections.map((section) => ({
+          rs_idx: section.rs_idx,
+          rs_grade: "",
+        })),
+      )
+    }
+  }, [reviewSections])
 
   const handleImageUpload = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -250,7 +225,7 @@ const ReviewFormPage = () => {
       <div className="w-full h-2 bg-gray-50 mt-6" />
 
       <div className="px-5 py-8 flex flex-col gap-8">
-        {reviewSections.map((section) => (
+        {reviewSections?.map((section) => (
           <ReviewSectionComponent
             key={section.rs_idx}
             section={section}
