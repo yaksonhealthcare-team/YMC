@@ -5,13 +5,21 @@ import { ReviewListItem } from "./_fragments/ReviewListItem.tsx"
 import { useIntersection } from "../../hooks/useIntersection.tsx"
 import { useNavigate, useLocation } from "react-router-dom"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
+import { Button } from "@components/Button"
 
 const ReviewPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const location = useLocation()
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useReviews()
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isError,
+    refetch,
+  } = useReviews()
 
   const { observerTarget } = useIntersection({
     onIntersect: fetchNextPage,
@@ -47,13 +55,26 @@ const ReviewPage = () => {
     return <LoadingIndicator className="min-h-screen" />
   }
 
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen gap-4">
+        <span className="text-gray-500 text-sm font-medium">
+          데이터를 불러오는데 실패했습니다.
+        </span>
+        <Button variantType="primary" sizeType="m" onClick={() => refetch()}>
+          다시 시도
+        </Button>
+      </div>
+    )
+  }
+
   if (!data) {
     return null
   }
 
   if (data.pages[0].length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full">
+      <div className="flex flex-col items-center justify-center min-h-screen">
         <span className="text-gray-500 text-sm font-medium">
           작성한 만족도가 없습니다.
         </span>
@@ -69,6 +90,11 @@ const ReviewPage = () => {
             <ReviewListItem review={review} />
           </div>
         )),
+      )}
+      {isFetchingNextPage && (
+        <div className="py-4">
+          <LoadingIndicator />
+        </div>
       )}
       <div ref={observerTarget} />
     </div>
