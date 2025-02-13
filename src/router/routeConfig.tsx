@@ -25,8 +25,15 @@ const EmailPassword = lazy(() => import("../pages/signup/EmailPassword"))
 const ProfileSetup = lazy(() => import("../pages/signup/ProfileSetup"))
 const SignupComplete = lazy(() => import("../pages/signup/SignupComplete"))
 const PointPage = lazy(() => import("../pages/point/PointPage"))
-const Branch = lazy(() => import("../pages/branch/Branch"))
-const BranchDetail = lazy(() => import("../pages/branch/[id]/BranchDetail"))
+const Branch = lazy(
+  () => import(/* webpackChunkName: "branch" */ "../pages/branch/Branch"),
+)
+const BranchDetail = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "branch-detail" */ "../pages/branch/[id]/BranchDetail"
+    ),
+)
 const FavoritePage = lazy(() => import("../pages/favorite/FavoritePage"))
 const PaymentHistoryPage = lazy(
   () => import("../pages/payment/PaymentHistoryPage"),

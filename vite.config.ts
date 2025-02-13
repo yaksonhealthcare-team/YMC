@@ -17,4 +17,15 @@ export default defineConfig({
       "@apis": "/src/apis",
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "react-vendor": ["react", "react-dom", "react-router-dom"],
+          "ui-vendor": ["@mui/material", "@emotion/react", "@emotion/styled"],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000,
+  },
 })
