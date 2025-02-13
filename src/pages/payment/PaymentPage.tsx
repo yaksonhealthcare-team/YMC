@@ -62,6 +62,8 @@ interface OrderResponse {
     P_HPP_METHOD: string
     P_RESERVED: string
     P_TIMESTAMP: string
+    P_VBANK_DT?: string
+    P_VBANK_TM?: string
   }
 }
 
@@ -531,27 +533,16 @@ const PaymentPage = () => {
       P_TIMESTAMP: orderData.pg_info.P_TIMESTAMP,
       P_RESERVED: paymentReserved,
       P_MOBILE: "Y",
+      // 서버에서 제공하는 가상계좌 만료시간 사용
+      ...(selectedPayment === "vbank" && {
+        P_VBANK_DT: orderData.pg_info.P_VBANK_DT,
+        P_VBANK_TM: orderData.pg_info.P_VBANK_TM,
+      }),
     }
 
     // 카드 결제인 경우에만 카드 옵션 추가
     if (selectedPayment === "card") {
       baseParams.P_CARD_OPTION = ""
-    }
-
-    // 가상계좌인 경우 만료시간 설정 (기본 24시간)
-    if (selectedPayment === "vbank") {
-      const expireDate = new Date()
-      expireDate.setHours(expireDate.getHours() + 24)
-
-      const year = expireDate.getFullYear()
-      const month = String(expireDate.getMonth() + 1).padStart(2, "0")
-      const day = String(expireDate.getDate()).padStart(2, "0")
-      const hours = String(expireDate.getHours()).padStart(2, "0")
-      const minutes = String(expireDate.getMinutes()).padStart(2, "0")
-      const seconds = String(expireDate.getSeconds()).padStart(2, "0")
-
-      baseParams.P_VBANK_DT = `${year}${month}${day}`
-      baseParams.P_VBANK_TM = `${hours}${minutes}${seconds}`
     }
 
     // 파라미터 추가
