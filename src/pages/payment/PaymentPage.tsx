@@ -304,8 +304,11 @@ const PaymentPage = () => {
       return
     }
 
-    if (numValue > availablePoint) {
-      setPoint(availablePoint.toString())
+    // 사용 가능한 포인트와 상품 금액 중 작은 값을 최대값으로 설정
+    const maxPoint = Math.min(availablePoint, totalAmount)
+
+    if (numValue > maxPoint) {
+      setPoint(maxPoint.toString())
       return
     }
 
@@ -313,7 +316,9 @@ const PaymentPage = () => {
   }
 
   const handleUseAllPoints = () => {
-    setPoint(availablePoint.toString())
+    // 사용 가능한 포인트와 상품 금액 중 작은 값을 최대값으로 설정
+    const maxPoint = Math.min(availablePoint, totalAmount)
+    setPoint(maxPoint.toString())
   }
 
   const handleCountChange = (cartId: string, newCount: number) => {
