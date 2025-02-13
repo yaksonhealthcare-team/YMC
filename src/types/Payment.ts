@@ -149,3 +149,125 @@ export interface PaymentResult {
   status: PaymentStatus
   error?: string
 }
+
+export interface VirtualAccountInfo {
+  amt: string
+  bankcode: string
+  bankname: string
+  account: string
+  account_name: string
+  limitdate: string
+}
+
+export interface PaymentCancelRequest {
+  orderid: string
+  p_idx: string[]
+  cancel_memo?: string
+  refundAcctNum?: string // 가상계좌 환불시 필수
+  refundBankCode?: string // 가상계좌 환불시 필수
+  refundAcctName?: string // 가상계좌 환불시 필수
+}
+
+export interface PaymentCardInfo {
+  type: "CARD"
+  paydate: string
+  amt: string
+  appno: string
+  cardcd: string
+  cardname: string
+  card_noinf: string
+  quota: string
+}
+
+export interface PaymentBankInfo {
+  type: "BANK"
+  paydate: string
+  amt: string
+  bankcode: string
+  bankname: string
+}
+
+export interface PaymentVbankInfo {
+  type: "VBANK"
+  amt: string
+  bankcode: string
+  bankname: string
+  account: string
+  account_name: string
+  limitdate: string
+}
+
+export type PaymentInfo = PaymentCardInfo | PaymentBankInfo | PaymentVbankInfo
+
+export interface PaymentResponseItem {
+  p_idx: string
+  title: string
+  sessions: string
+  amount: string
+  brand: {
+    name: string
+    code: string
+  }
+  branch: {
+    name: string
+    code: string
+  }
+}
+
+export interface PaymentAmountInfo {
+  total_amount: string
+  discount_amount: number
+  point_amount: string
+  payment_amount: string
+}
+
+export interface PaymentPointInfo {
+  used_point: string
+  remaining_point: string
+}
+
+export interface CashReceiptInfo {
+  type: string
+  identityNum: string
+  amount: string
+  serviceCharge: string
+  taxFreeAmount: string
+  totalAmount: string
+}
+
+export interface PaymentResponse {
+  resultCode: string
+  resultMessage: string
+  body: {
+    orderid: string
+    p_idx: string[]
+    pay_info: PaymentInfo
+    cahereceipt_info: CashReceiptInfo | null
+    mp_info: number[] | null
+    items: PaymentResponseItem
+    amount_info: PaymentAmountInfo
+    point_info: PaymentPointInfo
+  }
+}
+
+export interface PaymentRequestItem {
+  p_idx: string
+  title: string
+  sessions: string
+  amount: string
+  brand_code: string
+  branch_code: string
+}
+
+export interface PaymentRequest {
+  orderid?: string
+  items: PaymentRequestItem[]
+  payment_method: "CARD" | "BANK" | "VBANK"
+  point_amount?: string
+  total_amount: string
+  payment_amount: string
+  vbank_info?: {
+    bank_code: string
+    account_name: string
+  }
+}

@@ -1,6 +1,10 @@
 import {
   PaymentHistoryDetailResponse,
   PaymentHistoryResponse,
+  PaymentCancelRequest,
+  PaymentResponse,
+  PaymentRequest,
+  VirtualAccountInfo,
 } from "types/Payment.ts"
 import { PaymentMapper } from "../mappers/PaymentMapper.ts"
 import { axiosClient } from "../queries/clients.ts"
@@ -38,4 +42,25 @@ export const cancelPayments = async (
     p_idx: paymentIds,
     cancel_memo: reason,
   })
+}
+
+export const cancelVirtualAccountPayment = async (
+  request: PaymentCancelRequest,
+) => {
+  await axiosClient.post("/payments/cancel", request)
+}
+
+export const fetchBankList = async () => {
+  const { data } = await axiosClient.get<
+    HTTPResponse<Array<{ code: string; name: string }>>
+  >("/payments/request_bankList")
+  return data.body
+}
+
+export const requestPayment = async (paymentData: PaymentRequest) => {
+  const { data } = await axiosClient.post<PaymentResponse>(
+    "/payments/request",
+    paymentData,
+  )
+  return data
 }

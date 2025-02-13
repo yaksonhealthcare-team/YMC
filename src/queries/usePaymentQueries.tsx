@@ -4,7 +4,10 @@ import {
   cancelPayments,
   fetchPayment,
   fetchPayments,
+  fetchBankList,
+  requestPayment,
 } from "../apis/payments.api.ts"
+import { PaymentRequest } from "../types/Payment.ts"
 import { queryClient } from "./clients.ts"
 
 export const usePaymentHistories = () =>
@@ -35,6 +38,19 @@ export const usePaymentCancel = () =>
       paymentIds: string[]
       reason: string
     }) => cancelPayments(orderId, paymentIds, reason),
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: [queryKeys.payments] }),
+  })
+
+export const useBankList = () =>
+  useQuery({
+    queryKey: queryKeys.payments.banks,
+    queryFn: () => fetchBankList(),
+  })
+
+export const useRequestPayment = () =>
+  useMutation({
+    mutationFn: (paymentData: PaymentRequest) => requestPayment(paymentData),
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: [queryKeys.payments] }),
   })
