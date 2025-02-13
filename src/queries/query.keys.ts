@@ -6,51 +6,42 @@ import { ReservationStatusCode } from "types/Reservation.ts"
 import { BannerRequestType } from "../types/Banner.ts"
 import { ScheduleFilters } from "../types/Schedule.ts"
 
-const createQueryKeys = () =>
-  ({
+const createQueryKeys = () => {
+  const keys = {
     branches: {
       all: ["branches"] as const,
       list: (filters: BranchFilters) =>
-        [...createQueryKeys().branches.all, filters] as const,
+        [...keys.branches.all, filters] as const,
       detail: (id: string, coords: Coordinate) =>
-        [...createQueryKeys().branches.all, id, coords] as const,
+        [...keys.branches.all, id, coords] as const,
       map: (coords: Coordinate, brandCode?: string, category?: string) =>
-        [
-          ...createQueryKeys().branches.all,
-          "maps",
-          coords,
-          brandCode,
-          category,
-        ] as const,
+        [...keys.branches.all, "maps", coords, brandCode, category] as const,
     },
     schedules: {
       all: ["schedules"] as const,
       date: (filters: ScheduleFilters) =>
-        [...createQueryKeys().schedules.all, "date", filters] as const,
+        [...keys.schedules.all, "date", filters] as const,
       times: (filters: ScheduleFilters) =>
-        [...createQueryKeys().schedules.all, "times", filters] as const,
+        [...keys.schedules.all, "times", filters] as const,
     },
     points: {
       all: ["points"] as const,
       list: (filters: PointFilters) =>
-        [
-          ...createQueryKeys().points.all,
-          { ...filters, infinite: true },
-        ] as const,
+        [...keys.points.all, { ...filters, infinite: true }] as const,
     },
     payments: {
       all: ["payments"] as const,
       histories: ({ page }: { page: number }) =>
-        [...createQueryKeys().payments.all, { page, infinite: true }] as const,
-      detail: (id: string) => [...createQueryKeys().payments.all, id] as const,
+        [...keys.payments.all, { page, infinite: true }] as const,
+      detail: (id: string) => [...keys.payments.all, id] as const,
       banks: ["payments", "banks"] as const,
     },
     questionnaires: {
       all: ["questionnaires"] as const,
       questions: (type: "common" | "reservation") =>
-        [...createQueryKeys().questionnaires.all, "questions", type] as const,
+        [...keys.questionnaires.all, "questions", type] as const,
       userResult: (type: "general" | "reservation") =>
-        [...createQueryKeys().questionnaires.all, "user_result", type] as const,
+        [...keys.questionnaires.all, "user_result", type] as const,
     },
     brands: {
       all: ["brands"] as const,
@@ -59,47 +50,35 @@ const createQueryKeys = () =>
     memberships: {
       all: ["memberships"] as const,
       list: (brandCode: string, scCode: string) =>
-        [
-          ...createQueryKeys().memberships.all,
-          "list",
-          brandCode,
-          scCode,
-        ] as const,
+        [...keys.memberships.all, "list", brandCode, scCode] as const,
       detail: (serviceIndex: string) =>
-        [...createQueryKeys().memberships.all, "detail", serviceIndex] as const,
+        [...keys.memberships.all, "detail", serviceIndex] as const,
       serviceCategories: (brandCode: string) => [
-        ...createQueryKeys().memberships.all,
+        ...keys.memberships.all,
         "service_categories",
         brandCode,
       ],
       myList: (status: string) =>
-        [...createQueryKeys().memberships.all, "myList", status] as const,
+        [...keys.memberships.all, "myList", status] as const,
       additionalManagement: (membershipIdx: number | undefined) =>
-        [
-          ...createQueryKeys().memberships.all,
-          "detail",
-          membershipIdx,
-        ] as const,
+        [...keys.memberships.all, "detail", membershipIdx] as const,
     },
     events: {
       all: ["events"] as const,
       list: ({ page, status }: { page: number; status: EventStatus }) =>
-        [
-          ...createQueryKeys().events.all,
-          { page, status, infinite: true },
-        ] as const,
-      detail: (id: string) => [...createQueryKeys().events.all, id] as const,
+        [...keys.events.all, { page, status, infinite: true }] as const,
+      detail: (id: string) => [...keys.events.all, id] as const,
     },
     notices: {
       all: ["notices"] as const,
       list: ({ page }: { page: number }) =>
-        [...createQueryKeys().notices.all, { page, infinite: true }] as const,
-      detail: (id: string) => [...createQueryKeys().notices.all, id] as const,
+        [...keys.notices.all, { page, infinite: true }] as const,
+      detail: (id: string) => [...keys.notices.all, id] as const,
     },
     reviews: {
       all: ["reviews"] as const,
       list: ({ page }: { page: number }) =>
-        [...createQueryKeys().reviews.all, { page, infinite: true }] as const,
+        [...keys.reviews.all, { page, infinite: true }] as const,
     },
     reservations: {
       all: ["reservations"] as const,
@@ -110,26 +89,26 @@ const createQueryKeys = () =>
         page: number
         status: ReservationStatusCode
       }) =>
-        [
-          ...createQueryKeys().reservations.all,
-          { page, status, infinite: true },
-        ] as const,
+        [...keys.reservations.all, { page, status, infinite: true }] as const,
     },
     banners: {
       all: ["banners"] as const,
       bannerType: (bannerRequestType: BannerRequestType) =>
-        [...createQueryKeys().banners.all, { bannerRequestType }] as const,
+        [...keys.banners.all, { bannerRequestType }] as const,
     },
     notifications: {
       all: ["notifications"] as const,
       list: (filters: BranchFilters) =>
-        [...createQueryKeys().notifications.all, filters] as const,
+        [...keys.notifications.all, filters] as const,
       detail: (id: string, coords: Coordinate) =>
-        [...createQueryKeys().notifications.all, id, coords] as const,
+        [...keys.notifications.all, id, coords] as const,
     },
     carts: {
       all: ["carts"] as const,
     },
-  }) as const
+  } as const
+
+  return keys
+}
 
 export const queryKeys = createQueryKeys()
