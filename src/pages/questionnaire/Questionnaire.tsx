@@ -137,7 +137,29 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
     if (!questions) return
 
     if (currentIndex < questions.length - 1) {
-      setCurrentIndex((prev) => prev + 1)
+      const currentQuestion = questions[currentIndex]
+      const currentFieldName = getFieldName(currentQuestion)
+      const currentValue = formik.values[currentFieldName]
+
+      // 현재 선택된 옵션의 next_cssq_idx 확인
+      let nextQuestionIdx = currentIndex + 1
+      if (Array.isArray(currentValue) && currentValue.length > 0) {
+        const selectedOption = currentQuestion.options.find(
+          (opt) => opt.csso_idx === currentValue[0].csso_idx,
+        )
+
+        if (selectedOption?.next_cssq_idx) {
+          // next_cssq_idx가 있는 경우 해당 질문으로 이동
+          const targetIndex = questions.findIndex(
+            (q) => q.cssq_idx === selectedOption.next_cssq_idx,
+          )
+          if (targetIndex !== -1) {
+            nextQuestionIdx = targetIndex
+          }
+        }
+      }
+
+      setCurrentIndex(nextQuestionIdx)
     } else {
       formik.handleSubmit()
     }
