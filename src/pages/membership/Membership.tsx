@@ -89,133 +89,135 @@ const MembershipPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-system-bg overflow-y-auto scrollbar-hide">
-      {/* 고정 영역 */}
-      <div className="fixed top-[48px] left-0 right-0 z-10 bg-system-bg">
-        {/* 안내 메시지 */}
-        {cartCount === 0 && (
-          <div className="w-full bg-[#92443D]">
-            <div className="max-w-[500px] min-w-[375px] mx-auto">
-              <div className="w-full h-[41px] flex items-center justify-center">
-                <span className="text-white text-14px font-medium">
-                  이용하고 싶은 회원권을 담아주세요.
-                </span>
+    <div className="min-h-screen bg-system-bg overflow-y-auto scrollbar-hide flex justify-center">
+      <div className="w-full max-w-[500px] relative">
+        {/* 고정 영역 */}
+        <div className="fixed top-[48px] left-1/2 -translate-x-1/2 w-full max-w-[500px] z-10 bg-system-bg">
+          {/* 안내 메시지 */}
+          {cartCount === 0 && (
+            <div className="w-full bg-[#92443D]">
+              <div className="max-w-[500px] min-w-[375px] mx-auto">
+                <div className="w-full h-[41px] flex items-center justify-center">
+                  <span className="text-white text-14px font-medium">
+                    이용하고 싶은 회원권을 담아주세요.
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* 브랜드 선택 탭 */}
-        <div className="w-full border-b border-gray-100">
-          <div className="max-w-[500px] min-w-[375px] mx-auto">
-            <Tabs
-              value={brandCode}
-              onChange={handleBrandChange}
-              variant="scrollable"
-              scrollButtons={false}
-              allowScrollButtonsMobile={false}
-              TabIndicatorProps={{
-                sx: {
-                  height: 2,
-                  bgcolor: "#212121",
-                },
-              }}
-              sx={{
-                minHeight: 48,
-                bgcolor: "#F8F5F2",
-                "& .MuiTabs-scroller": {
-                  overflowX: "auto !important",
-                  "&::-webkit-scrollbar": { display: "none" },
-                },
-                "& .MuiTab-root": {
-                  minWidth: "unset",
+          {/* 브랜드 선택 탭 */}
+          <div className="w-full border-b border-gray-100">
+            <div className="max-w-[500px] min-w-[375px] mx-auto">
+              <Tabs
+                value={brandCode}
+                onChange={handleBrandChange}
+                variant="scrollable"
+                scrollButtons={false}
+                allowScrollButtonsMobile={false}
+                TabIndicatorProps={{
+                  sx: {
+                    height: 2,
+                    bgcolor: "#212121",
+                  },
+                }}
+                sx={{
                   minHeight: 48,
-                  padding: "14px 0",
-                  marginRight: "24px",
-                  fontSize: "14px",
-                  fontWeight: 600,
-                  color: "#9E9E9E",
-                  "&.Mui-selected": {
-                    color: "#212121",
+                  bgcolor: "#F8F5F2",
+                  "& .MuiTabs-scroller": {
+                    overflowX: "auto !important",
+                    "&::-webkit-scrollbar": { display: "none" },
                   },
-                  "&:first-of-type": {
-                    marginLeft: "20px",
+                  "& .MuiTab-root": {
+                    minWidth: "unset",
+                    minHeight: 48,
+                    padding: "14px 0",
+                    marginRight: "24px",
+                    fontSize: "14px",
+                    fontWeight: 600,
+                    color: "#9E9E9E",
+                    "&.Mui-selected": {
+                      color: "#212121",
+                    },
+                    "&:first-of-type": {
+                      marginLeft: "20px",
+                    },
+                    "&:last-of-type": {
+                      marginRight: "20px",
+                    },
                   },
-                  "&:last-of-type": {
-                    marginRight: "20px",
-                  },
-                },
-              }}
-              aria-label="브랜드 선택"
-            >
-              <Tab label="약손명가" value="001" />
-              <Tab label="달리아스파" value="002" />
-              <Tab label="여리한다이어트" value="003" />
-            </Tabs>
+                }}
+                aria-label="브랜드 선택"
+              >
+                <Tab label="약손명가" value="001" />
+                <Tab label="달리아스파" value="002" />
+                <Tab label="여리한다이어트" value="003" />
+              </Tabs>
+            </div>
           </div>
-        </div>
 
-        {/* 카테고리 선택 */}
-        <div className="w-full max-w-[500px] min-w-[375px] mx-auto py-4">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide px-5">
-            <button
-              onClick={() => handleCategoryChange(undefined)}
-              className={`flex-shrink-0 w-[68px] h-[68px] rounded-full flex items-center justify-center ${
-                !selectedCategory ? "bg-primary" : "bg-[rgba(33,33,33,0.45)]"
-              }`}
-            >
-              <span className="text-white text-12px font-medium leading-[12px]">
-                전체
-              </span>
-            </button>
-            {categoriesData.body.map((category: MembershipCategory) => (
+          {/* 카테고리 선택 */}
+          <div className="w-full max-w-[500px] min-w-[375px] mx-auto py-4">
+            <div className="flex gap-2 overflow-x-auto scrollbar-hide px-5">
               <button
-                key={category.sc_code}
-                onClick={() => handleCategoryChange(category.sc_code)}
+                onClick={() => handleCategoryChange(undefined)}
                 className={`flex-shrink-0 w-[68px] h-[68px] rounded-full flex items-center justify-center ${
-                  selectedCategory === category.sc_code
-                    ? "bg-primary"
-                    : "bg-[rgba(33,33,33,0.45)]"
+                  !selectedCategory ? "bg-primary" : "bg-[rgba(33,33,33,0.45)]"
                 }`}
               >
-                <span className="text-white text-12px font-medium leading-[1.4] px-1">
-                  {category.sc_name}
+                <span className="text-white text-12px font-medium leading-[12px]">
+                  전체
                 </span>
               </button>
-            ))}
+              {categoriesData.body.map((category: MembershipCategory) => (
+                <button
+                  key={category.sc_code}
+                  onClick={() => handleCategoryChange(category.sc_code)}
+                  className={`flex-shrink-0 w-[68px] h-[68px] rounded-full flex items-center justify-center ${
+                    selectedCategory === category.sc_code
+                      ? "bg-primary"
+                      : "bg-[rgba(33,33,33,0.45)]"
+                  }`}
+                >
+                  <span className="text-white text-12px font-medium leading-[1.4] px-1">
+                    {category.sc_name}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* 회원권 목록 */}
-      <div className="pt-[145px] pb-[96px]">
-        <div className="max-w-[500px] min-w-[375px] mx-auto">
-          <div className="px-5 py-6">
-            {membershipsData.pages[0].body.length === 0 ? (
-              <div className="flex justify-center items-center h-[200px] text-gray-600 bg-system-bg">
-                준비중 입니다
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {membershipsData.pages.map((page) =>
-                  page.body.map((membership: MembershipItem) => (
-                    <MembershipCard
-                      key={membership.s_idx}
-                      membership={membership}
-                      onClick={() =>
-                        navigate(
-                          `/membership/${membership.s_idx}?brand_code=${brandCode}`,
-                        )
-                      }
-                    />
-                  )),
-                )}
-                <div ref={observerTarget} className="h-4" />
-                {isFetchingNextPage && (
-                  <LoadingIndicator className="min-h-[100px] bg-system-bg" />
-                )}
-              </div>
-            )}
+        {/* 회원권 목록 */}
+        <div className="pt-[145px] pb-[96px]">
+          <div className="max-w-[500px] min-w-[375px] mx-auto">
+            <div className="px-5 py-6">
+              {membershipsData.pages[0].body.length === 0 ? (
+                <div className="flex justify-center items-center h-[200px] text-gray-600 bg-system-bg">
+                  준비중 입니다
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {membershipsData.pages.map((page) =>
+                    page.body.map((membership: MembershipItem) => (
+                      <MembershipCard
+                        key={membership.s_idx}
+                        membership={membership}
+                        onClick={() =>
+                          navigate(
+                            `/membership/${membership.s_idx}?brand_code=${brandCode}`,
+                          )
+                        }
+                      />
+                    )),
+                  )}
+                  <div ref={observerTarget} className="h-4" />
+                  {isFetchingNextPage && (
+                    <LoadingIndicator className="min-h-[100px] bg-system-bg" />
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

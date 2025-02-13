@@ -586,50 +586,52 @@ const PaymentPage = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className="flex flex-col flex-1 border-gray-50 pb-[88px]">
-        <PaymentProductSection
-          paymentItems={paymentItems}
-          onCountChange={handleCountChange}
-          onDelete={handleDelete}
-        />
+    <div className="min-h-screen bg-gray-50">
+      <div className="flex flex-col flex-1">
+        <div className="flex flex-col divide-y divide-gray-50 bg-white">
+          <PaymentProductSection
+            paymentItems={paymentItems}
+            onCountChange={handleCountChange}
+            onDelete={handleDelete}
+          />
 
-        <PaymentPointSection
-          point={point}
-          availablePoint={availablePoint}
-          onPointChange={handlePointChange}
-          onUseAllPoints={handleUseAllPoints}
-        />
+          <PaymentPointSection
+            point={point}
+            availablePoint={availablePoint}
+            onPointChange={handlePointChange}
+            onUseAllPoints={handleUseAllPoints}
+          />
 
-        <PaymentMethodSection
-          selectedPayment={selectedPayment}
-          onPaymentMethodChange={setSelectedPayment}
-        />
+          <PaymentMethodSection
+            selectedPayment={selectedPayment}
+            onPaymentMethodChange={setSelectedPayment}
+          />
 
-        <PaymentSummarySection
-          totalAmount={totalAmount}
-          discountAmount={discountAmount}
-          pointAmount={pointAmount}
-          finalAmount={finalAmount}
-        />
+          <PaymentSummarySection
+            totalAmount={totalAmount}
+            discountAmount={discountAmount}
+            pointAmount={pointAmount}
+            finalAmount={finalAmount}
+          />
 
-        <PaymentAgreementSection
-          isAgreed={isAgreed}
-          onAgreementChange={setIsAgreed}
-        />
+          <PaymentAgreementSection
+            isAgreed={isAgreed}
+            onAgreementChange={setIsAgreed}
+          />
+        </div>
+
+        <FixedButtonContainer className={"bg-white"}>
+          <Button
+            variantType="primary"
+            sizeType="l"
+            disabled={!isAgreed}
+            onClick={handlePayment}
+            className="w-full"
+          >
+            {finalAmount.toLocaleString()}원 결제하기
+          </Button>
+        </FixedButtonContainer>
       </div>
-
-      <FixedButtonContainer className={"bg-white"}>
-        <Button
-          variantType="primary"
-          sizeType="l"
-          disabled={!isAgreed}
-          onClick={handlePayment}
-          className="w-full"
-        >
-          {finalAmount.toLocaleString()}원 결제하기
-        </Button>
-      </FixedButtonContainer>
     </div>
   )
 }
