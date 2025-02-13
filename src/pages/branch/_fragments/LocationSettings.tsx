@@ -8,6 +8,7 @@ import SavedLocationList from "./SavedLocationList.tsx"
 import LocationSearchResultList from "./LocationSearchResultList.tsx"
 import LocationSearchPlaceholder from "./LocationSearchPlaceholder.tsx"
 import {
+  useAddAddressBookmarkMutation,
   useAddressBookmarks,
   useAddressSearch,
 } from "../../../queries/useAddressQueries.ts"
@@ -68,6 +69,7 @@ const LocationSettings = () => {
   const [address, setAddress] = useState("")
   const [isEditing, setIsEditing] = useState(false)
   const { setLocation } = useBranchLocationSelect()
+  const { mutate: addBookmark } = useAddAddressBookmarkMutation()
 
   const { data: searchResults = [] } = useAddressSearch(address)
   useAddressBookmarks()
@@ -104,6 +106,11 @@ const LocationSettings = () => {
             setLocation({
               address: location.address,
               coords,
+            })
+            addBookmark({
+              address: location.address,
+              lat: location.lat,
+              lon: location.lon,
             })
             navigate("/branch", {
               state: {
