@@ -7,6 +7,51 @@ import LoadingIndicator from "@components/LoadingIndicator"
 import { useQuery } from "@tanstack/react-query"
 import { fetchPoints } from "../../apis/points.api"
 
+const CARD_CODE_MAP: { [key: string]: string } = {
+  "01": "외환카드",
+  "03": "롯데카드",
+  "04": "현대카드",
+  "06": "국민카드",
+  "11": "BC카드",
+  "12": "삼성카드",
+  "14": "신한카드",
+  "15": "한미카드",
+  "16": "NH카드",
+  "17": "하나SK카드",
+  "21": "글로벌BC카드",
+  "22": "제주카드",
+  "23": "광주카드",
+  "24": "전북카드",
+  "25": "씨티카드",
+  "26": "우리카드",
+  "32": "우체국카드",
+  "33": "저축은행카드",
+  "34": "MG새마을금고카드",
+  "35": "전북은행카드",
+  "36": "광주은행카드",
+  "37": "카카오뱅크카드",
+  "38": "케이뱅크카드",
+  "39": "페이코",
+  "41": "신협카드",
+  "42": "KDB산업은행카드",
+  "43": "제주은행카드",
+  "44": "현대증권카드",
+  "48": "신협체크카드",
+  "51": "삼성증권카드",
+  "52": "케이뱅크카드",
+  "54": "카카오뱅크카드",
+  "55": "토스뱅크카드",
+  "56": "토스페이먼츠",
+  "71": "AmericanExpress",
+  "91": "네이버페이",
+  "93": "토스페이",
+  "94": "SSG페이",
+  "95": "카카오페이",
+  "96": "페이코",
+  "97": "L페이",
+  "98": "삼성페이",
+}
+
 export default function PaymentCallbackPage() {
   const location = useLocation()
   const navigate = useNavigate()
@@ -91,6 +136,14 @@ export default function PaymentCallbackPage() {
       console.log("✅ 결제 성공")
       setPaymentStatus(PaymentStatus.SUCCESS)
 
+      const payInfo = jsonData.body.pay_info
+      const cardName =
+        payInfo.type === "CARD"
+          ? CARD_CODE_MAP[payInfo.cardcd] ||
+            payInfo.cardname ||
+            "알 수 없는 카드"
+          : undefined
+
       navigate("/payment/complete", {
         state: {
           orderId: jsonData.body.orderid,
@@ -107,14 +160,11 @@ export default function PaymentCallbackPage() {
           ],
           paymentMethod: jsonData.body.pay_info.type,
           cardPaymentInfo:
-            jsonData.body.pay_info.type === "CARD"
+            payInfo.type === "CARD"
               ? {
-                  cardName:
-                    jsonData.body.pay_info.cardname || "카드사 정보 없음",
+                  cardName,
                   installment:
-                    jsonData.body.pay_info.quota === "00"
-                      ? "일시불"
-                      : `${jsonData.body.pay_info.quota}개월`,
+                    payInfo.quota === "00" ? "일시불" : `${payInfo.quota}개월`,
                 }
               : undefined,
           amount_info: {
