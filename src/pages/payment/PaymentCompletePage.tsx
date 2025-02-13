@@ -57,14 +57,17 @@ const PaymentCompletePage = () => {
               ss_idx: 0,
               b_idx: 0,
               brand_code: item.brand.code,
-              amount: Number(item.amount),
-              b_type: "지정지점",
+              amount: 1,
+              b_type: item.branch.code === "0" ? "전지점" : "지정지점",
               title: item.title,
               brand: item.brand.name,
-              branchType: "지정지점",
+              branchType:
+                item.branch.code === "0" ? "전지점 사용가능" : item.branch.name,
               duration: 0,
               price: Number(item.amount),
               sessions: Number(item.sessions),
+              name:
+                item.branch.code === "0" ? "전지점 사용가능" : item.branch.name,
             }}
           />
         ))}

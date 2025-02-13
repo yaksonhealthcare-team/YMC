@@ -13,7 +13,7 @@ const PaymentSummary = ({ state, isVirtual }: PaymentSummaryProps) => (
       <div className="flex justify-between">
         <span className="font-m text-14px text-gray-500">상품 금액</span>
         <span className="font-sb text-14px text-gray-700">
-          {state.amount_info.total_amount.toLocaleString()}원
+          {Number(state.amount_info.total_amount).toLocaleString()}원
         </span>
       </div>
       {state.amount_info.discount_amount > 0 && (
@@ -28,7 +28,7 @@ const PaymentSummary = ({ state, isVirtual }: PaymentSummaryProps) => (
         <div className="flex justify-between">
           <span className="font-m text-14px text-gray-500">포인트 사용</span>
           <span className="font-sb text-14px text-success">
-            -{state.amount_info.point_amount.toLocaleString()}원
+            -{Number(state.amount_info.point_amount).toLocaleString()}원
           </span>
         </div>
       )}
@@ -38,7 +38,7 @@ const PaymentSummary = ({ state, isVirtual }: PaymentSummaryProps) => (
           {isVirtual ? "입금금액" : "최종결제금액"}
         </span>
         <span className="font-b text-20px text-gray-700">
-          {state.amount_info.payment_amount.toLocaleString()}원
+          {Number(state.amount_info.payment_amount).toLocaleString()}원
         </span>
       </div>
       {isVirtual && (
