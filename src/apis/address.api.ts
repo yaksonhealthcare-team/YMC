@@ -7,6 +7,14 @@ export interface AddressSearchResult {
   longitude: number
 }
 
+export interface AddressBookmark {
+  id: number
+  title: string
+  address: string
+  latitude: number
+  longitude: number
+}
+
 export const searchAddress = async (
   keyword: string,
 ): Promise<AddressSearchResult[]> => {
@@ -22,4 +30,10 @@ export const searchAddress = async (
     latitude: parseFloat(item.lat) || 0,
     longitude: parseFloat(item.lon) || 0,
   }))
+}
+
+export const deleteAddressBookmark = async (
+  bookmarkId: number,
+): Promise<void> => {
+  await axiosClient.delete(`/address/bookmarks/${bookmarkId}`)
 }
