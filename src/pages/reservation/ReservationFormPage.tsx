@@ -5,7 +5,10 @@ import CaretRigthIcon from "@assets/icons/CaretRightIcon.svg?react"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import { RadioCard } from "@components/RadioCard"
 import { MembershipRadioCard } from "./_fragments/MembershipRadioCard"
-import { AdditionalManagement } from "types/Membership"
+import {
+  AdditionalManagement,
+  AdditionalManagementOption,
+} from "types/Membership"
 import { Box, RadioGroup, useTheme } from "@mui/material"
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
@@ -91,11 +94,27 @@ const ReservationFormPage = () => {
         }}
         membershipIndex={data.item === "상담 예약" ? 0 : Number(data.item)}
         addServices={data.additionalServices.map((service) =>
-          Number(service.am_idx),
+          Number(service.s_idx),
         )}
         b_idx={selectedBranch?.b_idx || ""}
       />,
     )
+  }
+
+  const handleAdditionalServiceChange = (
+    checked: boolean,
+    service: AdditionalManagement,
+  ) => {
+    setData((prev) => {
+      const newServices = checked
+        ? [...prev.additionalServices, service]
+        : prev.additionalServices.filter((s) => s.s_idx !== service.s_idx)
+
+      return {
+        ...prev,
+        additionalServices: newServices,
+      }
+    })
   }
 
   useEffect(() => {
@@ -247,67 +266,52 @@ const ReservationFormPage = () => {
             <div className="flex flex-col gap-3">
               {additionalManagements.body.map((option) => {
                 const isChecked = data.additionalServices.some(
-                  (service) => service.am_idx === option.am_idx,
+                  (service) => service.s_idx === option.s_idx,
                 )
                 return (
                   <div
-                    key={option.am_idx}
+                    key={option.s_idx}
                     className="p-5 bg-white rounded-xl border border-gray-100 flex flex-col gap-2"
                   >
                     <div className="flex justify-between items-center">
                       <p className="text-[#212121] text-16px font-m leading-[23.68px]">
                         {option.s_name}
                       </p>
-                      <Checkbox
-                        checked={isChecked}
-                        onChange={() => {
-                          setData((prev) => {
-                            // 이미 선택된 항목인지 확인
-                            const existingIndex =
-                              prev.additionalServices.findIndex(
-                                (service) => service.am_idx === option.am_idx,
-                              )
-
-                            // 새로운 additionalServices 배열 생성
-                            const newAdditionalServices = [
-                              ...prev.additionalServices,
-                            ]
-
-                            if (existingIndex >= 0) {
-                              // 이미 선택된 항목이면 제거
-                              newAdditionalServices.splice(existingIndex, 1)
-                            } else {
-                              // 선택되지 않은 항목이면 추가
-                              newAdditionalServices.push({
-                                am_idx: option.am_idx,
-                                s_name: option.s_name,
-                                s_time: option.s_time,
-                                options: option.options,
-                              })
-                            }
-
-                            return {
-                              ...prev,
-                              additionalServices: newAdditionalServices,
-                            }
-                          })
-                        }}
-                        sx={{
-                          width: 20,
-                          height: 20,
-                          padding: 0,
-                          "& .MuiSvgIcon-root": {
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <Checkbox
+                          checked={isChecked}
+                          onChange={(e) => {
+                            e.stopPropagation()
+                            handleAdditionalServiceChange(e.target.checked, {
+                              s_idx: option.s_idx,
+                              s_name: option.s_name,
+                              s_time: option.s_time,
+                              options: option.options,
+                            })
+                          }}
+                          sx={{
                             width: 20,
                             height: 20,
-                          },
-                          "&.Mui-checked": {
-                            color: "#F37165",
-                          },
-                          "&:not(.Mui-checked)": {
-                            color: "#DDDDDD",
-                          },
-                        }}
-                      />
+                            padding: 0,
+                            backgroundColor: "white",
+                            "& .MuiSvgIcon-root": {
+                              width: 20,
+                              height: 20,
+                            },
+                            "&.Mui-checked": {
+                              color: "#F37165",
+                              backgroundColor: "white",
+                            },
+                            "&:not(.Mui-checked)": {
+                              color: "#DDDDDD",
+                              backgroundColor: "white",
+                            },
+                            "&:hover": {
+                              backgroundColor: "white",
+                            },
+                          }}
+                        />
+                      </div>
                     </div>
                     <div className="flex justify-between items-center">
                       <div className="flex items-center gap-2">

@@ -106,11 +106,10 @@ export interface AdditionalManagementOption {
 }
 
 export interface AdditionalManagement {
-  am_idx: string
+  s_idx: string
   s_name: string
   s_time: string
   options: AdditionalManagementOption[]
-  serviceIndex?: string
 }
 
 export interface MembershipUsageHistory {
