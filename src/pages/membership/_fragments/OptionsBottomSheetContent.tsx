@@ -193,6 +193,15 @@ export const OptionsBottomSheetContent = ({
   }
 
   const handleClose = () => {
+    // 선택된 옵션 초기화
+    setSelectedOptions([])
+    // 선택된 지점 초기화
+    setSelectedBranch(null)
+    // 드롭다운 닫기
+    setIsDropdownOpen(false)
+    // 모달 닫기
+    setIsModalOpen(false)
+    // 오버레이 닫기
     closeOverlay()
   }
 
@@ -348,7 +357,6 @@ export const OptionsBottomSheetContent = ({
                 "flex-1",
                 selectedOptions.length === 0 && "!text-[#BDBDBD]",
               )}
-              disabled={selectedOptions.length === 0}
             >
               {selectedOptions.length === 0 ? "닫기" : "장바구니 담기"}
             </Button>

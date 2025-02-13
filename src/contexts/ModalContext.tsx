@@ -158,6 +158,13 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
       const currentState = window.history.state
       if (currentState?.bottomSheet) {
         window.history.back()
+        setOverlayState({
+          isOpen: false,
+          type: null,
+          content: null,
+          options: {},
+        })
+        setAlertProps(null)
         return
       }
     }
