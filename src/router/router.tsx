@@ -1,4 +1,4 @@
-import { fetchUser, signinWithSocial } from "@apis/auth.api.ts"
+import { signinWithSocial } from "@apis/auth.api.ts"
 import ErrorPage from "@components/ErrorPage"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { Suspense, useEffect } from "react"
@@ -7,7 +7,7 @@ import {
   RouteObject,
   RouterProvider,
 } from "react-router-dom"
-import { AuthProvider, useAuth } from "../contexts/AuthContext.tsx"
+import { AuthProvider } from "../contexts/AuthContext.tsx"
 import { LayoutProvider } from "../contexts/LayoutContext.tsx"
 import { OverlayProvider } from "../contexts/ModalContext.tsx"
 import { SignupProvider } from "../contexts/SignupContext.tsx"
@@ -50,8 +50,6 @@ export const createRoutes = () => {
 }
 
 export const AppRouter = () => {
-  const { login } = useAuth()
-
   useEffect(() => {
     if (window.ReactNativeWebView) {
       window.ReactNativeWebView.onMessage = (data: string) => {
@@ -87,13 +85,11 @@ export const AppRouter = () => {
   const handleSocialLogin = async (data: any) => {
     console.log("소셜 로그인 처리:", data)
     try {
-      const { accessToken } = await signinWithSocial({
+      await signinWithSocial({
         socialAccessToken: data.accessToken,
         socialId: data.socialId,
         provider: data.provider,
       })
-      const user = await fetchUser(accessToken)
-      login({ user, token: accessToken })
       window.location.href = "/"
       return
     } catch (error) {
