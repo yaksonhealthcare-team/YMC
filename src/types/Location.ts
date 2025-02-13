@@ -1,6 +1,7 @@
 export interface Location {
-  title: string
+  csab_idx?: string
   address: string
-  latitude: number
-  longitude: number
+  lat: string
+  lon: string
+  base_address?: "Y" | "N"
 }

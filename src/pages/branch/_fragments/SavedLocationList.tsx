@@ -1,38 +1,36 @@
-import LocationListItem from "./LocationListItem.tsx"
-import { Location } from "../../../types/Location.ts"
+import {
+  useAddressBookmarks,
+  useDeleteAddressBookmarkMutation,
+} from "../../../queries/useAddressQueries"
+import { useNavigate } from "react-router-dom"
+import LocationSearchResultList from "./LocationSearchResultList"
 
 const SavedLocationList = () => {
-  const locations: Location[] = Array.from({ length: 30 }, () => ({
-    title: "약손명가 강남점",
-    address: "서울 강남구 테헤란로",
-    latitude: 37.5666805,
-    longitude: 126.9784147,
-  }))
+  const navigate = useNavigate()
+  const { data: bookmarks = [] } = useAddressBookmarks()
+  const { mutate: deleteBookmark } = useDeleteAddressBookmarkMutation()
 
   return (
     <div className={"flex flex-col py-6 h-full overflow-y-scroll"}>
       <p className={"px-5 font-sb text-16px"}>{"자주 쓰는 주소"}</p>
-      {locations.length === 0 ? (
-        <div
-          className={"w-full h-full flex flex-col items-center justify-center"}
-        >
-          <p className={"font-sb text-16px text-gray-300"}>
-            {"자주 쓰는 주소가 없어요."}
-          </p>
-        </div>
-      ) : (
-        <ul className={"px-5 divide-y divide-gray-100"}>
-          {locations.map(({ title, address }, index) => (
-            <li key={index} className={"py-4"}>
-              <LocationListItem
-                type={"saved"}
-                title={title}
-                address={address}
-              />
-            </li>
-          ))}
-        </ul>
-      )}
+      <LocationSearchResultList
+        type="saved"
+        locations={bookmarks}
+        onDelete={deleteBookmark}
+        onClick={(location) => {
+          navigate("/branch", {
+            state: {
+              selectedLocation: {
+                address: location.address,
+                coords: {
+                  latitude: parseFloat(location.lat),
+                  longitude: parseFloat(location.lon),
+                },
+              },
+            },
+          })
+        }}
+      />
     </div>
   )
 }

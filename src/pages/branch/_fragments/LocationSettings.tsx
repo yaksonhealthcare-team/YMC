@@ -7,8 +7,10 @@ import { SearchField } from "@components/SearchField.tsx"
 import SavedLocationList from "./SavedLocationList.tsx"
 import LocationSearchResultList from "./LocationSearchResultList.tsx"
 import LocationSearchPlaceholder from "./LocationSearchPlaceholder.tsx"
-import { searchAddress } from "../../../apis/address.api.ts"
-import { useQuery } from "@tanstack/react-query"
+import {
+  useAddressBookmarks,
+  useAddressSearch,
+} from "../../../queries/useAddressQueries.ts"
 
 const LocationSettingsHeader = ({
   onClickBack,
@@ -65,11 +67,8 @@ const LocationSettings = () => {
   const [address, setAddress] = useState("")
   const [isEditing, setIsEditing] = useState(false)
 
-  const { data: searchResults = [] } = useQuery({
-    queryKey: ["addressSearch", address],
-    queryFn: () => searchAddress(address),
-    enabled: address.length > 0,
-  })
+  const { data: searchResults = [] } = useAddressSearch(address)
+  useAddressBookmarks()
 
   const handleCloseButtonClicked = () => {
     if (location.state?.from === "/branch") {
