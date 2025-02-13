@@ -33,6 +33,7 @@ const LocationSearchResultList = ({
             {type === "saved" && onDelete && (
               <button
                 onClick={(e) => {
+                  e.preventDefault()
                   e.stopPropagation()
                   onDelete(location.csab_idx!)
                 }}

@@ -56,7 +56,9 @@ export const addAddressBookmark = async (
 }
 
 export const deleteAddressBookmark = async (
-  bookmarkId: string,
+  csab_idx: string,
 ): Promise<void> => {
-  await axiosClient.delete(`/address/bookmarks/${bookmarkId}`)
+  await axiosClient.delete(`/address/bookmarks`, {
+    data: { csab_idx },
+  })
 }

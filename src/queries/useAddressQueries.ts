@@ -6,7 +6,7 @@ import {
   searchAddress,
 } from "../apis/address.api"
 import { addressKeys } from "./keys/address.keys"
-import { AddressBookmark } from "../apis/address.api"
+import { Location } from "../types/Location"
 
 export const useAddressBookmarks = () => {
   return useQuery({
@@ -33,8 +33,12 @@ export const useDeleteAddressBookmarkMutation = () => {
 
   return useMutation({
     mutationFn: deleteAddressBookmark,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: addressKeys.bookmarks() })
+    onMutate: async (csab_idx) => {
+      queryClient.setQueryData<Location[]>(
+        addressKeys.bookmarks(),
+        (old) =>
+          old?.filter((bookmark) => bookmark.csab_idx !== csab_idx) ?? [],
+      )
     },
   })
 }
