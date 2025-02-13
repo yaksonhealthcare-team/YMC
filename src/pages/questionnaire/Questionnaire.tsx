@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, useMemo } from "react"
 import { useFormik } from "formik"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Button } from "@components/Button"
@@ -54,8 +54,91 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isCurrentValid, setIsCurrentValid] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
+  const [navigationStack, setNavigationStack] = useState<number[]>([0])
 
   const { returnPath = "/", returnText = "메인 홈으로" } = location.state || {}
+
+  const formik = useFormik<QuestionnaireFormValues>({
+    initialValues: {} as QuestionnaireFormValues,
+    onSubmit: async (values) => {
+      try {
+        await submitMutation.mutateAsync(values)
+        navigate("/questionnaire/complete", {
+          state: {
+            returnPath,
+            returnText,
+          },
+        })
+      } catch (error) {
+        showToast("문진 제출에 실패했습니다")
+      }
+    },
+  })
+
+  // 실제 답변해야 할 질문 수 계산
+  const { totalQuestions, currentQuestionNumber } = useMemo(() => {
+    if (!questions) return { totalQuestions: 0, currentQuestionNumber: 0 }
+
+    const answeredQuestions = new Set<string>() // 이미 답변한 질문들의 cssq_idx
+    const skipMap = new Map<string, string>() // 각 옵션별 건너뛰기 맵
+
+    // 건너뛰기 맵 생성
+    questions.forEach((question) => {
+      question.options.forEach((option) => {
+        if (option.next_cssq_idx) {
+          skipMap.set(option.csso_idx, option.next_cssq_idx)
+        }
+      })
+    })
+
+    // 현재까지의 경로에서 실제 답변해야 할 질문 수 계산
+    let count = 0
+    let currentNumber = 0
+    let idx = 0
+
+    while (idx < questions.length) {
+      const question = questions[idx]
+      if (answeredQuestions.has(question.cssq_idx)) {
+        idx++
+        continue
+      }
+
+      count++
+      if (idx <= currentIndex) {
+        currentNumber = count
+      }
+
+      // 현재 질문에 대한 답변 확인
+      const fieldName = getFieldName(question)
+      const answer = formik.values[fieldName]
+
+      if (Array.isArray(answer) && answer.length > 0) {
+        const selectedOption = question.options.find(
+          (opt) => opt.csso_idx === answer[0].csso_idx,
+        )
+
+        if (selectedOption?.next_cssq_idx) {
+          // 다음 질문으로 건너뛰기
+          const nextIdx = questions.findIndex(
+            (q) => q.cssq_idx === selectedOption.next_cssq_idx,
+          )
+          if (nextIdx !== -1) {
+            answeredQuestions.add(question.cssq_idx)
+            idx = nextIdx
+            continue
+          }
+        }
+      }
+
+      answeredQuestions.add(question.cssq_idx)
+      idx++
+    }
+
+    return {
+      totalQuestions: count,
+      currentQuestionNumber: currentNumber,
+    }
+  }, [questions, currentIndex, formik.values])
 
   const handleValidationChange = (isValid: boolean) => {
     setIsCurrentValid(isValid)
@@ -108,23 +191,6 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
     setNavigation({ display: false })
   }, [setHeader, setNavigation, handleBack])
 
-  const formik = useFormik<QuestionnaireFormValues>({
-    initialValues: {} as QuestionnaireFormValues,
-    onSubmit: async (values) => {
-      try {
-        await submitMutation.mutateAsync(values)
-        navigate("/questionnaire/complete", {
-          state: {
-            returnPath,
-            returnText,
-          },
-        })
-      } catch (error) {
-        showToast("문진 제출에 실패했습니다")
-      }
-    },
-  })
-
   // 폼 값이 변경될 때마다 hasChanges를 true로 설정
   useEffect(() => {
     const hasValues = Object.values(formik.values).some((value) =>
@@ -159,6 +225,8 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
         }
       }
 
+      // 이동 경로 스택에 현재 인덱스 추가
+      setNavigationStack((prev) => [...prev, nextQuestionIdx])
       setCurrentIndex(nextQuestionIdx)
     } else {
       formik.handleSubmit()
@@ -166,8 +234,15 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
   }
 
   const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex((prev) => prev - 1)
+    if (navigationStack.length > 1) {
+      // 스택에서 현재 위치 제거하고 이전 위치로 이동
+      setNavigationStack((prev) => {
+        const newStack = [...prev]
+        newStack.pop() // 현재 위치 제거
+        const prevIndex = newStack[newStack.length - 1] // 이전 위치
+        setCurrentIndex(prevIndex)
+        return newStack
+      })
     }
   }
 
@@ -185,9 +260,9 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
           <div className="p-5">
             <p className="font-medium text-gray-400 mb-3">
               <span className="font-semibold text-primary">
-                {currentIndex + 1}
+                {currentQuestionNumber}
               </span>
-              /{questions.length}
+              /{totalQuestions}
             </p>
 
             {currentQuestion && (
@@ -209,7 +284,7 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
             variantType="line"
             sizeType="l"
             onClick={handlePrev}
-            disabled={currentIndex === 0}
+            disabled={navigationStack.length <= 1}
           >
             이전
           </Button>
