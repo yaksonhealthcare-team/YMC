@@ -167,6 +167,16 @@ export default function PaymentCallbackPage() {
                     payInfo.quota === "00" ? "일시불" : `${payInfo.quota}개월`,
                 }
               : undefined,
+          vbankInfo:
+            payInfo.type === "VBANK"
+              ? {
+                  bankName: payInfo.bankname,
+                  bankCode: payInfo.bankcode,
+                  account: payInfo.account,
+                  accountName: payInfo.account_name,
+                  limitDate: payInfo.limitdate,
+                }
+              : undefined,
           amount_info: {
             total_amount: jsonData.body.amount_info.total_amount,
             discount_amount: jsonData.body.amount_info.discount_amount,

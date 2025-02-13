@@ -122,6 +122,13 @@ export interface PaymentCompleteState {
     cardName: string
     installment: string
   }
+  vbankInfo?: {
+    bankName: string
+    bankCode: string
+    account: string
+    accountName: string
+    limitDate: string
+  }
   amount_info: {
     total_amount: string
     discount_amount: number

@@ -40,19 +40,31 @@ const PaymentInfo = ({ state }: PaymentInfoProps) => {
             <div className="flex justify-between">
               <span className="font-m text-14px text-gray-500">입금은행</span>
               <span className="font-sb text-14px text-gray-700">
-                우리은행 1234123412342
+                {state.vbankInfo?.bankName} {state.vbankInfo?.account}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="font-m text-14px text-gray-500">예금주</span>
               <span className="font-sb text-14px text-gray-700">
-                주식회사 약손명가
+                {state.vbankInfo?.accountName || "주식회사 약손명가"}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="font-m text-14px text-gray-500">입금기한</span>
               <span className="font-sb text-14px text-error">
-                2024-10-10 (목) 23시 59분까지
+                {state.vbankInfo?.limitDate
+                  ? new Date(state.vbankInfo.limitDate).toLocaleString(
+                      "ko-KR",
+                      {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        weekday: "short",
+                      },
+                    )
+                  : "-"}
               </span>
             </div>
           </div>
