@@ -1,7 +1,12 @@
 import { useEffect, useMemo } from "react"
 import { Button } from "@components/Button"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useNavigate, useParams, useLocation, useSearchParams } from "react-router-dom"
+import {
+  useNavigate,
+  useParams,
+  useLocation,
+  useSearchParams,
+} from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
 import OptionsBottomSheetContent from "./_fragments/OptionsBottomSheetContent.tsx"
@@ -17,7 +22,8 @@ import MembershipPlaceholderImage from "@assets/images/MembershipPlaceholderImag
 import CartIcon from "@components/icons/CartIcon.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
 import LoadingIndicator from "@components/LoadingIndicator"
-import { MembershipDetail } from "types/Membership.ts"
+import { MembershipDetail } from "../../types/Membership"
+import { formatPrice } from "utils/format"
 
 const MembershipInfo = ({ membership }: { membership: MembershipDetail }) => {
   return (
@@ -46,13 +52,13 @@ const MembershipInfo = ({ membership }: { membership: MembershipDetail }) => {
             )}
             <div className="flex items-baseline gap-1">
               <span className="text-gray-900 font-b text-18px">
-                {membership.options[0].ss_price}원
+                {formatPrice(membership.options[0].ss_price)}원
               </span>
               <span className="text-gray-900 font-r text-12px">부터~</span>
             </div>
             {membership.options[0].original_price && (
               <span className="text-gray-400 font-r text-14px line-through translate-y-[0.5px]">
-                {membership.options[0].original_price}원
+                {formatPrice(membership.options[0].original_price)}원
               </span>
             )}
           </div>
@@ -131,7 +137,7 @@ const MembershipDetailPage = () => {
   const brandCode = searchParams.get("brand_code") || "001"
   const { setHeader, setNavigation } = useLayout()
   const { data: membership } = useMembershipDetail(id!)
-  const { openBottomSheet } = useOverlay()
+  const { openBottomSheet, closeOverlay } = useOverlay()
   const { clear } = useMembershipOptionsStore()
 
   // 구매하기 버튼 클릭 시 바텀시트 열기
@@ -148,6 +154,7 @@ const MembershipDetailPage = () => {
         title={membership.s_name || "No Name"}
         duration={parseInt(membership.s_time || "0")}
         brandCode={brandCode}
+        onClose={closeOverlay}
       />,
     )
   }

@@ -3,7 +3,7 @@ import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { Button } from "@components/Button.tsx"
 import FixedButtonContainer from "@components/FixedButtonContainer.tsx"
 import { useNavigate } from "react-router-dom"
-import { usePaymentStore } from "../../hooks/usePaymentStore.ts"
+import { usePaymentStore } from "../../hooks/usePaymentStore"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { fetchPoints } from "../../apis/points.api.ts"
@@ -13,8 +13,9 @@ import PaymentPointSection from "./_fragments/PaymentPointSection.tsx"
 import PaymentMethodSection from "./_fragments/PaymentMethodSection.tsx"
 import PaymentSummarySection from "./_fragments/PaymentSummarySection.tsx"
 import PaymentAgreementSection from "./_fragments/PaymentAgreementSection.tsx"
-import { PaymentStatus } from "../../types/Payment.ts"
+import { PaymentStatus } from "../../types/Payment"
 import { useOverlay } from "../../contexts/ModalContext"
+import { formatPriceWithUnit } from "utils/format"
 
 interface OrderResponse {
   resultCode: string
@@ -633,7 +634,7 @@ const PaymentPage = () => {
             onClick={handlePayment}
             className="w-full"
           >
-            {finalAmount.toLocaleString()}원 결제하기
+            {formatPriceWithUnit(finalAmount)} 결제하기
           </Button>
         </FixedButtonContainer>
       </div>

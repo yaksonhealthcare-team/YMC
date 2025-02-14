@@ -22,6 +22,9 @@ import { AdditionalServiceCard } from "@components/AdditionalServiceCard"
 import { ReservationFormSection } from "./_fragments/ReservationFormSection"
 import { ReservationSummarySection } from "./_fragments/ReservationSummarySection"
 import { useErrorHandler } from "hooks/useErrorHandler"
+import { formatPrice, parsePrice } from "utils/format"
+import { formatDateForAPI } from "utils/date"
+import { toNumber } from "utils/number"
 
 interface FormDataType {
   item: undefined | string
@@ -140,8 +143,8 @@ const ReservationFormPage = () => {
   }, [selectedBranch, location.state])
 
   const totalPrice = data.additionalServices.reduce((sum, service) => {
-    const optionPrice = service.options?.[0]?.ss_price?.replace(/,/g, "")
-    return sum + (optionPrice ? Number(optionPrice) : 0)
+    const optionPrice = service.options?.[0]?.ss_price
+    return sum + (optionPrice ? parsePrice(optionPrice) : 0)
   }, 0)
 
   const renderAdditionalManagementSection = () => {
@@ -191,16 +194,10 @@ const ReservationFormPage = () => {
     try {
       if (!validateReservationData()) return
 
-      // 상담 예약 가능 횟수 체크
-      if (consultationCount >= 2) {
-        handleError(new Error("상담 예약 가능 횟수가 없습니다."))
-        return
-      }
-
       const response = await createReservation({
         r_gubun: "C",
         b_idx: data.branch!,
-        r_date: data.date!.format("YYYY-MM-DD"),
+        r_date: formatDateForAPI(data.date?.toDate() || null),
         r_stime: data.timeSlot!.time,
         r_memo: data.request,
       })
@@ -241,10 +238,10 @@ const ReservationFormPage = () => {
         r_gubun: "R",
         mp_idx: data.item,
         b_idx: data.branch!,
-        r_date: data.date!.format("YYYY-MM-DD"),
+        r_date: formatDateForAPI(data.date?.toDate() || null),
         r_stime: data.timeSlot!.time,
         add_services: data.additionalServices.map((service) =>
-          Number(service.s_idx),
+          toNumber(service.s_idx),
         ),
         r_memo: data.request,
       })
@@ -360,7 +357,7 @@ const ReservationFormPage = () => {
         >
           {data.item === "상담 예약"
             ? "예약하기"
-            : `${totalPrice.toLocaleString()}원 결제하기`}
+            : `${formatPrice(totalPrice)}원 결제하기`}
         </Button>
       </FixedButtonContainer>
     </div>
