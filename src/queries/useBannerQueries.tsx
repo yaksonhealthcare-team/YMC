@@ -17,12 +17,14 @@ export const useBanner = (
     ...options,
   })
 
+// TODO: API 구현 후 수정
 export const useBanners = (
   options?: Omit<UseQueryOptions<Banner[], Error>, "queryKey" | "queryFn">,
 ) => {
   return useQuery({
     queryKey: ["banners"],
-    queryFn: getBanners,
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
     ...options,
   })

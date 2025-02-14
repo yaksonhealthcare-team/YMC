@@ -63,14 +63,15 @@ export const useRequestPayment = () =>
 export const usePayment = (id: number) => {
   return useQuery({
     queryKey: ["payments", id],
-    queryFn: () => getPayment(id),
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }
 
 export const useCreatePayment = () => {
   return useMutation({
-    mutationFn: createPayment,
+    mutationFn: () => Promise.reject(new Error("Not implemented")),
     retry: false,
   })
 }
@@ -78,14 +79,15 @@ export const useCreatePayment = () => {
 export const usePaymentByReservation = (reservationId: number) => {
   return useQuery({
     queryKey: ["payments", "reservation", reservationId],
-    queryFn: () => getPaymentByReservation(reservationId),
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }
 
 export const useCancelPayment = () => {
   return useMutation({
-    mutationFn: cancelPayment,
+    mutationFn: () => Promise.reject(new Error("Not implemented")),
     retry: false,
   })
 }

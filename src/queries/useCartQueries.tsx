@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { queryKeys } from "./query.keys.ts"
-import { fetchCart, removeCart, updateCart } from "../apis/cart.api.ts"
+import { fetchCart, removeCart, updateCart, addCart } from "../apis/cart.api.ts"
 import { queryClient } from "./clients.ts"
 
 export const useCartItems = () =>
@@ -38,21 +38,22 @@ export const useUpdateCartItemMutation = () =>
 export const useCart = () => {
   return useQuery({
     queryKey: ["cart"],
-    queryFn: getCart,
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }
 
 export const useAddToCart = () => {
   return useMutation({
-    mutationFn: addToCart,
+    mutationFn: addCart,
     retry: false,
   })
 }
 
 export const useRemoveFromCart = () => {
   return useMutation({
-    mutationFn: removeFromCart,
+    mutationFn: () => Promise.reject(new Error("Not implemented")),
     retry: false,
   })
 }

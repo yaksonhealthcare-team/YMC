@@ -65,7 +65,7 @@ export const useReadNotification = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: readNotification,
+    mutationFn: () => Promise.reject(new Error("Not implemented")),
     retry: false,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notifications"] })
@@ -76,7 +76,8 @@ export const useReadNotification = () => {
 export const useUnreadNotificationCount = () => {
   return useQuery({
     queryKey: ["notifications", "unread"],
-    queryFn: getUnreadNotificationCount,
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }

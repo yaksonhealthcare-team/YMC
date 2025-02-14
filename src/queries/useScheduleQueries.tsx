@@ -51,7 +51,8 @@ export const useScheduleTimesQueries = (filter: ScheduleFilters) =>
 export const useSchedule = (id: number) => {
   return useQuery({
     queryKey: ["schedules", id],
-    queryFn: () => getSchedule(id),
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }
@@ -59,7 +60,8 @@ export const useSchedule = (id: number) => {
 export const useSchedules = () => {
   return useQuery({
     queryKey: ["schedules"],
-    queryFn: getSchedules,
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }

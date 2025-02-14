@@ -30,14 +30,21 @@ export const usePointsEarn = () =>
 export const usePointHistory = () => {
   return useInfiniteQuery({
     queryKey: ["points", "history"],
-    queryFn: getPointHistory,
+    queryFn: ({ pageParam = 1 }) =>
+      fetchPointHistories({ page: pageParam, sort: "D" }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      if (!lastPage.data?.length || lastPage.currentPage >= lastPage.totalPage)
+        return undefined
+      return lastPage.currentPage + 1
+    },
     retry: false,
   })
 }
 
 export const useUsePoint = () => {
   return useMutation({
-    mutationFn: usePoint,
+    mutationFn: earnPoints,
     retry: false,
   })
 }

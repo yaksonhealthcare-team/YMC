@@ -93,7 +93,8 @@ export const useReviewQuestions = (reviewId: string) => {
 export const useReview = (id: number) => {
   return useQuery({
     queryKey: ["reviews", id],
-    queryFn: () => getReview(id),
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }
@@ -101,14 +102,8 @@ export const useReview = (id: number) => {
 export const useMyReviews = () => {
   return useQuery({
     queryKey: ["reviews", "my"],
-    queryFn: getMyReviews,
-    retry: false,
-  })
-}
-
-export const useCreateReview = () => {
-  return useMutation({
-    mutationFn: createReview,
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }
@@ -116,7 +111,8 @@ export const useCreateReview = () => {
 export const useReviewByReservation = (reservationId: number) => {
   return useQuery({
     queryKey: ["reviews", "reservation", reservationId],
-    queryFn: () => getReviewByReservation(reservationId),
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }
@@ -124,7 +120,8 @@ export const useReviewByReservation = (reservationId: number) => {
 export const useReviewByTherapist = (therapistId: number) => {
   return useQuery({
     queryKey: ["reviews", "therapist", therapistId],
-    queryFn: () => getReviewByTherapist(therapistId),
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }
@@ -132,7 +129,8 @@ export const useReviewByTherapist = (therapistId: number) => {
 export const useReviewByBranch = (branchId: number) => {
   return useQuery({
     queryKey: ["reviews", "branch", branchId],
-    queryFn: () => getReviewByBranch(branchId),
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }

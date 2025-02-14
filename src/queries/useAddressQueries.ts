@@ -4,10 +4,6 @@ import {
   deleteAddressBookmark,
   getAddressBookmarks,
   searchAddress,
-  getAddresses,
-  createAddress,
-  deleteAddress,
-  getDefaultAddress,
 } from "../apis/address.api"
 import { addressKeys } from "./keys/address.keys"
 import { Location } from "../types/Location"
@@ -59,19 +55,22 @@ export const useAddressSearch = (keyword: string) => {
   })
 }
 
+// TODO: API 구현 후 수정
 export const useAddresses = () => {
   return useQuery({
     queryKey: ["addresses"],
-    queryFn: getAddresses,
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }
 
+// TODO: API 구현 후 수정
 export const useCreateAddress = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: createAddress,
+    mutationFn: () => Promise.reject(new Error("Not implemented")),
     retry: false,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["addresses"] })
@@ -79,11 +78,12 @@ export const useCreateAddress = () => {
   })
 }
 
+// TODO: API 구현 후 수정
 export const useDeleteAddress = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: deleteAddress,
+    mutationFn: () => Promise.reject(new Error("Not implemented")),
     retry: false,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["addresses"] })
@@ -91,10 +91,12 @@ export const useDeleteAddress = () => {
   })
 }
 
+// TODO: API 구현 후 수정
 export const useDefaultAddress = () => {
   return useQuery({
     queryKey: ["addresses", "default"],
-    queryFn: getDefaultAddress,
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }

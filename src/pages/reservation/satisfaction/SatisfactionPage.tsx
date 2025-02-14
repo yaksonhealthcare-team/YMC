@@ -42,13 +42,6 @@ const GRADE_TEXT = {
   H: "최고예요!",
 } as const
 
-const EVALUATION_ITEMS = [
-  { key: "upperBody" as const, label: "상체 관리는 어떠셨나요?" },
-  { key: "lowerBody" as const, label: "하체 관리는 어떠셨나요?" },
-  { key: "face" as const, label: "얼굴 관리는 어떠셨나요?" },
-  { key: "finish" as const, label: "마무리 관리는 어떠셨나요?" },
-]
-
 const SatisfactionPage = () => {
   const { id } = useParams<SatisfactionPageParams>()
   const location = useLocation()

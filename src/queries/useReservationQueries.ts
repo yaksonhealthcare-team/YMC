@@ -131,34 +131,15 @@ export const useCreateReservationMutation = () => {
 export const useReservation = (id: number) => {
   return useQuery({
     queryKey: ["reservations", id],
-    queryFn: () => getReservation(id),
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
-  })
-}
-
-export const useReservations = () => {
-  return useQuery({
-    queryKey: ["reservations"],
-    queryFn: getReservations,
-    retry: false,
-  })
-}
-
-export const useCreateReservation = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: createReservation,
-    retry: false,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reservations"] })
-    },
   })
 }
 
 export const useUpdateReservation = () => {
   return useMutation({
-    mutationFn: updateReservation,
+    mutationFn: () => Promise.reject(new Error("Not implemented")),
     retry: false,
   })
 }

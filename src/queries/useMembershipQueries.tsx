@@ -79,7 +79,8 @@ export const useAdditionalManagement = (membershipIdx?: string) => {
 export const useMembership = (id: number) => {
   return useQuery({
     queryKey: ["memberships", id],
-    queryFn: () => getMembership(id),
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }
@@ -87,7 +88,8 @@ export const useMembership = (id: number) => {
 export const useMembershipByUser = () => {
   return useQuery({
     queryKey: ["memberships", "user"],
-    queryFn: getMembershipByUser,
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }
@@ -95,7 +97,8 @@ export const useMembershipByUser = () => {
 export const useAvailableMemberships = () => {
   return useQuery({
     queryKey: ["memberships", "available"],
-    queryFn: getAvailableMemberships,
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }

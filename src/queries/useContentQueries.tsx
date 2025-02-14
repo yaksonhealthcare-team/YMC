@@ -35,7 +35,8 @@ export const useNotice = (code: string) => {
 export const useContent = (id: number) => {
   return useQuery({
     queryKey: ["contents", id],
-    queryFn: () => getContent(id),
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }
@@ -43,7 +44,8 @@ export const useContent = (id: number) => {
 export const useContents = () => {
   return useQuery({
     queryKey: ["contents"],
-    queryFn: getContents,
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }
@@ -51,7 +53,8 @@ export const useContents = () => {
 export const useContentsByCategory = (category: string) => {
   return useQuery({
     queryKey: ["contents", "category", category],
-    queryFn: () => getContentsByCategory(category),
+    queryFn: () => Promise.reject(new Error("Not implemented")),
+    enabled: false,
     retry: false,
   })
 }
