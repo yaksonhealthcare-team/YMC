@@ -6,7 +6,7 @@ import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import { RadioCard } from "@components/RadioCard"
 import { MembershipRadioCard } from "./_fragments/MembershipRadioCard"
 import { AdditionalManagement } from "types/Membership"
-import { Box, RadioGroup, useTheme } from "@mui/material"
+import { Box, RadioGroup, useTheme, Skeleton } from "@mui/material"
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
 import "swiper/css/pagination"
@@ -147,7 +147,84 @@ const ReservationFormPage = () => {
     return sum + (optionPrice ? Number(optionPrice) : 0)
   }, 0)
 
-  if (isMembershipsLoading || isAdditionalLoading) {
+  const renderAdditionalManagementSection = () => {
+    if (data.item === "상담 예약" || isAdditionalLoading) return null
+
+    if (!additionalManagements?.body?.length) return null
+
+    return (
+      <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
+        <p className="font-m text-14px text-gray-700 mb-4">추가관리 (선택)</p>
+        <div className="flex flex-col gap-3">
+          {additionalManagements.body.map((option) => {
+            const isChecked = data.additionalServices.some(
+              (service) => service.s_idx === option.s_idx,
+            )
+            return (
+              <div
+                key={option.s_idx}
+                className="p-5 bg-white rounded-xl border border-gray-100 flex flex-col gap-2"
+              >
+                <div className="flex justify-between items-center">
+                  <p className="text-[#212121] text-16px font-m leading-[23.68px]">
+                    {option.s_name}
+                  </p>
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <Checkbox
+                      checked={isChecked}
+                      onChange={(e) => {
+                        e.stopPropagation()
+                        handleAdditionalServiceChange(e.target.checked, {
+                          s_idx: option.s_idx,
+                          s_name: option.s_name,
+                          s_time: option.s_time,
+                          options: option.options,
+                        })
+                      }}
+                      sx={{
+                        width: 20,
+                        height: 20,
+                        padding: 0,
+                        backgroundColor: "white",
+                        "& .MuiSvgIcon-root": {
+                          width: 20,
+                          height: 20,
+                        },
+                        "&.Mui-checked": {
+                          color: "#F37165",
+                          backgroundColor: "white",
+                        },
+                        "&:not(.Mui-checked)": {
+                          color: "#DDDDDD",
+                          backgroundColor: "white",
+                        },
+                        "&:hover": {
+                          backgroundColor: "white",
+                        },
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    <ClockIcon className="w-3.5 h-3.5 text-gray-500" />
+                    <span className="text-gray-500 text-14px font-r leading-[20.72px]">
+                      {Number(option.s_time || 0)}분 소요
+                    </span>
+                  </div>
+                  <p className="text-[#212121] text-16px font-bold leading-[23.68px]">
+                    {option.options?.[0]?.ss_price || "0"}원
+                  </p>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </section>
+    )
+  }
+
+  if (isMembershipsLoading) {
     return <LoadingIndicator className="min-h-screen" />
   }
 
@@ -252,82 +329,7 @@ const ReservationFormPage = () => {
           새로 작성하기
         </Button>
       </section>
-      {!isAdditionalLoading &&
-        additionalManagements &&
-        additionalManagements.body.length > 0 &&
-        data.item !== "상담 예약" && (
-          <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
-            <p className="font-m text-14px text-gray-700 mb-4">
-              추가관리 (선택)
-            </p>
-            <div className="flex flex-col gap-3">
-              {additionalManagements.body.map((option) => {
-                const isChecked = data.additionalServices.some(
-                  (service) => service.s_idx === option.s_idx,
-                )
-                return (
-                  <div
-                    key={option.s_idx}
-                    className="p-5 bg-white rounded-xl border border-gray-100 flex flex-col gap-2"
-                  >
-                    <div className="flex justify-between items-center">
-                      <p className="text-[#212121] text-16px font-m leading-[23.68px]">
-                        {option.s_name}
-                      </p>
-                      <div onClick={(e) => e.stopPropagation()}>
-                        <Checkbox
-                          checked={isChecked}
-                          onChange={(e) => {
-                            e.stopPropagation()
-                            handleAdditionalServiceChange(e.target.checked, {
-                              s_idx: option.s_idx,
-                              s_name: option.s_name,
-                              s_time: option.s_time,
-                              options: option.options,
-                            })
-                          }}
-                          sx={{
-                            width: 20,
-                            height: 20,
-                            padding: 0,
-                            backgroundColor: "white",
-                            "& .MuiSvgIcon-root": {
-                              width: 20,
-                              height: 20,
-                            },
-                            "&.Mui-checked": {
-                              color: "#F37165",
-                              backgroundColor: "white",
-                            },
-                            "&:not(.Mui-checked)": {
-                              color: "#DDDDDD",
-                              backgroundColor: "white",
-                            },
-                            "&:hover": {
-                              backgroundColor: "white",
-                            },
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-2">
-                        <ClockIcon className="w-3.5 h-3.5 text-gray-500" />
-                        <span className="text-gray-500 text-14px font-r leading-[20.72px]">
-                          {Number(option.s_time || 0)}분 소요
-                        </span>
-                      </div>
-                      <p className="text-[#212121] text-16px font-bold leading-[23.68px]">
-                        {option.options?.[0]?.ss_price || "0"}원
-                      </p>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </section>
-        )}
-
+      {renderAdditionalManagementSection()}
       <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
         <div className="flex flex-col gap-6 [&_p:first-child]:text-16px [&_p:first-child]:font-sb">
           <CustomInputButton
