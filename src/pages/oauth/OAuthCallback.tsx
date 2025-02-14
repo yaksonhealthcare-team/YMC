@@ -1,10 +1,11 @@
+import LoadingIndicator from "@components/LoadingIndicator"
+import { AxiosError } from "axios"
 import { useEffect, useRef } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { useAuth } from "../../contexts/AuthContext"
-import { useOverlay } from "../../contexts/ModalContext"
-import { useLayout } from "../../contexts/LayoutContext"
 import { fetchUser, signinWithSocial } from "../../apis/auth.api"
-import LoadingIndicator from "@components/LoadingIndicator"
+import { useAuth } from "../../contexts/AuthContext"
+import { useLayout } from "../../contexts/LayoutContext"
+import { useOverlay } from "../../contexts/ModalContext"
 
 const OAuthCallback = () => {
   const { provider } = useParams()
@@ -65,6 +66,22 @@ const OAuthCallback = () => {
           navigate("/", { replace: true })
           return
         } catch (error) {
+          if (error instanceof AxiosError) {
+            if (error.response?.status === 401) {
+              const socialSignupInfo = {
+                provider: getProviderCode(provider),
+                id: parsedData.Header[0].id,
+                ...socialData,
+              }
+
+              sessionStorage.setItem(
+                "socialSignupInfo",
+                JSON.stringify(socialSignupInfo),
+              )
+              navigate("/signup/terms", { replace: true })
+              return
+            }
+          }
           throw error
         }
       } catch (error) {
