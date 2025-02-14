@@ -1,21 +1,17 @@
 import { Button } from "@components/Button.tsx"
+import { useOverlay } from "contexts/ModalContext.tsx"
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useNavigate, useLocation } from "react-router-dom"
-import { useOverlay } from "../../contexts/ModalContext"
-import { findEmailWithDecryptData } from "../../apis/decrypt-result.api"
 
 const FindEmail = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const location = useLocation()
-  const verifiedData = location.state?.verifiedData
   const { openAlert } = useOverlay()
   const [loginInfo, setLoginInfo] = useState<{
     thirdPartyType?: string
     email?: string
   } | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     setHeader({
@@ -25,48 +21,27 @@ const FindEmail = () => {
     })
 
     setNavigation({ display: false })
+  }, [navigate, setHeader, setNavigation])
 
-    // 본인인증 데이터가 없으면 계정찾기 페이지로 이동
-    if (!verifiedData) {
-      navigate("/find-account")
+  useEffect(() => {
+    const loginInfo = sessionStorage.getItem("loginInfo")
+    if (loginInfo) {
+      setLoginInfo(JSON.parse(loginInfo))
+      sessionStorage.removeItem("loginInfo")
       return
     }
 
-    // 본인인증 데이터로 이메일 찾기
-    const fetchEmail = async () => {
-      try {
-        const result = await findEmailWithDecryptData({
-          token_version_id: verifiedData.tokenVersionId,
-          enc_data: verifiedData.encData,
-          integrity_value: verifiedData.integrityValue,
-        })
-        setLoginInfo(result)
-      } catch (error) {
-        openAlert({
-          title: "오류",
-          description: "계정을 찾을 수 없습니다.",
-        })
-        navigate("/login")
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchEmail()
-  }, [verifiedData, navigate, openAlert])
+    openAlert({
+      title: "오류",
+      description: "계정을 찾을 수 없습니다.",
+      onClose: () => {
+        navigate("/login", { replace: true })
+      },
+    })
+  }, [])
 
   const navigateToLogin = () => {
-    navigate("/login")
-  }
-
-  if (isLoading) {
-    return (
-      <div className="px-[20px] mt-[28px]">
-        <p className="flex flex-col justify-center items-center font-[600] text-20px text-[#212121]">
-          계정을 찾고 있습니다...
-        </p>
-      </div>
-    )
+    navigate("/login", { replace: true })
   }
 
   return (

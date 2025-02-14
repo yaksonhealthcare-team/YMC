@@ -1,4 +1,8 @@
-import { DecryptRequest, fetchDecryptResult } from "@apis/decrypt-result.api"
+import {
+  DecryptRequest,
+  fetchDecryptResult,
+  findEmailWithDecryptData,
+} from "@apis/decrypt-result.api"
 import { AxiosError } from "axios"
 import { useOverlay } from "contexts/ModalContext"
 import { useEffect } from "react"
@@ -15,6 +19,24 @@ const FindAccountCallback = () => {
     const encData = queryParams.get("enc_data")
     const integrityValue = queryParams.get("integrity_value")
 
+    const fetchEmail = async (request: DecryptRequest) => {
+      try {
+        return findEmailWithDecryptData({
+          token_version_id: request.token_version_id,
+          enc_data: request.enc_data,
+          integrity_value: request.integrity_value,
+        })
+      } catch (error) {
+        openAlert({
+          title: "오류",
+          description: "계정을 찾을 수 없습니다.",
+          onClose: () => {
+            navigate("/find-account", { replace: true })
+          },
+        })
+      }
+    }
+
     const handleVerification = async () => {
       try {
         if (!tokenVersionId || !encData || !integrityValue) {
@@ -30,14 +52,12 @@ const FindAccountCallback = () => {
         const userData = response.body
 
         console.log(userData)
+
+        const loginInfo = await fetchEmail(request)
+
+        sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo))
         navigate(`/find-account/${tab}`, {
-          state: {
-            verifiedData: {
-              tokenVersionId: tokenVersionId,
-              encData: encData,
-              integrityValue: integrityValue,
-            },
-          },
+          replace: true,
         })
       } catch (error) {
         if (error instanceof AxiosError) {
@@ -46,7 +66,7 @@ const FindAccountCallback = () => {
             description:
               error.response?.data?.resultMessage || "본인인증에 실패했습니다.",
             onClose: () => {
-              navigate("/signup/terms", { replace: true })
+              navigate("/find-account", { replace: true })
             },
           })
           return
@@ -55,7 +75,7 @@ const FindAccountCallback = () => {
           title: "오류",
           description: "본인인증에 실패했습니다.",
           onClose: () => {
-            navigate("/signup/terms", { replace: true })
+            navigate("/find-account", { replace: true })
           },
         })
       }
