@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Button } from "@components/Button"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import {
@@ -22,7 +22,7 @@ import MembershipPlaceholderImage from "@assets/images/MembershipPlaceholderImag
 import CartIcon from "@components/icons/CartIcon.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
 import LoadingIndicator from "@components/LoadingIndicator"
-import { MembershipDetail } from "types/Membership.ts"
+import { MembershipDetail, MembershipOption } from "../../types/Membership"
 import { formatPrice, parsePrice } from "utils/format"
 import { toNumber } from "utils/number"
 
@@ -141,6 +141,24 @@ const MembershipDetailPage = () => {
   const { openBottomSheet } = useOverlay()
   const { clear } = useMembershipOptionsStore()
 
+  const sortedCourses = useMemo(() => {
+    return (
+      membership?.courses?.sort(
+        (a, b) => toNumber(a.prior) - toNumber(b.prior),
+      ) ?? []
+    )
+  }, [membership?.courses])
+
+  const [selectedOption, setSelectedOption] = useState<MembershipOption | null>(
+    null,
+  )
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
+
+  const handleOptionClick = (option: MembershipOption) => {
+    setSelectedOption(option)
+    setIsBottomSheetOpen(true)
+  }
+
   // 구매하기 버튼 클릭 시 바텀시트 열기
   const handlePurchaseClick = () => {
     if (!membership) return
@@ -190,11 +208,6 @@ const MembershipDetailPage = () => {
     parsePrice(membership.options[0].ss_price),
     parsePrice(membership.options[0].original_price),
   )
-
-  const sortedCourses =
-    membership?.courses?.sort(
-      (a, b) => toNumber(a.prior) - toNumber(b.prior),
-    ) || []
 
   return (
     <div className="pb-[94px]">

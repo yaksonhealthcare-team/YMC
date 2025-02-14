@@ -1,31 +1,53 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useLayout } from "contexts/LayoutContext"
 import { Button } from "@components/Button"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 import CartCard from "@components/CartCard.tsx"
-import { useCart } from "queries/useCartQueries"
+import {
+  useCartItems,
+  useDeleteCartItemsMutation,
+  useUpdateCartItemMutation,
+} from "queries/useCartQueries"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { usePaymentStore } from "../../hooks/usePaymentStore.ts"
-import { formatPrice, formatPriceWithUnit } from "utils/format"
-import { calculateDiscountRate } from "utils/number"
+import { formatPriceWithUnit } from "utils/format"
+
+interface CartOption {
+  originalPrice: number
+  price: number
+  items: Array<{ count: number; cartId: string }>
+  ss_idx: string
+  sessions: number
+}
+
+interface CartItem {
+  id: string
+  options: CartOption[]
+  branchId: string
+  brandCode: string
+  title: string
+  brand: string
+  branchType: string
+  duration: number
+}
 
 const CartPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
-  const { data: cartWithSummary, isLoading } = useCart()
+  const { data: cartWithSummary, isLoading } = useCartItems()
   const { mutate: removeCartItems } = useDeleteCartItemsMutation()
   const { mutate: updateCartItem } = useUpdateCartItemMutation()
   const { setItems: setPaymentItems, setBranch } = usePaymentStore()
 
-  const items = cartWithSummary?.items || []
+  const items = (cartWithSummary?.items || []) as CartItem[]
 
   // 상품 총 금액 계산 (할인 전)
   const calculateTotalOriginalPrice = () => {
-    return items.reduce((total, item) => {
+    return items.reduce((total: number, item: CartItem) => {
       return (
         total +
-        item.options.reduce((optionTotal, option) => {
+        item.options.reduce((optionTotal: number, option: CartOption) => {
           return optionTotal + option.originalPrice * option.items[0].count
         }, 0)
       )
@@ -34,10 +56,10 @@ const CartPage = () => {
 
   // 할인 금액 계산
   const calculateDiscountAmount = () => {
-    return items.reduce((total, item) => {
+    return items.reduce((total: number, item: CartItem) => {
       return (
         total +
-        item.options.reduce((optionTotal, option) => {
+        item.options.reduce((optionTotal: number, option: CartOption) => {
           return (
             optionTotal +
             (option.originalPrice - option.price) * option.items[0].count
@@ -49,10 +71,10 @@ const CartPage = () => {
 
   // 최종 결제 금액 계산
   const calculateFinalPrice = () => {
-    return items.reduce((total, item) => {
+    return items.reduce((total: number, item: CartItem) => {
       return (
         total +
-        item.options.reduce((optionTotal, option) => {
+        item.options.reduce((optionTotal: number, option: CartOption) => {
           return optionTotal + option.price * option.items[0].count
         }, 0)
       )
@@ -92,14 +114,14 @@ const CartPage = () => {
   }
 
   const getTotalItemCount = () =>
-    items.reduce((prev, acc) => prev + acc.options.length, 0)
+    items.reduce((prev: number, acc: CartItem) => prev + acc.options.length, 0)
 
   const handlePayment = () => {
     if (!items.length) return
 
     // 장바구니 아이템을 PaymentStore 형식으로 변환
-    const paymentItems = items.flatMap((item) =>
-      item.options.map((option) => {
+    const paymentItems = items.flatMap((item: CartItem) =>
+      item.options.map((option: CartOption) => {
         const b_type: "지정지점" | "전지점" =
           item.branchType === "지점 회원권" ? "지정지점" : "전지점"
         return {

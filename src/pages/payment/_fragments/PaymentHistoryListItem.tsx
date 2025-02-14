@@ -1,12 +1,12 @@
-import { PaymentHistory } from "../../../types/Payment.ts"
+import { PaymentHistory } from "../../../types/Payment"
+import { formatDate } from "../../../utils/date"
+import { formatPriceWithUnit, formatPoint } from "../../../utils/format"
 import { format } from "date-fns"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { Button } from "@components/Button.tsx"
 import { useOverlay } from "../../../contexts/ModalContext.tsx"
 import { usePointsEarn } from "../../../queries/usePointQueries.tsx"
 import PaymentHistoryItemCard from "./PaymentItemList.tsx"
-import { formatPoint, formatPriceWithUnit } from "utils/format"
-import { formatDate } from "utils/date"
 
 const PointCard = ({ point }: { point: number }) => (
   <div className={"bg-red-50 rounded-xl p-4"}>

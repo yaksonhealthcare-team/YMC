@@ -19,6 +19,11 @@ import { useNavigate } from "react-router-dom"
 import { formatPrice, parsePrice } from "utils/format"
 import { toNumber } from "utils/number"
 
+interface SelectedOption {
+  option: MembershipOption
+  count: number
+}
+
 interface Props {
   serviceType?: string
   options: MembershipOption[]
@@ -80,9 +85,9 @@ export const OptionsBottomSheetContent = ({
   }
 
   const handleCountChange = (option: MembershipOption, count: number) => {
-    setSelectedOptions((prev) => {
+    setSelectedOptions((prev: SelectedOption[]) => {
       const newOptions = prev.filter(
-        (item) => item.option.ss_idx !== option.ss_idx,
+        (item: SelectedOption) => item.option.ss_idx !== option.ss_idx,
       )
       if (count > 0) {
         newOptions.push({ option, count })
