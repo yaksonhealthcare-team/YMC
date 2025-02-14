@@ -55,7 +55,11 @@ const SatisfactionPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const createReviewMutation = useCreateReviewMutation()
-  const { data: reviewQuestions, isLoading } = useReviewQuestions(id || "")
+  const {
+    data: reviewQuestions,
+    isLoading,
+    isError,
+  } = useReviewQuestions(id || "")
   const reservationInfo = location.state as ReservationInfo
   const [form, setForm] = useState<SatisfactionForm>({
     content: "",
@@ -144,6 +148,17 @@ const SatisfactionPage = () => {
 
   if (isLoading) {
     return <LoadingIndicator className="min-h-screen" />
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen gap-4">
+        <p className="text-gray-500">만족도 질문을 불러오는데 실패했습니다.</p>
+        <Button variantType="primary" sizeType="m" onClick={() => navigate(-1)}>
+          이전으로 돌아가기
+        </Button>
+      </div>
+    )
   }
 
   return (
