@@ -13,9 +13,10 @@ export const BrandDetailPage = () => {
   useEffect(() => {
     setHeader({
       display: true,
-      title: brand ? brand.name : "Brand",
+      title: brand && brand.name ? brand.name : "Brand",
       left: "back",
-      backgroundColor: "bg-system-bg",
+      backgroundColor: "bg-white",
+      onClickBack: () => navigate(-1),
     })
     setNavigation({ display: false })
   }, [brand])
@@ -53,7 +54,7 @@ export const BrandDetailPage = () => {
         </div>
       )}
 
-      <div className="w-full px-[20px] pb-[30px] pt-[12px] bg-white">
+      <div className="sticky bottom-0 border-t border-[#F8F8F8] w-full px-[20px] pb-[30px] pt-[12px] bg-white">
         <Button
           className="w-full !rounded-[12px]"
           onClick={() => navigate("/reservation/form")}
