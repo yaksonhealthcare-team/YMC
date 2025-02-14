@@ -6,6 +6,7 @@ import {
   fetchReviews,
   fetchReservationReviewInfo,
   fetchReviewSections,
+  fetchReviewQuestions,
 } from "../apis/review.api"
 import { useNavigate } from "react-router-dom"
 import { reviews } from "./keys/reviews.keys"
@@ -70,5 +71,14 @@ export const useReviewSections = () => {
   return useQuery({
     queryKey: reviews.sections,
     queryFn: fetchReviewSections,
+  })
+}
+
+export const useReviewQuestions = (reviewId: string) => {
+  return useQuery({
+    queryKey: ["reviewQuestions", reviewId],
+    queryFn: () => fetchReviewQuestions(reviewId),
+    enabled: !!reviewId,
+    retry: false,
   })
 }

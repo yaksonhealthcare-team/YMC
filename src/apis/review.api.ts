@@ -101,3 +101,23 @@ export const fetchReviewSections = async (): Promise<ReviewSection[]> => {
     await axiosClient.get<HTTPResponse<ReviewSection[]>>("/reviews/sections")
   return data.body
 }
+
+export interface ReviewQuestion {
+  rs_idx: string
+  sc_name: string
+}
+
+export const fetchReviewQuestions = async (
+  reviewId: string,
+): Promise<ReviewQuestion[]> => {
+  const { data } = await axiosClient.get<HTTPResponse<ReviewQuestion[]>>(
+    "/reviews/reviews",
+    {
+      params: {
+        r_idx: reviewId,
+      },
+    },
+  )
+
+  return data.body
+}

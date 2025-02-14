@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react"
 import { useLayout } from "contexts/LayoutContext"
 import { useNavigate, useParams, useLocation } from "react-router-dom"
-import { TextArea } from "@components/TextArea"
-import { Button } from "@components/Button"
+import { TextArea } from "../../../components/TextArea"
+import { Button } from "../../../components/Button"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import PlusIcon from "@assets/icons/PlusIcon.svg?react"
 import clsx from "clsx"
-import { useCreateReviewMutation } from "../../../queries/useReviewQueries"
+import {
+  useCreateReviewMutation,
+  useReviewQuestions,
+} from "../../../queries/useReviewQueries"
 import { formatDate } from "../../../utils/date"
+import LoadingIndicator from "../../../components/LoadingIndicator"
 
 type SatisfactionPageParams = {
   id: string
@@ -27,10 +31,7 @@ interface ReservationInfo {
 }
 
 interface SatisfactionForm {
-  upperBody: Grade | null
-  lowerBody: Grade | null
-  face: Grade | null
-  finish: Grade | null
+  [key: string]: Grade | string | File[] | null
   content: string
   images: File[]
 }
@@ -54,12 +55,9 @@ const SatisfactionPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const createReviewMutation = useCreateReviewMutation()
+  const { data: reviewQuestions, isLoading } = useReviewQuestions(id || "")
   const reservationInfo = location.state as ReservationInfo
   const [form, setForm] = useState<SatisfactionForm>({
-    upperBody: null,
-    lowerBody: null,
-    face: null,
-    finish: null,
     content: "",
     images: [],
   })
@@ -79,10 +77,7 @@ const SatisfactionPage = () => {
     setNavigation({ display: false })
   }, [setHeader, setNavigation, navigate, reservationInfo])
 
-  const handleGradeSelect = (
-    key: keyof Omit<SatisfactionForm, "content" | "images">,
-    grade: Grade,
-  ) => {
+  const handleGradeSelect = (key: string, grade: Grade) => {
     setForm((prev) => ({
       ...prev,
       [key]: grade,
@@ -116,20 +111,19 @@ const SatisfactionPage = () => {
   }
 
   const isFormValid = () => {
-    return (
-      form.upperBody !== null &&
-      form.lowerBody !== null &&
-      form.face !== null &&
-      form.finish !== null
+    if (!reviewQuestions) return false
+    return reviewQuestions.every(
+      (question) =>
+        form[question.rs_idx] !== undefined && form[question.rs_idx] !== null,
     )
   }
 
   const handleSubmit = () => {
-    if (!id || !isFormValid() || !reservationInfo) return
+    if (!id || !isFormValid() || !reviewQuestions) return
 
-    const review = reservationInfo.review_items.map((item) => ({
-      rs_idx: item.rs_idx,
-      rs_grade: form[item.rs_type.toLowerCase() as keyof typeof form] as Grade,
+    const review = reviewQuestions.map((question) => ({
+      rs_idx: question.rs_idx,
+      rs_grade: form[question.rs_idx] as Grade,
     }))
 
     createReviewMutation.mutate({
@@ -146,6 +140,10 @@ const SatisfactionPage = () => {
         <p className="text-gray-500">예약 정보를 찾을 수 없습니다.</p>
       </div>
     )
+  }
+
+  if (isLoading) {
+    return <LoadingIndicator className="min-h-screen" />
   }
 
   return (
@@ -173,17 +171,21 @@ const SatisfactionPage = () => {
 
         {/* 만족도 평가 */}
         <div className="space-y-8 pt-2">
-          {EVALUATION_ITEMS.map(({ key, label }) => (
-            <div key={key} className="space-y-4">
-              <h3 className="text-16px font-sb text-gray-900">{label}</h3>
+          {reviewQuestions?.map((question) => (
+            <div key={question.rs_idx} className="space-y-4">
+              <h3 className="text-16px font-sb text-gray-900">
+                {question.sc_name}
+              </h3>
               <div className="flex gap-2">
                 {(["L", "M", "H"] as const).map((grade) => (
                   <button
                     key={grade}
-                    onClick={() => handleGradeSelect(key, grade)}
+                    onClick={() =>
+                      handleGradeSelect(question.rs_idx, grade as Grade)
+                    }
                     className={clsx(
                       "flex-1 h-10 rounded-lg text-14px font-m",
-                      form[key] === grade
+                      form[question.rs_idx] === grade
                         ? "bg-primary text-white font-m"
                         : "border border-gray-100 text-gray-900",
                     )}
@@ -252,15 +254,14 @@ const SatisfactionPage = () => {
       </div>
 
       {/* 하단 버튼 */}
-      <div className="fixed bottom-0 left-0 right-0 p-5 bg-white border-t border-gray-50 safe-area-bottom">
+      <div className="fixed bottom-0 left-0 right-0 p-5 bg-white border-t border-gray-100">
         <Button
-          disabled={!isFormValid() || createReviewMutation.isPending}
-          className="w-full"
           variantType="primary"
           sizeType="l"
+          disabled={!isFormValid()}
           onClick={handleSubmit}
         >
-          {createReviewMutation.isPending ? "등록 중..." : "등록하기"}
+          작성 완료
         </Button>
       </div>
     </div>
