@@ -14,12 +14,16 @@ import {
 } from "../../queries/useMembershipQueries"
 import { MembershipCategory, MembershipItem } from "../../types/Membership"
 import { MembershipCard } from "./_fragments/MembershipCard"
+import { BRAND_CODE } from "constants/brand"
+import { useBrands } from "../../queries/useBrandQueries"
 
 const MembershipPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const [searchParams, setSearchParams] = useSearchParams()
-  const brandCode = searchParams.get("brand_code") || "001" // 약손명가
+  const { data: brands } = useBrands()
+  const brandCode =
+    searchParams.get("brand_code") || (brands?.[0]?.code ?? BRAND_CODE.YAKSON)
   const [selectedCategory, setSelectedCategory] = useState<string>()
   const [cartCount, setCartCount] = useState(0)
 
@@ -83,7 +87,8 @@ const MembershipPage = () => {
     isCategoriesLoading ||
     isMembershipsLoading ||
     !categoriesData?.body ||
-    !membershipsData?.pages[0].body
+    !membershipsData?.pages[0].body ||
+    !brands
   ) {
     return <LoadingIndicator className="min-h-screen bg-system-bg" />
   }
@@ -149,9 +154,23 @@ const MembershipPage = () => {
                 }}
                 aria-label="브랜드 선택"
               >
-                <Tab label="약손명가" value="001" />
-                <Tab label="달리아스파" value="002" />
-                <Tab label="여리한다이어트" value="003" />
+                {[
+                  ...new Map(
+                    brands.map((brand) => [brand.code, brand]),
+                  ).values(),
+                ].map((brand) => (
+                  <Tab
+                    key={brand.code}
+                    label={brand.name}
+                    value={brand.code}
+                    sx={{
+                      marginRight: "24px !important",
+                      ...(brand.code === brands[brands.length - 1]?.code && {
+                        marginRight: "40px !important",
+                      }),
+                    }}
+                  />
+                ))}
               </Tabs>
             </div>
           </div>

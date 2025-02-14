@@ -1,5 +1,4 @@
 import { FormikProps } from "formik"
-import { TextField } from "@mui/material"
 import {
   OptionValue,
   Question,
@@ -7,12 +6,12 @@ import {
   QuestionnaireFormValues,
   QuestionOption,
 } from "types/Questionnaire"
-import { COLORS } from "@constants/ColorConstants"
-import { BirthDateInput } from "./BirthDateInput"
+import BirthDateInput from "./BirthDateInput"
 import { useEffect } from "react"
 import clsx from "clsx"
 import FilledCheckIcon from "@components/icons/FilledCheckIcon"
 import { TextArea } from "@components/TextArea"
+import CustomTextField from "@components/CustomTextField"
 
 interface QuestionItemProps {
   question: Question
@@ -35,7 +34,6 @@ export const QuestionItem = ({
   const checkValidation = () => {
     const currentValue = formik.values[fieldName]
 
-    // 생년월일 입력 검증 (cssq_idx가 1이거나 contents_type이 4인 경우)
     if (question.cssq_idx === "1" || question.contents_type === "4") {
       if (!currentValue || typeof currentValue !== "string") return false
 
@@ -43,30 +41,24 @@ export const QuestionItem = ({
       const month = currentValue.substring(4, 6)
       const day = currentValue.substring(6, 8)
 
-      // 기본 형식 검증
       if (!year || !month || !day) return false
 
-      // 년도 검증
       const currentYear = new Date().getFullYear()
       const yearNum = parseInt(year)
       if (yearNum < 1900 || yearNum > currentYear) return false
 
-      // 월 검증
       const monthNum = parseInt(month)
       if (monthNum < 1 || monthNum > 12) return false
 
-      // 일 검증
       const dayNum = parseInt(day)
       if (dayNum < 1 || dayNum > 31) return false
 
-      // 날짜 유효성 검증
       const date = new Date(yearNum, monthNum - 1, dayNum)
       if (date.getMonth() !== monthNum - 1) return false
 
       return true
     }
 
-    // 숫자 입력 검증
     if (question.contents_type === "3") {
       if (!currentValue) return false
       const numValue = Number(currentValue)
@@ -74,7 +66,6 @@ export const QuestionItem = ({
       return true
     }
 
-    // option_type이 "2"인 경우 주관식 답변 유효성 검사
     const hasSelectedSubjectiveOption = question.options.some(
       (option) =>
         option.option_type === "2" &&
@@ -108,7 +99,6 @@ export const QuestionItem = ({
 
       case "T":
         if (question.contents_type === "3") {
-          // 숫자 입력인 경우는 이미 위에서 검증됨
           return true
         }
         return (
@@ -118,11 +108,9 @@ export const QuestionItem = ({
         )
 
       case "C": {
-        // 객관식 + 주관식
         if (!Array.isArray(currentValue) || currentValue.length !== 1)
           return false
 
-        // 선택된 옵션이 주관식(option_type: "2")인 경우 텍스트 입력 확인
         const selectedOption = question.options.find(
           (opt) => opt.csso_idx === currentValue[0].csso_idx,
         )
@@ -140,7 +128,6 @@ export const QuestionItem = ({
   }
 
   const handleTextChange = (value: string) => {
-    // 100자를 초과하는 입력 방지
     if (value.length <= 100) {
       formik.setFieldValue(`${fieldName}_text`, value)
     }
@@ -174,7 +161,6 @@ export const QuestionItem = ({
     const inputType = question.answer_type === "M" ? "checkbox" : "radio"
 
     if (hasOptionImage) {
-      // 이미지가 있는 경우 2열 혹은 3열 정사각형으로 보여주기
       return (
         <>
           <label
@@ -221,7 +207,6 @@ export const QuestionItem = ({
         </>
       )
     } else {
-      // 이미지가 없는 경우 일반 FormControlLabel
       return (
         <>
           <label
@@ -275,53 +260,41 @@ export const QuestionItem = ({
     onValidationChange(isValid)
   }, [formik.values, fieldName])
 
+  const renderBirthDateInput = () => {
+    const value = formik.values[fieldName]
+    return (
+      <BirthDateInput
+        value={typeof value === "string" ? value : ""}
+        onChange={(inputValue: string) =>
+          formik.setFieldValue(fieldName, inputValue)
+        }
+        onValidationChange={onValidationChange}
+      />
+    )
+  }
+
   const renderQuestion = () => {
     const hasImage = hasOptionImage(question.options)
 
-    // 생년월일 입력 (cssq_idx가 1이거나 contents_type이 4인 경우)
     if (question.cssq_idx === "1" || question.contents_type === "4") {
-      return (
-        <BirthDateInput
-          value={(formik.values[fieldName] as string) || ""}
-          onChange={(value) => formik.setFieldValue(fieldName, value)}
-        />
-      )
+      return renderBirthDateInput()
     }
 
-    // 숫자 입력
     if (question.contents_type === "3") {
+      const value = formik.values[fieldName]
       return (
-        <TextField
-          name={fieldName}
-          value={formik.values[fieldName] || ""}
-          onChange={(e) => {
+        <CustomTextField
+          value={typeof value === "string" ? value : ""}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             const value = e.target.value
             formik.setFieldValue(fieldName, value === "" ? "" : value)
           }}
           placeholder="숫자를 입력해 주세요"
           type="number"
-          inputProps={{ min: 0 }}
-          fullWidth
-          variant="outlined"
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              borderRadius: "12px",
-              "& fieldset": {
-                borderColor: COLORS.BORDER,
-              },
-              "&:hover fieldset": {
-                borderColor: COLORS.BORDER,
-              },
-              "&.Mui-focused fieldset": {
-                borderColor: COLORS.PRIMARY,
-              },
-            },
-          }}
         />
       )
     }
 
-    // 객관식 문항
     if (question.options.length > 0) {
       return (
         <div
@@ -345,46 +318,27 @@ export const QuestionItem = ({
       )
     }
 
-    // 일반 텍스트 입력
+    const value = formik.values[fieldName]
     return (
-      <TextField
-        name={fieldName}
-        value={(formik.values[fieldName] as string) || ""}
-        onChange={formik.handleChange}
+      <TextArea
+        value={typeof value === "string" ? value : ""}
+        onChange={(e) => handleTextChange(e.target.value)}
         placeholder="입력해 주세요"
-        fullWidth
-        variant="outlined"
-        multiline={question.answer_type === "T"}
-        rows={question.answer_type === "T" ? 4 : 1}
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            borderRadius: "12px",
-            "& fieldset": {
-              borderColor: COLORS.BORDER,
-            },
-            "&:hover fieldset": {
-              borderColor: COLORS.BORDER,
-            },
-            "&.Mui-focused fieldset": {
-              borderColor: COLORS.PRIMARY,
-            },
-          },
-        }}
+        maxLength={500}
       />
     )
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      <p className="text-primary text-xl font-bold">
-        {question.question_text}
-      </p>
-      {question.answer_type === "M" && (
-        <p className="text-gray-400 text-sm font-medium">
-          * 복수 선택 가능
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
+        <p className="text-gray-700 text-18px font-sb">
+          {question.question_text}
         </p>
-      )}
-      <div className="mt-[28px]">{renderQuestion()}</div>
+      </div>
+      {renderQuestion()}
     </div>
   )
 }
+
+export default QuestionItem

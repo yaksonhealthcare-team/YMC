@@ -1,34 +1,32 @@
 import { Button } from "@components/Button.tsx"
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import CustomTextField from "@components/CustomTextField.tsx"
-import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useSignup } from "../../contexts/SignupContext.tsx"
 import PostcodeModal from "@components/modal/PostcodeModal.tsx"
-import { Address } from "react-daum-postcode/lib/loadPostcode"
 import Profile from "@assets/icons/Profile.svg?react"
 import SettingIcon from "@assets/icons/SettingIcon.svg?react"
 import { SwiperBrandCard } from "@components/SwiperBrandCard.tsx"
-import { signinWithSocial, signup } from "../../apis/auth.api.ts"
-import { loginWithEmail } from "../../apis/auth.api.ts"
-import { fetchUser } from "../../apis/auth.api.ts"
-import { useAuth } from "../../contexts/AuthContext.tsx"
-import { useOverlay } from "../../contexts/ModalContext"
-import { signupWithSocial } from "../../apis/auth.api.ts"
-import { UserSignup } from "../../types/User.ts"
-import { AxiosError } from "axios"
+import { useProfileSetupHandlers } from "../../hooks/useProfileSetupHandlers"
+import { useProfileSetupValidation } from "../../hooks/useProfileSetupValidation"
+import { useProfileSetupSubmit } from "../../hooks/useProfileSetupSubmit"
 
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
-  const navigate = useNavigate()
-  const { signupData, setSignupData, cleanup } = useSignup()
+  const { signupData, setSignupData } = useSignup()
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false)
-
-  const { login } = useAuth()
-  const { showToast } = useOverlay()
   const isSocialSignup = !!sessionStorage.getItem("socialSignupInfo")
 
-  const [nameError, setNameError] = useState("")
+  const {
+    handleImageUpload,
+    handleImageDelete,
+    handleCompletePostcode,
+    toggleBrandSelection,
+    handleNameChange,
+  } = useProfileSetupHandlers()
+
+  const { nameError, validateForm } = useProfileSetupValidation()
+  const { handleSubmit } = useProfileSetupSubmit()
 
   useEffect(() => {
     setHeader({
@@ -37,7 +35,7 @@ export const ProfileSetup = () => {
       backgroundColor: "white",
     })
     setNavigation({ display: false })
-  }, [])
+  }, [setHeader, setNavigation])
 
   useEffect(() => {
     if (isSocialSignup) {
@@ -54,193 +52,13 @@ export const ProfileSetup = () => {
         gender: socialInfo.gender === "M" ? "male" : "female",
       }))
     }
-  }, [])
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0]
-      setSignupData((prev) => ({
-        ...prev,
-        profileImage: file,
-      }))
-    }
-  }
-
-  const handleCompletePostcode = (address: Address) => {
-    setSignupData({
-      ...signupData,
-      postCode: address.zonecode,
-      address1: address.address,
-    })
-    setIsPostcodeOpen(false)
-  }
-
-  const toggleBrandSelection = (code: string) => {
-    setSignupData((prev: UserSignup) => {
-      const brandCodes = prev.brandCodes || []
-      const isSelected = brandCodes.includes(code)
-
-      const updatedBrands = isSelected
-        ? brandCodes.filter((brandCode) => brandCode !== code)
-        : [...brandCodes, code]
-
-      return { ...prev, brandCodes: updatedBrands }
-    })
-  }
-
-  const validateName = (name: string) => {
-    if (/[0-9!@#$%^&*(),.?":{}|<>]/.test(name)) {
-      setNameError("이름에는 특수문자와 숫자를 사용할 수 없습니다")
-      return false
-    }
-    setNameError("")
-    return true
-  }
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newName = e.target.value
-    setSignupData({ ...signupData, name: newName })
-    validateName(newName)
-  }
-
-  const handleImageDelete = () => {
-    setSignupData((prev) => ({
-      ...prev,
-      profileImage: null,
-    }))
-  }
+  }, [isSocialSignup, setSignupData])
 
   const handleSignupSubmit = async () => {
-    if (!validateName(signupData.name)) {
-      showToast("이름을 올바르게 입력해주세요")
+    if (!validateForm(signupData.name)) {
       return
     }
-
-    try {
-      const socialInfo = JSON.parse(
-        sessionStorage.getItem("socialSignupInfo") || "{}",
-      )
-      const isSocialSignup = !!socialInfo.provider
-
-      if (isSocialSignup) {
-        try {
-          const response = await signupWithSocial({
-            provider: socialInfo.provider,
-            userInfo: {
-              ...socialInfo,
-              id: socialInfo.id,
-              name: signupData.name,
-              email: signupData.email,
-              mobileno: signupData.mobileNumber,
-              birthdate: signupData.birthDate,
-              gender: signupData.gender === "male" ? "M" : "F",
-              post: signupData.postCode,
-              addr1: signupData.address1,
-              addr2: signupData.address2 || "",
-              marketing_yn: signupData.marketingYn ? "Y" : "N",
-              brand_code: signupData.brandCodes || [],
-            },
-          })
-
-          if (
-            !response ||
-            !response.body ||
-            !Array.isArray(response.body) ||
-            response.body.length === 0
-          ) {
-            throw new Error(
-              response?.resultMessage ||
-                "회원가입 응답에 유효한 body가 없습니다",
-            )
-          }
-
-          if (!response.body[0]?.accessToken) {
-            throw new Error(
-              response?.resultMessage ||
-                "회원가입 응답에 accessToken이 없습니다",
-            )
-          }
-
-          const { accessToken } = await signinWithSocial({
-            provider: socialInfo.provider,
-            socialAccessToken: response.body[0].accessToken,
-            socialId: socialInfo.socialId,
-          })
-
-          const user = await fetchUser(accessToken)
-          login({ user, token: accessToken })
-          cleanup()
-          navigate("/signup/complete")
-          return
-        } catch (error: unknown) {
-          if (error instanceof AxiosError) {
-            showToast(
-              error.response?.data?.resultMessage || "회원가입에 실패했습니다",
-            )
-          } else if (error instanceof Error) {
-            showToast(error.message || "회원가입에 실패했습니다")
-          } else {
-            showToast("회원가입에 실패했습니다")
-          }
-        }
-      } else {
-        // 일반 회원가입
-        try {
-          const signupFormData = {
-            userInfo: {
-              name: signupData.name,
-              email: signupData.email,
-              password: signupData.password!,
-              mobileno: signupData.mobileNumber,
-              birthdate: signupData.birthDate,
-              gender: signupData.gender === "male" ? "M" : "F",
-              addr1: signupData.address1,
-              addr2: signupData.address2 || "",
-              marketing_yn: signupData.marketingYn,
-              post: signupData.postCode,
-              nationalinfo: "0",
-              brand_code: signupData.brandCodes || [],
-            },
-            authData: {
-              di: signupData.di,
-            },
-            optional: {
-              recom: signupData.referralCode,
-            },
-          }
-
-          await signup(signupFormData)
-
-          const { accessToken } = await loginWithEmail({
-            username: signupData.email,
-            password: signupData.password!,
-          })
-
-          const user = await fetchUser(accessToken)
-          login({ user, token: accessToken })
-          cleanup()
-          navigate("/signup/complete")
-        } catch (error: unknown) {
-          if (error instanceof AxiosError) {
-            const errorMessage = error.response?.data?.resultMessage
-            showToast(errorMessage || "회원가입에 실패했습니다")
-          } else if (error instanceof Error) {
-            showToast(error.message || "회원가입에 실패했습니다")
-          } else {
-            showToast("회원가입에 실패했습니다")
-          }
-        }
-      }
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        const errorMessage = error.response?.data?.resultMessage
-        showToast(errorMessage || "회원가입에 실패했습니다")
-      } else if (error instanceof Error) {
-        showToast(error.message || "회원가입에 실패했습니다")
-      } else {
-        showToast("회원가입에 실패했습니다")
-      }
-    }
+    await handleSubmit()
   }
 
   return (

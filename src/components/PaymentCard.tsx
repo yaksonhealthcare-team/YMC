@@ -2,6 +2,7 @@ import { Number } from "@components/Number"
 import ClockIcon from "@assets/icons/ClockIcon.svg?react"
 import XCircleIcon from "@components/icons/XCircleIcon.tsx"
 import { CartItemOption } from "../types/Cart.ts"
+import { formatPriceWithUnit } from "../utils/format"
 
 interface PaymentCardProps {
   brand: string
@@ -25,33 +26,21 @@ const PaymentCard = ({
   onDeleteOption,
 }: PaymentCardProps) => {
   return (
-    <div className="p-5 bg-white rounded-[20px] border border-[#DDDDDD]">
-      {/* 상단 정보 */}
-      <div className="flex flex-col gap-3">
-        <div className="flex justify-between items-start">
-          <div className="flex flex-col gap-2">
-            <div className="px-1.5 py-0.5 bg-[#ECECEC] rounded">
-              <span className="text-[#757575] text-12px font-m">
-                {branchType}
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center gap-1">
-            <ClockIcon className="w-3.5 h-3.5 text-primary" />
-            <span className="text-[#757575] text-14px font-r">
-              {duration}분 소요
-            </span>
-          </div>
-        </div>
-
-        {/* 브랜드명과 상품명 */}
-        <div className="flex flex-col gap-1">
-          <p className="text-[#212121] text-14px font-r">{brand}</p>
-          <p className="text-[#212121] text-16px font-sb">{title}</p>
+    <div className="p-5 bg-white rounded-[20px] border border-gray-100">
+      <div className="flex flex-col gap-1.5">
+        <p className="text-gray-700 text-16px font-sb">{title}</p>
+        <div className="flex items-center gap-1.5">
+          <ClockIcon className="w-3.5 h-3.5 text-gray-500" />
+          <span className="text-gray-500 text-12px font-r">
+            {duration}분 소요
+          </span>
+          <div className="w-[1px] h-3 bg-gray-200 mx-1.5" />
+          <span className="text-gray-500 text-12px font-r">{brand}</span>
+          <div className="w-[1px] h-3 bg-gray-200 mx-1.5" />
+          <span className="text-gray-500 text-12px font-r">{branchType}</span>
         </div>
       </div>
 
-      {/* 옵션 목록 */}
       <div className="mt-5 flex flex-col gap-4">
         {options
           .sort((lhs, rhs) => rhs.sessions - lhs.sessions)
@@ -96,15 +85,12 @@ const PaymentCard = ({
                   <div className="flex items-center gap-2">
                     <div className="flex items-baseline gap-0.5">
                       <span className="text-[#212121] text-16px font-sb">
-                        {(option.price * count).toLocaleString()}
-                      </span>
-                      <span className="text-[#212121] text-14px font-r">
-                        원
+                        {formatPriceWithUnit(option.price * count)}
                       </span>
                     </div>
                     {option.originalPrice !== option.price && (
                       <span className="text-[#BDBDBD] text-14px font-r line-through">
-                        {(option.originalPrice * count).toLocaleString()}원
+                        {formatPriceWithUnit(option.originalPrice * count)}
                       </span>
                     )}
                   </div>

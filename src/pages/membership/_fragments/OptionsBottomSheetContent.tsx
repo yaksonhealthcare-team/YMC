@@ -150,9 +150,9 @@ export const OptionsBottomSheetContent = ({
         brand,
         branchType: serviceType === "앱전용 회원권" ? "전지점" : "지정 지점",
         duration,
-        price: parseInt(option.ss_price.replace(/,/g, "")),
+        price: parsePrice(option.ss_price),
         originalPrice: option.original_price
-          ? parseInt(option.original_price.replace(/,/g, ""))
+          ? parsePrice(option.original_price)
           : undefined,
         sessions: parseInt(option.ss_count),
       }))

@@ -1,122 +1,107 @@
 import { useEffect, useState } from "react"
-import CustomTextField from "@components/CustomTextField"
+import CustomTextField from "../../../components/CustomTextField"
+import { isInRange } from "../../../utils/number"
 
 interface BirthDateInputProps {
   value: string
   onChange: (value: string) => void
+  onValidationChange: (isValid: boolean) => void
 }
 
-export const BirthDateInput = ({ value, onChange }: BirthDateInputProps) => {
+const BirthDateInput = ({
+  value,
+  onChange,
+  onValidationChange,
+}: BirthDateInputProps) => {
   const [year, setYear] = useState("")
   const [month, setMonth] = useState("")
   const [day, setDay] = useState("")
-  const [age, setAge] = useState<number | null>(null)
+
+  const calculateAge = (birthDate: Date): number => {
+    const today = new Date()
+    let age = today.getFullYear() - birthDate.getFullYear()
+    const monthDiff = today.getMonth() - birthDate.getMonth()
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--
+    }
+
+    return age
+  }
+
+  const validateDate = (y: string, m: string, d: string): boolean => {
+    if (!y || !m || !d) return false
+
+    const yearNum = parseInt(y)
+    const monthNum = parseInt(m)
+    const dayNum = parseInt(d)
+
+    if (!isInRange(yearNum, 1900, new Date().getFullYear())) return false
+    if (!isInRange(monthNum, 1, 12)) return false
+
+    const date = new Date(yearNum, monthNum - 1, dayNum)
+    if (date.getMonth() !== monthNum - 1) return false
+
+    const age = calculateAge(date)
+    return age >= 14
+  }
 
   useEffect(() => {
-    if (value) {
-      setYear(value.substring(0, 4))
-      setMonth(value.substring(4, 6))
-      setDay(value.substring(6, 8))
-      calculateAge(value)
-    }
+    const [y, m, d] = value.split("-")
+    setYear(y || "")
+    setMonth(m || "")
+    setDay(d || "")
   }, [value])
 
-  const calculateAge = (birthDate: string) => {
-    if (birthDate.length === 8) {
-      const year = parseInt(birthDate.substring(0, 4))
-      const month = parseInt(birthDate.substring(4, 6))
-      const day = parseInt(birthDate.substring(6, 8))
+  useEffect(() => {
+    const isValid = validateDate(year, month, day)
+    onValidationChange(isValid)
 
-      const today = new Date()
-      const birth = new Date(year, month - 1, day)
-
-      let age = today.getFullYear() - birth.getFullYear()
-      const monthDiff = today.getMonth() - birth.getMonth()
-
-      if (
-        monthDiff < 0 ||
-        (monthDiff === 0 && today.getDate() < birth.getDate())
-      ) {
-        age--
-      }
-
-      setAge(age)
-    } else {
-      setAge(null)
+    if (isValid) {
+      onChange(`${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`)
     }
-  }
-
-  const handleChange = (type: "year" | "month" | "day", newValue: string) => {
-    let sanitizedValue = newValue.replace(/\D/g, "")
-
-    switch (type) {
-      case "year":
-        sanitizedValue = sanitizedValue.slice(0, 4)
-        setYear(sanitizedValue)
-        break
-      case "month":
-        sanitizedValue = sanitizedValue.slice(0, 2)
-        if (parseInt(sanitizedValue) > 12) sanitizedValue = "12"
-        setMonth(sanitizedValue)
-        break
-      case "day":
-        sanitizedValue = sanitizedValue.slice(0, 2)
-        if (parseInt(sanitizedValue) > 31) sanitizedValue = "31"
-        setDay(sanitizedValue)
-        break
-    }
-
-    // 변경된 필드의 값만 업데이트하여 조합
-    const updatedValue =
-      type === "year"
-        ? sanitizedValue + month + day
-        : type === "month"
-          ? year + sanitizedValue + day
-          : year + month + sanitizedValue
-
-    // 모든 필드가 채워져 있을 때만 onChange 호출
-    if (updatedValue.length === 8) {
-      onChange(updatedValue)
-      calculateAge(updatedValue)
-    }
-  }
+  }, [year, month, day, onChange, onValidationChange])
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex gap-2">
-        <div className="grow">
-          <CustomTextField
-            value={year}
-            onChange={(e) => handleChange("year", e.target.value)}
-            placeholder="YYYY"
-            state="default"
-            type="tel"
-          />
-        </div>
-        <div className="grow">
-          <CustomTextField
-            value={month}
-            onChange={(e) => handleChange("month", e.target.value)}
-            placeholder="MM"
-            state="default"
-            type="tel"
-          />
-        </div>
-        <div className="grow">
-          <CustomTextField
-            value={day}
-            onChange={(e) => handleChange("day", e.target.value)}
-            placeholder="DD"
-            state="default"
-            type="tel"
-          />
-        </div>
-      </div>
-      {age !== null && (
-        <div className="text-right text-gray-900 text-14px font-r">
-          만 {age}세
-        </div>
-      )}
+    <div className="flex gap-3">
+      <CustomTextField
+        placeholder="YYYY"
+        value={year}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          const val = e.target.value.replace(/\D/g, "").slice(0, 4)
+          setYear(val)
+        }}
+        className="flex-1"
+        type="tel"
+        state="default"
+      />
+      <CustomTextField
+        placeholder="MM"
+        value={month}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          const val = e.target.value.replace(/\D/g, "").slice(0, 2)
+          setMonth(val)
+        }}
+        className="flex-1"
+        type="tel"
+        state="default"
+      />
+      <CustomTextField
+        placeholder="DD"
+        value={day}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          const val = e.target.value.replace(/\D/g, "").slice(0, 2)
+          setDay(val)
+        }}
+        className="flex-1"
+        type="tel"
+        state="default"
+      />
     </div>
   )
 }
+
+export default BirthDateInput

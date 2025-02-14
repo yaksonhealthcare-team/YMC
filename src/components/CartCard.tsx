@@ -2,6 +2,7 @@ import { Number } from "@components/Number"
 import ClockIcon from "@assets/icons/ClockIcon.svg?react"
 import XCircleIcon from "@components/icons/XCircleIcon.tsx"
 import { CartItemOption } from "../types/Cart.ts"
+import { formatPriceWithUnit } from "../utils/format"
 
 interface CartCardProps {
   brand: string
@@ -25,22 +26,21 @@ const CartCard = ({
   onDeleteOption,
 }: CartCardProps) => {
   return (
-    <div className="mb-4 p-5 bg-white rounded-[20px] border border-gray-200">
-      <div className="flex justify-between items-center mb-3">
-        <div className="px-1.5 py-0.5 bg-gray-100 rounded inline-flex">
-          <span className="text-gray-500 text-12px font-m">{branchType}</span>
+    <div className="p-5 bg-white rounded-[20px] border border-gray-100">
+      <div className="flex justify-between items-start">
+        <div className="flex flex-col gap-1.5">
+          <p className="text-gray-700 text-16px font-sb">{title}</p>
+          <div className="flex items-center gap-1.5">
+            <ClockIcon className="w-3.5 h-3.5 text-gray-500" />
+            <span className="text-gray-500 text-12px font-r">
+              {duration}분 소요
+            </span>
+            <div className="w-[1px] h-3 bg-gray-200 mx-1.5" />
+            <span className="text-gray-500 text-12px font-r">{brand}</span>
+            <div className="w-[1px] h-3 bg-gray-200 mx-1.5" />
+            <span className="text-gray-500 text-12px font-r">{branchType}</span>
+          </div>
         </div>
-        <div className="flex items-center gap-1 mt-2">
-          <ClockIcon className="w-3.5 h-3.5 text-primary" />
-          <span className="text-gray-500 text-14px font-r">
-            {duration}분 소요
-          </span>
-        </div>
-      </div>
-
-      <div className="mb-5">
-        <p className="text-gray-700 text-14px font-r">{brand}</p>
-        <p className="text-gray-700 text-16px font-sb mt-1">{title}</p>
       </div>
 
       {options
@@ -48,22 +48,23 @@ const CartCard = ({
         .map((option, idx) => {
           const count = option.items.reduce((prev, acc) => prev + acc.count, 0)
           return (
-            <div key={idx} className="mb-4 last:mb-0">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-gray-700 text-16px font-m">
-                  {option.sessions}회
-                </span>
-                <button
-                  onClick={() =>
-                    onDeleteOption?.(
-                      option.items.flatMap((item) => item.cartId),
-                    )
-                  }
-                >
-                  <XCircleIcon className={"w-4"} />
-                </button>
-              </div>
-              <div className="flex w-full justify-between items-center mb-4">
+            <div key={idx}>
+              <div className="mt-4">
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-gray-700 text-16px font-m">
+                    {option.sessions}회
+                  </span>
+                  <button
+                    onClick={() =>
+                      onDeleteOption?.(
+                        option.items.flatMap((item) => item.cartId),
+                      )
+                    }
+                  >
+                    <XCircleIcon className="w-5 h-5 text-gray-400" />
+                  </button>
+                </div>
+
                 <div className="flex w-full items-center justify-between gap-4">
                   <Number
                     count={count}
@@ -84,15 +85,12 @@ const CartCard = ({
                   <div className={"flex items-center gap-4"}>
                     <div>
                       <span className="text-gray-700 text-16px font-sb">
-                        {(option.price * count).toLocaleString()}
-                      </span>
-                      <span className="text-gray-700 text-14px font-r ml-1">
-                        원
+                        {formatPriceWithUnit(option.price * count)}
                       </span>
                     </div>
                     {option.originalPrice !== option.price && (
                       <span className="text-gray-300 text-14px font-r line-through">
-                        {(option.originalPrice * count).toLocaleString()}원
+                        {formatPriceWithUnit(option.originalPrice * count)}
                       </span>
                     )}
                   </div>

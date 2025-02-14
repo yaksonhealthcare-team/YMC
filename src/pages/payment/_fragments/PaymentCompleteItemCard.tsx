@@ -1,4 +1,5 @@
 import { PaymentItem } from "../../../types/Payment"
+import { formatPriceWithUnit } from "../../../utils/format"
 
 interface PaymentItemCardProps {
   item: PaymentItem
@@ -15,7 +16,7 @@ const PaymentItemCard = ({ item }: PaymentItemCardProps) => (
             {item.sessions}회
           </span>
           <span className="text-gray-900 text-14px font-b">
-            {(item.price * item.amount).toLocaleString()}원
+            {formatPriceWithUnit(item.price * item.amount)}
           </span>
         </div>
       </div>

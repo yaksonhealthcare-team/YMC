@@ -218,20 +218,24 @@ const EditProfile = () => {
           </LabeledForm>
           <LabeledForm label={"성별"}>
             <RadioGroup value={gender} onChange={handleChangeGender}>
-              <div className={"flex gap-2 items-center"}>
+              <div className={"flex gap-2"}>
                 <RadioCard
                   value={"female"}
                   checked={gender === "female"}
-                  className="!h-[52px] !p-4 !rounded-[12px]"
+                  className="flex-1 !min-h-[52px] !py-4 !px-4 !rounded-[12px]"
                 >
-                  <p className="text-[16px] font-semibold">{"여자"}</p>
+                  <p className="text-[16px] font-semibold leading-[20px]">
+                    {"여자"}
+                  </p>
                 </RadioCard>
                 <RadioCard
                   value={"male"}
                   checked={gender === "male"}
-                  className="!h-[52px] !p-4 !rounded-[12px]"
+                  className="flex-1 !min-h-[52px] !py-4 !px-4 !rounded-[12px]"
                 >
-                  <p className="text-[16px] font-semibold">{"남자"}</p>
+                  <p className="text-[16px] font-semibold leading-[20px]">
+                    {"남자"}
+                  </p>
                 </RadioCard>
               </div>
             </RadioGroup>

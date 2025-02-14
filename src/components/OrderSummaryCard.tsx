@@ -1,4 +1,5 @@
 import { ShopIcon } from "@components/icons/ShopIcon.tsx"
+import { formatPriceWithUnit } from "../utils/format"
 
 interface CartOption {
   sessions: number
@@ -35,7 +36,7 @@ const OrderSummaryCard = ({
           {options[0].sessions}회
         </span>
         <span className="text-gray-700 text-14px font-b">
-          {options[0].price.toLocaleString()}원
+          {formatPriceWithUnit(options[0].price)}
         </span>
       </div>
 

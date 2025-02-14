@@ -14,7 +14,7 @@ import ClockIcon from "@assets/icons/ClockIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
 import NoteIcon from "@assets/icons/NoteIcon.svg?react"
 import { useMembershipDetail } from "queries/useMembershipQueries.tsx"
-import calculateDiscountRate from "utils/calculateDiscountRate.ts"
+import { calculateDiscountRate } from "../../utils/number"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/swiper-bundle.css"
@@ -23,10 +23,15 @@ import CartIcon from "@components/icons/CartIcon.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { MembershipDetail } from "../../types/Membership"
-import { formatPrice } from "utils/format"
+import { formatPrice, parsePrice } from "../../utils/format"
+import { toNumber } from "../../utils/number"
 
 const MembershipInfo = ({ membership }: { membership: MembershipDetail }) => {
   const firstOption = membership.options?.[0]
+
+  const price = firstOption ? parsePrice(firstOption.ss_price) : 0
+  const originalPrice = firstOption ? parsePrice(firstOption.original_price) : 0
+  const discountRate = calculateDiscountRate(originalPrice, price)
 
   return (
     <div className="flex flex-col px-5 py-6 gap-4">
@@ -41,13 +46,9 @@ const MembershipInfo = ({ membership }: { membership: MembershipDetail }) => {
         </div>
         {firstOption && (
           <div className="flex items-baseline gap-2">
-            {firstOption.original_price && (
+            {discountRate > 0 && (
               <span className="text-primary font-b text-18px">
-                {calculateDiscountRate(
-                  Number(firstOption.ss_price.replace(/,/g, "")),
-                  Number(firstOption.original_price.replace(/,/g, "")),
-                )}
-                %
+                {discountRate}%
               </span>
             )}
             <div className="flex items-baseline gap-1">
@@ -56,10 +57,15 @@ const MembershipInfo = ({ membership }: { membership: MembershipDetail }) => {
               </span>
               <span className="text-gray-900 font-r text-12px">부터~</span>
             </div>
-            {firstOption.original_price && (
-              <span className="text-gray-400 font-r text-14px line-through translate-y-[0.5px]">
-                {formatPrice(firstOption.original_price)}원
-              </span>
+            {originalPrice > 0 && (
+              <div className="flex items-center gap-2">
+                <p className="text-14px font-m text-gray-500 line-through">
+                  {formatPrice(originalPrice)}원
+                </p>
+                <p className="text-14px font-sb text-primary">
+                  {discountRate > 0 && `${discountRate}%`}
+                </p>
+              </div>
             )}
           </div>
         )}
@@ -79,8 +85,9 @@ const MembershipDetailContent = ({
 }) => {
   const sortedCourses = useMemo(
     () =>
-      membership?.courses?.sort((a, b) => Number(a.prior) - Number(b.prior)) ||
-      [],
+      membership?.courses?.sort(
+        (a, b) => toNumber(a.prior) - toNumber(b.prior),
+      ) || [],
     [membership?.courses],
   )
 

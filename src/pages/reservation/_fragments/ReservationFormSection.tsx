@@ -6,6 +6,7 @@ import CustomTextField from "@components/CustomTextField"
 import { Dayjs } from "dayjs"
 import { TimeSlot } from "types/Schedule"
 import { Branch } from "types/Branch"
+import { formatDate } from "utils/date"
 
 interface ReservationFormSectionProps {
   data: {
@@ -44,7 +45,7 @@ export const ReservationFormSection = ({
           label="예약 일시"
           value={
             data.date && data.timeSlot
-              ? `${data.date.format("YYYY.MM.DD")} ${data.timeSlot.time}`
+              ? `${formatDate(data.date.toDate(), "yyyy.MM.dd")} ${data.timeSlot.time}`
               : ""
           }
           placeholder="예약 날짜를 선택해주세요."

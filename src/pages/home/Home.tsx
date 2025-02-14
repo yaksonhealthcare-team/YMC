@@ -28,6 +28,7 @@ import LoadingIndicator from "@components/LoadingIndicator"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import { getStatusFromString } from "../../utils/membership"
 import { useUnreadNotificationsCount } from "../../queries/useNotificationQueries"
+import { formatDate } from "../../utils/date"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -301,12 +302,8 @@ const EventSection = () => {
   const { data: events } = useEvents()
   const navigate = useNavigate()
 
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr)
-    const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, "0")
-    const day = String(date.getDate()).padStart(2, "0")
-    return `${year}.${month}.${day}`
+  const formatDateForAPI = (date: Date) => {
+    return formatDate(date, "yyyy-MM-dd")
   }
 
   return (
@@ -342,7 +339,8 @@ const EventSection = () => {
                     {event.title}
                   </span>
                   <span className="font-r text-12px text-gray-600">
-                    {formatDate(event.sdate)} ~ {formatDate(event.edate)}
+                    {formatDateForAPI(new Date(event.sdate))} ~{" "}
+                    {formatDateForAPI(new Date(event.edate))}
                   </span>
                 </div>
               </div>

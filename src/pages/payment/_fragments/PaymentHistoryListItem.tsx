@@ -1,16 +1,17 @@
 import { PaymentHistory } from "../../../types/Payment"
-import { format } from "date-fns"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { usePointsEarn } from "../../../queries/usePointQueries.tsx"
 import PaymentHistoryItemCard from "./PaymentItemList.tsx"
 import { Button } from "@components/Button"
 import { useOverlay } from "../../../contexts/ModalContext"
+import { formatDate } from "../../../utils/date"
+import { formatPoint } from "../../../utils/format"
 
 const PointCard = ({ point }: { point: number }) => (
   <div className={"bg-red-50 rounded-xl p-4"}>
     <p
       className={"text-14px font-m text-primary"}
-    >{`+${point.toLocaleString()}P 적립되었습니다.`}</p>
+    >{`+${formatPoint(point)} 적립되었습니다.`}</p>
   </div>
 )
 
@@ -29,7 +30,7 @@ const ReceivePointBottomSheet = ({
         </span>
         <p
           className={"text-20px font-b text-primary"}
-        >{`+${point.toLocaleString()}`}</p>
+        >{`+${formatPoint(point)}`}</p>
       </div>
       <p className={"mt-4"}>{"포인트가 적립되었습니다."}</p>
       <div className={"border-t border-gray-50 pt-3 px-5 mt-10 w-full"}>
@@ -56,7 +57,9 @@ const PaymentHistoryListItem = ({ payment }: { payment: PaymentHistory }) => {
     <div className={"flex flex-col gap-4"}>
       <div className={"flex justify-between items-center"}>
         <div className={"flex gap-2 items-center"}>
-          <p className={"font-sb"}>{format(payment.paidAt, "yyyy.MM.dd")}</p>
+          <p className={"font-sb"}>
+            {formatDate(payment.paidAt, "yyyy.MM.dd")}
+          </p>
           <span
             className={
               "font-m text-12px text-gray-500 bg-gray-50 rounded py-0.5 px-1.5"

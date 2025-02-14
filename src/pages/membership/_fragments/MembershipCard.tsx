@@ -1,7 +1,8 @@
 import { MembershipItem } from "../../../types/Membership"
 import ClockIcon from "@assets/icons/ClockIcon.svg?react"
 import { Tag } from "@components/Tag"
-import { formatPrice } from "../../../utils/format"
+import { formatPrice, parsePrice } from "../../../utils/format"
+import calculateDiscountRate from "../../../utils/calculateDiscountRate"
 
 interface MembershipCardProps {
   membership: MembershipItem
@@ -15,11 +16,9 @@ export const MembershipCard = ({
   const firstOption = membership.options?.[0]
   const hasDiscount = firstOption?.original_price && firstOption?.ss_price
   const discountRate = hasDiscount
-    ? Math.floor(
-        ((Number(firstOption.original_price.replace(/,/g, "")) -
-          Number(firstOption.ss_price.replace(/,/g, ""))) /
-          Number(firstOption.original_price.replace(/,/g, ""))) *
-          100,
+    ? calculateDiscountRate(
+        parsePrice(firstOption.ss_price),
+        parsePrice(firstOption.original_price),
       )
     : 0
 

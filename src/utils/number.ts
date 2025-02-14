@@ -42,3 +42,14 @@ export const calculatePercent = (value: number, total: number): number => {
   if (total === 0) return 0
   return Math.round((value / total) * 100)
 }
+
+/**
+ * 할인율 계산 (반올림)
+ */
+export const calculateDiscountRate = (
+  originalPrice: number,
+  discountedPrice: number,
+): number => {
+  if (originalPrice === 0) return 0
+  return Math.round(((originalPrice - discountedPrice) / originalPrice) * 100)
+}

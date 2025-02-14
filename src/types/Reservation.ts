@@ -1,3 +1,7 @@
+import { AdditionalManagement } from "./Membership"
+import { TimeSlot } from "./TimeSlot"
+import { Dayjs } from "dayjs"
+
 export type ReservationStatusCode = "000" | "001" | "002" | "003"
 
 export enum ReservationStatus {
@@ -81,3 +85,12 @@ export const reservationFilters: FilterItem[] = [
     title: "예약취소",
   },
 ]
+
+export interface FormDataType {
+  branch: string
+  item: string | null
+  date: Dayjs | null
+  timeSlot: TimeSlot | null
+  request: string
+  additionalServices: AdditionalManagement[]
+}

@@ -144,9 +144,9 @@ export interface PaymentCompleteState {
 
 export enum PaymentStatus {
   PENDING = "PENDING",
-  SUCCESS = "SUCCESS",
+  COMPLETED = "COMPLETED",
   FAILED = "FAILED",
-  CANCELED = "CANCELED",
+  CANCELLED = "CANCELLED",
 }
 
 export interface PaymentResult {
@@ -277,4 +277,76 @@ export interface PaymentRequest {
     bank_code: string
     account_name: string
   }
+}
+
+export interface OrderResponse {
+  resultCode: string
+  resultMessage: string
+  orderer: {
+    csm_idx: string
+    name: string
+    hp: string
+    email: string
+  }
+  orderSheet: {
+    orderid: string
+    items: Array<{
+      membership: {
+        s_idx: string
+        s_name: string
+        s_time: string
+      }
+      branch: {
+        b_idx: string
+        b_name: string
+      }
+      option: {
+        ss_idx: string
+        ss_count: string
+      }
+      origin_price: string
+      price: string
+      amount: number
+    }>
+  }
+  orderSummary: {
+    total_origin_price: number
+    total_price: number
+    total_count: number
+  }
+  pg_info: {
+    P_MID: string
+    P_OID: string
+    P_AMT: number
+    P_GOODS: string
+    P_UNAME: string
+    P_NEXT_URL: string
+    P_NOTI_URL: string
+    P_HPP_METHOD: string
+    P_RESERVED: string
+    P_TIMESTAMP: string
+    P_VBANK_DT?: string
+    P_VBANK_TM?: string
+  }
+}
+
+export interface BasePaymentParams {
+  P_INI_PAYMENT: string
+  P_MID: string
+  P_OID: string
+  P_AMT: string
+  P_GOODS: string
+  P_UNAME: string
+  P_NEXT_URL: string
+  P_NOTI_URL: string
+  P_NOTI: string
+  P_CHARSET: string
+  P_HPP_METHOD: string
+  P_TIMESTAMP: string
+  P_RESERVED?: string
+  P_CARD_OPTION?: string
+  P_VBANK_DT?: string
+  P_VBANK_TM?: string
+  P_MOBILE?: string
+  P_APP_BASE?: string
 }

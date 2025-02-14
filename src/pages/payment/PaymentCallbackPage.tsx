@@ -151,7 +151,7 @@ export default function PaymentCallbackPage() {
 
       // 결제 성공 처리
       console.log("✅ 결제 성공")
-      setPaymentStatus(PaymentStatus.SUCCESS)
+      setPaymentStatus(PaymentStatus.COMPLETED)
 
       // 결제 성공 시 포인트 정보 갱신
       queryClient.invalidateQueries({ queryKey: ["points"] })
