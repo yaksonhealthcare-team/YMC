@@ -1,4 +1,5 @@
 import { AdditionalManagement } from "types/Membership"
+import { formatPriceWithUnit } from "utils/format"
 
 interface ReservationSummarySectionProps {
   additionalServices: AdditionalManagement[]
@@ -19,7 +20,7 @@ export const ReservationSummarySection = ({
               {service.s_name}
             </p>
             <p className="text-base font-medium">
-              {service.options?.[0]?.ss_price || "0"}원
+              {formatPriceWithUnit(service.options?.[0]?.ss_price)}
             </p>
           </div>
         ))}
@@ -28,7 +29,7 @@ export const ReservationSummarySection = ({
       <div className="flex justify-between items-center">
         <p className="text-gray-700 text-base font-sb">총 결제금액</p>
         <p className="text-primary text-xl font-bold">
-          {totalPrice.toLocaleString()}원
+          {formatPriceWithUnit(totalPrice)}
         </p>
       </div>
     </section>

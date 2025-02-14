@@ -15,6 +15,8 @@ import PaymentSummarySection from "./_fragments/PaymentSummarySection.tsx"
 import PaymentAgreementSection from "./_fragments/PaymentAgreementSection.tsx"
 import { PaymentStatus } from "../../types/Payment.ts"
 import { useOverlay } from "../../contexts/ModalContext"
+import { formatPrice, formatPriceWithUnit } from "utils/format"
+import { toNumber } from "utils/number"
 
 interface OrderResponse {
   resultCode: string
@@ -633,7 +635,7 @@ const PaymentPage = () => {
             onClick={handlePayment}
             className="w-full"
           >
-            {finalAmount.toLocaleString()}원 결제하기
+            {formatPriceWithUnit(finalAmount)} 결제하기
           </Button>
         </FixedButtonContainer>
       </div>

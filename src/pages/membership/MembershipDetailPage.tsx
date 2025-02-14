@@ -1,7 +1,12 @@
 import { useEffect, useMemo } from "react"
 import { Button } from "@components/Button"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useNavigate, useParams, useLocation, useSearchParams } from "react-router-dom"
+import {
+  useNavigate,
+  useParams,
+  useLocation,
+  useSearchParams,
+} from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
 import OptionsBottomSheetContent from "./_fragments/OptionsBottomSheetContent.tsx"
@@ -18,6 +23,8 @@ import CartIcon from "@components/icons/CartIcon.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { MembershipDetail } from "types/Membership.ts"
+import { formatPrice, parsePrice } from "utils/format"
+import { toNumber } from "utils/number"
 
 const MembershipInfo = ({ membership }: { membership: MembershipDetail }) => {
   return (
@@ -46,13 +53,13 @@ const MembershipInfo = ({ membership }: { membership: MembershipDetail }) => {
             )}
             <div className="flex items-baseline gap-1">
               <span className="text-gray-900 font-b text-18px">
-                {membership.options[0].ss_price}원
+                {formatPrice(membership.options[0].ss_price)}원
               </span>
               <span className="text-gray-900 font-r text-12px">부터~</span>
             </div>
             {membership.options[0].original_price && (
               <span className="text-gray-400 font-r text-14px line-through translate-y-[0.5px]">
-                {membership.options[0].original_price}원
+                {formatPrice(membership.options[0].original_price)}원
               </span>
             )}
           </div>
@@ -178,6 +185,16 @@ const MembershipDetailPage = () => {
   }, [])
 
   if (!membership) return <LoadingIndicator className="min-h-screen" />
+
+  const discountRate = calculateDiscountRate(
+    parsePrice(membership.options[0].ss_price),
+    parsePrice(membership.options[0].original_price),
+  )
+
+  const sortedCourses =
+    membership?.courses?.sort(
+      (a, b) => toNumber(a.prior) - toNumber(b.prior),
+    ) || []
 
   return (
     <div className="pb-[94px]">

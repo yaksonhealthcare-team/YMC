@@ -1,21 +1,19 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useLayout } from "../../contexts/LayoutContext"
+import { useLayout } from "contexts/LayoutContext"
 import { Button } from "@components/Button"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 import CartCard from "@components/CartCard.tsx"
-import {
-  useCartItems,
-  useDeleteCartItemsMutation,
-  useUpdateCartItemMutation,
-} from "../../queries/useCartQueries.tsx"
-import LoadingIndicator from "@components/LoadingIndicator.tsx"
+import { useCart } from "queries/useCartQueries"
+import LoadingIndicator from "@components/LoadingIndicator"
 import { usePaymentStore } from "../../hooks/usePaymentStore.ts"
+import { formatPrice, formatPriceWithUnit } from "utils/format"
+import { calculateDiscountRate } from "utils/number"
 
 const CartPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
-  const { data: cartWithSummary, isLoading } = useCartItems()
+  const { data: cartWithSummary, isLoading } = useCart()
   const { mutate: removeCartItems } = useDeleteCartItemsMutation()
   const { mutate: updateCartItem } = useUpdateCartItemMutation()
   const { setItems: setPaymentItems, setBranch } = usePaymentStore()
@@ -199,27 +197,26 @@ const CartPage = () => {
             <div className="flex justify-between">
               <span className="text-gray-500 text-14px font-m">상품 금액</span>
               <span className="text-gray-700 text-14px font-sb">
-                {totalOriginalPrice.toLocaleString()}원
+                {formatPriceWithUnit(totalOriginalPrice)}
               </span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-500 text-14px font-m">
-                상품할인금액
-              </span>
-              <span className="text-success text-14px font-sb">
-                {discountAmount > 0
-                  ? `-${discountAmount.toLocaleString()}`
-                  : "0"}
-                원
-              </span>
-            </div>
+            {discountAmount > 0 && (
+              <div className="flex justify-between">
+                <span className="text-gray-500 text-14px font-m">
+                  상품할인금액
+                </span>
+                <span className="text-success text-14px font-sb">
+                  -{formatPriceWithUnit(discountAmount)}
+                </span>
+              </div>
+            )}
             <div className="w-full h-[1px] bg-gray-100 my-4" />
             <div className="flex justify-between items-center">
               <span className="text-gray-700 text-16px font-m">
                 결제예정금액
               </span>
               <span className="text-gray-700 text-20px font-b">
-                {finalPrice.toLocaleString()}원
+                {formatPriceWithUnit(finalPrice)}
               </span>
             </div>
           </div>

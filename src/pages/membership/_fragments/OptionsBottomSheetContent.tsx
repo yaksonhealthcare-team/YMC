@@ -16,6 +16,8 @@ import { useOverlay } from "../../../contexts/ModalContext"
 import { MembershipBranchSelectModal } from "./MembershipBranchSelectModal.tsx"
 import { Branch } from "types/Branch.ts"
 import { useNavigate } from "react-router-dom"
+import { formatPrice, parsePrice } from "utils/format"
+import { toNumber } from "utils/number"
 
 interface Props {
   serviceType?: string
@@ -77,23 +79,21 @@ export const OptionsBottomSheetContent = ({
     setSelectedOptions(newSelectedOptions)
   }
 
-  const handleCountChange = (optionId: string, newCount: number) => {
-    if (newCount < 1) {
-      return
-    }
-
-    const newSelectedOptions = selectedOptions.map((selectedOption) =>
-      selectedOption.option.ss_idx === optionId
-        ? { ...selectedOption, count: newCount }
-        : selectedOption,
-    )
-    setSelectedOptions(newSelectedOptions)
+  const handleCountChange = (option: MembershipOption, count: number) => {
+    setSelectedOptions((prev) => {
+      const newOptions = prev.filter(
+        (item) => item.option.ss_idx !== option.ss_idx,
+      )
+      if (count > 0) {
+        newOptions.push({ option, count })
+      }
+      return newOptions
+    })
   }
 
   const calculateTotalPrice = () => {
     return selectedOptions.reduce(
-      (total, { option, count }) =>
-        total + parseInt(option.ss_price.replace(/,/g, "")) * count,
+      (total, { option, count }) => total + parsePrice(option.ss_price) * count,
       0,
     )
   }
@@ -299,25 +299,31 @@ export const OptionsBottomSheetContent = ({
                   />
                 </div>
                 <div className="flex justify-between items-center">
-                  <Number
-                    count={count}
-                    onClickMinus={() =>
-                      handleCountChange(option.ss_idx, count - 1)
-                    }
-                    onClickPlus={() =>
-                      handleCountChange(option.ss_idx, count + 1)
-                    }
-                  />
+                  <div className="flex items-center gap-2">
+                    <button
+                      className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center"
+                      onClick={() => handleCountChange(option, count - 1)}
+                    >
+                      -
+                    </button>
+                    <span className="w-8 text-center">{count}</span>
+                    <button
+                      className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center"
+                      onClick={() => handleCountChange(option, count + 1)}
+                    >
+                      +
+                    </button>
+                  </div>
                   <div className="flex items-center gap-2">
                     <div className="flex items-baseline gap-0.5">
                       <span className="font-sb text-16px text-gray-900">
-                        {option.ss_price}
+                        {formatPrice(option.ss_price)}
                       </span>
                       <span className="font-r text-14px text-gray-900">원</span>
                     </div>
                     {option.original_price && (
                       <span className="font-r text-14px text-gray-400 line-through">
-                        {option.original_price}원
+                        {formatPrice(option.original_price)}원
                       </span>
                     )}
                   </div>
@@ -344,7 +350,7 @@ export const OptionsBottomSheetContent = ({
             <div className="flex items-center gap-1.5">
               <span className="font-r text-16px text-gray-900">총</span>
               <span className="font-b text-18px text-primary">
-                {totalPrice.toLocaleString()}원
+                {formatPrice(totalPrice)}원
               </span>
             </div>
           </div>
