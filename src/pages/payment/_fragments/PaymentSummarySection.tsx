@@ -1,4 +1,5 @@
 import { Divider } from "@mui/material"
+import { formatPriceWithUnit } from "utils/format"
 
 interface PaymentSummarySectionProps {
   totalAmount: number
@@ -20,19 +21,19 @@ const PaymentSummarySection = ({
         <div className="flex justify-between">
           <span className="text-gray-500 text-14px font-m">상품 금액</span>
           <span className="text-gray-700 font-sb text-14px">
-            {totalAmount.toLocaleString()}원
+            {formatPriceWithUnit(totalAmount)}
           </span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-500 text-14px font-m">상품할인금액</span>
           <span className="text-success font-sb text-14px">
-            -{discountAmount.toLocaleString()}원
+            -{formatPriceWithUnit(discountAmount)}
           </span>
         </div>
         <div className="flex justify-between">
           <span className="text-gray-500 text-14px font-m">포인트 사용</span>
           <span className="text-success font-sb text-14px">
-            -{pointAmount.toLocaleString()}원
+            -{formatPriceWithUnit(pointAmount)}
           </span>
         </div>
       </div>
@@ -40,7 +41,7 @@ const PaymentSummarySection = ({
       <div className="flex justify-between items-center">
         <span className="text-gray-700 text-16px font-m">최종결제금액</span>
         <span className="text-gray-700 font-b text-20px">
-          {finalAmount.toLocaleString()}원
+          {formatPriceWithUnit(finalAmount)}
         </span>
       </div>
     </div>
