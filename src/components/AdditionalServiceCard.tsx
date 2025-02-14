@@ -1,69 +1,74 @@
-import ClockIcon from "@assets/icons/ClockIcon.svg?react"
-import { Button } from "@components/Button.tsx"
-import clsx from "clsx"
+import { Checkbox } from "@mui/material"
+import { ClockIcon } from "@mui/x-date-pickers"
+import { AdditionalManagement } from "types/Membership"
 
 interface AdditionalServiceCardProps {
-  id: string
-  title: string
-  duration: number
-  price: number
-  onDelete?: () => void
+  option: AdditionalManagement
+  isChecked: boolean
+  onChangeService: (checked: boolean, service: AdditionalManagement) => void
 }
 
-const AdditionalServiceCard = ({
-  title,
-  duration,
-  price,
-  onDelete,
+export const AdditionalServiceCard = ({
+  option,
+  isChecked,
+  onChangeService,
 }: AdditionalServiceCardProps) => {
   return (
-    <div className="mb-4 p-5 bg-white rounded-[20px] border border-gray-200">
-      <div className="flex flex-col gap-5">
-        {/* 헤더 */}
-        <div className="flex flex-col gap-3">
-          <div className="flex justify-between items-center">
-            <div className="px-1.5 py-0.5 bg-gray-100 rounded inline-flex">
-              <span className="text-gray-500 text-12px font-m">추가 관리</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <ClockIcon className="w-3.5 h-3.5 text-primary" />
-              <span className="text-gray-500 text-14px font-r">
-                {duration}분 소요
-              </span>
-            </div>
-          </div>
-          <h3 className="text-gray-700 text-16px font-sb">{title}</h3>
-        </div>
-
-        {/* 가격 */}
-        <div
-          className={clsx(
-            "flex items-center",
-            onDelete ? "justify-end" : "justify-start",
-          )}
-        >
-          <div className="flex items-center gap-1">
-            <span className="text-gray-700 text-16px font-sb">
-              {price.toLocaleString()}
-            </span>
-            <span className="text-gray-700 text-14px font-r">원</span>
-          </div>
+    <div
+      key={option.s_idx}
+      className="p-5 bg-white rounded-xl border border-gray-100 flex flex-col gap-2"
+    >
+      <div className="flex justify-between items-center">
+        <p className="text-[#212121] text-16px font-m leading-[23.68px]">
+          {option.s_name}
+        </p>
+        <div onClick={(e) => e.stopPropagation()}>
+          <Checkbox
+            checked={isChecked}
+            onChange={(e) => {
+              e.stopPropagation()
+              onChangeService(e.target.checked, {
+                s_idx: option.s_idx,
+                s_name: option.s_name,
+                s_time: option.s_time,
+                options: option.options,
+              })
+            }}
+            sx={{
+              width: 20,
+              height: 20,
+              padding: 0,
+              backgroundColor: "white",
+              "& .MuiSvgIcon-root": {
+                width: 20,
+                height: 20,
+              },
+              "&.Mui-checked": {
+                color: "#F37165",
+                backgroundColor: "white",
+              },
+              "&:not(.Mui-checked)": {
+                color: "#DDDDDD",
+                backgroundColor: "white",
+              },
+              "&:hover": {
+                backgroundColor: "white",
+              },
+            }}
+          />
         </div>
       </div>
-
-      {/* 삭제 버튼 */}
-      {onDelete && (
-        <Button
-          variantType="gray"
-          sizeType="s"
-          onClick={onDelete}
-          className="w-full mt-6"
-        >
-          삭제하기
-        </Button>
-      )}
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <ClockIcon className="w-3.5 h-3.5 text-gray-500" />
+          <span className="text-gray-500 text-14px font-r leading-[20.72px]">
+            {Number(option.s_time || 0)}분 소요
+          </span>
+        </div>
+        <p className="text-[#212121] text-16px font-bold leading-[23.68px]">
+          {option.options?.[0]?.ss_price || "0"}원
+        </p>
+      </div>
     </div>
   )
 }
-
-export default AdditionalServiceCard

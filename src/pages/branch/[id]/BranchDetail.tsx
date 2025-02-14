@@ -1,26 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { useLayout } from "../../../contexts/LayoutContext.tsx"
-import {
-  ReactNode,
-  useEffect,
-  useState,
-  useMemo,
-  memo,
-  useCallback,
-} from "react"
-import DynamicHomeHeaderBackground from "../../home/_fragments/DynamicHomeHeaderBackground.tsx"
-import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
-import PinIcon from "@assets/icons/PinIcon.svg?react"
-import StoreIcon from "@assets/icons/StoreIcon.svg?react"
-import ShareIcon from "@assets/icons/ShareIcon.svg?react"
-import StaffSection from "./_fragments/StaffSection.tsx"
+import { useEffect, useState, useCallback } from "react"
 import MembershipAvailableBanner from "./_fragments/MembershipAvailableBanner.tsx"
-import { CustomTabs as Tabs } from "@components/Tabs.tsx"
-import TherapistList from "./_fragments/TherapistList.tsx"
-import ProgramList from "./_fragments/ProgramList.tsx"
-import BranchInformation from "./_fragments/BranchInformation.tsx"
-import ProfileCard from "@components/ProfileCard.tsx"
-import BranchDetailBottomActionBar from "./_fragments/BranchDetailBottomActionBar.tsx"
 import {
   useBranch,
   useBranchBookmarkMutation,
@@ -30,6 +11,9 @@ import { DEFAULT_COORDINATE } from "../../../types/Coordinate.ts"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useOverlay } from "../../../contexts/ModalContext.tsx"
 import { BranchDetail as BranchDetailType } from "../../../types/Branch.ts"
+import { BranchHeader } from "./_fragments/BranchHeader"
+import { BranchTabs } from "./_fragments/BranchTabs"
+import { BranchActions } from "./_fragments/BranchActions"
 
 const branchDetailTabs = ["therapists", "programs", "information"] as const
 type BranchDetailTab = (typeof branchDetailTabs)[number]
@@ -39,101 +23,6 @@ const BranchDetailTabs: Record<BranchDetailTab, string> = {
   "programs": "관리프로그램",
   "information": "기본정보",
 }
-
-interface BranchHeaderProps {
-  branch: BranchDetailType
-  onShare: () => void
-  onBack: () => void
-}
-
-const BranchStaffInfo = memo(({ branch }: { branch: BranchDetailType }) => {
-  if (!branch.staffs.length && !branch.director) return null
-
-  return (
-    <div className={"flex flex-col gap-4 -mb-4 py-4"}>
-      <div className={"w-full h-[1px] bg-gray-200 rounded-sm"} />
-      {branch.staffs.length > 0 && (
-        <StaffSection
-          directorCount={
-            branch.staffs.filter((staff) => staff.grade === "원장").length
-          }
-          staffCount={
-            branch.staffs.filter((staff) => staff.grade === "테라피스트").length
-          }
-        />
-      )}
-      {branch.director && <ProfileCard type={"primary"} {...branch.director} />}
-    </div>
-  )
-})
-
-const BranchHeaderContent = memo(({ branch }: { branch: BranchDetailType }) => {
-  return (
-    <>
-      <div className={"flex flex-row items-center gap-1 mt-1.5"}>
-        <IconLabel
-          icon={<StoreIcon className={"text-gray-500"} />}
-          label={branch.brand}
-        />
-        {branch.location.distance && (
-          <IconLabel
-            icon={<PinIcon className={"text-gray-500"} />}
-            label={branch.location.distance}
-          />
-        )}
-      </div>
-    </>
-  )
-})
-
-const BranchHeader = memo(({ branch, onShare, onBack }: BranchHeaderProps) => {
-  return (
-    <DynamicHomeHeaderBackground
-      header={
-        <>
-          <div className={"flex flex-row items-center gap-2"}>
-            <div onClick={onBack}>
-              <CaretLeftIcon className="w-5 h-5" />
-            </div>
-            <p className={"font-b text-20px"}>{branch.name}</p>
-          </div>
-          <BranchHeaderContent branch={branch} />
-        </>
-      }
-      content={<BranchStaffInfo branch={branch} />}
-      buttonArea={
-        <button
-          className={
-            "flex w-10 h-10 rounded-full bg-primary justify-center items-center text-white shadow-md"
-          }
-          onClick={onShare}
-        >
-          <ShareIcon className={"w-6 h-6"} />
-        </button>
-      }
-    />
-  )
-})
-
-const TabContent = memo(
-  ({
-    selectedTab,
-    branch,
-  }: {
-    selectedTab: BranchDetailTab
-    branch: BranchDetailType
-  }) => {
-    switch (selectedTab) {
-      case "therapists":
-        return <TherapistList therapists={branch.staffs} />
-      case "programs":
-        return <ProgramList brandCode={branch.brandCode} />
-      case "information":
-      default:
-        return <BranchInformation branch={branch} />
-    }
-  },
-)
 
 const BranchDetail = () => {
   const { id } = useParams()
@@ -146,7 +35,7 @@ const BranchDetail = () => {
   const { data: branch, isLoading } = useBranch(id || "", {
     latitude: DEFAULT_COORDINATE.latitude,
     longitude: DEFAULT_COORDINATE.longitude,
-  })
+  }) as { data: BranchDetailType | undefined; isLoading: boolean }
   const { mutate: addBookmark } = useBranchBookmarkMutation()
   const { mutate: removeBookmark } = useBranchUnbookmarkMutation()
 
@@ -169,18 +58,6 @@ const BranchDetail = () => {
   }, [branch])
 
   const handleBack = useCallback(() => navigate(-1), [navigate])
-
-  const memoizedHeader = useMemo(
-    () =>
-      branch ? (
-        <BranchHeader
-          branch={branch}
-          onShare={handleShare}
-          onBack={handleBack}
-        />
-      ) : null,
-    [branch, handleShare, handleBack],
-  )
 
   const handleMembershipBannerClick = useCallback(() => {
     if (!branch) return
@@ -225,7 +102,11 @@ const BranchDetail = () => {
   return (
     <div className={"relative flex-grow w-full bg-system-bg overflow-x-hidden"}>
       <div className={"flex flex-col gap-3 p-5"}>
-        {memoizedHeader}
+        <BranchHeader
+          branch={branch}
+          onShare={handleShare}
+          onBack={handleBack}
+        />
         {branch.availableMembershipCount > 0 && (
           <MembershipAvailableBanner
             availableMembershipCount={branch.availableMembershipCount}
@@ -233,40 +114,19 @@ const BranchDetail = () => {
           />
         )}
       </div>
-      <Tabs
-        type={"fit"}
-        tabs={Object.entries(BranchDetailTabs).map(([value, label]) => ({
-          value: value,
-          label: label,
-        }))}
-        onChange={(value: string) =>
-          setSelectedTab(value as keyof typeof BranchDetailTabs)
-        }
-        activeTab={selectedTab}
+      <BranchTabs
+        selectedTab={selectedTab}
+        onChangeTab={(tab) => setSelectedTab(tab)}
+        branch={branch}
       />
-      <TabContent selectedTab={selectedTab} branch={branch} />
       <div className={"h-20"} />
-      <div
-        className={
-          "z-10 fixed left-1/2 -translate-x-1/2 min-w-[375px] max-w-[500px] w-full bottom-0 bg-system-bg border-t border-gray-100 py-3 px-5"
-        }
-      >
-        <BranchDetailBottomActionBar
-          isBookmarked={branch.isBookmarked || false}
-          bookmarkCount={branch.favoriteCount}
-          onBookmark={handleBookmark}
-          onClickReservation={handleReservation}
-        />
-      </div>
+      <BranchActions
+        branch={branch}
+        onBookmark={handleBookmark}
+        onReservation={handleReservation}
+      />
     </div>
   )
 }
-
-const IconLabel = ({ icon, label }: { icon: ReactNode; label: string }) => (
-  <div className={"flex flex-row gap-0.5 items-center"}>
-    {icon}
-    <p className={"font-m text-14px text-gray-500"}>{label}</p>
-  </div>
-)
 
 export default BranchDetail
