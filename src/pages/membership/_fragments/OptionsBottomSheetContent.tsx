@@ -2,7 +2,6 @@ import { useMemo, useState } from "react"
 import XCircleIcon from "@components/icons/XCircleIcon.tsx"
 import { MembershipOption } from "../../../types/Membership"
 import clsx from "clsx"
-import { Number } from "@components/Number.tsx"
 import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { Button } from "@components/Button"
@@ -11,18 +10,11 @@ import { usePaymentStore } from "../../../hooks/usePaymentStore.ts"
 import { Divider } from "@mui/material"
 import { addCart } from "../../../apis/cart.api"
 import { queryClient } from "../../../queries/clients"
-import { queryKeys } from "../../../queries/query.keys"
 import { useOverlay } from "../../../contexts/ModalContext"
 import { MembershipBranchSelectModal } from "./MembershipBranchSelectModal.tsx"
 import { Branch } from "types/Branch.ts"
 import { useNavigate } from "react-router-dom"
 import { formatPrice, parsePrice } from "utils/format"
-import { toNumber } from "utils/number"
-
-interface SelectedOption {
-  option: MembershipOption
-  count: number
-}
 
 interface Props {
   serviceType?: string
@@ -32,6 +24,7 @@ interface Props {
   title: string
   duration: number
   brandCode: string
+  onClose: () => void
 }
 
 export const OptionsBottomSheetContent = ({
@@ -42,6 +35,7 @@ export const OptionsBottomSheetContent = ({
   title,
   duration,
   brandCode,
+  onClose,
 }: Props) => {
   const navigate = useNavigate()
   const {
@@ -67,14 +61,13 @@ export const OptionsBottomSheetContent = ({
       return
     }
 
-    const newSelectedOptions = [
+    setSelectedOptions([
       {
         option,
         count: 1,
       },
       ...selectedOptions,
-    ]
-    setSelectedOptions(newSelectedOptions)
+    ])
   }
 
   const handleRemoveOption = (optionId: string) => {
@@ -85,15 +78,13 @@ export const OptionsBottomSheetContent = ({
   }
 
   const handleCountChange = (option: MembershipOption, count: number) => {
-    setSelectedOptions((prev: SelectedOption[]) => {
-      const newOptions = prev.filter(
-        (item: SelectedOption) => item.option.ss_idx !== option.ss_idx,
-      )
-      if (count > 0) {
-        newOptions.push({ option, count })
-      }
-      return newOptions
-    })
+    setSelectedOptions(
+      selectedOptions
+        .map((item) =>
+          item.option.ss_idx === option.ss_idx ? { ...item, count } : item,
+        )
+        .filter((item) => item.count > 0),
+    )
   }
 
   const calculateTotalPrice = () => {
@@ -126,7 +117,7 @@ export const OptionsBottomSheetContent = ({
       }))
 
       await addCart(cartItems)
-      await queryClient.refetchQueries({ queryKey: queryKeys.carts.all })
+      await queryClient.refetchQueries({ queryKey: ["carts"] })
 
       openModal({
         title: "장바구니 담기 완료",
@@ -207,7 +198,7 @@ export const OptionsBottomSheetContent = ({
     // 모달 닫기
     setIsModalOpen(false)
     // 오버레이 닫기
-    closeOverlay()
+    onClose()
   }
 
   const handleCartButtonClick = () => {

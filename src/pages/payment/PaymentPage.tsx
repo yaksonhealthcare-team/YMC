@@ -15,12 +15,7 @@ import PaymentSummarySection from "./_fragments/PaymentSummarySection.tsx"
 import PaymentAgreementSection from "./_fragments/PaymentAgreementSection.tsx"
 import { PaymentStatus } from "../../types/Payment"
 import { useOverlay } from "../../contexts/ModalContext"
-import { formatPrice, formatPriceWithUnit } from "utils/format"
-import { toNumber } from "utils/number"
-import { usePointsStore } from "../../hooks/usePointsStore"
-import { usePaymentMutation } from "../../queries/usePaymentQueries"
-import PaymentFailedModal from "./_fragments/PaymentFailedModal"
-import PaymentSuccessModal from "./_fragments/PaymentSuccessModal"
+import { formatPriceWithUnit } from "utils/format"
 
 interface OrderResponse {
   resultCode: string
