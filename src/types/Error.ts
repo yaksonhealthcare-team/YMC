@@ -26,6 +26,11 @@ export const ERROR_CODES = {
   // 결제 관련 에러
   PAYMENT_ERROR: "60",
   PAYMENT_CANCEL_ERROR: "61",
+
+  // 예약 관련 에러
+  CONSULTATION_LIMIT_EXCEEDED: "40",
+  ALREADY_RESERVED: "41",
+  INVALID_RESERVATION_TIME: "42",
 } as const
 
 export const getErrorMessage = (code: string): string => {
@@ -47,6 +52,12 @@ export const getErrorMessage = (code: string): string => {
     case ERROR_CODES.PAYMENT_ERROR:
     case ERROR_CODES.PAYMENT_CANCEL_ERROR:
       return "결제 처리 중 오류가 발생했습니다."
+    case ERROR_CODES.CONSULTATION_LIMIT_EXCEEDED:
+      return "상담 예약 가능 횟수가 없습니다."
+    case ERROR_CODES.ALREADY_RESERVED:
+      return "이미 예약된 시간입니다."
+    case ERROR_CODES.INVALID_RESERVATION_TIME:
+      return "예약 가능한 시간이 아닙니다."
     default:
       return "알 수 없는 오류가 발생했습니다."
   }

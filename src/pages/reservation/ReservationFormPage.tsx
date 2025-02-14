@@ -21,6 +21,7 @@ import { MembershipSwiper } from "@components/MembershipSwiper"
 import { AdditionalServiceCard } from "@components/AdditionalServiceCard"
 import { ReservationFormSection } from "./_fragments/ReservationFormSection"
 import { ReservationSummarySection } from "./_fragments/ReservationSummarySection"
+import { useErrorHandler } from "hooks/useErrorHandler"
 
 interface FormDataType {
   item: undefined | string
@@ -44,6 +45,7 @@ const ReservationFormPage = () => {
     queryFn: getConsultationCount,
   })
   const { mutateAsync: createReservation } = useCreateReservationMutation()
+  const { handleError } = useErrorHandler()
 
   const { data: membershipsData, isLoading: isMembershipsLoading } =
     useMembershipList(BRAND_CODE)
@@ -169,14 +171,29 @@ const ReservationFormPage = () => {
     )
   }
 
+  const validateReservationData = () => {
+    if (!data.item) {
+      handleError(new Error("회원권을 먼저 선택해주세요."))
+      return false
+    }
+    if (!data.date || !data.timeSlot) {
+      handleError(new Error("예약 날짜와 시간을 선택해주세요."))
+      return false
+    }
+    if (!data.branch) {
+      handleError(new Error("지점을 선택해주세요."))
+      return false
+    }
+    return true
+  }
+
   const handleConsultationReservation = async () => {
     try {
+      if (!validateReservationData()) return
+
       // 상담 예약 가능 횟수 체크
       if (consultationCount >= 2) {
-        openAlert({
-          title: "예약 실패",
-          description: "상담 예약 가능 횟수가 없습니다.",
-        })
+        handleError(new Error("상담 예약 가능 횟수가 없습니다."))
         return
       }
 
@@ -189,26 +206,7 @@ const ReservationFormPage = () => {
       })
 
       if (response.resultCode !== "00") {
-        let errorMessage = "상담 예약에 실패했습니다."
-
-        switch (response.resultCode) {
-          case "40":
-            errorMessage = "상담 예약 가능 횟수가 없습니다."
-            break
-          case "41":
-            errorMessage = "이미 예약된 시간입니다."
-            break
-          case "42":
-            errorMessage = "예약 가능한 시간이 아닙니다."
-            break
-          default:
-            errorMessage = response.resultMessage || "상담 예약에 실패했습니다."
-        }
-
-        openAlert({
-          title: "예약 실패",
-          description: errorMessage,
-        })
+        handleError(new Error(response.resultMessage))
         return
       }
 
@@ -231,29 +229,20 @@ const ReservationFormPage = () => {
         })
       }
     } catch (error) {
-      openAlert({
-        title: "예약 실패",
-        description: "상담 예약에 실패했습니다. 다시 시도해주세요.",
-      })
+      handleError(error, "상담 예약에 실패했습니다. 다시 시도해주세요.")
     }
   }
 
   const handleMembershipReservation = async () => {
     try {
-      if (!data.date || !data.timeSlot) {
-        openAlert({
-          title: "예약 실패",
-          description: "예약 날짜와 시간을 선택해주세요.",
-        })
-        return
-      }
+      if (!validateReservationData()) return
 
       const response = await createReservation({
         r_gubun: "R",
         mp_idx: data.item,
         b_idx: data.branch!,
-        r_date: data.date.format("YYYY-MM-DD"),
-        r_stime: data.timeSlot.time,
+        r_date: data.date!.format("YYYY-MM-DD"),
+        r_stime: data.timeSlot!.time,
         add_services: data.additionalServices.map((service) =>
           Number(service.s_idx),
         ),
@@ -261,23 +250,7 @@ const ReservationFormPage = () => {
       })
 
       if (response.resultCode !== "00") {
-        let errorMessage = "예약에 실패했습니다."
-
-        switch (response.resultCode) {
-          case "41":
-            errorMessage = "이미 예약된 시간입니다."
-            break
-          case "42":
-            errorMessage = "예약 가능한 시간이 아닙니다."
-            break
-          default:
-            errorMessage = response.resultMessage || "예약에 실패했습니다."
-        }
-
-        openAlert({
-          title: "예약 실패",
-          description: errorMessage,
-        })
+        handleError(new Error(response.resultMessage))
         return
       }
 
@@ -288,8 +261,8 @@ const ReservationFormPage = () => {
             {
               type: data.item,
               branch: data.branch,
-              date: data.date.format("YYYY-MM-DD"),
-              time: data.timeSlot.time,
+              date: data.date!.format("YYYY-MM-DD"),
+              time: data.timeSlot!.time,
               additionalServices: data.additionalServices,
               request: data.request,
             },
@@ -298,10 +271,7 @@ const ReservationFormPage = () => {
         replace: true,
       })
     } catch (error) {
-      openAlert({
-        title: "예약 실패",
-        description: "예약에 실패했습니다. 다시 시도해주세요.",
-      })
+      handleError(error, "예약에 실패했습니다. 다시 시도해주세요.")
     }
   }
 
@@ -352,7 +322,7 @@ const ReservationFormPage = () => {
         }
         onNavigateBranchSelect={() => {
           if (!data.item) {
-            alert("회원권을 먼저 선택해주세요.")
+            handleError(new Error("회원권을 먼저 선택해주세요."))
             return
           }
           navigate("/membership/select-branch", {
@@ -377,20 +347,7 @@ const ReservationFormPage = () => {
           variantType="primary"
           sizeType="l"
           onClick={async () => {
-            if (!data.date || !data.timeSlot) {
-              openAlert({
-                title: "예약 실패",
-                description: "예약 날짜와 시간을 선택해주세요.",
-              })
-              return
-            }
-            if (!data.branch) {
-              openAlert({
-                title: "예약 실패",
-                description: "지점을 선택해주세요.",
-              })
-              return
-            }
+            if (!validateReservationData()) return
 
             if (data.item === "상담 예약") {
               await handleConsultationReservation()
