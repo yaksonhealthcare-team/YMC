@@ -1,7 +1,7 @@
+import { UserMapper } from "../mappers/UserMapper.ts"
 import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
-import { User, UserResponse, UpdateUserProfileRequest } from "../types/User.ts"
-import { UserMapper } from "../mappers/UserMapper.ts"
+import { UpdateUserProfileRequest, User, UserResponse } from "../types/User.ts"
 
 export const loginWithEmail = async ({
   username,
@@ -93,13 +93,7 @@ export const signupWithSocial = async ({
     ...processedUserInfo,
   })
 
-  // BOM 제거
-  const cleanedData = response.data.replace(/^\uFEFF/, "")
-
-  // JSON 파싱
-  const parsedData = JSON.parse(cleanedData)
-
-  return parsedData
+  return response.data
 }
 
 interface SignupFormData {
@@ -169,8 +163,8 @@ export const signinWithSocial = async ({
   })
 
   return {
-    refreshToken: data.Header?.[0]?.refreshToken || "",
-    accessToken: data.body[0].accessToken,
+    refreshToken: data.body[0]?.refreshToken || "",
+    accessToken: data.body[0]?.accessToken || "",
   }
 }
 
