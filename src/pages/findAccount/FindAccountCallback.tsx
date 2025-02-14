@@ -1,15 +1,11 @@
 import { DecryptRequest, fetchDecryptResult } from "@apis/decrypt-result.api"
 import { AxiosError } from "axios"
 import { useOverlay } from "contexts/ModalContext"
-import { useSignup } from "contexts/SignupContext"
 import { useEffect } from "react"
-import { useLocation, useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
 const FindAccountCallback = () => {
-  const { setSignupData } = useSignup()
-  const location = useLocation()
   const { openAlert } = useOverlay()
-  const socialInfo = location.state?.social
   const navigate = useNavigate()
   const { tab } = useParams<{ tab: string }>()
   const queryParams = new URLSearchParams(window.location.search)
@@ -34,20 +30,6 @@ const FindAccountCallback = () => {
         const userData = response.body
 
         console.log(userData)
-        setSignupData((prev) => ({
-          ...prev,
-          name: userData.name,
-          mobileNumber: userData.hp,
-          birthDate: userData.birthdate,
-          gender: userData.sex === "M" ? "male" : "female",
-          di: userData.di,
-          ...(socialInfo && {
-            social: {
-              provider: socialInfo.provider,
-              accessToken: socialInfo.accessToken,
-            },
-          }),
-        }))
         navigate(`/find-account/${tab}`, {
           state: {
             verifiedData: {
