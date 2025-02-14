@@ -12,11 +12,13 @@ import { useOverlay } from "contexts/ModalContext"
 interface ReserveCardProps {
   reservation: Reservation
   className?: string
+  showDday?: boolean
 }
 
 export const ReserveCard = ({
   reservation,
   className = "",
+  showDday = false,
 }: ReserveCardProps) => {
   const navigate = useNavigate()
   const { mutate: completeVisit } = useCompleteVisit()
@@ -34,6 +36,41 @@ export const ReserveCard = ({
     if (statusGroups.completed.includes(status)) return "completed"
     if (statusGroups.cancelled.includes(status)) return "cancelled"
     if (statusGroups.progressing.includes(status)) return "progressing"
+    return null
+  }
+
+  const getDday = (date: Date) => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const targetDate = new Date(date)
+    targetDate.setHours(0, 0, 0, 0)
+    const diffTime = targetDate.getTime() - today.getTime()
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    return diffDays
+  }
+
+  const renderDdayBadge = () => {
+    if (!showDday) return null
+    const status = classifyReservationStatus(
+      reservation.status as ReservationStatusCode,
+    )
+    const dday = getDday(reservation.date)
+
+    if (status === "completed") {
+      return (
+        <div className="bg-[#ECECEC] text-[#9E9E9E] px-2 py-[3px] rounded-full text-12px font-m">
+          방문완료
+        </div>
+      )
+    }
+
+    if (status === "upcoming" || dday >= 0) {
+      return (
+        <div className="bg-primary-100 text-primary px-2 py-[3px] rounded-full text-12px font-m">
+          {dday === 0 ? "D-day" : `D-${dday}`}
+        </div>
+      )
+    }
     return null
   }
 
@@ -102,10 +139,13 @@ export const ReserveCard = ({
       )}
       onClick={() => navigate(`/reservation/${reservation.id}`)}
     >
-      <div>
-        <span className="font-b text-16px text-gray-700">
-          {reservation.store}
-        </span>
+      <div className="flex flex-col w-full">
+        <div className="flex w-full items-center justify-between gap-1.5">
+          <span className="font-b text-16px text-gray-700">
+            {reservation.store}
+          </span>
+          {renderDdayBadge()}
+        </div>
         <div className="mt-1">
           <span className="font-r text-14px text-gray-700">
             {reservation.programName}

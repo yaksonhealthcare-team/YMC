@@ -199,7 +199,11 @@ const ReserveCardSection = () => {
       <Title
         type="arrow"
         title="예정된 예약"
-        count={upcomingReservations?.length ? `${upcomingReservations.length}건` : "0건"}
+        count={
+          upcomingReservations?.length
+            ? `${upcomingReservations.length}건`
+            : "0건"
+        }
         onClick={() => navigate("/member-history/reservation")}
       />
       {!upcomingReservations || upcomingReservations.length === 0 ? (
@@ -217,7 +221,7 @@ const ReserveCardSection = () => {
         >
           {upcomingReservations.map((reservation) => (
             <SwiperSlide key={reservation.id}>
-              <ReserveCard reservation={reservation} />
+              <ReserveCard reservation={reservation} showDday={true} />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -297,6 +301,10 @@ const EventSection = () => {
   const { data: events } = useEvents()
   const navigate = useNavigate()
 
+  const formatDate = (dateStr: string) => {
+    return dateStr.replace(/-/g, ".")
+  }
+
   return (
     <div className="mt-6 px-5">
       <Title title="이벤트 프로모션" />
@@ -330,7 +338,7 @@ const EventSection = () => {
                     {event.title}
                   </span>
                   <span className="font-r text-12px text-gray-600">
-                    {event.sdate} ~ {event.edate}
+                    {formatDate(event.sdate)} ~ {formatDate(event.edate)}
                   </span>
                 </div>
               </div>
