@@ -1,60 +1,77 @@
+import { DecryptRequest, fetchDecryptResult } from "@apis/decrypt-result.api"
+import { AxiosError } from "axios"
+import { useOverlay } from "contexts/ModalContext"
+import { useSignup } from "contexts/SignupContext"
 import { useEffect } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
 
 const SignupCallback = () => {
+  const { setSignupData } = useSignup()
+  const location = useLocation()
+  const { openAlert } = useOverlay()
+  const socialInfo = location.state?.social
+  const navigate = useNavigate()
+
   useEffect(() => {
-    // URL에서 쿼리 파라미터 가져오기
     const queryParams = new URLSearchParams(window.location.search)
 
     const tokenVersionId = queryParams.get("token_version_id")
     const encData = queryParams.get("enc_data")
     const integrityValue = queryParams.get("integrity_value")
 
-    if (!tokenVersionId || !encData || !integrityValue) {
-      // 팝업인 경우
-      if (window.opener) {
-        window.opener.postMessage(
-          {
-            type: "PASS_VERIFICATION_FAILED",
-            error: "본인인증에 실패했습니다.",
-          },
-          "*",
-        )
-        window.close()
-      }
-      return
-    }
-
     const handleVerification = async () => {
       try {
-        // 팝업인 경우
-        if (window.opener) {
-          window.opener.postMessage(
-            {
-              type: "PASS_VERIFICATION_DATA",
-              data: {
-                token_version_id: tokenVersionId,
-                enc_data: encData,
-                integrity_value: integrityValue,
-              },
-            },
-            "*",
-          )
+        if (!tokenVersionId || !encData || !integrityValue) {
+          throw new Error("본인인증 정보가 없습니다.")
         }
+
+        const request: DecryptRequest = {
+          token_version_id: tokenVersionId,
+          enc_data: encData,
+          integrity_value: integrityValue,
+        }
+        const response = await fetchDecryptResult(request)
+        const userData = response.body
+
+        console.log(userData)
+        setSignupData((prev) => ({
+          ...prev,
+          name: userData.name,
+          mobileNumber: userData.hp,
+          birthDate: userData.birthdate,
+          gender: userData.sex === "M" ? "male" : "female",
+          di: userData.di,
+          ...(socialInfo && {
+            social: {
+              provider: socialInfo.provider,
+              accessToken: socialInfo.accessToken,
+            },
+          }),
+        }))
+        navigate(socialInfo ? "/signup/profile" : "/signup/email")
       } catch (error) {
-        if (window.opener) {
-          window.opener.postMessage(
-            {
-              type: "PASS_VERIFICATION_FAILED",
-              error: "본인인증 처리 중 오류가 발생했습니다.",
+        if (error instanceof AxiosError) {
+          openAlert({
+            title: "오류",
+            description:
+              error.response?.data?.resultMessage || "본인인증에 실패했습니다.",
+            onClose: () => {
+              navigate("/signup/terms", { replace: true })
             },
-            "*",
-          )
+          })
+          return
         }
+        openAlert({
+          title: "오류",
+          description: "본인인증에 실패했습니다.",
+          onClose: () => {
+            navigate("/signup/terms", { replace: true })
+          },
+        })
       }
     }
 
     handleVerification()
-    window.close()
   }, [])
 
   return (

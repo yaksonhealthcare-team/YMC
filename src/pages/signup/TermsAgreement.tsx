@@ -1,23 +1,16 @@
 import { Button } from "@components/Button"
 import CheckFillCircleIcon from "@components/icons/CheckFillCircleIcon.tsx"
 import { Checkbox } from "@mui/material"
-import { DecryptRequest, fetchDecryptResult } from "apis/decrypt-result.api"
-import { AxiosError } from "axios"
-import { useOverlay } from "contexts/ModalContext"
 import { useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { fetchEncryptDataForNice } from "../../apis/pass.api.ts"
 import { useLayout } from "../../contexts/LayoutContext"
-import { useSignup } from "../../contexts/SignupContext.tsx"
 
 window.name = "Parent_window"
 
 export const TermsAgreement = () => {
   const navigate = useNavigate()
-  const location = useLocation()
-  const socialInfo = location.state?.social
   const { setHeader, setNavigation } = useLayout()
-  const { openAlert } = useOverlay()
   const [agreements, setAgreements] = useState({
     all: false,
     terms: false,
@@ -30,8 +23,6 @@ export const TermsAgreement = () => {
   const [tokenVersionId, setTokenVersionId] = useState("")
   const [encData, setEncData] = useState("")
   const [integrityValue, setIntegrityValue] = useState("")
-
-  const { setSignupData } = useSignup()
 
   useEffect(() => {
     setHeader({
@@ -63,64 +54,6 @@ export const TermsAgreement = () => {
 
     fetchNiceData()
   }, [])
-
-  // 본인인증 결과 메시지 처리
-  useEffect(() => {
-    const handlePassVerification = async (event: MessageEvent) => {
-      const { type, data, error } = event.data
-
-      if (type === "PASS_VERIFICATION_FAILED") {
-        openAlert({
-          title: "오류",
-          description: error,
-        })
-        return
-      }
-
-      if (type === "PASS_VERIFICATION_DATA") {
-        try {
-          const request: DecryptRequest = {
-            token_version_id: data.token_version_id,
-            enc_data: data.enc_data,
-            integrity_value: data.integrity_value,
-          }
-
-          const response = await fetchDecryptResult(request)
-          const userData = response.body
-
-          setSignupData((prev) => ({
-            ...prev,
-            name: userData.name,
-            mobileNumber: userData.hp,
-            birthDate: userData.birthdate,
-            gender: userData.sex === "M" ? "male" : "female",
-            marketingYn: agreements.marketing,
-            di: userData.di,
-            ...(socialInfo && {
-              social: {
-                provider: socialInfo.provider,
-                accessToken: socialInfo.accessToken,
-              },
-            }),
-          }))
-
-          // 소셜 로그인인 경우 프로필 설정 페이지로, 아닌 경우 이메일/비밀번호 입력 페이지로 이동
-          navigate(socialInfo ? "/signup/profile" : "/signup/email")
-        } catch (error) {
-          const axiosError = error as AxiosError<{ resultMessage: string }>
-          openAlert({
-            title: "오류",
-            description:
-              axiosError.response?.data?.resultMessage ||
-              "본인인증에 실패했습니다.",
-          })
-        }
-      }
-    }
-
-    window.addEventListener("message", handlePassVerification)
-    return () => window.removeEventListener("message", handlePassVerification)
-  }, [agreements.marketing, navigate, setSignupData, openAlert, socialInfo])
 
   const handleAllCheck = () => {
     const newValue = !agreements.all
