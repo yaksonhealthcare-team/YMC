@@ -1,6 +1,7 @@
 import { Button } from "@components/Button"
 import Logo from "@components/Logo"
 import { Typography } from "@mui/material"
+import { getKakaoLoginUrl } from "libs/kakao"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import AppleIcon from "../../assets/icons/AppleIcon.svg?react"
@@ -78,10 +79,6 @@ const Login = () => {
     }
 
     if (url) window.location.href = url
-  }
-
-  const getKakaoLoginUrl = () => {
-    return `${import.meta.env.VITE_KAKAO_REDIRECT_URI}?scope=account_email`
   }
 
   return (

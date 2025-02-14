@@ -84,6 +84,9 @@ const ReservationQuestionnaireHistory = lazy(
   () => import("../pages/myPage/questionnaire/ReservationQuestionnaireHistory"),
 )
 const FindAccount = lazy(() => import("../pages/findAccount/FindAccount"))
+const FindAccountCallback = lazy(
+  () => import("../pages/findAccount/FindAccountCallback"),
+)
 const FindEmail = lazy(() => import("../pages/findAccount/FindEmail"))
 const ProfileResetPassword = lazy(
   () => import("../pages/editProfile/ProfileResetPassword"),
@@ -201,6 +204,10 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/find-account",
     element: <FindAccount />,
+  },
+  {
+    path: "/find-account/callback/:tab",
+    element: <FindAccountCallback />,
   },
   {
     path: "/find-account/find-email",

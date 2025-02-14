@@ -10,21 +10,21 @@ export interface EncryptData {
 
 const getReturnUrl = () => {
   // localhost인 경우 현재 origin 사용
-  if (window.location.hostname === 'localhost') {
+  if (window.location.hostname === "localhost") {
     return `${window.location.origin}/signup/callback`
   }
-  
+
   // 그 외의 경우 현재 hostname 사용
   return `${window.location.protocol}//${window.location.hostname}/signup/callback`
 }
 
-export const fetchEncryptDataForNice = async () => {
-  const return_url = getReturnUrl()
+export const fetchEncryptDataForNice = async (returnUrl?: string) => {
+  const return_url = returnUrl ?? getReturnUrl()
 
   const { data } = await axiosClient.post<HTTPResponse<EncryptData[]>>(
     "/auth/crypto/token.php",
     { return_url },
   )
 
-  return data
+  return data.body[0]
 }
