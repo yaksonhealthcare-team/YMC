@@ -1,11 +1,7 @@
 import { axiosClient } from "../queries/clients"
 
-const APPLE_CLIENT_ID = "com.yaksonhc.devapi"
-const APPLE_REDIRECT_URI = "https://devapi.yaksonhc.com/api/auth/apple_callback"
-
-// TODO: 백엔드 API 추가 필요
-// 1. GET /auth/apple/init - 로그인 URL 반환
-// 2. 콜백 처리 - /api/auth/apple_callback
+const APPLE_CLIENT_ID = "com.yaksonhc.therapist"
+const APPLE_REDIRECT_URI = import.meta.env.VITE_APPLE_REDIRECT_URI
 
 export const getAppleLoginUrl = () => {
   const state = Math.random().toString(36).substr(2, 11)
@@ -18,8 +14,8 @@ export const getAppleToken = async (code: string) => {
   const { data } = await axiosClient.post("/auth/signin/social", {
     thirdPartyType: "A",
     SocialAccessToken: code,
-    device_token: window.fcmToken || '',
-    device_type: window.osType || 'android'
+    device_token: window.fcmToken || "",
+    device_type: window.osType || "android",
   })
 
   return data.body[0].accessToken
