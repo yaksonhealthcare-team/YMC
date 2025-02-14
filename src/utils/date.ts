@@ -48,8 +48,8 @@ export const formatDateWithDay = (date: Date | string | null): string => {
 }
 
 export const formatDateRange = (
-  startDate: string | Date | null | undefined,
-  endDate: string | Date | null | undefined,
+  startDate: string | Date | null,
+  endDate: string | Date | null,
 ) => {
   const start = formatDate(startDate)
   const end = formatDate(endDate)

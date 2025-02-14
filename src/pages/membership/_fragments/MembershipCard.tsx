@@ -1,6 +1,5 @@
 import { MembershipItem } from "../../../types/Membership"
 import ClockIcon from "@assets/icons/ClockIcon.svg?react"
-import calculateDiscountRate from "../../../utils/calculateDiscountRate"
 import { Tag } from "@components/Tag"
 import { formatPrice, parsePrice } from "../../../utils/format"
 
