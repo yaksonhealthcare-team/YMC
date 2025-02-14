@@ -89,3 +89,15 @@ export const createReservation = async (params: CreateReservationRequest) => {
   >("/reservation/reservations", params)
   return data
 }
+
+export const getConsultationCount = async (): Promise<number> => {
+  const { data } = await axiosClient.get<HTTPResponse<{ count: number }>>(
+    "/reservation/consultation-count",
+  )
+
+  if (data.resultCode !== "00") {
+    throw new Error(data.resultMessage || "API 오류가 발생했습니다.")
+  }
+
+  return data.body?.count || 0
+}

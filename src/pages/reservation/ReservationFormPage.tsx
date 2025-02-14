@@ -25,9 +25,10 @@ import { Checkbox } from "@mui/material"
 import { useMembershipList } from "../../queries/useMembershipQueries.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
-import { useConsultationCount } from "../../queries/useConsultationQueries.ts"
-import type { Swiper as SwiperType } from "swiper"
 import { useCreateReservationMutation } from "../../queries/useReservationQueries"
+import { useQuery } from "@tanstack/react-query"
+import { getConsultationCount } from "../../apis/reservation.api"
+import type { Swiper as SwiperType } from "swiper"
 
 interface FormDataType {
   item: undefined | string
@@ -47,7 +48,10 @@ const ReservationFormPage = () => {
   const location = useLocation()
   const theme = useTheme()
   const { selectedBranch, clear } = useMembershipOptionsStore()
-  const { data: consultationCount = 0 } = useConsultationCount()
+  const { data: consultationCount = 0 } = useQuery({
+    queryKey: ["consultationCount"],
+    queryFn: getConsultationCount,
+  })
   const { mutateAsync: createReservation } = useCreateReservationMutation()
 
   const { data: membershipsData, isLoading: isMembershipsLoading } =
@@ -230,6 +234,7 @@ const ReservationFormPage = () => {
   const handleConsultationReservation = async () => {
     try {
       // 상담 예약 가능 횟수 체크
+      const consultationCount = await getConsultationCount()
       if (consultationCount >= 2) {
         openAlert({
           title: "예약 실패",
