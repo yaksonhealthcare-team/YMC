@@ -26,6 +26,8 @@ import { MembershipDetail } from "../../types/Membership"
 import { formatPrice } from "utils/format"
 
 const MembershipInfo = ({ membership }: { membership: MembershipDetail }) => {
+  const firstOption = membership.options?.[0]
+
   return (
     <div className="flex flex-col px-5 py-6 gap-4">
       <div className="flex flex-col gap-3">
@@ -37,28 +39,26 @@ const MembershipInfo = ({ membership }: { membership: MembershipDetail }) => {
             {membership.s_name || "데이터가 없습니다"}
           </h1>
         </div>
-        {membership.options?.length > 0 && (
+        {firstOption && (
           <div className="flex items-baseline gap-2">
-            {membership.options[0].original_price && (
+            {firstOption.original_price && (
               <span className="text-primary font-b text-18px">
                 {calculateDiscountRate(
-                  Number(membership.options[0].ss_price.replace(/,/g, "")),
-                  Number(
-                    membership.options[0].original_price.replace(/,/g, ""),
-                  ),
+                  Number(firstOption.ss_price.replace(/,/g, "")),
+                  Number(firstOption.original_price.replace(/,/g, "")),
                 )}
                 %
               </span>
             )}
             <div className="flex items-baseline gap-1">
               <span className="text-gray-900 font-b text-18px">
-                {formatPrice(membership.options[0].ss_price)}원
+                {formatPrice(firstOption.ss_price)}원
               </span>
               <span className="text-gray-900 font-r text-12px">부터~</span>
             </div>
-            {membership.options[0].original_price && (
+            {firstOption.original_price && (
               <span className="text-gray-400 font-r text-14px line-through translate-y-[0.5px]">
-                {formatPrice(membership.options[0].original_price)}원
+                {formatPrice(firstOption.original_price)}원
               </span>
             )}
           </div>
