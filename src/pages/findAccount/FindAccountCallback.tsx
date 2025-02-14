@@ -11,10 +11,10 @@ const FindAccountCallback = () => {
   const { openAlert } = useOverlay()
   const socialInfo = location.state?.social
   const navigate = useNavigate()
+  const { tab } = useParams<{ tab: string }>()
+  const queryParams = new URLSearchParams(window.location.search)
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search)
-    const { tab } = useParams()
     const tokenVersionId = queryParams.get("token_version_id")
     const encData = queryParams.get("enc_data")
     const integrityValue = queryParams.get("integrity_value")
