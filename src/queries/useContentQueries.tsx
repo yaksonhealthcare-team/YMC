@@ -11,6 +11,7 @@ export const useNoticesSummary = () =>
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000, // 5분
     gcTime: 10 * 60 * 1000, // 10분
+    retry: false,
   })
 
 // 공지사항 목록 페이지용 (무한 스크롤)
@@ -18,6 +19,7 @@ export const useNotices = () => {
   return useQuery({
     queryKey: ["notices"],
     queryFn: () => fetchNotices(),
+    retry: false,
   })
 }
 
@@ -26,5 +28,30 @@ export const useNotice = (code: string) => {
     queryKey: ["notice", code],
     queryFn: () => fetchNotice(code),
     enabled: !!code,
+    retry: false,
+  })
+}
+
+export const useContent = (id: number) => {
+  return useQuery({
+    queryKey: ["contents", id],
+    queryFn: () => getContent(id),
+    retry: false,
+  })
+}
+
+export const useContents = () => {
+  return useQuery({
+    queryKey: ["contents"],
+    queryFn: getContents,
+    retry: false,
+  })
+}
+
+export const useContentsByCategory = (category: string) => {
+  return useQuery({
+    queryKey: ["contents", "category", category],
+    queryFn: () => getContentsByCategory(category),
+    retry: false,
   })
 }

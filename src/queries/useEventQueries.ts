@@ -19,5 +19,6 @@ export const useEventDetail = (code: string) => {
     enabled: !!code,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
+    retry: false,
   })
 }

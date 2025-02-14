@@ -5,6 +5,7 @@ export const useBrands = () => {
   return useQuery({
     queryKey: ["brands"],
     queryFn: () => fetchBrands(),
+    retry: false,
   })
 }
 
@@ -13,5 +14,6 @@ export const useBrand = (brandCode?: string) => {
     queryKey: ["brand", brandCode],
     queryFn: () => fetchBrand(brandCode!),
     enabled: !!brandCode,
+    retry: false,
   })
 }

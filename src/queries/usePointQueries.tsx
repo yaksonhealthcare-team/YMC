@@ -13,6 +13,7 @@ export const usePointHistories = () =>
       if (lastPage.data.length === 0) return undefined
       return allPages.length + 1
     },
+    retry: false,
   })
 
 export const usePointsEarn = () =>
@@ -23,4 +24,20 @@ export const usePointsEarn = () =>
         queryKey: queryKeys.payments.all,
       })
     },
+    retry: false,
   })
+
+export const usePointHistory = () => {
+  return useInfiniteQuery({
+    queryKey: ["points", "history"],
+    queryFn: getPointHistory,
+    retry: false,
+  })
+}
+
+export const useUsePoint = () => {
+  return useMutation({
+    mutationFn: usePoint,
+    retry: false,
+  })
+}

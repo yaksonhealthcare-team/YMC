@@ -20,6 +20,7 @@ export const MembershipSection = ({
   const { data: consultationCount = 0 } = useQuery({
     queryKey: ["consultationCount"],
     queryFn: getConsultationCount,
+    retry: false,
   })
 
   return (

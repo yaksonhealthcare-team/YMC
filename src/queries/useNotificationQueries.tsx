@@ -26,6 +26,7 @@ export const useNotifications = (filters: NotificationFilters) => {
       return allPages.length + 1
     },
     initialPageParam: 1,
+    retry: false,
   })
 }
 
@@ -33,6 +34,7 @@ export const useNotificationSettings = () => {
   return useQuery({
     queryKey: ["notificationSettings"],
     queryFn: getNotificationSettings,
+    retry: false,
   })
 }
 
@@ -44,6 +46,7 @@ export const useUpdateNotificationSettings = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notificationSettings"] })
     },
+    retry: false,
   })
 }
 
@@ -54,5 +57,26 @@ export const useUnreadNotificationsCount = () => {
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     staleTime: 1000 * 30, // 30초
+    retry: false,
+  })
+}
+
+export const useReadNotification = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: readNotification,
+    retry: false,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications"] })
+    },
+  })
+}
+
+export const useUnreadNotificationCount = () => {
+  return useQuery({
+    queryKey: ["notifications", "unread"],
+    queryFn: getUnreadNotificationCount,
+    retry: false,
   })
 }

@@ -9,14 +9,7 @@ export const useCartItems = () =>
     queryFn: fetchCart,
     staleTime: 5 * 60 * 1000, // 5분
     gcTime: 10 * 60 * 1000, // 10분
-    retry: (failureCount, error: any) => {
-      // resultCode가 "25"인 경우 재시도하지 않음 (장바구니가 비어있는 경우)
-      if (error?.response?.data?.resultCode === "25") {
-        return false
-      }
-      // 그 외의 경우 기본 재시도 정책을 따름 (3번까지 재시도)
-      return failureCount < 1
-    },
+    retry: false,
   })
 
 export const useDeleteCartItemsMutation = () =>
@@ -27,6 +20,7 @@ export const useDeleteCartItemsMutation = () =>
         queryKey: queryKeys.carts.all,
       })
     },
+    retry: false,
   })
 
 export const useUpdateCartItemMutation = () =>
@@ -38,4 +32,27 @@ export const useUpdateCartItemMutation = () =>
         queryKey: queryKeys.carts.all,
       })
     },
+    retry: false,
   })
+
+export const useCart = () => {
+  return useQuery({
+    queryKey: ["cart"],
+    queryFn: getCart,
+    retry: false,
+  })
+}
+
+export const useAddToCart = () => {
+  return useMutation({
+    mutationFn: addToCart,
+    retry: false,
+  })
+}
+
+export const useRemoveFromCart = () => {
+  return useMutation({
+    mutationFn: removeFromCart,
+    retry: false,
+  })
+}

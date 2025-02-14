@@ -47,3 +47,19 @@ export const useScheduleTimesQueries = (filter: ScheduleFilters) =>
     gcTime: 1000 * 60 * 30, // 30분 동안 캐시 보관
     retry: false, // 에러 발생시 재시도 하지 않음
   })
+
+export const useSchedule = (id: number) => {
+  return useQuery({
+    queryKey: ["schedules", id],
+    queryFn: () => getSchedule(id),
+    retry: false,
+  })
+}
+
+export const useSchedules = () => {
+  return useQuery({
+    queryKey: ["schedules"],
+    queryFn: getSchedules,
+    retry: false,
+  })
+}

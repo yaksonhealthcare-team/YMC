@@ -56,12 +56,14 @@ export const useBranches = (filters: BranchFilters) =>
       }
       return undefined
     },
+    retry: false,
   })
 
 export const useBranch = (b_idx: string, coords: Coordinate) =>
   useQuery({
     queryKey: queryKeys.branches.detail(b_idx, coords),
     queryFn: () => fetchBranch(b_idx, coords),
+    retry: false,
   })
 
 export const useBranchBookmarksQuery = (coords?: Coordinate) => {
@@ -69,6 +71,7 @@ export const useBranchBookmarksQuery = (coords?: Coordinate) => {
     queryKey: ["branchBookmarks", coords],
     queryFn: () => getBranchBookmarks(coords),
     enabled: !!coords,
+    retry: false,
   })
 }
 
@@ -76,6 +79,7 @@ export const useBranchDetailQuery = (b_idx: string) => {
   return useQuery({
     queryKey: ["branchDetail", b_idx],
     queryFn: () => fetchBranch(b_idx, { latitude: 0, longitude: 0 }),
+    retry: false,
   })
 }
 
@@ -88,6 +92,7 @@ export const useBranchBookmarkMutation = () => {
       queryClient.invalidateQueries({ queryKey: ["branches"] })
       queryClient.invalidateQueries({ queryKey: ["branchBookmarks"] })
     },
+    retry: false,
   })
 }
 
@@ -100,5 +105,6 @@ export const useBranchUnbookmarkMutation = () => {
       queryClient.invalidateQueries({ queryKey: ["branches"] })
       queryClient.invalidateQueries({ queryKey: ["branchBookmarks"] })
     },
+    retry: false,
   })
 }

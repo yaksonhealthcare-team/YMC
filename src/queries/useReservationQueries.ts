@@ -39,6 +39,7 @@ export const useUpcomingReservations = () => {
   return useQuery({
     queryKey: ["upcomingReservations"],
     queryFn: () => fetchReservations("001", 1),
+    retry: false,
   })
 }
 
@@ -51,6 +52,7 @@ export const useReservations = (status: ReservationStatusCode = "000") => {
       if (lastPage.length === 0) return undefined
       return pages.length + 1
     },
+    retry: false,
   })
 }
 
@@ -89,6 +91,7 @@ export const useReservationDetail = (reservationId: string) => {
 
       return detail
     },
+    retry: false,
   })
 }
 
@@ -101,6 +104,7 @@ export const useCompleteVisit = () => {
       queryClient.invalidateQueries({ queryKey: ["reservations"] })
       queryClient.invalidateQueries({ queryKey: ["reservation"] })
     },
+    retry: false,
   })
 }
 
@@ -113,11 +117,48 @@ export const useCancelReservation = () => {
   return useMutation({
     mutationFn: ({ reservationId, cancelMemo }: CancelReservationParams) =>
       cancelReservation(reservationId, cancelMemo),
+    retry: false,
   })
 }
 
 export const useCreateReservationMutation = () => {
   return useMutation({
     mutationFn: (params: CreateReservationRequest) => createReservation(params),
+    retry: false,
+  })
+}
+
+export const useReservation = (id: number) => {
+  return useQuery({
+    queryKey: ["reservations", id],
+    queryFn: () => getReservation(id),
+    retry: false,
+  })
+}
+
+export const useReservations = () => {
+  return useQuery({
+    queryKey: ["reservations"],
+    queryFn: getReservations,
+    retry: false,
+  })
+}
+
+export const useCreateReservation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: createReservation,
+    retry: false,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["reservations"] })
+    },
+  })
+}
+
+export const useUpdateReservation = () => {
+  return useMutation({
+    mutationFn: updateReservation,
+    retry: false,
   })
 }

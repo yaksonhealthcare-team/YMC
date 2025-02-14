@@ -64,7 +64,7 @@ export default function PaymentCallbackPage() {
     queryFn: () => fetchPoints(),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,
-    retry: 1,
+    retry: false,
   })
 
   useEffect(() => {

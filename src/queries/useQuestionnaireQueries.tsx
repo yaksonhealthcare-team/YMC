@@ -23,6 +23,7 @@ export const useQuestionnaire = (type: QuestionnaireType) =>
         ? fetchCommonQuestionnaire
         : fetchReservationQuestionnaire,
     enabled: !!type,
+    retry: false,
   })
 
 // 문진 제출
@@ -32,6 +33,7 @@ export const useSubmitQuestionnaire = (type: QuestionnaireType) =>
       type === "common"
         ? submitCommonQuestionnaire
         : submitReservationQuestionnaire,
+    retry: false,
   })
 
 // 사용자 일반 문진 결과 조회
@@ -42,6 +44,7 @@ export const useUserGeneralQuestionnaireResult = () =>
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     staleTime: 0,
+    retry: false,
   })
 
 // 사용자 예약 문진 결과 조회
@@ -52,4 +55,5 @@ export const useUserReservationQuestionnaireResult = () =>
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     staleTime: 0,
+    retry: false,
   })

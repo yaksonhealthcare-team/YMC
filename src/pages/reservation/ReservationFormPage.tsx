@@ -46,6 +46,7 @@ const ReservationFormPage = () => {
   const { data: consultationCount = 0 } = useQuery({
     queryKey: ["consultationCount"],
     queryFn: getConsultationCount,
+    retry: false,
   })
   const { mutateAsync: createReservation } = useCreateReservationMutation()
   const { handleError } = useErrorHandler()

@@ -13,5 +13,17 @@ export const useBanner = (
     queryFn: () => fetchBanners(bannerRequestType),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    retry: false,
     ...options,
   })
+
+export const useBanners = (
+  options?: Omit<UseQueryOptions<Banner[], Error>, "queryKey" | "queryFn">,
+) => {
+  return useQuery({
+    queryKey: ["banners"],
+    queryFn: getBanners,
+    retry: false,
+    ...options,
+  })
+}

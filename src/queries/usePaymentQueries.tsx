@@ -19,12 +19,14 @@ export const usePaymentHistories = () =>
       if (lastPage.length === 0) return undefined
       return allPages.length + 1
     },
+    retry: false,
   })
 
 export const usePaymentHistory = (paymentId: string) =>
   useQuery({
     queryKey: queryKeys.payments.detail(paymentId),
     queryFn: () => fetchPayment(paymentId),
+    retry: false,
   })
 
 export const usePaymentCancel = () =>
@@ -40,12 +42,14 @@ export const usePaymentCancel = () =>
     }) => cancelPayments(orderId, paymentIds, reason),
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: [queryKeys.payments] }),
+    retry: false,
   })
 
 export const useBankList = () =>
   useQuery({
     queryKey: queryKeys.payments.banks,
     queryFn: () => fetchBankList(),
+    retry: false,
   })
 
 export const useRequestPayment = () =>
@@ -53,4 +57,35 @@ export const useRequestPayment = () =>
     mutationFn: (paymentData: PaymentRequest) => requestPayment(paymentData),
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: [queryKeys.payments] }),
+    retry: false,
   })
+
+export const usePayment = (id: number) => {
+  return useQuery({
+    queryKey: ["payments", id],
+    queryFn: () => getPayment(id),
+    retry: false,
+  })
+}
+
+export const useCreatePayment = () => {
+  return useMutation({
+    mutationFn: createPayment,
+    retry: false,
+  })
+}
+
+export const usePaymentByReservation = (reservationId: number) => {
+  return useQuery({
+    queryKey: ["payments", "reservation", reservationId],
+    queryFn: () => getPaymentByReservation(reservationId),
+    retry: false,
+  })
+}
+
+export const useCancelPayment = () => {
+  return useMutation({
+    mutationFn: cancelPayment,
+    retry: false,
+  })
+}

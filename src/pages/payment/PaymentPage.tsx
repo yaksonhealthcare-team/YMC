@@ -54,6 +54,7 @@ const PaymentPage = () => {
   const { data: availablePoints = 0, isLoading: isPointsLoading } = useQuery({
     queryKey: ["points"],
     queryFn: fetchPoints,
+    retry: false,
   })
 
   useEffect(() => {

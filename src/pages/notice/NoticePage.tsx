@@ -25,6 +25,7 @@ const NoticePage: React.FC = () => {
       return allPages.length + 1
     },
     initialPageParam: 1,
+    retry: false,
   })
 
   const notices = (pages?.pages || []).flatMap((page) => page)
