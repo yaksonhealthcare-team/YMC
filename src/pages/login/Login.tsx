@@ -81,7 +81,7 @@ const Login = () => {
   }
 
   const getKakaoLoginUrl = () => {
-    return `https://devapi.yaksonhc.com/api/auth/kakao_login?scope=account_email`
+    return `${import.meta.env.VITE_KAKAO_REDIRECT_URI}?scope=account_email`
   }
 
   return (
