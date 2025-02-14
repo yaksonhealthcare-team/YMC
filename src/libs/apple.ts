@@ -1,6 +1,6 @@
 import { axiosClient } from "../queries/clients"
 
-const APPLE_CLIENT_ID = "com.yaksonhc.therapist"
+const APPLE_CLIENT_ID = import.meta.env.VITE_APPLE_CLIENT_ID
 const APPLE_REDIRECT_URI = import.meta.env.VITE_APPLE_REDIRECT_URI
 
 export const getAppleLoginUrl = () => {
