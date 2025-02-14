@@ -9,6 +9,8 @@ import {
   cancelReservation,
   fetchReservations,
   fetchReservationDetail,
+  createReservation,
+  CreateReservationRequest,
 } from "apis/reservation.api"
 import { Reservation, ReservationStatusCode } from "types/Reservation"
 
@@ -111,5 +113,11 @@ export const useCancelReservation = () => {
   return useMutation({
     mutationFn: ({ reservationId, cancelMemo }: CancelReservationParams) =>
       cancelReservation(reservationId, cancelMemo),
+  })
+}
+
+export const useCreateReservationMutation = () => {
+  return useMutation({
+    mutationFn: (params: CreateReservationRequest) => createReservation(params),
   })
 }

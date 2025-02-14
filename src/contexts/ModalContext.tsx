@@ -53,7 +53,7 @@ export interface OverlayContextValue {
     message: string,
     options?: Record<string, unknown> | undefined,
   ) => void
-  openBottomSheet: (content: ReactNode) => void
+  openBottomSheet: (content: ReactNode, options?: BottomSheetOptions) => void
   showToast: (message: string) => void
   openAlert: (props: {
     title: string
@@ -180,8 +180,11 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
     openOverlay(OverlayTypes.MESSAGE_BOX, message, options)
   }
 
-  const openBottomSheet = (content: ReactNode) => {
-    openOverlay(OverlayTypes.BOTTOM_SHEET, content)
+  const openBottomSheet = (
+    content: ReactNode,
+    options: BottomSheetOptions = {},
+  ) => {
+    openOverlay(OverlayTypes.BOTTOM_SHEET, content, options)
   }
 
   const showToast = (message: string) => {
@@ -355,8 +358,12 @@ const OverlayContainer: React.FC = () => {
               borderTopRightRadius: 24,
               maxHeight:
                 (options as BottomSheetOptions)?.height === "large"
-                  ? "90vh"
+                  ? "95vh"
                   : "80vh",
+              minHeight:
+                (options as BottomSheetOptions)?.height === "large"
+                  ? "95vh"
+                  : "auto",
               overflowY: "auto",
               width: "100%",
             },

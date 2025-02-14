@@ -5,18 +5,19 @@ import {
   useQueryClient,
 } from "@tanstack/react-query"
 import {
-  fetchBranches,
   getBranchBookmarks,
   fetchBranch,
   addBranchBookmark,
   removeBranchBookmark,
 } from "../apis/branch.api.ts"
 import { Coordinate } from "../types/Coordinate.ts"
+import { BranchSearchResponse } from "../types/Branch"
+import { axiosClient } from "./clients"
 
 interface BranchFilters {
   page?: number
-  latitude: number
-  longitude: number
+  latitude?: number
+  longitude?: number
   brandCode?: string
   category?: string
   search?: string
@@ -30,14 +31,30 @@ const queryKeys = {
 }
 
 export const useBranches = (filters: BranchFilters) =>
-  useInfiniteQuery({
+  useInfiniteQuery<BranchSearchResponse>({
     initialPageParam: 1,
     queryKey: queryKeys.branches.list(filters),
-    queryFn: ({ pageParam = 1 }) =>
-      fetchBranches({ ...filters, page: pageParam }),
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.branches.length === 0) return undefined
-      return allPages.length + 1
+    queryFn: async ({ pageParam = 1 }) => {
+      const { data } = await axiosClient.get<BranchSearchResponse>(
+        "/branches/branches",
+        {
+          params: {
+            page: pageParam,
+            nowlat: filters.latitude,
+            nowlon: filters.longitude,
+            search: filters.search,
+            brand_code: filters.brandCode,
+          },
+        },
+      )
+      return data
+    },
+    getNextPageParam: (lastPage) => {
+      if (!lastPage.body?.result?.length) return undefined
+      if (lastPage.current_page < lastPage.total_page_count) {
+        return lastPage.current_page + 1
+      }
+      return undefined
     },
   })
 

@@ -2,7 +2,6 @@ import { Branch } from "../../../types/Branch.ts"
 import BranchPlaceholderImage from "@assets/images/BranchPlaceholderImage.png"
 import HeartDisabledIcon from "@assets/icons/HeartDisabledIcon.svg?react"
 import HeartEnabledIcon from "@assets/icons/HeartEnabledIcon.svg?react"
-import { useNavigate } from "react-router-dom"
 import useIntersection from "../../../hooks/useIntersection.tsx"
 import {
   useBranchBookmarkMutation,
@@ -13,10 +12,14 @@ import { useOverlay } from "../../../contexts/ModalContext.tsx"
 interface BranchFilterListProps {
   branches: Branch[]
   onIntersect: () => void
+  onSelectBranch: (branch: Branch) => void
 }
 
-const BranchFilterList = ({ branches, onIntersect }: BranchFilterListProps) => {
-  const navigate = useNavigate()
+const BranchFilterList = ({
+  branches,
+  onIntersect,
+  onSelectBranch,
+}: BranchFilterListProps) => {
   const { observerTarget } = useIntersection({ onIntersect })
   const { showToast } = useOverlay()
 
@@ -35,7 +38,7 @@ const BranchFilterList = ({ branches, onIntersect }: BranchFilterListProps) => {
           <BranchFilterListItem
             key={branch.b_idx}
             branch={branch}
-            onClick={(branch) => navigate(`/branch/${branch.b_idx}`)}
+            onClick={() => onSelectBranch(branch)}
             onClickFavorite={() => {
               if (branch.isFavorite) {
                 removeBookmark(branch.b_idx)

@@ -30,7 +30,21 @@ const Step1SearchBranchList = ({
       longitude: location?.longitude || DEFAULT_COORDINATE.longitude,
     })
 
-  const branches = data?.pages.flatMap(({ branches }) => branches) || []
+  const branches =
+    data?.pages.flatMap((page) =>
+      page.body.result.map((branch) => ({
+        b_idx: branch.b_idx,
+        name: branch.b_name,
+        address: branch.b_addr,
+        latitude: Number(branch.b_lat),
+        longitude: Number(branch.b_lon),
+        canBookToday: branch.reserve === "Y",
+        distanceInMeters: branch.distance,
+        isFavorite: branch.b_bookmark === "Y",
+        brandCode: branch.brand_code,
+        brand: "therapist",
+      })),
+    ) || []
 
   const { observerTarget } = useIntersection({
     onIntersect: () => {

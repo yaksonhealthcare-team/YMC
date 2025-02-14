@@ -1,4 +1,3 @@
-import { Divider } from "@mui/material"
 import CloseIcon from "@assets/icons/CloseIcon.svg?react"
 import {
   DateCalendarProps,
@@ -46,20 +45,22 @@ const DateAndTimeBottomSheet = ({
 
   const handleDateSelect = (date: Dayjs | null) => {
     setSelectedDate(date)
+    onSelect(date, selectedTime)
   }
 
   const handleTimeSelect = (time: TimeSlot | null) => {
     setSelectedTime(time)
+    onSelect(selectedDate, time)
   }
 
   const handleComplete = () => {
     onClose()
-    onSelect(selectedDate, selectedTime)
   }
 
   return (
     <div className={"flex flex-col items-center gap-5 px-5 pb-[100px]"}>
       <DateAndTimeBottomSheetHeader onClose={onClose} />
+      <div className="w-full h-px bg-gray-100" />
       <DatePickerSection
         date={selectedDate}
         handleDateSelect={handleDateSelect}
@@ -101,18 +102,9 @@ const DateAndTimeBottomSheet = ({
 
 const DateAndTimeBottomSheetHeader = ({ onClose }: { onClose: () => void }) => (
   <>
-    <Divider
-      sx={{
-        width: "52px",
-        height: "1.5px",
-        borderRadius: "100px",
-        bgcolor: "gray.200",
-        margin: "0 auto",
-      }}
-    />
     <div className={"w-full"}>
       <div className={"flex justify-between"}>
-        <p className={"font-sb text-18px"}>{"지점 필터"}</p>
+        <p className={"font-sb text-18px"}>{"예약 날짜를 선택해주세요."}</p>
         <button onClick={onClose}>
           <CloseIcon />
         </button>
@@ -332,7 +324,7 @@ const TimePickerSection = ({
     }
 
     setTimeSlots(mapTimesToTimeSlots(times))
-  }, [isLoading])
+  }, [isLoading, times])
 
   return (
     <div className="w-full grid grid-cols-4 gap-[9px]">

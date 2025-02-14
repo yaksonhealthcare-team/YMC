@@ -2,35 +2,53 @@ import { useEffect, useState } from "react"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useGeolocation } from "../../hooks/useGeolocation"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
-import { useBranches } from "../../queries/useBranchQueries"
+import { useBranches } from "../../queries/useBranchQueries.tsx"
 import { DEFAULT_COORDINATE } from "../../types/Coordinate"
 import { Branch, BranchSearchResult } from "../../types/Branch"
 import { SearchField } from "../../components/SearchField"
 import useIntersection from "../../hooks/useIntersection"
 import BranchPlaceholderImage from "../../assets/images/BranchPlaceholderImage.png"
 import { MembershipActiveBranchList } from "./_fragments/MembershipActiveBranchList"
+import LoadingIndicator from "@components/LoadingIndicator"
+import { useLocation, useNavigate } from "react-router-dom"
 
 interface Props {
   onSelect?: (branch: Branch) => void
   onClose: () => void
 }
 
-export const MembershipBranchSelectPage = ({ onSelect, onClose }: Props) => {
+const DEFAULT_BRAND_CODE = "001" // 약손명가
+
+const MembershipBranchSelectPage = ({ onSelect, onClose }: Props) => {
   const [query, setQuery] = useState("")
   const { setHeader, setNavigation } = useLayout()
-  const { location: geolocationLocation } = useGeolocation()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { location: geolocationLocation, error: geolocationError } =
+    useGeolocation()
   const { setSelectedBranch, setIsBottomSheetOpen } =
     useMembershipOptionsStore()
+
+  const coordinates = geolocationLocation
+    ? {
+        latitude: geolocationLocation.latitude,
+        longitude: geolocationLocation.longitude,
+      }
+    : geolocationError
+      ? DEFAULT_COORDINATE
+      : DEFAULT_COORDINATE
 
   const {
     data: branchPages,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isLoading,
   } = useBranches({
-    latitude: geolocationLocation?.latitude || DEFAULT_COORDINATE.latitude,
-    longitude: geolocationLocation?.longitude || DEFAULT_COORDINATE.longitude,
+    latitude: coordinates.latitude,
+    longitude: coordinates.longitude,
     search: query,
+    brandCode: location.state?.brand_code || DEFAULT_BRAND_CODE,
   })
 
   const branches = branchPages?.pages.flatMap((page) => page.body.result) || []
@@ -53,11 +71,16 @@ export const MembershipBranchSelectPage = ({ onSelect, onClose }: Props) => {
     })
     setNavigation({ display: false })
 
+    navigate(location.pathname, {
+      replace: true,
+      state: location.state,
+    })
+
     return () => {
       setHeader({ display: false })
       setNavigation({ display: true })
     }
-  }, [setHeader, setNavigation, onClose])
+  }, [setHeader, setNavigation, onClose, navigate, location])
 
   const handleBranchSelect = (branch: BranchSearchResult | Branch) => {
     const branchData: Branch =
@@ -80,9 +103,22 @@ export const MembershipBranchSelectPage = ({ onSelect, onClose }: Props) => {
       onSelect(branchData)
     } else {
       setSelectedBranch(branchData)
-      setIsBottomSheetOpen(true)
+      if (location.state?.returnPath) {
+        navigate(location.state.returnPath, {
+          state: {
+            ...location.state,
+            selectedBranch: branchData,
+          },
+        })
+      } else {
+        setIsBottomSheetOpen(true)
+        onClose()
+      }
     }
-    onClose()
+  }
+
+  if (isLoading) {
+    return <LoadingIndicator className="min-h-screen" />
   }
 
   return (
@@ -147,3 +183,5 @@ export const MembershipBranchSelectPage = ({ onSelect, onClose }: Props) => {
     </div>
   )
 }
+
+export default MembershipBranchSelectPage

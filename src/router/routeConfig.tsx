@@ -1,6 +1,16 @@
 import { lazy, ReactNode } from "react"
 import WithdrawalPage from "../pages/profile/WithdrawalPage"
 import Store from "../pages/store/Store"
+import { useNavigate } from "react-router-dom"
+
+const MembershipBranchSelectPageWrapper = () => {
+  const navigate = useNavigate()
+  return <MembershipBranchSelectPage onClose={() => navigate(-1)} />
+}
+
+const MembershipBranchSelectPage = lazy(
+  () => import("../pages/membership/MembershipBranchSelectPage"),
+)
 
 export interface RouteConfig {
   path: string
@@ -239,6 +249,11 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/membership",
     element: <Membership />,
+    auth: true,
+  },
+  {
+    path: "/membership/select-branch",
+    element: <MembershipBranchSelectPageWrapper />,
     auth: true,
   },
   {

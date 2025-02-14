@@ -27,6 +27,7 @@ import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useConsultationCount } from "../../queries/useConsultationQueries.ts"
 import type { Swiper as SwiperType } from "swiper"
+import { useCreateReservationMutation } from "../../queries/useReservationQueries"
 
 interface FormDataType {
   item: undefined | string
@@ -40,13 +41,14 @@ interface FormDataType {
 const BRAND_CODE = "001" // 약손명가
 
 const ReservationFormPage = () => {
-  const { openBottomSheet, closeOverlay } = useOverlay()
+  const { openBottomSheet, closeOverlay, openAlert } = useOverlay()
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const location = useLocation()
   const theme = useTheme()
   const { selectedBranch, clear } = useMembershipOptionsStore()
   const { data: consultationCount = 0 } = useConsultationCount()
+  const { mutateAsync: createReservation } = useCreateReservationMutation()
 
   const { data: membershipsData, isLoading: isMembershipsLoading } =
     useMembershipList(BRAND_CODE)
@@ -95,6 +97,7 @@ const ReservationFormPage = () => {
         )}
         b_idx={selectedBranch?.b_idx || ""}
       />,
+      { height: "large" },
     )
   }
 
@@ -224,6 +227,142 @@ const ReservationFormPage = () => {
     )
   }
 
+  const handleConsultationReservation = async () => {
+    try {
+      // 상담 예약 가능 횟수 체크
+      if (consultationCount >= 2) {
+        openAlert({
+          title: "예약 실패",
+          description: "상담 예약 가능 횟수가 없습니다.",
+        })
+        return
+      }
+
+      const response = await createReservation({
+        r_gubun: "C",
+        b_idx: data.branch!,
+        r_date: data.date!.format("YYYY-MM-DD"),
+        r_stime: data.timeSlot!.time,
+        r_memo: data.request,
+      })
+
+      if (response.resultCode !== "00") {
+        let errorMessage = "상담 예약에 실패했습니다."
+
+        switch (response.resultCode) {
+          case "40":
+            errorMessage = "상담 예약 가능 횟수가 없습니다."
+            break
+          case "41":
+            errorMessage = "이미 예약된 시간입니다."
+            break
+          case "42":
+            errorMessage = "예약 가능한 시간이 아닙니다."
+            break
+          default:
+            errorMessage = response.resultMessage || "상담 예약에 실패했습니다."
+        }
+
+        openAlert({
+          title: "예약 실패",
+          description: errorMessage,
+        })
+        return
+      }
+
+      openAlert({
+        title: "예약 완료",
+        description: "상담 예약이 완료되었습니다.",
+      })
+
+      if (location.state?.returnPath) {
+        navigate(location.state.returnPath, {
+          state: {
+            ...location.state,
+            type: data.item,
+            branch: data.branch,
+            date: data.date?.format("YYYY-MM-DD"),
+            time: data.timeSlot?.time,
+            additionalServices: data.additionalServices,
+            request: data.request,
+          },
+        })
+      }
+    } catch (error) {
+      openAlert({
+        title: "예약 실패",
+        description: "상담 예약에 실패했습니다. 다시 시도해주세요.",
+      })
+    }
+  }
+
+  const handleMembershipReservation = async () => {
+    try {
+      if (!data.date || !data.timeSlot) {
+        openAlert({
+          title: "예약 실패",
+          description: "예약 날짜와 시간을 선택해주세요.",
+        })
+        return
+      }
+
+      const response = await createReservation({
+        r_gubun: "R",
+        mp_idx: data.item,
+        b_idx: data.branch!,
+        r_date: data.date.format("YYYY-MM-DD"),
+        r_stime: data.timeSlot.time,
+        add_services: data.additionalServices.map((service) =>
+          Number(service.s_idx),
+        ),
+        r_memo: data.request,
+      })
+
+      if (response.resultCode !== "00") {
+        let errorMessage = "예약에 실패했습니다."
+
+        switch (response.resultCode) {
+          case "41":
+            errorMessage = "이미 예약된 시간입니다."
+            break
+          case "42":
+            errorMessage = "예약 가능한 시간이 아닙니다."
+            break
+          default:
+            errorMessage = response.resultMessage || "예약에 실패했습니다."
+        }
+
+        openAlert({
+          title: "예약 실패",
+          description: errorMessage,
+        })
+        return
+      }
+
+      navigate("/payment", {
+        state: {
+          type: "reservation",
+          items: [
+            {
+              type: data.item,
+              branch: data.branch,
+              date: data.date.format("YYYY-MM-DD"),
+              time: data.timeSlot.time,
+              additionalServices: data.additionalServices,
+              request: data.request,
+            },
+          ],
+        },
+        replace: true,
+      })
+    } catch (error) {
+      openAlert({
+        title: "예약 실패",
+        description: "예약에 실패했습니다. 다시 시도해주세요.",
+      })
+    }
+  }
+
   if (isMembershipsLoading) {
     return <LoadingIndicator className="min-h-screen" />
   }
@@ -346,8 +485,8 @@ const ReservationFormPage = () => {
                 state: {
                   returnPath: "/reservation/form",
                   selectedItem: data.item,
+                  brand_code: BRAND_CODE,
                 },
-                replace: true,
               })
             }}
           />
@@ -400,36 +539,60 @@ const ReservationFormPage = () => {
           </p>
         </div>
       </section>
-      <section className="px-5 py-6">
-        <p className="font-m text-14px mb-2 text-gray-700">결제 금액</p>
-        <div className="flex flex-col gap-3 mt-4">
-          {data.additionalServices.map((service) => (
-            <div key={service.s_idx} className="flex justify-between">
-              <p className="text-gray-400 text-sm font-medium">
-                {service.s_name}
-              </p>
-              <p className="text-base font-medium">
-                {service.options?.[0]?.ss_price || "0"}원
-              </p>
-            </div>
-          ))}
-        </div>
-        <div className="w-full h-px bg-gray-100 my-4" />
-        <div className="flex justify-between items-center">
-          <p className="text-gray-700 text-base font-sb">총 결제금액</p>
-          <p className="text-primary text-xl font-bold">
-            {totalPrice.toLocaleString()}원
-          </p>
-        </div>
-      </section>
+      {data.item !== "상담 예약" && (
+        <section className="px-5 py-6">
+          <p className="font-m text-14px mb-2 text-gray-700">결제 금액</p>
+          <div className="flex flex-col gap-3 mt-4">
+            {data.additionalServices.map((service) => (
+              <div key={service.s_idx} className="flex justify-between">
+                <p className="text-gray-400 text-sm font-medium">
+                  {service.s_name}
+                </p>
+                <p className="text-base font-medium">
+                  {service.options?.[0]?.ss_price || "0"}원
+                </p>
+              </div>
+            ))}
+          </div>
+          <div className="w-full h-px bg-gray-100 my-4" />
+          <div className="flex justify-between items-center">
+            <p className="text-gray-700 text-base font-sb">총 결제금액</p>
+            <p className="text-primary text-xl font-bold">
+              {totalPrice.toLocaleString()}원
+            </p>
+          </div>
+        </section>
+      )}
       <FixedButtonContainer className="bg-white">
         <Button
           variantType="primary"
           sizeType="l"
-          onClick={() => {}}
+          onClick={async () => {
+            if (!data.date || !data.timeSlot) {
+              openAlert({
+                title: "예약 실패",
+                description: "예약 날짜와 시간을 선택해주세요.",
+              })
+              return
+            }
+            if (!data.branch) {
+              openAlert({
+                title: "예약 실패",
+                description: "지점을 선택해주세요.",
+              })
+              return
+            }
+
+            if (data.item === "상담 예약") {
+              await handleConsultationReservation()
+              return
+            }
+
+            await handleMembershipReservation()
+          }}
           className="w-full"
         >
-          {data.item === "0"
+          {data.item === "상담 예약"
             ? "예약하기"
             : `${totalPrice.toLocaleString()}원 결제하기`}
         </Button>

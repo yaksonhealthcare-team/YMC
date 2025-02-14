@@ -56,8 +56,23 @@ const Branch = () => {
     category: selectedFilter.category?.code,
   })
 
-  const address = result?.pages[0].address || "서울 강남구 테헤란로78길 14-10"
-  const branches = result?.pages.flatMap(({ branches }) => branches) || []
+  const address =
+    result?.pages[0]?.body?.current_addr || "서울 강남구 테헤란로78길 14-10"
+  const branches =
+    result?.pages.flatMap((page) =>
+      page.body.result.map((branch) => ({
+        b_idx: branch.b_idx,
+        name: branch.b_name,
+        address: branch.b_addr,
+        latitude: Number(branch.b_lat),
+        longitude: Number(branch.b_lon),
+        canBookToday: branch.reserve === "Y",
+        distanceInMeters: branch.distance,
+        isFavorite: branch.b_bookmark === "Y",
+        brandCode: branch.brand_code,
+        brand: "therapist",
+      })),
+    ) || []
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -89,6 +104,19 @@ const Branch = () => {
 
   const handleNavigateToBranchSearch = () => {
     navigate("/branch/search")
+  }
+
+  const handleBranchSelect = (branch: BranchType) => {
+    if (location.state?.returnPath) {
+      navigate(location.state.returnPath, {
+        state: {
+          ...location.state,
+          selectedBranch: branch,
+        },
+      })
+    } else {
+      navigate(`/branch/${branch.b_idx}`)
+    }
   }
 
   useEffect(() => {
@@ -140,6 +168,7 @@ const Branch = () => {
                 fetchNextPage()
               }
             }}
+            onSelectBranch={handleBranchSelect}
           />
         )
       case "map":
