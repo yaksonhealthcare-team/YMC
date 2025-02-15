@@ -8,7 +8,7 @@ import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
 const ChangePhoneNumberCallback = () => {
-  const { openAlert } = useOverlay()
+  const { openModal } = useOverlay()
   const navigate = useNavigate()
   const queryParams = new URLSearchParams(window.location.search)
 
@@ -25,10 +25,10 @@ const ChangePhoneNumberCallback = () => {
           integrity_value: request.integrity_value,
         })
       } catch (error) {
-        openAlert({
+        openModal({
           title: "오류",
-          description: "계정을 찾을 수 없습니다.",
-          onClose: () => {
+          message: "계정을 찾을 수 없습니다.",
+          onConfirm: () => {
             navigate("/profile/change-phone", { replace: true })
           },
         })
@@ -49,10 +49,10 @@ const ChangePhoneNumberCallback = () => {
 
         await changePhoneNumber(request)
       } catch (error) {
-        openAlert({
+        openModal({
           title: "오류",
-          description: "계정을 찾을 수 없습니다.",
-          onClose: () => {
+          message: "계정을 찾을 수 없습니다.",
+          onConfirm: () => {
             navigate("/profile/change-phone", { replace: true })
           },
         })
@@ -60,7 +60,7 @@ const ChangePhoneNumberCallback = () => {
     }
 
     handleVerification()
-  }, [navigate, openAlert, queryParams])
+  }, [navigate, openModal, queryParams])
 
   return <div>ChangePhoneNumberCallback</div>
 }

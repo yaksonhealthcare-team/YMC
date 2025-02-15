@@ -9,7 +9,7 @@ import { useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 
 const FindAccountCallback = () => {
-  const { openAlert } = useOverlay()
+  const { openModal } = useOverlay()
   const navigate = useNavigate()
   const { tab } = useParams<{ tab: string }>()
   const queryParams = new URLSearchParams(window.location.search)
@@ -27,10 +27,10 @@ const FindAccountCallback = () => {
           integrity_value: request.integrity_value,
         })
       } catch (error) {
-        openAlert({
+        openModal({
           title: "오류",
-          description: "계정을 찾을 수 없습니다.",
-          onClose: () => {
+          message: "계정을 찾을 수 없습니다.",
+          onConfirm: () => {
             navigate("/find-account", { replace: true })
           },
         })
@@ -61,20 +61,20 @@ const FindAccountCallback = () => {
         })
       } catch (error) {
         if (error instanceof AxiosError) {
-          openAlert({
+          openModal({
             title: "오류",
-            description:
+            message:
               error.response?.data?.resultMessage || "본인인증에 실패했습니다.",
-            onClose: () => {
+            onConfirm: () => {
               navigate("/find-account", { replace: true })
             },
           })
           return
         }
-        openAlert({
+        openModal({
           title: "오류",
-          description: "본인인증에 실패했습니다.",
-          onClose: () => {
+          message: "본인인증에 실패했습니다.",
+          onConfirm: () => {
             navigate("/find-account", { replace: true })
           },
         })
@@ -82,7 +82,7 @@ const FindAccountCallback = () => {
     }
 
     handleVerification()
-  }, [])
+  }, [navigate, openModal, tab, queryParams])
 
   return (
     <div className="flex items-center justify-center min-h-screen">

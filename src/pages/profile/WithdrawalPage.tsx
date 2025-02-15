@@ -10,7 +10,7 @@ const WithdrawalPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const { logout } = useAuth()
-  const { openAlert } = useOverlay()
+  const { openModal } = useOverlay()
   const [isAgreed, setIsAgreed] = useState(false)
   const { mutateAsync: withdrawal } = useWithdrawal()
 
@@ -26,27 +26,29 @@ const WithdrawalPage = () => {
 
   const handleWithdrawal = async () => {
     if (!isAgreed) {
-      openAlert({
+      openModal({
         title: "안내",
-        description: "회원탈퇴 안내에 동의해주세요.",
+        message: "회원탈퇴 안내에 동의해주세요.",
+        onConfirm: () => {},
       })
       return
     }
 
     try {
       await withdrawal()
-      openAlert({
+      openModal({
         title: "안내",
-        description: "회원탈퇴가 완료되었습니다.",
-        onClose: () => {
+        message: "회원탈퇴가 완료되었습니다.",
+        onConfirm: () => {
           logout()
           navigate("/")
         },
       })
     } catch (error) {
-      openAlert({
+      openModal({
         title: "오류",
-        description: "회원탈퇴에 실패했습니다. 다시 시도해주세요.",
+        message: "회원탈퇴에 실패했습니다. 다시 시도해주세요.",
+        onConfirm: () => {},
       })
     }
   }

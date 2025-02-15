@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 const SignupCallback = () => {
   const { setSignupData } = useSignup()
   const location = useLocation()
-  const { openAlert } = useOverlay()
+  const { openModal } = useOverlay()
   const socialInfo = location.state?.social
   const navigate = useNavigate()
 
@@ -51,20 +51,20 @@ const SignupCallback = () => {
         navigate(socialInfo ? "/signup/profile" : "/signup/email")
       } catch (error) {
         if (error instanceof AxiosError) {
-          openAlert({
+          openModal({
             title: "오류",
-            description:
+            message:
               error.response?.data?.resultMessage || "본인인증에 실패했습니다.",
-            onClose: () => {
+            onConfirm: () => {
               navigate("/signup/terms", { replace: true })
             },
           })
           return
         }
-        openAlert({
+        openModal({
           title: "오류",
-          description: "본인인증에 실패했습니다.",
-          onClose: () => {
+          message: "본인인증에 실패했습니다.",
+          onConfirm: () => {
             navigate("/signup/terms", { replace: true })
           },
         })

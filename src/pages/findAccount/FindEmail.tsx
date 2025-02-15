@@ -7,7 +7,7 @@ import { useLayout } from "../../contexts/LayoutContext.tsx"
 const FindEmail = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const { openAlert } = useOverlay()
+  const { openModal } = useOverlay()
   const [loginInfo, setLoginInfo] = useState<{
     thirdPartyType?: string
     email?: string
@@ -31,10 +31,10 @@ const FindEmail = () => {
       return
     }
 
-    openAlert({
+    openModal({
       title: "오류",
-      description: "계정을 찾을 수 없습니다.",
-      onClose: () => {
+      message: "계정을 찾을 수 없습니다.",
+      onConfirm: () => {
         navigate("/login", { replace: true })
       },
     })

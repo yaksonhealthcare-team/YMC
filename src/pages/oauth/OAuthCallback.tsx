@@ -11,7 +11,7 @@ const OAuthCallback = () => {
   const { provider } = useParams()
   const navigate = useNavigate()
   const { login } = useAuth()
-  const { openAlert } = useOverlay()
+  const { openModal } = useOverlay()
   const { setHeader, setNavigation } = useLayout()
   const isProcessing = useRef(false)
 
@@ -85,10 +85,10 @@ const OAuthCallback = () => {
           throw error
         }
       } catch (error) {
-        openAlert({
+        openModal({
           title: "오류",
-          description: "로그인에 실패했습니다.",
-          onClose: () => {
+          message: "로그인에 실패했습니다.",
+          onConfirm: () => {
             navigate("/login", { replace: true })
           },
         })

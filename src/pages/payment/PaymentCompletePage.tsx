@@ -16,7 +16,7 @@ const PaymentCompletePage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const state = location.state as PaymentCompleteState
-  const { openAlert } = useOverlay()
+  const { openModal } = useOverlay()
 
   useEffect(() => {
     if (!location.state) {
@@ -44,9 +44,10 @@ const PaymentCompletePage = () => {
         navigate("/reservation/form")
       }
     } catch (error) {
-      openAlert({
+      openModal({
         title: "오류",
-        description: "페이지 이동 중 오류가 발생했습니다.",
+        message: "페이지 이동 중 오류가 발생했습니다.",
+        onConfirm: () => {},
       })
       console.error("Navigation error:", error)
     }

@@ -21,7 +21,7 @@ interface FormDataType {
 
 export const useReservation = () => {
   const navigate = useNavigate()
-  const { openAlert } = useOverlay()
+  const { openModal } = useOverlay()
   const { handleError } = useErrorHandler()
   const { validateReservationData } = useReservationValidation()
   const { mutateAsync: createReservation } = useCreateReservationMutation()
@@ -52,23 +52,24 @@ export const useReservation = () => {
         return
       }
 
-      openAlert({
+      openModal({
         title: "예약 완료",
-        description: "상담 예약이 완료되었습니다.",
+        message: "상담 예약이 완료되었습니다.",
+        onConfirm: () => {
+          if (returnPath) {
+            navigate(returnPath, {
+              state: {
+                type: data.item,
+                branch: data.branch,
+                date: formatDateForAPI(data.date?.toDate() || null),
+                time: data.timeSlot?.time,
+                additionalServices: data.additionalServices,
+                request: data.request,
+              },
+            })
+          }
+        },
       })
-
-      if (returnPath) {
-        navigate(returnPath, {
-          state: {
-            type: data.item,
-            branch: data.branch,
-            date: formatDateForAPI(data.date?.toDate() || null),
-            time: data.timeSlot?.time,
-            additionalServices: data.additionalServices,
-            request: data.request,
-          },
-        })
-      }
     } catch (error) {
       handleError(error, "상담 예약에 실패했습니다. 다시 시도해주세요.")
     }

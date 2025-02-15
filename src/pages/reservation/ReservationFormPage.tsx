@@ -38,7 +38,7 @@ interface FormDataType {
 const BRAND_CODE = "001" // 약손명가
 
 const ReservationFormPage = () => {
-  const { openBottomSheet, closeOverlay, openAlert } = useOverlay()
+  const { openBottomSheet, closeOverlay, openModal } = useOverlay()
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const location = useLocation()
@@ -208,24 +208,25 @@ const ReservationFormPage = () => {
         return
       }
 
-      openAlert({
+      openModal({
         title: "예약 완료",
-        description: "상담 예약이 완료되었습니다.",
+        message: "상담 예약이 완료되었습니다.",
+        onConfirm: () => {
+          if (location.state?.returnPath) {
+            navigate(location.state.returnPath, {
+              state: {
+                ...location.state,
+                type: data.item,
+                branch: data.branch,
+                date: data.date?.format("YYYY-MM-DD"),
+                time: data.timeSlot?.time,
+                additionalServices: data.additionalServices,
+                request: data.request,
+              },
+            })
+          }
+        },
       })
-
-      if (location.state?.returnPath) {
-        navigate(location.state.returnPath, {
-          state: {
-            ...location.state,
-            type: data.item,
-            branch: data.branch,
-            date: data.date?.format("YYYY-MM-DD"),
-            time: data.timeSlot?.time,
-            additionalServices: data.additionalServices,
-            request: data.request,
-          },
-        })
-      }
     } catch (error) {
       handleError(error, "상담 예약에 실패했습니다. 다시 시도해주세요.")
     }
