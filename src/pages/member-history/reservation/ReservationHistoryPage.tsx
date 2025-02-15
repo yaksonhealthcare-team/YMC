@@ -43,7 +43,6 @@ const ReservationHistoryPage = () => {
           <ReserveCard
             key={reservation.id}
             reservation={reservation}
-            showDday={true}
             className="border-b border-gray-100 rounded-none"
           />
         )),

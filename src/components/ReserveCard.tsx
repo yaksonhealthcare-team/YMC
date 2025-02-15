@@ -12,13 +12,11 @@ import ReserveTag from "./ReserveTag"
 interface ReserveCardProps {
   reservation: Reservation
   className?: string
-  showDday?: boolean
 }
 
 export const ReserveCard = ({
   reservation,
   className = "",
-  showDday = false,
 }: ReserveCardProps) => {
   const navigate = useNavigate()
   const { mutate: completeVisit } = useCompleteVisit()
@@ -36,31 +34,6 @@ export const ReserveCard = ({
     if (statusGroups.completed.includes(status)) return "completed"
     if (statusGroups.cancelled.includes(status)) return "cancelled"
     if (statusGroups.progressing.includes(status)) return "progressing"
-    return null
-  }
-
-  const getDday = (date: Date) => {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    const targetDate = new Date(date)
-    targetDate.setHours(0, 0, 0, 0)
-    const diffTime = targetDate.getTime() - today.getTime()
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-    return diffDays
-  }
-
-  const renderDdayBadge = () => {
-    if (!showDday) return null
-    const status = classifyReservationStatus(reservation.status)
-    const dday = getDday(reservation.date)
-
-    if (status === "upcoming" && dday >= 0) {
-      return (
-        <div className="bg-primary-100 text-primary px-2 py-[3px] rounded-full text-12px font-m">
-          {dday === 0 ? "D-day" : `D-${dday}`}
-        </div>
-      )
-    }
     return null
   }
 

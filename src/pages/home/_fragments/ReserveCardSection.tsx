@@ -43,7 +43,7 @@ export const ReserveCardSection = () => {
         >
           {upcomingReservations.map((reservation) => (
             <SwiperSlide key={reservation.id}>
-              <ReserveCard reservation={reservation} showDday={true} />
+              <ReserveCard reservation={reservation} />
             </SwiperSlide>
           ))}
         </Swiper>
