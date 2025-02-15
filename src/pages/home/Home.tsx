@@ -1,45 +1,37 @@
 import "swiper/swiper-bundle.css"
 import { useEffect, useMemo } from "react"
-import { useLayout } from "../../contexts/LayoutContext.tsx"
+import { useLayout } from "../../contexts/LayoutContext"
 import { useNavigate } from "react-router-dom"
 import { Container, Typography } from "@mui/material"
-import DynamicHomeHeaderBackground from "./_fragments/DynamicHomeHeaderBackground.tsx"
-import Logo from "@components/Logo.tsx"
+import DynamicHomeHeaderBackground from "./_fragments/DynamicHomeHeaderBackground"
+import Logo from "@components/Logo"
 import NotiIcon from "@assets/icons/NotiIcon.svg?react"
-import { Title } from "@components/Title.tsx"
-import { MembershipCard } from "@components/MembershipCard.tsx"
 import { Swiper, SwiperSlide } from "swiper/react"
-import { FloatingButton } from "@components/FloatingButton.tsx"
-import { EmptyCard } from "@components/EmptyCard.tsx"
-import { ReserveCard } from "@components/ReserveCard.tsx"
-import { useUpcomingReservations } from "queries/useReservationQueries"
+import { FloatingButton } from "@components/FloatingButton"
 import { useUserMemberships } from "queries/useMembershipQueries"
-import SplashScreen from "@components/Splash.tsx"
-import { SwiperBrandCard } from "@components/SwiperBrandCard.tsx"
+import SplashScreen from "@components/Splash"
 import { Pagination } from "swiper/modules"
 import { useBanner } from "queries/useBannerQueries"
 import { BannerRequestType } from "types/Banner"
-import NoticesSummarySlider from "@components/NoticesSummarySlider.tsx"
-import { useAuth } from "../../contexts/AuthContext.tsx"
-import { MyMembership } from "types/Membership"
-import { useEvents } from "queries/useEventQueries"
-import { Event } from "types/Event"
-import LoadingIndicator from "@components/LoadingIndicator"
-import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
-import { getStatusFromString } from "../../utils/membership"
+import NoticesSummarySlider from "@components/NoticesSummarySlider"
+import { useAuth } from "../../contexts/AuthContext"
 import { useUnreadNotificationsCount } from "../../queries/useNotificationQueries"
-import { formatDate } from "../../utils/date"
+import { MembershipCardSection } from "./_fragments/MembershipCardSection"
+import { BrandSection } from "./_fragments/BrandSection"
+import { EventSection } from "./_fragments/EventSection"
+import { BusinessInfo } from "./_fragments/BusinessInfo"
+import { ReserveCardSection } from "./_fragments/ReserveCardSection"
+import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
   const { data: mainBanner } = useBanner(BannerRequestType.SLIDE, {
-    staleTime: 5 * 60 * 1000, // 5분
-    gcTime: 10 * 60 * 1000, // 10분
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   })
   const { data: memberships, isLoading: membershipLoading } =
     useUserMemberships("T")
   const { user } = useAuth()
-
   const navigate = useNavigate()
   const { clear } = useMembershipOptionsStore()
   const { data: unreadCount = 0 } = useUnreadNotificationsCount()
@@ -57,9 +49,9 @@ const Home = () => {
   useEffect(() => {
     setHeader({
       display: false,
-      backgroundColor: "bg-system-bg", // 상단 안전영역 흰색
+      backgroundColor: "bg-system-bg",
     })
-    setNavigation({ display: true }) // 하단 안전영역 자동으로 흰색
+    setNavigation({ display: true })
   }, [])
 
   const handleReservationClick = () => {
@@ -197,228 +189,6 @@ const Home = () => {
           }}
         />
       </Container>
-    </div>
-  )
-}
-
-const ReserveCardSection = () => {
-  const { data: upcomingReservations } = useUpcomingReservations()
-  const navigate = useNavigate()
-  const { clear } = useMembershipOptionsStore()
-
-  const handleReservationClick = () => {
-    clear()
-    navigate("/reservation/form")
-  }
-
-  return (
-    <div className="mt-6 px-5">
-      <Title
-        type="arrow"
-        title="예정된 예약"
-        count={
-          upcomingReservations?.length
-            ? `${upcomingReservations.length}건`
-            : "0건"
-        }
-        onClick={() => navigate("/member-history/reservation")}
-      />
-      {!upcomingReservations || upcomingReservations.length === 0 ? (
-        <EmptyCard
-          title={`예정된 예약이 없어요.\n예약을 통해 관리를 받아보세요.`}
-          button="예약하러 가기"
-          onClick={handleReservationClick}
-        />
-      ) : (
-        <Swiper
-          spaceBetween={10}
-          slidesPerView={1}
-          style={{ overflow: "visible" }}
-          className="mt-2"
-        >
-          {upcomingReservations.map((reservation) => (
-            <SwiperSlide key={reservation.id}>
-              <ReserveCard reservation={reservation} showDday={true} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      )}
-    </div>
-  )
-}
-
-const MembershipCardSection = ({
-  memberships,
-  isLoading,
-}: {
-  memberships: MyMembership[]
-  isLoading: boolean
-}) => {
-  const navigate = useNavigate()
-
-  const renderContent = () => {
-    if (isLoading) return <LoadingIndicator className="py-8" />
-    if (memberships.length === 0) {
-      return (
-        <EmptyCard
-          title={`사용 가능한 회원권이 없어요.\n회원권 구매 후 예약이 가능해요.`}
-          button="회원권 구매하기"
-          onClick={() => navigate("/membership")}
-        />
-      )
-    }
-    return (
-      <Swiper
-        spaceBetween={10}
-        slidesPerView={1}
-        style={{ overflow: "visible" }}
-        className="mt-2"
-      >
-        {memberships.map((membership) => {
-          const cardTitle = membership.service_name || "회원권 이름"
-          return (
-            <SwiperSlide key={membership.mp_idx} className="mr-2">
-              <MembershipCard
-                id={parseInt(membership.mp_idx)}
-                title={cardTitle}
-                count={`${membership.remain_amount}회 / ${membership.buy_amount}회`}
-                startDate={membership.pay_date}
-                endDate={membership.expiration_date}
-                status={getStatusFromString(membership.status)}
-                showReserveButton={true}
-                serviceType={membership.s_type.replace("회원권", "").trim()}
-              />
-            </SwiperSlide>
-          )
-        })}
-      </Swiper>
-    )
-  }
-
-  return (
-    <div className="mt-6 px-5">
-      <Title
-        type="arrow"
-        title="보유 회원권"
-        count={`${memberships.length}개`}
-        onClick={() => navigate(`/member-history/membership`)}
-      />
-      {renderContent()}
-    </div>
-  )
-}
-
-const BrandSection = () => {
-  const navigate = useNavigate()
-
-  const handleBrandClick = (brandCode: string) => {
-    navigate(`/brand/${brandCode}`)
-  }
-
-  return (
-    <div className="mt-6">
-      <Title className="px-5" title="브랜드 관" />
-      <SwiperBrandCard className="mt-2 px-5" onBrandClick={handleBrandClick} />
-    </div>
-  )
-}
-
-const EventSection = () => {
-  const { data: events } = useEvents()
-  const navigate = useNavigate()
-
-  const formatDateForAPI = (date: Date) => {
-    return formatDate(date, "yyyy-MM-dd")
-  }
-
-  return (
-    <div className="mt-6 px-5">
-      <Title title="이벤트 프로모션" />
-      {events && events.length > 0 ? (
-        <Swiper
-          spaceBetween={10}
-          slidesPerView={events.length === 1 ? 1 : 1.1}
-          style={{ overflow: "visible" }}
-          className="mt-2"
-        >
-          {events.map((event: Event) => (
-            <SwiperSlide
-              key={event.code}
-              className={events.length === 1 ? "" : "mr-3"}
-            >
-              <div
-                className="flex flex-col gap-4 bg-white pb-4 rounded-[20px] border border-gray-100"
-                onClick={() => navigate(`/event/${event.code}`)}
-              >
-                {event.files.length > 0 && (
-                  <div className="w-full aspect-[16/9] relative rounded-t-[20px] overflow-hidden">
-                    <img
-                      src={event.files[0].fileurl}
-                      alt={event.title}
-                      className="w-full h-full object-cover absolute inset-0"
-                    />
-                  </div>
-                )}
-                <div className="flex flex-col px-5 gap-1.5">
-                  <span className="font-b text-16px text-gray-700">
-                    {event.title}
-                  </span>
-                  <span className="font-r text-12px text-gray-600">
-                    {formatDateForAPI(new Date(event.sdate))} ~{" "}
-                    {formatDateForAPI(new Date(event.edate))}
-                  </span>
-                </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      ) : (
-        <EmptyCard
-          title={`진행중인 이벤트가 없어요.\n새로운 이벤트로 곧 찾아뵐게요.`}
-        />
-      )}
-    </div>
-  )
-}
-
-const BusinessInfo = () => {
-  const navigate = useNavigate()
-
-  return (
-    <div className="mt-12 px-6 pt-8 pb-10 flex flex-col gap-4 bg-white relative">
-      <span className="font-b text-16px text-gray-600">
-        (주) 약손명가 헬스케어
-      </span>
-      <div className="flex flex-col gap-1">
-        <span className="font-r text-12px text-gray-500">대표자 : 홍길동</span>
-        <span className="font-r text-12px text-gray-500">
-          주소 : 서울특별시 강남구 테헤란로 10길, 동성빌딩
-        </span>
-        <span className="font-r text-12px text-gray-500">
-          번호 : 02-1234-1234
-        </span>
-        <span className="font-r text-12px text-gray-500">
-          통신판매업 번호 : 0000-0000-0000
-        </span>
-      </div>
-      <div className="flex items-center gap-3">
-        <span
-          className="font-sb text-14px text-gray-400 cursor-pointer hover:text-gray-600"
-          onClick={() => navigate("/terms/privacy")}
-        >
-          개인정보처리방침
-        </span>
-        <div className="h-3.5 border-l border-gray-300"></div>
-        <span
-          className="font-sb text-14px text-gray-400 cursor-pointer hover:text-gray-600"
-          onClick={() => navigate("/terms")}
-        >
-          이용약관
-        </span>
-      </div>
-      <span className="font-r text-12px text-gray-300">
-        © 2024. yaksonhouse. All Rights Reserved.
-      </span>
     </div>
   )
 }
