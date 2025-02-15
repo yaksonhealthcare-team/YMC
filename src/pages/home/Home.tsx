@@ -78,7 +78,10 @@ const Home = () => {
             </div>
           }
           contents={[
-            <div className="flex justify-between items-center bg-primary-300 rounded-2xl p-4">
+            <div
+              key="user-info"
+              className="flex justify-between items-center bg-primary-300 rounded-2xl p-4"
+            >
               <div className="flex gap-2 flex-col text-white">
                 <Typography>
                   <span className={"text-18px font-b"}>{user?.name}님</span>{" "}
@@ -86,20 +89,19 @@ const Home = () => {
                 </Typography>
                 <Typography className="font-m text-14px">
                   <span className="mr-2">{user?.levelName}</span>{" "}
-                  <span className="font-b mr-[2px]">
-                    {user && user.point ? user.point : 0}
-                  </span>
+                  <span className="font-b mr-[2px]">{user?.point || 0}</span>
                   <span>P</span>
                 </Typography>
               </div>
-              <div
-                className="rounded-full bg-white text-primary-300 py-2 px-5 cursor-pointer font-sb whitespace-nowrap text-14px"
+              <button
+                className="rounded-full bg-white text-primary-300 py-2 px-5 font-sb whitespace-nowrap text-14px"
                 onClick={handleReservationClick}
+                aria-label="예약하기"
               >
                 예약하기
-              </div>
+              </button>
             </div>,
-            <div className="mt-3">
+            <div key="banner" className="mt-3">
               <Swiper
                 modules={[Pagination]}
                 pagination={{
@@ -127,22 +129,26 @@ const Home = () => {
                     }
                   `}
                 </style>
-                {mainBanner &&
-                  mainBanner.map((banner, index) => (
-                    <SwiperSlide key={index}>
+                {mainBanner?.map((banner, index) => (
+                  <SwiperSlide key={index}>
+                    <button
+                      className="w-full"
+                      onClick={() => {
+                        const link = banner.link.startsWith("http")
+                          ? banner.link
+                          : `https://${banner.link}`
+                        window.location.href = link || "/membership"
+                      }}
+                      aria-label={banner.title}
+                    >
                       <img
                         src={banner.fileUrl}
-                        alt={`${banner.title}`}
+                        alt={banner.title}
                         className="w-full h-[144px] object-cover rounded-2xl"
-                        onClick={() => {
-                          const link = banner.link.startsWith("http")
-                            ? banner.link
-                            : `https://${banner.link}`
-                          window.location.href = link || "/membership"
-                        }}
                       />
-                    </SwiperSlide>
-                  ))}
+                    </button>
+                  </SwiperSlide>
+                ))}
               </Swiper>
             </div>,
           ]}
