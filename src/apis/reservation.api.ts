@@ -51,10 +51,17 @@ export const fetchReservationDetail = async (
   return data.body[0]
 }
 
-export const completeVisit = async (reservationId: string): Promise<void> => {
-  await axiosClient.post(`/reservation/complete`, {
-    r_idx: reservationId,
-  })
+export const completeVisit = async (r_idx: string): Promise<void> => {
+  const { data } = await axiosClient.post<HTTPResponse<null>>(
+    "/reservation/complete",
+    {
+      r_idx,
+    },
+  )
+
+  if (data.resultCode !== "00") {
+    throw new Error(data.resultMessage || "API 오류가 발생했습니다.")
+  }
 }
 
 export const cancelReservation = async (

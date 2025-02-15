@@ -2,7 +2,12 @@ import { AdditionalManagement } from "./Membership"
 import { TimeSlot } from "./TimeSlot"
 import { Dayjs } from "dayjs"
 
-export type ReservationStatusCode = "000" | "001" | "002" | "003"
+export type ReservationStatusCode =
+  | "000" // 전체
+  | "001" // 예약완료
+  | "002" // 방문완료
+  | "003" // 예약취소
+  | "008" // 관리중
 
 export enum ReservationStatus {
   COMPLETED = "000",
@@ -19,6 +24,7 @@ export const ReservationStatusLabel = {
   "001": "예약완료",
   "002": "대기예약",
   "003": "예약취소",
+  "008": "관리중",
 } as const
 
 export enum ReservationType {

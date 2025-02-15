@@ -60,14 +60,13 @@ const ReservationDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
-  const { mutate: completeVisit } = useCompleteVisit()
+  const { mutate } = useCompleteVisit()
   const { openModal, openBottomSheet, closeOverlay } = useOverlay()
   const {
     data: reservation,
     isLoading,
     isError,
     error,
-    refetch,
   } = useReservationDetail(id || "")
 
   useEffect(() => {
@@ -86,9 +85,23 @@ const ReservationDetailPage = () => {
       message: "방문을 완료하시겠습니까?",
       onConfirm: () => {
         if (id) {
-          completeVisit(id, {
+          mutate(id, {
             onSuccess: () => {
-              refetch()
+              openModal({
+                title: "완료",
+                message: "방문 완료 처리되었습니다.",
+                onConfirm: () => {},
+              })
+            },
+            onError: (error) => {
+              openModal({
+                title: "오류",
+                message:
+                  error instanceof Error
+                    ? error.message
+                    : "방문 완료 처리에 실패했습니다.",
+                onConfirm: () => {},
+              })
             },
           })
         }
@@ -139,43 +152,15 @@ const ReservationDetailPage = () => {
   const renderActionButtons = () => {
     if (!reservation) return null
 
+    const now = new Date()
+    const reservationEndTime = new Date(reservation.date)
+    const [hours, minutes] = reservation.duration.split(":").map(Number)
+    reservationEndTime.setHours(reservationEndTime.getHours() + (hours || 0))
+    reservationEndTime.setMinutes(
+      reservationEndTime.getMinutes() + (minutes || 0),
+    )
+
     switch (reservation.status) {
-      case "001": // 예약완료
-        if (reservation.type === "관리중") {
-          return (
-            <Button
-              variantType="primary"
-              sizeType="l"
-              className="w-full"
-              onClick={handleCompleteVisit}
-            >
-              방문 완료하기
-            </Button>
-          )
-        }
-        return (
-          <Button
-            variantType="primary"
-            sizeType="l"
-            className="w-full"
-            onClick={handleCancelReservation}
-          >
-            예약 취소하기
-          </Button>
-        )
-
-      case "003": // 예약취소
-        return (
-          <Button
-            variantType="primary"
-            sizeType="l"
-            className="w-full"
-            onClick={() => navigate("/reservation/form")}
-          >
-            다시 예약하기
-          </Button>
-        )
-
       case "000": // 관리완료
         return (
           <div className="flex gap-[8px]">
@@ -212,7 +197,95 @@ const ReservationDetailPage = () => {
           </div>
         )
 
+      case "001": // 예약완료
+        if (now > reservationEndTime) {
+          return (
+            <Button
+              variantType="primary"
+              sizeType="l"
+              className="w-full"
+              onClick={handleCompleteVisit}
+            >
+              방문 완료하기
+            </Button>
+          )
+        }
+        return (
+          <Button
+            variantType="primary"
+            sizeType="l"
+            className="w-full"
+            onClick={handleCancelReservation}
+          >
+            예약 취소하기
+          </Button>
+        )
+
+      case "008": // 관리중
+        if (now > reservationEndTime) {
+          return (
+            <Button
+              variantType="primary"
+              sizeType="l"
+              className="w-full"
+              onClick={handleCompleteVisit}
+            >
+              방문 완료하기
+            </Button>
+          )
+        }
+        return null
+
+      case "002": // 방문완료
+        return (
+          <div className="flex gap-[8px]">
+            <Button
+              variantType="line"
+              sizeType="l"
+              className="flex-1"
+              onClick={() =>
+                navigate(`/reservation/${id}/satisfaction`, {
+                  state: {
+                    r_idx: reservation.id,
+                    r_date: reservation.date.toISOString(),
+                    b_name: reservation.store,
+                    ps_name: reservation.programName,
+                    review_items: [
+                      { rs_idx: "1", rs_type: "시술만족도" },
+                      { rs_idx: "2", rs_type: "친절도" },
+                      { rs_idx: "3", rs_type: "청결도" },
+                    ],
+                  },
+                })
+              }
+            >
+              만족도 작성
+            </Button>
+            <Button
+              variantType="primary"
+              sizeType="l"
+              className="flex-1"
+              onClick={() => navigate("/reservation/form")}
+            >
+              다시 예약하기
+            </Button>
+          </div>
+        )
+
+      case "003": // 예약취소
+        return (
+          <Button
+            variantType="primary"
+            sizeType="l"
+            className="w-full"
+            onClick={() => navigate("/reservation/form")}
+          >
+            다시 예약하기
+          </Button>
+        )
+
       default:
+        console.log("Status not handled:", reservation.status)
         return null
     }
   }

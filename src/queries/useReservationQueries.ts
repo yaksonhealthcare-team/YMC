@@ -14,6 +14,14 @@ import {
 } from "apis/reservation.api"
 import { Reservation, ReservationStatusCode } from "types/Reservation"
 
+const statusMap: Record<string, ReservationStatusCode> = {
+  "관리완료": "000",
+  "예약완료": "001",
+  "방문완료": "002",
+  "예약취소": "003",
+  "관리중": "008",
+}
+
 export interface ReservationDetail extends Reservation {
   services: Array<{
     name: string
@@ -68,7 +76,7 @@ export const useReservationDetail = (reservationId: string) => {
         store: data.b_name,
         programName: data.ps_name,
         date: new Date(data.r_date),
-        status: data.r_status,
+        status: statusMap[data.r_status] || "000",
         duration: data.r_take_time,
         visit: Number(data.visit),
         type: data.r_gubun,
@@ -99,9 +107,8 @@ export const useCompleteVisit = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: completeVisit,
+    mutationFn: (r_idx: string) => completeVisit(r_idx),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reservations"] })
       queryClient.invalidateQueries({ queryKey: ["reservation"] })
     },
     retry: false,
