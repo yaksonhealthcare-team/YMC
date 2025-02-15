@@ -1,38 +1,21 @@
-import { useEffect, useState } from "react"
-import {
-  DEFAULT_COORDINATE,
-  GeolocationOptions,
-  GeolocationState,
-} from "../types/Coordinate.ts"
+import { useEffect } from "react"
+import { useGeolocationStore } from "../stores/geolocationStore"
+import { GeolocationOptions } from "../types/Coordinate"
 
-export const useGeolocation = (
-  options: GeolocationOptions = {},
-): GeolocationState => {
-  const [state, setState] = useState<GeolocationState>({
-    location: DEFAULT_COORDINATE,
-    error: null,
-    loading: true,
-  })
+export const useGeolocation = (options: GeolocationOptions = {}) => {
+  const { location, error, loading, setLocation, setError, setLoading } =
+    useGeolocationStore()
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      setState((prev) => ({
-        ...prev,
-        error: "Geolocation이 지원되지 않는 브라우저입니다.",
-        loading: false,
-      }))
+      setError("Geolocation이 지원되지 않는 브라우저입니다.")
+      setLoading(false)
       return
     }
 
     const successHandler = (position: GeolocationPosition) => {
-      setState((prev) => ({
-        ...prev,
-        location: {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        },
-        loading: false,
-      }))
+      setLocation(position.coords.latitude, position.coords.longitude)
+      setLoading(false)
     }
 
     const errorHandler = (error: GeolocationPositionError) => {
@@ -53,11 +36,8 @@ export const useGeolocation = (
           break
       }
 
-      setState((prev) => ({
-        ...prev,
-        error: errorMessage,
-        loading: false,
-      }))
+      setError(errorMessage)
+      setLoading(false)
     }
 
     const defaultOptions: GeolocationOptions = {
@@ -74,5 +54,5 @@ export const useGeolocation = (
     )
   }, [])
 
-  return state
+  return { location, error, loading, setLocation }
 }
