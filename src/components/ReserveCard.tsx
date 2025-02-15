@@ -51,9 +51,7 @@ export const ReserveCard = ({
 
   const renderDdayBadge = () => {
     if (!showDday) return null
-    const status = classifyReservationStatus(
-      reservation.status as ReservationStatusCode,
-    )
+    const status = classifyReservationStatus(reservation.status)
     const dday = getDday(reservation.date)
 
     if (status === "upcoming" && dday >= 0) {
@@ -136,12 +134,13 @@ export const ReserveCard = ({
   }
 
   return (
-    <div
+    <button
       className={clsx(
-        `flex justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px]`,
+        `flex justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px] w-full text-left`,
         className,
       )}
       onClick={() => navigate(`/reservation/${reservation.id}`)}
+      aria-label={`${reservation.store} ${reservation.programName} 예약 상세보기`}
     >
       <div className="flex flex-col w-full">
         <div className="flex w-full items-center gap-1.5">
@@ -162,16 +161,14 @@ export const ReserveCard = ({
       <div className="flex flex-col justify-between items-end min-w-[90px]">
         <div className="flex gap-1">
           <ReserveTag
-            status={classifyReservationStatus(
-              reservation.status as ReservationStatusCode,
-            )}
+            status={classifyReservationStatus(reservation.status)}
             reservationDate={reservation.date}
           />
           {renderDdayBadge()}
         </div>
         {getButton()}
       </div>
-    </div>
+    </button>
   )
 }
 
