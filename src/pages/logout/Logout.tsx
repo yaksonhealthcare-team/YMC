@@ -1,8 +1,8 @@
 import Logo from "@components/Logo.tsx"
-import { useEffect } from "react"
 import { Typography } from "@mui/material"
-import { useAuth } from "../../contexts/AuthContext.tsx"
+import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "../../contexts/AuthContext.tsx"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 
 const Logout = () => {
@@ -23,8 +23,8 @@ const Logout = () => {
     logout()
 
     setTimeout(() => {
-      navigate("/login")
-    }, 1500)
+      navigate("/login", { replace: true })
+    }, 1000)
   }
   useEffect(() => {
     handleLogout()
