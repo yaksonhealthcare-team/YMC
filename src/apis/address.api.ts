@@ -29,6 +29,20 @@ interface AddressBookmarkResponse {
   }>
 }
 
+interface AddressBookmarkAddResponse {
+  resultCode: string
+  resultMessage: string
+  resultCount: number
+  body: null
+}
+
+interface AddressBookmarkDeleteResponse {
+  resultCode: string
+  resultMessage: string
+  resultCount: number
+  body: null
+}
+
 export const searchAddress = async (keyword: string): Promise<Location[]> => {
   const { data } = await axiosClient.get("/address/search", {
     params: {
@@ -51,14 +65,19 @@ export const getAddressBookmarks = async (): Promise<Location[]> => {
 
 export const addAddressBookmark = async (
   bookmark: Omit<Location, "csab_idx">,
-): Promise<void> => {
-  await axiosClient.post("/address/bookmarks", bookmark)
+): Promise<AddressBookmarkAddResponse> => {
+  const { data } = await axiosClient.post<AddressBookmarkAddResponse>(
+    "/address/bookmarks",
+    bookmark,
+  )
+  return data
 }
 
 export const deleteAddressBookmark = async (
   csab_idx: string,
-): Promise<void> => {
-  await axiosClient.delete(`/address/bookmarks`, {
-    data: { csab_idx },
-  })
+): Promise<AddressBookmarkDeleteResponse> => {
+  const { data } = await axiosClient.delete<AddressBookmarkDeleteResponse>(
+    `/address/bookmarks?csab_idx=${csab_idx}`,
+  )
+  return data
 }

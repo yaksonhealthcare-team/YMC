@@ -6,7 +6,7 @@ import {
   searchAddress,
 } from "../apis/address.api"
 import { addressKeys } from "./keys/address.keys"
-import { Location } from "../types/Location"
+import { useOverlay } from "../contexts/ModalContext"
 
 export const useAddressBookmarks = () => {
   return useQuery({
@@ -32,15 +32,20 @@ export const useAddAddressBookmarkMutation = () => {
 
 export const useDeleteAddressBookmarkMutation = () => {
   const queryClient = useQueryClient()
+  const { showToast } = useOverlay()
 
   return useMutation({
     mutationFn: deleteAddressBookmark,
-    onMutate: async (csab_idx) => {
-      queryClient.setQueryData<Location[]>(
-        addressKeys.bookmarks(),
-        (old) =>
-          old?.filter((bookmark) => bookmark.csab_idx !== csab_idx) ?? [],
-      )
+    onSuccess: (response) => {
+      if (response.resultCode === "00") {
+        showToast("자주 쓰는 주소가 삭제되었습니다.")
+        queryClient.invalidateQueries({ queryKey: addressKeys.bookmarks() })
+      } else {
+        showToast("주소 삭제에 실패했습니다. 다시 시도해주세요.")
+      }
+    },
+    onError: () => {
+      showToast("주소 삭제에 실패했습니다. 다시 시도해주세요.")
     },
     retry: false,
   })
@@ -51,52 +56,6 @@ export const useAddressSearch = (keyword: string) => {
     queryKey: addressKeys.search(keyword),
     queryFn: () => searchAddress(keyword),
     enabled: keyword.length > 0,
-    retry: false,
-  })
-}
-
-// TODO: API 구현 후 수정
-export const useAddresses = () => {
-  return useQuery({
-    queryKey: ["addresses"],
-    queryFn: () => Promise.reject(new Error("Not implemented")),
-    enabled: false,
-    retry: false,
-  })
-}
-
-// TODO: API 구현 후 수정
-export const useCreateAddress = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: () => Promise.reject(new Error("Not implemented")),
-    retry: false,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["addresses"] })
-    },
-  })
-}
-
-// TODO: API 구현 후 수정
-export const useDeleteAddress = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: () => Promise.reject(new Error("Not implemented")),
-    retry: false,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["addresses"] })
-    },
-  })
-}
-
-// TODO: API 구현 후 수정
-export const useDefaultAddress = () => {
-  return useQuery({
-    queryKey: ["addresses", "default"],
-    queryFn: () => Promise.reject(new Error("Not implemented")),
-    enabled: false,
     retry: false,
   })
 }

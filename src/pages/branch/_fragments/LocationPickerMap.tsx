@@ -9,6 +9,8 @@ import { fetchBranches } from "../../../apis/branch.api.ts"
 import { Branch } from "../../../types/Branch.ts"
 import { useNavigate } from "react-router-dom"
 import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect.ts"
+import { useAddAddressBookmarkMutation } from "../../../queries/useAddressQueries"
+import { useOverlay } from "../../../contexts/ModalContext"
 
 const LocationPickerMap = () => {
   const { naver } = window
@@ -16,6 +18,8 @@ const LocationPickerMap = () => {
   const { setHeader, setNavigation } = useLayout()
   const { location, loading } = useGeolocation()
   const { setLocation } = useBranchLocationSelect()
+  const { mutate: addBookmark } = useAddAddressBookmarkMutation()
+  const { openModal, showToast } = useOverlay()
   const [center, setCenter] = useState<Coordinate | null>(null)
   const [branches, setBranches] = useState<Branch[]>([])
   const [address, setAddress] = useState({
@@ -93,6 +97,41 @@ const LocationPickerMap = () => {
     })
   }
 
+  const handleAddBookmark = () => {
+    if (!center || !address.road) return
+
+    openModal({
+      title: "자주 쓰는 주소 등록",
+      message: "이 주소를 자주 쓰는 주소로 등록하시겠습니까?",
+      onConfirm: () => {
+        addBookmark(
+          {
+            address: address.road,
+            lat: center.latitude.toString(),
+            lon: center.longitude.toString(),
+          },
+          {
+            onSuccess: (response) => {
+              if (response.resultCode === "29") {
+                showToast("이미 등록된 주소입니다.")
+                return
+              }
+              if (response.resultCode === "00") {
+                showToast("자주 쓰는 주소로 등록되었습니다.")
+                return
+              }
+              showToast("주소 등록에 실패했습니다. 다시 시도해주세요.")
+            },
+            onError: (error) => {
+              console.error("Failed to add bookmark:", error)
+              showToast("주소 등록에 실패했습니다. 다시 시도해주세요.")
+            },
+          },
+        )
+      },
+    })
+  }
+
   if (loading || !center) {
     return (
       <div className="flex items-center justify-center w-full h-full">
@@ -141,10 +180,17 @@ const LocationPickerMap = () => {
           <p className={"px-5 text-14px text-gray-500 mt-2"}>{address.jibun}</p>
         )}
         <div className={"w-full h-[1px] bg-gray-50 mt-6"} />
-        <div className={"w-full px-5 mt-3"}>
+        <div className={"w-full px-5 mt-3 flex gap-2"}>
+          <Button
+            variantType={"line"}
+            className={"flex-1"}
+            onClick={handleAddBookmark}
+          >
+            {"자주 쓰는 주소로 등록"}
+          </Button>
           <Button
             variantType={"primary"}
-            className={"w-full"}
+            className={"flex-1"}
             onClick={handleSetLocation}
           >
             {"이 위치로 설정"}
