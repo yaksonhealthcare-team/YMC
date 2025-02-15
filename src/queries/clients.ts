@@ -1,5 +1,5 @@
 import { QueryClient } from "@tanstack/react-query"
-import axios, { AxiosError } from "axios"
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios"
 import { ERROR_CODES, getErrorMessage } from "../types/Error"
 
 interface ApiResponse<T> {
@@ -7,11 +7,6 @@ interface ApiResponse<T> {
   resultMessage: string
   resultCount: string
   body: T
-}
-
-interface ErrorResponse {
-  resultCode: string
-  resultMessage: string
 }
 
 // 전역 에러 메시지 표시를 위한 함수
@@ -49,11 +44,35 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken") || null
 
-  if (token) {
+  if (token && config.headers.Authorization !== `Bearer ${token}`) {
     config.headers.Authorization = `Bearer ${token}`
   }
   return config
 })
+
+const refreshToken = async (originalRequest: InternalAxiosRequestConfig) => {
+  try {
+    const refreshToken = localStorage.getItem("refreshToken")
+    const response = await axios.post(
+      "https://devapi.yaksonhc.com/api/auth/refresh",
+      {
+        refresh_token: refreshToken,
+      },
+    )
+
+    const { access_token } = response.data
+    localStorage.setItem("accessToken", access_token)
+
+    originalRequest.headers.Authorization = `Bearer ${access_token}`
+    return axiosClient(originalRequest)
+  } catch (error) {
+    // 리프레시 토큰도 만료되었을 경우
+    localStorage.removeItem("accessToken")
+    localStorage.removeItem("refreshToken")
+    window.location.href = "/login"
+    return Promise.reject(error)
+  }
+}
 
 axiosClient.interceptors.response.use(
   (response) => {
@@ -88,16 +107,24 @@ axiosClient.interceptors.response.use(
       data: data,
     }
   },
-  async (error: AxiosError<ErrorResponse>) => {
+  async (error) => {
     const errorCode = error.response?.data?.resultCode || ""
     const errorMessage =
       error.response?.data?.resultMessage || getErrorMessage(errorCode)
 
+    const originalRequest = error.config
+
+    // 토큰이 만료되었을 때 (401 에러)
+    if (error.response?.status === 401 && !originalRequest?._retry) {
+      refreshToken(originalRequest)
+    }
+
     // 예상된 에러 케이스 처리
     switch (errorCode) {
       case ERROR_CODES.TOKEN_EXPIRED:
-        // Access Token 만료 처리
-        // TODO: 토큰 갱신 로직 구현
+        if (!originalRequest?._retry) {
+          refreshToken(originalRequest)
+        }
         break
 
       case ERROR_CODES.REFRESH_TOKEN_EXPIRED:
@@ -130,4 +157,4 @@ axiosClient.interceptors.response.use(
   },
 )
 
-export { queryClient, axiosClient }
+export { axiosClient, queryClient }
