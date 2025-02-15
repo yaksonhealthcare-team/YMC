@@ -1,5 +1,6 @@
 export interface Notification {
   id: number
+  isRead: boolean
   mainCategory: string
   subCategory?: string
   title: string
@@ -18,6 +19,7 @@ export interface NotificationResponse {
   push_date: string
   r_date: string
   b_name?: string
+  is_read?: string
 }
 
 export interface NotificationFilters {

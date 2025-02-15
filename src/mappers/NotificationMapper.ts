@@ -8,6 +8,7 @@ import {
 export const NotificationMapper = {
   toNotification: (response: NotificationResponse): Notification => ({
     id: response.id,
+    isRead: response.is_read === '읽음',
     mainCategory: response.main_category,
     subCategory: response.sub_category,
     title: response.title,
