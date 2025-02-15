@@ -1,11 +1,6 @@
 import React, { createContext, ReactNode, useContext, useState } from "react"
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "@mui/material"
+import { Dialog, DialogContent } from "@mui/material"
+import { Button } from "../components/Button"
 
 /**
  * 오버레이 타입을 정의하는 열거형
@@ -288,7 +283,7 @@ const OverlayContainer: React.FC = () => {
               {bottomSheetOptions.buttons?.map((button, index) => (
                 <Button
                   key={index}
-                  variant={button.variant || "contained"}
+                  variantType="primary"
                   onClick={button.onClick}
                   fullWidth
                   className={`mt-2 ${
