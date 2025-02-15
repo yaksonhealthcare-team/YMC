@@ -15,6 +15,7 @@ import { MembershipBranchSelectModal } from "./MembershipBranchSelectModal.tsx"
 import { Branch } from "types/Branch.ts"
 import { useNavigate } from "react-router-dom"
 import { formatPrice, parsePrice } from "utils/format"
+import { createPortal } from "react-dom"
 
 interface Props {
   serviceType?: string
@@ -386,14 +387,16 @@ export const OptionsBottomSheetContent = ({
         </div>
       </div>
 
-      {isModalOpen && (
-        <MembershipBranchSelectModal
-          onBranchSelect={(branch: Branch) => {
-            setSelectedBranch(branch)
-          }}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
+      {isModalOpen &&
+        createPortal(
+          <MembershipBranchSelectModal
+            onBranchSelect={(branch: Branch) => {
+              setSelectedBranch(branch)
+            }}
+            onClose={() => setIsModalOpen(false)}
+          />,
+          document.body,
+        )}
     </div>
   )
 }
