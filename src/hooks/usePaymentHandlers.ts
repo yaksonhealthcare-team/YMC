@@ -29,12 +29,17 @@ export const usePaymentHandlers = () => {
 
   const handleCountChange = async (cartId: string, newCount: number) => {
     try {
-      await axiosClient.patch(`/carts/${cartId}`, {
-        count: newCount,
-      })
+      // 로컬 상태만 업데이트
+      usePaymentStore.setState((state) => ({
+        items: state.items.map((item) =>
+          item.ss_idx.toString() === cartId
+            ? { ...item, amount: newCount }
+            : item,
+        ),
+      }))
     } catch (error) {
       console.error("수량 변경 실패:", error)
-      showToast("수량 변경에 실패했습니다.")
+      showToast("수량 변경에 실패했습니다. 다시 시도해주세요.")
     }
   }
 
