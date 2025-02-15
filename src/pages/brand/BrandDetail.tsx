@@ -13,7 +13,7 @@ export const BrandDetailPage = () => {
   useEffect(() => {
     setHeader({
       display: true,
-      title: brand && brand.name ? brand.name : "Brand",
+      title: brand && brand.length > 0 ? brand[0].name : "Brand",
       left: "back",
       backgroundColor: "bg-white",
       onClickBack: () => navigate(-1),
@@ -22,39 +22,15 @@ export const BrandDetailPage = () => {
   }, [brand])
 
   return (
-    <div className="relative w-full min-h-screen flex flex-col">
-      <div className="flex-1">
-        {brand?.pictures?.map((picture, index) => (
-          <img
-            key={index}
-            src={picture.fileurl}
-            alt=""
-            className="w-full object-contain"
-          />
-        ))}
-        {!brand?.pictures?.length && brand?.thumbnail && (
-          <img
-            src={brand.thumbnail.fileurl}
-            alt=""
-            className="w-full object-contain"
-          />
-        )}
-        {!brand?.pictures?.length && !brand?.thumbnail && (
-          <img
-            src="/assets/brand_example.png"
-            alt=""
-            className="w-full object-contain"
-          />
-        )}
-      </div>
+    <div className="relative w-full">
+      {/*TODO brand detail api 아사나 요청사항 확인후 재 변경 필요, /assets/brand_example.png 제거 */}
+      <img
+        src={brand  && brand.length > 0 ? brand?.[0].imageUrl : "/assets/brand_example.png"}
+        alt=""
+        className="w-full h-full"
+      />
 
-      {brand?.description && (
-        <div className="px-[20px] py-[12px] bg-white">
-          <p className="text-sm text-gray-700">{brand.description}</p>
-        </div>
-      )}
-
-      <div className="sticky bottom-0 border-t border-[#F8F8F8] w-full px-[20px] pb-[30px] pt-[12px] bg-white">
+      <div className="sticky bottom-0 w-full px-[20px] pb-[30px] pt-[12px] bg-white">
         <Button
           className="w-full !rounded-[12px]"
           onClick={() => navigate("/reservation/form")}
