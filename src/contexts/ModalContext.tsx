@@ -239,6 +239,7 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
               onClick={(e) => {
                 e.preventDefault()
                 closeOverlay()
+                alertProps.onClose?.()
               }}
             >
               확인
