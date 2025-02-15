@@ -11,7 +11,7 @@ const BUTTON_STYLES = {
 const BUTTON_ICONS = {
   location: "/assets/floatingIcons/location.png",
   top: "/assets/floatingIcons/top.png",
-  search: "/assets/floatingIcons/search.png",
+  search: "/assets/floatingIcons/search.svg",
   reserve: "/assets/floatingIcons/reserve.png",
   membership: "/assets/floatingIcons/membership.png",
 } as const
