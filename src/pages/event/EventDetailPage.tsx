@@ -35,7 +35,7 @@ const EventDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-white p-5">
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 mt-[48px]">
         <EventHeader event={event} />
         <div className="w-full h-[1px] bg-[#ECECEC] rounded-[1px]"></div>
         <EventContent event={event} />
