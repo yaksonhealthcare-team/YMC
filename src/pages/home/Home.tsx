@@ -44,6 +44,11 @@ const Home = () => {
   const { clear } = useMembershipOptionsStore()
   const { data: unreadCount = 0 } = useUnreadNotificationsCount()
 
+  const getDisplayCount = (count: number) => {
+    if (count > 99) return "99+"
+    return count
+  }
+
   const availableMemberships = useMemo(() => {
     if (!memberships?.pages[0]?.body) return []
     return memberships.pages[0].body
@@ -129,26 +134,31 @@ const Home = () => {
                     }
                   `}
                 </style>
-                {mainBanner?.map((banner, index) => (
-                  <SwiperSlide key={index}>
-                    <button
-                      className="w-full"
-                      onClick={() => {
-                        const link = banner.link.startsWith("http")
-                          ? banner.link
-                          : `https://${banner.link}`
-                        window.location.href = link || "/membership"
-                      }}
-                      aria-label={banner.title}
-                    >
-                      <img
-                        src={banner.fileUrl}
-                        alt={banner.title}
-                        className="w-full h-[144px] object-cover rounded-2xl"
-                      />
-                    </button>
-                  </SwiperSlide>
-                ))}
+                {mainBanner?.map((banner, index) => {
+                  const getBannerLink = (link: string) => {
+                    if (link.startsWith("http")) return link
+                    return `https://${link}`
+                  }
+
+                  return (
+                    <SwiperSlide key={index}>
+                      <button
+                        className="w-full"
+                        onClick={() => {
+                          window.location.href =
+                            getBannerLink(banner.link) || "/membership"
+                        }}
+                        aria-label={banner.title}
+                      >
+                        <img
+                          src={banner.fileUrl}
+                          alt={banner.title}
+                          className="w-full h-[144px] object-cover rounded-2xl"
+                        />
+                      </button>
+                    </SwiperSlide>
+                  )
+                })}
               </Swiper>
             </div>,
           ]}
@@ -163,7 +173,7 @@ const Home = () => {
               {unreadCount > 0 && (
                 <div className="absolute -top-0.5 right-1 min-w-[18px] h-[18px] bg-white border border-primary rounded-full flex items-center justify-center px-1">
                   <span className="text-primary text-[10px] leading-none font-m">
-                    {unreadCount > 99 ? "99+" : unreadCount}
+                    {getDisplayCount(unreadCount)}
                   </span>
                 </div>
               )}
@@ -246,28 +256,31 @@ const MembershipCardSection = ({
 }) => {
   const navigate = useNavigate()
 
-  return (
-    <div className="mt-6 px-5">
-      <Title
-        type="arrow"
-        title="보유 회원권"
-        count={`${memberships.length}개`}
-        onClick={() => navigate(`/member-history/membership`)}
-      />
-      {isLoading ? (
-        <LoadingIndicator className="py-8" />
-      ) : memberships.length > 0 ? (
-        <Swiper
-          spaceBetween={10}
-          slidesPerView={1}
-          style={{ overflow: "visible" }}
-          className="mt-2"
-        >
-          {memberships.map((membership) => (
+  const renderContent = () => {
+    if (isLoading) return <LoadingIndicator className="py-8" />
+    if (memberships.length === 0) {
+      return (
+        <EmptyCard
+          title={`사용 가능한 회원권이 없어요.\n회원권 구매 후 예약이 가능해요.`}
+          button="회원권 구매하기"
+          onClick={() => navigate("/membership")}
+        />
+      )
+    }
+    return (
+      <Swiper
+        spaceBetween={10}
+        slidesPerView={1}
+        style={{ overflow: "visible" }}
+        className="mt-2"
+      >
+        {memberships.map((membership) => {
+          const cardTitle = membership.service_name || "회원권 이름"
+          return (
             <SwiperSlide key={membership.mp_idx} className="mr-2">
               <MembershipCard
                 id={parseInt(membership.mp_idx)}
-                title={membership.service_name || "회원권 이름"}
+                title={cardTitle}
                 count={`${membership.remain_amount}회 / ${membership.buy_amount}회`}
                 startDate={membership.pay_date}
                 endDate={membership.expiration_date}
@@ -276,15 +289,21 @@ const MembershipCardSection = ({
                 serviceType={membership.s_type.replace("회원권", "").trim()}
               />
             </SwiperSlide>
-          ))}
-        </Swiper>
-      ) : (
-        <EmptyCard
-          title={`사용 가능한 회원권이 없어요.\n회원권 구매 후 예약이 가능해요.`}
-          button="회원권 구매하기"
-          onClick={() => navigate("/membership")}
-        />
-      )}
+          )
+        })}
+      </Swiper>
+    )
+  }
+
+  return (
+    <div className="mt-6 px-5">
+      <Title
+        type="arrow"
+        title="보유 회원권"
+        count={`${memberships.length}개`}
+        onClick={() => navigate(`/member-history/membership`)}
+      />
+      {renderContent()}
     </div>
   )
 }
