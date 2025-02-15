@@ -32,7 +32,7 @@ export const fetchUser = async (token: string): Promise<User> => {
     data: { body: response },
   } = await axiosClient.get<HTTPResponse<UserResponse[]>>("/auth/me", {
     headers: {
-      Authorization: token,
+      Authorization: `Bearer ${token}`,
     },
   })
   return UserMapper.toEntity(response[0])
