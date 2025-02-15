@@ -72,7 +72,7 @@ export const cancelReservation = async (
 export interface CreateReservationRequest {
   r_gubun: "R" | "C" // 예약(R) 상담(C)
   mp_idx?: string // 회원권 식별자 (일반 예약시에만 필요)
-  b_idx: string // 지점 식별자
+  b_idx?: string // 지점 식별자 (지정지점인 경우에만 필요)
   r_date: string // 예약 일자
   r_stime: string // 예약 시간
   add_services?: number[] // 추가관리 옵션 식별자 목록

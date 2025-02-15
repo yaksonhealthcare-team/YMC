@@ -247,7 +247,9 @@ const ReservationFormPage = () => {
 
       const response = await createReservation({
         r_gubun: "C",
-        b_idx: data.branch!,
+        ...(selectedBranch?.b_type === "지정지점" && {
+          b_idx: selectedBranch.b_idx,
+        }),
         r_date: formatDateForAPI(data.date?.toDate() || null),
         r_stime: data.timeSlot!.time,
         r_memo: data.request,
@@ -289,7 +291,9 @@ const ReservationFormPage = () => {
       const response = await createReservation({
         r_gubun: "R",
         mp_idx: data.item,
-        b_idx: data.branch!,
+        ...(selectedBranch?.b_type === "지정지점" && {
+          b_idx: selectedBranch.b_idx,
+        }),
         r_date: formatDateForAPI(data.date?.toDate() || null),
         r_stime: data.timeSlot!.time,
         add_services: data.additionalServices.map((service) =>

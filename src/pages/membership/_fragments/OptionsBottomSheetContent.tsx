@@ -107,14 +107,24 @@ export const OptionsBottomSheetContent = ({
         branchType = "지정지점"
       }
 
-      const cartItems = selectedOptions.map(({ option, count }) => ({
-        s_idx: parseInt(membershipId),
-        ss_idx: parseInt(option.ss_idx),
-        b_idx: selectedBranch ? parseInt(selectedBranch.b_idx) : 0,
-        brand_code: brandCode,
-        amount: count,
-        b_type: branchType,
-      }))
+      const cartItems = selectedOptions.map(({ option, count }) => {
+        const baseItem = {
+          s_idx: parseInt(membershipId),
+          ss_idx: parseInt(option.ss_idx),
+          brand_code: brandCode,
+          amount: count,
+          b_type: branchType,
+        }
+
+        if (branchType === "지정지점" && selectedBranch) {
+          return {
+            ...baseItem,
+            b_idx: parseInt(selectedBranch.b_idx),
+          }
+        }
+
+        return baseItem
+      })
 
       await addCart(cartItems)
       await queryClient.refetchQueries({ queryKey: ["carts"] })

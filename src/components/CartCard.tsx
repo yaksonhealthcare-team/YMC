@@ -3,6 +3,7 @@ import ClockIcon from "@assets/icons/ClockIcon.svg?react"
 import XCircleIcon from "@components/icons/XCircleIcon.tsx"
 import { CartItemOption } from "../types/Cart.ts"
 import { formatPriceWithUnit } from "../utils/format"
+import clsx from "clsx"
 
 interface CartCardProps {
   brand: string
@@ -13,6 +14,7 @@ interface CartCardProps {
   onCountChange: (cartId: string, newCount: number) => void
   onDelete: () => void
   onDeleteOption?: (cartIds: string[]) => void
+  className?: string
 }
 
 const CartCard = ({
@@ -24,9 +26,15 @@ const CartCard = ({
   onCountChange,
   onDelete,
   onDeleteOption,
+  className,
 }: CartCardProps) => {
   return (
-    <div className="p-5 bg-white rounded-[20px] border border-gray-100">
+    <div
+      className={clsx(
+        "p-5 bg-white rounded-[20px] border border-gray-100",
+        className,
+      )}
+    >
       <div className="flex justify-between items-start">
         <div className="flex flex-col gap-1.5">
           <p className="text-gray-700 text-16px font-sb">{title}</p>

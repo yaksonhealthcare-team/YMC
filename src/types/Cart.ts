@@ -75,7 +75,7 @@ export interface CartSummary {
 export interface CartItemPostRequest {
   s_idx: number
   ss_idx: number
-  b_idx: number
+  b_idx?: number
   brand_code: string
   amount: number
   b_type: "전지점" | "지정지점" // 지점 타입

@@ -144,6 +144,8 @@ const CartPage = () => {
 
     // 첫 번째 아이템의 지점 정보로 selectedBranch 설정
     const firstItem = items[0]
+    const b_type =
+      firstItem.branchType === "지점 회원권" ? "지정지점" : "전지점"
     const selectedBranch = {
       b_idx: firstItem.branchId,
       brandCode: firstItem.brandCode,
@@ -155,6 +157,7 @@ const CartPage = () => {
       distanceInMeters: null,
       isFavorite: false,
       brand: "therapist" as const,
+      b_type: b_type as "지정지점" | "전지점",
     }
 
     setPaymentItems(paymentItems)
@@ -192,6 +195,7 @@ const CartPage = () => {
                 )
               }
               onDeleteOption={(cartIds) => handleRemoveItems(cartIds)}
+              className="mb-4"
             />
           ))}
 

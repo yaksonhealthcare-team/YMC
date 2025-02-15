@@ -9,6 +9,7 @@ export interface Branch {
   isFavorite: boolean
   brandCode: string
   brand: string
+  b_type?: "전지점" | "지정지점"
 }
 
 export interface BranchesWithCurrentAddress {
