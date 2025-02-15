@@ -1,6 +1,7 @@
 import { Checkbox } from "@mui/material"
 import { ClockIcon } from "@mui/x-date-pickers"
 import { AdditionalManagement } from "types/Membership"
+import { parsePrice } from "utils/format"
 
 interface AdditionalServiceCardProps {
   option: AdditionalManagement
@@ -66,7 +67,7 @@ export const AdditionalServiceCard = ({
           </span>
         </div>
         <p className="text-[#212121] text-16px font-bold leading-[23.68px]">
-          {option.options?.[0]?.ss_price || "0"}원
+          {parsePrice(option.options?.[0]?.ss_price).toLocaleString()}원
         </p>
       </div>
     </div>

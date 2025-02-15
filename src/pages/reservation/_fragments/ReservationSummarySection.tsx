@@ -1,5 +1,6 @@
 import { AdditionalManagement } from "types/Membership"
 import PriceSummary from "@components/PriceSummary"
+import { parsePrice } from "utils/format"
 
 interface ReservationSummarySectionProps {
   additionalServices: AdditionalManagement[]
@@ -15,7 +16,7 @@ export const ReservationSummarySection = ({
       <PriceSummary
         items={additionalServices.map((service) => ({
           label: service.s_name,
-          amount: Number(service.options?.[0]?.ss_price || 0),
+          amount: parsePrice(service.options?.[0]?.ss_price),
         }))}
         total={{
           label: "총 결제금액",

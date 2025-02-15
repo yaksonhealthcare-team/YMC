@@ -24,6 +24,7 @@ import { useErrorHandler } from "hooks/useErrorHandler"
 import { formatPrice, parsePrice } from "utils/format"
 import { formatDateForAPI } from "utils/date"
 import { toNumber } from "utils/number"
+import { createAdditionalManagementOrder } from "apis/order.api"
 
 interface FormDataType {
   item: undefined | string
@@ -288,7 +289,8 @@ const ReservationFormPage = () => {
     try {
       if (!validateReservationData()) return
 
-      const response = await createReservation({
+      // 1. 예약 생성
+      const reservationResponse = await createReservation({
         r_gubun: "R",
         mp_idx: data.item,
         ...(selectedBranch?.b_type === "지정지점" && {
@@ -302,27 +304,46 @@ const ReservationFormPage = () => {
         r_memo: data.request,
       })
 
-      if (response.resultCode !== "00") {
-        handleError(new Error(response.resultMessage))
+      if (reservationResponse.resultCode !== "00") {
+        handleError(new Error(reservationResponse.resultMessage))
         return
       }
 
-      navigate("/payment", {
-        state: {
-          type: "reservation",
-          items: [
-            {
-              type: data.item,
-              branch: data.branch,
-              date: data.date!.format("YYYY-MM-DD"),
-              time: data.timeSlot!.time,
-              additionalServices: data.additionalServices,
-              request: data.request,
-            },
-          ],
-        },
-        replace: true,
-      })
+      // 2. 추가 관리 주문서 발행
+      if (data.additionalServices.length > 0) {
+        const orderResponse = await createAdditionalManagementOrder({
+          add_services: data.additionalServices.map((service) => ({
+            s_idx: service.s_idx,
+            ss_idx: service.options[0].ss_idx,
+            amount: 1,
+          })),
+          b_idx: data.branch!,
+        })
+
+        if (orderResponse.resultCode !== "00") {
+          handleError(new Error(orderResponse.resultMessage))
+          return
+        }
+
+        // 3. 결제 페이지로 이동
+        navigate("/payment", {
+          state: {
+            type: "additional",
+            orderId: orderResponse.orderSheet.orderid,
+            items: orderResponse.orderSheet.items,
+          },
+          replace: true,
+        })
+      } else {
+        // 추가 관리가 없는 경우 예약 완료 처리
+        openModal({
+          title: "예약 완료",
+          message: "예약이 완료되었습니다.",
+          onConfirm: () => {
+            navigate("/member-history/reservation")
+          },
+        })
+      }
     } catch (error) {
       handleError(error, "예약에 실패했습니다. 다시 시도해주세요.")
     }

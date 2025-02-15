@@ -1,7 +1,7 @@
 import { useOverlay } from "contexts/ModalContext"
-import { axiosClient } from "queries/clients"
 import { OrderResponse, BasePaymentParams, PaymentItem } from "types/Payment"
 import { usePaymentStore } from "./usePaymentStore"
+import { createOrder } from "apis/order.api"
 
 export const usePayment = () => {
   const { showToast } = useOverlay()
@@ -64,16 +64,14 @@ export const usePayment = () => {
 
   const handlePayment = async () => {
     try {
-      const response = await axiosClient.post<OrderResponse>("/orders", {
-        points: points.usedPoints,
-      })
+      const response = await createOrder(points.usedPoints)
 
-      if (response.data.resultCode !== "00") {
-        showToast(response.data.resultMessage)
+      if (response.resultCode !== "00") {
+        showToast(response.resultMessage)
         return
       }
 
-      await requestPayment(response.data)
+      await requestPayment(response)
     } catch (error) {
       console.error("결제 요청 실패:", error)
       showToast("결제 요청에 실패했습니다.")
