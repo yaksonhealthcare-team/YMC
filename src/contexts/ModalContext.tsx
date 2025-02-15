@@ -219,20 +219,34 @@ const OverlayContainer: React.FC = () => {
     case OverlayTypes.MODAL: {
       const modalProps = content as ModalProps
       return (
-        <Dialog open={isOpen} onClose={closeOverlay}>
-          <DialogTitle>{modalProps.title}</DialogTitle>
-          <DialogContent>
-            <p className="text-gray-600">{modalProps.message}</p>
-          </DialogContent>
-          <DialogActions>
-            {modalProps.onCancel && (
-              <Button onClick={modalProps.onCancel}>취소</Button>
-            )}
-            <Button onClick={modalProps.onConfirm} variant="contained">
-              확인
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-5 mx-5 w-full max-w-sm">
+            <h2 className="text-lg font-semibold mb-2">{modalProps.title}</h2>
+            <p className="text-gray-600 mb-5">{modalProps.message}</p>
+            <div className="flex gap-2">
+              {modalProps.onCancel && (
+                <button
+                  className="flex-1 py-3 bg-gray-100 text-gray-900 rounded-lg font-medium"
+                  onClick={() => {
+                    modalProps.onCancel?.()
+                    closeOverlay()
+                  }}
+                >
+                  취소
+                </button>
+              )}
+              <button
+                className="flex-1 py-3 bg-primary text-white rounded-lg font-medium"
+                onClick={() => {
+                  modalProps.onConfirm()
+                  closeOverlay()
+                }}
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        </div>
       )
     }
 
@@ -292,32 +306,39 @@ const OverlayContainer: React.FC = () => {
 
     case OverlayTypes.MESSAGE_BOX: {
       const messageBoxOptions = options as MessageBoxOptions
+      const alertProps: AlertProps = {
+        title: messageBoxOptions.title || "메시지",
+        description: content as string,
+        onClose: closeOverlay,
+      }
+
       return (
-        <Dialog
-          open={isOpen}
-          onClose={closeOverlay}
-          aria-labelledby="message-box-title"
-          aria-describedby="message-box-description"
-          className="z-50"
-        >
-          <DialogTitle id="message-box-title">
-            {messageBoxOptions.title || "메시지"}
-          </DialogTitle>
-          <DialogContent>
-            <p id="message-box-description" className="text-gray-700">
-              {content}
-            </p>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={closeOverlay} color="primary">
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-5 mx-5 w-full max-w-sm">
+            <h2 className="text-lg font-semibold mb-2">{alertProps.title}</h2>
+            <p className="text-gray-600 mb-5">{alertProps.description}</p>
+            <button
+              className="w-full py-3 bg-primary text-white rounded-lg font-medium"
+              onClick={(e) => {
+                e.preventDefault()
+                closeOverlay()
+                alertProps.onClose?.()
+              }}
+            >
               확인
-            </Button>
-          </DialogActions>
-        </Dialog>
+            </button>
+          </div>
+        </div>
       )
     }
 
     default:
       return null
   }
+}
+
+interface AlertProps {
+  title: string
+  description: string
+  onClose?: () => void
 }
