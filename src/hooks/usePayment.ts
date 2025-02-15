@@ -1,17 +1,11 @@
 import { useOverlay } from "contexts/ModalContext"
-import { OrderResponse, BasePaymentParams, PaymentItem } from "types/Payment"
+import { OrderResponse, BasePaymentParams } from "types/Payment"
 import { usePaymentStore } from "./usePaymentStore"
 import { createOrder } from "apis/order.api"
 
 export const usePayment = () => {
   const { showToast } = useOverlay()
-  const { points } = usePaymentStore()
-
-  const calculateTotalAmount = (items: PaymentItem[]) => {
-    return (
-      items.reduce((total, item) => total + item.amount, 0) - points.usedPoints
-    )
-  }
+  const { points, selectedPaymentMethod } = usePaymentStore()
 
   const requestPayment = async (orderData: OrderResponse) => {
     const appendInput = (name: string, value: string) => {
@@ -27,8 +21,10 @@ export const usePayment = () => {
     form.method = "post"
     form.action = "https://mobile.inicis.com/smart/payment/"
 
+    const paymentMethod = selectedPaymentMethod?.toUpperCase() || "CARD"
+
     const params: BasePaymentParams = {
-      P_INI_PAYMENT: "CARD",
+      P_INI_PAYMENT: paymentMethod,
       P_MID: orderData.pg_info.P_MID,
       P_OID: orderData.pg_info.P_OID,
       P_AMT: String(orderData.pg_info.P_AMT),
@@ -79,7 +75,6 @@ export const usePayment = () => {
   }
 
   return {
-    calculateTotalAmount,
     handlePayment,
   }
 }

@@ -37,8 +37,8 @@ import { usePaymentHandlers } from "hooks/usePaymentHandlers"
 const PaymentPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
-  const { items, points } = usePaymentStore()
-  const { calculateTotalAmount, handlePayment } = usePayment()
+  const { items, points, setPaymentMethod } = usePaymentStore()
+  const { handlePayment } = usePayment()
   const {
     handlePointChange,
     handleUseAllPoints,
@@ -83,7 +83,10 @@ const PaymentPage = () => {
     return <LoadingIndicator className="min-h-screen" />
   }
 
-  const totalAmount = calculateTotalAmount(items)
+  const handlePaymentMethodChange = (method: "card" | "bank" | "vbank") => {
+    setSelectedPayment(method)
+    setPaymentMethod(method)
+  }
 
   return (
     <div className="min-h-screen bg-white pb-32">
@@ -102,14 +105,21 @@ const PaymentPage = () => {
 
       <PaymentMethodSection
         selectedPayment={selectedPayment}
-        onPaymentMethodChange={setSelectedPayment}
+        onPaymentMethodChange={handlePaymentMethodChange}
       />
 
       <PaymentSummarySection
-        totalAmount={totalAmount + points.usedPoints}
+        totalAmount={items.reduce(
+          (total, item) => total + item.price * item.amount,
+          0,
+        )}
         discountAmount={0}
         pointAmount={points.usedPoints}
-        finalAmount={totalAmount}
+        finalAmount={Math.max(
+          items.reduce((total, item) => total + item.price * item.amount, 0) -
+            points.usedPoints,
+          0,
+        )}
       />
 
       <PaymentAgreementSection
@@ -125,7 +135,16 @@ const PaymentPage = () => {
           disabled={!isAgreed}
           className="w-full"
         >
-          {formatPriceWithUnit(totalAmount)}원 결제하기
+          {formatPriceWithUnit(
+            Math.max(
+              items.reduce(
+                (total, item) => total + item.price * item.amount,
+                0,
+              ) - points.usedPoints,
+              0,
+            ),
+          )}{" "}
+          결제하기
         </Button>
       </FixedButtonContainer>
     </div>

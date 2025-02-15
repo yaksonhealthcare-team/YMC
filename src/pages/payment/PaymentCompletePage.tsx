@@ -87,6 +87,7 @@ const PaymentCompletePage = () => {
               sessions: Number(item.sessions),
               name:
                 item.branch.code === "0" ? "전지점 사용가능" : item.branch.name,
+              type: "membership" as const,
             }}
           />
         ))}

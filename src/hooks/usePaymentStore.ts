@@ -12,11 +12,13 @@ interface PaymentStore {
   selectedBranch: Branch | null
   paymentStatus: PaymentStatus
   points: Points
+  selectedPaymentMethod: "card" | "bank" | "vbank"
   setItems: (items: PaymentItem[]) => void
   setBranch: (branch: Branch) => void
   clear: () => void
   setPaymentStatus: (status: PaymentStatus) => void
   setPoints: (points: number) => void
+  setPaymentMethod: (method: "card" | "bank" | "vbank") => void
 }
 
 export const usePaymentStore = create<PaymentStore>((set) => ({
@@ -27,6 +29,7 @@ export const usePaymentStore = create<PaymentStore>((set) => ({
     availablePoints: 0,
     usedPoints: 0,
   },
+  selectedPaymentMethod: "card",
   setItems: (items) => set({ items }),
   setBranch: (branch) => set({ selectedBranch: branch }),
   clear: () => set({ items: [], selectedBranch: null }),
@@ -38,4 +41,5 @@ export const usePaymentStore = create<PaymentStore>((set) => ({
         usedPoints: points,
       },
     })),
+  setPaymentMethod: (method) => set({ selectedPaymentMethod: method }),
 }))

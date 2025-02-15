@@ -26,6 +26,11 @@ export interface PaymentItem {
   originalPrice?: number
   sessions: number
   name?: string
+  type: "membership" | "additional"
+  // 추가관리 전용 필드
+  mp_idx?: number
+  r_date?: string
+  r_memo?: string
 }
 
 export interface PaymentHistoryItem {

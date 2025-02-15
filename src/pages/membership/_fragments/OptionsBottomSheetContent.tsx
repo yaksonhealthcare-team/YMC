@@ -165,6 +165,7 @@ export const OptionsBottomSheetContent = ({
           ? parsePrice(option.original_price)
           : undefined,
         sessions: parseInt(option.ss_count),
+        type: "membership" as const,
       }))
 
       // 지점 회원권이면서 selectedBranch가 없는 경우에만 return

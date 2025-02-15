@@ -138,6 +138,7 @@ const CartPage = () => {
           price: option.price,
           originalPrice: option.originalPrice,
           sessions: option.sessions,
+          type: "membership" as const,
         }
       }),
     )
