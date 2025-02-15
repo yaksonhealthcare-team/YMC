@@ -16,11 +16,11 @@ import { BannerRequestType } from "types/Banner"
 import NoticesSummarySlider from "@components/NoticesSummarySlider"
 import { useAuth } from "../../contexts/AuthContext"
 import { useUnreadNotificationsCount } from "../../queries/useNotificationQueries"
-import { MembershipCardSection } from "./_fragments/MembershipCardSection"
-import { BrandSection } from "./_fragments/BrandSection"
-import { EventSection } from "./_fragments/EventSection"
-import { BusinessInfo } from "./_fragments/BusinessInfo"
-import { ReserveCardSection } from "./_fragments/ReserveCardSection"
+import { MembershipCardSection } from "./../../pages/home/_fragments/MembershipCardSection"
+import { BrandSection } from "./../../pages/home/_fragments/BrandSection"
+import { EventSection } from "./../../pages/home/_fragments/EventSection"
+import { BusinessInfo } from "./../../pages/home/_fragments/BusinessInfo"
+import { ReserveCardSection } from "./../../pages/home/_fragments/ReserveCardSection"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 
 const Home = () => {
@@ -126,14 +126,14 @@ const Home = () => {
                     }
                   `}
                 </style>
-                {mainBanner?.map((banner, index) => {
+                {mainBanner?.map((banner) => {
                   const getBannerLink = (link: string) => {
                     if (link.startsWith("http")) return link
                     return `https://${link}`
                   }
 
                   return (
-                    <SwiperSlide key={index}>
+                    <SwiperSlide key={banner.code}>
                       <button
                         className="w-full"
                         onClick={() => {
