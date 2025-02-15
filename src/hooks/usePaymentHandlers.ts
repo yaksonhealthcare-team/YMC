@@ -14,9 +14,19 @@ export const usePaymentHandlers = () => {
     }
 
     const numValue = Number(value)
+    const totalAmount = usePaymentStore
+      .getState()
+      .items.reduce((total, item) => total + item.price * item.amount, 0)
+
     if (numValue > points.availablePoints) {
       showToast("사용 가능한 포인트를 초과했습니다.")
       setPoints(points.availablePoints)
+      return
+    }
+
+    if (numValue > totalAmount) {
+      showToast("총 상품 금액을 초과하여 포인트를 사용할 수 없습니다.")
+      setPoints(totalAmount)
       return
     }
 
@@ -24,7 +34,12 @@ export const usePaymentHandlers = () => {
   }
 
   const handleUseAllPoints = () => {
-    setPoints(points.availablePoints)
+    const totalAmount = usePaymentStore
+      .getState()
+      .items.reduce((total, item) => total + item.price * item.amount, 0)
+
+    const pointsToUse = Math.min(points.availablePoints, totalAmount)
+    setPoints(pointsToUse)
   }
 
   const handleCountChange = async (cartId: string, newCount: number) => {
