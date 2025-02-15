@@ -158,14 +158,11 @@ export const ReserveCard = ({
         </div>
         <DateAndTime date={reservation.date} className="mt-3" />
       </div>
-      <div className="flex flex-col justify-between items-end min-w-[90px]">
-        <div className="flex gap-1">
-          <ReserveTag
-            status={classifyReservationStatus(reservation.status)}
-            reservationDate={reservation.date}
-          />
-          {renderDdayBadge()}
-        </div>
+      <div className="flex flex-col justify-between items-end min-w-[90px] h-full gap-6">
+        <ReserveTag
+          status={classifyReservationStatus(reservation.status)}
+          reservationDate={reservation.date}
+        />
         {getButton()}
       </div>
     </button>
