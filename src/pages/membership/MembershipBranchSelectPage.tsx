@@ -67,7 +67,17 @@ const MembershipBranchSelectPage = ({ onSelect, onClose }: Props) => {
       title: "지점 선택",
       backgroundColor: "bg-white",
       display: true,
-      onClickBack: onClose,
+      onClickBack: () => {
+        if (location.state?.returnPath) {
+          navigate(location.state.returnPath, {
+            state: {
+              ...location.state,
+            },
+          })
+        } else {
+          onClose()
+        }
+      },
     })
     setNavigation({ display: false })
 

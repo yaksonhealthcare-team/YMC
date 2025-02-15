@@ -1,5 +1,5 @@
 import { useLayout } from "contexts/LayoutContext"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { RadioCard } from "@components/RadioCard"
 import { AdditionalManagement } from "types/Membership"
@@ -15,8 +15,7 @@ import { useMembershipList } from "../../queries/useMembershipQueries.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useCreateReservationMutation } from "../../queries/useReservationQueries"
-import { useQuery } from "@tanstack/react-query"
-import { getConsultationCount } from "../../apis/reservation.api"
+import { useConsultationCount } from "../../hooks/useConsultationCount"
 import { MembershipSwiper } from "@components/MembershipSwiper"
 import { AdditionalServiceCard } from "@components/AdditionalServiceCard"
 import { ReservationFormSection } from "./_fragments/ReservationFormSection"
@@ -42,18 +41,11 @@ const ReservationFormPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const location = useLocation()
-  const { selectedBranch, clear } = useMembershipOptionsStore()
-  const { data: consultationCount = 0 } = useQuery({
-    queryKey: ["consultationCount"],
-    queryFn: getConsultationCount,
-    retry: false,
-  })
-  const { mutateAsync: createReservation } = useCreateReservationMutation()
+  const { selectedBranch, clear, setSelectedBranch } =
+    useMembershipOptionsStore()
   const { handleError } = useErrorHandler()
 
-  const { data: membershipsData, isLoading: isMembershipsLoading } =
-    useMembershipList(BRAND_CODE)
-
+  // State
   const [data, setData] = useState<FormDataType>({
     item: undefined,
     branch: undefined,
@@ -63,9 +55,98 @@ const ReservationFormPage = () => {
     additionalServices: [],
   })
 
+  // Queries
+  const { data: consultationCount = 0 } = useConsultationCount()
+  const { mutateAsync: createReservation } = useCreateReservationMutation()
+  const { data: membershipsData, isLoading: isMembershipsLoading } =
+    useMembershipList(BRAND_CODE)
+
+  // Additional Queries
   const { data: additionalManagements, isLoading: isAdditionalLoading } =
     useAdditionalManagement(data.item)
 
+  // Navigation Handler
+  const handleBack = useCallback(() => {
+    // 먼저 모든 상태를 초기화
+    setData({
+      item: undefined,
+      branch: undefined,
+      date: null,
+      timeSlot: null,
+      request: "",
+      additionalServices: [],
+    })
+    clear()
+
+    // 상태 초기화 후 뒤로가기
+    navigate("..", { replace: true })
+  }, [clear, navigate])
+
+  // Layout Effects
+  useEffect(() => {
+    const cleanupRef = { shouldNavigate: true }
+
+    setHeader({
+      display: true,
+      title: "예약하기",
+      left: "back",
+      onClickBack: () => {
+        if (cleanupRef.shouldNavigate) {
+          handleBack()
+        }
+      },
+      backgroundColor: "bg-white",
+    })
+    setNavigation({ display: false })
+
+    return () => {
+      cleanupRef.shouldNavigate = false
+    }
+  }, [handleBack])
+
+  // Data Effects
+  useEffect(() => {
+    let isSubscribed = true
+
+    if (selectedBranch && isSubscribed) {
+      setData((prev) => ({
+        ...prev,
+        branch: selectedBranch.b_idx,
+      }))
+    }
+
+    return () => {
+      isSubscribed = false
+    }
+  }, [selectedBranch])
+
+  useEffect(() => {
+    let isSubscribed = true
+
+    if (location.state?.selectedBranch && isSubscribed) {
+      setSelectedBranch(location.state.selectedBranch)
+    }
+
+    if (location.state?.selectedItem && isSubscribed) {
+      setData((prev) => ({
+        ...prev,
+        item: location.state.selectedItem,
+      }))
+    }
+
+    return () => {
+      isSubscribed = false
+    }
+  }, [location.state, setSelectedBranch])
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      clear() // 컴포넌트 언마운트 시 상태 초기화
+    }
+  }, [clear])
+
+  // Handlers
   const handleOnChangeItem = (value: string) => {
     setData((prev) => ({
       ...prev,
@@ -75,7 +156,15 @@ const ReservationFormPage = () => {
   }
 
   const handleOpenCalendar = () => {
-    if (!data.item) return
+    if (!data.item) {
+      handleError(new Error("회원권을 먼저 선택해주세요."))
+      return
+    }
+
+    if (!data.branch) {
+      handleError(new Error("지점을 먼저 선택해주세요."))
+      return
+    }
 
     openBottomSheet(
       <DateAndTimeBottomSheet
@@ -115,66 +204,26 @@ const ReservationFormPage = () => {
     })
   }
 
-  useEffect(() => {
-    setHeader({
-      display: true,
-      title: "예약하기",
-      left: "back",
-      onClickBack: () => {
-        navigate(-1)
-        clear()
-      },
-      backgroundColor: "bg-white",
-    })
-    setNavigation({ display: false })
-
-    if (selectedBranch) {
-      setData((prev) => ({
-        ...prev,
-        branch: selectedBranch.b_idx,
-      }))
+  const handleNavigateBranchSelect = useCallback(() => {
+    if (!data.item) {
+      handleError(new Error("회원권을 먼저 선택해주세요."))
+      return
     }
-
-    if (location.state?.selectedItem) {
-      setData((prev) => ({
-        ...prev,
-        item: location.state.selectedItem,
-      }))
+    try {
+      navigate("/membership/select-branch", {
+        state: {
+          returnPath: "/reservation/form",
+          selectedItem: data.item,
+          brand_code: BRAND_CODE,
+        },
+      })
+    } catch (error) {
+      console.error("Navigation error:", error)
+      handleError(new Error("지점 선택 페이지로 이동할 수 없습니다."))
     }
-  }, [selectedBranch, location.state])
+  }, [data.item, navigate, handleError])
 
-  const totalPrice = data.additionalServices.reduce((sum, service) => {
-    const optionPrice = service.options?.[0]?.ss_price
-    return sum + (optionPrice ? parsePrice(optionPrice) : 0)
-  }, 0)
-
-  const renderAdditionalManagementSection = () => {
-    if (data.item === "상담 예약" || isAdditionalLoading) return null
-
-    if (!additionalManagements?.body?.length) return null
-
-    return (
-      <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
-        <p className="font-m text-14px text-gray-700 mb-4">추가관리 (선택)</p>
-        <div className="flex flex-col gap-3">
-          {additionalManagements.body.map((option) => {
-            const isChecked = data.additionalServices.some(
-              (service) => service.s_idx === option.s_idx,
-            )
-            return (
-              <AdditionalServiceCard
-                key={option.s_idx}
-                option={option}
-                isChecked={isChecked}
-                onChangeService={handleAdditionalServiceChange}
-              />
-            )
-          })}
-        </div>
-      </section>
-    )
-  }
-
+  // Validation
   const validateReservationData = () => {
     if (!data.item) {
       handleError(new Error("회원권을 먼저 선택해주세요."))
@@ -191,6 +240,7 @@ const ReservationFormPage = () => {
     return true
   }
 
+  // Reservation Handlers
   const handleConsultationReservation = async () => {
     try {
       if (!validateReservationData()) return
@@ -274,10 +324,44 @@ const ReservationFormPage = () => {
     }
   }
 
+  // Calculations
+  const totalPrice = data.additionalServices.reduce((sum, service) => {
+    const optionPrice = service.options?.[0]?.ss_price
+    return sum + (optionPrice ? parsePrice(optionPrice) : 0)
+  }, 0)
+
+  // Render Sections
+  const renderAdditionalManagementSection = () => {
+    if (data.item === "상담 예약" || isAdditionalLoading) return null
+    if (!additionalManagements?.body?.length) return null
+
+    return (
+      <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
+        <p className="font-m text-14px text-gray-700 mb-4">추가관리 (선택)</p>
+        <div className="flex flex-col gap-3">
+          {additionalManagements.body.map((option) => {
+            const isChecked = data.additionalServices.some(
+              (service) => service.s_idx === option.s_idx,
+            )
+            return (
+              <AdditionalServiceCard
+                key={option.s_idx}
+                option={option}
+                isChecked={isChecked}
+                onChangeService={handleAdditionalServiceChange}
+              />
+            )
+          })}
+        </div>
+      </section>
+    )
+  }
+
   if (isMembershipsLoading) {
     return <LoadingIndicator className="min-h-screen" />
   }
 
+  // Main Render
   return (
     <div className="flex-1 space-y-3 pb-32 overflow-y-auto overflow-x-hidden">
       <section className="px-5 pt-2 pb-6 border-b-8 border-[#f7f7f7]">
@@ -319,19 +403,7 @@ const ReservationFormPage = () => {
         onChangeRequest={(value) =>
           setData((prev) => ({ ...prev, request: value }))
         }
-        onNavigateBranchSelect={() => {
-          if (!data.item) {
-            handleError(new Error("회원권을 먼저 선택해주세요."))
-            return
-          }
-          navigate("/membership/select-branch", {
-            state: {
-              returnPath: "/reservation/form",
-              selectedItem: data.item,
-              brand_code: BRAND_CODE,
-            },
-          })
-        }}
+        onNavigateBranchSelect={handleNavigateBranchSelect}
       />
 
       {data.item !== "상담 예약" && (
