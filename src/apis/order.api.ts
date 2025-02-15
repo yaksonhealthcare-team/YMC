@@ -19,10 +19,3 @@ export const createAdditionalManagementOrder = async (
   )
   return response.data
 }
-
-export const createOrder = async (points: number): Promise<OrderResponse> => {
-  const response = await axiosClient.post<OrderResponse>("/orders", {
-    points,
-  })
-  return response.data
-}
