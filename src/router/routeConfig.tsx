@@ -1,7 +1,7 @@
 import { lazy, ReactNode } from "react"
+import { useNavigate } from "react-router-dom"
 import WithdrawalPage from "../pages/profile/WithdrawalPage"
 import Store from "../pages/store/Store"
-import { useNavigate } from "react-router-dom"
 
 const MembershipBranchSelectPageWrapper = () => {
   const navigate = useNavigate()
@@ -133,6 +133,9 @@ const MembershipHistoryPage = lazy(
 )
 const ProfileChangePhoneNumber = lazy(
   () => import("../pages/editProfile/ProfileChangePhoneNumber"),
+)
+const ChangePhoneNumberCallback = lazy(
+  () => import("../pages/editProfile/ChangePhoneNumberCallback"),
 )
 const PaymentCompletePage = lazy(
   () => import("../pages/payment/PaymentCompletePage"),
@@ -456,6 +459,10 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/profile/change-phone",
     element: <ProfileChangePhoneNumber />,
+  },
+  {
+    path: "/profile/change-phone/callback",
+    element: <ChangePhoneNumberCallback />,
   },
   {
     path: "/profile/withdrawal",

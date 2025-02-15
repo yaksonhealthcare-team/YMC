@@ -1,11 +1,11 @@
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useEffect } from "react"
 import { Button } from "@components/Button.tsx"
-import { useNavigate } from "react-router-dom"
+import { checkByNice } from "utils/niceCheck.ts"
+import { fetchEncryptDataForNice } from "@apis/pass.api.ts"
 
 const ProfileChangePhoneNumber = () => {
   const { setHeader, setNavigation } = useLayout()
-  const navigate = useNavigate()
 
   useEffect(() => {
     setHeader({
@@ -17,6 +17,26 @@ const ProfileChangePhoneNumber = () => {
     setNavigation({ display: false })
   }, [])
 
+  const getReturnUrl = () => {
+    // localhost인 경우 현재 origin 사용
+    if (window.location.hostname === "localhost") {
+      return `${window.location.origin}/profile/change-phone/callback`
+    }
+
+    // 그 외의 경우 현재 hostname 사용
+    return `${window.location.protocol}//${window.location.hostname}/profile/change-phone/callback`
+  }
+
+  const onClickCheckByNice = async (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.preventDefault()
+
+    const returnUrl = getReturnUrl()
+    const data = await fetchEncryptDataForNice(returnUrl)
+    await checkByNice(data)
+  }
+
   return (
     <div className={"flex flex-col p-5"}>
       <p className={"text-center font-sb text-20px mt-32"}>
@@ -24,13 +44,7 @@ const ProfileChangePhoneNumber = () => {
         <br />
         {"본인인증이 필요해요."}
       </p>
-      <Button
-        className={"w-full mt-10"}
-        onClick={() => {
-          // TODO: Pass API 완료 후 추가 작업할 것
-          navigate(-1)
-        }}
-      >
+      <Button className={"w-full mt-10"} onClick={onClickCheckByNice}>
         {"본인인증 하러가기"}
       </Button>
     </div>

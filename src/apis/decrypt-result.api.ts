@@ -18,8 +18,8 @@ export interface DecryptResponse {
 }
 
 export interface FindEmailResponse {
-  thirdPartyType?: string    // 이메일 또는 소셜로그인 유형
-  email?: string       // 로그인 유형이 이메일인 경우에만 존재
+  thirdPartyType?: string // 이메일 또는 소셜로그인 유형
+  email?: string // 로그인 유형이 이메일인 경우에만 존재
 }
 
 export const fetchDecryptResult = async (request: DecryptRequest) => {
@@ -31,10 +31,24 @@ export const fetchDecryptResult = async (request: DecryptRequest) => {
   return data
 }
 
-export const findEmailWithDecryptData = async (request: DecryptRequest): Promise<FindEmailResponse> => {
+export const findEmailWithDecryptData = async (
+  request: DecryptRequest,
+): Promise<FindEmailResponse> => {
   const { data } = await axiosClient.post<HTTPResponse<FindEmailResponse>>(
     "/auth/account/find-account",
     { ...request },
   )
   return data.body
+}
+
+export interface ChangePhoneNumberResponse {}
+
+export const changePhoneNumberWithDecryptData = async (
+  request: DecryptRequest,
+): Promise<ChangePhoneNumberResponse> => {
+  const { data } = await axiosClient.post<
+    HTTPResponse<ChangePhoneNumberResponse>
+  >("/auth/account/change-phone-number", { ...request })
+
+  return data
 }
