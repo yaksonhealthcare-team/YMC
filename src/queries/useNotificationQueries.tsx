@@ -53,7 +53,15 @@ export const useUpdateNotificationSettings = () => {
 export const useUnreadNotificationsCount = () => {
   return useQuery({
     queryKey: ["unreadNotificationsCount"],
-    queryFn: fetchUnreadNotificationsCount,
+    queryFn: async () => {
+      try {
+        const count = await fetchUnreadNotificationsCount()
+        return count ?? 0
+      } catch (error) {
+        console.error("Failed to fetch unread notifications count:", error)
+        return 0
+      }
+    },
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     staleTime: 1000 * 30, // 30초

@@ -19,7 +19,10 @@ export const SwiperBrandCard = ({
       <div className="flex gap-4 pb-2 pr-5">
         {brands &&
           brands.map((brand, index) => (
-            <div key={brand.code} className={index === brands.length - 1 ? 'pr-5' : ''}>
+            <div
+              key={`${brand.code}-${index}`}
+              className={index === brands.length - 1 ? "pr-5" : ""}
+            >
               <BrandCard
                 name={brand.name}
                 brandSrc={brand.imageUrl || ""}
