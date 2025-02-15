@@ -27,14 +27,10 @@ export const loginWithEmail = async ({
   }
 }
 
-export const fetchUser = async (token: string): Promise<User> => {
+export const fetchUser = async (_: string): Promise<User> => {
   const {
     data: { body: response },
-  } = await axiosClient.get<HTTPResponse<UserResponse[]>>("/auth/me", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
+  } = await axiosClient.get<HTTPResponse<UserResponse[]>>("/auth/me")
   return UserMapper.toEntity(response[0])
 }
 
