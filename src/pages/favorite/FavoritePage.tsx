@@ -1,25 +1,21 @@
 import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import { EmptyCard } from "../../components/EmptyCard.tsx"
+import LoadingIndicator from "../../components/LoadingIndicator.tsx"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { Branch } from "../../types/Branch.ts"
-import { BranchFilterListItem } from "../branch/_fragments/BranchFilterList.tsx"
+import { useOverlay } from "../../contexts/ModalContext.tsx"
+import { useGeolocation } from "../../hooks/useGeolocation.tsx"
 import {
   useBranchBookmarksQuery,
   useBranchUnbookmarkMutation,
 } from "../../queries/useBranchQueries.tsx"
-import { useNavigate } from "react-router-dom"
-import { useGeolocation } from "../../hooks/useGeolocation.tsx"
-import { useOverlay } from "../../contexts/ModalContext.tsx"
-import LoadingIndicator from "../../components/LoadingIndicator.tsx"
-import { EmptyCard } from "../../components/EmptyCard.tsx"
+import { Branch } from "../../types/Branch.ts"
+import { BranchFilterListItem } from "../branch/_fragments/BranchFilterList.tsx"
 
 const FavoritePage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const {
-    location,
-    loading: locationLoading,
-    error: locationError,
-  } = useGeolocation()
+  const { location, loading: locationLoading } = useGeolocation()
   const { data, isLoading: branchesLoading } = useBranchBookmarksQuery(location)
   const { mutate: removeBookmark } = useBranchUnbookmarkMutation()
   const { showToast } = useOverlay()
@@ -52,16 +48,6 @@ const FavoritePage = () => {
     return (
       <div className="h-screen flex items-center justify-center bg-white">
         <LoadingIndicator />
-      </div>
-    )
-  }
-
-  if (locationError) {
-    return (
-      <div className="h-screen bg-white p-5">
-        <EmptyCard
-          title={`위치 정보를 불러올 수 없습니다.\n${locationError}`}
-        />
       </div>
     )
   }
