@@ -27,6 +27,7 @@ export const usePayment = () => {
     form.name = "SendPayForm"
     form.method = "post"
     form.action = "https://mobile.inicis.com/smart/payment/"
+    form.acceptCharset = "euc-kr";
 
     const paymentMethod = selectedPaymentMethod?.toUpperCase() || "CARD"
 
@@ -78,6 +79,7 @@ export const usePayment = () => {
         })),
       },
     )
+    console.log(response.data)
     return response.data
   }
 
