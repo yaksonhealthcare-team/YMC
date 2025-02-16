@@ -470,6 +470,10 @@ export const routeConfig: RouteConfig[] = [
   },
   //지점 찾기, 지점 상세보기
   {
+    path: "/branch/:id",
+    element: <BranchDetail />,
+  },
+  {
     path: "/branch",
     element: <Branch />,
   },
@@ -484,10 +488,6 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/branch/search",
     element: <BranchSearch />,
-  },
-  {
-    path: "/branch/:id",
-    element: <BranchDetail />,
   },
   // OAuth 콜백
   {

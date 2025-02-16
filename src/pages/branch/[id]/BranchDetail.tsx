@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { useLayout } from "../../../contexts/LayoutContext.tsx"
-import { useEffect, useState, useCallback } from "react"
-import MembershipAvailableBanner from "./_fragments/MembershipAvailableBanner.tsx"
+import { useEffect, useState, useCallback, lazy, Suspense } from "react"
 import {
   useBranch,
   useBranchBookmarkMutation,
@@ -11,26 +10,23 @@ import { DEFAULT_COORDINATE } from "../../../types/Coordinate.ts"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useOverlay } from "../../../contexts/ModalContext.tsx"
 import { BranchDetail as BranchDetailType } from "../../../types/Branch.ts"
-import { BranchHeader } from "./_fragments/BranchHeader"
-import { BranchTabs } from "./_fragments/BranchTabs"
-import { BranchActions } from "./_fragments/BranchActions"
+
+const MembershipAvailableBanner = lazy(
+  () => import("./_fragments/MembershipAvailableBanner.tsx"),
+)
+const BranchHeader = lazy(() => import("./_fragments/BranchHeader"))
+const BranchTabs = lazy(() => import("./_fragments/BranchTabs"))
+const BranchActions = lazy(() => import("./_fragments/BranchActions"))
 
 const branchDetailTabs = ["therapists", "programs", "information"] as const
 type BranchDetailTab = (typeof branchDetailTabs)[number]
-
-const BranchDetailTabs: Record<BranchDetailTab, string> = {
-  "therapists": "테라피스트",
-  "programs": "관리프로그램",
-  "information": "기본정보",
-}
 
 const BranchDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { showToast } = useOverlay()
-  const [selectedTab, setSelectedTab] =
-    useState<keyof typeof BranchDetailTabs>("information")
+  const [selectedTab, setSelectedTab] = useState<BranchDetailTab>("information")
 
   const { data: branch, isLoading } = useBranch(id || "", {
     latitude: DEFAULT_COORDINATE.latitude,
@@ -102,29 +98,35 @@ const BranchDetail = () => {
   return (
     <div className={"relative flex-grow w-full bg-system-bg overflow-x-hidden"}>
       <div className={"flex flex-col gap-3 p-5"}>
-        <BranchHeader
-          branch={branch}
-          onShare={handleShare}
-          onBack={handleBack}
-        />
-        {branch.availableMembershipCount > 0 && (
-          <MembershipAvailableBanner
-            availableMembershipCount={branch.availableMembershipCount}
-            onClick={handleMembershipBannerClick}
+        <Suspense fallback={<LoadingIndicator className="h-20" />}>
+          <BranchHeader
+            branch={branch}
+            onShare={handleShare}
+            onBack={handleBack}
           />
-        )}
+          {branch.availableMembershipCount > 0 && (
+            <MembershipAvailableBanner
+              availableMembershipCount={branch.availableMembershipCount}
+              onClick={handleMembershipBannerClick}
+            />
+          )}
+        </Suspense>
       </div>
-      <BranchTabs
-        selectedTab={selectedTab}
-        onChangeTab={(tab) => setSelectedTab(tab)}
-        branch={branch}
-      />
+      <Suspense fallback={<LoadingIndicator className="h-20" />}>
+        <BranchTabs
+          selectedTab={selectedTab}
+          onChangeTab={(tab: BranchDetailTab) => setSelectedTab(tab)}
+          branch={branch}
+        />
+      </Suspense>
       <div className={"h-20"} />
-      <BranchActions
-        branch={branch}
-        onBookmark={handleBookmark}
-        onReservation={handleReservation}
-      />
+      <Suspense fallback={<LoadingIndicator className="h-20" />}>
+        <BranchActions
+          branch={branch}
+          onBookmark={handleBookmark}
+          onReservation={handleReservation}
+        />
+      </Suspense>
     </div>
   )
 }

@@ -23,9 +23,12 @@ export default defineConfig({
         manualChunks: {
           "react-vendor": ["react", "react-dom", "react-router-dom"],
           "ui-vendor": ["@mui/material", "@emotion/react", "@emotion/styled"],
+          "branch-vendor": ["@components/MapView", "@components/BranchCard"],
+          "swiper-vendor": ["swiper", "swiper/react", "swiper/modules"],
         },
       },
     },
     chunkSizeWarningLimit: 1000,
+    sourcemap: true,
   },
 })
