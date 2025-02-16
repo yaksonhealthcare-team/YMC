@@ -1,12 +1,12 @@
 import { ChangeEventHandler } from "react"
-import { InputAdornment, TextField } from "@mui/material"
-import SearchIcon from "@components/icons/SearchIcon"
-import XCircleIcon from "@components/icons/XCircleIcon"
-import { COLORS } from "@constants/ColorConstants"
+import { InputAdornment, TextField } from "@mui/material";
+import SearchIcon from "@components/icons/SearchIcon";
+import XCircleIcon from "@components/icons/XCircleIcon";
+import { COLORS } from "@constants/ColorConstants";
 
 interface SearchFieldProps {
   placeholder?: string
-  value: string
+  value?: string
   onChange?: ChangeEventHandler<HTMLInputElement>
   disabled?: boolean
   onClear?: () => void
