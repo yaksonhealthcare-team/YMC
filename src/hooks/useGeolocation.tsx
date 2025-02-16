@@ -2,11 +2,53 @@ import { useEffect } from "react"
 import { useGeolocationStore } from "../stores/geolocationStore"
 import { GeolocationOptions } from "../types/Coordinate"
 
+const isReactNative = () => window.ReactNativeWebView
+
+interface MessageEvent {
+  type: "GET_LOCATION"
+}
+
 export const useGeolocation = (options: GeolocationOptions = {}) => {
   const { location, error, loading, setLocation, setError, setLoading } =
     useGeolocationStore()
 
   useEffect(() => {
+    if (isReactNative()) {
+      const handleLocationReceived = (event: CustomEvent) => {
+        const { latitude, longitude } = event.detail
+        setLocation(latitude, longitude)
+        setLoading(false)
+      }
+
+      const handleLocationError = (event: CustomEvent) => {
+        setError(event.detail.message)
+        setLoading(false)
+      }
+
+      window.addEventListener(
+        "locationReceived",
+        handleLocationReceived as EventListener,
+      )
+      window.addEventListener(
+        "locationError",
+        handleLocationError as EventListener,
+      )
+
+      const message: MessageEvent = { type: "GET_LOCATION" }
+      window.ReactNativeWebView?.postMessage(JSON.stringify(message))
+
+      return () => {
+        window.removeEventListener(
+          "locationReceived",
+          handleLocationReceived as EventListener,
+        )
+        window.removeEventListener(
+          "locationError",
+          handleLocationError as EventListener,
+        )
+      }
+    }
+
     if (!navigator.geolocation) {
       setError("Geolocation이 지원되지 않는 브라우저입니다.")
       setLoading(false)
