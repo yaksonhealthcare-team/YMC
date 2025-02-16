@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useGeolocation } from "../../hooks/useGeolocation"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
@@ -14,12 +14,11 @@ import { useLocation, useNavigate } from "react-router-dom"
 
 interface Props {
   onSelect?: (branch: Branch) => void
-  onClose: () => void
 }
 
 const DEFAULT_BRAND_CODE = "001" // 약손명가
 
-const MembershipBranchSelectPage = ({ onSelect, onClose }: Props) => {
+const MembershipBranchSelectPage = ({ onSelect }: Props) => {
   const [query, setQuery] = useState("")
   const { setHeader, setNavigation } = useLayout()
   const location = useLocation()
@@ -61,6 +60,8 @@ const MembershipBranchSelectPage = ({ onSelect, onClose }: Props) => {
     },
   })
 
+  const memoizedState = useMemo(() => location.state, [location.state]);
+
   useEffect(() => {
     setHeader({
       left: "back",
@@ -68,14 +69,14 @@ const MembershipBranchSelectPage = ({ onSelect, onClose }: Props) => {
       backgroundColor: "bg-white",
       display: true,
       onClickBack: () => {
-        if (location.state?.returnPath) {
-          navigate(location.state.returnPath, {
+        if (memoizedState?.returnPath) {
+          navigate(memoizedState.returnPath, {
             state: {
-              ...location.state,
+              ...memoizedState,
             },
           })
         } else {
-          onClose()
+          navigate(-1)
         }
       },
     })
@@ -90,7 +91,7 @@ const MembershipBranchSelectPage = ({ onSelect, onClose }: Props) => {
       setHeader({ display: false })
       setNavigation({ display: true })
     }
-  }, [setHeader, setNavigation, onClose, navigate, location])
+  }, [setHeader, setNavigation, navigate, memoizedState])
 
   const handleBranchSelect = (branch: BranchSearchResult | Branch) => {
     const branchData: Branch =
@@ -122,7 +123,7 @@ const MembershipBranchSelectPage = ({ onSelect, onClose }: Props) => {
         })
       } else {
         setIsBottomSheetOpen(true)
-        onClose()
+        navigate(-1)
       }
     }
   }
