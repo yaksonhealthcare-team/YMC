@@ -91,7 +91,7 @@ const PaymentPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white pb-32">
+    <div className="bg-white pb-[95px]">
       <PaymentProductSection
         items={items}
         onCountChange={handleCountChange}
@@ -119,7 +119,7 @@ const PaymentPage = () => {
         pointAmount={points.usedPoints}
         finalAmount={Math.max(
           items.reduce((total, item) => total + item.price * item.amount, 0) -
-            points.usedPoints,
+          points.usedPoints,
           0,
         )}
       />
