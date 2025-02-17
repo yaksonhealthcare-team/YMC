@@ -6,6 +6,7 @@ import { fetchUser, signinWithSocial } from "../../apis/auth.api"
 import { useAuth } from "../../contexts/AuthContext"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useOverlay } from "../../contexts/ModalContext"
+import { requestForToken } from "../../libs/firebase"
 
 const OAuthCallback = () => {
   const { provider } = useParams()
@@ -56,10 +57,14 @@ const OAuthCallback = () => {
 
         // 이미 가입된 회원 (next_action_type === "signin")
         try {
+          const fcmToken = await requestForToken()
+
           const result = await signinWithSocial({
             socialAccessToken: socialData.SocialAccessToken,
             socialId: socialData.socialId,
             provider: getProviderCode(provider),
+            deviceToken: fcmToken || undefined,
+            deviceType: "web",
           })
           const user = await fetchUser(result.accessToken)
           login({ user, token: result.accessToken })
