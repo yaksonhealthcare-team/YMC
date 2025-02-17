@@ -40,7 +40,7 @@ const TabContent = memo(
   },
 )
 
-export const BranchTabs = memo(
+const BranchTabs = memo(
   ({ selectedTab, onChangeTab, branch }: BranchTabsProps) => {
     return (
       <>
@@ -58,3 +58,5 @@ export const BranchTabs = memo(
     )
   },
 )
+
+export default BranchTabs

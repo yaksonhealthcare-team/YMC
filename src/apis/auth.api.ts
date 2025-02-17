@@ -3,6 +3,13 @@ import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
 import { UpdateUserProfileRequest, User, UserResponse } from "../types/User.ts"
 
+interface SignInResponseBody {
+  refreshToken: string
+  accessToken: string
+}
+
+export interface SignInResponse extends HTTPResponse<SignInResponseBody[]> {}
+
 export const loginWithEmail = async ({
   username,
   password,
@@ -52,24 +59,6 @@ export const updateUserProfile = async (data: UpdateUserProfileRequest) => {
   const requestData = UserMapper.toUpdateProfileRequest(data)
   const response = await axiosClient.patch("/auth/me", requestData)
   return response.data
-}
-
-export const loginWithNaver = async ({
-  accessToken,
-}: {
-  accessToken: string
-}) => {
-  const { data } = await axiosClient.post("/auth/signin/social", {
-    thirdPartyType: "N",
-    SocialAccessToken: accessToken,
-    device_token: "TODO: FCM 토큰 추가",
-    device_type: "TODO: 디바이스 타입 추가",
-  })
-
-  return {
-    refreshToken: data.Header[0].refreshToken,
-    accessToken: data.body[0].accessToken,
-  }
 }
 
 export const signupWithSocial = async ({
@@ -142,25 +131,25 @@ export const signup = async (signupData: SignupFormData) => {
   return data
 }
 
-export const signinWithSocial = async ({
-  socialAccessToken,
-  socialId,
-  provider,
-}: {
-  socialAccessToken: string
-  socialId: string
+export interface SignInWithSocialRequest {
   provider: "K" | "N" | "G" | "A"
-}): Promise<{
-  refreshToken: string
-  accessToken: string
-}> => {
-  const { data } = await axiosClient.post("/auth/signin/social", {
-    thirdPartyType: provider,
-    socialId: socialId,
-    device_token: "TODO: FCM 토큰 추가",
-    device_type: "TODO: 디바이스 타입 추가",
-    SocialAccessToken: socialAccessToken,
-  })
+  socialId: string
+  socialAccessToken: string
+  deviceToken?: string
+  deviceType?: "android" | "ios" | "web"
+}
+
+export async function signinWithSocial(params: SignInWithSocialRequest) {
+  const { data } = await axiosClient.post<SignInResponse>(
+    "/auth/signin/social",
+    {
+      SocialAccessToken: params.socialAccessToken,
+      thirdPartyType: params.provider,
+      socialId: params.socialId,
+      deviceToken: params.deviceToken,
+      deviceType: params.deviceType,
+    },
+  )
 
   return {
     refreshToken: data.body[0]?.refreshToken || "",

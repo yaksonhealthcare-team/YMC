@@ -61,33 +61,33 @@ const BranchHeaderContent = memo(({ branch }: { branch: BranchDetailType }) => {
   )
 })
 
-export const BranchHeader = memo(
-  ({ branch, onShare, onBack }: BranchHeaderProps) => {
-    return (
-      <DynamicHomeHeaderBackground
-        header={
-          <>
-            <div className={"flex flex-row items-center gap-2"}>
-              <div onClick={onBack}>
-                <CaretLeftIcon className="w-5 h-5" />
-              </div>
-              <p className={"font-b text-20px"}>{branch.name}</p>
+const BranchHeader = memo(({ branch, onShare, onBack }: BranchHeaderProps) => {
+  return (
+    <DynamicHomeHeaderBackground
+      header={
+        <>
+          <div className={"flex flex-row items-center gap-2"}>
+            <div onClick={onBack}>
+              <CaretLeftIcon className="w-5 h-5" />
             </div>
-            <BranchHeaderContent branch={branch} />
-          </>
-        }
-        content={<BranchStaffInfo branch={branch} />}
-        buttonArea={
-          <button
-            className={
-              "flex w-10 h-10 rounded-full bg-primary justify-center items-center text-white shadow-md"
-            }
-            onClick={onShare}
-          >
-            <ShareIcon className={"w-6 h-6"} />
-          </button>
-        }
-      />
-    )
-  },
-)
+            <p className={"font-b text-20px"}>{branch.name}</p>
+          </div>
+          <BranchHeaderContent branch={branch} />
+        </>
+      }
+      content={<BranchStaffInfo branch={branch} />}
+      buttonArea={
+        <button
+          className={
+            "flex w-10 h-10 rounded-full bg-primary justify-center items-center text-white shadow-md"
+          }
+          onClick={onShare}
+        >
+          <ShareIcon className={"w-6 h-6"} />
+        </button>
+      }
+    />
+  )
+})
+
+export default BranchHeader

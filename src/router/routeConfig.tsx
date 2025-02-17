@@ -1,12 +1,5 @@
 import { lazy, ReactNode } from "react"
-import { useNavigate } from "react-router-dom"
 import WithdrawalPage from "../pages/profile/WithdrawalPage"
-import Store from "../pages/store/Store"
-
-const MembershipBranchSelectPageWrapper = () => {
-  const navigate = useNavigate()
-  return <MembershipBranchSelectPage onClose={() => navigate(-1)} />
-}
 
 const MembershipBranchSelectPage = lazy(
   () => import("../pages/membership/MembershipBranchSelectPage"),
@@ -152,6 +145,7 @@ const PaymentCallbackPage = lazy(
 const PaymentFailedPage = lazy(
   () => import("../pages/payment/PaymentFailedPage"),
 )
+const StorePage = lazy(() => import("../pages/store/Store"))
 
 export const routeConfig: RouteConfig[] = [
   {
@@ -256,7 +250,7 @@ export const routeConfig: RouteConfig[] = [
   },
   {
     path: "/membership/select-branch",
-    element: <MembershipBranchSelectPageWrapper />,
+    element: <MembershipBranchSelectPage />,
     auth: true,
   },
   {
@@ -271,7 +265,7 @@ export const routeConfig: RouteConfig[] = [
   },
   {
     path: "/store",
-    element: <Store />,
+    element: <StorePage />,
   },
   {
     path: "/member-history/reservation",
@@ -470,6 +464,10 @@ export const routeConfig: RouteConfig[] = [
   },
   //지점 찾기, 지점 상세보기
   {
+    path: "/branch/:id",
+    element: <BranchDetail />,
+  },
+  {
     path: "/branch",
     element: <Branch />,
   },
@@ -484,10 +482,6 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/branch/search",
     element: <BranchSearch />,
-  },
-  {
-    path: "/branch/:id",
-    element: <BranchDetail />,
   },
   // OAuth 콜백
   {

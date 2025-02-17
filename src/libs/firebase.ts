@@ -1,20 +1,68 @@
 import { initializeApp } from "@firebase/app"
-import { getAuth, GoogleAuthProvider, OAuthProvider } from "@firebase/auth"
+import { getAuth } from "@firebase/auth"
+import { getMessaging, getToken, onMessage } from "firebase/messaging"
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBfgTaIp8DbdpsZOQMgSKTwAIlMx7RwIcE",
-  authDomain: "therapist-dd196.firebaseapp.com",
-  projectId: "therapist-dd196",
-  storageBucket: "therapist-dd196.firebasestorage.app",
-  messagingSenderId: "39001505358",
-  appId: "1:39001505358:web:a68d1851390d2e766d4d1f",
-  measurementId: "G-EW5VLV8E8J",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 }
 
 // Firebase 초기화는 앱에서 한 번만 해야 함
 const app = initializeApp(firebaseConfig)
 export const auth = getAuth(app)
 
-// 로그인 제공업체 설정
-export const googleProvider = new GoogleAuthProvider()
-export const appleProvider = new OAuthProvider("apple.com")
+// FCM 설정
+export const messaging = getMessaging(app)
+
+// 알림 권한 요청
+export async function requestNotificationPermission(): Promise<boolean> {
+  try {
+    if (!("Notification" in window)) {
+      console.log("이 브라우저는 알림을 지원하지 않습니다.")
+      return false
+    }
+
+    const permission = await Notification.requestPermission()
+    return permission === "granted"
+  } catch (error) {
+    console.error("알림 권한 요청 중 오류 발생:", error)
+    return false
+  }
+}
+
+// FCM 토큰 가져오기
+export async function requestForToken() {
+  try {
+    if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+      // 알림 권한 요청
+      const permissionGranted = await requestNotificationPermission()
+      if (!permissionGranted) {
+        console.log("알림 권한이 거부되었습니다.")
+        return null
+      }
+
+      const currentToken = await getToken(messaging, {
+        vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
+      })
+      return currentToken
+    }
+    console.log("FCM not supported")
+    return null
+  } catch (error) {
+    console.log("An error occurred while retrieving token:", error)
+    return null
+  }
+}
+
+// FCM 메시지 수신 핸들러
+export const onMessageListener = () =>
+  new Promise((resolve) => {
+    onMessage(messaging, (payload) => {
+      resolve(payload)
+    })
+  })

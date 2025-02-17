@@ -1,11 +1,18 @@
 import { useOverlay } from "contexts/ModalContext"
-import { OrderResponse, BasePaymentParams } from "types/Payment"
+import { OrderResponse, BasePaymentParams, PaymentItem } from "types/Payment"
 import { usePaymentStore } from "./usePaymentStore"
-import { createOrder } from "apis/order.api"
+import { axiosClient } from "queries/clients"
 
 export const usePayment = () => {
   const { showToast } = useOverlay()
-  const { points, selectedPaymentMethod } = usePaymentStore()
+  const { points, selectedPaymentMethod, items } = usePaymentStore()
+
+  const calculateTotalAmount = (items: PaymentItem[]) => {
+    return (
+      items.reduce((total, item) => total + item.price * item.amount, 0) -
+      points.usedPoints
+    )
+  }
 
   const requestPayment = async (orderData: OrderResponse) => {
     const appendInput = (name: string, value: string) => {
@@ -20,6 +27,7 @@ export const usePayment = () => {
     form.name = "SendPayForm"
     form.method = "post"
     form.action = "https://mobile.inicis.com/smart/payment/"
+    form.acceptCharset = "euc-kr";
 
     const paymentMethod = selectedPaymentMethod?.toUpperCase() || "CARD"
 
@@ -58,9 +66,26 @@ export const usePayment = () => {
     form.submit()
   }
 
+  const createMembershipOrder = async () => {
+    const response = await axiosClient.post<OrderResponse>(
+      "/orders/memberships",
+      {
+        orders: items.map((item) => ({
+          s_idx: item.s_idx,
+          ss_idx: item.ss_idx,
+          b_idx: item.b_type === "전지점" ? 0 : item.b_idx,
+          brand_code: item.brand_code,
+          amount: item.amount,
+        })),
+      },
+    )
+    console.log(response.data)
+    return response.data
+  }
+
   const handlePayment = async () => {
     try {
-      const response = await createOrder(points.usedPoints)
+      const response = await createMembershipOrder()
 
       if (response.resultCode !== "00") {
         showToast(response.resultMessage)
@@ -75,6 +100,7 @@ export const usePayment = () => {
   }
 
   return {
+    calculateTotalAmount,
     handlePayment,
   }
 }

@@ -8,7 +8,7 @@ interface BranchActionsProps {
   onReservation: () => void
 }
 
-export const BranchActions = memo(
+const BranchActions = memo(
   ({ branch, onBookmark, onReservation }: BranchActionsProps) => {
     return (
       <div
@@ -26,3 +26,5 @@ export const BranchActions = memo(
     )
   },
 )
+
+export default BranchActions

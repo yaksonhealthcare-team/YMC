@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react"
-import { useLayout } from "../../contexts/LayoutContext"
 import { Button } from "@components/Button"
 import FixedButtonContainer from "@components/FixedButtonContainer"
-import { useNavigate } from "react-router-dom"
-import { usePaymentStore } from "../../hooks/usePaymentStore"
-import { useQuery } from "@tanstack/react-query"
 import LoadingIndicator from "@components/LoadingIndicator"
-import { fetchPoints } from "../../apis/points.api"
-import PaymentProductSection from "./_fragments/PaymentProductSection"
-import PaymentPointSection from "./_fragments/PaymentPointSection"
-import PaymentMethodSection from "./_fragments/PaymentMethodSection"
-import PaymentSummarySection from "./_fragments/PaymentSummarySection"
-import PaymentAgreementSection from "./_fragments/PaymentAgreementSection"
-import { formatPriceWithUnit } from "utils/format"
+import { useQuery } from "@tanstack/react-query"
 import { usePayment } from "hooks/usePayment"
 import { usePaymentHandlers } from "hooks/usePaymentHandlers"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { formatPriceWithUnit } from "utils/format"
+import { fetchPoints } from "../../apis/points.api"
+import { useLayout } from "../../contexts/LayoutContext"
+import { usePaymentStore } from "../../hooks/usePaymentStore"
+import PaymentAgreementSection from "./_fragments/PaymentAgreementSection"
+import PaymentMethodSection from "./_fragments/PaymentMethodSection"
+import PaymentPointSection from "./_fragments/PaymentPointSection"
+import PaymentProductSection from "./_fragments/PaymentProductSection"
+import PaymentSummarySection from "./_fragments/PaymentSummarySection"
 
 /**
  * TODO: 결제 연동 관련 확인사항
@@ -38,7 +38,7 @@ const PaymentPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { items, points, setPaymentMethod } = usePaymentStore()
-  const { handlePayment } = usePayment()
+  const { handlePayment, calculateTotalAmount } = usePayment()
   const {
     handlePointChange,
     handleUseAllPoints,
@@ -56,6 +56,8 @@ const PaymentPage = () => {
     queryFn: fetchPoints,
     retry: false,
   })
+
+  const totalAmount = calculateTotalAmount(items)
 
   useEffect(() => {
     if (availablePoints > 0) {
@@ -89,7 +91,7 @@ const PaymentPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white pb-32">
+    <div className="bg-white pb-[95px]">
       <PaymentProductSection
         items={items}
         onCountChange={handleCountChange}
@@ -117,7 +119,7 @@ const PaymentPage = () => {
         pointAmount={points.usedPoints}
         finalAmount={Math.max(
           items.reduce((total, item) => total + item.price * item.amount, 0) -
-            points.usedPoints,
+          points.usedPoints,
           0,
         )}
       />
@@ -135,15 +137,7 @@ const PaymentPage = () => {
           disabled={!isAgreed}
           className="w-full"
         >
-          {formatPriceWithUnit(
-            Math.max(
-              items.reduce(
-                (total, item) => total + item.price * item.amount,
-                0,
-              ) - points.usedPoints,
-              0,
-            ),
-          )}{" "}
+          {formatPriceWithUnit(Math.max(totalAmount - points.usedPoints, 0))}{" "}
           결제하기
         </Button>
       </FixedButtonContainer>
