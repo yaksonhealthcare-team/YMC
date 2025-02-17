@@ -1,6 +1,5 @@
 import { lazy, ReactNode } from "react"
 import WithdrawalPage from "../pages/profile/WithdrawalPage"
-import Store from "../pages/store/Store"
 
 const MembershipBranchSelectPage = lazy(
   () => import("../pages/membership/MembershipBranchSelectPage"),
@@ -146,6 +145,7 @@ const PaymentCallbackPage = lazy(
 const PaymentFailedPage = lazy(
   () => import("../pages/payment/PaymentFailedPage"),
 )
+const StorePage = lazy(() => import("../pages/store/Store"))
 
 export const routeConfig: RouteConfig[] = [
   {
@@ -265,7 +265,7 @@ export const routeConfig: RouteConfig[] = [
   },
   {
     path: "/store",
-    element: <Store />,
+    element: <StorePage />,
   },
   {
     path: "/member-history/reservation",
