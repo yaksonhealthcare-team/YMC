@@ -146,10 +146,14 @@ export const signinWithSocial = async ({
   socialAccessToken,
   socialId,
   provider,
+  deviceToken,
+  deviceType,
 }: {
   socialAccessToken: string
   socialId: string
   provider: "K" | "N" | "G" | "A"
+  deviceToken?: string
+  deviceType?: "android" | "ios"
 }): Promise<{
   refreshToken: string
   accessToken: string
@@ -157,8 +161,8 @@ export const signinWithSocial = async ({
   const { data } = await axiosClient.post("/auth/signin/social", {
     thirdPartyType: provider,
     socialId: socialId,
-    device_token: "TODO: FCM 토큰 추가",
-    device_type: "TODO: 디바이스 타입 추가",
+    device_token: deviceToken,
+    device_type: deviceType,
     SocialAccessToken: socialAccessToken,
   })
 

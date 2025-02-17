@@ -42,12 +42,13 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
   }, [])
 
   const handleSocialLogin = async (data: any) => {
-    console.log("소셜 로그인 처리:", data)
     try {
       const { accessToken } = await signinWithSocial({
         socialAccessToken: data.accessToken,
         socialId: data.socialId,
         provider: data.provider,
+        deviceToken: data.deviceToken,
+        deviceType: data.deviceType,
       })
       const user = await fetchUser(accessToken)
       login({ user, token: accessToken })
