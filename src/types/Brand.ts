@@ -9,3 +9,13 @@ export interface BrandResponse {
   brand_name: string
   brand_pic?: string
 }
+
+export interface BrandDetail {
+  descriptionImageUrls: string[]
+  logoImageUrl?: string
+}
+
+export interface BrandDetailResponse {
+  brand_pic: string[]
+  thumbnail?: string
+}

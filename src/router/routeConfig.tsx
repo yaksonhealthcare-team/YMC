@@ -133,7 +133,7 @@ const ChangePhoneNumberCallback = lazy(
 const PaymentCompletePage = lazy(
   () => import("../pages/payment/PaymentCompletePage"),
 )
-const BrandDetailPage = lazy(() => import("../pages/brand/BrandDetail"))
+const BrandDetailPage = lazy(() => import("../pages/brand/BrandDetailPage.tsx"))
 const OAuthCallback = lazy(() => import("../pages/oauth/OAuthCallback"))
 const LocationPickerMap = lazy(
   () => import("../pages/branch/_fragments/LocationPickerMap"),
@@ -166,7 +166,7 @@ export const routeConfig: RouteConfig[] = [
   },
   //브랜드관
   {
-    path: "/brand/:brandCode",
+    path: "/brand/:brandCode/:brandName",
     element: <BrandDetailPage />,
   },
   //로그인, 로그아웃

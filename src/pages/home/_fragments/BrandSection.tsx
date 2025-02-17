@@ -5,8 +5,8 @@ import { SwiperBrandCard } from "@components/SwiperBrandCard"
 export const BrandSection = () => {
   const navigate = useNavigate()
 
-  const handleBrandClick = (brandCode: string) => {
-    navigate(`/brand/${brandCode}`)
+  const handleBrandClick = (brandCode: string, brandName: string) => {
+    navigate(`/brand/${brandCode}/${brandName}`)
   }
 
   return (

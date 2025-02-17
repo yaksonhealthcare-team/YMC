@@ -3,7 +3,7 @@ import { useBrands } from "../queries/useBrandQueries.tsx"
 
 interface SwiperBrandCardProps {
   className?: string
-  onBrandClick: (brandCode: string) => void
+  onBrandClick: (brandCode: string, brandName: string) => void
   selectedBrandCodes?: string[]
 }
 
@@ -26,7 +26,7 @@ export const SwiperBrandCard = ({
               <BrandCard
                 name={brand.name}
                 brandSrc={brand.imageUrl || ""}
-                onClick={() => onBrandClick(brand.code)}
+                onClick={() => onBrandClick(brand.code, brand.name)}
                 selected={
                   selectedBrandCodes
                     ? selectedBrandCodes?.includes(brand.code)
