@@ -20,11 +20,11 @@
 
 # Reviewer Checklist
 <!-- Please check the following points during review -->
-- Are the background and problem definition properly established?
-- Is the solution appropriately implemented?
-- Are there alternative solutions for the blockers?
-- Are all issues and relevant links properly connected?
-- Are the next steps appropriately defined?
+- [ ] Are the background and problem definition properly established?
+- [ ] Is the solution appropriately implemented?
+- [ ] Are there alternative solutions for the blockers?
+- [ ] Are all issues and relevant links properly connected?
+- [ ] Are the next steps appropriately defined?
 
 # Reviewers
 
