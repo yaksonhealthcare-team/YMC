@@ -98,61 +98,63 @@ const Home = () => {
                 예약하기
               </button>
             </div>,
-            <div key="banner" className="mt-3">
-              <Swiper
-                modules={[Pagination]}
-                pagination={{
-                  clickable: true,
-                }}
-                slidesPerView={1}
-                className="w-full h-[144px] rounded-2xl"
-                loop={true}
-              >
-                <style>
-                  {`
-                    .swiper-pagination {
-                      bottom: 4px !important;
+            mainBanner?.[0]?.isVisible && (
+              <div key="banner" className="mt-3">
+                <Swiper
+                  modules={[Pagination]}
+                  pagination={{
+                    clickable: true,
+                  }}
+                  slidesPerView={1}
+                  className="w-full h-[144px] rounded-2xl"
+                  loop={true}
+                >
+                  <style>
+                    {`
+                      .swiper-pagination {
+                        bottom: 4px !important;
+                      }
+                      .swiper-pagination-bullet {
+                        width: 7px !important;
+                        height: 7px !important;
+                        background: transparent !important;
+                        border: 1px solid white !important;
+                        opacity: 1 !important;
+                      }
+                      .swiper-pagination-bullet-active {
+                        background: white !important;
+                        border-color: white !important;
+                      }
+                    `}
+                  </style>
+                  {mainBanner?.map((banner) => {
+                    const getBannerLink = (link: string) => {
+                      if (link.startsWith("http")) return link
+                      return `https://${link}`
                     }
-                    .swiper-pagination-bullet {
-                      width: 7px !important;
-                      height: 7px !important;
-                      background: transparent !important;
-                      border: 1px solid white !important;
-                      opacity: 1 !important;
-                    }
-                    .swiper-pagination-bullet-active {
-                      background: white !important;
-                      border-color: white !important;
-                    }
-                  `}
-                </style>
-                {mainBanner?.map((banner) => {
-                  const getBannerLink = (link: string) => {
-                    if (link.startsWith("http")) return link
-                    return `https://${link}`
-                  }
 
-                  return (
-                    <SwiperSlide key={banner.code}>
-                      <button
-                        className="w-full"
-                        onClick={() => {
-                          window.location.href =
-                            getBannerLink(banner.link) || "/membership"
-                        }}
-                        aria-label={banner.title}
-                      >
-                        <img
-                          src={banner.fileUrl}
-                          alt={banner.title}
-                          className="w-full h-[144px] object-cover rounded-2xl"
-                        />
-                      </button>
-                    </SwiperSlide>
-                  )
-                })}
-              </Swiper>
-            </div>,
+                    return (
+                      <SwiperSlide key={banner.code}>
+                        <button
+                          className="w-full"
+                          onClick={() => {
+                            window.location.href =
+                              getBannerLink(banner.link) || "/membership"
+                          }}
+                          aria-label={banner.title}
+                        >
+                          <img
+                            src={banner.fileUrl}
+                            alt={banner.title}
+                            className="w-full h-[144px] object-cover rounded-2xl"
+                          />
+                        </button>
+                      </SwiperSlide>
+                    )
+                  })}
+                </Swiper>
+              </div>
+            ),
           ]}
           buttonArea={
             <div className="relative">

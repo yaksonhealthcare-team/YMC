@@ -1,7 +1,7 @@
 import { Banner, BannerResponse } from "../types/Banner.ts"
 
 export class BannerMapper {
-  static toEntity(dto: BannerResponse): Banner {
+  static toEntity(dto: BannerResponse["body"][0]): Banner {
     return {
       code: dto.code,
       title: dto.title,
@@ -14,7 +14,11 @@ export class BannerMapper {
     }
   }
 
-  static toEntities(dtos: BannerResponse[]): Banner[] {
-    return dtos.map(this.toEntity)
+  static toEntities(response: BannerResponse): Banner[] {
+    const isVisible = response.use === "Y"
+    return response.body.map((dto) => ({
+      ...this.toEntity(dto),
+      isVisible,
+    }))
   }
 }
