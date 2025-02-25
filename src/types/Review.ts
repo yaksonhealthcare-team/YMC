@@ -8,6 +8,10 @@ export interface ReviewResponse {
   rs_grade_L: string
   rs_grade_M: string
   rs_grade_H: string
+  review: Array<{
+    question: string
+    response: string
+  }>
   review_memo: string
   imgList: string[]
   ss_count: string
@@ -30,7 +34,7 @@ export interface Review {
   }
   evaluations: {
     question: string
-    grade: "L" | "M" | "H"
+    response: string
   }[]
   content: string
   imageUrls: string[]

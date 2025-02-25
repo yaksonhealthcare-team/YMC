@@ -5,12 +5,6 @@ import StoreIcon from "@assets/icons/StoreIcon.svg?react"
 import { ReviewDetail } from "../../../types/Review.ts"
 import { formatDate } from "../../../utils/date.ts"
 
-const RATING_LABEL: Record<"H" | "M" | "L", string> = {
-  H: "좋았어요!",
-  M: "그냥 그래요",
-  L: "아쉬워요",
-} as const
-
 const RATING_TYPE_LABEL: Record<"H" | "M" | "L", string> = {
   H: "만족",
   M: "보통",
@@ -110,7 +104,7 @@ export const ReviewDetailContent = ({ review }: Props) => {
                 {evaluation.question}
               </span>
               <span className="text-gray-700 text-sm">
-                {RATING_LABEL[evaluation.grade]}
+                {evaluation.response}
               </span>
             </div>
           ))}
