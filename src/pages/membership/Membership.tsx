@@ -15,15 +15,17 @@ import {
 import { MembershipCategory, MembershipItem } from "../../types/Membership"
 import { MembershipCard } from "./_fragments/MembershipCard"
 import { BRAND_CODE } from "constants/brand"
-import { useBrands } from "../../queries/useBrandQueries"
+import { useDisplayBrands } from "../../hooks/useDisplayBrands"
 
 const MembershipPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { data: brands } = useBrands()
+  const { displayedBrands } = useDisplayBrands()
+
   const brandCode =
-    searchParams.get("brand_code") || (brands?.[0]?.code ?? BRAND_CODE.YAKSON)
+    searchParams.get("brand_code") ||
+    (displayedBrands?.[0]?.code ?? BRAND_CODE.YAKSON)
   const [selectedCategory, setSelectedCategory] = useState<string>()
   const [cartCount, setCartCount] = useState(0)
 
@@ -74,6 +76,9 @@ const MembershipPage = () => {
     }
   }
 
+  const isLastDisplayedBrand = (code: string) =>
+    code === displayedBrands?.[displayedBrands.length - 1]?.code
+
   // 카테고리 변경 시
   const handleCategoryChange = (category?: string) => {
     setSelectedCategory(category)
@@ -88,7 +93,7 @@ const MembershipPage = () => {
     isMembershipsLoading ||
     !categoriesData?.body ||
     !membershipsData?.pages[0].body ||
-    !brands
+    !displayedBrands
   ) {
     return <LoadingIndicator className="min-h-screen bg-system-bg" />
   }
@@ -154,20 +159,15 @@ const MembershipPage = () => {
                 }}
                 aria-label="브랜드 선택"
               >
-                {[
-                  ...new Map(
-                    brands.map((brand) => [brand.code, brand]),
-                  ).values(),
-                ].map((brand) => (
+                {displayedBrands?.map((brand) => (
                   <Tab
                     key={brand.code}
                     label={brand.name}
                     value={brand.code}
                     sx={{
-                      marginRight: "24px !important",
-                      ...(brand.code === brands[brands.length - 1]?.code && {
-                        marginRight: "40px !important",
-                      }),
+                      marginRight: isLastDisplayedBrand(brand.code)
+                        ? "40px !important"
+                        : "24px !important",
                     }}
                   />
                 ))}

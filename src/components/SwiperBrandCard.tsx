@@ -1,5 +1,5 @@
 import { BrandCard } from "@components/BrandCard.tsx"
-import { useBrands } from "../queries/useBrandQueries.tsx"
+import { useDisplayBrands } from "../hooks/useDisplayBrands"
 
 interface SwiperBrandCardProps {
   className?: string
@@ -12,16 +12,16 @@ export const SwiperBrandCard = ({
   onBrandClick,
   selectedBrandCodes,
 }: SwiperBrandCardProps) => {
-  const { data: brands } = useBrands()
+  const { displayedBrands } = useDisplayBrands()
 
   return (
     <div className={`w-full overflow-x-auto scrollbar-hide ${className}`}>
       <div className="flex gap-4 pb-2 pr-5">
-        {brands &&
-          brands.map((brand, index) => (
+        {displayedBrands &&
+          displayedBrands.map((brand, index) => (
             <div
               key={`${brand.code}-${index}`}
-              className={index === brands.length - 1 ? "pr-5" : ""}
+              className={index === displayedBrands.length - 1 ? "pr-5" : ""}
             >
               <BrandCard
                 name={brand.name}
