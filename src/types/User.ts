@@ -100,3 +100,17 @@ export interface UpdateUserProfileRequest {
   profileUrl: string
   marketingAgreed: boolean
 }
+
+export interface CRMUserResponse {
+  id: string
+  name: string
+  email: string
+  hp: string
+  birthdate: string
+  sex: "M" | "F"
+  brands: {
+    b_idx: string
+    b_name: string
+    addr: string
+  }[]
+}

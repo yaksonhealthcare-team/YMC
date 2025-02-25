@@ -1,19 +1,37 @@
 import { Button } from "@components/Button.tsx"
 import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import CheckCircle from "@assets/icons/CheckCircle.svg?react"
 import { useAuth } from "../../contexts/AuthContext.tsx"
+import { fetchCRMUser } from "../../apis/user.api"
 
 export const SignupComplete = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { user } = useAuth()
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     setHeader({ display: false })
     setNavigation({ display: false })
   }, [])
+
+  const handleExistingUser = async () => {
+    try {
+      setIsLoading(true)
+      const crmUser = await fetchCRMUser()
+      if (crmUser && crmUser.brands && crmUser.brands.length > 0) {
+        navigate("/signup/branch")
+      } else {
+        navigate("/questionnaire/common")
+      }
+    } catch (error) {
+      navigate("/questionnaire/common")
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className="flex flex-col items-center px-5 pt-[144px]">
@@ -53,10 +71,8 @@ export const SignupComplete = () => {
           <Button
             variantType="primary"
             sizeType="l"
-            onClick={() => {
-              navigate("/signup/branch")
-              /* TODO: 기존 회원 연동 */
-            }}
+            onClick={handleExistingUser}
+            disabled={isLoading}
           >
             네, 이용해봤어요
           </Button>
