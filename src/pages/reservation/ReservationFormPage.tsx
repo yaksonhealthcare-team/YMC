@@ -454,7 +454,7 @@ const ReservationFormPage = () => {
           }}
           className="w-full"
         >
-          {data.item === "상담 예약"
+          {data.item === "상담 예약" || totalPrice === 0
             ? "예약하기"
             : `${formatPrice(totalPrice)}원 결제하기`}
         </Button>
