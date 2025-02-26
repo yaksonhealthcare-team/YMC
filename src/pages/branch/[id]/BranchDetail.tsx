@@ -97,7 +97,7 @@ const BranchDetail = () => {
 
   return (
     <div className={"relative flex-grow w-full bg-system-bg overflow-x-hidden"}>
-      <div className={"flex flex-col gap-3 p-5"}>
+      <div className={"flex flex-col gap-3 py-5"}>
         <Suspense fallback={<LoadingIndicator className="h-20" />}>
           <BranchHeader
             branch={branch}
