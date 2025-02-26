@@ -22,6 +22,7 @@ interface SocialSignupInfo {
   birthdate?: string
   gender?: string
   socialId: string
+  di: string
 }
 
 export const useProfileSetupSubmit = () => {
@@ -42,6 +43,7 @@ export const useProfileSetupSubmit = () => {
           mobileno: signupData.mobileNumber,
           birthdate: signupData.birthDate,
           gender: signupData.gender === "male" ? "M" : "F",
+          di: signupData.di,
           post: signupData.postCode,
           addr1: signupData.address1,
           addr2: signupData.address2 || "",
