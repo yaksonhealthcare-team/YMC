@@ -1,6 +1,7 @@
 import HeartDisabledIcon from "@assets/icons/HeartDisabledIcon.svg?react"
 import HeartEnabledIcon from "@assets/icons/HeartEnabledIcon.svg?react"
 import { Button } from "@components/Button.tsx"
+import FixedButtonContainer from "@components/FixedButtonContainer"
 
 interface BranchDetailBottomActionBarProps {
   isBookmarked: boolean
@@ -41,7 +42,7 @@ const BranchDetailBottomActionBar = ({
   onBookmark,
 }: BranchDetailBottomActionBarProps) => {
   return (
-    <div className={"flex gap-5"}>
+    <FixedButtonContainer className="!bg-white flex gap-5">
       <BookmarkSection
         isBookmarked={isBookmarked}
         bookmarkCount={bookmarkCount}
@@ -55,7 +56,8 @@ const BranchDetailBottomActionBar = ({
       >
         {"예약하기"}
       </Button>
-    </div>
+    </FixedButtonContainer>
+    
   )
 }
 
