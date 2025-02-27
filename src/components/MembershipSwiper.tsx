@@ -20,11 +20,12 @@ export const MembershipSwiper = ({
   selectedItem,
   onChangeItem,
 }: MembershipSwiperProps) => {
+  // eslint-disable-next-line
   const [_, setSwiperInstance] = useState<SwiperType | null>(null)
   const [activeIndex, setActiveIndex] = useState(0)
 
   return (
-    <Box className="w-full">
+    <Box className="w-full pb-[20px]">
       <RadioGroup
         value={selectedItem}
         onChange={(e) => onChangeItem(e.target.value)}
@@ -44,6 +45,9 @@ export const MembershipSwiper = ({
         >
           <style>
             {`
+              .swiper-pagination {
+                bottom: -28px !important;
+              }
               .swiper-pagination-bullet {
                 width: 6px;
                 height: 6px;

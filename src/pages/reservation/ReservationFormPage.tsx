@@ -25,6 +25,7 @@ import { formatDateForAPI } from "utils/date"
 import { toNumber } from "utils/number"
 import { createAdditionalManagementOrder } from "apis/order.api"
 import { useUserMemberships } from "queries/useMembershipQueries"
+import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 
 interface FormDataType {
   item: undefined | string
@@ -414,14 +415,34 @@ const ReservationFormPage = () => {
               </div>
             </RadioCard>
           </div>
-          {!isMembershipsLoading && membershipsData?.pages[0] && (
+          {!isMembershipsLoading && membershipsData?.pages[0] ? (
             <MembershipSwiper
               membershipsData={membershipsData.pages[0]}
               selectedItem={data.item}
               onChangeItem={handleOnChangeItem}
             />
+          ) : (
+            <Button
+              variantType="secondary"
+              sizeType="l"
+              onClick={() => navigate('/membership')}
+              className="justify-between items-center w-full !text-primary-300 font-sb !py-[20px] !rounded-xl"
+            >
+              회원권 구매하기
+              <CaretRightIcon className="w-5 h-6" />
+            </Button>
           )}
         </RadioGroup>
+        <div className="flex flex-col mt-[16px]">
+          <p className="text-gray-500 text-14px">
+            * 상담 예약은 월간 2회까지 이용 가능합니다.
+          </p>
+          {!membershipsData?.pages[0]?.body?.length && (
+            <p className="text-gray-500 text-14px">
+              * 관리 프로그램은 회원권 구매 후 예약이 가능합니다.
+            </p>
+          )}
+        </div>
       </section>
 
       {renderAdditionalManagementSection()}
