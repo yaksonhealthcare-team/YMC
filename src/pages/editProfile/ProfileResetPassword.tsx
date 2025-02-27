@@ -10,7 +10,7 @@ const ProfileResetPassword = () => {
   const handleChangePassword = async (password: string) => {
     if (!user) return
     try {
-      await resetPassword(user.email, password)
+      await resetPassword(password)
       navigate("complete")
     } catch (error) {
       console.error(error)

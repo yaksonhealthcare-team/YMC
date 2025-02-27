@@ -23,8 +23,12 @@ const FindAccountResetPassword = () => {
 
   const handleChangePassword = async (password: string) => {
     try {
-      // TODO: 본인인증 데이터로 이메일 찾기 API 호출 후 비밀번호 변경
-      await resetPassword("coolkyung@nate.com", password)
+      await resetPassword(
+        password,
+        verifiedData.token_version_id,
+        verifiedData.enc_data,
+        verifiedData.integrity_value,
+      )
       navigate("complete")
     } catch (error) {
       console.error(error)

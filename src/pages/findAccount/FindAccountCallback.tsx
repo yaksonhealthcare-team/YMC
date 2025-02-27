@@ -1,6 +1,5 @@
 import {
   DecryptRequest,
-  fetchDecryptResult,
   findEmailWithDecryptData,
 } from "@apis/decrypt-result.api"
 import { AxiosError } from "axios"
@@ -20,21 +19,11 @@ const FindAccountCallback = () => {
     const integrityValue = queryParams.get("integrity_value")
 
     const fetchEmail = async (request: DecryptRequest) => {
-      try {
-        return findEmailWithDecryptData({
-          token_version_id: request.token_version_id,
-          enc_data: request.enc_data,
-          integrity_value: request.integrity_value,
-        })
-      } catch (error) {
-        openModal({
-          title: "오류",
-          message: "계정을 찾을 수 없습니다.",
-          onConfirm: () => {
-            navigate("/find-account", { replace: true })
-          },
-        })
-      }
+      return findEmailWithDecryptData({
+        token_version_id: request.token_version_id,
+        enc_data: request.enc_data,
+        integrity_value: request.integrity_value,
+      })
     }
 
     const handleVerification = async () => {
@@ -48,17 +37,26 @@ const FindAccountCallback = () => {
           enc_data: encData,
           integrity_value: integrityValue,
         }
-        const response = await fetchDecryptResult(request)
-        const userData = response.body
 
-        console.log(userData)
+        if (tab === "find-email") {
+          const loginInfo = await fetchEmail(request)
 
-        const loginInfo = await fetchEmail(request)
-
-        sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo))
-        navigate(`/find-account/${tab}`, {
-          replace: true,
-        })
+          sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo))
+          navigate(`/find-account/${tab}`, {
+            replace: true,
+          })
+        } else if (tab === "reset-password") {
+          navigate(`/find-account/reset-password`, {
+            replace: true,
+            state: {
+              verifiedData: {
+                token_version_id: tokenVersionId,
+                enc_data: encData,
+                integrity_value: integrityValue,
+              },
+            },
+          })
+        }
       } catch (error) {
         if (error instanceof AxiosError) {
           openModal({
