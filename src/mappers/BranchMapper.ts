@@ -125,8 +125,7 @@ export class BranchMapper {
       notices: [dto.b_notice],
       favoriteCount: Number(dto.b_bookmarks_count),
       availableMembershipCount: Number(dto.membership_count),
-      // TODO: 백엔드 API 수정 후 dto.is_bookmarked === "Y"로 변경 예정
-      isBookmarked: false,
+      isBookmarked: dto.is_bookmarked === "Y",
     }
   }
 }

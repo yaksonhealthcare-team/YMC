@@ -11,7 +11,7 @@ import {
   removeBranchBookmark,
 } from "../apis/branch.api.ts"
 import { Coordinate } from "../types/Coordinate.ts"
-import { BranchSearchResponse } from "../types/Branch"
+import { BranchSearchResponse, BranchDetail } from "../types/Branch"
 import { axiosClient } from "./clients"
 
 interface BranchFilters {
@@ -87,7 +87,18 @@ export const useBranchBookmarkMutation = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (branchId: string) => addBranchBookmark(branchId),
-    onSuccess: () => {
+    onSuccess: (_, branchId) => {
+      queryClient.setQueryData<BranchDetail>(
+        ["branch", branchId],
+        (oldData) => {
+          if (!oldData) return oldData
+          return {
+            ...oldData,
+            isBookmarked: true,
+            favoriteCount: oldData.favoriteCount + 1,
+          }
+        },
+      )
       queryClient.invalidateQueries({ queryKey: ["branch"] })
       queryClient.invalidateQueries({ queryKey: ["branches"] })
       queryClient.invalidateQueries({ queryKey: ["branchBookmarks"] })
@@ -100,7 +111,18 @@ export const useBranchUnbookmarkMutation = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (branchId: string) => removeBranchBookmark(branchId),
-    onSuccess: () => {
+    onSuccess: (_, branchId) => {
+      queryClient.setQueryData<BranchDetail>(
+        ["branch", branchId],
+        (oldData) => {
+          if (!oldData) return oldData
+          return {
+            ...oldData,
+            isBookmarked: false,
+            favoriteCount: Math.max(0, oldData.favoriteCount - 1),
+          }
+        },
+      )
       queryClient.invalidateQueries({ queryKey: ["branch"] })
       queryClient.invalidateQueries({ queryKey: ["branches"] })
       queryClient.invalidateQueries({ queryKey: ["branchBookmarks"] })
