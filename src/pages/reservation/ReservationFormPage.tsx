@@ -11,7 +11,6 @@ import { Dayjs } from "dayjs"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 import { useAdditionalManagement } from "../../queries/useMembershipQueries.tsx"
 import { TimeSlot } from "../../types/Schedule.ts"
-import { useMembershipList } from "../../queries/useMembershipQueries.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useCreateReservationMutation } from "../../queries/useReservationQueries"
@@ -25,6 +24,8 @@ import { formatPrice, parsePrice } from "utils/format"
 import { formatDateForAPI } from "utils/date"
 import { toNumber } from "utils/number"
 import { createAdditionalManagementOrder } from "apis/order.api"
+import { useUserMemberships } from "queries/useMembershipQueries"
+import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 
 interface FormDataType {
   item: undefined | string
@@ -60,7 +61,7 @@ const ReservationFormPage = () => {
   const { data: consultationCount = 0 } = useConsultationCount()
   const { mutateAsync: createReservation } = useCreateReservationMutation()
   const { data: membershipsData, isLoading: isMembershipsLoading } =
-    useMembershipList(BRAND_CODE)
+    useUserMemberships()
 
   // Additional Queries
   const { data: additionalManagements, isLoading: isAdditionalLoading } =
@@ -245,12 +246,15 @@ const ReservationFormPage = () => {
   const handleConsultationReservation = async () => {
     try {
       if (!validateReservationData()) return
+      if (!selectedBranch) {
+        handleError(new Error("지점을 선택해주세요."))
+        return
+      }
 
       const response = await createReservation({
         r_gubun: "C",
-        ...(selectedBranch?.b_type === "지정지점" && {
-          b_idx: selectedBranch.b_idx,
-        }),
+        mp_idx: data.item,
+        b_idx: selectedBranch.b_idx,
         r_date: formatDateForAPI(data.date?.toDate() || null),
         r_stime: data.timeSlot!.time,
         r_memo: data.request,
@@ -288,14 +292,16 @@ const ReservationFormPage = () => {
   const handleMembershipReservation = async () => {
     try {
       if (!validateReservationData()) return
+      if (!selectedBranch) {
+        handleError(new Error("지점을 선택해주세요."))
+        return
+      }
 
       // 1. 예약 생성
       const reservationResponse = await createReservation({
         r_gubun: "R",
         mp_idx: data.item,
-        ...(selectedBranch?.b_type === "지정지점" && {
-          b_idx: selectedBranch.b_idx,
-        }),
+        b_idx: selectedBranch.b_idx,
         r_date: formatDateForAPI(data.date?.toDate() || null),
         r_stime: data.timeSlot!.time,
         add_services: data.additionalServices.map((service) =>
@@ -409,14 +415,34 @@ const ReservationFormPage = () => {
               </div>
             </RadioCard>
           </div>
-          {!isMembershipsLoading && membershipsData?.pages[0] && (
+          {!isMembershipsLoading && membershipsData?.pages[0] ? (
             <MembershipSwiper
               membershipsData={membershipsData.pages[0]}
               selectedItem={data.item}
               onChangeItem={handleOnChangeItem}
             />
+          ) : (
+            <Button
+              variantType="secondary"
+              sizeType="l"
+              onClick={() => navigate('/membership')}
+              className="justify-between items-center w-full !text-primary-300 font-sb !py-[20px] !rounded-xl"
+            >
+              회원권 구매하기
+              <CaretRightIcon className="w-5 h-6" />
+            </Button>
           )}
         </RadioGroup>
+        <div className="flex flex-col mt-[16px]">
+          <p className="text-gray-500 text-14px">
+            * 상담 예약은 월간 2회까지 이용 가능합니다.
+          </p>
+          {!membershipsData?.pages[0]?.body?.length && (
+            <p className="text-gray-500 text-14px">
+              * 관리 프로그램은 회원권 구매 후 예약이 가능합니다.
+            </p>
+          )}
+        </div>
       </section>
 
       {renderAdditionalManagementSection()}
