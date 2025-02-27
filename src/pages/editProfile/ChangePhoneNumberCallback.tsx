@@ -1,17 +1,17 @@
 import { useOverlay } from "contexts/ModalContext"
 import { changePhoneNumberWithDecryptData } from "@apis/decrypt-result.api"
 import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { useNiceAuthCallback } from "utils/niceAuth"
 
 const ChangePhoneNumberCallback = () => {
   const { openModal } = useOverlay()
   const navigate = useNavigate()
-  const queryParams = new URLSearchParams(window.location.search)
+  const [searchParams] = useSearchParams()
   const { parseNiceAuthData } = useNiceAuthCallback()
 
   useEffect(() => {
-    const jsonData = queryParams.get("jsonData")
+    const jsonData = searchParams.get("jsonData")
 
     const changePhoneNumber = async (tokenVersionId: string, di: string) => {
       try {
@@ -51,7 +51,7 @@ const ChangePhoneNumberCallback = () => {
     }
 
     handleVerification()
-  }, [navigate, openModal, queryParams, parseNiceAuthData])
+  }, [navigate, openModal, searchParams, parseNiceAuthData])
 
   return (
     <div className="flex items-center justify-center min-h-screen">

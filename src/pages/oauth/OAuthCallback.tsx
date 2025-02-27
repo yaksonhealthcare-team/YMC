@@ -1,7 +1,7 @@
 import LoadingIndicator from "@components/LoadingIndicator"
 import { AxiosError } from "axios"
 import { useEffect, useRef } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { fetchUser, signinWithSocial } from "../../apis/auth.api"
 import { useAuth } from "../../contexts/AuthContext"
 import { useLayout } from "../../contexts/LayoutContext"
@@ -11,6 +11,7 @@ import { requestForToken } from "../../libs/firebase"
 const OAuthCallback = () => {
   const { provider } = useParams()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { login } = useAuth()
   const { openModal } = useOverlay()
   const { setHeader, setNavigation } = useLayout()
@@ -27,11 +28,9 @@ const OAuthCallback = () => {
       isProcessing.current = true
 
       try {
-        const searchParams = new URLSearchParams(window.location.search)
-
         const jsonData = searchParams.get("jsonData")
         if (!jsonData) {
-          throw new Error("인증 정보가 없습니다.")
+          return
         }
 
         const decodedData = decodeURIComponent(jsonData)
@@ -101,7 +100,7 @@ const OAuthCallback = () => {
     }
 
     handleCallback()
-  }, [provider, navigate, login])
+  }, [provider, navigate, login, openModal, searchParams])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">

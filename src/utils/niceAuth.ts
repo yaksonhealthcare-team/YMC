@@ -30,7 +30,7 @@ export const useNiceAuthCallback = () => {
   ): NiceAuthResponse["body"] | null => {
     try {
       if (!jsonData) {
-        throw new Error("본인인증 정보가 없습니다.")
+        return null
       }
 
       const decodedData: NiceAuthResponse = JSON.parse(

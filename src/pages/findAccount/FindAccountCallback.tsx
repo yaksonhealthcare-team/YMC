@@ -1,18 +1,18 @@
 import { findEmailWithDecryptData } from "@apis/decrypt-result.api"
 import { useOverlay } from "contexts/ModalContext"
 import { useEffect } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { useNiceAuthCallback } from "utils/niceAuth"
 
 const FindAccountCallback = () => {
   const { openModal } = useOverlay()
   const navigate = useNavigate()
   const { tab } = useParams<{ tab: string }>()
-  const queryParams = new URLSearchParams(window.location.search)
+  const [searchParams] = useSearchParams()
   const { parseNiceAuthData } = useNiceAuthCallback()
 
   useEffect(() => {
-    const jsonData = queryParams.get("jsonData")
+    const jsonData = searchParams.get("jsonData")
 
     const fetchEmail = async (tokenVersionId: string, di: string) => {
       try {
@@ -71,7 +71,7 @@ const FindAccountCallback = () => {
     }
 
     handleVerification()
-  }, [navigate, openModal, tab, queryParams, parseNiceAuthData])
+  }, [navigate, openModal, tab, searchParams, parseNiceAuthData])
 
   return (
     <div className="flex items-center justify-center min-h-screen">

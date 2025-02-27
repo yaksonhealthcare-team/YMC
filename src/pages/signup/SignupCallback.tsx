@@ -1,20 +1,20 @@
 import { useOverlay } from "contexts/ModalContext"
 import { useSignup } from "contexts/SignupContext"
 import { useEffect } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
 import { useNiceAuthCallback } from "utils/niceAuth"
 
 const SignupCallback = () => {
   const { setSignupData } = useSignup()
   const location = useLocation()
+  const [searchParams] = useSearchParams()
   const { openModal } = useOverlay()
   const socialInfo = location.state?.social
   const navigate = useNavigate()
   const { parseNiceAuthData } = useNiceAuthCallback()
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search)
-    const jsonData = queryParams.get("jsonData")
+    const jsonData = searchParams.get("jsonData")
 
     const handleVerification = async () => {
       // 공통 유틸리티로 나이스 인증 데이터 파싱
@@ -52,7 +52,14 @@ const SignupCallback = () => {
     }
 
     handleVerification()
-  }, [navigate, openModal, socialInfo, setSignupData, parseNiceAuthData])
+  }, [
+    searchParams,
+    navigate,
+    openModal,
+    socialInfo,
+    setSignupData,
+    parseNiceAuthData,
+  ])
 
   return (
     <div className="flex items-center justify-center min-h-screen">
