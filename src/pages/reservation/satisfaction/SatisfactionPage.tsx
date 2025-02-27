@@ -268,6 +268,7 @@ const SatisfactionPage = () => {
           sizeType="l"
           disabled={!isFormValid()}
           onClick={handleSubmit}
+           className="w-full"
         >
           작성 완료
         </Button>
