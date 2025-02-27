@@ -26,8 +26,7 @@ const FindAccountResetPassword = () => {
       await resetPassword(
         password,
         verifiedData.token_version_id,
-        verifiedData.enc_data,
-        verifiedData.integrity_value,
+        verifiedData.di,
       )
       navigate("complete")
     } catch (error) {

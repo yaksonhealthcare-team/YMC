@@ -48,14 +48,12 @@ export const fetchUser = async (token: string): Promise<User> => {
 export const resetPassword = async (
   password: string,
   token_version_id?: string,
-  enc_data?: string,
-  integrity_value?: string,
+  di?: string,
 ): Promise<void> => {
   await axiosClient.put("/auth/reset_password", {
     password: password,
     token_version_id: token_version_id,
-    enc_data: enc_data,
-    integrity_value: integrity_value,
+    di: di,
   })
 }
 

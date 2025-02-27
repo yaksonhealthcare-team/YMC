@@ -1,9 +1,8 @@
-import { DecryptRequest, fetchDecryptResult } from "@apis/decrypt-result.api"
-import { AxiosError } from "axios"
 import { useOverlay } from "contexts/ModalContext"
 import { useSignup } from "contexts/SignupContext"
 import { useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
+import { useNiceAuthCallback } from "utils/niceAuth"
 
 const SignupCallback = () => {
   const { setSignupData } = useSignup()
@@ -11,28 +10,18 @@ const SignupCallback = () => {
   const { openModal } = useOverlay()
   const socialInfo = location.state?.social
   const navigate = useNavigate()
+  const { parseNiceAuthData } = useNiceAuthCallback()
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search)
-
-    const tokenVersionId = queryParams.get("token_version_id")
-    const encData = queryParams.get("enc_data")
-    const integrityValue = queryParams.get("integrity_value")
+    const jsonData = queryParams.get("jsonData")
 
     const handleVerification = async () => {
+      // 공통 유틸리티로 나이스 인증 데이터 파싱
+      const userData = parseNiceAuthData(jsonData, "/signup/terms")
+      if (!userData) return
+
       try {
-        if (!tokenVersionId || !encData || !integrityValue) {
-          throw new Error("본인인증 정보가 없습니다.")
-        }
-
-        const request: DecryptRequest = {
-          token_version_id: tokenVersionId,
-          enc_data: encData,
-          integrity_value: integrityValue,
-        }
-        const response = await fetchDecryptResult(request)
-        const userData = response.body
-
         console.log(userData)
         setSignupData((prev) => ({
           ...prev,
@@ -41,6 +30,7 @@ const SignupCallback = () => {
           birthDate: userData.birthdate,
           gender: userData.sex === "M" ? "male" : "female",
           di: userData.di,
+          tokenVersionId: userData.token_version_id,
           ...(socialInfo && {
             social: {
               provider: socialInfo.provider,
@@ -50,20 +40,10 @@ const SignupCallback = () => {
         }))
         navigate(socialInfo ? "/signup/profile" : "/signup/email")
       } catch (error) {
-        if (error instanceof AxiosError) {
-          openModal({
-            title: "오류",
-            message:
-              error.response?.data?.resultMessage || "본인인증에 실패했습니다.",
-            onConfirm: () => {
-              navigate("/signup/terms", { replace: true })
-            },
-          })
-          return
-        }
+        console.error("회원가입 처리 오류:", error)
         openModal({
           title: "오류",
-          message: "본인인증에 실패했습니다.",
+          message: "회원가입 정보 처리에 실패했습니다.",
           onConfirm: () => {
             navigate("/signup/terms", { replace: true })
           },
@@ -72,7 +52,7 @@ const SignupCallback = () => {
     }
 
     handleVerification()
-  }, [])
+  }, [navigate, openModal, socialInfo, setSignupData, parseNiceAuthData])
 
   return (
     <div className="flex items-center justify-center min-h-screen">

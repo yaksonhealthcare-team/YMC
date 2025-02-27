@@ -1,45 +1,47 @@
-import {
-  DecryptRequest,
-  findEmailWithDecryptData,
-} from "@apis/decrypt-result.api"
-import { AxiosError } from "axios"
+import { findEmailWithDecryptData } from "@apis/decrypt-result.api"
 import { useOverlay } from "contexts/ModalContext"
 import { useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import { useNiceAuthCallback } from "utils/niceAuth"
 
 const FindAccountCallback = () => {
   const { openModal } = useOverlay()
   const navigate = useNavigate()
   const { tab } = useParams<{ tab: string }>()
   const queryParams = new URLSearchParams(window.location.search)
+  const { parseNiceAuthData } = useNiceAuthCallback()
 
   useEffect(() => {
-    const tokenVersionId = queryParams.get("token_version_id")
-    const encData = queryParams.get("enc_data")
-    const integrityValue = queryParams.get("integrity_value")
+    const jsonData = queryParams.get("jsonData")
 
-    const fetchEmail = async (request: DecryptRequest) => {
-      return findEmailWithDecryptData({
-        token_version_id: request.token_version_id,
-        enc_data: request.enc_data,
-        integrity_value: request.integrity_value,
-      })
+    const fetchEmail = async (tokenVersionId: string, di: string) => {
+      try {
+        return await findEmailWithDecryptData({
+          token_version_id: tokenVersionId,
+          di: di,
+        })
+      } catch (error) {
+        openModal({
+          title: "오류",
+          message: "계정을 찾을 수 없습니다.",
+          onConfirm: () => {
+            navigate("/find-account", { replace: true })
+          },
+        })
+      }
     }
 
     const handleVerification = async () => {
+      // 공통 유틸리티로 나이스 인증 데이터 파싱
+      const userData = parseNiceAuthData(jsonData, "/find-account")
+      if (!userData) return
+
       try {
-        if (!tokenVersionId || !encData || !integrityValue) {
-          throw new Error("본인인증 정보가 없습니다.")
-        }
-
-        const request: DecryptRequest = {
-          token_version_id: tokenVersionId,
-          enc_data: encData,
-          integrity_value: integrityValue,
-        }
-
         if (tab === "find-email") {
-          const loginInfo = await fetchEmail(request)
+          const loginInfo = await fetchEmail(
+            userData.token_version_id,
+            userData.di,
+          )
 
           sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo))
           navigate(`/find-account/${tab}`, {
@@ -50,28 +52,17 @@ const FindAccountCallback = () => {
             replace: true,
             state: {
               verifiedData: {
-                token_version_id: tokenVersionId,
-                enc_data: encData,
-                integrity_value: integrityValue,
+                token_version_id: userData.token_version_id,
+                di: userData.di,
               },
             },
           })
         }
       } catch (error) {
-        if (error instanceof AxiosError) {
-          openModal({
-            title: "오류",
-            message:
-              error.response?.data?.resultMessage || "본인인증에 실패했습니다.",
-            onConfirm: () => {
-              navigate("/find-account", { replace: true })
-            },
-          })
-          return
-        }
+        console.error("계정 찾기 오류:", error)
         openModal({
           title: "오류",
-          message: "본인인증에 실패했습니다.",
+          message: "계정을 찾을 수 없습니다.",
           onConfirm: () => {
             navigate("/find-account", { replace: true })
           },
@@ -80,7 +71,7 @@ const FindAccountCallback = () => {
     }
 
     handleVerification()
-  }, [navigate, openModal, tab, queryParams])
+  }, [navigate, openModal, tab, queryParams, parseNiceAuthData])
 
   return (
     <div className="flex items-center justify-center min-h-screen">
