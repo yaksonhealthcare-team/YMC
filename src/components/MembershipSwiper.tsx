@@ -6,11 +6,11 @@ import "swiper/css/pagination"
 import { MembershipRadioCard } from "../pages/reservation/_fragments/MembershipRadioCard"
 import type { Swiper as SwiperType } from "swiper"
 import { useState } from "react"
-import { HTTPResponse } from "types/HTTPResponse"
-import { MembershipItem } from "types/Membership"
+import { MyMembership } from "types/Membership"
+import { ListResponse } from "apis/membership.api"
 
 interface MembershipSwiperProps {
-  membershipsData: HTTPResponse<MembershipItem[]>
+  membershipsData: ListResponse<MyMembership>
   selectedItem?: string
   onChangeItem: (value: string) => void
 }
@@ -56,12 +56,12 @@ export const MembershipSwiper = ({
             `}
           </style>
           {membershipsData.body.map((membership) => (
-            <SwiperSlide key={membership.s_idx}>
+            <SwiperSlide key={membership.mp_idx}>
               <div>
                 <MembershipRadioCard
                   membership={membership}
-                  checked={selectedItem === membership.s_idx}
-                  value={membership.s_idx}
+                  checked={selectedItem === membership.mp_idx}
+                  value={membership.mp_idx}
                 />
               </div>
             </SwiperSlide>

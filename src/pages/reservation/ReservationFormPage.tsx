@@ -11,7 +11,6 @@ import { Dayjs } from "dayjs"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 import { useAdditionalManagement } from "../../queries/useMembershipQueries.tsx"
 import { TimeSlot } from "../../types/Schedule.ts"
-import { useMembershipList } from "../../queries/useMembershipQueries.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useCreateReservationMutation } from "../../queries/useReservationQueries"
@@ -25,6 +24,7 @@ import { formatPrice, parsePrice } from "utils/format"
 import { formatDateForAPI } from "utils/date"
 import { toNumber } from "utils/number"
 import { createAdditionalManagementOrder } from "apis/order.api"
+import { useUserMemberships } from "queries/useMembershipQueries"
 
 interface FormDataType {
   item: undefined | string
@@ -60,7 +60,7 @@ const ReservationFormPage = () => {
   const { data: consultationCount = 0 } = useConsultationCount()
   const { mutateAsync: createReservation } = useCreateReservationMutation()
   const { data: membershipsData, isLoading: isMembershipsLoading } =
-    useMembershipList(BRAND_CODE)
+    useUserMemberships()
 
   // Additional Queries
   const { data: additionalManagements, isLoading: isAdditionalLoading } =
@@ -252,6 +252,7 @@ const ReservationFormPage = () => {
 
       const response = await createReservation({
         r_gubun: "C",
+        mp_idx: data.item,
         b_idx: selectedBranch.b_idx,
         r_date: formatDateForAPI(data.date?.toDate() || null),
         r_stime: data.timeSlot!.time,
@@ -290,14 +291,16 @@ const ReservationFormPage = () => {
   const handleMembershipReservation = async () => {
     try {
       if (!validateReservationData()) return
+      if (!selectedBranch) {
+        handleError(new Error("지점을 선택해주세요."))
+        return
+      }
 
       // 1. 예약 생성
       const reservationResponse = await createReservation({
         r_gubun: "R",
         mp_idx: data.item,
-        ...(selectedBranch?.b_type === "지정지점" && {
-          b_idx: selectedBranch.b_idx,
-        }),
+        b_idx: selectedBranch.b_idx,
         r_date: formatDateForAPI(data.date?.toDate() || null),
         r_stime: data.timeSlot!.time,
         add_services: data.additionalServices.map((service) =>
