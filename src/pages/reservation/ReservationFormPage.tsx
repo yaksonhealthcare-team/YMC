@@ -245,12 +245,14 @@ const ReservationFormPage = () => {
   const handleConsultationReservation = async () => {
     try {
       if (!validateReservationData()) return
+      if (!selectedBranch) {
+        handleError(new Error("지점을 선택해주세요."))
+        return
+      }
 
       const response = await createReservation({
         r_gubun: "C",
-        ...(selectedBranch?.b_type === "지정지점" && {
-          b_idx: selectedBranch.b_idx,
-        }),
+        b_idx: selectedBranch.b_idx,
         r_date: formatDateForAPI(data.date?.toDate() || null),
         r_stime: data.timeSlot!.time,
         r_memo: data.request,
