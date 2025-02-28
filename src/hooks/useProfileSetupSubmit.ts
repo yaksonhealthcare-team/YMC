@@ -23,6 +23,7 @@ interface SocialSignupInfo {
   gender?: string
   socialId: string
   di: string
+  token_version_id: string
 }
 
 export const useProfileSetupSubmit = () => {
@@ -44,6 +45,7 @@ export const useProfileSetupSubmit = () => {
           birthdate: signupData.birthDate,
           gender: signupData.gender === "male" ? "M" : "F",
           di: signupData.di,
+          token_version_id: signupData.tokenVersionId,
           post: signupData.postCode,
           addr1: signupData.address1,
           addr2: signupData.address2 || "",
@@ -104,6 +106,7 @@ export const useProfileSetupSubmit = () => {
         },
         authData: {
           di: signupData.di,
+          token_version_id: signupData.tokenVersionId,
         },
         optional: {
           recom: signupData.referralCode,

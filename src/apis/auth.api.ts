@@ -73,10 +73,8 @@ export const signupWithSocial = async ({
   // di 값의 + 문자를 %2B로 변환
   const processedUserInfo = {
     ...userInfo,
-    di:
-      typeof userInfo.di === "string"
-        ? userInfo.di.replace(/\+/g, "%2B")
-        : userInfo.di,
+    di: userInfo.di,
+    token_version_id: userInfo.token_version_id,
   }
 
   const response = await axiosClient.post("/auth/signup/social", {
@@ -104,6 +102,7 @@ interface SignupFormData {
   }
   authData: {
     di: string
+    token_version_id: string
   }
   optional?: {
     recom?: string
@@ -118,7 +117,8 @@ const createSignupRequest = ({
   const requestData = {
     ...userInfo,
     marketing_yn: userInfo.marketing_yn ? "Y" : "N",
-    di: authData.di.replace(/\+/g, "%2B"),
+    di: authData.di,
+    token_version_id: authData.token_version_id,
     ...(optional.recom && { recom: optional.recom }),
   }
 
