@@ -28,7 +28,8 @@ export const QuestionnaireHeader = ({
               variantType="primary"
               sizeType="l"
               onClick={() => {
-                window.history.go(-2) // 모달의 history entry와 현재 페이지를 모두 뒤로가기
+                closeOverlay()
+                navigate(-1)
               }}
             >
               나가기
