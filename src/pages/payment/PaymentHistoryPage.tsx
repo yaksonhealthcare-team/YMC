@@ -1,10 +1,11 @@
-import { useLayout } from "../../contexts/LayoutContext.tsx"
+import { EmptyCard } from "@components/EmptyCard"
+import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import { useLayout } from "../../contexts/LayoutContext.tsx"
+import useIntersection from "../../hooks/useIntersection.tsx"
 import { usePaymentHistories } from "../../queries/usePaymentQueries.tsx"
 import PaymentHistoryListItem from "./_fragments/PaymentHistoryListItem.tsx"
-import useIntersection from "../../hooks/useIntersection.tsx"
-import { useNavigate } from "react-router-dom"
-import SplashScreen from "@components/Splash.tsx"
 
 const PaymentHistoryPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -14,6 +15,7 @@ const PaymentHistoryPage = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isLoading,
   } = usePaymentHistories()
 
   const { observerTarget } = useIntersection({
@@ -34,29 +36,36 @@ const PaymentHistoryPage = () => {
     setNavigation({ display: false })
   }, [])
 
-  if (!payments) return <SplashScreen />
+  if (isLoading) {
+    return <LoadingIndicator className="min-h-screen" />
+  }
+
+  if (isFetchingNextPage) {
+    return <LoadingIndicator className="min-h-[100px]" />
+  }
 
   return (
     <div className={"h-full flex flex-col overflow-hidden"}>
-      <ul className={"divide-[#F7F8Fb] divide-y-8 overflow-y-scroll"}>
-        {payments.pages.map((page) =>
-          page.map((payment, index) => (
-            <li
-              key={index}
-              className={"p-5"}
-              onClick={() => navigate(`/payment/${payment.index}`)}
-            >
-              <PaymentHistoryListItem payment={payment} />
-            </li>
-          )),
-        )}
-        <div ref={observerTarget} className={"h-4 bg-[#F7F8Fb]"} />
-        {isFetchingNextPage && (
-          <div className={"text-center text-gray-500 py-4 bg-[#F7F8Fb]"}>
-            로딩 중...
-          </div>
-        )}
-      </ul>
+      {payments && payments.pages.length > 0 && payments.pages[0].length > 0 ? (
+        <ul className={"divide-[#F7F8Fb] divide-y-8 overflow-y-scroll"}>
+          {payments.pages.map((page) =>
+            page.map((payment, index) => (
+              <li
+                key={index}
+                className={"p-5"}
+                onClick={() => navigate(`/payment/${payment.index}`)}
+              >
+                <PaymentHistoryListItem payment={payment} />
+              </li>
+            )),
+          )}
+          <div ref={observerTarget} className={"h-4 bg-[#F7F8Fb]"} />
+        </ul>
+      ) : (
+        <EmptyCard
+          title={`결제 내역이 없어요.\n결제 내역이 생기면 이곳에 표시됩니다.`}
+        />
+      )}
     </div>
   )
 }
