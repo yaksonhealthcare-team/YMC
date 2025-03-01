@@ -246,7 +246,7 @@ const OverlayContainer: React.FC = () => {
     }
 
     case OverlayTypes.BOTTOM_SHEET: {
-      const bottomSheetOptions = options as BottomSheetOptions
+      const bottomSheetOptions = options
       return (
         <Dialog
           open={isOpen}
@@ -254,7 +254,7 @@ const OverlayContainer: React.FC = () => {
           keepMounted
           fullWidth
           maxWidth="sm"
-          className="z-50"
+          className="z-[9000]"
           PaperProps={{
             style: {
               position: "fixed",

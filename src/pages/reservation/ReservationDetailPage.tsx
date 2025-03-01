@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { useLayout } from "contexts/LayoutContext"
 import { Button } from "@components/Button"
@@ -61,13 +61,15 @@ const ReservationDetailPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { mutate } = useCompleteVisit()
-  const { openModal, openBottomSheet, closeOverlay } = useOverlay()
+  const { openModal, openBottomSheet, closeOverlay, overlayState } =
+    useOverlay()
   const {
     data: reservation,
     isLoading,
     isError,
     error,
   } = useReservationDetail(id || "")
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
 
   useEffect(() => {
     setHeader({
@@ -78,6 +80,15 @@ const ReservationDetailPage = () => {
     })
     setNavigation({ display: false })
   }, [navigate, setHeader, setNavigation])
+
+  // 바텀 시트 상태 감지
+  useEffect(() => {
+    if (overlayState.isOpen && overlayState.type === "bottomSheet") {
+      setIsBottomSheetOpen(true)
+    } else {
+      setIsBottomSheetOpen(false)
+    }
+  }, [overlayState])
 
   const handleCompleteVisit = () => {
     openModal({
@@ -116,7 +127,7 @@ const ReservationDetailPage = () => {
         <p className="mx-5 mt-2 font-r text-16px text-gray-900">
           예약 취소 시 차감된 상담 횟수는 복원됩니다.
         </p>
-        <div className="mt-10 border-t border-gray-50 flex gap-2 pt-3 px-5">
+        <div className="mt-10 border-t border-gray-50 flex gap-2 py-3 px-5">
           <Button
             className="w-full"
             variantType="line"
@@ -321,9 +332,11 @@ const ReservationDetailPage = () => {
           remainingCount={reservation.remainingCount}
         />
       )}
-      <FixedButtonContainer className="z-[200]">
-        {renderActionButtons()}
-      </FixedButtonContainer>
+      {!isBottomSheetOpen && (
+        <FixedButtonContainer className="z-[200]">
+          {renderActionButtons()}
+        </FixedButtonContainer>
+      )}
     </div>
   )
 }
