@@ -8,11 +8,12 @@ export const useProfileSetupHandlers = () => {
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false)
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
+    if (event.target.files?.[0]) {
       const file = event.target.files[0]
+      const imageUrl = URL.createObjectURL(file)
       setSignupData((prev) => ({
         ...prev,
-        profileImage: file,
+        profileUrl: imageUrl,
       }))
     }
   }
@@ -20,7 +21,7 @@ export const useProfileSetupHandlers = () => {
   const handleImageDelete = () => {
     setSignupData((prev) => ({
       ...prev,
-      profileImage: null,
+      profileUrl: undefined,
     }))
   }
 

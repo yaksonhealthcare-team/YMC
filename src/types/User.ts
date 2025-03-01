@@ -59,7 +59,7 @@ export interface UserSignup {
   postCode: string
   address1: string
   address2: string
-  profileImage: File | null
+  profileUrl?: string
   brandCodes: string[]
   referralCode: string
   recom: string

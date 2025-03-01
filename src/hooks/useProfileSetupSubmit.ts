@@ -51,6 +51,7 @@ export const useProfileSetupSubmit = () => {
           addr2: signupData.address2 || "",
           marketing_yn: signupData.marketingYn ? "Y" : "N",
           brand_code: signupData.brandCodes || [],
+          profileUrl: signupData.profileUrl,
         },
       })
 
@@ -103,6 +104,7 @@ export const useProfileSetupSubmit = () => {
           post: signupData.postCode,
           nationalinfo: "0",
           brand_code: signupData.brandCodes || [],
+          profileUrl: signupData.profileUrl,
         },
         authData: {
           di: signupData.di,

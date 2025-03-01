@@ -1,10 +1,4 @@
-import {
-  User,
-  UserResponse,
-  UserSignup,
-  UserSignupRequest,
-  UpdateUserProfileRequest,
-} from "../types/User.ts"
+import { UpdateUserProfileRequest, User, UserResponse } from "../types/User.ts"
 
 export class UserMapper {
   static toEntity(response: UserResponse): User {
@@ -42,23 +36,6 @@ export class UserMapper {
       sex: dto.sex,
       profileURL: dto.profileUrl,
       marketing_yn: dto.marketingAgreed ? "Y" : "N",
-    }
-  }
-}
-
-export class UserSignupRequestMapper {
-  static fromUserSignup(dto: UserSignup): UserSignupRequest {
-    return {
-      ...dto,
-      mobileno: dto.mobileNumber,
-      birthdate: dto.birthDate,
-      addr1: dto.address1,
-      addr2: dto.address2,
-      fileToUpload: dto.profileImage,
-      token_version_id: dto.tokenVersionId,
-      enc_data: dto.encData,
-      integrity_value: dto.integrityValue,
-      marketing_yn: dto.marketingYn,
     }
   }
 }

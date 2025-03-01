@@ -50,6 +50,7 @@ export const ProfileSetup = () => {
         mobileNumber: socialInfo.mobileno || prev.mobileNumber,
         birthDate: socialInfo.birthdate || prev.birthDate,
         gender: socialInfo.gender === "M" ? "male" : "female",
+        profileUrl: socialInfo.profileUrl || prev.profileUrl,
       }))
     }
   }, [isSocialSignup, setSignupData])
@@ -84,10 +85,10 @@ export const ProfileSetup = () => {
               className="w-20 h-20 rounded-full border border-[#ECECEC] cursor-pointer relative block"
               htmlFor="profileImageUpload"
             >
-              {signupData.profileImage ? (
+              {signupData.profileUrl ? (
                 <>
                   <img
-                    src={URL.createObjectURL(signupData.profileImage)}
+                    src={signupData.profileUrl}
                     alt="프로필"
                     className="rounded-full w-full h-full object-cover"
                   />
