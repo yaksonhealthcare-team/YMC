@@ -20,8 +20,8 @@ const EmailLogin = () => {
   const navigate = useNavigate()
   const { showToast } = useOverlay()
   const [formData, setFormData] = useState<LoginForm>({
-    email: "coolkyung@nate.com",
-    password: "coolkyung1234",
+    email: "",
+    password: "",
   })
   const [showPassword, setShowPassword] = useState(false)
 
