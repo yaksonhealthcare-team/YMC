@@ -14,23 +14,6 @@ const FindAccountCallback = () => {
   useEffect(() => {
     const jsonData = searchParams.get("jsonData")
 
-    const fetchEmail = async (tokenVersionId: string, di: string) => {
-      try {
-        return await findEmailWithDecryptData({
-          token_version_id: tokenVersionId,
-          di: di,
-        })
-      } catch (error) {
-        openModal({
-          title: "오류",
-          message: "계정을 찾을 수 없습니다.",
-          onConfirm: () => {
-            navigate("/find-account", { replace: true })
-          },
-        })
-      }
-    }
-
     const handleVerification = async () => {
       // 공통 유틸리티로 나이스 인증 데이터 파싱
       const userData = parseNiceAuthData(jsonData, "/find-account")
@@ -38,10 +21,14 @@ const FindAccountCallback = () => {
 
       try {
         if (tab === "find-email") {
-          const loginInfo = await fetchEmail(
-            userData.token_version_id,
-            userData.di,
-          )
+          const loginInfo = await findEmailWithDecryptData({
+            token_version_id: userData.token_version_id,
+            di: userData.di,
+          })
+
+          if (!loginInfo) {
+            throw new Error("계정을 찾을 수 없습니다.")
+          }
 
           sessionStorage.setItem("loginInfo", JSON.stringify(loginInfo))
           navigate(`/find-account/${tab}`, {
@@ -70,7 +57,9 @@ const FindAccountCallback = () => {
       }
     }
 
-    handleVerification()
+    if (jsonData) {
+      handleVerification()
+    }
   }, [navigate, openModal, tab, searchParams, parseNiceAuthData])
 
   return (

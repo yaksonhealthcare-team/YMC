@@ -14,11 +14,11 @@ export interface FindEmailResponse {
 export const findEmailWithDecryptData = async (
   request: DecryptRequest,
 ): Promise<FindEmailResponse> => {
-  const { data } = await axiosClient.post<HTTPResponse<FindEmailResponse>>(
+  const { data } = await axiosClient.post<HTTPResponse<FindEmailResponse[]>>(
     "/auth/account/find-account",
     { ...request },
   )
-  return data.body
+  return data.body[0]
 }
 
 export interface ChangePhoneNumberResponse {}
