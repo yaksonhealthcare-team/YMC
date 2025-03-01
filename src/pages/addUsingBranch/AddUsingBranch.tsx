@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react"
-import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useNavigate } from "react-router-dom"
 import { Button } from "@components/Button.tsx"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useLayout } from "../../contexts/LayoutContext.tsx"
+import { useErrorHandler } from "../../hooks/useErrorHandler"
+import { useSaveVisitedStoreMutation } from "../../queries/useVisitedStoreQueries"
 import { Branch } from "../../types/Branch.ts"
 import Step1SearchBranchList from "./Step1SearchBranchList.tsx"
 import Step2SelectedBranchList from "./Step2SelectedBranchList.tsx"
@@ -12,6 +14,9 @@ const AddUsingBranch = () => {
   const navigate = useNavigate()
   const [pageStep, setPageStep] = useState(1)
   const [selectedBranches, setSelectedBranches] = useState<Branch[]>([])
+  const { handleError } = useErrorHandler()
+  const { mutateAsync: saveVisitedStoreMutation } =
+    useSaveVisitedStoreMutation()
 
   const handleBack = () => {
     if (pageStep === 1) {
@@ -40,9 +45,28 @@ const AddUsingBranch = () => {
     setNavigation({ display: false })
   }, [setHeader, setNavigation, pageStep])
 
+  const handleSaveVisitedStores = async () => {
+    try {
+      // 선택된 모든 매장에 대해 순차적으로 저장
+      for (const branch of selectedBranches) {
+        await saveVisitedStoreMutation(branch.b_idx)
+      }
+    } catch (error) {
+      handleError(error, "방문 매장 저장 중 오류가 발생했습니다")
+    } finally {
+      setPageStep(pageStep + 1)
+    }
+  }
+
   const handleNextStep = () => {
     if (pageStep === 3) {
       navigate("/questionnaire/common")
+      return
+    }
+
+    if (pageStep === 2) {
+      handleSaveVisitedStores()
+      return
     }
 
     setPageStep(pageStep + 1)

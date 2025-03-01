@@ -1,10 +1,5 @@
 import { Branch } from "../../types/Branch.ts"
 import BranchItem from "./BranchItem.tsx"
-import { useNavigate } from "react-router-dom"
-import { Button } from "@mui/material"
-import LoadingIndicator from "../../components/LoadingIndicator"
-import { useErrorHandler } from "../../hooks/useErrorHandler"
-import { useSaveVisitedStoreMutation } from "../../queries/useVisitedStoreQueries"
 
 interface SelectedBranchListProps {
   selectedBranches: Branch[]
@@ -13,25 +8,6 @@ interface SelectedBranchListProps {
 const Step2SelectedBranchList = ({
   selectedBranches,
 }: SelectedBranchListProps) => {
-  const navigate = useNavigate()
-  const { handleError } = useErrorHandler()
-  const { mutateAsync: saveVisitedStoreMutation, isPending } =
-    useSaveVisitedStoreMutation()
-
-  const handleSaveVisitedStores = async () => {
-    try {
-      // 선택된 모든 매장에 대해 순차적으로 저장
-      for (const branch of selectedBranches) {
-        await saveVisitedStoreMutation(branch.b_idx)
-      }
-    } catch (error) {
-      handleError(error, "방문 매장 저장 중 오류가 발생했습니다")
-    } finally {
-      // 에러 발생 여부와 관계없이 마이페이지로 이동
-      navigate("/my-page")
-    }
-  }
-
   return (
     <div className="flex flex-col justify-between h-full">
       <div className="px-[20px] mt-[20px]">
@@ -56,17 +32,6 @@ const Step2SelectedBranchList = ({
             <BranchItem branch={branch} />
           </div>
         ))}
-      </div>
-
-      <div className="px-[20px] py-[16px]">
-        <Button
-          variant="contained"
-          fullWidth
-          onClick={handleSaveVisitedStores}
-          disabled={selectedBranches.length === 0}
-        >
-          {isPending ? <LoadingIndicator /> : "저장하기"}
-        </Button>
       </div>
     </div>
   )
