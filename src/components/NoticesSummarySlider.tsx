@@ -16,9 +16,9 @@ const NoticesSummarySlider = ({
   right,
 }: NoticesSummarySliderProps) => {
   const navigate = useNavigate()
-  const { data: notices } = useNoticesSummary()
+  const { data: noticesData } = useNoticesSummary()
 
-  if (!notices?.length) return null
+  if (!noticesData?.notices?.length) return null
 
   return (
     <div className={className}>
@@ -34,7 +34,7 @@ const NoticesSummarySlider = ({
         slidesPerView={1}
         autoHeight
       >
-        {notices.map((notice) => (
+        {noticesData.notices.map((notice) => (
           <SwiperSlide
             key={notice.code}
             className="flex text-sm items-center cursor-pointer"

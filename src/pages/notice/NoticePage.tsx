@@ -17,18 +17,23 @@ const NoticePage: React.FC = () => {
     fetchNextPage,
     isFetchingNextPage,
     isLoading,
-  } = useInfiniteQuery<Notice[]>({
+  } = useInfiniteQuery<{
+    notices: Notice[]
+    pageInfo: { totalPages: number; currentPage: number }
+  }>({
     queryKey: ["notices"],
     queryFn: async ({ pageParam }) => fetchNotices(pageParam as number),
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === 0) return undefined
-      return allPages.length + 1
+    getNextPageParam: (lastPage) => {
+      if (lastPage.notices.length === 0) return undefined
+      if (lastPage.pageInfo.currentPage >= lastPage.pageInfo.totalPages)
+        return undefined
+      return lastPage.pageInfo.currentPage + 1
     },
     initialPageParam: 1,
     retry: false,
   })
 
-  const notices = (pages?.pages || []).flatMap((page) => page)
+  const notices = (pages?.pages || []).flatMap((page) => page.notices)
 
   useEffect(() => {
     setHeader({

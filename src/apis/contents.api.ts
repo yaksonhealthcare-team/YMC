@@ -32,7 +32,12 @@ export const fetchEventDetail = async (code: string): Promise<EventDetail> => {
   return ContentMapper.toEventDetail(data.body[0])
 }
 
-export const fetchNotices = async (page: number = 1): Promise<Notice[]> => {
+export const fetchNotices = async (
+  page: number = 1,
+): Promise<{
+  notices: Notice[]
+  pageInfo: { totalPages: number; currentPage: number }
+}> => {
   const { data } = await axiosClient.get<HTTPResponse<Notice[]>>(
     "/contents/contents",
     {
@@ -42,7 +47,13 @@ export const fetchNotices = async (page: number = 1): Promise<Notice[]> => {
       },
     },
   )
-  return ContentMapper.toNotices(data.body)
+  return {
+    notices: ContentMapper.toNotices(data.body),
+    pageInfo: {
+      totalPages: Number(data.total_page_count),
+      currentPage: Number(data.current_page),
+    },
+  }
 }
 
 export const fetchNotice = async (code: string): Promise<NoticeDetail> => {

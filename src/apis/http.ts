@@ -4,6 +4,10 @@ export interface HTTPResponse<T> {
   resultCode: string
   resultMessage: string
   resultCount: number
+  total_count?: string
+  total_page_count?: number
+  current_page?: string
+  gubun?: string
   body: T
 }
 
