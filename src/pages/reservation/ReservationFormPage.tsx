@@ -396,6 +396,9 @@ const ReservationFormPage = () => {
   return (
     <div className="flex-1 space-y-3 pb-32 overflow-y-auto overflow-x-hidden">
       <section className="px-5 pt-2 pb-6 border-b-8 border-[#f7f7f7]">
+        <h2 className="text-gray-700 text-18px font-sb leading-[148%] tracking-[-0.09px] mb-4">
+          원하는 예약을 선택해주세요.
+        </h2>
         <RadioGroup
           className="flex flex-col space-y-4"
           value={data.item}
@@ -425,7 +428,7 @@ const ReservationFormPage = () => {
             <Button
               variantType="secondary"
               sizeType="l"
-              onClick={() => navigate('/membership')}
+              onClick={() => navigate("/membership")}
               className="justify-between items-center w-full !text-primary-300 font-sb !py-[20px] !rounded-xl"
             >
               회원권 구매하기
