@@ -418,7 +418,9 @@ const ReservationFormPage = () => {
               </div>
             </RadioCard>
           </div>
-          {!isMembershipsLoading && membershipsData?.pages[0] ? (
+          {!isMembershipsLoading &&
+          membershipsData?.pages[0]?.body?.length &&
+          membershipsData.pages[0].body.length > 0 ? (
             <MembershipSwiper
               membershipsData={membershipsData.pages[0]}
               selectedItem={data.item}
