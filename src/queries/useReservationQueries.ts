@@ -77,7 +77,7 @@ export const useReservationDetail = (reservationId: string) => {
         programName: data.ps_name,
         date: new Date(data.r_date),
         status: statusMap[data.r_status] || "000",
-        duration: data.r_take_time,
+        duration: data.r_take_time || "0:0",
         visit: Number(data.visit),
         type: data.r_gubun,
         services: [],

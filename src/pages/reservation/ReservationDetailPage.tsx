@@ -165,7 +165,9 @@ const ReservationDetailPage = () => {
 
     const now = new Date()
     const reservationEndTime = new Date(reservation.date)
-    const [hours, minutes] = reservation.duration.split(":").map(Number)
+    const [hours, minutes] = (reservation.duration || "0:0")
+      .split(":")
+      .map(Number)
     reservationEndTime.setHours(reservationEndTime.getHours() + (hours || 0))
     reservationEndTime.setMinutes(
       reservationEndTime.getMinutes() + (minutes || 0),

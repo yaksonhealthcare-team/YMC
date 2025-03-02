@@ -39,7 +39,7 @@ export interface Reservation {
   programName: string
   date: Date
   status: ReservationStatusCode
-  duration: string
+  duration?: string
   visit: number
   type: string
   remainingDays?: string
