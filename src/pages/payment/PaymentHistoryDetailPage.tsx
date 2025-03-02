@@ -50,7 +50,9 @@ const PaymentHistoryDetailPage = () => {
       )
     }
 
-    if (canceled) return null
+    if (canceled) {
+      return null
+    }
 
     return (
       <div className={"border-t border-gray-200 px-5 pt-3 pb-8"}>

@@ -118,6 +118,9 @@ const PaymentCancelPage = lazy(
 const PaymentCancelCompletePage = lazy(
   () => import("../pages/payment/PaymentCancelCompletePage"),
 )
+const PaymentCancelDetailPage = lazy(
+  () => import("../pages/payment/PaymentCancelDetailPage"),
+)
 const ReservationHistory = lazy(
   () => import("../pages/memberHistory/ReservationHistory"),
 )
@@ -360,6 +363,11 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/payment/:id/cancel",
     element: <PaymentCancelPage />,
+    auth: true,
+  },
+  {
+    path: "/payment/:id/cancel-detail",
+    element: <PaymentCancelDetailPage />,
     auth: true,
   },
   {

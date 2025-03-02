@@ -1,8 +1,16 @@
 import { format } from "date-fns"
 import { PaymentHistoryDetail } from "../../../../types/Payment.ts"
 import PaymentItemList from "../PaymentItemList.tsx"
+import { useNavigate } from "react-router-dom"
 
-const PaymentItemSection = ({ payment }: { payment: PaymentHistoryDetail }) => {
+const PaymentItemSection = ({
+  payment,
+  hideButton = false,
+}: {
+  payment: PaymentHistoryDetail
+  hideButton?: boolean
+}) => {
+  const navigate = useNavigate()
   return (
     <div className={"flex flex-col gap-4"}>
       <div className={"flex gap-2 items-center"}>
@@ -17,9 +25,13 @@ const PaymentItemSection = ({ payment }: { payment: PaymentHistoryDetail }) => {
       </div>
       <PaymentItemList
         payment={payment}
-        onClickShowCancelHistory={() => {
-          console.log("Show")
-        }}
+        onClickShowCancelHistory={
+          !hideButton
+            ? () => {
+                navigate(`/payment/${payment.index}/cancel-detail`)
+              }
+            : undefined
+        }
       />
     </div>
   )
