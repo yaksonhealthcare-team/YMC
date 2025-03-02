@@ -63,7 +63,7 @@ export const TermsAgreement = () => {
 
   const handleDetailClick = (path: string) => (e: React.MouseEvent) => {
     e.preventDefault()
-    navigate(path)
+    navigate(`/terms${path}`)
   }
 
   const handleOnClickNext = async (
@@ -107,7 +107,7 @@ export const TermsAgreement = () => {
             title="서비스 이용약관 (필수)"
             checked={agreements.terms}
             onChange={() => handleAgreement("terms")}
-            onDetail={handleDetailClick("/terms")}
+            onDetail={handleDetailClick("/service")}
           />
           <AgreementItem
             title="개인정보 수집 이용 (필수)"
