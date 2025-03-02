@@ -17,6 +17,8 @@ import ShareIcon from "@assets/icons/ShareIcon.svg?react"
 import { Indicator } from "@components/Indicator.tsx"
 import { Notice } from "@components/Notice.tsx"
 import { Number } from "@components/Number.tsx"
+import { GenderSelect } from "@components/GenderSelect.tsx"
+import { Gender } from "../utils/gender"
 
 const DevPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -61,6 +63,8 @@ const DevPage = () => {
   const handleClickPlus = (ount: number) => {
     setNumber(++ount)
   }
+
+  const [selectedGender, setSelectedGender] = useState<Gender>("F")
 
   return (
     <>
@@ -274,6 +278,20 @@ const DevPage = () => {
           onClickMinus={() => handleClickMinus(number)}
           onClickPlus={() => handleClickPlus(number)}
         />
+      </div>
+      <div className="p-4 border-t">
+        {"GenderSelect: "}
+        <GenderSelect
+          value={selectedGender}
+          onChange={(gender) => setSelectedGender(gender)}
+        />
+        <div className="mt-2">
+          <GenderSelect
+            value={selectedGender}
+            onChange={(gender) => setSelectedGender(gender)}
+            disabled
+          />
+        </div>
       </div>
       <div className="p-4 border-t">
         <Button

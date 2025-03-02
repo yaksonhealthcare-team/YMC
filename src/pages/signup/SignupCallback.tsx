@@ -28,7 +28,7 @@ const SignupCallback = () => {
           name: userData.name,
           mobileNumber: userData.hp,
           birthDate: userData.birthdate,
-          gender: userData.sex === "M" ? "male" : "female",
+          gender: userData.sex,
           di: userData.di,
           tokenVersionId: userData.token_version_id,
           ...(socialInfo && {

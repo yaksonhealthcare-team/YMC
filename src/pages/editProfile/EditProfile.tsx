@@ -1,5 +1,5 @@
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { ChangeEvent, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import { useNavigate } from "react-router-dom"
 import ProfileImageButton from "./_fragments/ProfileImageButton.tsx"
@@ -10,8 +10,6 @@ import AppleLoginIcon from "@assets/icons/third_party_logo/AppleLoginIcon.svg?re
 import GoogleLoginIcon from "@assets/icons/third_party_logo/GoogleLoginIcon.svg?react"
 import BottomSheetForm from "./_fragments/EditProfileBottomSheetForm.tsx"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
-import { RadioGroup } from "@mui/material"
-import { RadioCard } from "@components/RadioCard.tsx"
 import CustomTextField from "@components/CustomTextField.tsx"
 import Switch from "@components/Switch.tsx"
 import {
@@ -22,6 +20,8 @@ import { updateUserProfile } from "../../apis/auth.api.ts"
 import PostcodeModal from "@components/modal/PostcodeModal.tsx"
 import { UpdateUserProfileRequest } from "../../types/User.ts"
 import { fetchUser } from "../../apis/auth.api.ts"
+import { Gender } from "../../utils/gender.ts"
+import { GenderSelect } from "@components/GenderSelect"
 
 const EditProfile = () => {
   const { user, login } = useAuth()
@@ -29,9 +29,7 @@ const EditProfile = () => {
   const { openBottomSheet, closeOverlay, showToast } = useOverlay()
   const navigate = useNavigate()
 
-  const [gender, setGender] = useState<"male" | "female">(
-    user?.gender === "M" ? "male" : "female",
-  )
+  const [gender, setGender] = useState<Gender>(user?.gender || "M")
   const [address, setAddress] = useState({
     ...user!.address,
     postalCode: user!.postalCode,
@@ -84,7 +82,7 @@ const EditProfile = () => {
         postalCode: address.postalCode,
         address1: address.road,
         address2: address.detail,
-        sex: gender === "male" ? "M" : "F",
+        sex: gender,
         profileUrl: profileImageUrl || "",
         marketingAgreed: marketingAgreed,
       }
@@ -112,11 +110,6 @@ const EditProfile = () => {
     } else {
       setProfileImageUrl(undefined)
     }
-  }
-
-  const handleChangeGender = (event: ChangeEvent<HTMLInputElement>) => {
-    const newGender = event.target.value as "male" | "female"
-    setGender(newGender)
   }
 
   const handleClickBackButton = () => {
@@ -217,28 +210,7 @@ const EditProfile = () => {
             </p>
           </LabeledForm>
           <LabeledForm label={"성별"}>
-            <RadioGroup value={gender} onChange={handleChangeGender}>
-              <div className={"flex gap-2"}>
-                <RadioCard
-                  value={"female"}
-                  checked={gender === "female"}
-                  className="flex-1 !min-h-[52px] !py-4 !px-4 !rounded-[12px]"
-                >
-                  <p className="text-[16px] font-semibold leading-[20px]">
-                    {"여자"}
-                  </p>
-                </RadioCard>
-                <RadioCard
-                  value={"male"}
-                  checked={gender === "male"}
-                  className="flex-1 !min-h-[52px] !py-4 !px-4 !rounded-[12px]"
-                >
-                  <p className="text-[16px] font-semibold leading-[20px]">
-                    {"남자"}
-                  </p>
-                </RadioCard>
-              </div>
-            </RadioGroup>
+            <GenderSelect value={gender} onChange={setGender} />
           </LabeledForm>
           <LabeledForm className={"flex flex-col gap-2"} label={"주소"}>
             <FieldWithButton

@@ -10,6 +10,7 @@ import {
   loginWithEmail,
   fetchUser,
 } from "../apis/auth.api"
+import { Gender } from "../utils/gender"
 
 type SocialProvider = "N" | "K" | "G" | "A"
 
@@ -20,7 +21,7 @@ interface SocialSignupInfo {
   email?: string
   mobileno?: string
   birthdate?: string
-  gender?: string
+  gender?: Gender
   socialId: string
   di: string
   token_version_id: string
@@ -43,7 +44,7 @@ export const useProfileSetupSubmit = () => {
           email: signupData.email,
           mobileno: signupData.mobileNumber,
           birthdate: signupData.birthDate,
-          gender: signupData.gender === "male" ? "M" : "F",
+          gender: signupData.gender,
           di: signupData.di,
           token_version_id: signupData.tokenVersionId,
           post: signupData.postCode,
@@ -97,7 +98,7 @@ export const useProfileSetupSubmit = () => {
           password: signupData.password!,
           mobileno: signupData.mobileNumber,
           birthdate: signupData.birthDate,
-          gender: signupData.gender === "male" ? "M" : "F",
+          gender: signupData.gender,
           addr1: signupData.address1,
           addr2: signupData.address2 || "",
           marketing_yn: signupData.marketingYn,

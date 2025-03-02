@@ -7,6 +7,7 @@ import {
   useState,
 } from "react"
 import { UserSignup } from "../types/User.ts"
+import { Gender } from "../utils/gender"
 
 export interface SocialSignupInfo {
   provider: string
@@ -16,7 +17,7 @@ export interface SocialSignupInfo {
   name: string
   mobileno: string
   birthdate: string
-  gender: string
+  gender: Gender
   socialAccessToken: string
 }
 
@@ -30,7 +31,7 @@ const initialState: UserSignup = {
   name: "",
   mobileNumber: "",
   birthDate: "",
-  gender: "",
+  gender: "M",
   di: "",
   tokenVersionId: "",
   encData: "",
@@ -40,7 +41,7 @@ const initialState: UserSignup = {
   postCode: "",
   address1: "",
   address2: "",
-  profileImage: null,
+  profileUrl: "",
   brandCodes: [],
   referralCode: "",
   recom: "",

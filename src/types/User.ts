@@ -1,3 +1,5 @@
+import { Gender } from "../utils/gender"
+
 export interface User {
   id: string
   name: string
@@ -49,7 +51,7 @@ export interface UserSignup {
   name: string
   mobileNumber: string
   birthDate: string
-  gender: string
+  gender: Gender
   di: string
   tokenVersionId: string
   encData: string
