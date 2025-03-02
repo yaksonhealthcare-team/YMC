@@ -30,6 +30,7 @@ interface ReserveTagProps {
 const ReserveTag = ({ status, reservationDate }: ReserveTagProps) => {
   if (!status) return null
 
+  // 취소된 경우 "예약취소" 라벨만 표시하고 "방문완료" 표시하지 않음
   const variant = TAG_VARIANTS[status]
   const title =
     typeof variant.title === "function"
