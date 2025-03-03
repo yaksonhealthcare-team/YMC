@@ -1,13 +1,12 @@
-import { lazy, ReactNode } from "react"
+import { lazy } from "react"
 import WithdrawalPage from "../pages/profile/WithdrawalPage"
+import { RouteObject } from "react-router-dom"
 
 const MembershipBranchSelectPage = lazy(
   () => import("../pages/membership/MembershipBranchSelectPage"),
 )
 
-export interface RouteConfig {
-  path: string
-  element: ReactNode
+export interface RouteConfig extends Omit<RouteObject, "children"> {
   auth?: boolean
   children?: RouteConfig[]
 }
@@ -121,8 +120,8 @@ const PaymentCancelCompletePage = lazy(
 const PaymentCancelDetailPage = lazy(
   () => import("../pages/payment/PaymentCancelDetailPage"),
 )
-const ReservationHistory = lazy(
-  () => import("../pages/memberHistory/ReservationHistory"),
+const ReservationHistoryPage = lazy(
+  () => import("../pages/member-history/reservation/ReservationHistoryPage"),
 )
 const MembershipHistoryPage = lazy(
   () => import("../pages/member-history/membership/MembershipHistoryPage"),
@@ -290,7 +289,7 @@ export const routeConfig: RouteConfig[] = [
   },
   {
     path: "/member-history/reservation",
-    element: <ReservationHistory />,
+    element: <ReservationHistoryPage />,
     auth: true,
   },
   {
@@ -327,11 +326,6 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/mypage/active-branch",
     element: <ActiveBranch />,
-    auth: true,
-  },
-  {
-    path: "/myinfo",
-    element: <div>My Info</div>,
     auth: true,
   },
   {

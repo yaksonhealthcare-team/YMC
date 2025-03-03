@@ -48,16 +48,33 @@ export const ReserveCard = ({
     })
   }
 
+  const handleSatisfactionClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    navigate(`/reservation/${reservation.id}/satisfaction`, {
+      state: {
+        r_idx: reservation.id,
+        r_date: reservation.date.toISOString(),
+        b_name: reservation.store,
+        ps_name: reservation.programName,
+        review_items: [
+          { rs_idx: "1", rs_type: "시술만족도" },
+          { rs_idx: "2", rs_type: "친절도" },
+          { rs_idx: "3", rs_type: "청결도" },
+        ],
+      },
+    })
+  }
+
   const getButton = (): ReactNode => {
     const statusType = classifyReservationStatus(reservation.status)
     const now = new Date()
     const reservationEndTime = new Date(reservation.date)
-    const [hours, minutes] = (reservation.duration || "0:0")
+    const [hours, minutes] = (reservation.duration ?? "00:00")
       .split(":")
       .map(Number)
-    reservationEndTime.setHours(reservationEndTime.getHours() + (hours || 0))
+    reservationEndTime.setHours(reservationEndTime.getHours() + (hours ?? 0))
     reservationEndTime.setMinutes(
-      reservationEndTime.getMinutes() + (minutes || 0),
+      reservationEndTime.getMinutes() + (minutes ?? 0),
     )
 
     switch (statusType) {
@@ -66,22 +83,7 @@ export const ReserveCard = ({
           <Button
             variantType="primary"
             sizeType="xs"
-            onClick={(e) => {
-              e.stopPropagation()
-              navigate(`/reservation/${reservation.id}/satisfaction`, {
-                state: {
-                  r_idx: reservation.id,
-                  r_date: reservation.date.toISOString(),
-                  b_name: reservation.store,
-                  ps_name: reservation.programName,
-                  review_items: [
-                    { rs_idx: "1", rs_type: "시술만족도" },
-                    { rs_idx: "2", rs_type: "친절도" },
-                    { rs_idx: "3", rs_type: "청결도" },
-                  ],
-                },
-              })
-            }}
+            onClick={handleSatisfactionClick}
           >
             만족도 작성
           </Button>
@@ -115,6 +117,7 @@ export const ReserveCard = ({
         className,
       )}
       onClick={() => navigate(`/reservation/${reservation.id}`)}
+      tabIndex={0}
       aria-label={`${reservation.store} ${reservation.programName} 예약 상세보기`}
     >
       <div className="flex flex-col w-full">

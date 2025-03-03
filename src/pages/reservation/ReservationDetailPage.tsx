@@ -68,7 +68,7 @@ const ReservationDetailPage = () => {
     isLoading,
     isError,
     error,
-  } = useReservationDetail(id || "")
+  } = useReservationDetail(id ?? "")
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
 
   useEffect(() => {
@@ -90,33 +90,39 @@ const ReservationDetailPage = () => {
     }
   }, [overlayState])
 
+  const handleVisitSuccess = () => {
+    openModal({
+      title: "완료",
+      message: "방문 완료 처리되었습니다.",
+      onConfirm: () => {},
+    })
+  }
+
+  const handleVisitError = (error: unknown) => {
+    openModal({
+      title: "오류",
+      message:
+        error instanceof Error
+          ? error.message
+          : "방문 완료 처리에 실패했습니다.",
+      onConfirm: () => {},
+    })
+  }
+
+  const handleVisitConfirm = () => {
+    if (id) {
+      mutate(id, {
+        onSuccess: handleVisitSuccess,
+        onError: handleVisitError,
+      })
+    }
+  }
+
   const handleCompleteVisit = () => {
     openModal({
       title: "방문 완료",
       message: "방문을 완료하시겠습니까?",
-      onConfirm: () => {
-        if (id) {
-          mutate(id, {
-            onSuccess: () => {
-              openModal({
-                title: "완료",
-                message: "방문 완료 처리되었습니다.",
-                onConfirm: () => {},
-              })
-            },
-            onError: (error) => {
-              openModal({
-                title: "오류",
-                message:
-                  error instanceof Error
-                    ? error.message
-                    : "방문 완료 처리에 실패했습니다.",
-                onConfirm: () => {},
-              })
-            },
-          })
-        }
-      },
+      onConfirm: handleVisitConfirm,
     })
   }
 
@@ -165,7 +171,7 @@ const ReservationDetailPage = () => {
 
     const now = new Date()
     const reservationEndTime = new Date(reservation.date)
-    const [hours, minutes] = (reservation.duration || "0:0")
+    const [hours, minutes] = (reservation.duration || "00:00")
       .split(":")
       .map(Number)
     reservationEndTime.setHours(reservationEndTime.getHours() + (hours || 0))
@@ -175,6 +181,7 @@ const ReservationDetailPage = () => {
 
     switch (reservation.status) {
       case "000": // 관리완료
+      case "002": // 방문완료
         return (
           <div className="flex gap-[8px]">
             <Button
@@ -248,42 +255,6 @@ const ReservationDetailPage = () => {
           )
         }
         return null
-
-      case "002": // 방문완료
-        return (
-          <div className="flex gap-[8px]">
-            <Button
-              variantType="line"
-              sizeType="l"
-              className="flex-1"
-              onClick={() =>
-                navigate(`/reservation/${id}/satisfaction`, {
-                  state: {
-                    r_idx: reservation.id,
-                    r_date: reservation.date.toISOString(),
-                    b_name: reservation.store,
-                    ps_name: reservation.programName,
-                    review_items: [
-                      { rs_idx: "1", rs_type: "시술만족도" },
-                      { rs_idx: "2", rs_type: "친절도" },
-                      { rs_idx: "3", rs_type: "청결도" },
-                    ],
-                  },
-                })
-              }
-            >
-              만족도 작성
-            </Button>
-            <Button
-              variantType="primary"
-              sizeType="l"
-              className="flex-1"
-              onClick={() => navigate("/reservation/form")}
-            >
-              다시 예약하기
-            </Button>
-          </div>
-        )
 
       case "003": // 예약취소
         return (

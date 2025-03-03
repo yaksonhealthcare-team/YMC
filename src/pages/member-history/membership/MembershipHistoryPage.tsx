@@ -9,7 +9,7 @@ import {
   myMembershipFilters,
   MyMembershipFilterItem,
 } from "../../../types/Membership"
-import MainTabs from "../../memberHistory/_fragments/MainTabs"
+import MainTabs from "../_fragments/MainTabs"
 import { Button } from "@components/Button"
 import clsx from "clsx"
 import AddMembershipIcon from "@assets/icons/AddMembershipIcon.svg?react"
