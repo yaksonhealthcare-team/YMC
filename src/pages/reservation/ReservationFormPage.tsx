@@ -14,7 +14,6 @@ import { TimeSlot } from "../../types/Schedule.ts"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useCreateReservationMutation } from "../../queries/useReservationQueries"
-import { useConsultationCount } from "../../hooks/useConsultationCount"
 import { MembershipSwiper } from "@components/MembershipSwiper"
 import { AdditionalServiceCard } from "@components/AdditionalServiceCard"
 import { ReservationFormSection } from "./_fragments/ReservationFormSection"
@@ -26,6 +25,8 @@ import { toNumber } from "utils/number"
 import { createAdditionalManagementOrder } from "apis/order.api"
 import { useUserMemberships } from "queries/useMembershipQueries"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
+import { getConsultationCount } from "../../apis/reservation.api"
+import { useQuery } from "@tanstack/react-query"
 
 interface FormDataType {
   item: undefined | string
@@ -58,7 +59,10 @@ const ReservationFormPage = () => {
   })
 
   // Queries
-  const { data: consultationCount = 0 } = useConsultationCount()
+  const { data: consultationCount } = useQuery({
+    queryKey: ["consultation-count"],
+    queryFn: getConsultationCount,
+  })
   const { mutateAsync: createReservation } = useCreateReservationMutation()
   const { data: membershipsData, isLoading: isMembershipsLoading } =
     useUserMemberships()
@@ -410,9 +414,9 @@ const ReservationFormPage = () => {
                 <div className="text-gray-700 text-16px font-sb">상담 예약</div>
                 <div className="px-2 py-0.5 bg-tag-greenBg rounded-[999px] justify-center items-center flex">
                   <div className="text-center text-tag-green text-12px font-m">
-                    {consultationCount === 0
+                    {consultationCount?.currentCount === 0
                       ? "FREE"
-                      : `${consultationCount}/2`}
+                      : `${consultationCount?.currentCount ?? 0}/${consultationCount?.maxCount ?? 0}`}
                   </div>
                 </div>
               </div>
@@ -440,7 +444,7 @@ const ReservationFormPage = () => {
         </RadioGroup>
         <div className="flex flex-col mt-[16px]">
           <p className="text-gray-500 text-14px">
-            * 상담 예약은 월간 2회까지 이용 가능합니다.
+            * 상담 예약은 월간 {consultationCount?.maxCount ?? 0}회까지 이용 가능합니다.
           </p>
           {!membershipsData?.pages[0]?.body?.length && (
             <p className="text-gray-500 text-14px">
