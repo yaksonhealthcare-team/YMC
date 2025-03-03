@@ -414,9 +414,9 @@ const ReservationFormPage = () => {
                 <div className="text-gray-700 text-16px font-sb">상담 예약</div>
                 <div className="px-2 py-0.5 bg-tag-greenBg rounded-[999px] justify-center items-center flex">
                   <div className="text-center text-tag-green text-12px font-m">
-                    {consultationCount?.currentCount === 0
+                    {!consultationCount?.currentCount
                       ? "FREE"
-                      : `${consultationCount?.currentCount ?? 0}/${consultationCount?.maxCount ?? 0}`}
+                      : `${(consultationCount?.maxCount ?? 0) - (consultationCount?.currentCount ?? 0)}/${consultationCount?.maxCount ?? 0}`}
                   </div>
                 </div>
               </div>
