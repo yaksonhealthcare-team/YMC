@@ -1,6 +1,7 @@
 import React from "react"
 import { useNavigate } from "react-router-dom"
 import { Event } from "../../../types/Content"
+import { Image } from "@components/common/Image"
 
 const EventItem: React.FC<{ event: Event }> = ({ event }) => {
   const navigate = useNavigate()
@@ -13,7 +14,7 @@ const EventItem: React.FC<{ event: Event }> = ({ event }) => {
       onClick={() => navigate(`/event/${event.code}`)}
     >
       {thumbnail && (
-        <img
+        <Image
           src={thumbnail.fileurl}
           alt={event.title}
           className="w-[88px] h-[88px] rounded-lg border border-gray-100 object-cover"

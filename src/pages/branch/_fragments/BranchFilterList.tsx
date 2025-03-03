@@ -8,6 +8,7 @@ import {
   useBranchUnbookmarkMutation,
 } from "../../../queries/useBranchQueries.tsx"
 import { useOverlay } from "../../../contexts/ModalContext.tsx"
+import { Image } from "@components/common/Image"
 
 interface BranchFilterListProps {
   branches: Branch[]
@@ -67,7 +68,7 @@ export const BranchFilterListItem = ({
 }) => (
   <li onClick={() => onClick(branch)} className={"cursor-pointer w-full flex"}>
     <div className={"w-full py-4 gap-4 flex items-stretch"}>
-      <img
+      <Image
         className={
           "border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"
         }

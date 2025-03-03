@@ -7,10 +7,10 @@ import { Button } from "@components/Button"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import { TextArea } from "@components/TextArea"
 import FixedButtonContainer from "@components/FixedButtonContainer"
-import XCircleIcon from "@components/icons/XCircleIcon"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useReviewSections } from "../../queries/useReviewQueries"
 import { validateFile, escapeHtml } from "utils/sanitize"
+import { Image } from "@components/common/Image"
 
 interface ReviewSection {
   rs_idx: string
@@ -254,21 +254,35 @@ const ReviewFormPage = () => {
                 {images.length} / 8
               </span>
             </label>
-            {images.map((image) => (
+            {images.map((image, index) => (
               <div
                 key={image.id}
-                className="relative w-20 h-20 border border-gray-100 rounded-lg shrink-0"
+                className="relative w-20 h-20 rounded-lg border border-gray-100"
               >
-                <img
+                <Image
                   src={image.preview}
-                  alt="업로드 이미지"
+                  alt={`리뷰 이미지 ${index + 1}`}
                   className="w-full h-full object-cover rounded-lg"
                 />
                 <button
+                  type="button"
                   onClick={() => handleImageDelete(image.id)}
-                  className="absolute top-[5px] right-[5px] w-4 h-4 bg-gray-700 rounded-full flex items-center justify-center"
+                  className="absolute -top-2 -right-2 bg-gray-700 rounded-full bg-opacity-60 w-[24px] h-[24px] flex justify-center items-center"
                 >
-                  <XCircleIcon className="w-4 h-4" circleColor="#212121" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-[16px] h-[16px] text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
                 </button>
               </div>
             ))}

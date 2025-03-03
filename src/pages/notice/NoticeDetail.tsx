@@ -5,6 +5,7 @@ import { useNotice } from "../../queries/useContentQueries.tsx"
 import { NoticeDetail as Notice } from "../../types/Content.ts"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
+import { Image } from "@components/common/Image"
 
 const NoticeDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -71,7 +72,7 @@ const NoticeContent: React.FC<{ notice: Notice }> = ({ notice }) => {
       </div>
       {notice.files?.length > 0 && notice.files[0].fileurl && (
         <div className="mt-4">
-          <img
+          <Image
             src={notice.files[0].fileurl}
             alt="공지사항 이미지"
             className="w-full rounded-lg"

@@ -1,9 +1,13 @@
 import { useNavigate } from "react-router-dom"
-import { useMembershipCategories, useMembershipList } from "queries/useMembershipQueries"
+import {
+  useMembershipCategories,
+  useMembershipList,
+} from "queries/useMembershipQueries"
 import { MembershipCategory } from "types/Membership"
 import { useState, useEffect } from "react"
 import { MembershipCard } from "../../../../pages/membership/_fragments/MembershipCard"
 import LoadingIndicator from "@components/LoadingIndicator"
+import { Image } from "@components/common/Image"
 
 interface ProgramListProps {
   brandCode: string
@@ -23,13 +27,17 @@ const CareProgramTabItem = ({
       return <div className={"w-[68px] h-[68px] rounded-full bg-primary"} />
     }
     return program.sc_pic ? (
-      <img
+      <Image
         src={program.sc_pic}
         alt={"배경"}
-        className={"w-[68px] h-[68px] rounded-full object-cover opacity-45 bg-[#212121]"}
+        className={
+          "w-[68px] h-[68px] rounded-full object-cover opacity-45 bg-[#212121]"
+        }
       />
     ) : (
-      <div className={"w-[68px] h-[68px] rounded-full bg-[rgba(33,33,33,0.45)]"} />
+      <div
+        className={"w-[68px] h-[68px] rounded-full bg-[rgba(33,33,33,0.45)]"}
+      />
     )
   }
 
@@ -55,16 +63,21 @@ const CareProgramTabItem = ({
 const ProgramList = ({ brandCode }: ProgramListProps) => {
   const navigate = useNavigate()
   const { data: categoriesData } = useMembershipCategories(brandCode)
-  const [selectedProgram, setSelectedProgram] = useState<MembershipCategory | null>(null)
+  const [selectedProgram, setSelectedProgram] =
+    useState<MembershipCategory | null>(null)
 
   const { data: memberships, isLoading } = useMembershipList(
     brandCode,
-    selectedProgram?.sc_code
+    selectedProgram?.sc_code,
   )
 
   // 컴포넌트 마운트 시 첫 번째 카테고리 선택
   useEffect(() => {
-    if (categoriesData?.body && categoriesData.body.length > 0 && !selectedProgram) {
+    if (
+      categoriesData?.body &&
+      categoriesData.body.length > 0 &&
+      !selectedProgram
+    ) {
       setSelectedProgram(categoriesData.body[0])
     }
   }, [categoriesData?.body])
@@ -75,6 +88,33 @@ const ProgramList = ({ brandCode }: ProgramListProps) => {
 
   if (!categoriesData?.body || categoriesData.body.length === 0) {
     return null
+  }
+
+  const renderMembershipList = () => {
+    if (isLoading) {
+      return <LoadingIndicator />
+    }
+
+    const membershipList = memberships?.pages[0]?.body
+    if (!membershipList || membershipList.length === 0) {
+      return (
+        <div className="px-5 py-4 text-center text-gray-500">
+          회원권이 없습니다.
+        </div>
+      )
+    }
+
+    return (
+      <div className="px-5 space-y-3 pb-[24px]">
+        {membershipList.map((membership) => (
+          <MembershipCard
+            key={membership.s_idx}
+            membership={membership}
+            onClick={() => navigate(`/membership/${membership.s_idx}`)}
+          />
+        ))}
+      </div>
+    )
   }
 
   return (
@@ -89,24 +129,7 @@ const ProgramList = ({ brandCode }: ProgramListProps) => {
           />
         ))}
       </ul>
-
-      {isLoading ? (
-        <LoadingIndicator />
-      ) : memberships?.pages[0]?.body && memberships?.pages[0]?.body.length > 0 ? (
-        <div className="px-5 space-y-3 pb-[24px]">
-          {memberships?.pages[0]?.body.map((membership) => (
-            <MembershipCard
-              key={membership.s_idx}
-              membership={membership}
-              onClick={() => navigate(`/membership/${membership.s_idx}`)}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="px-5 py-4 text-center text-gray-500">
-          회원권이 없습니다.
-        </div>
-      )}
+      {renderMembershipList()}
     </div>
   )
 }

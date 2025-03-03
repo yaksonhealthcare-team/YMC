@@ -8,6 +8,7 @@ import { DEFAULT_COORDINATE } from "../../types/Coordinate.ts"
 import { useBranches } from "../../queries/useBranchQueries.tsx"
 import useIntersection from "../../hooks/useIntersection.tsx"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
+import { Image } from "@components/common/Image"
 
 interface MembershipBranchListProps {
   onSelect?: (branch: Branch) => void
@@ -16,19 +17,21 @@ interface MembershipBranchListProps {
 
 const DEFAULT_BRAND_CODE = "001" // 약손명가
 
-const MembershipBranchList = ({onSelect, query}: MembershipBranchListProps) => {
+const MembershipBranchList = ({
+  onSelect,
+  query,
+}: MembershipBranchListProps) => {
   const location = useLocation()
   const navigate = useNavigate()
-  const { location: geolocationLocation, error: _ } =
-    useGeolocation()
+  const { location: geolocationLocation, error: _ } = useGeolocation()
   const { setSelectedBranch, setIsBottomSheetOpen } =
     useMembershipOptionsStore()
 
   const coordinates = geolocationLocation
     ? {
-      latitude: geolocationLocation.latitude,
-      longitude: geolocationLocation.longitude,
-    }
+        latitude: geolocationLocation.latitude,
+        longitude: geolocationLocation.longitude,
+      }
     : DEFAULT_COORDINATE
 
   const {
@@ -58,17 +61,17 @@ const MembershipBranchList = ({onSelect, query}: MembershipBranchListProps) => {
     const branchData: Branch =
       "b_idx" in branch && "b_name" in branch
         ? {
-          b_idx: branch.b_idx,
-          name: branch.b_name,
-          address: branch.b_addr,
-          latitude: Number(branch.b_lat),
-          longitude: Number(branch.b_lon),
-          canBookToday: branch.reserve === "Y",
-          distanceInMeters: branch.distance,
-          isFavorite: branch.b_bookmark === "Y",
-          brandCode: branch.brand_code,
-          brand: "therapist",
-        }
+            b_idx: branch.b_idx,
+            name: branch.b_name,
+            address: branch.b_addr,
+            latitude: Number(branch.b_lat),
+            longitude: Number(branch.b_lon),
+            canBookToday: branch.reserve === "Y",
+            distanceInMeters: branch.distance,
+            isFavorite: branch.b_bookmark === "Y",
+            brandCode: branch.brand_code,
+            brand: "therapist",
+          }
         : branch
 
     if (onSelect) {
@@ -94,13 +97,13 @@ const MembershipBranchList = ({onSelect, query}: MembershipBranchListProps) => {
   }
 
   if (query?.length === 0) {
-    return <MembershipActiveBranchList onBranchSelect={handleBranchSelect} />;
+    return <MembershipActiveBranchList onBranchSelect={handleBranchSelect} />
   }
 
   if (branches.length === 0) {
     return (
       <div className="p-4 text-center text-gray-500">검색 결과가 없습니다.</div>
-    );
+    )
   }
 
   return (
@@ -111,7 +114,7 @@ const MembershipBranchList = ({onSelect, query}: MembershipBranchListProps) => {
             className="w-full px-5 py-4 gap-4 flex items-stretch"
             onClick={() => handleBranchSelect(branch)}
           >
-            <img
+            <Image
               className="border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"
               src={BranchPlaceholderImage}
               alt="지점 사진"
@@ -130,7 +133,9 @@ const MembershipBranchList = ({onSelect, query}: MembershipBranchListProps) => {
                   </>
                 )}
                 {branch.distance && (
-                  <p className="font-r text-12px text-gray-400">{branch.distance}</p>
+                  <p className="font-r text-12px text-gray-400">
+                    {branch.distance}
+                  </p>
                 )}
               </div>
               <p className="font-r text-14px text-start">{branch.b_addr}</p>
@@ -140,7 +145,7 @@ const MembershipBranchList = ({onSelect, query}: MembershipBranchListProps) => {
       ))}
       <div ref={observerTarget} className="h-1" />
     </ul>
-  );
+  )
 }
 
 export default MembershipBranchList

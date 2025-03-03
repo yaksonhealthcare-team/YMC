@@ -4,6 +4,7 @@ import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
 import { ReviewDetail } from "../../../types/Review.ts"
 import { formatDate } from "../../../utils/date.ts"
+import { Image } from "@components/common/Image"
 
 const RATING_TYPE_LABEL: Record<"H" | "M" | "L", string> = {
   H: "만족",
@@ -128,23 +129,23 @@ export const ReviewDetailContent = ({ review }: Props) => {
 
       <div className="px-5 flex flex-col gap-3">
         <h3 className="text-gray-700 text-sm font-semibold">업로드한 사진</h3>
-        {review.imageUrls && review.imageUrls.length > 0 ? (
-          <div className="flex gap-2 overflow-x-auto no-scrollbar touch-pan-x">
-            {review.imageUrls.map((image, index) => (
-              <div
-                key={index}
-                className="shrink-0 w-20 h-20 rounded-lg border border-gray-100 p-[5px]"
-              >
-                <img
-                  src={image}
-                  alt={`리뷰 이미지 ${index + 1}`}
-                  className="w-full h-full object-cover rounded-lg"
-                />
-              </div>
-            ))}
+        {review.images && review.images.length > 0 && (
+          <div className="flex flex-col gap-4">
+            <div className="flex gap-4 overflow-x-auto">
+              {review.images.map((image, index) => (
+                <div
+                  key={index}
+                  className="relative w-[200px] h-[200px] shrink-0 rounded-lg"
+                >
+                  <Image
+                    src={image}
+                    alt={`리뷰 이미지 ${index + 1}`}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        ) : (
-          <p className="text-gray-400 text-sm">등록된 사진이 없습니다.</p>
         )}
       </div>
     </div>

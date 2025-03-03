@@ -3,6 +3,7 @@ import { formatDate } from "../../../utils/date.ts"
 import { getGradeLabel } from "../../../utils/grade.ts"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
+import { Image } from "@components/common/Image"
 
 interface ReviewListItemProps {
   review: Review
@@ -66,7 +67,7 @@ export const ReviewListItem = ({ review }: ReviewListItemProps) => {
                     key={index}
                     className="shrink-0 w-20 h-20 rounded-lg border border-gray-100"
                   >
-                    <img
+                    <Image
                       src={image}
                       alt={`리뷰 이미지 ${index + 1}`}
                       className="w-full h-full object-cover rounded-lg"

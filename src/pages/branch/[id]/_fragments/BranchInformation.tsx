@@ -1,4 +1,4 @@
-import { BranchDetail } from "../../../../types/Branch.ts"
+import { BranchDetail } from "types/Branch"
 import ClockIcon from "@assets/icons/ClockIcon.svg?react"
 import PinIcon from "@assets/icons/PinIcon.svg?react"
 import PhoneIcon from "@assets/icons/PhoneIcon.svg?react"
@@ -6,8 +6,9 @@ import CopyIcon from "@assets/icons/CopyIcon.svg?react"
 import { ReactNode, useState } from "react"
 import { copyToClipboard } from "../../../../utils/copyUtils.ts"
 import { Tag } from "@components/Tag.tsx"
-import BranchImageCarousel from "./BranchImageCarousel.tsx"
+import BranchImageCarousel from "./BranchImageCarousel"
 import MapView from "@components/MapView.tsx"
+import { Image } from "@components/common/Image"
 
 const IconSection = ({
   icon,
@@ -88,10 +89,10 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
               className={"relative"}
               onClick={() => setOpenImageModal(true)}
             >
-              <img
+              <Image
                 className={"rounded-3xl w-full h-[100px] object-cover"}
                 src={branch.images[0]}
-                alt={"image"}
+                alt={"지점 이미지"}
               />
               <CopyIcon className={"absolute top-2 right-3 text-white"} />
             </button>

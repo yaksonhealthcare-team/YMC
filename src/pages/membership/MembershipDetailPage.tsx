@@ -25,6 +25,7 @@ import LoadingIndicator from "@components/LoadingIndicator"
 import { MembershipDetail } from "../../types/Membership"
 import { formatPrice, parsePrice } from "../../utils/format"
 import { toNumber } from "../../utils/number"
+import { Image } from "@components/common/Image"
 
 const MembershipInfo = ({ membership }: { membership: MembershipDetail }) => {
   const firstOption = membership.options?.[0]
@@ -199,7 +200,7 @@ const MembershipDetailPage = () => {
         {membership?.pictures?.length > 0 ? (
           membership.pictures.map((imageUrl, index) => (
             <SwiperSlide key={index}>
-              <img
+              <Image
                 src={imageUrl || MembershipPlaceholderImage}
                 alt={`${membership.s_name} 이미지 ${index + 1}`}
                 className="w-full h-full object-cover"
@@ -208,7 +209,7 @@ const MembershipDetailPage = () => {
           ))
         ) : (
           <SwiperSlide>
-            <img
+            <Image
               src={MembershipPlaceholderImage}
               alt={`${membership.s_name || "회원권"} 기본 이미지`}
               className="w-full h-full object-cover"

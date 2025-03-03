@@ -33,6 +33,7 @@ export class ReviewMapper {
     return {
       ...this.toReviewEntity(review),
       additionalServices,
+      images: review.imgList || [],
     }
   }
 }

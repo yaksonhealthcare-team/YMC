@@ -44,20 +44,18 @@ const BranchStaffInfo = memo(({ branch }: { branch: BranchDetailType }) => {
 
 const BranchHeaderContent = memo(({ branch }: { branch: BranchDetailType }) => {
   return (
-    <>
-      <div className={"flex flex-row items-center gap-1 mt-1.5"}>
+    <div className={"flex flex-row items-center gap-1 mt-1.5"}>
+      <IconLabel
+        icon={<StoreIcon className={"text-gray-500"} />}
+        label={branch.brand}
+      />
+      {branch.location.distance && (
         <IconLabel
-          icon={<StoreIcon className={"text-gray-500"} />}
-          label={branch.brand}
+          icon={<PinIcon className={"text-gray-500"} />}
+          label={branch.location.distance}
         />
-        {branch.location.distance && (
-          <IconLabel
-            icon={<PinIcon className={"text-gray-500"} />}
-            label={branch.location.distance}
-          />
-        )}
-      </div>
-    </>
+      )}
+    </div>
   )
 })
 
@@ -67,9 +65,9 @@ const BranchHeader = memo(({ branch, onShare, onBack }: BranchHeaderProps) => {
       header={
         <>
           <div className={"flex flex-row items-center gap-2"}>
-            <div onClick={onBack}>
+            <button onClick={onBack}>
               <CaretLeftIcon className="w-5 h-5" />
-            </div>
+            </button>
             <p className={"font-b text-20px"}>{branch.name}</p>
           </div>
           <BranchHeaderContent branch={branch} />

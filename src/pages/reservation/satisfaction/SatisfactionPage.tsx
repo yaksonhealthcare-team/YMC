@@ -12,6 +12,7 @@ import {
 } from "../../../queries/useReviewQueries"
 import { formatDate } from "../../../utils/date"
 import LoadingIndicator from "../../../components/LoadingIndicator"
+import { Image } from "@components/common/Image"
 
 import { validateFile, escapeHtml } from "utils/sanitize"
 
@@ -268,7 +269,7 @@ const SatisfactionPage = () => {
               </label>
               {form.images.map((image, index) => (
                 <div key={index} className="relative w-20 h-20">
-                  <img
+                  <Image
                     src={URL.createObjectURL(image)}
                     alt={`업로드 이미지 ${index + 1}`}
                     className="w-full h-full object-cover rounded-lg"

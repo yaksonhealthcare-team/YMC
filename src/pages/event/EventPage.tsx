@@ -7,6 +7,7 @@ import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import Header from "@components/Header"
 import clsx from "clsx"
 import { useLayout } from "../../contexts/LayoutContext"
+import { Image } from "@components/common/Image"
 
 const EventPage = () => {
   const navigate = useNavigate()
@@ -86,7 +87,7 @@ const EventPage = () => {
               >
                 <div className="flex gap-4">
                   {event.files.length > 0 && (
-                    <img
+                    <Image
                       src={event.files[0].fileurl}
                       alt={event.title}
                       className="w-[88px] h-[88px] rounded-lg border border-gray-100 object-cover flex-shrink-0"

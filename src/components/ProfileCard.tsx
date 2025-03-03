@@ -1,4 +1,5 @@
 import BranchPlaceholderImage from "@assets/images/BranchPlaceholderImage.png"
+import { Image } from "./common/Image"
 
 interface ProfileCardProps {
   type: "primary" | "default"
@@ -30,7 +31,7 @@ const ProfileImage = ({
   profileImageUrl,
   className = "",
 }: ProfileImageProps) => (
-  <img
+  <Image
     className={`rounded-full h-20 aspect-square object-cover ${className}`}
     src={profileImageUrl || BranchPlaceholderImage}
     alt={"프로필 사진"}
@@ -51,7 +52,9 @@ const ProfileCard = ({
       className={`${styles.background} p-5 rounded-2xl shadow-md flex justify-between items-center`}
     >
       <div>
-        <p className={`font-b text-18px ${styles.text}`}>{name} {grade}</p>
+        <p className={`font-b text-18px ${styles.text}`}>
+          {name} {grade}
+        </p>
         {description && (
           <p className={`${styles.description} text-14px ${styles.text}`}>
             {description}

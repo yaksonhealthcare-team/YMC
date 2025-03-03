@@ -3,6 +3,7 @@ import GearIcon from "@assets/icons/GearIcon.svg?react"
 import Profile from "@assets/icons/Profile.svg?react"
 import { useOverlay } from "../../../contexts/ModalContext"
 import { validateFile } from "utils/sanitize"
+import { Image } from "@components/common/Image"
 
 interface ProfileImageButtonProps {
   profileImageUrl?: string
@@ -60,10 +61,11 @@ const ProfileImageButton = ({
             htmlFor="profileImageUpload"
             className="block w-full h-full cursor-pointer"
           >
-            <img
+            <Image
               src={imageSrc}
               alt="프로필"
               className="w-full h-full rounded-full object-cover"
+              useDefaultProfile
             />
           </label>
           <button

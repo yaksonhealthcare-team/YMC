@@ -11,6 +11,7 @@ import { useProfileSetupHandlers } from "../../hooks/useProfileSetupHandlers"
 import { useProfileSetupValidation } from "../../hooks/useProfileSetupValidation"
 import { useProfileSetupSubmit } from "../../hooks/useProfileSetupSubmit"
 import { GenderSelect } from "@components/GenderSelect"
+import { Image } from "@components/common/Image"
 
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -88,10 +89,11 @@ export const ProfileSetup = () => {
             >
               {signupData.profileUrl ? (
                 <>
-                  <img
+                  <Image
                     src={signupData.profileUrl}
                     alt="프로필"
                     className="rounded-full w-full h-full object-cover"
+                    useDefaultProfile
                   />
                   <button
                     onClick={(e) => {

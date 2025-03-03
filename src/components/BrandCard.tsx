@@ -1,4 +1,5 @@
 import clsx from "clsx"
+import { Image } from "./common/Image"
 
 const BRAND_CONTAINER_STYLES = {
   default: "border-gray-100 bg-white",
@@ -27,7 +28,11 @@ export const BrandCard = ({
           : BRAND_CONTAINER_STYLES.default,
       )}
     >
-      <img src={brandSrc} alt={name || "Brand image"} />
+      <Image
+        src={brandSrc}
+        alt={name ?? "Brand image"}
+        className="w-full h-full object-contain"
+      />
     </div>
     <span
       className={clsx(

@@ -3,6 +3,7 @@ import { useEffect } from "react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useBrand } from "../../queries/useBrandQueries.tsx"
 import { Button } from "@components/Button.tsx"
+import { Image } from "@components/common/Image"
 
 export const BrandDetailPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -24,10 +25,10 @@ export const BrandDetailPage = () => {
   return (
     <div className="relative w-full">
       {brandDetail?.descriptionImageUrls?.map((url, index) => (
-        <img
+        <Image
           key={index}
           src={url}
-          alt=""
+          alt={`${brandName} 설명 이미지 ${index + 1}`}
           className="w-full h-full border-8"
         />
       ))}

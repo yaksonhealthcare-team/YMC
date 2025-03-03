@@ -7,6 +7,7 @@ import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { EventDetail } from "types/Event"
 import { sanitizeHtml } from "utils/sanitize"
+import { Image } from "@components/common/Image"
 
 const EventDetailPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -67,11 +68,11 @@ const EventContent = ({ event }: { event: EventDetail }) => {
   return (
     <div className="self-stretch flex flex-col gap-3">
       {event.files?.length > 0 && event.files[0].fileurl && (
-        <div className="mb-4">
-          <img
+        <div className="relative w-full h-[200px] md:h-[400px]">
+          <Image
             src={event.files[0].fileurl}
             alt={event.title}
-            className="w-full rounded-lg"
+            className="w-full h-full object-cover rounded-lg"
           />
         </div>
       )}

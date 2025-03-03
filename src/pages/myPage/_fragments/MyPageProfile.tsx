@@ -1,5 +1,6 @@
 import Profile from "@assets/icons/Profile.svg?react"
 import { useAuth } from "../../../contexts/AuthContext"
+import { Image } from "@components/common/Image"
 
 const MyPageProfile = () => {
   const { user } = useAuth()
@@ -8,10 +9,11 @@ const MyPageProfile = () => {
     <div className="flex items-center gap-3 py-4">
       <div className="w-12 h-12 rounded-full border border-gray-100 overflow-hidden bg-gray-50 flex items-center justify-center">
         {user?.profileURL ? (
-          <img
+          <Image
             src={user.profileURL}
             alt="프로필"
             className="w-full h-full object-cover"
+            useDefaultProfile
           />
         ) : (
           <Profile className="w-8 h-8 text-gray-300" />

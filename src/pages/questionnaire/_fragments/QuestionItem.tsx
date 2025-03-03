@@ -12,6 +12,7 @@ import clsx from "clsx"
 import FilledCheckIcon from "@components/icons/FilledCheckIcon"
 import { TextArea } from "@components/TextArea"
 import CustomTextField from "@components/CustomTextField"
+import { Image } from "@components/common/Image"
 
 interface QuestionItemProps {
   question: Question
@@ -176,7 +177,7 @@ export const QuestionItem = ({
             htmlFor={`option-${option.csso_idx}`}
           >
             <div className="flex items-center justify-center w-8 h-8">
-              <img
+              <Image
                 className="max-w-[100%] max-h-[100%] object-contain"
                 src={option.option_image_url || "https://placehold.co/600x400"}
                 alt={option.option_text}

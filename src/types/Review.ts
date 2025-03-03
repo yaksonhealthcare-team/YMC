@@ -45,6 +45,8 @@ export interface Review {
 
 export interface ReviewDetail extends Review {
   additionalServices: string[]
+  imageUrls: string[]
+  images: string[]
 }
 
 export interface ReviewSection {
