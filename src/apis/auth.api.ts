@@ -141,21 +141,58 @@ export interface SignInWithSocialRequest {
   deviceType?: "android" | "ios" | "web"
 }
 
-export async function signinWithSocial(params: SignInWithSocialRequest) {
-  const { data } = await axiosClient.post<SignInResponse>(
-    "/auth/signin/social",
-    {
-      SocialAccessToken: params.socialAccessToken,
-      thirdPartyType: params.provider,
-      socialId: params.socialId,
-      deviceToken: params.deviceToken,
-      deviceType: params.deviceType,
-    },
-  )
+export interface SignInWithSocialResponse {
+  refreshToken: string
+  accessToken: string
+}
 
-  return {
-    refreshToken: data.body[0]?.refreshToken || "",
-    accessToken: data.body[0]?.accessToken || "",
+export class UserNotFoundError extends Error {
+  constructor() {
+    super("User not found")
+    this.name = "UserNotFoundError"
+  }
+}
+
+export async function signinWithSocial(
+  params: SignInWithSocialRequest,
+): Promise<SignInWithSocialResponse> {
+  try {
+    const response = await axiosClient.post<SignInResponse>(
+      "/auth/signin/social",
+      {
+        SocialAccessToken: params.socialAccessToken,
+        thirdPartyType: params.provider,
+        socialId: params.socialId,
+        deviceToken: params.deviceToken,
+        deviceType: params.deviceType,
+      },
+      {
+        maxRedirects: 0,
+        validateStatus: (status) => {
+          return (status >= 200 && status < 300) || status === 302
+        },
+        withCredentials: true,
+      },
+    )
+
+    // 302 상태 코드를 받았을 경우 UserNotFoundError 발생
+    if (response.status === 302 || !response.data.body?.[0]?.accessToken) {
+      throw new UserNotFoundError()
+    }
+
+    return {
+      refreshToken: response.data.body[0].refreshToken,
+      accessToken: response.data.body[0].accessToken,
+    }
+  } catch (error: any) {
+    if (
+      error.response?.status === 404 ||
+      error.response?.status === 302 ||
+      error.code === "ERR_NETWORK"
+    ) {
+      throw new UserNotFoundError()
+    }
+    throw error
   }
 }
 

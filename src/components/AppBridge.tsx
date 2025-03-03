@@ -1,4 +1,4 @@
-import { fetchUser, signinWithSocial } from "@apis/auth.api"
+import { fetchUser, signinWithSocial, UserNotFoundError } from "@apis/auth.api"
 import { useAuth } from "contexts/AuthContext"
 import React, { useEffect } from "react"
 
@@ -55,6 +55,22 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
       window.location.href = "/"
       return
     } catch (error) {
+      if (error instanceof UserNotFoundError) {
+        sessionStorage.setItem(
+          "socialSignupInfo",
+          JSON.stringify({
+            socialAccessToken: data.accessToken,
+            socialId: data.socialId,
+            provider: data.provider,
+            deviceToken: data.deviceToken,
+            deviceType: data.deviceType,
+            email: data.email,
+          }),
+        )
+        window.location.href = "/signup/terms"
+
+        return
+      }
       window.ReactNativeWebView?.postMessage(
         JSON.stringify({
           type: "CONSOLE_LOG",
