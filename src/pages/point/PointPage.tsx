@@ -3,6 +3,8 @@ import { useEffect } from "react"
 import { usePointHistories } from "../../queries/usePointQueries.tsx"
 import { Tag } from "@components/Tag.tsx"
 import useIntersection from "../../hooks/useIntersection.tsx"
+import LoadingIndicator from "@components/LoadingIndicator"
+import { EmptyCard } from "@components/EmptyCard"
 
 const PointPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -12,6 +14,7 @@ const PointPage = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isLoading,
   } = usePointHistories()
 
   useEffect(() => {
@@ -27,19 +30,29 @@ const PointPage = () => {
   const { observerTarget } = useIntersection({
     onIntersect: () => {
       if (hasNextPage && !isFetchingNextPage) {
-        fetchNextPage()
+        void fetchNextPage()
       }
     },
   })
 
-  if (!histories) return <></>
+  if (isLoading) {
+    return <LoadingIndicator className="min-h-screen" />
+  }
+
+  if (!histories || histories.pages[0].data.length === 0) {
+    return (
+      <div className="h-screen bg-white p-5">
+        <EmptyCard title="포인트 내역이 없습니다." />
+      </div>
+    )
+  }
 
   return (
     <div className={"flex flex-col p-5"}>
       <ul className={"divide-y"}>
         {histories.pages.map((page) =>
-          page.data.map((history, index) => (
-            <li key={index} className={"py-6"}>
+          page.data.map((history) => (
+            <li key={`${history.date}-${history.title}`} className={"py-6"}>
               <div className={"flex gap-4"}>
                 <div className={"flex-shrink"}>
                   <Tag
@@ -71,7 +84,9 @@ const PointPage = () => {
       </ul>
       <div ref={observerTarget} className={"h-4"} />
       {isFetchingNextPage && (
-        <p className={"text-center text-gray-500 py-4"}>로딩 중...</p>
+        <div className="py-4">
+          <LoadingIndicator />
+        </div>
       )}
     </div>
   )

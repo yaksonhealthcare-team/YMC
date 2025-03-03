@@ -5,7 +5,7 @@ const MyPageProfile = () => {
   const { user } = useAuth()
 
   return (
-    <div className="flex items-center gap-3 px-5 py-4">
+    <div className="flex items-center gap-3 py-4">
       <div className="w-12 h-12 rounded-full border border-gray-100 overflow-hidden bg-gray-50 flex items-center justify-center">
         {user?.profileURL ? (
           <img
@@ -18,7 +18,7 @@ const MyPageProfile = () => {
         )}
       </div>
       <span className="font-b text-[20px] text-gray-900">
-        {user?.username ?? ""}님
+        {user?.username ? `${user.username}님` : "회원님"}
       </span>
     </div>
   )

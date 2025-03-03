@@ -154,6 +154,7 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/dev",
     element: <Dev />,
+    auth: false,
   },
   //홈
   {
@@ -176,69 +177,85 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/login",
     element: <Login />,
+    auth: false,
   },
   {
     path: "/login/email",
     element: <EmailLogin />,
+    auth: false,
   },
   {
     path: "/logout",
     element: <Logout />,
+    auth: false,
   },
   // 회원가입
   {
     path: "/signup/terms",
     element: <TermsAgreement />,
+    auth: false,
   },
   {
     path: "/signup/email",
     element: <EmailPassword />,
+    auth: false,
   },
   {
     path: "/signup/profile",
     element: <ProfileSetup />,
+    auth: false,
   },
   {
     path: "/signup/callback",
     element: <SignupCallback />,
+    auth: false,
   },
   {
     path: "/signup/complete",
     element: <SignupComplete />,
+    auth: false,
   },
   {
     path: "/signup/branch",
     element: <AddUsingBranch />,
+    auth: false,
   },
   // 비밀번호 찾기, 이메일 찾기
   {
     path: "/find-account",
     element: <FindAccount />,
+    auth: false,
   },
   {
     path: "/find-account/callback/:tab",
     element: <FindAccountCallback />,
+    auth: false,
   },
   {
     path: "/find-account/find-email",
     element: <FindEmail />,
+    auth: false,
   },
   {
     path: "/find-account/reset-password",
     element: <FindAccountResetPassword />,
+    auth: false,
   },
   {
     path: "/find-account/reset-password/complete",
     element: <ResetPasswordComplete />,
+    auth: false,
   },
   // 문진작성
   {
     path: "/questionnaire/common",
     element: <Questionnaire type="common" />,
+    auth: true,
   },
   {
     path: "/questionnaire/reservation",
     element: <Questionnaire type="reservation" />,
+    auth: true,
   },
   {
     path: "/questionnaire/complete",
@@ -269,6 +286,7 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/store",
     element: <StorePage />,
+    auth: false,
   },
   {
     path: "/member-history/reservation",
@@ -355,10 +373,12 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/payment",
     element: <PaymentPage />,
+    auth: true,
   },
   {
     path: "/payment/complete",
     element: <PaymentCompletePage />,
+    auth: true,
   },
   {
     path: "/payment/:id/cancel",
@@ -405,18 +425,22 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/event",
     element: <EventPage />,
+    auth: false,
   },
   {
     path: "/event/:id",
     element: <EventDetailPage />,
+    auth: false,
   },
   {
     path: "/notice",
     element: <NoticePage />,
+    auth: false,
   },
   {
     path: "/notice/:id",
     element: <NoticeDetailPage />,
+    auth: false,
   },
   //설정
   {
@@ -428,73 +452,90 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/terms",
     element: <TermsPage />,
+    auth: false,
   },
   {
     path: "/terms/service",
     element: <ServiceTermsPage />,
+    auth: false,
   },
   {
     path: "/terms/privacy",
     element: <PrivacyTermsPage />,
+    auth: false,
   },
   {
     path: "/terms/location",
     element: <LocationTermsPage />,
+    auth: false,
   },
   {
     path: "/terms/marketing",
     element: <MarketingTermsPage />,
+    auth: false,
   },
   //프로필
   {
     path: "/profile",
     element: <EditProfile />,
+    auth: true,
   },
   {
     path: "/profile/reset-password",
     element: <ProfileResetPassword />,
+    auth: true,
   },
   {
     path: "/profile/reset-password/complete",
     element: <ResetPasswordComplete />,
+    auth: true,
   },
   {
     path: "/profile/change-phone",
     element: <ProfileChangePhoneNumber />,
+    auth: true,
   },
   {
     path: "/profile/change-phone/callback",
     element: <ChangePhoneNumberCallback />,
+    auth: true,
   },
   {
     path: "/profile/withdrawal",
     element: <WithdrawalPage />,
+    auth: true,
   },
   //지점 찾기, 지점 상세보기
   {
     path: "/branch/:id",
     element: <BranchDetail />,
+    auth: false,
   },
   {
     path: "/branch",
     element: <Branch />,
+    auth: false,
   },
   {
     path: "/branch/location",
     element: <LocationSettings />,
+    auth: true,
   },
   {
     path: "/branch/location/picker",
     element: <LocationPickerMap />,
+    auth: true,
   },
   {
     path: "/branch/search",
     element: <BranchSearch />,
+    auth: false,
   },
   // OAuth 콜백
   {
     path: "/oauth/callback/:provider",
     element: <OAuthCallback />,
+    auth: false,
   },
   {
     path: "/payment/callback",

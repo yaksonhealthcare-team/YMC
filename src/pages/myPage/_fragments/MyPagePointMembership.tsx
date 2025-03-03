@@ -114,16 +114,18 @@ const MyPagePointMembership = () => {
 
   return (
     <div className="flex gap-2">
-      <div
-        className="w-[101px] h-24 bg-white rounded-2xl border border-gray-100 flex flex-col items-center justify-center gap-2"
+      <button
+        type="button"
+        className="w-[101px] h-24 bg-white rounded-2xl border border-gray-100 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-gray-50 transition-colors"
         onClick={handleOpenQuestionnaire}
       >
         <PersonalCardIcon className="w-6 h-6" />
         <span className="font-m text-14px text-gray-500">내 문진</span>
-      </div>
-      <div className="flex-1 h-24 px-5 py-3 bg-white rounded-2xl border border-gray-100 flex flex-col justify-center gap-3">
-        <div
-          className="flex justify-between items-center"
+      </button>
+      <div className="flex-1 h-24 px-5 py-3 bg-white rounded-2xl border border-gray-100 flex flex-col justify-center gap-2">
+        <button
+          type="button"
+          className="flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors rounded-lg p-1 w-full"
           onClick={() => navigate("/point")}
         >
           <div className="flex items-center gap-2">
@@ -136,10 +138,11 @@ const MyPagePointMembership = () => {
             </span>
             <CaretRightIcon className="w-3 h-3" />
           </div>
-        </div>
+        </button>
         <Divider className="border-gray-100" />
-        <div
-          className="flex justify-between items-center"
+        <button
+          type="button"
+          className="flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors rounded-lg p-1 w-full"
           onClick={handleOpenUserLevel}
         >
           <div className="flex items-center gap-2">
@@ -148,11 +151,11 @@ const MyPagePointMembership = () => {
           </div>
           <div className="flex items-center gap-1.5">
             <span className="font-sb text-16px text-gray-900">
-              {user?.level ?? ""}
+              {user?.level ?? "일반"}
             </span>
             <InformationIcon className="w-4 h-4 text-gray-400" />
           </div>
-        </div>
+        </button>
       </div>
     </div>
   )

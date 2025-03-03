@@ -82,36 +82,37 @@ const MyPageMenu = () => {
   const navigate = useNavigate()
   const customWindow = window as CustomWindow
 
+  const handleClick = (item: (typeof menuItems)[0]) => {
+    if (item.external) {
+      if (customWindow.ReactNativeWebView) {
+        customWindow.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            type: "OPEN_EXTERNAL_LINK",
+            payload: { url: item.path },
+          }),
+        )
+      } else if (customWindow.webkit?.messageHandlers.openExternalLink) {
+        customWindow.webkit.messageHandlers.openExternalLink.postMessage(
+          item.path,
+        )
+      } else if (customWindow.Android?.openExternalLink) {
+        customWindow.Android.openExternalLink(item.path)
+      } else {
+        window.open(item.path, "_blank")
+      }
+    } else {
+      navigate(item.path)
+    }
+  }
+
   return (
     <div className="bg-white rounded-[20px] border border-gray-100 p-5 space-y-4">
       {menuItems.map((item) => (
-        <div
+        <button
+          type="button"
           key={item.id}
-          onClick={() => {
-            if (item.external) {
-              if (customWindow.ReactNativeWebView) {
-                customWindow.ReactNativeWebView.postMessage(
-                  JSON.stringify({
-                    type: "OPEN_EXTERNAL_LINK",
-                    payload: { url: item.path },
-                  }),
-                )
-              } else if (
-                customWindow.webkit?.messageHandlers.openExternalLink
-              ) {
-                customWindow.webkit.messageHandlers.openExternalLink.postMessage(
-                  item.path,
-                )
-              } else if (customWindow.Android?.openExternalLink) {
-                customWindow.Android.openExternalLink(item.path)
-              } else {
-                window.open(item.path, "_blank")
-              }
-            } else {
-              navigate(item.path)
-            }
-          }}
-          className="flex items-center justify-between h-12"
+          onClick={() => handleClick(item)}
+          className="flex items-center justify-between h-12 w-full hover:bg-gray-50 transition-colors rounded-lg p-1"
         >
           <div className="flex items-center gap-3">
             <item.icon className="w-4 h-4 text-gray-900" />
@@ -122,7 +123,7 @@ const MyPageMenu = () => {
             </span>
           </div>
           <CaretRightIcon className="w-3 h-3 text-gray-900" />
-        </div>
+        </button>
       ))}
     </div>
   )

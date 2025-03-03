@@ -5,6 +5,8 @@ import { useOverlay } from "../../../contexts/ModalContext"
 import { Button } from "@components/Button"
 import BranchCard from "@components/BranchCard"
 import { useAuth } from "../../../contexts/AuthContext"
+import LoadingIndicator from "@components/LoadingIndicator"
+import { EmptyCard } from "@components/EmptyCard"
 
 interface InformationBottomSheetProps {
   onClose: () => void
@@ -30,7 +32,7 @@ const InformationBottomSheet = ({ onClose }: InformationBottomSheetProps) => (
 const ActiveBranch = () => {
   const { setHeader, setNavigation } = useLayout()
   const { openBottomSheet, closeOverlay } = useOverlay()
-  const { user } = useAuth()
+  const { user, isLoading } = useAuth()
 
   const handleClickInformation = () => {
     openBottomSheet(<InformationBottomSheet onClose={closeOverlay} />)
@@ -47,7 +49,17 @@ const ActiveBranch = () => {
     setNavigation({ display: false })
   }, [])
 
-  if (!user) return null
+  if (isLoading) {
+    return <LoadingIndicator className="min-h-screen" />
+  }
+
+  if (!user?.brands?.length) {
+    return (
+      <div className="h-screen bg-white p-5">
+        <EmptyCard title="이용 중인 지점이 없습니다." />
+      </div>
+    )
+  }
 
   return (
     <div className="w-full h-full p-5">
@@ -55,7 +67,7 @@ const ActiveBranch = () => {
         {user.brands.map((branch) => (
           <li
             key={branch.b_idx}
-            className="p-5 rounded-2xl border border-gray-100"
+            className="p-5 rounded-2xl border border-gray-100 hover:bg-gray-50 transition-colors"
           >
             <BranchCard name={branch.brandName} address={branch.address} />
           </li>

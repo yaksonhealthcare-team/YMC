@@ -6,6 +6,7 @@ import { useIntersection } from "../../hooks/useIntersection.tsx"
 import { useNavigate, useLocation } from "react-router-dom"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { Button } from "@components/Button"
+import { EmptyCard } from "@components/EmptyCard"
 
 const ReviewPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -22,7 +23,11 @@ const ReviewPage = () => {
   } = useReviews()
 
   const { observerTarget } = useIntersection({
-    onIntersect: fetchNextPage,
+    onIntersect: () => {
+      if (hasNextPage && !isFetchingNextPage) {
+        void fetchNextPage()
+      }
+    },
     enabled: hasNextPage && !isFetchingNextPage,
   })
 
@@ -57,7 +62,7 @@ const ReviewPage = () => {
 
   if (isError) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen gap-4">
+      <div className="flex flex-col items-center justify-center min-h-screen gap-4 bg-white">
         <span className="text-gray-500 text-sm font-medium">
           데이터를 불러오는데 실패했습니다.
         </span>
@@ -68,27 +73,26 @@ const ReviewPage = () => {
     )
   }
 
-  if (!data) {
-    return null
-  }
-
-  if (data.pages[0].length === 0) {
+  if (!data || data.pages[0].length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <span className="text-gray-500 text-sm font-medium">
-          작성한 만족도가 없습니다.
-        </span>
+      <div className="h-screen bg-white p-5">
+        <EmptyCard title="작성한 만족도가 없습니다." />
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-white">
       {data.pages.map((page) =>
         page.map((review) => (
-          <div key={review.id} onClick={() => navigate(`/review/${review.id}`)}>
+          <button
+            type="button"
+            key={review.id}
+            onClick={() => navigate(`/review/${review.id}`)}
+            className="w-full text-left hover:bg-gray-50 transition-colors"
+          >
             <ReviewListItem review={review} />
-          </div>
+          </button>
         )),
       )}
       {isFetchingNextPage && (
