@@ -100,7 +100,7 @@ const MembershipUsageHistory = () => {
   if (!memberShipDetail) {
     return (
       <div className="flex justify-center items-center h-[calc(100vh-82px)] text-gray-500">
-        <p>회원권 정보를 찾을 수 없습니다.</p>
+        <p>내역이 없습니다.</p>
       </div>
     )
   }
