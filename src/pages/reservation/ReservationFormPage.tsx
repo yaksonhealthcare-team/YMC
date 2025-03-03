@@ -409,11 +409,27 @@ const ReservationFormPage = () => {
           onChange={(e) => handleOnChangeItem(e.target.value)}
         >
           <div>
-            <RadioCard checked={data.item === "상담 예약"} value="상담 예약">
+            <RadioCard 
+              checked={data.item === "상담 예약"} 
+              value="상담 예약"
+              disabled={consultationCount && (consultationCount.maxCount - consultationCount.currentCount) <= 0}
+            >
               <div className="justify-start items-center gap-2 flex">
-                <div className="text-gray-700 text-16px font-sb">상담 예약</div>
-                <div className="px-2 py-0.5 bg-tag-greenBg rounded-[999px] justify-center items-center flex">
-                  <div className="text-center text-tag-green text-12px font-m">
+                <div className={`text-16px font-sb ${
+                  consultationCount && (consultationCount.maxCount - consultationCount.currentCount) <= 0 
+                    ? "text-gray-400" 
+                    : "text-gray-700"
+                }`}>상담 예약</div>
+                <div className={`px-2 py-0.5 rounded-[999px] justify-center items-center flex ${
+                  consultationCount && (consultationCount.maxCount - consultationCount.currentCount) <= 0
+                    ? "bg-[#FFF8F7]"
+                    : "bg-tag-greenBg"
+                }`}>
+                  <div className={`text-center text-12px font-m ${
+                    consultationCount && (consultationCount.maxCount - consultationCount.currentCount) <= 0
+                      ? "text-error"
+                      : "text-tag-green"
+                  }`}>
                     {!consultationCount?.currentCount
                       ? "FREE"
                       : `${(consultationCount?.maxCount ?? 0) - (consultationCount?.currentCount ?? 0)}/${consultationCount?.maxCount ?? 0}`}
