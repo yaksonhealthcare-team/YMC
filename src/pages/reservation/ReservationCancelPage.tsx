@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useOverlay } from "../../contexts/ModalContext"
@@ -8,6 +8,7 @@ import FixedButtonContainer from "@components/FixedButtonContainer"
 import ReservationCancelBottomSheetContent from "./_fragments/ReservationCancelBottomSheetContent"
 import { Divider } from "@mui/material"
 import { useCancelReservation } from "queries/useReservationQueries"
+import { escapeHtml } from "utils/sanitize"
 
 interface ReservationDetail {
   branchName: string
@@ -26,7 +27,7 @@ const ReservationCancelPage = () => {
   const { showToast, openBottomSheet } = useOverlay()
   const [cancelReason, setCancelReason] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [reservation, setReservation] = useState<ReservationDetail>()
+  const [reservation, setReservation] = useState<ReservationDetail | null>(null)
   const { mutate: cancelReservation } = useCancelReservation()
 
   useEffect(() => {
@@ -43,10 +44,13 @@ const ReservationCancelPage = () => {
     try {
       setIsLoading(true)
       if (id) {
+        // 취소 사유 이스케이프 처리
+        const sanitizedReason = escapeHtml(cancelReason)
+
         cancelReservation(
           {
             reservationId: id,
-            cancelMemo: cancelReason,
+            cancelMemo: sanitizedReason,
           },
           {
             onSuccess: () => {

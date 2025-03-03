@@ -10,6 +10,7 @@ import FixedButtonContainer from "@components/FixedButtonContainer"
 import XCircleIcon from "@components/icons/XCircleIcon"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useReviewSections } from "../../queries/useReviewQueries"
+import { validateFile, escapeHtml } from "utils/sanitize"
 
 interface ReviewSection {
   rs_idx: string
@@ -80,12 +81,9 @@ const ReviewFormPage = () => {
       const maxSize = 5 * 1024 * 1024 // 5MB
 
       const validFiles = Array.from(files).filter((file) => {
-        if (!allowedTypes.includes(file.type)) {
-          alert("JPG, JPEG, PNG 파일만 업로드 가능합니다.")
-          return false
-        }
-        if (file.size > maxSize) {
-          alert("5MB 이하의 파일만 업로드 가능합니다.")
+        const validation = validateFile(file, allowedTypes, maxSize)
+        if (!validation.valid) {
+          alert(validation.message)
           return false
         }
         return true
@@ -144,7 +142,7 @@ const ReviewFormPage = () => {
       const reviewData = ratings
       formData.append("review", JSON.stringify(reviewData))
 
-      formData.append("review_memo", review)
+      formData.append("review_memo", escapeHtml(review))
 
       images.forEach((image) => {
         formData.append("upload", image.file)

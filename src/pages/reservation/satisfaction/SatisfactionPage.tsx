@@ -13,6 +13,8 @@ import {
 import { formatDate } from "../../../utils/date"
 import LoadingIndicator from "../../../components/LoadingIndicator"
 
+import { validateFile, escapeHtml } from "utils/sanitize"
+
 type SatisfactionPageParams = {
   id: string
 }
@@ -90,13 +92,28 @@ const SatisfactionPage = () => {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
-    if (files.length + form.images.length > 8) {
+
+    // 파일 유효성 검증
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"]
+    const maxSize = 5 * 1024 * 1024 // 5MB
+
+    const validFiles = files.filter((file) => {
+      const validation = validateFile(file, allowedTypes, maxSize)
+      if (!validation.valid) {
+        alert(validation.message)
+        return false
+      }
+      return true
+    })
+
+    if (validFiles.length + form.images.length > 8) {
       alert("최대 8장까지 업로드 가능합니다.")
       return
     }
+
     setForm((prev) => ({
       ...prev,
-      images: [...prev.images, ...files],
+      images: [...prev.images, ...validFiles],
     }))
   }
 
@@ -118,17 +135,29 @@ const SatisfactionPage = () => {
   const handleSubmit = () => {
     if (!id || !isFormValid() || !reviewQuestions) return
 
-    const review = reviewQuestions.map((question) => ({
+    const reviewData = reviewQuestions.map((question) => ({
       rs_idx: question.rs_idx,
       rs_grade: form[question.rs_idx] as Grade,
     }))
 
-    createReviewMutation.mutate({
-      r_idx: id,
-      review,
-      review_memo: form.content || undefined,
-      images: form.images.length > 0 ? form.images : undefined,
-    })
+    // 리뷰 내용 이스케이프 처리
+    const reviewMemo = form.content
+      ? escapeHtml(form.content as string)
+      : undefined
+
+    createReviewMutation.mutate(
+      {
+        r_idx: id,
+        review: reviewData,
+        review_memo: reviewMemo,
+        images: form.images.length > 0 ? form.images : undefined,
+      },
+      {
+        onSuccess: () => {
+          navigate("/member-history/reservation")
+        },
+      },
+    )
   }
 
   if (!reservationInfo) {
@@ -268,7 +297,7 @@ const SatisfactionPage = () => {
           sizeType="l"
           disabled={!isFormValid()}
           onClick={handleSubmit}
-           className="w-full"
+          className="w-full"
         >
           작성 완료
         </Button>

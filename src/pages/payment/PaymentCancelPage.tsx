@@ -11,6 +11,7 @@ import CheckIcon from "@components/icons/CheckIcon.tsx"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
 import { AxiosError } from "axios"
 import LoadingIndicator from "@components/LoadingIndicator"
+import { escapeHtml } from "utils/sanitize"
 
 const PaymentCancelItemCard = ({
   item,
@@ -76,6 +77,43 @@ const PaymentCancelPage = () => {
 
   if (!payment || isLoading)
     return <LoadingIndicator className="min-h-screen" />
+
+  const handleSubmit = async () => {
+    if (step === "form" && reason.length < MIN_REASON_LENGTH) {
+      return
+    }
+
+    if (step === "form") {
+      // 취소 사유 이스케이프 처리
+      const sanitizedReason = escapeHtml(reason)
+
+      try {
+        await cancelPayment({
+          orderId: payment.id,
+          paymentIds: selectedItems,
+          reason: sanitizedReason,
+        })
+        navigate("/payment/cancel/complete")
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          const errorMessage = error.response?.data?.message
+          if (errorMessage?.includes("already used")) {
+            showToast("이미 사용 중이거나 사용 완료된 회원권입니다")
+          } else if (errorMessage?.includes("expired")) {
+            showToast("만료된 회원권입니다")
+          } else if (errorMessage?.includes("not found")) {
+            showToast("존재하지 않는 결제 내역입니다")
+          } else {
+            showToast(errorMessage || "결제 취소 요청에 실패했습니다")
+          }
+        } else {
+          showToast("결제 취소 요청에 실패했습니다")
+        }
+      }
+    } else {
+      navigate("/member-history/payment")
+    }
+  }
 
   switch (step) {
     case "select":
@@ -161,31 +199,7 @@ const PaymentCancelPage = () => {
           <div className={"border-t border-gray-100 px-5 pt-3 pb-8"}>
             <Button
               className={"w-full"}
-              onClick={async () => {
-                try {
-                  await cancelPayment({
-                    orderId: payment.id,
-                    paymentIds: selectedItems,
-                    reason: reason,
-                  })
-                  navigate("/payment/cancel/complete")
-                } catch (error) {
-                  if (error instanceof AxiosError) {
-                    const errorMessage = error.response?.data?.message
-                    if (errorMessage?.includes("already used")) {
-                      showToast("이미 사용 중이거나 사용 완료된 회원권입니다")
-                    } else if (errorMessage?.includes("expired")) {
-                      showToast("만료된 회원권입니다")
-                    } else if (errorMessage?.includes("not found")) {
-                      showToast("존재하지 않는 결제 내역입니다")
-                    } else {
-                      showToast(errorMessage || "결제 취소 요청에 실패했습니다")
-                    }
-                  } else {
-                    showToast("결제 취소 요청에 실패했습니다")
-                  }
-                }
-              }}
+              onClick={handleSubmit}
               disabled={
                 reason.length < MIN_REASON_LENGTH ||
                 reason.length > MAX_REASON_LENGTH

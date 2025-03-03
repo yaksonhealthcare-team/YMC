@@ -2,6 +2,7 @@ import { ChangeEvent, useRef, useState } from "react"
 import GearIcon from "@assets/icons/GearIcon.svg?react"
 import Profile from "@assets/icons/Profile.svg?react"
 import { useOverlay } from "../../../contexts/ModalContext"
+import { validateFile } from "utils/sanitize"
 
 interface ProfileImageButtonProps {
   profileImageUrl?: string
@@ -23,10 +24,11 @@ const ProfileImageButton = ({
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      if (file.size > MAX_FILE_SIZE) {
-        showToast(
-          "이미지 크기가 너무 큽니다. 5MB 이하의 이미지를 선택해주세요.",
-        )
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png"]
+      const validation = validateFile(file, allowedTypes, MAX_FILE_SIZE)
+
+      if (!validation.valid) {
+        showToast(validation.message || "이미지 업로드에 실패했습니다.")
         if (fileInputRef.current) {
           fileInputRef.current.value = ""
         }

@@ -6,6 +6,7 @@ import { useEffect } from "react"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { EventDetail } from "types/Event"
+import { sanitizeHtml } from "utils/sanitize"
 
 const EventDetailPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -76,7 +77,7 @@ const EventContent = ({ event }: { event: EventDetail }) => {
       )}
       <div
         className="text-16px font-normal text-gray-900 leading-[26.88px]"
-        dangerouslySetInnerHTML={{ __html: event.contents }}
+        dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.contents) }}
       />
     </div>
   )
