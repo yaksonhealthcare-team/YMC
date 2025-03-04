@@ -31,6 +31,14 @@ export const usePayment = () => {
 
     const paymentMethod = selectedPaymentMethod?.toUpperCase() || "CARD"
 
+    // P_RESERVED 값 설정
+    let pReserved = "centerCd=Y"  // IDC 센터코드 수신 옵션
+    
+    // 계좌이체 시 뱅크페이 앱 스키마
+    if (paymentMethod === "BANK") {
+      pReserved += "&appScheme=kftc-bankpay://"
+    }
+
     const params: BasePaymentParams = {
       P_INI_PAYMENT: paymentMethod,
       P_MID: orderData.pg_info.P_MID,
@@ -44,7 +52,7 @@ export const usePayment = () => {
       P_CHARSET: "utf8",
       P_HPP_METHOD: orderData.pg_info.P_HPP_METHOD,
       P_TIMESTAMP: orderData.pg_info.P_TIMESTAMP,
-      P_RESERVED: orderData.pg_info.P_RESERVED,
+      P_RESERVED: pReserved,
       P_MOBILE: "Y",
       P_APP_BASE: "Y",
     }
