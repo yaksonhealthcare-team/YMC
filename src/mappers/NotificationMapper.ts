@@ -25,7 +25,7 @@ export const NotificationMapper = {
     response: NotificationSettingsResponse,
   ): NotificationSettings => ({
     reservations: response.reservation_yn === "Y",
-    payments: response.payment_yn === "Y",
+    membership: response.membership_yn === "Y",
     points: response.point_yn === "Y",
     notices: response.notification_yn === "Y",
   }),
@@ -34,7 +34,7 @@ export const NotificationMapper = {
     settings: Partial<NotificationSettings>,
   ): Partial<NotificationSettingsResponse> => ({
     reservation_yn: settings.reservations ? "Y" : "N",
-    payment_yn: settings.payments ? "Y" : "N",
+    membership_yn: settings.membership ? "Y" : "N",
     point_yn: settings.points ? "Y" : "N",
     notification_yn: settings.notices ? "Y" : "N",
   }),

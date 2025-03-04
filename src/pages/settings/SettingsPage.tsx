@@ -54,11 +54,11 @@ const SettingsPage = () => {
       </div>
 
       <div className={"flex justify-between py-6"}>
-        <p>{"결제 알림"}</p>
+        <p>{"회원권 알림"}</p>
         <Switch.IOS
-          checked={settings?.payments ?? false}
+          checked={settings?.membership ?? false}
           onChange={(event) => {
-            handleToggle("payments", event.target.checked)
+            handleToggle("membership", event.target.checked)
           }}
         />
       </div>
