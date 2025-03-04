@@ -64,16 +64,6 @@ export const usePayment = () => {
       params.P_VBANK_TM = orderData.pg_info.P_VBANK_TM
     }
 
-    // 디버깅 로그 추가
-    console.group("💳 결제 요청 정보")
-    console.log("주문 데이터:", orderData)
-    console.log("결제 방식:", paymentMethod)
-    console.log("P_NEXT_URL:", params.P_NEXT_URL)
-    console.log("P_NOTI 설정:", params.P_NOTI)
-    console.log("사용 포인트:", points.usedPoints)
-    console.log("전체 파라미터:", params)
-    console.groupEnd()
-
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         form.appendChild(appendInput(key, String(value)))
