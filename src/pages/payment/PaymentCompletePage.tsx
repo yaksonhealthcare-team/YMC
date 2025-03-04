@@ -33,8 +33,18 @@ const PaymentCompletePage = () => {
     setNavigation({ display: false })
   }, [])
 
+  if (!state) {
+    return null
+  }
+
   const isAdditional = state.type === "additional"
   const isVirtual = state.paymentMethod === "VBANK"
+
+  const itemsArray = Array.isArray(state.items) 
+    ? state.items 
+    : state.items 
+    ? [state.items]
+    : []
 
   const handleNavigate = () => {
     try {
@@ -64,10 +74,10 @@ const PaymentCompletePage = () => {
         <div className="flex items-center gap-1 mb-4">
           <span className="text-gray-700 font-sb text-16px">주문내역</span>
           <span className="text-primary font-sb text-16px">
-            {state.items.length}건
+            {itemsArray.length}건
           </span>
         </div>
-        {state.items.map((item) => (
+        {itemsArray.map((item) => (
           <PaymentItemCard
             key={item.p_idx}
             item={{
