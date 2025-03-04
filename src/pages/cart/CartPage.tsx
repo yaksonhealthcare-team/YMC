@@ -12,6 +12,8 @@ import {
 import LoadingIndicator from "@components/LoadingIndicator"
 import { usePaymentStore } from "../../hooks/usePaymentStore.ts"
 import { formatPriceWithUnit } from "utils/format"
+import { getConsultationCount } from "../../apis/reservation.api"
+import { useQuery } from "@tanstack/react-query"
 
 interface CartOption {
   originalPrice: number
@@ -39,6 +41,10 @@ const CartPage = () => {
   const { mutate: removeCartItems } = useDeleteCartItemsMutation()
   const { mutate: updateCartItem } = useUpdateCartItemMutation()
   const { setItems: setPaymentItems, setBranch } = usePaymentStore()
+  const { data: consultationCount } = useQuery({
+    queryKey: ["consultation-count"],
+    queryFn: getConsultationCount,
+  })
 
   const items = (cartWithSummary?.items || []) as CartItem[]
 
@@ -204,7 +210,7 @@ const CartPage = () => {
             <div className="flex gap-1">
               <span className="text-gray-500">*</span>
               <p className="text-gray-500 text-14px font-r">
-                상담 예약은 월간 2회까지 이용 가능합니다.
+                상담 예약은 월간 {consultationCount?.maxCount ?? 0}회까지 이용 가능합니다.
               </p>
             </div>
             <div className="flex gap-1">

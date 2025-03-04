@@ -97,14 +97,23 @@ export const createReservation = async (params: CreateReservationRequest) => {
   return data
 }
 
-export const getConsultationCount = async (): Promise<number> => {
-  const { data } = await axiosClient.get<HTTPResponse<{ count: number }>>(
-    "/reservation/consultation-count",
-  )
+export const getConsultationCount = async (): Promise<{
+  currentCount: number
+  maxCount: number
+}> => {
+  const { data } = await axiosClient.get<
+    HTTPResponse<{
+      current_count: string
+      consultation_max_count: string
+    }>
+  >("/reservation/consultation-count")
 
   if (data.resultCode !== "00") {
     throw new Error(data.resultMessage || "API 오류가 발생했습니다.")
   }
 
-  return data.body?.count || 0
+  return {
+    currentCount: Number(data.body?.current_count ?? 0),
+    maxCount: Number(data.body?.consultation_max_count ?? 0),
+  }
 }
