@@ -22,7 +22,7 @@ const PaymentPointSection = ({
           value={usedPoints || ""}
           onChange={onPointChange}
           placeholder="0"
-          className="flex-1 p-3 border border-gray-100 rounded-xl font-r text-16px"
+          className="flex-1 p-3 border border-gray-100 rounded-xl font-r text-16px min-w-0"
         />
         <Button
           variantType="secondary"
