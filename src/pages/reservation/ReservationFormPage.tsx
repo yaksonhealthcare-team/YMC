@@ -85,7 +85,7 @@ const ReservationFormPage = () => {
     clear()
 
     // 상태 초기화 후 뒤로가기
-    navigate("..", { replace: true })
+    navigate(-1)
   }, [clear, navigate])
 
   // Layout Effects
