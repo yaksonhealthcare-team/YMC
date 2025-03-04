@@ -116,7 +116,7 @@ export const fetchMembershipUsageHistory = async (
     throw new Error(response.data.resultMessage || "API 오류가 발생했습니다.")
   }
 
-  if (!response.data.body) {
+  if (!response.data.body && response.data.resultCode !== "00") {
     throw new Error("회원권 정보를 찾을 수 없습니다.")
   }
 
