@@ -61,14 +61,14 @@ export enum NotificationSearchType {}
 
 export interface NotificationSettings {
   reservations: boolean
-  payments: boolean
+  membership: boolean
   points: boolean
   notices: boolean
 }
 
 export interface NotificationSettingsResponse {
   reservation_yn: "Y" | "N"
-  payment_yn: "Y" | "N"
+  membership_yn: "Y" | "N"
   point_yn: "Y" | "N"
   notification_yn: "Y" | "N"
 }
