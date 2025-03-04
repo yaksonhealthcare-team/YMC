@@ -40,7 +40,7 @@ export const usePayment = () => {
       P_UNAME: orderData.pg_info.P_UNAME,
       P_NEXT_URL: orderData.pg_info.P_NEXT_URL,
       P_NOTI_URL: orderData.pg_info.P_NOTI_URL,
-      P_NOTI: "",
+      P_NOTI: `${orderData.orderSheet.orderid},${points.usedPoints || 0}`,
       P_CHARSET: "utf8",
       P_HPP_METHOD: orderData.pg_info.P_HPP_METHOD,
       P_TIMESTAMP: orderData.pg_info.P_TIMESTAMP,
