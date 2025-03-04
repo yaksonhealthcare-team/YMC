@@ -29,7 +29,7 @@ export const ReservationMapper = {
       store: dto.b_name,
       date: new Date(dto.r_date),
       status: statusMap[dto.r_status] || "000",
-      remainingDays: dto.remain_amount,
+      remainingDays: dto.remaining_days,
       visit: parseInt(dto.visit),
       programName: dto.ps_name,
       duration: dto.r_take_time,

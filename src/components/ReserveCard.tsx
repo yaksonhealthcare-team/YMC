@@ -139,7 +139,7 @@ export const ReserveCard = ({
       <div className="flex flex-col justify-between items-end min-w-[90px] h-full gap-6">
         <ReserveTag
           status={classifyReservationStatus(reservation.status)}
-          reservationDate={reservation.date}
+          remainingDays={reservation.remainingDays!}
         />
         {getButton()}
       </div>

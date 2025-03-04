@@ -62,6 +62,7 @@ export interface ReservationResponse {
   s_name: string
   buy_amount: string
   remain_amount: string
+  remaining_days: string
   add_services: Array<{
     s_name: string
     s_price: string

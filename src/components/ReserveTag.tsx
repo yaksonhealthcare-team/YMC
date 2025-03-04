@@ -1,12 +1,11 @@
 import { Tag } from "./Tag"
-import calculateDday from "utils/calculateDday"
 
 type StatusType = "upcoming" | "completed" | "cancelled" | "progressing" | null
 
 const TAG_VARIANTS = {
   upcoming: {
     type: "red",
-    title: (date: Date) => `D-${calculateDday(date)}`,
+    title: "remainingDays",
   },
   completed: {
     type: "used",
@@ -24,18 +23,14 @@ const TAG_VARIANTS = {
 
 interface ReserveTagProps {
   status: StatusType
-  reservationDate: Date
+  remainingDays: string
 }
 
-const ReserveTag = ({ status, reservationDate }: ReserveTagProps) => {
+const ReserveTag = ({ status, remainingDays }: ReserveTagProps) => {
   if (!status) return null
 
-  // 취소된 경우 "예약취소" 라벨만 표시하고 "방문완료" 표시하지 않음
   const variant = TAG_VARIANTS[status]
-  const title =
-    typeof variant.title === "function"
-      ? variant.title(reservationDate)
-      : variant.title
+  const title = status === "upcoming" ? remainingDays : variant.title
 
   return <Tag type={variant.type} title={title} className="rounded-full" />
 }
