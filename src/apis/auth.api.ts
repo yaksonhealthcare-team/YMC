@@ -171,7 +171,6 @@ export async function signinWithSocial(
         validateStatus: (status) => {
           return (status >= 200 && status < 300) || status === 302
         },
-        withCredentials: true,
       },
     )
 
