@@ -46,8 +46,6 @@ const initialState: UserSignup = {
   referralCode: "",
   recom: "",
   marketingYn: false,
-  // sessionStorage에서 소셜 정보 가져오기
-  ...JSON.parse(sessionStorage.getItem("socialSignupInfo") || "{}"),
 }
 
 const SignupContext = createContext<SignupContextType | undefined>(undefined)

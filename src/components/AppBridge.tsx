@@ -59,12 +59,14 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
         sessionStorage.setItem(
           "socialSignupInfo",
           JSON.stringify({
-            socialAccessToken: data.accessToken,
-            socialId: data.socialId,
             provider: data.provider,
+            next_action_type: "signup",
+            thirdPartyType: data.provider,
+            socialId: data.socialId,
+            SocialAccessToken: data.accessToken,
+            email: data.email,
             deviceToken: data.deviceToken,
             deviceType: data.deviceType,
-            email: data.email,
           }),
         )
         window.location.href = "/signup/terms"

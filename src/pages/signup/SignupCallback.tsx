@@ -1,15 +1,14 @@
 import { useOverlay } from "contexts/ModalContext"
 import { useSignup } from "contexts/SignupContext"
 import { useEffect } from "react"
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
+import { Gender } from "utils/gender"
 import { useNiceAuthCallback } from "utils/niceAuth"
 
 const SignupCallback = () => {
   const { setSignupData } = useSignup()
-  const location = useLocation()
   const [searchParams] = useSearchParams()
   const { openModal } = useOverlay()
-  const socialInfo = location.state?.social
   const navigate = useNavigate()
   const { parseNiceAuthData } = useNiceAuthCallback()
 
@@ -28,17 +27,11 @@ const SignupCallback = () => {
           name: userData.name,
           mobileNumber: userData.hp,
           birthDate: userData.birthdate,
-          gender: userData.sex,
+          gender: userData.sex as Gender,
           di: userData.di,
           tokenVersionId: userData.token_version_id,
-          ...(socialInfo && {
-            social: {
-              provider: socialInfo.provider,
-              accessToken: socialInfo.accessToken,
-            },
-          }),
         }))
-        navigate(socialInfo ? "/signup/profile" : "/signup/email")
+        navigate("/signup/email")
       } catch (error) {
         console.error("회원가입 처리 오류:", error)
         openModal({
@@ -52,14 +45,7 @@ const SignupCallback = () => {
     }
 
     handleVerification()
-  }, [
-    searchParams,
-    navigate,
-    openModal,
-    socialInfo,
-    setSignupData,
-    parseNiceAuthData,
-  ])
+  }, [searchParams, navigate, openModal, setSignupData, parseNiceAuthData])
 
   return (
     <div className="flex items-center justify-center min-h-screen">

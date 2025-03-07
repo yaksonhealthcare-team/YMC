@@ -56,12 +56,7 @@ export const useProfileSetupSubmit = () => {
         },
       })
 
-      if (
-        !response ||
-        !response.body ||
-        !Array.isArray(response.body) ||
-        response.body.length === 0
-      ) {
+      if (!response?.body?.length) {
         throw new Error(
           response?.resultMessage || "회원가입 응답에 유효한 body가 없습니다",
         )
@@ -95,7 +90,7 @@ export const useProfileSetupSubmit = () => {
         userInfo: {
           name: signupData.name,
           email: signupData.email,
-          password: signupData.password!,
+          password: signupData.password,
           mobileno: signupData.mobileNumber,
           birthdate: signupData.birthDate,
           gender: signupData.gender,
@@ -120,7 +115,7 @@ export const useProfileSetupSubmit = () => {
 
       const { accessToken } = await loginWithEmail({
         username: signupData.email,
-        password: signupData.password!,
+        password: signupData.password,
       })
 
       const user = await fetchUser(accessToken)
@@ -147,7 +142,7 @@ export const useProfileSetupSubmit = () => {
   const handleSubmit = async () => {
     try {
       const socialInfo = JSON.parse(
-        sessionStorage.getItem("socialSignupInfo") || "{}",
+        sessionStorage.getItem("socialSignupInfo") ?? "{}",
       ) as SocialSignupInfo
       const isSocialSignup = !!socialInfo.provider
 

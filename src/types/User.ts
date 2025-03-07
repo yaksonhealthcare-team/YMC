@@ -68,32 +68,6 @@ export interface UserSignup {
   marketingYn: boolean
 }
 
-export interface UserSignupRequest {
-  name: string
-  mobileno: string
-  birthdate: string
-  gender: string
-  di: string
-  token_version_id: string
-  enc_data: string
-  integrity_value: string
-  email: string
-  password: string
-  addr1: string
-  addr2: string
-  fileToUpload: File | null
-  recom: string
-  marketing_yn: boolean
-}
-
-export interface UserUpdateRequest {
-  post: string
-  addr1: string
-  addr2: string
-  marketing_yn: string
-  // TODO: API Request에 gender 필드 추가되면 여기도 추가할 것
-}
-
 export interface UpdateUserProfileRequest {
   postalCode: string
   address1: string
