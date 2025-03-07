@@ -151,7 +151,7 @@ const SatisfactionPage = () => {
         r_idx: id,
         review: reviewData,
         review_memo: reviewMemo,
-        images: form.images.length > 0 ? form.images : undefined,
+        images: [""], // TODO: /api/images/images 이미지 업로드 후 이미지 주소
       },
       {
         onSuccess: () => {

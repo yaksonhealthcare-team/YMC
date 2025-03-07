@@ -48,31 +48,19 @@ export interface CreateReviewRequest {
     rs_grade: "L" | "M" | "H"
   }>
   review_memo?: string
-  images?: File[]
+  images?: string[]
 }
 
-export const createReview = async (
-  request: CreateReviewRequest,
-): Promise<void> => {
-  const formData = new FormData()
-  formData.append("r_idx", request.r_idx)
-  formData.append("review", JSON.stringify(request.review))
-
-  if (request.review_memo) {
-    formData.append("review_memo", request.review_memo)
-  }
-
-  if (request.images) {
-    request.images.forEach((image, index) => {
-      formData.append(`upload[${index}]`, image)
-    })
-  }
-
-  await axiosClient.post<HTTPResponse<null>>("/reviews/reviews", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
+export const createReview = (request: CreateReviewRequest) => {
+  return axiosClient.post<HTTPResponse<CreateReviewRequest>>(
+    "/reviews/reviews",
+    request,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
     },
-  })
+  )
 }
 
 export interface ReservationReviewInfo {
