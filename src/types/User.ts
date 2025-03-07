@@ -36,7 +36,7 @@ export interface UserResponse {
   addr1: string
   addr2: string
   marketing_yn: string
-  point: number
+  points: number
   profileURL?: string
   thirdPartyType: string
   sex: "M" | "F"
