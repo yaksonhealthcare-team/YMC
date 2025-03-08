@@ -38,11 +38,13 @@ export interface Reservation {
   store: string
   programName: string
   date: Date
-  status: ReservationStatusCode
+  status: string
+  statusCode: ReservationStatusCode
   duration?: string
   visit: number
   type: string
   remainingDays?: string
+  reviewPositiveYn?: string
 }
 
 export interface ReservationResponse {
@@ -58,11 +60,13 @@ export interface ReservationResponse {
   r_take_time: string
   visit: string
   r_status: ReservationStatusCode
+  r_status_code: ReservationStatusCode
   r_memo: string
   s_name: string
   buy_amount: string
   remain_amount: string
   remaining_days: string
+  review_positive_yn?: string
   add_services: Array<{
     s_name: string
     s_price: string

@@ -14,14 +14,6 @@ import {
 } from "apis/reservation.api"
 import { Reservation, ReservationStatusCode } from "types/Reservation"
 
-const statusMap: Record<string, ReservationStatusCode> = {
-  "관리완료": "000",
-  "예약완료": "001",
-  "방문완료": "002",
-  "예약취소": "003",
-  "관리중": "008",
-}
-
 export interface ReservationDetail extends Reservation {
   services: Array<{
     name: string
@@ -76,8 +68,10 @@ export const useReservationDetail = (reservationId: string) => {
         store: data.b_name,
         programName: data.ps_name,
         date: new Date(data.r_date),
-        status: statusMap[data.r_status] || "000",
+        status: data.r_status,
+        statusCode: data.r_status_code,
         duration: data.r_take_time || "0:0",
+        reviewPositiveYn: data.review_positive_yn,
         visit: Number(data.visit),
         type: data.r_gubun,
         services: [],

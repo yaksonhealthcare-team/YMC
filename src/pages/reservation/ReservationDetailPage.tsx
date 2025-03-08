@@ -179,41 +179,54 @@ const ReservationDetailPage = () => {
       reservationEndTime.getMinutes() + (minutes || 0),
     )
 
-    switch (reservation.status) {
-      case "000": // 관리완료
+    switch (reservation.statusCode) {
+      case "000": // 전체
       case "002": // 방문완료
         return (
           <div className="flex gap-[8px]">
-            <Button
-              variantType="line"
-              sizeType="l"
-              className="flex-1"
-              onClick={() =>
-                navigate(`/reservation/${id}/satisfaction`, {
-                  state: {
-                    r_idx: reservation.id,
-                    r_date: reservation.date.toISOString(),
-                    b_name: reservation.store,
-                    ps_name: reservation.programName,
-                    review_items: [
-                      { rs_idx: "1", rs_type: "시술만족도" },
-                      { rs_idx: "2", rs_type: "친절도" },
-                      { rs_idx: "3", rs_type: "청결도" },
-                    ],
-                  },
-                })
-              }
-            >
-              만족도 작성
-            </Button>
-            <Button
-              variantType="primary"
-              sizeType="l"
-              className="flex-1"
-              onClick={() => navigate("/reservation/form")}
-            >
-              다시 예약하기
-            </Button>
+            {reservation.reviewPositiveYn === "Y" ? (
+              <>
+                <Button
+                  variantType="line"
+                  sizeType="l"
+                  className="flex-1"
+                  onClick={() =>
+                    navigate(`/reservation/${id}/satisfaction`, {
+                      state: {
+                        r_idx: reservation.id,
+                        r_date: reservation.date.toISOString(),
+                        b_name: reservation.store,
+                        ps_name: reservation.programName,
+                        review_items: [
+                          { rs_idx: "1", rs_type: "시술만족도" },
+                          { rs_idx: "2", rs_type: "친절도" },
+                          { rs_idx: "3", rs_type: "청결도" },
+                        ],
+                      },
+                    })
+                  }
+                >
+                  만족도 작성
+                </Button>
+                <Button
+                  variantType="primary"
+                  sizeType="l"
+                  className="flex-1"
+                  onClick={() => navigate("/reservation/form")}
+                >
+                  다시 예약하기
+                </Button>
+              </>
+            ) : (
+              <Button
+                variantType="primary"
+                sizeType="l"
+                className="w-full"
+                onClick={() => navigate("/reservation/form")}
+              >
+                다시 예약하기
+              </Button>
+            )}
           </div>
         )
 
@@ -269,7 +282,7 @@ const ReservationDetailPage = () => {
         )
 
       default:
-        console.log("Status not handled:", reservation.status)
+        console.log("Status not handled:", reservation.statusCode)
         return null
     }
   }
