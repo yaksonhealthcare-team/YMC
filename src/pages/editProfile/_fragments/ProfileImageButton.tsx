@@ -1,9 +1,9 @@
-import { ChangeEvent, useRef, useState } from "react"
 import GearIcon from "@assets/icons/GearIcon.svg?react"
 import Profile from "@assets/icons/Profile.svg?react"
-import { useOverlay } from "../../../contexts/ModalContext"
-import { validateFile } from "utils/sanitize"
 import { Image } from "@components/common/Image"
+import { ChangeEvent, useRef } from "react"
+import { validateFile } from "utils/sanitize"
+import { useOverlay } from "../../../contexts/ModalContext"
 
 interface ProfileImageButtonProps {
   profileImageUrl?: string

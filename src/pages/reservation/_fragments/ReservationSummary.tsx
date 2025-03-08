@@ -3,15 +3,6 @@ import { Divider } from "@mui/material"
 import { ReservationDetail } from "queries/useReservationQueries"
 import { format, isValid } from "date-fns"
 import { ko } from "date-fns/locale"
-import { ReservationStatusCode } from "types/Reservation"
-
-const statusLabelMap: Record<ReservationStatusCode, string> = {
-  "000": "관리완료",
-  "001": "예약완료",
-  "002": "방문완료",
-  "003": "예약취소",
-  "008": "관리중",
-}
 
 interface ReservationSummaryProps {
   reservation: ReservationDetail
