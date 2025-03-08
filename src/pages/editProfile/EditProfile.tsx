@@ -22,7 +22,7 @@ import { UpdateUserProfileRequest } from "../../types/User.ts"
 import { fetchUser } from "../../apis/auth.api.ts"
 import { Gender } from "../../utils/gender.ts"
 import { GenderSelect } from "@components/GenderSelect"
-import { uploadImages } from "../../apis/review.api.ts"
+import { uploadImages } from "../../apis/image.api.ts"
 
 const EditProfile = () => {
   const { user, login } = useAuth()

@@ -10,7 +10,7 @@ import {
   useCreateReviewMutation,
   useReviewQuestions,
 } from "../../../queries/useReviewQueries"
-import { uploadImages } from "../../../apis/review.api"
+import { uploadImages } from "../../../apis/image.api"
 import { formatDate } from "../../../utils/date"
 import LoadingIndicator from "../../../components/LoadingIndicator"
 import { Image } from "@components/common/Image"
