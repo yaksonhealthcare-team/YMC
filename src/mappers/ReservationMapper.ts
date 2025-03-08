@@ -29,11 +29,13 @@ export const ReservationMapper = {
       store: dto.b_name,
       date: new Date(dto.r_date),
       status: statusMap[dto.r_status] || "000",
+      statusCode: dto.r_status_code,
       remainingDays: dto.remaining_days,
       visit: parseInt(dto.visit),
       programName: dto.ps_name,
       duration: dto.r_take_time,
       type: typeMap[dto.r_gubun] || ReservationType.OTHER,
+      reviewPositiveYn: dto.review_positive_yn,
     }
   },
 

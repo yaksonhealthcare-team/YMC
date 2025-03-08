@@ -66,7 +66,7 @@ export const ReserveCard = ({
   }
 
   const getButton = (): ReactNode => {
-    const statusType = classifyReservationStatus(reservation.status)
+    const statusType = classifyReservationStatus(reservation.statusCode)
     const now = new Date()
     const reservationEndTime = new Date(reservation.date)
     const [hours, minutes] = (reservation.duration ?? "00:00")
@@ -79,18 +79,24 @@ export const ReserveCard = ({
 
     switch (statusType) {
       case "completed":
-        return (
-          <Button
-            variantType="primary"
-            sizeType="xs"
-            onClick={handleSatisfactionClick}
-          >
-            만족도 작성
-          </Button>
-        )
+        if (reservation.reviewPositiveYn === "Y") {
+          return (
+            <Button
+              variantType="primary"
+              sizeType="xs"
+              onClick={handleSatisfactionClick}
+            >
+              만족도 작성
+            </Button>
+          )
+        }
+        return null
 
       case "upcoming":
-        if (reservation.status === "002" || reservation.status === "008") {
+        if (
+          reservation.statusCode === "002" ||
+          reservation.statusCode === "008"
+        ) {
           if (now > reservationEndTime) {
             return (
               <Button
@@ -138,7 +144,7 @@ export const ReserveCard = ({
       </div>
       <div className="flex flex-col justify-between items-end min-w-[90px] h-full gap-6">
         <ReserveTag
-          status={classifyReservationStatus(reservation.status)}
+          status={classifyReservationStatus(reservation.statusCode)}
           remainingDays={reservation.remainingDays!}
         />
         {getButton()}
