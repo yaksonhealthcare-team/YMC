@@ -22,6 +22,7 @@ import { UpdateUserProfileRequest } from "../../types/User.ts"
 import { fetchUser } from "../../apis/auth.api.ts"
 import { Gender } from "../../utils/gender.ts"
 import { GenderSelect } from "@components/GenderSelect"
+import { uploadImages } from "../../apis/review.api.ts"
 
 const EditProfile = () => {
   const { user, login } = useAuth()
@@ -39,6 +40,8 @@ const EditProfile = () => {
   const [profileImageUrl, setProfileImageUrl] = useState<string | undefined>(
     user?.profileURL,
   )
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null)
+  const [isProfileImageChanged, setIsProfileImageChanged] = useState(false)
   const detailAddressFieldRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -78,12 +81,32 @@ const EditProfile = () => {
     if (!user) return
 
     try {
+      let finalProfileUrl = profileImageUrl || ""
+
+      // 프로필 이미지가 변경되었고 새 이미지 파일이 있는 경우 이미지 업로드
+      if (isProfileImageChanged && profileImageFile) {
+        try {
+          const uploadedUrls = await uploadImages({
+            fileToUpload: [profileImageFile],
+            nextUrl: "/auth/me",
+          })
+
+          if (uploadedUrls && uploadedUrls.length > 0) {
+            finalProfileUrl = uploadedUrls[0]
+          }
+        } catch (error) {
+          console.error("이미지 업로드 실패:", error)
+          showToast("이미지 업로드에 실패했습니다.")
+          return
+        }
+      }
+
       const updatedData: UpdateUserProfileRequest = {
         postalCode: address.postalCode,
         address1: address.road,
         address2: address.detail,
         sex: gender,
-        profileUrl: profileImageUrl || "",
+        profileUrl: finalProfileUrl,
         marketingAgreed: marketingAgreed,
       }
 
@@ -104,6 +127,9 @@ const EditProfile = () => {
   }
 
   const handleImageChange = (file: File | null) => {
+    setIsProfileImageChanged(true)
+    setProfileImageFile(file)
+
     if (file) {
       const imageUrl = URL.createObjectURL(file)
       setProfileImageUrl(imageUrl)

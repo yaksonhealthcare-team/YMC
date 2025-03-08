@@ -16,9 +16,6 @@ const ProfileImageButton = ({
   profileImageUrl,
   onImageChange,
 }: ProfileImageButtonProps) => {
-  const [imageSrc, setImageSrc] = useState<string | null>(
-    profileImageUrl || null,
-  )
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { showToast } = useOverlay()
 
@@ -29,7 +26,7 @@ const ProfileImageButton = ({
       const validation = validateFile(file, allowedTypes, MAX_FILE_SIZE)
 
       if (!validation.valid) {
-        showToast(validation.message || "이미지 업로드에 실패했습니다.")
+        showToast(validation.message ?? "이미지 업로드에 실패했습니다.")
         if (fileInputRef.current) {
           fileInputRef.current.value = ""
         }
@@ -38,7 +35,6 @@ const ProfileImageButton = ({
 
       const reader = new FileReader()
       reader.onloadend = () => {
-        setImageSrc(reader.result as string)
         onImageChange?.(file)
       }
       reader.readAsDataURL(file)
@@ -46,7 +42,6 @@ const ProfileImageButton = ({
   }
 
   const handleImageDelete = () => {
-    setImageSrc(null)
     onImageChange?.(null)
     if (fileInputRef.current) {
       fileInputRef.current.value = ""
@@ -55,14 +50,14 @@ const ProfileImageButton = ({
 
   return (
     <div className="relative w-20 h-20">
-      {imageSrc ? (
+      {profileImageUrl ? (
         <>
           <label
             htmlFor="profileImageUpload"
             className="block w-full h-full cursor-pointer"
           >
             <Image
-              src={imageSrc}
+              src={profileImageUrl}
               alt="프로필"
               className="w-full h-full rounded-full object-cover"
               useDefaultProfile
