@@ -10,6 +10,7 @@ import {
   useCreateReviewMutation,
   useReviewQuestions,
 } from "../../../queries/useReviewQueries"
+import { uploadImages } from "../../../apis/review.api"
 import { formatDate } from "../../../utils/date"
 import LoadingIndicator from "../../../components/LoadingIndicator"
 import { Image } from "@components/common/Image"
@@ -61,6 +62,7 @@ const SatisfactionPage = () => {
     content: "",
     images: [],
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     if (!reservationInfo) {
@@ -133,8 +135,10 @@ const SatisfactionPage = () => {
     )
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!id || !isFormValid() || !reviewQuestions) return
+
+    setIsSubmitting(true)
 
     const reviewData = reviewQuestions.map((question) => ({
       rs_idx: question.rs_idx,
@@ -142,23 +146,42 @@ const SatisfactionPage = () => {
     }))
 
     // 리뷰 내용 이스케이프 처리
-    const reviewMemo = form.content
-      ? escapeHtml(form.content as string)
-      : undefined
+    const reviewMemo = form.content ? escapeHtml(form.content) : undefined
 
-    createReviewMutation.mutate(
-      {
-        r_idx: id,
-        review: reviewData,
-        review_memo: reviewMemo,
-        images: [""], // TODO: /api/images/images 이미지 업로드 후 이미지 주소
-      },
-      {
-        onSuccess: () => {
-          navigate("/member-history/reservation")
+    try {
+      // 이미지가 있는 경우 먼저 업로드
+      let imageUrls: string[] = []
+      if (form.images.length > 0) {
+        imageUrls = await uploadImages({
+          fileToUpload: form.images,
+          nextUrl: "/reviews/reviews",
+        })
+      }
+
+      // 리뷰 생성
+      createReviewMutation.mutate(
+        {
+          r_idx: id,
+          review: reviewData,
+          review_memo: reviewMemo,
+          images: imageUrls.length > 0 ? imageUrls : undefined,
         },
-      },
-    )
+        {
+          onSuccess: () => {
+            setIsSubmitting(false)
+            navigate("/member-history/reservation")
+          },
+          onError: () => {
+            setIsSubmitting(false)
+            alert("리뷰 등록에 실패했습니다. 다시 시도해주세요.")
+          },
+        },
+      )
+    } catch (error) {
+      console.error("이미지 업로드 또는 리뷰 생성 중 오류 발생:", error)
+      alert("리뷰 등록에 실패했습니다. 다시 시도해주세요.")
+      setIsSubmitting(false)
+    }
   }
 
   if (!reservationInfo) {
@@ -296,11 +319,11 @@ const SatisfactionPage = () => {
         <Button
           variantType="primary"
           sizeType="l"
-          disabled={!isFormValid()}
+          disabled={!isFormValid() || isSubmitting}
           onClick={handleSubmit}
           className="w-full"
         >
-          작성 완료
+          {isSubmitting ? "제출 중..." : "작성 완료"}
         </Button>
       </div>
     </div>
