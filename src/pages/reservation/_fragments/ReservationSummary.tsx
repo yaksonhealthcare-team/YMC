@@ -44,10 +44,7 @@ const ReservationSummary = ({ reservation }: ReservationSummaryProps) => {
     <div className="p-[20px] rounded-[20px] shadow-card bg-white">
       <div className="flex gap-[8px] items-center">
         <p className="text-[18px] font-b text-gray-700">
-          {hasStatus
-            ? statusLabelMap[reservation.status as ReservationStatusCode] ||
-              "상태 정보 없음"
-            : "상태 정보 없음"}
+          {hasStatus ? reservation.status : "상태 정보 없음"}
         </p>
       </div>
       <div className="mt-3 flex items-center">

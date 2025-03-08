@@ -38,7 +38,7 @@ export interface Reservation {
   store: string
   programName: string
   date: Date
-  status: ReservationStatusCode
+  status: string
   statusCode: ReservationStatusCode
   duration?: string
   visit: number
