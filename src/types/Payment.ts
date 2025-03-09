@@ -80,6 +80,7 @@ export interface PaymentHistoryDetail extends PaymentHistory {
   usedPoint: number
   actualPrice: number
   items: (PaymentHistoryItem & { cancel: PaymentHistoryCancel })[]
+  isOfflinePayment: boolean
 }
 
 export interface PaymentHistoryDetailResponse {

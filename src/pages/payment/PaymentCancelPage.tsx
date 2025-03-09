@@ -78,6 +78,9 @@ const PaymentCancelPage = () => {
   if (!payment || isLoading)
     return <LoadingIndicator className="min-h-screen" />
 
+  // 현장결제 여부 확인
+  const isOfflinePayment = payment.type.includes("현장")
+
   const handleSubmit = async () => {
     if (step === "form" && reason.length < MIN_REASON_LENGTH) {
       return
@@ -124,6 +127,13 @@ const PaymentCancelPage = () => {
               <span className={"text-primary"}>1</span>/2
             </p>
             <p className={"font-b text-20px mt-2"}>{"상품을 선택해주세요."}</p>
+            {isOfflinePayment && (
+              <p className={"text-14px text-red-500 mt-2"}>
+                {
+                  "현장결제 건은 앱에서 결제취소가 불가능합니다. 센터에 문의해주세요."
+                }
+              </p>
+            )}
             <ul className={"mt-10 space-y-4"}>
               {payment.items.map((item, index) => (
                 <li key={index}>
@@ -153,7 +163,7 @@ const PaymentCancelPage = () => {
             <Button
               className={"w-full"}
               onClick={() => setStep("form")}
-              disabled={selectedItems.length === 0}
+              disabled={selectedItems.length === 0 || isOfflinePayment}
             >
               {`총 ${selectedItems.length}개 선택`}
             </Button>
@@ -202,7 +212,8 @@ const PaymentCancelPage = () => {
               onClick={handleSubmit}
               disabled={
                 reason.length < MIN_REASON_LENGTH ||
-                reason.length > MAX_REASON_LENGTH
+                reason.length > MAX_REASON_LENGTH ||
+                isOfflinePayment
               }
             >
               {"취소하기"}

@@ -48,6 +48,7 @@ export class PaymentMapper {
       usedPoint: Number(dto.use_point),
       actualPrice: Number(dto.actual_price),
       category: dto.is_add_service === "Y" ? "additional" : "membership",
+      isOfflinePayment: !dto.orderid || dto.orderid === "",
       items: dto.paysub.map((sub) => ({
         index: sub.p_idx,
         name: sub.ps_name,

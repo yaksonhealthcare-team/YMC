@@ -56,9 +56,15 @@ const PaymentHistoryDetailPage = () => {
 
     return (
       <div className={"border-t border-gray-200 px-5 pt-3 pb-8"}>
+        {payment.isOfflinePayment && (
+          <p className="text-center text-gray-500 mb-2 text-14px">
+            현장결제 건은 앱에서 취소가 불가능합니다.
+          </p>
+        )}
         <Button
           className={"w-full"}
           onClick={() => navigate(`/payment/${payment.index}/cancel`)}
+          disabled={payment.isOfflinePayment}
         >
           {"결제 취소하기"}
         </Button>
