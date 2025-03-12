@@ -64,10 +64,10 @@ export const updateUserProfile = async (data: UpdateUserProfileRequest) => {
 }
 
 export const signupWithSocial = async ({
-  provider,
+  thirdPartyType,
   userInfo,
 }: {
-  provider: string
+  thirdPartyType: string
   userInfo: Record<string, unknown>
 }) => {
   // di 값의 + 문자를 %2B로 변환
@@ -78,7 +78,7 @@ export const signupWithSocial = async ({
   }
 
   const response = await axiosClient.post("/auth/signup/social", {
-    thirdPartyType: provider,
+    thirdPartyType,
     ...processedUserInfo,
   })
 
@@ -134,11 +134,13 @@ export const signup = async (signupData: SignupFormData) => {
 }
 
 export interface SignInWithSocialRequest {
-  provider: "K" | "N" | "G" | "A"
+  SocialAccessToken: string
+  thirdPartyType: "K" | "N" | "G" | "A"
   socialId: string
-  socialAccessToken: string
-  deviceToken?: string
+  deviceToken?: string | null
   deviceType?: "android" | "ios" | "web"
+  id_token?: string
+  SocialRefreshToken?: string | null
 }
 
 export interface SignInWithSocialResponse {
@@ -154,18 +156,12 @@ export class UserNotFoundError extends Error {
 }
 
 export async function signinWithSocial(
-  params: SignInWithSocialRequest,
+  request: SignInWithSocialRequest,
 ): Promise<SignInWithSocialResponse> {
   try {
     const { data } = await axiosClient.post<SignInResponse>(
       "/auth/signin/social",
-      {
-        SocialAccessToken: params.socialAccessToken,
-        thirdPartyType: params.provider,
-        socialId: params.socialId,
-        deviceToken: params.deviceToken,
-        deviceType: params.deviceType,
-      },
+      request,
     )
 
     return {

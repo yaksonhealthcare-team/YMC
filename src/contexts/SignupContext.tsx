@@ -7,18 +7,17 @@ import {
   useState,
 } from "react"
 import { UserSignup } from "../types/User.ts"
-import { Gender } from "../utils/gender"
 
 export interface SocialSignupInfo {
-  provider: string
-  id: string
   socialId: string
   email: string
-  name: string
-  mobileno: string
-  birthdate: string
-  gender: Gender
-  socialAccessToken: string
+  next_action_type: "signup"
+  thirdPartyType: string
+  SocialAccessToken: string
+  deviceToken: string
+  deviceType: string
+  SocialRefreshToken: string
+  id_token: string
 }
 
 interface SignupContextType {

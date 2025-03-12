@@ -59,11 +59,13 @@ const OAuthCallback = () => {
           const fcmToken = await requestForToken()
 
           const result = await signinWithSocial({
-            socialAccessToken: socialData.SocialAccessToken,
+            SocialAccessToken: socialData.SocialAccessToken,
+            thirdPartyType: getProviderCode(provider),
             socialId: socialData.socialId,
-            provider: getProviderCode(provider),
-            deviceToken: fcmToken || undefined,
+            deviceToken: fcmToken,
             deviceType: "web",
+            id_token: socialData.id_token,
+            SocialRefreshToken: socialData.SocialRefreshToken,
           })
           const user = await fetchUser(result.accessToken)
           login({ user, token: result.accessToken })
