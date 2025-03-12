@@ -1,7 +1,7 @@
 import { fetchUser, signinWithSocial, UserNotFoundError } from "@apis/auth.api"
 import { useAuth } from "contexts/AuthContext"
 import React, { useEffect } from "react"
-
+import { SocialSignupInfo } from "contexts/SignupContext"
 const AppBridge = ({ children }: { children?: React.ReactNode }) => {
   if (!window.ReactNativeWebView) {
     return <>{children}</>
@@ -44,11 +44,13 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
   const handleSocialLogin = async (data: any) => {
     try {
       const { accessToken } = await signinWithSocial({
-        socialAccessToken: data.accessToken,
+        SocialAccessToken: data.accessToken,
         socialId: data.socialId,
-        provider: data.provider,
+        thirdPartyType: data.provider,
         deviceToken: data.deviceToken,
         deviceType: data.deviceType,
+        id_token: data.idToken,
+        SocialRefreshToken: data.refreshToken,
       })
       const user = await fetchUser(accessToken)
       login({ user, token: accessToken })
@@ -56,18 +58,20 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
       return
     } catch (error) {
       if (error instanceof UserNotFoundError) {
+        const socialSignupInfo: SocialSignupInfo = {
+          next_action_type: "signup",
+          thirdPartyType: data.provider,
+          socialId: data.socialId,
+          SocialAccessToken: data.accessToken,
+          email: data.email,
+          deviceToken: data.deviceToken,
+          deviceType: data.deviceType,
+          SocialRefreshToken: data.refreshToken,
+          id_token: data.idToken,
+        }
         sessionStorage.setItem(
           "socialSignupInfo",
-          JSON.stringify({
-            provider: data.provider,
-            next_action_type: "signup",
-            thirdPartyType: data.provider,
-            socialId: data.socialId,
-            SocialAccessToken: data.accessToken,
-            email: data.email,
-            deviceToken: data.deviceToken,
-            deviceType: data.deviceType,
-          }),
+          JSON.stringify(socialSignupInfo),
         )
         window.location.href = "/signup/terms"
 

@@ -1,30 +1,29 @@
+import { AxiosError } from "axios"
 import { useNavigate } from "react-router-dom"
+import {
+  fetchUser,
+  loginWithEmail,
+  signinWithSocial,
+  signup,
+  signupWithSocial,
+} from "../apis/auth.api"
 import { useAuth } from "../contexts/AuthContext"
 import { useOverlay } from "../contexts/ModalContext"
 import { useSignup } from "../contexts/SignupContext"
-import { AxiosError } from "axios"
-import {
-  signinWithSocial,
-  signupWithSocial,
-  signup,
-  loginWithEmail,
-  fetchUser,
-} from "../apis/auth.api"
-import { Gender } from "../utils/gender"
 
 type SocialProvider = "N" | "K" | "G" | "A"
 
-interface SocialSignupInfo {
-  provider: SocialProvider
-  id: string
-  name?: string
+export interface SocialSignupInfo {
   email?: string
-  mobileno?: string
-  birthdate?: string
-  gender?: Gender
   socialId: string
   di: string
+  thirdPartyType: SocialProvider
   token_version_id: string
+  id_token?: string
+  SocialRefreshToken?: string
+  deviceToken?: string
+  deviceType?: "android" | "ios" | "web"
+  next_action_type?: "signup"
 }
 
 export const useProfileSetupSubmit = () => {
@@ -36,10 +35,9 @@ export const useProfileSetupSubmit = () => {
   const handleSocialSignup = async (socialInfo: SocialSignupInfo) => {
     try {
       const response = await signupWithSocial({
-        provider: socialInfo.provider,
+        thirdPartyType: socialInfo.thirdPartyType,
         userInfo: {
           ...socialInfo,
-          id: socialInfo.id,
           name: signupData.name,
           email: signupData.email,
           mobileno: signupData.mobileNumber,
@@ -69,9 +67,13 @@ export const useProfileSetupSubmit = () => {
       }
 
       const { accessToken } = await signinWithSocial({
-        provider: socialInfo.provider,
-        socialAccessToken: response.body[0].accessToken,
+        thirdPartyType: socialInfo.thirdPartyType,
+        SocialAccessToken: response.body[0].accessToken,
         socialId: socialInfo.socialId,
+        id_token: socialInfo.id_token,
+        SocialRefreshToken: socialInfo.SocialRefreshToken,
+        deviceToken: socialInfo.deviceToken,
+        deviceType: socialInfo.deviceType,
       })
 
       const user = await fetchUser(accessToken)
@@ -141,13 +143,10 @@ export const useProfileSetupSubmit = () => {
 
   const handleSubmit = async () => {
     try {
-      const socialInfo = JSON.parse(
-        sessionStorage.getItem("socialSignupInfo") ?? "{}",
-      ) as SocialSignupInfo
-      const isSocialSignup = !!socialInfo.provider
-
-      if (isSocialSignup) {
-        await handleSocialSignup(socialInfo)
+      const socialInfo = sessionStorage.getItem("socialSignupInfo")
+      if (socialInfo) {
+        const socialSignupInfo: SocialSignupInfo = JSON.parse(socialInfo)
+        await handleSocialSignup(socialSignupInfo)
       } else {
         await handleEmailSignup()
       }
