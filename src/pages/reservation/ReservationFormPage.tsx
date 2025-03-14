@@ -65,7 +65,7 @@ const ReservationFormPage = () => {
   })
   const { mutateAsync: createReservation } = useCreateReservationMutation()
   const { data: membershipsData, isLoading: isMembershipsLoading } =
-    useUserMemberships()
+    useUserMemberships("T")
 
   // Additional Queries
   const { data: additionalManagements, isLoading: isAdditionalLoading } =
@@ -409,27 +409,47 @@ const ReservationFormPage = () => {
           onChange={(e) => handleOnChangeItem(e.target.value)}
         >
           <div>
-            <RadioCard 
-              checked={data.item === "상담 예약"} 
+            <RadioCard
+              checked={data.item === "상담 예약"}
               value="상담 예약"
-              disabled={consultationCount && (consultationCount.maxCount - consultationCount.currentCount) <= 0}
+              disabled={
+                consultationCount &&
+                consultationCount.maxCount - consultationCount.currentCount <= 0
+              }
             >
               <div className="justify-start items-center gap-2 flex">
-                <div className={`text-16px font-sb ${
-                  consultationCount && (consultationCount.maxCount - consultationCount.currentCount) <= 0 
-                    ? "text-gray-400" 
-                    : "text-gray-700"
-                }`}>상담 예약</div>
-                <div className={`px-2 py-0.5 rounded-[999px] justify-center items-center flex ${
-                  consultationCount && (consultationCount.maxCount - consultationCount.currentCount) <= 0
-                    ? "bg-[#FFF8F7]"
-                    : "bg-tag-greenBg"
-                }`}>
-                  <div className={`text-center text-12px font-m ${
-                    consultationCount && (consultationCount.maxCount - consultationCount.currentCount) <= 0
-                      ? "text-error"
-                      : "text-tag-green"
-                  }`}>
+                <div
+                  className={`text-16px font-sb ${
+                    consultationCount &&
+                    consultationCount.maxCount -
+                      consultationCount.currentCount <=
+                      0
+                      ? "text-gray-400"
+                      : "text-gray-700"
+                  }`}
+                >
+                  상담 예약
+                </div>
+                <div
+                  className={`px-2 py-0.5 rounded-[999px] justify-center items-center flex ${
+                    consultationCount &&
+                    consultationCount.maxCount -
+                      consultationCount.currentCount <=
+                      0
+                      ? "bg-[#FFF8F7]"
+                      : "bg-tag-greenBg"
+                  }`}
+                >
+                  <div
+                    className={`text-center text-12px font-m ${
+                      consultationCount &&
+                      consultationCount.maxCount -
+                        consultationCount.currentCount <=
+                        0
+                        ? "text-error"
+                        : "text-tag-green"
+                    }`}
+                  >
                     {!consultationCount?.currentCount
                       ? "FREE"
                       : `${(consultationCount?.maxCount ?? 0) - (consultationCount?.currentCount ?? 0)}/${consultationCount?.maxCount ?? 0}`}
@@ -460,7 +480,8 @@ const ReservationFormPage = () => {
         </RadioGroup>
         <div className="flex flex-col mt-[16px]">
           <p className="text-gray-500 text-14px">
-            * 상담 예약은 월간 {consultationCount?.maxCount ?? 0}회까지 이용 가능합니다.
+            * 상담 예약은 월간 {consultationCount?.maxCount ?? 0}회까지 이용
+            가능합니다.
           </p>
           {!membershipsData?.pages[0]?.body?.length && (
             <p className="text-gray-500 text-14px">
