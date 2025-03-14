@@ -13,7 +13,7 @@ export interface ReviewResponse {
     response: string
   }>
   review_memo: string
-  imgList: string[]
+  imgList: Array<{ r_pic: string }>
   ss_count: string
   total_count: number
   total_page_count: number

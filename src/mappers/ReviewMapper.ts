@@ -16,7 +16,7 @@ export class ReviewMapper {
       },
       evaluations: review.review || [],
       content: review.review_memo || "",
-      imageUrls: review.imgList || [],
+      imageUrls: (review.imgList || []).map((img) => img.r_pic),
       total_count: review.total_count,
       total_page_count: review.total_page_count,
       current_page: review.current_page,
@@ -33,7 +33,7 @@ export class ReviewMapper {
     return {
       ...this.toReviewEntity(review),
       additionalServices,
-      images: review.imgList || [],
+      images: (review.imgList || []).map((img) => img.r_pic),
     }
   }
 }
