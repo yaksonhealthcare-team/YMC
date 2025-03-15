@@ -56,6 +56,8 @@ const EmailLogin = () => {
       const { accessToken } = await loginWithEmail({
         username: formData.email,
         password: formData.password,
+        deviceToken: window.fcmToken,
+        deviceType: window.osType,
       })
       const user = await fetchUser(accessToken)
 

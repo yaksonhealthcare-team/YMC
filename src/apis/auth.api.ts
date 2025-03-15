@@ -13,9 +13,13 @@ export interface SignInResponse extends HTTPResponse<SignInResponseBody[]> {}
 export const loginWithEmail = async ({
   username,
   password,
+  deviceToken,
+  deviceType,
 }: {
   username: string
   password: string
+  deviceToken?: string | null
+  deviceType?: "android" | "ios" | "web"
 }): Promise<{
   refreshToken: string
   accessToken: string
@@ -23,9 +27,8 @@ export const loginWithEmail = async ({
   const { data } = await axiosClient.post("/auth/signin/email", {
     username: username,
     password: password,
-    // TODO: Add body params
-    // device_token: FCM_TOKEN,
-    // device_type: ANDROID | IOS,
+    deviceToken: deviceToken,
+    deviceType: deviceType,
   })
 
   return {

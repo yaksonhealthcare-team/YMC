@@ -14,4 +14,6 @@ interface Window {
     openExternalLink: (url: string) => void
   }
   setNativeSafeAreaColors?: (top: string, bottom: string) => void
+  fcmToken?: string
+  osType?: "android" | "ios" | "web"
 }

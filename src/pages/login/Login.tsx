@@ -15,7 +15,7 @@ import { getNaverLoginUrl } from "../../libs/naver"
 
 declare global {
   interface Window {
-    osType?: "ios" | "android"
+    osType?: "ios" | "android" | "web"
     fcmToken?: string
   }
 }
@@ -23,17 +23,19 @@ declare global {
 const Login = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const [osType, _setOsType] = useState<"ios" | "android" | undefined>(() => {
-    const savedOsType = localStorage.getItem("osType")
-    if (window.osType) {
-      localStorage.setItem("osType", window.osType)
-      return window.osType
-    }
-    if (savedOsType === "ios" || savedOsType === "android") {
-      return savedOsType
-    }
-    return undefined
-  })
+  const [osType, _setOsType] = useState<"ios" | "android" | "web" | undefined>(
+    () => {
+      const savedOsType = localStorage.getItem("osType")
+      if (window.osType) {
+        localStorage.setItem("osType", window.osType)
+        return window.osType
+      }
+      if (savedOsType === "ios" || savedOsType === "android") {
+        return savedOsType
+      }
+      return undefined
+    },
+  )
 
   useEffect(() => {
     setHeader({
