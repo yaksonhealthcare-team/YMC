@@ -85,6 +85,7 @@ export interface BranchFilters {
   brandCode?: string
   category?: string
   search?: string
+  mp_idx?: string
 }
 
 export interface BranchSearchResponse {

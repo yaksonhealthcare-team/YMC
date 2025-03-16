@@ -20,6 +20,7 @@ interface ReservationFormSectionProps {
   onOpenCalendar: () => void
   onChangeRequest: (value: string) => void
   onNavigateBranchSelect: () => void
+  disableBranchSelection?: boolean
 }
 
 export const ReservationFormSection = ({
@@ -28,6 +29,7 @@ export const ReservationFormSection = ({
   onOpenCalendar,
   onChangeRequest,
   onNavigateBranchSelect,
+  disableBranchSelection = false,
 }: ReservationFormSectionProps) => {
   const theme = useTheme()
 
@@ -39,7 +41,8 @@ export const ReservationFormSection = ({
           value={selectedBranch ? selectedBranch.name : ""}
           placeholder="지점을 선택해주세요."
           iconRight={<CaretRigthIcon className="w-4 h-4" />}
-          onClick={onNavigateBranchSelect}
+          onClick={disableBranchSelection ? undefined : onNavigateBranchSelect}
+          disabled={disableBranchSelection}
         />
         <CustomInputButton
           label="예약 일시"

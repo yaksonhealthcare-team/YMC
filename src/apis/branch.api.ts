@@ -18,6 +18,7 @@ export const fetchBranches = async (
       brand_code: filters.brandCode,
       csbc_idx: filters.category,
       search: filters.search,
+      mp_idx: filters.mp_idx,
     },
   })
   return BranchMapper.toEntities(data)

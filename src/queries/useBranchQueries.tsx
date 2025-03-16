@@ -21,6 +21,7 @@ interface BranchFilters {
   brandCode?: string
   category?: string
   search?: string
+  mp_idx?: string
 }
 
 const queryKeys = {
@@ -44,6 +45,7 @@ export const useBranches = (filters: BranchFilters) =>
             nowlon: filters.longitude,
             search: filters.search,
             brand_code: filters.brandCode,
+            mp_idx: filters.mp_idx,
           },
         },
       )

@@ -161,6 +161,38 @@ const ReservationFormPage = () => {
     }))
   }
 
+  // 회원권에 단일 지점만 있는 경우 자동으로 선택
+  useEffect(() => {
+    if (!data.item || data.item === "상담 예약") return
+
+    // 선택된 회원권 찾기
+    const selectedMembership = membershipsData?.pages[0]?.body?.find(
+      (membership) => membership.mp_idx === data.item,
+    )
+
+    // 단일 지점만 있는 경우 자동 선택
+    if (
+      selectedMembership?.branchs &&
+      selectedMembership.branchs.length === 1
+    ) {
+      const singleBranch = selectedMembership.branchs[0]
+      const branch = {
+        b_idx: singleBranch.b_idx,
+        name: singleBranch.b_name,
+        // Branch 인터페이스 필수 필드
+        address: "",
+        latitude: 0,
+        longitude: 0,
+        canBookToday: true,
+        distanceInMeters: null,
+        isFavorite: false,
+        brandCode: BRAND_CODE,
+        brand: "약손명가",
+      }
+      setSelectedBranch(branch)
+    }
+  }, [data.item, membershipsData])
+
   const handleOpenCalendar = () => {
     if (!data.item) {
       handleError(new Error("회원권을 먼저 선택해주세요."))
@@ -216,18 +248,25 @@ const ReservationFormPage = () => {
       return
     }
     try {
+      // 선택된 회원권 찾기
+      const selectedMembership = membershipsData?.pages[0]?.body?.find(
+        (membership) => membership.mp_idx === data.item,
+      )
+
       navigate("/membership/select-branch", {
         state: {
           returnPath: "/reservation/form",
           selectedItem: data.item,
           brand_code: BRAND_CODE,
+          // 회원권의 branchs 정보 전달
+          availableBranches: selectedMembership?.branchs || [],
         },
       })
     } catch (error) {
       console.error("Navigation error:", error)
       handleError(new Error("지점 선택 페이지로 이동할 수 없습니다."))
     }
-  }, [data.item, navigate, handleError])
+  }, [data.item, navigate, handleError, membershipsData])
 
   // Validation
   const validateReservationData = () => {
@@ -501,6 +540,14 @@ const ReservationFormPage = () => {
           setData((prev) => ({ ...prev, request: value }))
         }
         onNavigateBranchSelect={handleNavigateBranchSelect}
+        disableBranchSelection={
+          data.item !== "상담 예약" &&
+          !!membershipsData?.pages[0]?.body?.find(
+            (membership) =>
+              membership.mp_idx === data.item &&
+              membership.branchs?.length === 1,
+          )
+        }
       />
 
       {data.item !== "상담 예약" && (

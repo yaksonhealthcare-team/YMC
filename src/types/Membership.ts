@@ -61,6 +61,11 @@ export interface ServiceCourse {
   serviceCourseIndex?: string
 }
 
+export interface BranchInfo {
+  b_idx: string
+  b_name: string
+}
+
 export interface MyMembership {
   mp_idx: string
   status: string
@@ -72,6 +77,7 @@ export interface MyMembership {
   expiration_date: string
   reservations?: MembershipUsageHistory[]
   id?: string
+  branchs?: BranchInfo[]
 }
 
 export interface MyMembershipFilterItem {

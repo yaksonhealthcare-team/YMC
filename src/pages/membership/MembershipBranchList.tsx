@@ -9,6 +9,7 @@ import { useBranches } from "../../queries/useBranchQueries.tsx"
 import useIntersection from "../../hooks/useIntersection.tsx"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { Image } from "@components/common/Image"
+import { BranchInfo } from "../../types/Membership.ts"
 
 interface MembershipBranchListProps {
   onSelect?: (branch: Branch) => void
@@ -45,9 +46,17 @@ const MembershipBranchList = ({
     longitude: coordinates.longitude,
     search: query,
     brandCode: location.state?.brand_code || DEFAULT_BRAND_CODE,
+    mp_idx: location.state?.selectedItem,
   })
 
   const branches = branchPages?.pages.flatMap((page) => page.body.result) || []
+
+  // 사용 가능한 지점 목록이 지정된 경우 해당 지점만 필터링
+  const availableBranches: BranchInfo[] =
+    location.state?.availableBranches || []
+
+  // 서버에서 이미 필터링된 결과를 사용
+  const filteredBranches = branches
 
   const { observerTarget } = useIntersection({
     onIntersect: () => {
@@ -92,21 +101,8 @@ const MembershipBranchList = ({
     }
   }
 
-  if (isLoading) {
-    return <LoadingIndicator className="min-h-screen" />
-  }
-
-  if (query?.length === 0) {
-    return <MembershipActiveBranchList onBranchSelect={handleBranchSelect} />
-  }
-
-  if (branches.length === 0) {
-    return (
-      <div className="p-4 text-center text-gray-500">검색 결과가 없습니다.</div>
-    )
-  }
-
-  return (
+  // 지점 목록 렌더링 컴포넌트 추출
+  const renderBranchList = (branches: BranchSearchResult[]) => (
     <ul className="overflow-y-scroll h-full divide-y divide-gray-100">
       {branches.map((branch) => (
         <li key={branch.b_idx}>
@@ -146,6 +142,28 @@ const MembershipBranchList = ({
       <div ref={observerTarget} className="h-1" />
     </ul>
   )
+
+  if (isLoading) {
+    return <LoadingIndicator className="min-h-screen" />
+  }
+
+  // 검색어가 없고 사용 가능한 지점 목록이 있으면 해당 지점만 표시
+  if (query?.length === 0) {
+    // 사용 가능한 지점이 있는 경우 바로 지점 목록을 보여줌
+    if (availableBranches.length > 0) {
+      return renderBranchList(filteredBranches)
+    }
+    // 사용 가능한 지점이 없는 경우 기존 활성 지점 목록 표시
+    return <MembershipActiveBranchList onBranchSelect={handleBranchSelect} />
+  }
+
+  if (filteredBranches.length === 0) {
+    return (
+      <div className="p-4 text-center text-gray-500">검색 결과가 없습니다.</div>
+    )
+  }
+
+  return renderBranchList(filteredBranches)
 }
 
 export default MembershipBranchList

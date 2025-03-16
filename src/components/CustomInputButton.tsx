@@ -7,6 +7,7 @@ interface CustomInputButtonProps {
   iconRight?: React.ReactNode
   onClick?: () => void
   className?: string
+  disabled?: boolean
 }
 
 const CustomInputButton = ({
@@ -16,6 +17,7 @@ const CustomInputButton = ({
   iconRight,
   onClick,
   className,
+  disabled = false,
 }: CustomInputButtonProps) => {
   return (
     <div>
@@ -23,8 +25,10 @@ const CustomInputButton = ({
       <button
         type="button"
         onClick={onClick}
+        disabled={disabled}
         className={clsx(
           "w-full bg-white border !border-gray-100 rounded-xl h-[56px] px-[14px] flex items-center justify-between cursor-pointer",
+          disabled && "opacity-70 cursor-not-allowed",
           className,
         )}
       >
