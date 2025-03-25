@@ -9,15 +9,18 @@ export type ReservationStatusCode =
   | "003" // 예약취소
   | "008" // 관리중
 
-export enum ReservationStatus {
-  COMPLETED = "000",
-  CONFIRMED = "001",
-  PENDING = "002",
-  CUSTOMER_CANCELLED = "003",
-  STORE_CANCELLED = "003",
-  IN_PROGRESS = "001",
-  NO_SHOW = "003",
-}
+export const ReservationStatus = {
+  COMPLETED: "000",
+  CONFIRMED: "001",
+  PENDING: "002",
+  CUSTOMER_CANCELLED: "003",
+  STORE_CANCELLED: "003",
+  IN_PROGRESS: "001",
+  NO_SHOW: "003",
+} as const
+
+export type ReservationStatus =
+  (typeof ReservationStatus)[keyof typeof ReservationStatus]
 
 export const ReservationStatusLabel = {
   "000": "관리완료",
