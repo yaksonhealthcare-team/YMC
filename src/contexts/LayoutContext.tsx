@@ -155,6 +155,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
                 title={"홈"}
                 link={"/"}
               />
+              {/* 
               <NavButton
                 activeIcon={"/assets/navIcon/membership_active.png"}
                 inactiveIcon={"/assets/navIcon/membership_inactive.png"}
@@ -162,6 +163,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
                 link={"/membership?brand_code=001"}
                 isActive={(path) => path.startsWith("/membership")}
               />
+              */}
               <NavButton
                 activeIcon={"/assets/navIcon/store_active.png"}
                 inactiveIcon={"/assets/navIcon/store_inactive.png"}
