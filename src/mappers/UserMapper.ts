@@ -20,6 +20,7 @@ export class UserMapper {
       profileURL: response.profileURL,
       thirdPartyType: response.thirdPartyType,
       gender: response.sex as "M" | "F",
+      birthdate: response.birthdate || "",
       brands: response.brands.map((brand) => ({
         b_idx: brand.b_idx,
         brandName: brand.b_name,

@@ -23,6 +23,7 @@ export interface User {
     address: string
   }[]
   gender: "M" | "F"
+  birthdate: string
 }
 
 export interface UserResponse {
@@ -40,6 +41,7 @@ export interface UserResponse {
   profileURL?: string
   thirdPartyType: string
   sex: "M" | "F"
+  birthdate: string
   brands: {
     b_idx: string
     b_name: string
@@ -72,7 +74,7 @@ export interface UpdateUserProfileRequest {
   postalCode: string
   address1: string
   address2: string
-  sex: "M" | "F"
+  sex?: "M" | "F"
   profileUrl: string
   marketingAgreed: boolean
 }

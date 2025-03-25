@@ -105,7 +105,6 @@ const EditProfile = () => {
         postalCode: address.postalCode,
         address1: address.road,
         address2: address.detail,
-        sex: gender,
         profileUrl: finalProfileUrl,
         marketingAgreed: marketingAgreed,
       }
@@ -232,11 +231,15 @@ const EditProfile = () => {
           </LabeledForm>
           <LabeledForm label={"생년월일"}>
             <p className="text-[18px] font-medium text-gray-900">
-              {"1999.01.09"}
+              {user.birthdate
+                ? `${user.birthdate.slice(0, 4)}.${user.birthdate.slice(4, 6)}.${user.birthdate.slice(6, 8)}`
+                : ""}
             </p>
           </LabeledForm>
           <LabeledForm label={"성별"}>
-            <GenderSelect value={gender} onChange={setGender} />
+            <div className="opacity-50">
+              <GenderSelect value={gender} onChange={setGender} disabled />
+            </div>
           </LabeledForm>
           <LabeledForm className={"flex flex-col gap-2"} label={"주소"}>
             <FieldWithButton
