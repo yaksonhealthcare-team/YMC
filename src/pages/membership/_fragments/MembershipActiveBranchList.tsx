@@ -2,8 +2,14 @@ import BranchCard from "../../../components/BranchCard"
 import { Branch } from "types/Branch"
 import { useAuth } from "../../../contexts/AuthContext"
 import { useLocation } from "react-router-dom"
-import { BranchInfo } from "../../../types/Membership"
 import { useMemo } from "react"
+
+interface BranchInfo {
+  b_idx: string
+  brandName: string
+  address?: string
+  brandCode: string
+}
 
 interface Props {
   onBranchSelect: (branch: Branch) => void
@@ -22,11 +28,11 @@ export const MembershipActiveBranchList = ({ onBranchSelect }: Props) => {
     if (!user?.brands?.length) return []
 
     if (availableBranches.length === 0) {
-      return user.brands // 사용 가능한 지점 목록이 없으면 모든 활성 지점 표시
+      return user.brands as BranchInfo[] // 사용 가능한 지점 목록이 없으면 모든 활성 지점 표시
     }
 
     // 사용자의 활성 지점 중 사용 가능한 지점만 필터링
-    return user.brands.filter((brand) =>
+    return (user.brands as BranchInfo[]).filter((brand) =>
       availableBranches.some(
         (availableBranch: BranchInfo) => availableBranch.b_idx === brand.b_idx,
       ),

@@ -7,7 +7,7 @@ import MembershipBranchList from "./MembershipBranchList.tsx"
 
 interface Props {
   onSelect?: (branch: Branch) => void
-  brandCode: string
+  brandCode?: string
 }
 
 const MembershipBranchSelectPage = ({ onSelect, brandCode }: Props) => {
@@ -17,6 +17,7 @@ const MembershipBranchSelectPage = ({ onSelect, brandCode }: Props) => {
   const navigate = useNavigate()
 
   const memoizedState = useMemo(() => location.state, [location.state])
+  const currentBrandCode = brandCode || location.state?.brand_code
 
   // 헤더 설정
   useEffect(() => {
@@ -47,16 +48,21 @@ const MembershipBranchSelectPage = ({ onSelect, brandCode }: Props) => {
 
   // 브랜드 코드 설정
   useEffect(() => {
-    if (location.state?.brand_code !== brandCode) {
+    if (location.state?.brand_code !== currentBrandCode) {
       navigate(location.pathname, {
         replace: true,
         state: {
           ...location.state,
-          brand_code: brandCode,
+          brand_code: currentBrandCode,
         },
       })
     }
-  }, [brandCode, location.pathname, location.state?.brand_code, navigate])
+  }, [
+    currentBrandCode,
+    location.pathname,
+    location.state?.brand_code,
+    navigate,
+  ])
 
   return (
     <div className={"flex flex-col overflow-y-hidden"}>

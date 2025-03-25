@@ -268,7 +268,7 @@ export const routeConfig: RouteConfig[] = [
     auth: true,
   },
   {
-    path: "/membership/select-branch",
+    path: "/membership/branch-select",
     element: <MembershipBranchSelectPage />,
     auth: true,
   },
