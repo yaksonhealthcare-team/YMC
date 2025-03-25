@@ -1,15 +1,16 @@
-import { Branch, BranchSearchResult } from "../../types/Branch.ts"
-import { MembershipActiveBranchList } from "./_fragments/MembershipActiveBranchList.tsx"
-import BranchPlaceholderImage from "@assets/images/BranchPlaceholderImage.png"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useGeolocation } from "../../hooks/useGeolocation.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
 import { DEFAULT_COORDINATE } from "../../types/Coordinate.ts"
 import { useBranches } from "../../queries/useBranchQueries.tsx"
-import useIntersection from "../../hooks/useIntersection.tsx"
+import { Branch, BranchSearchResult } from "../../types/Branch.ts"
+import { useIntersection } from "../../hooks/useIntersection.tsx"
+import { BranchInfo } from "../../types/Membership.ts"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { Image } from "@components/common/Image"
-import { BranchInfo } from "../../types/Membership.ts"
+import BranchPlaceholderImage from "@assets/images/BranchPlaceholderImage.png"
+import { MembershipActiveBranchList } from "./_fragments/MembershipActiveBranchList.tsx"
+import useDebounce from "../../hooks/useDebounce.tsx"
 
 interface MembershipBranchListProps {
   onSelect?: (branch: Branch) => void
@@ -35,6 +36,8 @@ const MembershipBranchList = ({
       }
     : DEFAULT_COORDINATE
 
+  const debouncedQuery = useDebounce(query, 300)
+
   const {
     data: branchPages,
     hasNextPage,
@@ -44,7 +47,7 @@ const MembershipBranchList = ({
   } = useBranches({
     latitude: coordinates.latitude,
     longitude: coordinates.longitude,
-    search: query,
+    search: debouncedQuery,
     brandCode: location.state?.brand_code || DEFAULT_BRAND_CODE,
     mp_idx: location.state?.selectedItem,
   })
