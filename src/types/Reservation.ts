@@ -54,6 +54,7 @@ export interface ReservationResponse {
   b_lat: string
   b_lon: string
   b_tel: string
+  b_addr: string
   r_date: string
   p_idx: string
   ps_name: string

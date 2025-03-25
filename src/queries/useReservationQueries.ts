@@ -89,6 +89,7 @@ export const useReservationDetail = (reservationId: string) => {
         latitude: Number(data.b_lat),
         longitude: Number(data.b_lon),
         phone: data.b_tel,
+        address: data.b_addr,
       }
 
       return detail
