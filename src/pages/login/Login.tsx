@@ -12,6 +12,7 @@ import { useLayout } from "../../contexts/LayoutContext"
 import { getAppleLoginUrl } from "../../libs/apple"
 import { getGoogleLoginUrl } from "../../libs/google"
 import { getNaverLoginUrl } from "../../libs/naver"
+import { CircularProgress } from "@mui/material"
 
 declare global {
   interface Window {
@@ -36,6 +37,7 @@ const Login = () => {
       return undefined
     },
   )
+  const [loadingProvider, setLoadingProvider] = useState<string | null>(null)
 
   useEffect(() => {
     setHeader({
@@ -54,33 +56,74 @@ const Login = () => {
   const handleSocialLogin = async (
     provider: "kakao" | "naver" | "google" | "apple",
   ) => {
-    if (window.ReactNativeWebView) {
-      window.ReactNativeWebView.postMessage(
-        JSON.stringify({
-          type: "SOCIAL_LOGIN",
-          provider,
-        }),
-      )
-      return
-    }
-    let url = ""
+    setLoadingProvider(provider)
+    try {
+      if (window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            type: "SOCIAL_LOGIN",
+            provider,
+          }),
+        )
+        return
+      }
+      let url = ""
 
-    switch (provider) {
-      case "naver":
-        url = getNaverLoginUrl()
-        break
-      case "google":
-        url = await getGoogleLoginUrl()
-        break
-      case "apple":
-        url = getAppleLoginUrl()
-        break
-      case "kakao":
-        url = getKakaoLoginUrl()
-        break
-    }
+      switch (provider) {
+        case "naver":
+          url = getNaverLoginUrl()
+          break
+        case "google":
+          url = await getGoogleLoginUrl()
+          break
+        case "apple":
+          url = getAppleLoginUrl()
+          break
+        case "kakao":
+          url = getKakaoLoginUrl()
+          break
+      }
 
-    if (url) window.location.href = url
+      if (url) window.location.href = url
+    } catch (error) {
+      console.error("소셜 로그인 에러:", error)
+    } finally {
+      setLoadingProvider(null)
+    }
+  }
+
+  const renderSocialLoginButton = (
+    provider: "kakao" | "naver" | "google" | "apple",
+    icon: React.ReactNode,
+    text: string,
+    bgColor: string,
+    textColor: string = "text-[#262626]",
+    borderColor: string = bgColor,
+  ) => {
+    const isLoading = loadingProvider === provider
+    return (
+      <Button
+        onClick={() => handleSocialLogin(provider)}
+        fullCustom
+        sizeType="l"
+        disabled={isLoading}
+        className={`${bgColor} border-${borderColor} ${textColor} font-b flex items-center px-5 py-[13.75px] rounded-[12px] relative ${
+          isLoading ? "opacity-70" : ""
+        }`}
+      >
+        {isLoading ? (
+          <CircularProgress
+            size={24}
+            className={`absolute left-5 ${
+              textColor === "text-white" ? "text-white" : "text-[#9E9E9E]"
+            }`}
+          />
+        ) : (
+          <div className="absolute left-5">{icon}</div>
+        )}
+        <span className="flex-1 text-center text-16px">{text}</span>
+      </Button>
+    )
   }
 
   return (
@@ -93,56 +136,42 @@ const Login = () => {
       {/* 로그인 버튼 그룹 */}
       <div className="flex flex-col gap-3 px-5 mt-auto mb-auto">
         {/* 카카오 로그인 */}
-        <Button
-          onClick={() => handleSocialLogin("kakao")}
-          fullCustom
-          sizeType="l"
-          className="bg-[#FEE500] border-[#FEE500] text-[#262626] font-b flex items-center px-5 py-[13.75px] rounded-[12px] relative"
-        >
-          <KakaoIcon className="w-6 h-6 absolute left-5" />
-          <span className="flex-1 text-center text-16px">
-            카카오톡으로 로그인
-          </span>
-        </Button>
+        {renderSocialLoginButton(
+          "kakao",
+          <KakaoIcon className="w-6 h-6" />,
+          "카카오톡으로 로그인",
+          "bg-[#FEE500]",
+        )}
 
         {/* 네이버 로그인 */}
-        <Button
-          onClick={() => handleSocialLogin("naver")}
-          fullCustom
-          sizeType="l"
-          className="bg-[#03C75A] border-[#03C75A] text-white font-b flex items-center px-5 h-[52px] rounded-[12px] relative"
-        >
-          <NaverIcon className="w-6 h-6 text-white absolute left-5" />
-          <span className="flex-1 text-center text-16px">네이버로 로그인</span>
-        </Button>
+        {renderSocialLoginButton(
+          "naver",
+          <NaverIcon className="w-6 h-6 text-white" />,
+          "네이버로 로그인",
+          "bg-[#03C75A]",
+          "text-white",
+        )}
 
         {/* 구글 로그인 (웹 또는 Android에서만 표시) */}
-        {(!osType || osType === "android") && (
-          <Button
-            onClick={() => handleSocialLogin("google")}
-            fullCustom
-            sizeType="l"
-            className="bg-white border-[#ECECEC] text-[#212121] font-b flex items-center px-5 h-[52px] border border-solid rounded-[12px] relative"
-          >
-            <GoogleIcon className="w-6 h-6 absolute left-5" />
-            <span className="flex-1 text-center text-16px">
-              Google로 로그인
-            </span>
-          </Button>
-        )}
+        {(!osType || osType === "android") &&
+          renderSocialLoginButton(
+            "google",
+            <GoogleIcon className="w-6 h-6" />,
+            "Google로 로그인",
+            "bg-white",
+            "text-[#212121]",
+            "[#ECECEC]",
+          )}
 
         {/* 애플 로그인 (웹 또는 iOS에서만 표시) */}
-        {(!osType || osType === "ios") && (
-          <Button
-            onClick={() => handleSocialLogin("apple")}
-            fullCustom
-            sizeType="l"
-            className="bg-[#000000] border-black text-white font-b flex items-center px-5 h-[52px] rounded-[12px] relative"
-          >
-            <AppleIcon className="w-6 h-6 text-white absolute left-5" />
-            <span className="flex-1 text-center text-16px">Apple로 로그인</span>
-          </Button>
-        )}
+        {(!osType || osType === "ios") &&
+          renderSocialLoginButton(
+            "apple",
+            <AppleIcon className="w-6 h-6 text-white" />,
+            "Apple로 로그인",
+            "bg-[#000000]",
+            "text-white",
+          )}
 
         {/* 이메일 로그인 */}
         <Button

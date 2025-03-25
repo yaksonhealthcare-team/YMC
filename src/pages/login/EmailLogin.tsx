@@ -8,6 +8,7 @@ import { useLayout } from "../../contexts/LayoutContext"
 import EyeIcon from "../../assets/icons/EyeIcon.svg?react"
 import EyeSlashIcon from "../../assets/icons/EyeSlashIcon.svg?react"
 import { fetchUser, loginWithEmail } from "../../apis/auth.api.ts"
+import { CircularProgress } from "@mui/material"
 
 interface LoginForm {
   email: string
@@ -24,6 +25,7 @@ const EmailLogin = () => {
     password: "",
   })
   const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const isFormValid = formData.email.length > 0 && formData.password.length > 0
 
@@ -53,6 +55,7 @@ const EmailLogin = () => {
     }
 
     try {
+      setIsLoading(true)
       const { accessToken } = await loginWithEmail({
         username: formData.email,
         password: formData.password,
@@ -68,6 +71,8 @@ const EmailLogin = () => {
       navigate("/")
     } catch (error) {
       showToast("로그인에 실패했습니다")
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -119,14 +124,18 @@ const EmailLogin = () => {
           variantType="primary"
           sizeType="l"
           onClick={handleSubmit}
-          disabled={!isFormValid}
+          disabled={!isFormValid || isLoading}
           className={
-            !isFormValid
+            !isFormValid || isLoading
               ? "bg-[#ECECEC] !text-[#9E9E9E] hover:bg-[#ECECEC]"
               : ""
           }
         >
-          로그인
+          {isLoading ? (
+            <CircularProgress size={24} className="text-[#9E9E9E]" />
+          ) : (
+            "로그인"
+          )}
         </Button>
       </div>
 
