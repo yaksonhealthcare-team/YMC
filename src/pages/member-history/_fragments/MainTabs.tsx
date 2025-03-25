@@ -1,18 +1,23 @@
+import { useNavigate, useLocation } from "react-router-dom"
 import { CustomTabs } from "@components/Tabs"
-import { useLocation, useNavigate } from "react-router-dom"
-
-type MemberHistoryTab = "reservation" | "membership"
+import { MemberHistoryTab, MemberHistoryState } from "types/MemberHistory"
 
 const mainTabs = [
   { label: "예약", value: "reservation" },
   { label: "회원권", value: "membership" },
 ]
 
-const TabsContent = ({ activeTab }: { activeTab: MemberHistoryTab }) => {
+const MainTabs = () => {
+  const location = useLocation()
   const navigate = useNavigate()
+  const state = location.state as MemberHistoryState
+  const activeTab =
+    state?.activeTab || (location.pathname.split("/").pop() as MemberHistoryTab)
 
   const handleOnChangeTab = (value: MemberHistoryTab) => {
-    navigate(`/member-history/${value}`)
+    navigate(`/member-history/${value}`, {
+      state: { ...state, activeTab: value },
+    })
   }
 
   return (
@@ -23,13 +28,6 @@ const TabsContent = ({ activeTab }: { activeTab: MemberHistoryTab }) => {
       activeTab={activeTab}
     />
   )
-}
-
-const MainTabs = () => {
-  const location = useLocation()
-  const activeTab = location.pathname.split("/").pop() as MemberHistoryTab
-
-  return <TabsContent activeTab={activeTab} />
 }
 
 export default MainTabs
