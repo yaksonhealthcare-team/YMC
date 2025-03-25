@@ -99,15 +99,14 @@ const LocationSettings = () => {
     setNavigation({ display: false })
   }, [])
 
-  useEffect(() => {
-    if (locationError) {
-      showToast(locationError)
-    }
-  }, [locationError, showToast])
-
   const handleCurrentLocationClick = () => {
     if (locationLoading) {
       showToast("위치 정보를 가져오는 중입니다.")
+      return
+    }
+
+    if (locationError) {
+      showToast("위치 정보를 사용할 수 없습니다.")
       return
     }
 
