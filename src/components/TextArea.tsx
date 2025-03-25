@@ -1,40 +1,5 @@
 import { TextField } from "@mui/material"
 import clsx from "clsx"
-import { COLORS } from "@constants/ColorConstants"
-
-const TEXT_FIELD_STYLES = {
-  base: {
-    "& .MuiOutlinedInput-root": {
-      borderRadius: "12px",
-      "& textarea::placeholder": {
-        color: COLORS.PLACEHOLDER,
-        opacity: 1,
-      },
-      "& textarea.Mui-disabled": {
-        zIndex: 1,
-        WebkitTextFillColor: COLORS.DISABLED_TEXT,
-      },
-    },
-    "& .MuiInputLabel-root": {
-      fontSize: "12px",
-      color: COLORS.LABEL,
-    },
-  },
-  normal: {
-    borderColor: COLORS.BORDER,
-  },
-  error: {
-    borderColor: COLORS.ERROR,
-  },
-  disabled: {
-    borderColor: COLORS.DISABLED_BORDER,
-    backgroundColor: COLORS.DISABLED_BG,
-  },
-  focused: {
-    borderWidth: 1,
-    borderColor: COLORS.FOCUSED_BORDER,
-  },
-} as const
 
 const COUNTER_TEXT_STYLES = {
   normal: "text-gray-400",
@@ -62,7 +27,7 @@ export const TextArea = ({
   error,
   onChange,
 }: TextAreaProps) => {
-  const isError = error || (maxLength && value.length > maxLength)
+  const isError = Boolean(error || (maxLength && value.length > maxLength))
   const textStyle = isError
     ? COUNTER_TEXT_STYLES.error
     : COUNTER_TEXT_STYLES.normal
@@ -80,22 +45,12 @@ export const TextArea = ({
         value={value}
         onChange={onChange}
         error={isError}
-        variant="outlined"
-        sx={{
-          ...TEXT_FIELD_STYLES.base,
-          "& .MuiOutlinedInput-root": {
-            ...TEXT_FIELD_STYLES.base["& .MuiOutlinedInput-root"],
-            "& fieldset": {
-              borderColor: isError ? COLORS.ERROR : COLORS.BORDER,
-            },
-            "&:hover fieldset": {
-              borderColor: isError ? COLORS.ERROR : COLORS.BORDER,
-            },
-            "&.Mui-focused fieldset": {
-              borderColor: isError ? COLORS.ERROR : COLORS.FOCUSED_BORDER,
-            },
-            "&.Mui-disabled fieldset": TEXT_FIELD_STYLES.disabled,
-          },
+        helperText={isError ? helperText : ""}
+        className="!bg-white"
+        InputProps={{
+          className: `!text-14px !font-r !text-gray-700 !rounded-xl !border-gray-200 ${
+            isError ? "!border-error" : "!border-gray-200"
+          }`,
         }}
       />
 

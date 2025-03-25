@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { useParams, useNavigate, useLocation } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useOverlay } from "../../contexts/ModalContext"
 import { TextArea } from "@components/TextArea"
@@ -10,7 +10,6 @@ import { Divider } from "@mui/material"
 import {
   useCancelReservation,
   useReservationDetail,
-  ReservationDetail,
 } from "queries/useReservationQueries"
 import { escapeHtml } from "utils/sanitize"
 import LoadingIndicator from "@components/LoadingIndicator"
@@ -27,7 +26,6 @@ interface ReservationDetailView {
 const ReservationCancelPage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const location = useLocation()
 
   const { setHeader, setNavigation } = useLayout()
   const { showToast, openBottomSheet } = useOverlay()
