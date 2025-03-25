@@ -140,6 +140,7 @@ const ReservationDetailPage = () => {
             onClick={() => {
               closeOverlay()
               navigate(`/reservation/${id}/cancel`, {
+                replace: true,
                 state: {
                   r_idx: reservation?.id,
                   r_date: reservation?.date.toISOString(),
@@ -154,10 +155,7 @@ const ReservationDetailPage = () => {
           <Button
             className="w-full"
             variantType="primary"
-            onClick={(e) => {
-              e.preventDefault()
-              closeOverlay()
-            }}
+            onClick={() => closeOverlay()}
           >
             돌아가기
           </Button>

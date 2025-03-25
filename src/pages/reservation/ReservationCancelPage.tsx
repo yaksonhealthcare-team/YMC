@@ -54,6 +54,7 @@ const ReservationCancelPage = () => {
           },
           {
             onSuccess: () => {
+              // 바텀시트 닫기
               const closeOverlay = document.querySelector(
                 '[aria-label="close"]',
               )
@@ -61,7 +62,10 @@ const ReservationCancelPage = () => {
                 closeOverlay.click()
               }
               showToast("예약이 취소되었습니다")
-              navigate(`/reservation/${id}`)
+              // 예약 상세 페이지로 이동하기 전에 약간의 지연을 줌
+              setTimeout(() => {
+                navigate(`/reservation/${id}`, { replace: true })
+              }, 100)
             },
             onError: (error) => {
               console.error("예약 취소 실패:", error)
@@ -87,7 +91,17 @@ const ReservationCancelPage = () => {
     }
 
     openBottomSheet(
-      <ReservationCancelBottomSheetContent onConfirm={handleConfirmCancel} />,
+      <ReservationCancelBottomSheetContent
+        onConfirm={() => {
+          // 바텀시트 먼저 닫기
+          const closeOverlay = document.querySelector('[aria-label="close"]')
+          if (closeOverlay instanceof HTMLElement) {
+            closeOverlay.click()
+          }
+          // 그 다음 취소 처리
+          handleConfirmCancel()
+        }}
+      />,
     )
   }
 

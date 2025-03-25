@@ -58,7 +58,7 @@ export const useReservations = (status: ReservationStatusCode = "000") => {
 
 export const useReservationDetail = (reservationId: string) => {
   return useQuery({
-    queryKey: ["reservation", reservationId],
+    queryKey: ["reservationDetail", reservationId],
     queryFn: () => fetchReservationDetail(reservationId),
     select: (data) => {
       if (!data) return null
@@ -103,8 +103,8 @@ export const useCompleteVisit = () => {
 
   return useMutation({
     mutationFn: (r_idx: string) => completeVisit(r_idx),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reservation"] })
+    onSuccess: (_, r_idx) => {
+      queryClient.invalidateQueries({ queryKey: ["reservationDetail", r_idx] })
     },
     retry: false,
   })
@@ -116,10 +116,19 @@ interface CancelReservationParams {
 }
 
 export const useCancelReservation = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: ({ reservationId, cancelMemo }: CancelReservationParams) =>
       cancelReservation(reservationId, cancelMemo),
     retry: false,
+    onSuccess: (_, variables) => {
+      // 예약 목록과 상세 정보 쿼리 무효화
+      queryClient.invalidateQueries({ queryKey: ["reservations"] })
+      queryClient.invalidateQueries({
+        queryKey: ["reservationDetail", variables.reservationId],
+      })
+    },
   })
 }
 
