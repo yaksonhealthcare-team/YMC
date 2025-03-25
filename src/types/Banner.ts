@@ -33,3 +33,9 @@ export enum BannerRequestType {
   CARD = "C01",
   RIBBON = "R01",
 }
+
+export interface BannerRequestParams {
+  gubun: BannerRequestType
+  area01?: "Y" | "N"
+  area02?: "Y" | "N"
+}

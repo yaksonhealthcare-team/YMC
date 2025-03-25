@@ -25,10 +25,17 @@ import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
-  const { data: mainBanner } = useBanner(BannerRequestType.SLIDE, {
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
-  })
+  const { data: mainBanner } = useBanner(
+    {
+      gubun: BannerRequestType.SLIDE,
+      area01: "Y",
+      area02: "Y",
+    },
+    {
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+    },
+  )
   const { data: memberships, isLoading: membershipLoading } =
     useUserMemberships("T")
   const { user } = useAuth()
