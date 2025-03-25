@@ -29,7 +29,7 @@ const FavoritePage = () => {
       left: "back",
       backgroundColor: "bg-white",
     })
-    setNavigation({ display: false })
+    setNavigation({ display: true })
   }, [setHeader, setNavigation])
 
   const handleBranchClick = (branch: Branch) => {

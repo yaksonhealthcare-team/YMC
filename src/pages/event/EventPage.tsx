@@ -23,7 +23,7 @@ const EventPage = () => {
     setHeader({
       backgroundColor: "bg-white",
     })
-    setNavigation({ display: false })
+    setNavigation({ display: true })
   }, [setNavigation, setHeader])
 
   return (

@@ -34,12 +34,6 @@ const menuItems = [
     icon: BookmarkIcon,
   },
   {
-    id: "cart",
-    title: "장바구니",
-    path: "/cart",
-    icon: CartIcon,
-  },
-  {
     id: "payment",
     title: "결제 내역",
     path: "/payment_history",

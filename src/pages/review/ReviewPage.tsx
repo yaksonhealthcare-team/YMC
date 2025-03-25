@@ -43,7 +43,7 @@ const ReviewPage = () => {
       left: "back",
       backgroundColor: "bg-white",
     })
-    setNavigation({ display: false })
+    setNavigation({ display: true })
   }, [])
 
   useEffect(() => {

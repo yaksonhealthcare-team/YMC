@@ -33,7 +33,7 @@ const PaymentHistoryPage = () => {
       title: "결제 내역",
       backgroundColor: "bg-white",
     })
-    setNavigation({ display: false })
+    setNavigation({ display: true })
   }, [])
 
   if (isLoading) {

@@ -1,7 +1,10 @@
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useEffect } from "react"
 import Switch from "@components/Switch.tsx"
-import { useNotificationSettings, useUpdateNotificationSettings } from "../../queries/useNotificationQueries"
+import {
+  useNotificationSettings,
+  useUpdateNotificationSettings,
+} from "../../queries/useNotificationQueries"
 import { NotificationSettings } from "../../types/Notification"
 
 const SettingsPage = () => {
@@ -16,7 +19,7 @@ const SettingsPage = () => {
       backgroundColor: "bg-white",
       display: true,
     })
-    setNavigation({ display: false })
+    setNavigation({ display: true })
   }, [])
 
   if (isLoading) {

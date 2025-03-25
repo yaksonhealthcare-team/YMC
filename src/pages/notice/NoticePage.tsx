@@ -42,7 +42,7 @@ const NoticePage: React.FC = () => {
       left: "back",
       backgroundColor: "bg-white",
     })
-    setNavigation({ display: false })
+    setNavigation({ display: true })
   }, [setHeader, setNavigation])
 
   if (isLoading) {
