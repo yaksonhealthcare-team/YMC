@@ -18,7 +18,7 @@ const BranchHeader = lazy(() => import("./_fragments/BranchHeader"))
 const BranchTabs = lazy(() => import("./_fragments/BranchTabs"))
 const BranchActions = lazy(() => import("./_fragments/BranchActions"))
 
-const branchDetailTabs = ["therapists", "programs", "information"] as const
+const branchDetailTabs = ["programs", "information"] as const
 type BranchDetailTab = (typeof branchDetailTabs)[number]
 
 const BranchDetail = () => {
@@ -26,7 +26,7 @@ const BranchDetail = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { showToast } = useOverlay()
-  const [selectedTab, setSelectedTab] = useState<BranchDetailTab>("information")
+  const [selectedTab, setSelectedTab] = useState<BranchDetailTab>("programs")
 
   const { data: branch, isLoading } = useBranch(id || "", {
     latitude: DEFAULT_COORDINATE.latitude,

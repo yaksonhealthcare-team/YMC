@@ -5,11 +5,10 @@ import ProgramList from "./ProgramList"
 import BranchInformation from "./BranchInformation"
 import { BranchDetail as BranchDetailType } from "types/Branch"
 
-const branchDetailTabs = ["therapists", "programs", "information"] as const
+const branchDetailTabs = ["programs", "information"] as const
 type BranchDetailTab = (typeof branchDetailTabs)[number]
 
 const BranchDetailTabs: Record<BranchDetailTab, string> = {
-  "therapists": "테라피스트",
   "programs": "관리프로그램",
   "information": "기본정보",
 }
@@ -29,8 +28,6 @@ const TabContent = memo(
     branch: BranchDetailType
   }) => {
     switch (selectedTab) {
-      case "therapists":
-        return <TherapistList therapists={branch.staffs} />
       case "programs":
         return <ProgramList brandCode={branch.brandCode} />
       case "information":
