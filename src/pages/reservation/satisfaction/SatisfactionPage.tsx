@@ -170,8 +170,11 @@ const SatisfactionPage = () => {
         {
           onSuccess: () => {
             setIsSubmitting(false)
-            // 예약 리스트 쿼리 무효화
+            // 예약 리스트와 상세 정보 쿼리 무효화
             queryClient.invalidateQueries({ queryKey: ["reservations"] })
+            queryClient.invalidateQueries({
+              queryKey: ["reservationDetail", id],
+            })
             navigate("/member-history/reservation")
           },
           onError: () => {
