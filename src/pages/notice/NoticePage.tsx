@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { Notice } from "types/Content"
 import { EmptyCard } from "@components/EmptyCard"
 import { useInfiniteQuery } from "@tanstack/react-query"
@@ -10,6 +10,8 @@ import LoadingIndicator from "@components/LoadingIndicator.tsx"
 const NoticePage: React.FC = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
+  const location = useLocation()
+  const fromPath = location.state?.from || "/mypage"
 
   const {
     data: pages,
@@ -41,9 +43,10 @@ const NoticePage: React.FC = () => {
       title: "공지사항",
       left: "back",
       backgroundColor: "bg-white",
+      onClickBack: () => navigate(fromPath),
     })
     setNavigation({ display: true })
-  }, [setHeader, setNavigation])
+  }, [setHeader, setNavigation, navigate, fromPath])
 
   if (isLoading) {
     return <LoadingIndicator className="min-h-screen" />
@@ -61,7 +64,11 @@ const NoticePage: React.FC = () => {
             <div
               key={notice.code}
               className="flex flex-col gap-4 bg-white py-4 border-b border-gray-100"
-              onClick={() => navigate(`/notice/${notice.code}`)}
+              onClick={() =>
+                navigate(`/notice/${notice.code}`, {
+                  state: { from: fromPath },
+                })
+              }
             >
               <div className="flex flex-col gap-1.5">
                 <span className="font-b text-16px text-gray-700">

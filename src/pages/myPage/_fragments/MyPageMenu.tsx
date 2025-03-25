@@ -94,7 +94,11 @@ const MyPageMenu = () => {
         window.open(item.path, "_blank")
       }
     } else {
-      navigate(item.path)
+      if (item.id === "notice") {
+        navigate(item.path, { state: { from: "/mypage" } })
+      } else {
+        navigate(item.path)
+      }
     }
   }
 

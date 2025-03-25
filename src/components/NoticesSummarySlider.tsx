@@ -8,12 +8,14 @@ interface NoticesSummarySliderProps {
   className?: string
   left?: React.ReactNode
   right?: React.ReactNode
+  fromPath?: string
 }
 
 const NoticesSummarySlider = ({
   className,
   left,
   right,
+  fromPath = "/",
 }: NoticesSummarySliderProps) => {
   const navigate = useNavigate()
   const { data: noticesData } = useNoticesSummary()
@@ -38,7 +40,9 @@ const NoticesSummarySlider = ({
           <SwiperSlide
             key={notice.code}
             className="flex text-sm items-center cursor-pointer"
-            onClick={() => navigate(`/notice/${notice.code}`)}
+            onClick={() =>
+              navigate(`/notice/${notice.code}`, { state: { from: fromPath } })
+            }
           >
             {left}
             <span className="overflow-hidden text-ellipsis whitespace-nowrap">

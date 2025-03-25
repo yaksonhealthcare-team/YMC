@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate, useLocation } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useNotice } from "../../queries/useContentQueries.tsx"
 import { NoticeDetail as Notice } from "../../types/Content.ts"
@@ -10,6 +10,8 @@ import { Image } from "@components/common/Image"
 const NoticeDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const location = useLocation()
+  const fromPath = location.state?.from || "/mypage"
   const { setHeader, setNavigation } = useLayout()
   const { data: notice, isLoading, isError } = useNotice(id!)
 
@@ -18,10 +20,10 @@ const NoticeDetailPage: React.FC = () => {
       display: true,
       left: "back",
       backgroundColor: "bg-white",
-      onClickBack: () => navigate(-1),
+      onClickBack: () => navigate("/notice", { state: { from: fromPath } }),
     })
     setNavigation({ display: false })
-  }, [setHeader, setNavigation, navigate])
+  }, [setHeader, setNavigation, navigate, fromPath])
 
   if (isLoading) {
     return <LoadingIndicator className="min-h-screen" />

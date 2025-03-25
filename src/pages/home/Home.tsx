@@ -77,6 +77,7 @@ const Home = () => {
               <Logo text size={136} />
               <NoticesSummarySlider
                 className={"h-[21px] mt-[12px] max-w-[90%] text-gray-500"}
+                fromPath="/"
                 left={<span className="min-w-[40px]">[공지]</span>}
               />
             </div>
