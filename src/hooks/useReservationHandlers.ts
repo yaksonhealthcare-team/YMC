@@ -32,6 +32,8 @@ export const useReservationHandlers = ({
     setData((prev) => ({
       ...prev,
       item: value,
+      date: null,
+      timeSlot: null,
       additionalServices: [],
     }))
   }
