@@ -43,17 +43,37 @@ interface AddressBookmarkDeleteResponse {
   body: null
 }
 
-export const searchAddress = async (keyword: string): Promise<Location[]> => {
-  const { data } = await axiosClient.get("/address/search", {
-    params: {
-      keyword,
-    },
-  })
+interface AddressSearchResponse {
+  resultCode: string
+  resultMessage: string
+  resultCount: number
+  body: {
+    result: Array<{
+      brand_code: string
+      b_idx: string
+      b_name: string
+      b_addr: string
+      b_lat: string
+      b_lon: string
+      b_addressbookmark: string
+    }>
+  }
+}
 
-  return data.body.map((item: Record<string, any>) => ({
-    address: item.address || "",
-    lat: item.lat || "0",
-    lon: item.lon || "0",
+export const searchAddress = async (keyword: string): Promise<Location[]> => {
+  const { data } = await axiosClient.get<AddressSearchResponse>(
+    "/address/search",
+    {
+      params: {
+        keyword,
+      },
+    },
+  )
+
+  return data.body.result.map((item) => ({
+    address: item.b_addr || "",
+    lat: item.b_lat || "0",
+    lon: item.b_lon || "0",
   }))
 }
 
