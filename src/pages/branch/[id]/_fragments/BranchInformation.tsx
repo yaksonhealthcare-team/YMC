@@ -9,6 +9,7 @@ import { Tag } from "@components/Tag.tsx"
 import BranchImageCarousel from "./BranchImageCarousel"
 import MapView from "@components/MapView.tsx"
 import { Image } from "@components/common/Image"
+import { useOverlay } from "contexts/ModalContext"
 
 const IconSection = ({
   icon,
@@ -46,6 +47,7 @@ const LabelSection = ({
 
 const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
   const [openImageModal, setOpenImageModal] = useState(false)
+  const { showToast } = useOverlay()
 
   const { weekday, saturday, holiday } = branch.operatingHours
 
@@ -58,6 +60,11 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
     start: string
     end: string
   }) => <p>{`${label} ${start} - ${end}`}</p>
+
+  const handleCopyAddress = async () => {
+    await copyToClipboard(branch.location.address)
+    showToast("클립보드에 복사 되었습니다")
+  }
 
   return (
     <>
@@ -119,7 +126,7 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
                 <p>{branch.location.address}</p>
                 <button
                   className={"text-tag-blue flex-shrink-0"}
-                  onClick={() => copyToClipboard(branch.location.address)}
+                  onClick={handleCopyAddress}
                 >
                   {"복사"}
                 </button>
