@@ -4,7 +4,6 @@ import CrosshairIcon from "@assets/icons/CrosshairIcon.svg?react"
 import { Branch } from "../types/Branch.ts"
 import { useNaverMapBranchMarkers } from "../hooks/useNaverMapBranchMarkers.tsx"
 import { getCurrentLocation } from "../utils/getCurrentLocation.ts"
-import clsx from "clsx"
 import { useNaverMap } from "../hooks/useNaverMap.ts"
 
 interface MapViewProps {
@@ -39,7 +38,9 @@ const MapView = ({
   const { updateCurrentLocationMarker } = useNaverMapBranchMarkers({
     map: mapInstance.current,
     branches,
-    selectedBranchId: selectedBranch?.b_idx,
+    selectedBranchId: selectedBranch?.b_idx
+      ? Number(selectedBranch.b_idx)
+      : null,
     options: {
       showCurrentLocationMarker: options?.showCurrentLocation,
       onClickMarker: (branch) => {

@@ -405,6 +405,10 @@ const ReservationFormPage = () => {
   }, 0)
 
   // Render Sections
+        </div>
+      </section>
+    )
+  }
 
   if (isMembershipsLoading) {
     return <LoadingIndicator className="min-h-screen" />

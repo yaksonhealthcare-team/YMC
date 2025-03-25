@@ -1,4 +1,3 @@
-import React from "react"
 import { Button } from "@components/Button"
 import { useOverlay } from "contexts/ModalContext"
 

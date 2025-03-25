@@ -1,6 +1,5 @@
 import { memo } from "react"
 import { CustomTabs as Tabs } from "@components/Tabs"
-import TherapistList from "./TherapistList"
 import ProgramList from "./ProgramList"
 import BranchInformation from "./BranchInformation"
 import { BranchDetail as BranchDetailType } from "types/Branch"

@@ -148,7 +148,6 @@ const LocationPickerMap = () => {
         options={{
           showCurrentLocation: false,
           showCurrentLocationButton: true,
-          currentLocationButtonClassName: "!bottom-52",
           onMoveMap: (newCenter) => {
             setCenter(newCenter)
           },

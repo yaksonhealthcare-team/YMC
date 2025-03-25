@@ -13,8 +13,6 @@ const ReservationSummary = ({ reservation }: ReservationSummaryProps) => {
   const hasStatus = !!reservation.status
   const hasProgramName = !!reservation.programName
   const hasDuration = !!reservation.duration
-  const hasAdditionalServices =
-    (reservation.additionalServices || []).length > 0
   const hasRequest = !!reservation.request
 
   const formatDate = (date: Date) => {

@@ -67,7 +67,7 @@ const Location = ({ reservation }: LocationProps) => {
       <div className="aspect-[1.8] relative">
         {hasLocation ? (
           <MapView
-            center={hasLocation ? branchLocation : undefined}
+            center={branchLocation}
             branches={[branch]}
             options={{
               showCurrentLocationButton: false,

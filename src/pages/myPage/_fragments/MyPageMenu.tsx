@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import BookmarkIcon from "@assets/icons/BookmarkIcon.svg?react"
-import CartIcon from "@assets/icons/CartIcon.svg?react"
 import PaymentIcon from "@assets/icons/PaymentIcon.svg?react"
 import ReviewIcon from "@assets/icons/ReviewIcon.svg?react"
 import InquiryIcon from "@assets/icons/InquiryIcon.svg?react"
