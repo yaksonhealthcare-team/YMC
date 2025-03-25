@@ -185,7 +185,7 @@ const ReservationDetailPage = () => {
           reservation.type === ReservationType.MANAGEMENT
             ? reservation.membershipName
             : "상담 예약",
-        branch: reservation.store,
+        branch: reservation.branchId,
         date: dayjs(reservation.date).format("YYYY-MM-DD"),
         timeSlot: { time: reservation.duration },
         request: reservation.request || "",
@@ -194,10 +194,6 @@ const ReservationDetailPage = () => {
         membershipId: reservation.membershipId,
       },
     }
-    console.log(
-      "Navigating to Reservation Form with state:",
-      JSON.stringify(state, null, 2),
-    )
     navigate("/reservation/form", { state })
   }
 
