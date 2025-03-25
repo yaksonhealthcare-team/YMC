@@ -2,6 +2,8 @@ import { fetchUser, signinWithSocial, UserNotFoundError } from "@apis/auth.api"
 import { useAuth } from "contexts/AuthContext"
 import React, { useEffect } from "react"
 import { SocialSignupInfo } from "contexts/SignupContext"
+import { axiosClient } from "../queries/clients"
+
 const AppBridge = ({ children }: { children?: React.ReactNode }) => {
   if (!window.ReactNativeWebView) {
     return <>{children}</>
@@ -43,10 +45,56 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
 
   const handleSocialLogin = async (data: any) => {
     try {
+      // Apple 로그인인 경우 서버 콜백 호출 (provider가 'A' 또는 'apple'인 경우)
+      if (data.provider === "A" || data.provider === "apple") {
+        try {
+          // 콜백 시작 로그
+          window.ReactNativeWebView?.postMessage(
+            JSON.stringify({
+              type: "CONSOLE_LOG",
+              data: "Apple 로그인 콜백 호출 시작",
+            }),
+          )
+
+          // 서버의 Apple 콜백 API 호출 (환경 변수가 전체 URL이므로 마지막 경로만 추출)
+          const appleCallbackUrl = "/api/auth/apple_callback"
+          await axiosClient.post(appleCallbackUrl, {
+            code: data.accessToken,
+            id_token: data.idToken,
+            state:
+              localStorage.getItem("appleState") ||
+              Math.random().toString(36).substr(2, 11),
+          })
+
+          // 콜백 로그 출력
+          window.ReactNativeWebView?.postMessage(
+            JSON.stringify({
+              type: "CONSOLE_LOG",
+              data: "Apple 로그인 콜백 호출 완료",
+            }),
+          )
+        } catch (callbackError: any) {
+          // 콜백 오류 상세 정보 로그 출력
+          window.ReactNativeWebView?.postMessage(
+            JSON.stringify({
+              type: "CONSOLE_LOG",
+              data: `Apple 콜백 처리 중 오류: ${callbackError.message || JSON.stringify(callbackError)}`,
+            }),
+          )
+          // 콜백 오류가 발생해도 계속 진행 (서버에서는 이미 처리했을 수 있음)
+        }
+      }
+
+      // 소셜 로그인 처리 - provider가 문자열인 경우 적절한 코드로 변환
+      const providerCode =
+        typeof data.provider === "string"
+          ? getProviderCode(data.provider)
+          : data.provider
+
       const { accessToken } = await signinWithSocial({
         SocialAccessToken: data.accessToken,
         socialId: data.socialId,
-        thirdPartyType: data.provider,
+        thirdPartyType: providerCode,
         deviceToken: data.deviceToken,
         deviceType: data.deviceType,
         id_token: data.idToken,
@@ -58,9 +106,15 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
       return
     } catch (error) {
       if (error instanceof UserNotFoundError) {
+        // provider가 문자열인 경우 적절한 코드로 변환
+        const providerCode =
+          typeof data.provider === "string"
+            ? getProviderCode(data.provider)
+            : data.provider
+
         const socialSignupInfo: SocialSignupInfo = {
           next_action_type: "signup",
-          thirdPartyType: data.provider,
+          thirdPartyType: providerCode,
           socialId: data.socialId,
           SocialAccessToken: data.accessToken,
           email: data.email,
@@ -73,8 +127,18 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
           "socialSignupInfo",
           JSON.stringify(socialSignupInfo),
         )
-        window.location.href = "/signup/terms"
 
+        // Apple 로그인인 경우 회원가입 페이지로 이동하기 전 로그
+        if (data.provider === "A" || data.provider === "apple") {
+          window.ReactNativeWebView?.postMessage(
+            JSON.stringify({
+              type: "CONSOLE_LOG",
+              data: "Apple 회원가입 진행 중...",
+            }),
+          )
+        }
+
+        window.location.href = "/signup/terms"
         return
       }
       window.ReactNativeWebView?.postMessage(
@@ -84,6 +148,22 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
         }),
       )
       throw error
+    }
+  }
+
+  // provider 코드 변환
+  const getProviderCode = (provider: string): "K" | "N" | "G" | "A" => {
+    switch (provider.toLowerCase()) {
+      case "kakao":
+        return "K"
+      case "naver":
+        return "N"
+      case "google":
+        return "G"
+      case "apple":
+        return "A"
+      default:
+        return provider as "K" | "N" | "G" | "A"
     }
   }
 
