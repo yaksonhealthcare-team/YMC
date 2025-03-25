@@ -7,7 +7,7 @@ import { Event } from "types/Event"
 import { formatDate } from "utils/date"
 
 export const EventSection = () => {
-  const { data: events } = useEvents()
+  const { data: events } = useEvents("ING")
   const navigate = useNavigate()
 
   const formatDateForAPI = (date: Date) => {
