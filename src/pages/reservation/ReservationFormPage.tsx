@@ -15,7 +15,7 @@ import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useCreateReservationMutation } from "../../queries/useReservationQueries"
 import { MembershipSwiper } from "@components/MembershipSwiper"
-import { AdditionalServiceCard } from "@components/AdditionalServiceCard"
+// import { AdditionalServiceCard } from "@components/AdditionalServiceCard"
 import { ReservationFormSection } from "./_fragments/ReservationFormSection"
 import { ReservationSummarySection } from "./_fragments/ReservationSummarySection"
 import { useErrorHandler } from "hooks/useErrorHandler"
@@ -68,7 +68,7 @@ const ReservationFormPage = () => {
     useUserMemberships("T")
 
   // Additional Queries
-  const { data: additionalManagements, isLoading: isAdditionalLoading } =
+  const { } =
     useAdditionalManagement(data.item)
 
   // Navigation Handler
@@ -224,22 +224,6 @@ const ReservationFormPage = () => {
       />,
       { height: "large" },
     )
-  }
-
-  const handleAdditionalServiceChange = (
-    checked: boolean,
-    service: AdditionalManagement,
-  ) => {
-    setData((prev) => {
-      const newServices = checked
-        ? [...prev.additionalServices, service]
-        : prev.additionalServices.filter((s) => s.s_idx !== service.s_idx)
-
-      return {
-        ...prev,
-        additionalServices: newServices,
-      }
-    })
   }
 
   const handleNavigateBranchSelect = useCallback(() => {
