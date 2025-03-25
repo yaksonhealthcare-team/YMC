@@ -13,6 +13,8 @@ import {
   useAddressSearch,
 } from "../../../queries/useAddressQueries.ts"
 import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect"
+import { useGeolocation } from "../../../hooks/useGeolocation.tsx"
+import { useOverlay } from "../../../contexts/ModalContext"
 
 const LocationSettingsHeader = ({
   onClickBack,
@@ -71,6 +73,12 @@ const LocationSettings = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const { setLocation } = useBranchLocationSelect()
   const { mutate: addBookmark } = useAddAddressBookmarkMutation()
+  const {
+    location: currentLocation,
+    error: locationError,
+    loading: locationLoading,
+  } = useGeolocation()
+  const { showToast } = useOverlay()
 
   const { data: searchResults = [] } = useAddressSearch(address)
   useAddressBookmarks()
@@ -92,6 +100,43 @@ const LocationSettings = () => {
     })
     setNavigation({ display: false })
   }, [])
+
+  useEffect(() => {
+    if (locationError) {
+      showToast(locationError)
+    }
+  }, [locationError, showToast])
+
+  const handleCurrentLocationClick = () => {
+    if (locationLoading) {
+      showToast("위치 정보를 가져오는 중입니다.")
+      return
+    }
+
+    if (currentLocation) {
+      const coords = {
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude,
+      }
+      setLocation({
+        address: "현재 위치",
+        coords,
+      })
+      addBookmark({
+        address: "현재 위치",
+        lat: currentLocation.latitude.toString(),
+        lon: currentLocation.longitude.toString(),
+      })
+      navigate("/branch", {
+        state: {
+          selectedLocation: {
+            address: "현재 위치",
+            coords,
+          },
+        },
+      })
+    }
+  }
 
   const renderContent = () => {
     if (address.length > 0) {
@@ -138,10 +183,7 @@ const LocationSettings = () => {
       <LocationSettingsSearchBar
         text={address}
         setText={setAddress}
-        onClickCurrentLocation={() => {
-          setIsEditing(true)
-          setAddress("")
-        }}
+        onClickCurrentLocation={handleCurrentLocationClick}
         onFocus={() => setIsSearchFocused(true)}
         onBlur={() => setIsSearchFocused(false)}
       />
