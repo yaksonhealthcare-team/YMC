@@ -26,11 +26,19 @@ const initialState = {
   isBottomSheetOpen: false,
 }
 
-export const useMembershipOptionsStore = create<MembershipOptionsStore>((set) => ({
-  ...initialState,
-  setCurrentPath: (path) => set({ currentPath: path }),
-  setSelectedOptions: (options) => set({ selectedOptions: options }),
-  setSelectedBranch: (branch) => set({ selectedBranch: branch }),
-  setIsBottomSheetOpen: (isOpen) => set({ isBottomSheetOpen: isOpen }),
-  clear: () => set(initialState),
-}))
+export const useMembershipOptionsStore = create<MembershipOptionsStore>(
+  (set) => ({
+    ...initialState,
+    setCurrentPath: (path) => set({ currentPath: path }),
+    setSelectedOptions: (options) => set({ selectedOptions: options }),
+    setSelectedBranch: (branch) => set({ selectedBranch: branch }),
+    setIsBottomSheetOpen: (isOpen) => set({ isBottomSheetOpen: isOpen }),
+    clear: () =>
+      set((state) => ({
+        ...state,
+        selectedOptions: [],
+        selectedBranch: null,
+        isBottomSheetOpen: false,
+      })),
+  }),
+)
