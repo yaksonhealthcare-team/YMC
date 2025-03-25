@@ -48,6 +48,7 @@ interface TextAreaProps extends React.HTMLAttributes<HTMLTextAreaElement> {
   maxLength?: number
   value: string
   disabled?: boolean
+  error?: boolean
   onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
 }
 
@@ -58,9 +59,10 @@ export const TextArea = ({
   maxLength,
   value = "",
   disabled,
+  error,
   onChange,
 }: TextAreaProps) => {
-  const isError = maxLength && value.length > maxLength
+  const isError = error || (maxLength && value.length > maxLength)
   const textStyle = isError
     ? COUNTER_TEXT_STYLES.error
     : COUNTER_TEXT_STYLES.normal
@@ -77,7 +79,7 @@ export const TextArea = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        error={isError || false}
+        error={isError}
         variant="outlined"
         sx={{
           ...TEXT_FIELD_STYLES.base,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate, useLocation } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useOverlay } from "../../contexts/ModalContext"
 import { TextArea } from "@components/TextArea"
@@ -7,10 +7,15 @@ import { Button } from "@components/Button"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 import ReservationCancelBottomSheetContent from "./_fragments/ReservationCancelBottomSheetContent"
 import { Divider } from "@mui/material"
-import { useCancelReservation } from "queries/useReservationQueries"
+import {
+  useCancelReservation,
+  useReservationDetail,
+  ReservationDetail,
+} from "queries/useReservationQueries"
 import { escapeHtml } from "utils/sanitize"
+import LoadingIndicator from "@components/LoadingIndicator"
 
-interface ReservationDetail {
+interface ReservationDetailView {
   branchName: string
   programName: string
   duration: string
@@ -22,13 +27,18 @@ interface ReservationDetail {
 const ReservationCancelPage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const { setHeader, setNavigation } = useLayout()
   const { showToast, openBottomSheet } = useOverlay()
   const [cancelReason, setCancelReason] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [reservation, setReservation] = useState<ReservationDetail | null>(null)
+  const [reservation, setReservation] = useState<ReservationDetailView | null>(
+    null,
+  )
   const { mutate: cancelReservation } = useCancelReservation()
+  const { data: reservationDetail, isLoading: isDetailLoading } =
+    useReservationDetail(id ?? "")
 
   useEffect(() => {
     setHeader({
@@ -39,6 +49,27 @@ const ReservationCancelPage = () => {
     })
     setNavigation({ display: false })
   }, [id])
+
+  useEffect(() => {
+    if (reservationDetail) {
+      const totalPrice = (reservationDetail.additionalServices || []).reduce(
+        (sum: number, service) => sum + service.price,
+        0,
+      )
+
+      setReservation({
+        branchName: reservationDetail.branchName,
+        programName: reservationDetail.programName,
+        duration: reservationDetail.duration || "00:00",
+        additionalServices:
+          reservationDetail.additionalServices?.map(
+            (service) => service.name,
+          ) || [],
+        totalPrice,
+        request: reservationDetail.request,
+      })
+    }
+  }, [reservationDetail])
 
   const handleConfirmCancel = async () => {
     try {
@@ -109,16 +140,9 @@ const ReservationCancelPage = () => {
     setCancelReason(e.target.value)
   }
 
-  useEffect(() => {
-    setReservation({
-      branchName: "약손명가 강남구청역점",
-      programName: "K-beauty 연예인 관리 A 코스",
-      duration: "120분",
-      additionalServices: ["얼굴 집중 케어", "콜라겐 집중 관리", "붓기 관리"],
-      totalPrice: 100000,
-      request: "한달 전 턱 보톡스를 맞았어요! 참고 부탁드립니다 :-)",
-    })
-  }, [])
+  if (isDetailLoading) {
+    return <LoadingIndicator className="min-h-screen" />
+  }
 
   return (
     <div className="w-full flex flex-col pb-[120px]">
@@ -177,6 +201,7 @@ const ReservationCancelPage = () => {
           onChange={handleTextAreaChange}
           maxLength={100}
           helperText="5자 이상 작성해주세요."
+          error={cancelReason.length > 0 && cancelReason.length < 5}
         />
       </div>
 
@@ -196,7 +221,7 @@ const ReservationCancelPage = () => {
           onClick={handleCancel}
           className="w-full"
         >
-          예약 취소하기
+          {isLoading ? "취소 처리중..." : "예약 취소하기"}
         </Button>
       </FixedButtonContainer>
     </div>
