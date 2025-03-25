@@ -6,7 +6,6 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { SearchField } from "@components/SearchField.tsx"
 import SavedLocationList from "./SavedLocationList.tsx"
 import LocationSearchResultList from "./LocationSearchResultList.tsx"
-import LocationSearchPlaceholder from "./LocationSearchPlaceholder.tsx"
 import {
   useAddAddressBookmarkMutation,
   useAddressBookmarks,
@@ -69,7 +68,6 @@ const LocationSettings = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const [address, setAddress] = useState("")
-  const [isEditing, setIsEditing] = useState(false)
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const { setLocation } = useBranchLocationSelect()
   const { mutate: addBookmark } = useAddAddressBookmarkMutation()
@@ -171,11 +169,7 @@ const LocationSettings = () => {
         />
       )
     }
-    return isEditing ? (
-      <LocationSearchPlaceholder isSearchFocused={isSearchFocused} />
-    ) : (
-      <SavedLocationList isSearchFocused={isSearchFocused} />
-    )
+    return <SavedLocationList isSearchFocused={isSearchFocused} />
   }
 
   return (
