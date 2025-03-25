@@ -111,8 +111,16 @@ const MembershipUsageHistory = () => {
         id={parseInt(memberShipDetail.mp_idx)}
         title={memberShipDetail.service_name || memberShipDetail.s_type}
         count={`${memberShipDetail.remain_amount}회 / ${memberShipDetail.buy_amount}회`}
-        startDate={memberShipDetail.pay_date.split(" ")[0]}
-        endDate={memberShipDetail.expiration_date.split(" ")[0]}
+        startDate={
+          memberShipDetail.pay_date
+            ? memberShipDetail.pay_date.split(" ")[0]
+            : ""
+        }
+        endDate={
+          memberShipDetail.expiration_date
+            ? memberShipDetail.expiration_date.split(" ")[0]
+            : ""
+        }
         status={
           memberShipDetail.status === "사용가능"
             ? MembershipStatus.ACTIVE
