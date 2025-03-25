@@ -1,15 +1,21 @@
 import { EmptyCard } from "@components/EmptyCard"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 import useIntersection from "../../hooks/useIntersection.tsx"
 import { usePaymentHistories } from "../../queries/usePaymentQueries.tsx"
 import PaymentHistoryListItem from "./_fragments/PaymentHistoryListItem.tsx"
+import { useQueryClient } from "@tanstack/react-query"
+
+const SCROLL_POSITION_KEY = ["payment_history_scroll_position"] as const
 
 const PaymentHistoryPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const scrollContainerRef = useRef<HTMLUListElement>(null)
+
   const {
     data: payments,
     fetchNextPage,
@@ -34,30 +40,67 @@ const PaymentHistoryPage = () => {
       backgroundColor: "bg-white",
     })
     setNavigation({ display: true })
+
+    // 저장된 스크롤 위치 복원
+    const savedPosition = queryClient.getQueryData(SCROLL_POSITION_KEY)
+    if (scrollContainerRef.current && savedPosition) {
+      scrollContainerRef.current.scrollTop = savedPosition as number
+    }
+
+    return () => {
+      // 현재 스크롤 위치 저장
+      if (scrollContainerRef.current) {
+        queryClient.setQueryData(
+          SCROLL_POSITION_KEY,
+          scrollContainerRef.current.scrollTop,
+        )
+      }
+    }
   }, [])
+
+  // 스크롤 이벤트 핸들러
+  const handleScroll = () => {
+    if (scrollContainerRef.current) {
+      queryClient.setQueryData(
+        SCROLL_POSITION_KEY,
+        scrollContainerRef.current.scrollTop,
+      )
+    }
+  }
+
+  // 페이지 이동 시 스크롤 위치 초기화
+  const handlePaymentClick = (paymentIndex: string) => {
+    queryClient.removeQueries({ queryKey: SCROLL_POSITION_KEY })
+    navigate(`/payment/${paymentIndex}`)
+  }
 
   if (isLoading) {
     return <LoadingIndicator className="min-h-screen" />
   }
 
-  if (isFetchingNextPage) {
-    return <LoadingIndicator className="min-h-[100px]" />
-  }
-
   return (
     <div className={"h-full flex flex-col overflow-hidden"}>
       {payments && payments.pages.length > 0 && payments.pages[0].length > 0 ? (
-        <ul className={"divide-[#F7F8Fb] divide-y-8 overflow-y-scroll"}>
+        <ul
+          ref={scrollContainerRef}
+          onScroll={handleScroll}
+          className={"divide-[#F7F8Fb] divide-y-8 overflow-y-auto flex-1"}
+        >
           {payments.pages.map((page) =>
             page.map((payment, index) => (
               <li
-                key={index}
+                key={payment.index || index}
                 className={"p-5"}
-                onClick={() => navigate(`/payment/${payment.index}`)}
+                onClick={() => handlePaymentClick(payment.index)}
               >
                 <PaymentHistoryListItem payment={payment} />
               </li>
             )),
+          )}
+          {isFetchingNextPage && (
+            <li className="py-4">
+              <LoadingIndicator className="h-8" />
+            </li>
           )}
           <div ref={observerTarget} className={"h-4 bg-[#F7F8Fb]"} />
         </ul>

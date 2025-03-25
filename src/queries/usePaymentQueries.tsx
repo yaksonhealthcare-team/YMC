@@ -13,13 +13,18 @@ import { queryClient } from "./clients.ts"
 export const usePaymentHistories = () =>
   useInfiniteQuery({
     initialPageParam: 1,
-    queryKey: queryKeys.payments.histories({ page: 1 }),
+    queryKey: queryKeys.payments.histories.list({ page: 1 }),
     queryFn: ({ pageParam = 1 }) => fetchPayments({ page: pageParam }),
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.length === 0) return undefined
       return allPages.length + 1
     },
     retry: false,
+    staleTime: 1000 * 60 * 5, // 5분
+    gcTime: 1000 * 60 * 30, // 30분
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   })
 
 export const usePaymentHistory = (paymentId: string) =>
@@ -41,7 +46,10 @@ export const usePaymentCancel = () =>
       reason: string
     }) => cancelPayments(orderId, paymentIds, reason),
     onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: [queryKeys.payments] }),
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.payments.histories.list({ page: 1 }),
+        exact: true,
+      }),
     retry: false,
   })
 
@@ -56,7 +64,10 @@ export const useRequestPayment = () =>
   useMutation({
     mutationFn: (paymentData: PaymentRequest) => requestPayment(paymentData),
     onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: [queryKeys.payments] }),
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.payments.histories.list({ page: 1 }),
+        exact: true,
+      }),
     retry: false,
   })
 
