@@ -69,7 +69,7 @@ const ReservationSummary = ({ reservation }: ReservationSummaryProps) => {
             : "소요시간 정보가 없습니다"}
         </p>
       </div>
-      <div className="mt-[16px]">
+      {/* <div className="mt-[16px]">
         <p className="text-gray-500 font-sb text-[14px]">추가관리</p>
         {hasAdditionalServices ? (
           <>
@@ -91,7 +91,7 @@ const ReservationSummary = ({ reservation }: ReservationSummaryProps) => {
             추가 관리 정보가 없습니다
           </p>
         )}
-      </div>
+      </div> */}
       <div className="mt-[16px]">
         <p className="text-gray-500 font-sb text-[14px]">요청사항</p>
         <p
