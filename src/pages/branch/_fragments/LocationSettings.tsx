@@ -68,6 +68,7 @@ const LocationSettings = () => {
   const location = useLocation()
   const [address, setAddress] = useState("")
   const [isEditing, setIsEditing] = useState(false)
+  const [isSearchFocused, setIsSearchFocused] = useState(false)
   const { setLocation } = useBranchLocationSelect()
   const { mutate: addBookmark } = useAddAddressBookmarkMutation()
 
@@ -121,26 +122,29 @@ const LocationSettings = () => {
               },
             })
           }}
+          isSearchFocused={isSearchFocused}
         />
       )
     }
-    return isEditing ? <LocationSearchPlaceholder /> : <SavedLocationList />
+    return isEditing ? (
+      <LocationSearchPlaceholder isSearchFocused={isSearchFocused} />
+    ) : (
+      <SavedLocationList isSearchFocused={isSearchFocused} />
+    )
   }
 
   return (
-    <div
-      className={
-        "flex flex-col items-stretch mt-5 w-full h-full overflow-hidden"
-      }
-    >
+    <div className={"flex flex-col h-full"}>
       <LocationSettingsSearchBar
         text={address}
         setText={setAddress}
-        onClickCurrentLocation={() => navigate("/branch/location/picker")}
-        onFocus={() => setIsEditing(true)}
-        onBlur={() => setIsEditing(false)}
+        onClickCurrentLocation={() => {
+          setIsEditing(true)
+          setAddress("")
+        }}
+        onFocus={() => setIsSearchFocused(true)}
+        onBlur={() => setIsSearchFocused(false)}
       />
-      <div className={"w-full h-2 bg-gray-50 mt-6"} />
       {renderContent()}
     </div>
   )

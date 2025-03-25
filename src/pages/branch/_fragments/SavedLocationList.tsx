@@ -6,7 +6,13 @@ import { useNavigate } from "react-router-dom"
 import LocationSearchResultList from "./LocationSearchResultList"
 import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect"
 
-const SavedLocationList = () => {
+interface SavedLocationListProps {
+  isSearchFocused?: boolean
+}
+
+const SavedLocationList = ({
+  isSearchFocused = false,
+}: SavedLocationListProps) => {
   const navigate = useNavigate()
   const { data: bookmarks = [] } = useAddressBookmarks()
   const { mutate: deleteBookmark } = useDeleteAddressBookmarkMutation()
@@ -37,6 +43,7 @@ const SavedLocationList = () => {
             },
           })
         }}
+        isSearchFocused={isSearchFocused}
       />
     </div>
   )

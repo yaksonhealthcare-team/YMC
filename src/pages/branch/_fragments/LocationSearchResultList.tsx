@@ -8,6 +8,7 @@ interface LocationSearchResultListProps {
   locations: Location[]
   onClick: (location: Location) => void
   onDelete?: (id: string) => void
+  isSearchFocused?: boolean
 }
 
 const LocationSearchResultList = ({
@@ -15,9 +16,10 @@ const LocationSearchResultList = ({
   locations,
   onClick,
   onDelete,
+  isSearchFocused = false,
 }: LocationSearchResultListProps) => {
   if (locations.length === 0) {
-    return <LocationSearchPlaceholder />
+    return <LocationSearchPlaceholder isSearchFocused={isSearchFocused} />
   }
 
   return (
