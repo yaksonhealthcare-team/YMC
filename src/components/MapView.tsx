@@ -5,16 +5,16 @@ import { Branch } from "../types/Branch.ts"
 import { useNaverMapBranchMarkers } from "../hooks/useNaverMapBranchMarkers.tsx"
 import { getCurrentLocation } from "../utils/getCurrentLocation.ts"
 import clsx from "clsx"
+import { useNaverMap } from "../hooks/useNaverMap.ts"
 
 interface MapViewProps {
-  center?: Coordinate
+  center: Coordinate
   branches?: Branch[]
   options?: {
     showCurrentLocationButton?: boolean
     showCurrentLocation?: boolean
-    onSelectBranch?: (branch: Branch | null) => void
-    onMoveMap?: (center: Coordinate) => void
-    currentLocationButtonClassName?: string
+    onMoveMap?: (coordinate: Coordinate) => void
+    onSelectBranch?: (branch: Branch) => void
   }
 }
 
@@ -23,13 +23,18 @@ const MapView = ({
   branches = [],
   options = { showCurrentLocationButton: true },
 }: MapViewProps) => {
-  const { naver } = window
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstance = useRef<naver.maps.Map | null>(null)
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
   const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(
     null,
   )
+  const [isMapInitialized, setIsMapInitialized] = useState(false)
+  const { isLoaded, error } = useNaverMap()
+
+  useEffect(() => {
+    console.log("MapView 상태:", { isLoaded, error, center, isMapInitialized })
+  }, [isLoaded, error, center, isMapInitialized])
 
   const { updateCurrentLocationMarker } = useNaverMapBranchMarkers({
     map: mapInstance.current,
@@ -43,7 +48,7 @@ const MapView = ({
 
         if (mapInstance.current) {
           mapInstance.current.setCenter(
-            new naver.maps.LatLng(branch.latitude, branch.longitude),
+            new window.naver.maps.LatLng(branch.latitude, branch.longitude),
           )
         }
       },
@@ -51,70 +56,130 @@ const MapView = ({
   })
 
   useEffect(() => {
-    if (!mapRef.current || !center) return
+    let mounted = true
 
-    mapInstance.current = new naver.maps.Map("map", {
-      center: new naver.maps.LatLng(center.latitude, center.longitude),
-      zoom: 14,
-    })
-
-    // 드래그 종료 시에만 위치 업데이트
-    if (options?.onMoveMap && mapInstance.current) {
-      const map = mapInstance.current
-      naver.maps.Event.addListener(map, "dragend", () => {
-        const center = map.getCenter()
-        options?.onMoveMap?.({
-          latitude: center.y,
-          longitude: center.x,
+    const initializeMap = () => {
+      if (!mounted || !mapRef.current || !center || !isLoaded) {
+        console.log("지도 초기화 조건 미충족:", {
+          mounted,
+          hasMapRef: !!mapRef.current,
+          hasCenter: !!center,
+          isLoaded,
         })
-      })
+        return
+      }
+
+      try {
+        console.log("지도 초기화 시작")
+        mapInstance.current = new window.naver.maps.Map("map", {
+          center: new window.naver.maps.LatLng(
+            center.latitude,
+            center.longitude,
+          ),
+          zoom: 14,
+        })
+
+        if (!mounted) return
+        setIsMapInitialized(true)
+        console.log("지도 초기화 완료")
+
+        // 드래그 종료 시에만 위치 업데이트
+        if (options?.onMoveMap && mapInstance.current) {
+          const map = mapInstance.current
+          window.naver.maps.Event.addListener(map, "dragend", () => {
+            const center = map.getCenter()
+            options?.onMoveMap?.({
+              latitude: center.y,
+              longitude: center.x,
+            })
+          })
+        }
+
+        if (options?.showCurrentLocation) {
+          getCurrentLocation({
+            onSuccess: (coords) => {
+              if (!mounted) return
+              setCurrentLocation(coords)
+            },
+          })
+        }
+      } catch (error) {
+        console.error("지도 초기화 중 오류 발생:", error)
+      }
     }
 
-    if (options?.showCurrentLocation) {
-      getCurrentLocation({
-        onSuccess: (coords) => {
-          setCurrentLocation(coords)
-        },
-      })
+    if (isLoaded && center) {
+      // mapRef가 설정될 때까지 대기
+      if (!mapRef.current) {
+        const checkMapRef = setInterval(() => {
+          if (mapRef.current) {
+            console.log("mapRef가 설정되었습니다.")
+            clearInterval(checkMapRef)
+            initializeMap()
+          }
+        }, 100)
+
+        return () => {
+          clearInterval(checkMapRef)
+        }
+      }
+
+      initializeMap()
     }
 
     return () => {
-      mapInstance.current = null
+      mounted = false
+      if (mapInstance.current) {
+        mapInstance.current = null
+        setIsMapInitialized(false)
+      }
     }
-  }, [center])
+  }, [center, isLoaded])
 
   useEffect(() => {
-    if (currentLocation) updateCurrentLocationMarker(currentLocation)
-  }, [currentLocation])
+    if (isMapInitialized && currentLocation && mapInstance.current) {
+      updateCurrentLocationMarker(currentLocation)
+    }
+  }, [currentLocation, isMapInitialized])
 
-  const moveToCurrentLocation = () => {
+  const handleCurrentLocationClick = () => {
     getCurrentLocation({
       onSuccess: (coords) => {
-        if (!mapInstance.current) return
-        mapInstance.current.setCenter(
-          new naver.maps.LatLng(coords.latitude, coords.longitude),
-        )
-        mapInstance.current.setZoom(15)
         setCurrentLocation(coords)
-        updateCurrentLocationMarker(coords)
-        options?.onMoveMap?.(coords)
+        if (mapInstance.current) {
+          mapInstance.current.setCenter(
+            new window.naver.maps.LatLng(coords.latitude, coords.longitude),
+          )
+        }
       },
     })
   }
 
-  if (!center) return null
+  if (error) {
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        <div className="text-red-500">지도 로딩 중 오류가 발생했습니다.</div>
+      </div>
+    )
+  }
+
+  if (!isLoaded || !center) {
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        <div className="text-gray-500">지도를 불러오는 중...</div>
+      </div>
+    )
+  }
 
   return (
-    <div id={"map"} ref={mapRef} className={"relative w-full h-full"}>
+    <div className="relative w-full h-full">
+      <div ref={mapRef} id="map" className="w-full h-full" />
       {options?.showCurrentLocationButton && (
         <button
-          className={clsx(
-            `absolute right-5 bottom-10 z-10 w-10 h-10 bg-white rounded-full items-center justify-center flex shadow-xl ${selectedBranch ? "transition-transform -translate-y-32 duration-300" : "transition-transform translate-y-0 duration-300"}`,
-            options.currentLocationButtonClassName || "",
-          )}
-          onClick={moveToCurrentLocation}
+          onClick={handleCurrentLocationClick}
+          className="absolute bottom-4 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-50"
         >
-          <CrosshairIcon />
+          <CrosshairIcon className="w-6 h-6" />
         </button>
       )}
     </div>

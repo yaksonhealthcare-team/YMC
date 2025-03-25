@@ -1,17 +1,14 @@
 import { Branch } from "../types/Branch.ts"
 import { Coordinate } from "../types/Coordinate.ts"
-import { useEffect, useRef, useState } from "react"
-import { createMarkerIcon, MarkerState } from "../utils/createMarkerIcon.ts"
+import { useEffect, useRef } from "react"
 
 interface UseNaverMapBranchMarkersProps {
   map: naver.maps.Map | null
   branches: Branch[]
-  selectedBranchId?: string
+  selectedBranchId?: number | null
   options?: {
     showCurrentLocationMarker?: boolean
     onClickMarker?: (branch: Branch) => void
-    onClickMap?: () => void
-    onMove?: (center: Coordinate) => void
   }
 }
 
@@ -19,102 +16,131 @@ export const useNaverMapBranchMarkers = ({
   map,
   branches,
   selectedBranchId,
-  options,
+  options = {},
 }: UseNaverMapBranchMarkersProps) => {
-  const [markers, setMarkers] = useState<Map<string, naver.maps.Marker>>(
-    new Map(),
-  )
-  const [currentLocationMarker, setCurrentLocationMarker] =
-    useState<naver.maps.Marker | null>(null)
-  const listenersRef = useRef<naver.maps.MapEventListener[]>([])
+  const markersRef = useRef<naver.maps.Marker[]>([])
+  const currentLocationMarkerRef = useRef<naver.maps.Marker | null>(null)
+  const eventListenersRef = useRef<naver.maps.MapEventListener[]>([])
 
-  const initializeMarkers = () => {
-    markers.forEach((marker) => marker.setMap(null))
-  }
-
-  const getMarkerState = (branch: Branch): MarkerState => {
-    if (branch.b_idx === selectedBranchId) {
-      return branch.isFavorite ? "active-bookmark" : "active"
-    }
-    return branch.isFavorite ? "bookmark" : "default"
-  }
-
-  // Set branch markers
   useEffect(() => {
-    if (!map) return
+    if (!map || !window.naver?.maps) {
+      console.log("지도 또는 네이버 지도 API가 초기화되지 않았습니다.")
+      return
+    }
+
+    const clearMarkers = () => {
+      try {
+        markersRef.current.forEach((marker) => {
+          if (marker && marker.getMap()) {
+            marker.setMap(null)
+          }
+        })
+        markersRef.current = []
+
+        if (
+          currentLocationMarkerRef.current &&
+          currentLocationMarkerRef.current.getMap()
+        ) {
+          currentLocationMarkerRef.current.setMap(null)
+          currentLocationMarkerRef.current = null
+        }
+      } catch (error) {
+        console.error("마커 정리 중 오류 발생:", error)
+      }
+    }
+
+    const clearEventListeners = () => {
+      try {
+        eventListenersRef.current.forEach((listener) => {
+          if (map && window.naver?.maps) {
+            window.naver.maps.Event.removeListener(listener)
+          }
+        })
+        eventListenersRef.current = []
+      } catch (error) {
+        console.error("이벤트 리스너 정리 중 오류 발생:", error)
+      }
+    }
+
+    const initializeMarkers = () => {
+      clearMarkers()
+      clearEventListeners()
+
+      branches.forEach((branch) => {
+        try {
+          const marker = new window.naver.maps.Marker({
+            position: new window.naver.maps.LatLng(
+              branch.latitude,
+              branch.longitude,
+            ),
+            map,
+            icon: {
+              content: `<div class="w-6 h-6 bg-white rounded-full border-2 border-primary flex items-center justify-center ${
+                Number(branch.b_idx) === selectedBranchId ? "border-2" : ""
+              }">
+                <div class="w-2 h-2 bg-primary rounded-full"></div>
+              </div>`,
+              anchor: new window.naver.maps.Point(12, 12),
+            },
+          })
+
+          if (options.onClickMarker) {
+            const listener = window.naver.maps.Event.addListener(
+              marker,
+              "click",
+              () => {
+                options.onClickMarker?.(branch)
+              },
+            )
+            eventListenersRef.current.push(listener)
+          }
+
+          markersRef.current.push(marker)
+        } catch (error) {
+          console.error("마커 초기화 중 오류 발생:", error)
+        }
+      })
+    }
 
     initializeMarkers()
-    const newMarkers = new Map<string, naver.maps.Marker>()
 
-    branches.forEach((branch) => {
-      const marker = new naver.maps.Marker({
-        position: new naver.maps.LatLng(branch.latitude, branch.longitude),
-        map,
-        icon: createMarkerIcon(branch, getMarkerState(branch)),
-      })
+    return () => {
+      clearMarkers()
+      clearEventListeners()
+    }
+  }, [map, branches, selectedBranchId, options.onClickMarker])
 
-      if (options?.onClickMarker) {
-        naver.maps.Event.addListener(marker, "click", () => {
-          options.onClickMarker?.(branch)
-        })
+  const updateCurrentLocationMarker = (coordinate: Coordinate) => {
+    if (!map || !window.naver?.maps) {
+      console.log("지도 또는 네이버 지도 API가 초기화되지 않았습니다.")
+      return
+    }
+
+    try {
+      if (
+        currentLocationMarkerRef.current &&
+        currentLocationMarkerRef.current.getMap()
+      ) {
+        currentLocationMarkerRef.current.setMap(null)
       }
 
-      newMarkers.set(branch.b_idx, marker)
-    })
-    setMarkers(newMarkers)
-
-    return () => initializeMarkers()
-  }, [map, branches, selectedBranchId])
-
-  // set event handlers
-  useEffect(() => {
-    if (!map) return
-
-    if (options?.onClickMap) {
-      const listener = naver.maps.Event.addListener(
+      currentLocationMarkerRef.current = new window.naver.maps.Marker({
+        position: new window.naver.maps.LatLng(
+          coordinate.latitude,
+          coordinate.longitude,
+        ),
         map,
-        "click",
-        options.onClickMap,
-      )
-      listenersRef.current.push(listener)
-    }
-
-    if (options?.onMove) {
-      const listener = naver.maps.Event.addListener(map, "dragend", (event) => {
-        options.onMove?.({
-          latitude: event.latlng.lat(),
-          longitude: event.latlng.lng(),
-        })
+        icon: {
+          content: `<div class="w-6 h-6 bg-blue-500 rounded-full border-2 border-white flex items-center justify-center">
+            <div class="w-2 h-2 bg-white rounded-full"></div>
+          </div>`,
+          anchor: new window.naver.maps.Point(12, 12),
+        },
       })
-      listenersRef.current.push(listener)
+    } catch (error) {
+      console.error("현재 위치 마커 업데이트 중 오류 발생:", error)
     }
-
-    const listeners = listenersRef.current
-    return () => naver.maps.Event.removeListener(listeners)
-  }, [map])
-
-  const updateCurrentLocationMarker = (currentLocation: Coordinate) => {
-    if (!map || !options?.showCurrentLocationMarker) return
-
-    currentLocationMarker?.setMap(null)
-    setCurrentLocationMarker(null)
-
-    const marker = new naver.maps.Marker({
-      position: new naver.maps.LatLng(
-        currentLocation.latitude,
-        currentLocation.longitude,
-      ),
-      map,
-      icon: createMarkerIcon(null, "current-location"),
-    })
-
-    setCurrentLocationMarker(marker)
-
-    return () => marker.setMap(null)
   }
 
-  return {
-    markers,
-    updateCurrentLocationMarker,
-  }
+  return { updateCurrentLocationMarker }
 }
