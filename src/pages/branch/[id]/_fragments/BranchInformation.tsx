@@ -114,7 +114,20 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
                   latitude: branch.location.latitude,
                   longitude: branch.location.longitude,
                 }}
-                branches={[]}
+                branches={[
+                  {
+                    b_idx: branch.b_idx,
+                    name: branch.name,
+                    address: branch.location.address,
+                    latitude: branch.location.latitude,
+                    longitude: branch.location.longitude,
+                    canBookToday: false,
+                    distanceInMeters: branch.location.distance || null,
+                    isFavorite: branch.isBookmarked || false,
+                    brandCode: branch.brandCode,
+                    brand: branch.brand,
+                  },
+                ]}
                 options={{
                   showCurrentLocation: false,
                   showCurrentLocationButton: false,

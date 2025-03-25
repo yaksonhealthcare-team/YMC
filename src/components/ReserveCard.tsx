@@ -117,12 +117,13 @@ export const ReserveCard = ({
   }
 
   return (
-    <button
+    <div
       className={clsx(
-        `flex justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px] w-full text-left`,
+        `flex justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px] w-full text-left cursor-pointer`,
         className,
       )}
       onClick={() => navigate(`/reservation/${reservation.id}`)}
+      role="button"
       tabIndex={0}
       aria-label={`${reservation.store} ${reservation.programName} 예약 상세보기`}
     >
@@ -149,7 +150,7 @@ export const ReserveCard = ({
         />
         {getButton()}
       </div>
-    </button>
+    </div>
   )
 }
 
