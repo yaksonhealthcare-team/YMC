@@ -262,7 +262,6 @@ export const routeConfig: RouteConfig[] = [
     auth: true,
   },
   //구매, 스토어, 예약
-  /*
   {
     path: "/membership",
     element: <Membership />,
@@ -283,7 +282,6 @@ export const routeConfig: RouteConfig[] = [
     element: <MembershipDetailPage />,
     auth: true,
   },
-  */
   {
     path: "/store",
     element: <StorePage />,

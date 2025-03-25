@@ -1,4 +1,4 @@
-import { BannerRequestType, BannerRequestParams } from "../types/Banner.ts"
+import { BannerRequestParams } from "../types/Banner.ts"
 import { useQuery, UseQueryOptions } from "@tanstack/react-query"
 import { queryKeys } from "./query.keys.ts"
 import { fetchBanners } from "../apis/banner.api.ts"
