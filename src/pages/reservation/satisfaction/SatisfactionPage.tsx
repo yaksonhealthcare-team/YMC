@@ -14,7 +14,7 @@ import { uploadImages } from "../../../apis/image.api"
 import { formatDate } from "../../../utils/date"
 import LoadingIndicator from "../../../components/LoadingIndicator"
 import { Image } from "@components/common/Image"
-
+import { useQueryClient } from "@tanstack/react-query"
 import { validateFile, escapeHtml } from "utils/sanitize"
 
 type SatisfactionPageParams = {
@@ -51,6 +51,7 @@ const SatisfactionPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
+  const queryClient = useQueryClient()
   const createReviewMutation = useCreateReviewMutation()
   const {
     data: reviewQuestions,
@@ -169,6 +170,8 @@ const SatisfactionPage = () => {
         {
           onSuccess: () => {
             setIsSubmitting(false)
+            // 예약 리스트 쿼리 무효화
+            queryClient.invalidateQueries({ queryKey: ["reservations"] })
             navigate("/member-history/reservation")
           },
           onError: () => {
