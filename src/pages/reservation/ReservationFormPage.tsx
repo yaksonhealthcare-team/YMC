@@ -68,8 +68,7 @@ const ReservationFormPage = () => {
     useUserMemberships("T")
 
   // Additional Queries
-  const { } =
-    useAdditionalManagement(data.item)
+  const {} = useAdditionalManagement(data.item)
 
   // Navigation Handler
   const handleBack = useCallback(() => {
@@ -296,19 +295,7 @@ const ReservationFormPage = () => {
         title: "예약 완료",
         message: "상담 예약이 완료되었습니다.",
         onConfirm: () => {
-          if (location.state?.returnPath) {
-            navigate(location.state.returnPath, {
-              state: {
-                ...location.state,
-                type: data.item,
-                branch: data.branch,
-                date: data.date?.format("YYYY-MM-DD"),
-                time: data.timeSlot?.time,
-                additionalServices: data.additionalServices,
-                request: data.request,
-              },
-            })
-          }
+          navigate("/member-history/reservation")
         },
       })
     } catch (error) {
