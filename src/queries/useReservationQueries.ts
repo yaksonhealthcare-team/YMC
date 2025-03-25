@@ -49,7 +49,7 @@ export const useReservations = (status: ReservationStatusCode = "000") => {
     queryFn: ({ pageParam = 1 }) => fetchReservations(status, pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage: Reservation[], pages) => {
-      if (lastPage.length === 0) return undefined
+      if (lastPage.length < 10) return undefined
       return pages.length + 1
     },
     retry: false,
