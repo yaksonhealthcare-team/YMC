@@ -142,11 +142,9 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
           <div>
             <div className={"h-[82px]"} />
             <div
-              className="flex fixed bottom-0 w-full max-w-[500px] h-[82px] z-10 bg-white justify-between"
+              className="flex fixed bottom-0 left-0 right-0 mx-auto h-[82px] z-10 bg-white justify-between max-w-[500px]"
               style={{
                 boxShadow: "0px -2px 16px 0px #2E2B2914",
-                width: "100%",
-                maxWidth: "inherit",
               }}
             >
               <NavButton
