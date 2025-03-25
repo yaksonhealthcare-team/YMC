@@ -5,12 +5,14 @@ interface MembershipUsageProps {
   membershipName?: string
   branchName?: string
   remainingCount?: string
+  membershipId?: string
 }
 
 const MembershipUsage = ({
   membershipName,
   branchName,
   remainingCount,
+  membershipId,
 }: MembershipUsageProps) => {
   const navigate = useNavigate()
   const hasMembershipName = !!membershipName
@@ -24,7 +26,7 @@ const MembershipUsage = ({
         <div
           className="flex items-center cursor-pointer"
           onClick={() => {
-            navigate("/member-history/membership")
+            navigate(`/membership/usage/${membershipId}`)
           }}
         >
           <span className="font-r text-12px text-gray-500">사용내역보기 </span>

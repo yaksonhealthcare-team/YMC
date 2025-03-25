@@ -365,6 +365,7 @@ const ReservationDetailPage = () => {
           membershipName={reservation.membershipName}
           branchName={reservation.branchName}
           remainingCount={reservation.remainingCount}
+          membershipId={reservation.membershipId}
         />
       )}
       {!isBottomSheetOpen && (
