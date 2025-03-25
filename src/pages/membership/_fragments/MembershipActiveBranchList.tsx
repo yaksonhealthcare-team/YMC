@@ -53,7 +53,7 @@ export const MembershipActiveBranchList = ({ onBranchSelect }: Props) => {
           canBookToday: false,
           distanceInMeters: null,
           isFavorite: false,
-          brandCode: "001",
+          brandCode: branch.brandCode,
           brand: "therapist",
         }
         return (

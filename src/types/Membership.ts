@@ -64,6 +64,7 @@ export interface ServiceCourse {
 export interface BranchInfo {
   b_idx: string
   b_name: string
+  brandCode: string
 }
 
 export interface MyMembership {

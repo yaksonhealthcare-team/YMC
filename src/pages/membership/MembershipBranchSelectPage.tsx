@@ -7,15 +7,16 @@ import MembershipBranchList from "./MembershipBranchList.tsx"
 
 interface Props {
   onSelect?: (branch: Branch) => void
+  brandCode: string
 }
 
-const MembershipBranchSelectPage = ({ onSelect }: Props) => {
+const MembershipBranchSelectPage = ({ onSelect, brandCode }: Props) => {
   const [query, setQuery] = useState("")
   const { setHeader, setNavigation } = useLayout()
   const location = useLocation()
   const navigate = useNavigate()
 
-  const memoizedState = useMemo(() => location.state, [location.state]);
+  const memoizedState = useMemo(() => location.state, [location.state])
 
   useEffect(() => {
     setHeader({
@@ -39,14 +40,17 @@ const MembershipBranchSelectPage = ({ onSelect }: Props) => {
 
     navigate(location.pathname, {
       replace: true,
-      state: location.state,
+      state: {
+        ...location.state,
+        brand_code: brandCode,
+      },
     })
 
     return () => {
       setHeader({ display: false })
       setNavigation({ display: true })
     }
-  }, [setHeader, setNavigation, navigate, memoizedState])
+  }, [setHeader, setNavigation, navigate, memoizedState, brandCode])
 
   return (
     <div className={"flex flex-col overflow-y-hidden"}>

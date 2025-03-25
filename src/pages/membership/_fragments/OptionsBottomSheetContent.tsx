@@ -229,6 +229,10 @@ export const OptionsBottomSheetContent = ({
     return false
   }, [selectedOptions.length, serviceType, selectedBranch])
 
+  const handleBranchSelect = (branch: Branch) => {
+    setSelectedBranch(branch)
+  }
+
   return (
     <div className="flex flex-col max-h-[610px] min-h-[500px]">
       {/* 콘텐츠 영역 */}
@@ -390,10 +394,9 @@ export const OptionsBottomSheetContent = ({
       {isModalOpen &&
         createPortal(
           <MembershipBranchSelectModal
-            onBranchSelect={(branch: Branch) => {
-              setSelectedBranch(branch)
-            }}
-            onClose={() => setIsModalOpen(false)}
+            onBranchSelect={handleBranchSelect}
+            onClose={closeOverlay}
+            brandCode={brandCode}
           />,
           document.body,
         )}

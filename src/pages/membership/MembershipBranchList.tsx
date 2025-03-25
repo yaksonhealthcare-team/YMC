@@ -17,8 +17,6 @@ interface MembershipBranchListProps {
   query?: string
 }
 
-const DEFAULT_BRAND_CODE = "001" // 약손명가
-
 const MembershipBranchList = ({
   onSelect,
   query,
@@ -48,7 +46,7 @@ const MembershipBranchList = ({
     latitude: coordinates.latitude,
     longitude: coordinates.longitude,
     search: debouncedQuery,
-    brandCode: location.state?.brand_code || DEFAULT_BRAND_CODE,
+    brandCode: location.state?.brand_code,
     mp_idx: location.state?.selectedItem,
   })
 

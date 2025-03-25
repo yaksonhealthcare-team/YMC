@@ -5,11 +5,13 @@ import MembershipBranchSelectPage from "../MembershipBranchSelectPage"
 interface Props {
   onBranchSelect: (branch: Branch) => void
   onClose: () => void
+  brandCode: string
 }
 
 export const MembershipBranchSelectModal = ({
   onBranchSelect,
   onClose,
+  brandCode,
 }: Props) => {
   return (
     <div
@@ -26,6 +28,7 @@ export const MembershipBranchSelectModal = ({
             onBranchSelect(branch)
             onClose()
           }}
+          brandCode={brandCode}
         />
       </div>
     </div>
