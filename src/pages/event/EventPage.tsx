@@ -50,12 +50,12 @@ const EventPage = () => {
           <button
             className={clsx(
               "flex-1 py-3 font-sb text-16px relative",
-              selectedTab === "ONGOING" ? "text-primary" : "text-gray-700",
+              selectedTab === "ING" ? "text-primary" : "text-gray-700",
             )}
-            onClick={() => setSelectedTab("ONGOING")}
+            onClick={() => setSelectedTab("ING")}
           >
             진행중
-            {selectedTab === "ONGOING" && (
+            {selectedTab === "ING" && (
               <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary" />
             )}
           </button>

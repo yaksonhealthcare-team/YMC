@@ -15,4 +15,4 @@ export interface EventDetail extends Event {
   contents: string
 }
 
-export type Tab = "ALL" | "ONGOING" | "END"
+export type Tab = "ALL" | "ING" | "END" | "TBD"
