@@ -61,6 +61,7 @@ const EditProfile = () => {
               "font-m text-gray-500 disabled:text-gray-300 disabled:cursor-default absolute right-5"
             }
             onClick={handleSubmit}
+            disabled={!hasChanges()}
           >
             <p>{"저장"}</p>
           </button>
@@ -78,7 +79,7 @@ const EditProfile = () => {
   }
 
   const handleSubmit = async () => {
-    if (!user) return
+    if (!user || !hasChanges()) return
 
     try {
       let finalProfileUrl = profileImageUrl || ""
@@ -138,23 +139,27 @@ const EditProfile = () => {
   }
 
   const handleClickBackButton = () => {
-    openBottomSheet(
-      <BottomSheetForm
-        title={"이 페이지를 나가시겠습니까?"}
-        content={"수정한 데이터가 저장되지 않습니다."}
-        confirmOptions={{
-          text: "나가기",
-          onClick: () => {
-            navigate("/mypage")
-            closeOverlay()
-          },
-        }}
-        cancelOptions={{
-          text: "취소하기",
-          onClick: closeOverlay,
-        }}
-      />,
-    )
+    if (hasChanges()) {
+      openBottomSheet(
+        <BottomSheetForm
+          title={"이 페이지를 나가시겠습니까?"}
+          content={"수정한 데이터가 저장되지 않습니다."}
+          confirmOptions={{
+            text: "나가기",
+            onClick: () => {
+              navigate("/mypage")
+              closeOverlay()
+            },
+          }}
+          cancelOptions={{
+            text: "취소하기",
+            onClick: closeOverlay,
+          }}
+        />,
+      )
+    } else {
+      navigate(-1)
+    }
   }
 
   const handleClickWithdrawal = () => {
@@ -190,6 +195,19 @@ const EditProfile = () => {
       default:
         return null
     }
+  }
+
+  // 변경사항이 있는지 확인하는 함수
+  const hasChanges = () => {
+    if (!user) return false
+
+    return (
+      isProfileImageChanged ||
+      address.postalCode !== user.postalCode ||
+      address.road !== user.address.road ||
+      address.detail !== user.address.detail ||
+      marketingAgreed !== user.marketingAgreed
+    )
   }
 
   return (
