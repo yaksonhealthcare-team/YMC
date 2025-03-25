@@ -48,11 +48,13 @@ export interface Reservation {
   type: string
   remainingDays?: string
   reviewPositiveYn?: string
+  branchId: string
 }
 
 export interface ReservationResponse {
   r_idx: string
   r_gubun: string
+  b_idx: string
   b_name: string
   b_lat: string
   b_lon: string

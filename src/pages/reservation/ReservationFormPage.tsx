@@ -8,6 +8,7 @@ import { Button } from "@components/Button"
 import { useOverlay } from "contexts/ModalContext"
 import DateAndTimeBottomSheet from "./_fragments/DateAndTimeBottomSheet"
 import { Dayjs } from "dayjs"
+import dayjs from "dayjs"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 import { useAdditionalManagement } from "../../queries/useMembershipQueries.tsx"
 import { TimeSlot } from "../../types/Schedule.ts"
@@ -35,6 +36,7 @@ interface FormDataType {
   timeSlot: null | TimeSlot
   request: string
   additionalServices: AdditionalManagement[]
+  membershipId?: string
 }
 
 const BRAND_CODE = "001" // 약손명가
@@ -50,12 +52,16 @@ const ReservationFormPage = () => {
 
   // State
   const [data, setData] = useState<FormDataType>({
-    item: undefined,
-    branch: undefined,
-    date: null,
-    timeSlot: null,
-    request: "",
-    additionalServices: [],
+    item: location.state?.fromReservation?.item || "",
+    branch: location.state?.fromReservation?.branch || "",
+    date: location.state?.fromReservation?.date
+      ? dayjs(location.state.fromReservation.date)
+      : null,
+    timeSlot: location.state?.fromReservation?.timeSlot || null,
+    request: location.state?.fromReservation?.request || "",
+    additionalServices:
+      location.state?.fromReservation?.additionalServices || [],
+    membershipId: location.state?.fromReservation?.membershipId,
   })
 
   // Queries
@@ -66,9 +72,6 @@ const ReservationFormPage = () => {
   const { mutateAsync: createReservation } = useCreateReservationMutation()
   const { data: membershipsData, isLoading: isMembershipsLoading } =
     useUserMemberships("T")
-
-  // Additional Queries
-  const {} = useAdditionalManagement(data.item)
 
   // Navigation Handler
   const handleBack = useCallback(() => {
@@ -109,6 +112,56 @@ const ReservationFormPage = () => {
     }
   }, [handleBack])
 
+  // 지점 자동 선택
+  useEffect(() => {
+    let isSubscribed = true
+
+    const setBranchFromReservation = async () => {
+      if (!membershipsData?.pages[0]?.body || isMembershipsLoading) {
+        return
+      }
+
+      if (location.state?.fromReservation?.branch) {
+        const branch = membershipsData.pages[0].body
+          .find((membership) =>
+            membership.branchs?.some(
+              (b) => b.b_name === location.state.fromReservation.branch,
+            ),
+          )
+          ?.branchs?.find(
+            (b) => b.b_name === location.state.fromReservation.branch,
+          )
+
+        if (isSubscribed && branch) {
+          const branchData = {
+            b_idx: branch.b_idx,
+            name: branch.b_name,
+            address: "",
+            latitude: 0,
+            longitude: 0,
+            canBookToday: true,
+            distanceInMeters: null,
+            isFavorite: false,
+            brandCode: BRAND_CODE,
+            brand: "약손명가",
+          }
+          setSelectedBranch(branchData)
+        }
+      }
+    }
+
+    setBranchFromReservation()
+
+    return () => {
+      isSubscribed = false
+    }
+  }, [
+    location.state?.fromReservation?.branch,
+    membershipsData,
+    setSelectedBranch,
+    isMembershipsLoading,
+  ])
+
   // Data Effects
   useEffect(() => {
     let isSubscribed = true
@@ -143,6 +196,43 @@ const ReservationFormPage = () => {
       isSubscribed = false
     }
   }, [location.state, setSelectedBranch])
+
+  // 회원권 유효성 검사
+  useEffect(() => {
+    let isSubscribed = true
+
+    const checkMembershipValidity = async () => {
+      if (location.state?.fromReservation?.membershipId && membershipsData) {
+        const membership = membershipsData.pages[0]?.body?.find(
+          (m) => m.mp_idx === location.state.fromReservation.membershipId,
+        )
+
+        if (
+          isSubscribed &&
+          (!membership || Number(membership.remain_amount) <= 0)
+        ) {
+          await openModal({
+            title: "알림",
+            message: "해당 회원권의 잔여 횟수가 없습니다.",
+            onConfirm: () => {
+              navigate("/member-history/reservation", { replace: true })
+            },
+          })
+        }
+      }
+    }
+
+    checkMembershipValidity()
+
+    return () => {
+      isSubscribed = false
+    }
+  }, [
+    location.state?.fromReservation?.membershipId,
+    membershipsData,
+    openModal,
+    navigate,
+  ])
 
   // Cleanup on unmount
   useEffect(() => {

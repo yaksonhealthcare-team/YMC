@@ -33,6 +33,7 @@ export interface ReservationDetail extends Reservation {
   remainingCount: string
   request?: string
   remainingDays?: string
+  membershipId?: string
 }
 
 export const useUpcomingReservations = () => {
@@ -63,6 +64,8 @@ export const useReservationDetail = (reservationId: string) => {
     select: (data) => {
       if (!data) return null
 
+      console.log("API Response Data:", data)
+
       const detail: ReservationDetail = {
         id: data.r_idx,
         store: data.b_name,
@@ -75,7 +78,7 @@ export const useReservationDetail = (reservationId: string) => {
         visit: Number(data.visit),
         type: data.r_gubun,
         services: [],
-        branchId: data.r_idx,
+        branchId: data.b_idx || data.b_name,
         branchName: data.b_name,
         membershipName: data.s_name,
         remainingCount: data.remain_amount,
@@ -90,6 +93,7 @@ export const useReservationDetail = (reservationId: string) => {
         longitude: Number(data.b_lon),
         phone: data.b_tel,
         address: data.b_addr,
+        membershipId: data.p_idx,
       }
 
       return detail

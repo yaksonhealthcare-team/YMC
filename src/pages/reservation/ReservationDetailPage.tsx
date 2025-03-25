@@ -14,6 +14,7 @@ import FixedButtonContainer from "@components/FixedButtonContainer"
 import { ReservationType } from "types/Reservation"
 import { Skeleton } from "@mui/material"
 import { useOverlay } from "contexts/ModalContext"
+import dayjs from "dayjs"
 
 const LoadingSkeleton = () => (
   <div className="flex-1 px-[20px] pt-[16px] pb-[150px] bg-system-bg">
@@ -70,6 +71,17 @@ const ReservationDetailPage = () => {
     error,
   } = useReservationDetail(id ?? "")
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
+
+  useEffect(() => {
+    if (reservation) {
+      console.log("Reservation loaded, initializing map with:", {
+        branchId: reservation.branchId,
+        branchName: reservation.branchName,
+        store: reservation.store,
+        status: reservation.statusCode,
+      })
+    }
+  }, [reservation])
 
   useEffect(() => {
     setHeader({
@@ -164,6 +176,31 @@ const ReservationDetailPage = () => {
     )
   }
 
+  const handleNavigateToReservationForm = () => {
+    if (!reservation) return
+
+    const state = {
+      fromReservation: {
+        item:
+          reservation.type === ReservationType.MANAGEMENT
+            ? reservation.membershipName
+            : "상담 예약",
+        branch: reservation.store,
+        date: dayjs(reservation.date).format("YYYY-MM-DD"),
+        timeSlot: { time: reservation.duration },
+        request: reservation.request || "",
+        additionalServices: reservation.additionalServices || [],
+        remainingCount: reservation.remainingCount,
+        membershipId: reservation.membershipId,
+      },
+    }
+    console.log(
+      "Navigating to Reservation Form with state:",
+      JSON.stringify(state, null, 2),
+    )
+    navigate("/reservation/form", { state })
+  }
+
   const renderActionButtons = () => {
     if (!reservation) return null
 
@@ -210,7 +247,7 @@ const ReservationDetailPage = () => {
                   variantType="primary"
                   sizeType="l"
                   className="flex-1"
-                  onClick={() => navigate("/reservation/form")}
+                  onClick={handleNavigateToReservationForm}
                 >
                   다시 예약하기
                 </Button>
@@ -220,7 +257,7 @@ const ReservationDetailPage = () => {
                 variantType="primary"
                 sizeType="l"
                 className="w-full"
-                onClick={() => navigate("/reservation/form")}
+                onClick={handleNavigateToReservationForm}
               >
                 다시 예약하기
               </Button>
@@ -273,7 +310,25 @@ const ReservationDetailPage = () => {
             variantType="primary"
             sizeType="l"
             className="w-full"
-            onClick={() => navigate("/reservation/form")}
+            onClick={() =>
+              navigate("/reservation/form", {
+                state: {
+                  fromReservation: {
+                    item:
+                      reservation.type === ReservationType.MANAGEMENT
+                        ? reservation.membershipName
+                        : "상담 예약",
+                    branch: reservation.store,
+                    date: dayjs(reservation.date).format("YYYY-MM-DD"),
+                    timeSlot: { time: reservation.duration },
+                    request: reservation.request || "",
+                    additionalServices: reservation.additionalServices || [],
+                    remainingCount: reservation.remainingCount,
+                    membershipId: reservation.membershipId,
+                  },
+                },
+              })
+            }
           >
             다시 예약하기
           </Button>

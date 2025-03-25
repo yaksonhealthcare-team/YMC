@@ -18,6 +18,7 @@ const MembershipBranchSelectPage = ({ onSelect, brandCode }: Props) => {
 
   const memoizedState = useMemo(() => location.state, [location.state])
 
+  // 헤더 설정
   useEffect(() => {
     setHeader({
       left: "back",
@@ -38,19 +39,24 @@ const MembershipBranchSelectPage = ({ onSelect, brandCode }: Props) => {
     })
     setNavigation({ display: false })
 
-    navigate(location.pathname, {
-      replace: true,
-      state: {
-        ...location.state,
-        brand_code: brandCode,
-      },
-    })
-
     return () => {
       setHeader({ display: false })
       setNavigation({ display: true })
     }
-  }, [setHeader, setNavigation, navigate, memoizedState, brandCode])
+  }, [setHeader, setNavigation, navigate, memoizedState])
+
+  // 브랜드 코드 설정
+  useEffect(() => {
+    if (location.state?.brand_code !== brandCode) {
+      navigate(location.pathname, {
+        replace: true,
+        state: {
+          ...location.state,
+          brand_code: brandCode,
+        },
+      })
+    }
+  }, [brandCode, location.pathname, location.state?.brand_code, navigate])
 
   return (
     <div className={"flex flex-col overflow-y-hidden"}>

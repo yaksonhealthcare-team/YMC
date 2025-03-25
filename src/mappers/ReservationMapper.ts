@@ -24,6 +24,7 @@ export const ReservationMapper = {
       duration: dto.r_take_time,
       type: typeMap[dto.r_gubun] || ReservationType.OTHER,
       reviewPositiveYn: dto.review_positive_yn,
+      branchId: dto.b_idx,
     }
   },
 
