@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import { GeolocationState, DEFAULT_COORDINATE } from "../types/Coordinate"
+import { GeolocationState } from "../types/Coordinate"
 
 interface GeolocationStore extends GeolocationState {
   setLocation: (latitude: number, longitude: number) => void
@@ -8,7 +8,7 @@ interface GeolocationStore extends GeolocationState {
 }
 
 export const useGeolocationStore = create<GeolocationStore>((set) => ({
-  location: DEFAULT_COORDINATE,
+  location: undefined,
   error: null,
   loading: true,
   setLocation: (latitude: number, longitude: number) =>

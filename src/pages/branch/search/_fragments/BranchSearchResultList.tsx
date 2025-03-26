@@ -2,9 +2,9 @@ import BranchCard from "@components/BranchCard.tsx"
 import useDebounce from "../../../../hooks/useDebounce.tsx"
 import { useBranches } from "../../../../queries/useBranchQueries.tsx"
 import { useGeolocation } from "../../../../hooks/useGeolocation.tsx"
-import { DEFAULT_COORDINATE } from "../../../../types/Coordinate.ts"
 import useIntersection from "../../../../hooks/useIntersection.tsx"
 import { Branch } from "../../../../types/Branch.ts"
+import LoadingIndicator from "@components/LoadingIndicator.tsx"
 
 interface BranchSearchResultListProps {
   query: string
@@ -16,17 +16,18 @@ const BranchSearchResultList = ({
   onSelect,
 }: BranchSearchResultListProps) => {
   const debouncedQuery = useDebounce(query, 300)
-  const { location } = useGeolocation()
+  const { location, loading: locationLoading } = useGeolocation()
+
   const {
     data: branchPages,
-    isLoading,
+    isLoading: branchesLoading,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
   } = useBranches({
     page: 1,
-    latitude: location?.latitude || DEFAULT_COORDINATE.latitude,
-    longitude: location?.longitude || DEFAULT_COORDINATE.longitude,
+    latitude: location?.latitude,
+    longitude: location?.longitude,
     brandCode: "",
     search: debouncedQuery,
   })
@@ -55,7 +56,25 @@ const BranchSearchResultList = ({
     },
   })
 
-  if (!isLoading && branches.length === 0) {
+  // 위치 정보를 로딩 중인 경우 로딩 표시
+  if (locationLoading) {
+    return (
+      <div className={"flex flex-col items-center justify-center mt-40"}>
+        <LoadingIndicator />
+        <p className={"mt-4 text-gray-500"}>
+          {"위치 정보를 불러오는 중입니다..."}
+        </p>
+      </div>
+    )
+  }
+
+  // 지점 데이터 로딩 중이고 결과가 없는 경우
+  if (branchesLoading && branches.length === 0) {
+    return <LoadingIndicator className={"self-center mt-40"} />
+  }
+
+  // 검색 결과가 없는 경우
+  if (!branchesLoading && branches.length === 0) {
     return <p className={"self-center mt-40"}>{"검색 결과가 없습니다."}</p>
   }
 
