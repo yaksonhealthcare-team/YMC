@@ -98,7 +98,7 @@ export const BranchFilterListItem = ({
           )}
           {branch.distanceInMeters && (
             <p className={"font-r text-12px text-gray-400"}>
-              {Math.round(Number(branch.distanceInMeters))}m
+              {branch.distanceInMeters}
             </p>
           )}
         </div>
