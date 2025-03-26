@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useGeolocationStore } from "../stores/geolocationStore"
-import { GeolocationOptions } from "../types/Coordinate"
+import { GeolocationOptions, DEFAULT_COORDINATE } from "../types/Coordinate"
 
 const isReactNative = () => window.ReactNativeWebView
 
@@ -22,6 +22,7 @@ export const useGeolocation = (options: GeolocationOptions = {}) => {
 
       const handleLocationError = (event: CustomEvent) => {
         setError(event.detail.message)
+        setLocation(DEFAULT_COORDINATE.latitude, DEFAULT_COORDINATE.longitude)
         setLoading(false)
       }
 
@@ -51,6 +52,7 @@ export const useGeolocation = (options: GeolocationOptions = {}) => {
 
     if (!navigator.geolocation) {
       setError("Geolocation이 지원되지 않는 브라우저입니다.")
+      setLocation(DEFAULT_COORDINATE.latitude, DEFAULT_COORDINATE.longitude)
       setLoading(false)
       return
     }
@@ -79,6 +81,7 @@ export const useGeolocation = (options: GeolocationOptions = {}) => {
       }
 
       setError(errorMessage)
+      setLocation(DEFAULT_COORDINATE.latitude, DEFAULT_COORDINATE.longitude)
       setLoading(false)
     }
 
