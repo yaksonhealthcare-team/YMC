@@ -25,7 +25,7 @@ export const useNaverMap = () => {
     const script = document.querySelector('script[src*="maps.js"]')
     if (script) {
       script.addEventListener("load", checkNaverMap)
-      script.addEventListener("error", (e) => {
+      script.addEventListener("error", () => {
         if (!mounted) return
         setError(new Error("네이버 지도 API 로딩 실패"))
       })
@@ -37,7 +37,7 @@ export const useNaverMap = () => {
       newScript.async = true
       newScript.defer = true
       newScript.onload = checkNaverMap
-      newScript.onerror = (e) => {
+      newScript.onerror = () => {
         if (!mounted) return
         setError(new Error("네이버 지도 API 로딩 실패"))
       }
