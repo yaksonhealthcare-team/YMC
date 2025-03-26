@@ -31,10 +31,6 @@ const MapView = ({
   const [isMapInitialized, setIsMapInitialized] = useState(false)
   const { isLoaded, error } = useNaverMap()
 
-  useEffect(() => {
-    console.log("MapView 상태:", { isLoaded, error, center, isMapInitialized })
-  }, [isLoaded, error, center, isMapInitialized])
-
   const { updateCurrentLocationMarker } = useNaverMapBranchMarkers({
     map: mapInstance.current,
     branches,
@@ -61,17 +57,10 @@ const MapView = ({
 
     const initializeMap = () => {
       if (!mounted || !mapRef.current || !center || !isLoaded) {
-        console.log("지도 초기화 조건 미충족:", {
-          mounted,
-          hasMapRef: !!mapRef.current,
-          hasCenter: !!center,
-          isLoaded,
-        })
         return
       }
 
       try {
-        console.log("지도 초기화 시작")
         mapInstance.current = new window.naver.maps.Map("map", {
           center: new window.naver.maps.LatLng(
             center.latitude,
@@ -82,7 +71,6 @@ const MapView = ({
 
         if (!mounted) return
         setIsMapInitialized(true)
-        console.log("지도 초기화 완료")
 
         // 드래그 종료 시에만 위치 업데이트
         if (options?.onMoveMap && mapInstance.current) {
@@ -105,7 +93,7 @@ const MapView = ({
           })
         }
       } catch (error) {
-        console.error("지도 초기화 중 오류 발생:", error)
+        // 지도 초기화 중 오류 발생
       }
     }
 
@@ -114,7 +102,6 @@ const MapView = ({
       if (!mapRef.current) {
         const checkMapRef = setInterval(() => {
           if (mapRef.current) {
-            console.log("mapRef가 설정되었습니다.")
             clearInterval(checkMapRef)
             initializeMap()
           }

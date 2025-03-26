@@ -24,7 +24,6 @@ export const useNaverMapBranchMarkers = ({
 
   useEffect(() => {
     if (!map || !window.naver?.maps) {
-      console.log("지도 또는 네이버 지도 API가 초기화되지 않았습니다.")
       return
     }
 
@@ -45,7 +44,7 @@ export const useNaverMapBranchMarkers = ({
           currentLocationMarkerRef.current = null
         }
       } catch (error) {
-        console.error("마커 정리 중 오류 발생:", error)
+        // 마커 정리 중 오류 발생
       }
     }
 
@@ -58,7 +57,7 @@ export const useNaverMapBranchMarkers = ({
         })
         eventListenersRef.current = []
       } catch (error) {
-        console.error("이벤트 리스너 정리 중 오류 발생:", error)
+        // 이벤트 리스너 정리 중 오류 발생
       }
     }
 
@@ -97,7 +96,7 @@ export const useNaverMapBranchMarkers = ({
 
           markersRef.current.push(marker)
         } catch (error) {
-          console.error("마커 초기화 중 오류 발생:", error)
+          // 마커 초기화 중 오류 발생
         }
       })
     }
@@ -112,7 +111,6 @@ export const useNaverMapBranchMarkers = ({
 
   const updateCurrentLocationMarker = (coordinate: Coordinate) => {
     if (!map || !window.naver?.maps) {
-      console.log("지도 또는 네이버 지도 API가 초기화되지 않았습니다.")
       return
     }
 
@@ -138,7 +136,7 @@ export const useNaverMapBranchMarkers = ({
         },
       })
     } catch (error) {
-      console.error("현재 위치 마커 업데이트 중 오류 발생:", error)
+      // 현재 위치 마커 업데이트 중 오류 발생
     }
   }
 
