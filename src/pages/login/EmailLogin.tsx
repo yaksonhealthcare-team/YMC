@@ -9,6 +9,7 @@ import EyeIcon from "../../assets/icons/EyeIcon.svg?react"
 import EyeSlashIcon from "../../assets/icons/EyeSlashIcon.svg?react"
 import { fetchUser, loginWithEmail } from "../../apis/auth.api.ts"
 import { CircularProgress } from "@mui/material"
+import { requestForToken } from "../../libs/firebase.ts"
 
 interface LoginForm {
   email: string
@@ -56,11 +57,13 @@ const EmailLogin = () => {
 
     try {
       setIsLoading(true)
+      const fcmToken = await requestForToken()
+
       const { accessToken } = await loginWithEmail({
         username: formData.email,
         password: formData.password,
-        deviceToken: window.fcmToken,
-        deviceType: window.osType,
+        deviceToken: fcmToken,
+        deviceType: "web",
       })
       const user = await fetchUser(accessToken)
 
