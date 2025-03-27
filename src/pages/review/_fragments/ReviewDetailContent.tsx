@@ -130,7 +130,7 @@ export const ReviewDetailContent = ({ review }: Props) => {
       <div className="px-5 flex flex-col gap-3">
         <h3 className="text-gray-700 text-sm font-semibold">업로드한 사진</h3>
         {review.images && review.images.length > 0 ? (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 mb-16">
             <div className="flex gap-4 overflow-x-auto no-scrollbar touch-pan-x">
               {review.images.map((image, index) => (
                 <div
