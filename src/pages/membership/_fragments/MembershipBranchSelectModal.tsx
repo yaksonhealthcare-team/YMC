@@ -32,13 +32,20 @@ export const MembershipBranchSelectModal = ({
           display: true,
           component: (
             <div className={"flex items-center justify-between px-5 py-3 h-[48px]"}>
-              <div
+              <button
                 onClick={() => {
                   navigate(`/membership?brand_code=${currentBrandCode}`)
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    navigate(`/membership?brand_code=${currentBrandCode}`)
+                  }
+                }}
+                className="focus:outline-none focus:ring-2 focus:ring-primary-300 rounded"
+                aria-label="뒤로 가기"
               >
                 <CaretLeftIcon className={"w-5 h-5"} />
-              </div>
+              </button>
               <CartIcon />
             </div>
           ),
