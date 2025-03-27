@@ -72,7 +72,7 @@ const PaymentCard = ({
                     onClickMinus={() => {
                       onCountChange(
                         option.items[0].cartId,
-                        Math.max(0, option.items[0].count - 1),
+                        Math.max(1, option.items[0].count - 1),
                       )
                     }}
                     onClickPlus={() =>

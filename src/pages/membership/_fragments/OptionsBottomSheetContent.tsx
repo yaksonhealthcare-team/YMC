@@ -79,12 +79,15 @@ export const OptionsBottomSheetContent = ({
   }
 
   const handleCountChange = (option: MembershipOption, count: number) => {
+    // 수량이 1 미만이면 1로 설정
+    const newCount = Math.max(1, count)
+
     setSelectedOptions(
-      selectedOptions
-        .map((item) =>
-          item.option.ss_idx === option.ss_idx ? { ...item, count } : item,
-        )
-        .filter((item) => item.count > 0),
+      selectedOptions.map((item) =>
+        item.option.ss_idx === option.ss_idx
+          ? { ...item, count: newCount }
+          : item,
+      ),
     )
   }
 

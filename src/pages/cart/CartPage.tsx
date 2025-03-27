@@ -108,11 +108,9 @@ const CartPage = () => {
   }
 
   const handleUpdateItem = (itemId: string, amount: number) => {
-    if (amount === 0) {
-      removeCartItems([itemId])
-    } else {
-      updateCartItem({ cartId: itemId, amount: amount })
-    }
+    // 수량은 항상 1 이상이어야 함
+    const validAmount = Math.max(1, amount)
+    updateCartItem({ cartId: itemId, amount: validAmount })
   }
 
   const handleRemoveItems = (itemIds: string[]) => {
@@ -210,7 +208,8 @@ const CartPage = () => {
             <div className="flex gap-1">
               <span className="text-gray-500">*</span>
               <p className="text-gray-500 text-14px font-r">
-                상담 예약은 월간 {consultationCount?.maxCount ?? 0}회까지 이용 가능합니다.
+                상담 예약은 월간 {consultationCount?.maxCount ?? 0}회까지 이용
+                가능합니다.
               </p>
             </div>
             <div className="flex gap-1">
