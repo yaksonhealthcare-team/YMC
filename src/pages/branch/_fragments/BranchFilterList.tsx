@@ -12,12 +12,14 @@ import { Image } from "@components/common/Image"
 
 interface BranchFilterListProps {
   branches: Branch[]
+  totalCount: number
   onIntersect: () => void
   onSelectBranch: (branch: Branch) => void
 }
 
 const BranchFilterList = ({
   branches,
+  totalCount,
   onIntersect,
   onSelectBranch,
 }: BranchFilterListProps) => {
@@ -29,10 +31,10 @@ const BranchFilterList = ({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-5 py-4 flex-none">
+      <div className="px-5 py-4 flex-none bg-white sticky top-0 z-10 border-b border-gray-100">
         <p className="font-m text-14px">
           {"총 "}
-          <span>{branches.length}</span>
+          <span>{totalCount}</span>
           {"개의 지점을 찾았습니다."}
         </p>
       </div>

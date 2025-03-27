@@ -202,6 +202,7 @@ const Branch = () => {
         return (
           <BranchFilterList
             branches={branches}
+            totalCount={result?.pages[0]?.total_count || 0}
             onIntersect={() => {
               if (hasNextPage && !isFetchingNextPage) {
                 fetchNextPage()
