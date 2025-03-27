@@ -8,6 +8,7 @@ import DateAndTime from "./DateAndTime"
 import { useCompleteVisit } from "queries/useReservationQueries"
 import { useOverlay } from "contexts/ModalContext"
 import ReserveTag from "./ReserveTag"
+import { useState, useEffect } from "react"
 
 interface ReserveCardProps {
   reservation: Reservation
@@ -20,7 +21,17 @@ export const ReserveCard = ({
 }: ReserveCardProps) => {
   const navigate = useNavigate()
   const { mutate: completeVisit } = useCompleteVisit()
-  const { openModal } = useOverlay()
+  const { openModal, overlayState } = useOverlay()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  // 오버레이 상태 감지
+  useEffect(() => {
+    if (overlayState.isOpen && overlayState.type === "modal") {
+      setIsModalOpen(true)
+    } else {
+      setIsModalOpen(false)
+    }
+  }, [overlayState])
 
   const classifyReservationStatus = (status: ReservationStatusCode) => {
     const statusGroups = {
@@ -85,6 +96,8 @@ export const ReserveCard = ({
               variantType="primary"
               sizeType="xs"
               onClick={handleSatisfactionClick}
+              className={isModalOpen ? "opacity-50 cursor-not-allowed" : ""}
+              disabled={isModalOpen}
             >
               만족도 작성
             </Button>
@@ -103,6 +116,8 @@ export const ReserveCard = ({
                 variantType="primary"
                 sizeType="xs"
                 onClick={handleCompleteVisit}
+                className={isModalOpen ? "opacity-50 cursor-not-allowed" : ""}
+                disabled={isModalOpen}
               >
                 방문 완료
               </Button>

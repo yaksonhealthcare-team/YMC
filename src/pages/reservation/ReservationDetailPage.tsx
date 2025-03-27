@@ -71,6 +71,7 @@ const ReservationDetailPage = () => {
     error,
   } = useReservationDetail(id ?? "")
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     if (reservation) {
@@ -93,12 +94,17 @@ const ReservationDetailPage = () => {
     setNavigation({ display: false })
   }, [navigate, setHeader, setNavigation])
 
-  // 바텀 시트 상태 감지
+  // 오버레이 상태 감지
   useEffect(() => {
-    if (overlayState.isOpen && overlayState.type === "bottomSheet") {
-      setIsBottomSheetOpen(true)
+    if (overlayState.isOpen) {
+      if (overlayState.type === "bottomSheet") {
+        setIsBottomSheetOpen(true)
+      } else if (overlayState.type === "modal") {
+        setIsModalOpen(true)
+      }
     } else {
       setIsBottomSheetOpen(false)
+      setIsModalOpen(false)
     }
   }, [overlayState])
 
@@ -220,7 +226,7 @@ const ReservationDetailPage = () => {
                 <Button
                   variantType="line"
                   sizeType="l"
-                  className="flex-1"
+                  className={`flex-1 ${isModalOpen ? "opacity-50 cursor-not-allowed" : ""}`}
                   onClick={() =>
                     navigate(`/reservation/${id}/satisfaction`, {
                       state: {
@@ -236,14 +242,16 @@ const ReservationDetailPage = () => {
                       },
                     })
                   }
+                  disabled={isModalOpen}
                 >
                   만족도 작성
                 </Button>
                 <Button
                   variantType="primary"
                   sizeType="l"
-                  className="flex-1"
+                  className={`flex-1 ${isModalOpen ? "opacity-50 cursor-not-allowed" : ""}`}
                   onClick={handleNavigateToReservationForm}
+                  disabled={isModalOpen}
                 >
                   다시 예약하기
                 </Button>
@@ -252,8 +260,9 @@ const ReservationDetailPage = () => {
               <Button
                 variantType="primary"
                 sizeType="l"
-                className="w-full"
+                className={`w-full ${isModalOpen ? "opacity-50 cursor-not-allowed" : ""}`}
                 onClick={handleNavigateToReservationForm}
+                disabled={isModalOpen}
               >
                 다시 예약하기
               </Button>
@@ -267,8 +276,9 @@ const ReservationDetailPage = () => {
             <Button
               variantType="primary"
               sizeType="l"
-              className="w-full"
+              className={`w-full ${isModalOpen ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={handleCompleteVisit}
+              disabled={isModalOpen}
             >
               방문 완료하기
             </Button>
@@ -278,8 +288,9 @@ const ReservationDetailPage = () => {
           <Button
             variantType="primary"
             sizeType="l"
-            className="w-full"
+            className={`w-full ${isModalOpen ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={handleCancelReservation}
+            disabled={isModalOpen}
           >
             예약 취소하기
           </Button>
@@ -291,8 +302,9 @@ const ReservationDetailPage = () => {
             <Button
               variantType="primary"
               sizeType="l"
-              className="w-full"
+              className={`w-full ${isModalOpen ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={handleCompleteVisit}
+              disabled={isModalOpen}
             >
               방문 완료하기
             </Button>
@@ -305,7 +317,7 @@ const ReservationDetailPage = () => {
           <Button
             variantType="primary"
             sizeType="l"
-            className="w-full"
+            className={`w-full ${isModalOpen ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={() =>
               navigate("/reservation/form", {
                 state: {
@@ -325,6 +337,7 @@ const ReservationDetailPage = () => {
                 },
               })
             }
+            disabled={isModalOpen}
           >
             다시 예약하기
           </Button>
