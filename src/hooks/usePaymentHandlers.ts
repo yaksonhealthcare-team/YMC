@@ -44,11 +44,14 @@ export const usePaymentHandlers = () => {
 
   const handleCountChange = async (cartId: string, newCount: number) => {
     try {
+      // 수량이 1 미만이면 1로 설정
+      const adjustedCount = Math.max(1, newCount)
+
       // 로컬 상태만 업데이트
       usePaymentStore.setState((state) => ({
         items: state.items.map((item) =>
           item.ss_idx.toString() === cartId
-            ? { ...item, amount: newCount }
+            ? { ...item, amount: adjustedCount }
             : item,
         ),
       }))

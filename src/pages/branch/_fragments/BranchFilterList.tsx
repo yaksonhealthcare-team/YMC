@@ -29,19 +29,13 @@ const BranchFilterList = ({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-5 mt-4 mb-2">
-        <p className="font-m text-14px">
-          {"총 "}
-          <span>{branches.length}</span>
-          {"개의 지점을 찾았습니다."}
-        </p>
-      </div>
       <div className="flex-1 overflow-y-auto">
-        <ul className="divide-y px-5">
-          {branches.map((branch) => (
+        <ul className="divide-y px-5 pt-3">
+          {branches.map((branch, index) => (
             <BranchFilterListItem
               key={branch.b_idx}
               branch={branch}
+              className={index === 0 ? "pt-1" : ""}
               onClick={() => onSelectBranch(branch)}
               onClickFavorite={() => {
                 if (branch.isFavorite) {
@@ -63,14 +57,19 @@ const BranchFilterList = ({
 
 export const BranchFilterListItem = ({
   branch,
+  className = "",
   onClick,
   onClickFavorite,
 }: {
   branch: Branch
+  className?: string
   onClick: (branch: Branch) => void
   onClickFavorite: (branch: Branch) => void
 }) => (
-  <li onClick={() => onClick(branch)} className="cursor-pointer w-full flex">
+  <li
+    onClick={() => onClick(branch)}
+    className={`cursor-pointer w-full flex ${className}`}
+  >
     <div className="w-full py-4 gap-4 flex items-stretch">
       <Image
         className="border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"

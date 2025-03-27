@@ -113,12 +113,17 @@ const Branch = () => {
 
       // 지점 목록 다시 조회
       refetch()
+
+      // 지도 화면에서도 필터링된 데이터가 즉시 반영되도록 selectedBranch 초기화
+      setSelectedBranch(null)
     }
   }
 
   const handleFilterReset = () => {
     setSelectedFilter({ brand: null, category: null })
     refetch()
+    // 필터 초기화 시 선택된 지점 초기화
+    setSelectedBranch(null)
   }
 
   const handleNavigateToLocationSettings = () => {
@@ -153,6 +158,11 @@ const Branch = () => {
 
       // branches 목록을 즉시 새로고침하지 않음
       // useEffect 의존성으로 인해 brand가 변경되면 자동으로 categories 쿼리가 실행됨
+
+      // 지도 화면에 있을 경우 선택된 지점 초기화
+      if (screen === "map") {
+        setSelectedBranch(null)
+      }
     }
   }
 
@@ -160,12 +170,27 @@ const Branch = () => {
     setHeader({
       component: (
         <div>
-          <BranchHeader
-            address={selectedLocation?.address ?? address}
-            onBack={handleNavigateToBack}
-            onClickLocation={handleNavigateToLocationSettings}
-            onSearch={handleNavigateToBranchSearch}
-          />
+          <div
+            className={
+              "w-full justify-between flex px-5 py-3.5 bg-white h-12 gap-4"
+            }
+          >
+            <button onClick={handleNavigateToBack}>
+              <CaretLeftIcon className={"w-5 h-5"} />
+            </button>
+            <button
+              className={"flex gap-2 items-center"}
+              onClick={handleNavigateToLocationSettings}
+            >
+              <p className={"font-sb text-14px overflow-ellipsis line-clamp-1"}>
+                {selectedLocation?.address ?? address}
+              </p>
+              <CaretDownIcon className={"w-4 h-4"} />
+            </button>
+            <button onClick={handleNavigateToBranchSearch}>
+              <SearchIcon className={"w-6 h-6"} />
+            </button>
+          </div>
           <BranchFilterSection
             currentFilter={selectedFilter}
             onInitialize={handleFilterReset}
@@ -186,6 +211,15 @@ const Branch = () => {
               )
             }}
           />
+          <div className="px-5 py-3 flex-none bg-white border-b border-gray-100">
+            <p className="font-m text-14px text-gray-700">
+              {"총 "}
+              <span className="font-b">
+                {result?.pages[0]?.total_count || 0}
+              </span>
+              {"개의 지점을 찾았습니다."}
+            </p>
+          </div>
         </div>
       ),
       display: true,
@@ -194,7 +228,14 @@ const Branch = () => {
     setNavigation({
       display: false,
     })
-  }, [selectedFilter, brands, address, categories, isCategoriesLoading])
+  }, [
+    selectedFilter,
+    brands,
+    address,
+    categories,
+    isCategoriesLoading,
+    result?.pages[0]?.total_count,
+  ])
 
   const renderScreen = () => {
     switch (screen) {
@@ -222,7 +263,7 @@ const Branch = () => {
   }
 
   return (
-    <div className={"relative flex flex-col flex-1 h-screen"}>
+    <div className="relative flex flex-col h-screen pt-[80px]">
       {renderScreen()}
       <div
         className={`fixed bottom-10 left-1/2 -translate-x-1/2 ${selectedBranch ? "transition-transform -translate-y-32 duration-300" : "transition-transform translate-y-0 duration-300"}`}
@@ -233,6 +274,9 @@ const Branch = () => {
           onClick={() => {
             if (screen === "list") {
               setScreen("map")
+              // 목록 화면에서 지도 화면으로 전환 시 선택된 지점은 초기화하되,
+              // 필터는 그대로 유지
+              setSelectedBranch(null)
             } else {
               setSelectedBranch(null)
               setScreen("list")
@@ -240,37 +284,6 @@ const Branch = () => {
           }}
         />
       </div>
-    </div>
-  )
-}
-
-const BranchHeader = ({
-  address,
-  onBack,
-  onSearch,
-  onClickLocation,
-}: {
-  address: string
-  onBack: () => void
-  onSearch: () => void
-  onClickLocation: () => void
-}) => {
-  return (
-    <div
-      className={"w-full justify-between flex px-5 py-3.5 bg-white h-12 gap-4"}
-    >
-      <button onClick={onBack}>
-        <CaretLeftIcon className={"w-5 h-5"} />
-      </button>
-      <button className={"flex gap-2 items-center"} onClick={onClickLocation}>
-        <p className={"font-sb text-14px overflow-ellipsis line-clamp-1"}>
-          {address}
-        </p>
-        <CaretDownIcon className={"w-4 h-4"} />
-      </button>
-      <button onClick={onSearch}>
-        <SearchIcon className={"w-6 h-6"} />
-      </button>
     </div>
   )
 }

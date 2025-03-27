@@ -41,14 +41,18 @@ export const MembershipActiveBranchList = ({ onBranchSelect }: Props) => {
 
   if (!filteredBranches.length) {
     return (
-      <div className="p-4 text-center text-gray-500">
-        이용 가능한 지점이 없습니다.
+      <div className="p-5">
+        <h3 className="font-m text-16px text-gray-900 mb-4">이용중인 지점</h3>
+        <div className="text-center text-gray-500 py-12">
+          이용중인 지점이 없습니다
+        </div>
       </div>
     )
   }
 
   return (
     <div className="flex flex-col gap-4 p-4">
+      <h3 className="font-m text-16px text-gray-900 mb-2">이용중인 지점</h3>
       {filteredBranches.map((branch) => {
         const branchData: Branch = {
           b_idx: branch.b_idx,

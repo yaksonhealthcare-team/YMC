@@ -11,6 +11,7 @@ import { Image } from "@components/common/Image"
 import BranchPlaceholderImage from "@assets/images/BranchPlaceholderImage.png"
 import { MembershipActiveBranchList } from "./_fragments/MembershipActiveBranchList.tsx"
 import useDebounce from "../../hooks/useDebounce.tsx"
+import SearchIcon from "@components/icons/SearchIcon"
 
 interface MembershipBranchListProps {
   onSelect?: (branch: Branch) => void
@@ -149,7 +150,11 @@ const MembershipBranchList = ({
   )
 
   if (isLoading) {
-    return <LoadingIndicator className="min-h-screen" />
+    return (
+      <div className="flex items-center justify-center h-full fixed inset-0 bg-white z-10">
+        <LoadingIndicator />
+      </div>
+    )
   }
 
   // 검색어가 없고 사용 가능한 지점 목록이 있으면 해당 지점만 표시
@@ -164,7 +169,17 @@ const MembershipBranchList = ({
 
   if (filteredBranches.length === 0) {
     return (
-      <div className="p-4 text-center text-gray-500">검색 결과가 없습니다.</div>
+      <div className="flex flex-col items-center justify-center px-5 h-full">
+        <div className="mb-4 p-3 rounded-full bg-gray-100">
+          <SearchIcon className="w-6 h-6 text-gray-400" />
+        </div>
+        <p className="font-m text-16px text-gray-700 text-center">
+          {"검색 결과가 없습니다"}
+        </p>
+        <p className="mt-2 font-r text-14px text-gray-500 text-center">
+          {"다른 키워드로 검색해 보세요"}
+        </p>
+      </div>
     )
   }
 

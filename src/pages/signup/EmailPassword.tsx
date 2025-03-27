@@ -6,12 +6,14 @@ import { useLayout } from "../../contexts/LayoutContext.tsx"
 import { useSignup } from "../../contexts/SignupContext.tsx"
 import PasswordCustomInput from "@components/input/PasswordCustomInput.tsx"
 import validateEmail from "../../utils/emailValidator.ts"
+import { CircularProgress } from "@mui/material"
 
 export const EmailPassword = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const { signupData, setSignupData } = useSignup()
   const isSocialSignup = !!sessionStorage.getItem("socialSignupInfo")
+  const [isLoading, setIsLoading] = useState(false)
 
   const [form, setForm] = useState({
     email: signupData.email || "",
@@ -124,17 +126,33 @@ export const EmailPassword = () => {
 
   const handleNavigateToNext = () => {
     if (validateForm()) {
-      setSignupData((prev) => ({
-        ...prev,
-        email: form.email,
-        ...(isSocialSignup ? {} : { password: form.password }),
-      }))
-      navigate("/signup/profile")
+      setIsLoading(true)
+      try {
+        setSignupData((prev) => ({
+          ...prev,
+          email: form.email,
+          ...(isSocialSignup ? {} : { password: form.password }),
+        }))
+        navigate("/signup/profile")
+      } finally {
+        setIsLoading(false)
+      }
     }
   }
 
   return (
     <div className="flex flex-col px-5 pt-5 pb-7 gap-10">
+      {isLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 flex flex-col items-center">
+            <CircularProgress color="primary" size={48} />
+            <p className="mt-4 text-16px font-medium text-[#212121]">
+              처리 중...
+            </p>
+          </div>
+        </div>
+      )}
+
       <h1 className="text-[20px] font-bold leading-[30px] text-[#212121]">
         {isSocialSignup ? "이메일을" : "이메일과 비밀번호를"}
         <br />
@@ -167,7 +185,12 @@ export const EmailPassword = () => {
         )}
       </div>
 
-      <Button variantType="primary" sizeType="l" onClick={handleNavigateToNext}>
+      <Button
+        variantType="primary"
+        sizeType="l"
+        onClick={handleNavigateToNext}
+        disabled={isLoading}
+      >
         다음
       </Button>
     </div>
