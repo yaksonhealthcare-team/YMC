@@ -12,14 +12,12 @@ import { Image } from "@components/common/Image"
 
 interface BranchFilterListProps {
   branches: Branch[]
-  totalCount: number
   onIntersect: () => void
   onSelectBranch: (branch: Branch) => void
 }
 
 const BranchFilterList = ({
   branches,
-  totalCount,
   onIntersect,
   onSelectBranch,
 }: BranchFilterListProps) => {

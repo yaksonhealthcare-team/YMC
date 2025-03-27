@@ -113,12 +113,17 @@ const Branch = () => {
 
       // 지점 목록 다시 조회
       refetch()
+
+      // 지도 화면에서도 필터링된 데이터가 즉시 반영되도록 selectedBranch 초기화
+      setSelectedBranch(null)
     }
   }
 
   const handleFilterReset = () => {
     setSelectedFilter({ brand: null, category: null })
     refetch()
+    // 필터 초기화 시 선택된 지점 초기화
+    setSelectedBranch(null)
   }
 
   const handleNavigateToLocationSettings = () => {
@@ -153,6 +158,11 @@ const Branch = () => {
 
       // branches 목록을 즉시 새로고침하지 않음
       // useEffect 의존성으로 인해 brand가 변경되면 자동으로 categories 쿼리가 실행됨
+
+      // 지도 화면에 있을 경우 선택된 지점 초기화
+      if (screen === "map") {
+        setSelectedBranch(null)
+      }
     }
   }
 
@@ -233,7 +243,6 @@ const Branch = () => {
         return (
           <BranchFilterList
             branches={branches}
-            totalCount={result?.pages[0]?.total_count || 0}
             onIntersect={() => {
               if (hasNextPage && !isFetchingNextPage) {
                 fetchNextPage()
@@ -265,6 +274,9 @@ const Branch = () => {
           onClick={() => {
             if (screen === "list") {
               setScreen("map")
+              // 목록 화면에서 지도 화면으로 전환 시 선택된 지점은 초기화하되,
+              // 필터는 그대로 유지
+              setSelectedBranch(null)
             } else {
               setSelectedBranch(null)
               setScreen("list")

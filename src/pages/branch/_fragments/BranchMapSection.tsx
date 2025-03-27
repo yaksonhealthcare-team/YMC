@@ -9,6 +9,8 @@ import {
   useBranchUnbookmarkMutation,
 } from "../../../queries/useBranchQueries.tsx"
 import { useNavigate } from "react-router-dom"
+import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect.ts"
+import { useGeolocation } from "../../../hooks/useGeolocation.tsx"
 
 interface BranchMapSectionProps {
   brandCode?: string
@@ -25,17 +27,27 @@ const BranchMapSection = ({
   const [branches, setBranches] = useState<Branch[]>([])
   const [coords, setCoords] = useState<Coordinate>(DEFAULT_COORDINATE)
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
+  const { location: selectedLocation } = useBranchLocationSelect()
+  const { location: currentLocation } = useGeolocation()
 
   const { mutateAsync: addBookmark } = useBranchBookmarkMutation()
   const { mutateAsync: removeBookmark } = useBranchUnbookmarkMutation()
 
   useEffect(() => {
-    fetchBranchesByCoords(coords)
+    // 초기 로딩 시 현재 위치 또는 선택된 위치를 기준으로 지점 데이터 로드
+    const initialCoords =
+      selectedLocation?.coords || currentLocation || DEFAULT_COORDINATE
+    setCoords(initialCoords)
+    fetchBranchesByCoords(initialCoords)
   }, [])
 
   useEffect(() => {
+    // 브랜드 코드나 카테고리가 변경되면 분기에서 즉시 데이터 로드
     setBranches([])
     fetchBranchesByCoords(coords)
+    // 필터 변경 시 선택된 지점 초기화
+    setSelectedBranch(null)
+    onSelectBranch(null)
   }, [brandCode, category])
 
   const fetchBranchesByCoords = async (coords: Coordinate) => {
