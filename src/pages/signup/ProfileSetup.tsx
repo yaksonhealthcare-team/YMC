@@ -12,6 +12,7 @@ import { useProfileSetupValidation } from "../../hooks/useProfileSetupValidation
 import { useProfileSetupSubmit } from "../../hooks/useProfileSetupSubmit"
 import { GenderSelect } from "@components/GenderSelect"
 import { Image } from "@components/common/Image"
+import { uploadImages } from "../../apis/image.api.ts"
 
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -29,6 +30,9 @@ export const ProfileSetup = () => {
 
   const { nameError, validateForm } = useProfileSetupValidation()
   const { handleSubmit } = useProfileSetupSubmit()
+
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null)
 
   useEffect(() => {
     setHeader({
@@ -57,11 +61,71 @@ export const ProfileSetup = () => {
     }
   }, [isSocialSignup, setSignupData])
 
+  const handleImageUploadWithFile = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (event.target.files?.[0]) {
+      const file = event.target.files[0]
+      setProfileImageFile(file)
+      const imageUrl = URL.createObjectURL(file)
+      setSignupData((prev) => ({
+        ...prev,
+        profileUrl: imageUrl,
+      }))
+    }
+  }
+
+  const handleImageDeleteWithFile = () => {
+    setProfileImageFile(null)
+    setSignupData((prev) => ({
+      ...prev,
+      profileUrl: undefined,
+    }))
+  }
+
   const handleSignupSubmit = async () => {
     if (!validateForm(signupData.name)) {
       return
     }
-    await handleSubmit()
+
+    setIsSubmitting(true)
+
+    try {
+      // 프로필 이미지가 있으면 업로드
+      if (profileImageFile) {
+        try {
+          const uploadedUrls = await uploadImages({
+            fileToUpload: [profileImageFile],
+            nextUrl: "/auth/signup",
+          })
+
+          if (uploadedUrls && uploadedUrls.length > 0) {
+            // 업로드된 이미지 URL로 업데이트
+            setSignupData((prev) => ({
+              ...prev,
+              profileUrl: uploadedUrls[0],
+            }))
+
+            // 업로드된 URL을 바로 사용하기 위해 await
+            await handleSubmit()
+          } else {
+            // 이미지 URL이 반환되지 않았을 경우 기존 데이터로 진행
+            await handleSubmit()
+          }
+        } catch (error) {
+          console.error("이미지 업로드 실패:", error)
+          // 이미지 업로드 실패해도 회원가입은 계속 진행
+          await handleSubmit()
+        }
+      } else {
+        // 프로필 이미지가 없는 경우 기존 로직대로 진행
+        await handleSubmit()
+      }
+    } catch (error) {
+      console.error("회원가입 실패:", error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -98,7 +162,7 @@ export const ProfileSetup = () => {
                   <button
                     onClick={(e) => {
                       e.preventDefault()
-                      handleImageDelete()
+                      handleImageDeleteWithFile()
                     }}
                     className="absolute right-0 bottom-0 bg-gray-700 rounded-full bg-opacity-60 w-[24px] h-[24px] flex justify-center items-center"
                   >
@@ -131,7 +195,7 @@ export const ProfileSetup = () => {
             id="profileImageUpload"
             accept="image/*"
             className="hidden"
-            onChange={handleImageUpload}
+            onChange={handleImageUploadWithFile}
           />
         </div>
 
@@ -265,11 +329,12 @@ export const ProfileSetup = () => {
           !signupData.mobileNumber ||
           !signupData.gender ||
           !signupData.address1 ||
-          !signupData.postCode
+          !signupData.postCode ||
+          isSubmitting
         }
         onClick={handleSignupSubmit}
       >
-        완료
+        {isSubmitting ? "처리 중..." : "완료"}
       </Button>
     </div>
   )
