@@ -1,5 +1,5 @@
 import { useLayout } from "contexts/LayoutContext"
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, useMemo } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { RadioCard } from "@components/RadioCard"
 import { AdditionalManagement } from "types/Membership"
@@ -72,6 +72,19 @@ const ReservationFormPage = () => {
   const { data: membershipsData, isLoading: isMembershipsLoading } =
     useUserMemberships("T")
 
+  // 지점 선택 시 해당 지점의 회원권만 필터링
+  const filteredMemberships = useMemo(() => {
+    if (!membershipsData?.pages[0]?.body) return []
+
+    if (!selectedBranch) return membershipsData.pages[0].body
+
+    return membershipsData.pages[0].body.filter((membership) =>
+      membership.branchs?.some(
+        (branch) => branch.b_idx === selectedBranch.b_idx,
+      ),
+    )
+  }, [membershipsData, selectedBranch])
+
   // Navigation Handler
   const handleBack = useCallback(() => {
     // 먼저 모든 상태를 초기화
@@ -87,57 +100,57 @@ const ReservationFormPage = () => {
 
     // 세션 스토리지에서 fromReservation 정보를 가져옴
     const fromReservation = sessionStorage.getItem("fromReservation")
-    
+
     // 세션 스토리지 정보가 있으면 초기화 (이전 방식과의 호환성 유지)
     if (fromReservation) {
       sessionStorage.removeItem("fromReservation")
     }
-    
+
     // 현재 위치 객체에서 상태 정보 확인
     const locationState = location.state || {}
-    
+
     // 1. 지점 선택 화면에서 왔을 경우 (무한 루프 방지)
     if (locationState.fromBranchSelect || locationState.selectedBranch) {
       // 원래 온 경로가 있으면 그 경로로, 없으면 홈으로
       if (locationState.originalPath) {
-        navigate(locationState.originalPath, { replace: true });
+        navigate(locationState.originalPath, { replace: true })
       } else {
-        navigate("/", { replace: true });
+        navigate("/", { replace: true })
       }
     }
     // 2. 지점 상세 페이지에서 왔을 경우
     else if (locationState.fromBranchDetail) {
       // 지점 상세 페이지로 돌아갈 때 originalPath 사용
       if (locationState.originalPath) {
-        navigate(locationState.originalPath, { replace: true });
+        navigate(locationState.originalPath, { replace: true })
       } else {
-        navigate("/branch", { replace: true });
+        navigate("/branch", { replace: true })
       }
     }
     // 3. 결제 완료 페이지에서 왔을 경우
-    else if (document.referrer.includes('/payment/complete')) {
-      navigate('/', { replace: true });
+    else if (document.referrer.includes("/payment/complete")) {
+      navigate("/", { replace: true })
     }
     // 4. 예약 상세 페이지에서 재예약으로 온 경우
     else if (locationState.fromReservationDetail) {
       // originalPath가 있으면 해당 경로로 이동, 없으면 예약 목록으로 이동
       if (locationState.originalPath) {
-        navigate(locationState.originalPath, { replace: true });
+        navigate(locationState.originalPath, { replace: true })
       } else {
-        navigate('/member-history/reservation', { replace: true });
+        navigate("/member-history/reservation", { replace: true })
       }
     }
     // 5. 회원권 카드에서 온 경우
     else if (locationState.fromMembershipCard) {
-      navigate('/member-history/membership', { replace: true });
+      navigate("/member-history/membership", { replace: true })
     }
     // 6. 특정 경로로 돌아가야 하는 경우
     else if (locationState.returnPath) {
-      navigate(locationState.returnPath, { replace: true });
+      navigate(locationState.returnPath, { replace: true })
     }
     // 7. 그 외 경우는 일반 뒤로가기
     else {
-      navigate(-1);
+      navigate(-1)
     }
   }, [clear, navigate, location])
 
@@ -176,11 +189,11 @@ const ReservationFormPage = () => {
         const branch = membershipsData.pages[0].body
           .find((membership) =>
             membership.branchs?.some(
-              (b) => b.b_name === location.state.fromReservation.branch,
+              (b) => b.b_idx === location.state.fromReservation.branch,
             ),
           )
           ?.branchs?.find(
-            (b) => b.b_name === location.state.fromReservation.branch,
+            (b) => b.b_idx === location.state.fromReservation.branch,
           )
 
         if (isSubscribed && branch) {
@@ -378,7 +391,7 @@ const ReservationFormPage = () => {
       )
 
       // 원래 경로 정보 확인
-      const originalPath = location.state?.originalPath || '/'
+      const originalPath = location.state?.originalPath || "/"
 
       navigate("/membership/branch-select", {
         state: {
@@ -394,12 +407,12 @@ const ReservationFormPage = () => {
             timeSlot: data.timeSlot,
             request: data.request,
             additionalServices: data.additionalServices,
-            membershipId: data.membershipId
+            membershipId: data.membershipId,
           },
           // 원래 경로 정보 저장
-          originalPath
+          originalPath,
         },
-        replace: true // 히스토리 스택에 추가되지 않고 교체하여 무한 루프 방지
+        replace: true, // 히스토리 스택에 추가되지 않고 교체하여 무한 루프 방지
       })
     } catch (error) {
       console.error("Navigation error:", error)
@@ -599,11 +612,12 @@ const ReservationFormPage = () => {
               </div>
             </RadioCard>
           </div>
-          {!isMembershipsLoading &&
-          membershipsData?.pages[0]?.body?.length &&
-          membershipsData.pages[0].body.length > 0 ? (
+          {!isMembershipsLoading && filteredMemberships.length > 0 ? (
             <MembershipSwiper
-              membershipsData={membershipsData.pages[0]}
+              membershipsData={{
+                ...(membershipsData?.pages[0] || {}),
+                body: filteredMemberships,
+              }}
               selectedItem={data.item}
               onChangeItem={handleOnChangeItem}
             />

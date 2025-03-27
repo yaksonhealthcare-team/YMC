@@ -59,16 +59,19 @@ const BranchDetail = () => {
   const handleBack = useCallback(() => {
     // 세션 스토리지를 확인하여 예약 페이지에서 돌아왔는지 확인
     const fromReservation = sessionStorage.getItem("fromReservation")
-    
+
     if (fromReservation === id) {
       // 예약 페이지에서 돌아온 경우, 세션 스토리지를 초기화
       sessionStorage.removeItem("fromReservation")
-      
+
       // 현재 위치 객체에서 상태 정보 확인
       const locationState = window.history.state?.usr || {}
-      
+
       // 원래 경로가 지정되어 있으면 해당 경로로 이동
-      if (locationState?.originalPath && locationState?.originalPath !== `/branch/${id}`) {
+      if (
+        locationState?.originalPath &&
+        locationState?.originalPath !== `/branch/${id}`
+      ) {
         navigate(locationState.originalPath)
       } else {
         // 지점 목록 페이지로 이동
@@ -87,10 +90,10 @@ const BranchDetail = () => {
 
   const handleReservation = useCallback(() => {
     if (!branch) return
-    
+
     // 예약 페이지로 이동하기 전에 세션 스토리지에 현재 지점 ID 저장
     sessionStorage.setItem("fromReservation", branch.b_idx)
-    
+
     navigate(`/reservation/form`, {
       state: {
         originalPath: `/branch/${branch.b_idx}`,
@@ -98,12 +101,20 @@ const BranchDetail = () => {
         selectedBranch: {
           b_idx: branch.b_idx,
           name: branch.name,
-          address: branch.location?.address || '',
+          address: branch.location?.address || "",
+          latitude: branch.location?.latitude || 0,
+          longitude: branch.location?.longitude || 0,
+          canBookToday: true,
+          distanceInMeters: null,
+          isFavorite: false,
+          brandCode: branch.brandCode,
           brand: branch.brand,
-          brandCode: branch.brandCode
-        }
+        },
+        fromReservation: {
+          branch: branch.b_idx,
+        },
       },
-      replace: true // 히스토리 스택에 추가하지 않고 교체
+      replace: true,
     })
   }, [branch, navigate])
 
