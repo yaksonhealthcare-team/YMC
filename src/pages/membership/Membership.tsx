@@ -61,7 +61,6 @@ const MembershipPage = () => {
         </div>
       ),
       right: <CartIcon />,
-      backgroundColor: "bg-system-bg",
     })
     setNavigation({ display: true })
   }, [])
