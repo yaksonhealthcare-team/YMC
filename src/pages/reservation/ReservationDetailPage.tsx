@@ -185,6 +185,9 @@ const ReservationDetailPage = () => {
   const handleNavigateToReservationForm = () => {
     if (!reservation) return
 
+    // 현재 경로 가져오기
+    const currentPath = window.location.pathname
+
     const state = {
       fromReservation: {
         item:
@@ -199,6 +202,8 @@ const ReservationDetailPage = () => {
         remainingCount: reservation.remainingCount,
         membershipId: reservation.membershipId,
       },
+      fromReservationDetail: true,
+      originalPath: currentPath
     }
     navigate("/reservation/form", { state })
   }
@@ -348,7 +353,10 @@ const ReservationDetailPage = () => {
             variantType="primary"
             sizeType="l"
             className={`w-full ${isModalOpen ? "opacity-50 cursor-not-allowed" : ""}`}
-            onClick={() =>
+            onClick={() => {
+              // 현재 경로 가져오기
+              const currentPath = window.location.pathname
+              
               navigate("/reservation/form", {
                 state: {
                   fromReservation: {
@@ -364,9 +372,11 @@ const ReservationDetailPage = () => {
                     remainingCount: reservation.remainingCount,
                     membershipId: reservation.membershipId,
                   },
+                  fromReservationDetail: true,
+                  originalPath: currentPath
                 },
               })
-            }
+            }}
             disabled={isModalOpen}
           >
             다시 예약하기

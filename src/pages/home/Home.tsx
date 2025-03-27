@@ -21,7 +21,6 @@ import { BrandSection } from "./../../pages/home/_fragments/BrandSection"
 import { EventSection } from "./../../pages/home/_fragments/EventSection"
 import { BusinessInfo } from "./../../pages/home/_fragments/BusinessInfo"
 import { ReserveCardSection } from "./../../pages/home/_fragments/ReserveCardSection"
-import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -40,7 +39,6 @@ const Home = () => {
     useUserMemberships("T")
   const { user } = useAuth()
   const navigate = useNavigate()
-  const { clear } = useMembershipOptionsStore()
   const { data: unreadCount = 0 } = useUnreadNotificationsCount()
 
   const getDisplayCount = (count: number) => {
@@ -62,8 +60,12 @@ const Home = () => {
   }, [])
 
   const handleReservationClick = () => {
-    clear()
-    navigate("/reservation/form")
+    navigate("/reservation/form", {
+      state: {
+        originalPath: "/",
+        fromHome: true
+      }
+    })
   }
 
   if (!user) return <SplashScreen />

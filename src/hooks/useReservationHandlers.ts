@@ -70,7 +70,7 @@ export const useReservationHandlers = ({
       handleError(new Error("회원권을 먼저 선택해주세요."))
       return
     }
-    navigate("/membership/select-branch", {
+    navigate("/membership/branch-select", {
       state: {
         returnPath: "/reservation/form",
         selectedItem: data.item,

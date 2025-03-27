@@ -27,13 +27,23 @@ const MembershipBranchSelectPage = ({ onSelect, brandCode }: Props) => {
       backgroundColor: "bg-white",
       display: true,
       onClickBack: () => {
+        // 복잡한 네비게이션 상태 관리 대신, 
+        // 지점 선택 -> 예약 폼 사이의 무한 루프를 방지하기 위해
+        // 예약 폼으로 돌아갈 때는 예약 관련 정보만 전달
         if (memoizedState?.returnPath) {
+          // 필요한 예약 정보만 전달
+          const { fromReservation, originalPath, fromReservationDetail } = memoizedState
           navigate(memoizedState.returnPath, {
             state: {
-              ...memoizedState,
+              fromReservation,
+              fromBranchSelect: true, // 지점 선택 페이지에서 왔음을 표시
+              originalPath, // 원래 온 경로 정보 유지
+              fromReservationDetail // 예약 상세에서 왔는지 여부 유지
             },
+            replace: true // 히스토리 스택에 추가하지 않고 교체
           })
         } else {
+          // 일반 뒤로가기
           navigate(-1)
         }
       },

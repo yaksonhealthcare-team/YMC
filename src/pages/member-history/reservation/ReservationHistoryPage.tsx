@@ -14,7 +14,6 @@ import {
   Reservation,
 } from "types/Reservation"
 import LoadingIndicator from "@components/LoadingIndicator"
-import { useMembershipOptionsStore } from "../../../hooks/useMembershipOptions"
 
 const ReservationContent = ({
   filterId,
@@ -114,11 +113,13 @@ const ReservationHistoryPage = () => {
     setReservationFilter(filter)
   }, [])
 
-  const { clear } = useMembershipOptionsStore()
-
   const handleReservationClick = () => {
-    clear()
-    navigate("/reservation/form")
+    navigate("/reservation/form", {
+      state: {
+        originalPath: "/member-history/reservation",
+        fromReservationHistory: true
+      }
+    })
   }
 
   useEffect(() => {

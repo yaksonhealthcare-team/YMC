@@ -234,6 +234,7 @@ export const OptionsBottomSheetContent = ({
 
   const handleBranchSelect = (branch: Branch) => {
     setSelectedBranch(branch)
+    setIsModalOpen(false)
   }
 
   return (
@@ -398,7 +399,7 @@ export const OptionsBottomSheetContent = ({
         createPortal(
           <MembershipBranchSelectModal
             onBranchSelect={handleBranchSelect}
-            onClose={closeOverlay}
+            onClose={() => setIsModalOpen(false)}
             brandCode={brandCode}
           />,
           document.body,
