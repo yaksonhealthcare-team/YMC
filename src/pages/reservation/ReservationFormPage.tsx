@@ -325,7 +325,7 @@ const ReservationFormPage = () => {
         (membership) => membership.mp_idx === data.item,
       )
 
-      navigate("/membership/select-branch", {
+      navigate("/membership/branch-select", {
         state: {
           returnPath: "/reservation/form",
           selectedItem: data.item,
