@@ -95,11 +95,15 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
     return (
       <div className={"z-10"}>
         <div
-          className={`fixed w-full max-w-[500px] ${
-            headerConfig.backgroundColor
-              ? headerConfig.backgroundColor
-              : "bg-system-bg"
-          }`}
+          className={`fixed w-full max-w-[500px]`}
+          style={{
+            backgroundColor:
+              headerConfig.backgroundColor === "white"
+                ? "white"
+                : headerConfig.backgroundColor?.startsWith("bg-")
+                  ? `var(--${headerConfig.backgroundColor.substring(3)})`
+                  : "var(--system-bg)",
+          }}
         >
           <Header
             type={
