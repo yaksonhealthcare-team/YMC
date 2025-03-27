@@ -29,7 +29,7 @@ const BranchFilterList = ({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-5 mt-4 mb-2">
+      <div className="px-5 py-4 flex-none">
         <p className="font-m text-14px">
           {"총 "}
           <span>{branches.length}</span>
