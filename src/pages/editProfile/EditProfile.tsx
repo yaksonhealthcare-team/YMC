@@ -116,9 +116,13 @@ const EditProfile = () => {
       const token = localStorage.getItem("accessToken")
       if (token) {
         const updatedUser = await fetchUser(token)
-        login({ user: updatedUser, token: token.replace("Bearer ", "") })
-        showToast("프로필이 성공적으로 수정되었습니다.")
-        navigate(-1)
+        if (updatedUser) {
+          login({ user: updatedUser, token: token.replace("Bearer ", "") })
+          showToast("프로필이 성공적으로 수정되었습니다.")
+          navigate(-1)
+        } else {
+          showToast("프로필 수정에 실패했습니다.")
+        }
       }
     } catch (error) {
       console.error("프로필 수정 실패:", error)
