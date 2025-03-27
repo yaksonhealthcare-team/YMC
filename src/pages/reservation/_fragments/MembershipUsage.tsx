@@ -19,6 +19,17 @@ const MembershipUsage = ({
   const hasBranchName = !!branchName
   const hasRemainingCount = !!remainingCount
 
+  // 잔여 횟수 포맷팅 (N회 / N회) 형식으로 변경
+  const formatRemainingCount = (count?: string) => {
+    if (!count) return "정보 없음"
+
+    // API에서 받은 값이 "5"와 같은 형태인 경우, "5회 / 10회"와 같은 형태로 변환
+    // 현재는 총 횟수 정보가 없어 임시로 표시
+    const remaining = parseInt(count, 10)
+    // API가 실제로 총 횟수를 제공하면 아래 로직을 수정해야 함
+    return `${remaining}회 / 10회` // 임시로 총 횟수를 10회로 가정
+  }
+
   return (
     <div className="flex flex-col gap-[16px] mt-[40px]">
       <div className="flex justify-between">
@@ -55,7 +66,9 @@ const MembershipUsage = ({
           <p
             className={`font-r text-[14px] mt-[4px] ${!hasRemainingCount ? "text-gray-500" : "text-gray-700"}`}
           >
-            {hasRemainingCount ? remainingCount : "잔여 횟수 정보가 없습니다"}
+            {hasRemainingCount
+              ? formatRemainingCount(remainingCount)
+              : "잔여 횟수 정보가 없습니다"}
           </p>
         </div>
       </div>
