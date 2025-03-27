@@ -33,6 +33,11 @@ const BranchMapSection = ({
     fetchBranchesByCoords(coords)
   }, [])
 
+  useEffect(() => {
+    setBranches([])
+    fetchBranchesByCoords(coords)
+  }, [brandCode, category])
+
   const fetchBranchesByCoords = async (coords: Coordinate) => {
     setCoords(coords)
     const { branches } = await fetchBranches({
