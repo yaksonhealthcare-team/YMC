@@ -162,13 +162,19 @@ const MembershipDetailPage = () => {
         title={membership.s_name || "No Name"}
         duration={parseInt(membership.s_time || "0")}
         brandCode={brandCode}
-        onClose={closeOverlay}
+        onClose={() => {
+          // 바텀시트가 닫힐 때 헤더를 다시 설정합니다
+          setTimeout(() => {
+            setMembershipHeader()
+          }, 50) // 약간의 지연 추가
+          closeOverlay()
+        }}
       />,
     )
   }
 
-  useEffect(() => {
-    clear()
+  // 회원권 상세 페이지 헤더 설정 함수
+  const setMembershipHeader = () => {
     setHeader({
       display: true,
       component: (
@@ -189,8 +195,18 @@ const MembershipDetailPage = () => {
       ),
       backgroundColor: "bg-white",
     })
+  }
+
+  // 초기 마운트 및 location.state 변경 시 헤더 설정
+  useEffect(() => {
+    clear()
+    setMembershipHeader()
     setNavigation({ display: false })
-  }, [])
+
+    return () => {
+      setNavigation({ display: true })
+    }
+  }, [location.state, brandCode, navigate, setHeader, setNavigation])
 
   if (!membership) return <LoadingIndicator className="min-h-screen" />
 

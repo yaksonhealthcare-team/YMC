@@ -102,7 +102,12 @@ const MembershipBranchList = ({
         })
       } else {
         setIsBottomSheetOpen(true)
-        navigate(-1)
+        navigate(-1 as never, {
+          state: { 
+            fromBranchSelect: true,
+            selectedBranch: branchData 
+          }
+        })
       }
     }
   }
