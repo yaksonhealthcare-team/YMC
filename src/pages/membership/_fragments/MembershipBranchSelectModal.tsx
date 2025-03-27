@@ -1,9 +1,9 @@
 import Header from "@components/Header"
 import { Branch } from "../../../types/Branch"
 import MembershipBranchSelectPage from "../MembershipBranchSelectPage"
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import { useLayout } from "../../../contexts/LayoutContext"
-import { useNavigate, useParams, useSearchParams } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import CartIcon from "@components/icons/CartIcon.tsx"
 
