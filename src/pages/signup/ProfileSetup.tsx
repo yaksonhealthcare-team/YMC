@@ -21,8 +21,8 @@ export const ProfileSetup = () => {
   const isSocialSignup = !!sessionStorage.getItem("socialSignupInfo")
 
   const {
-    handleImageUpload,
-    handleImageDelete,
+    // handleImageUpload,
+    // handleImageDelete,
     handleCompletePostcode,
     toggleBrandSelection,
     handleNameChange,
