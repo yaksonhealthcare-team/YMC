@@ -63,9 +63,12 @@ export const MembershipCard = ({
 
   const handleReservationClick = (e: React.MouseEvent) => {
     e.stopPropagation()
+    // 현재 경로 가져오기
+    const currentPath = window.location.pathname
+    
     navigate("/reservation/form", {
       state: {
-        originalPath: "/member-history/membership",
+        originalPath: currentPath,
         fromMembershipCard: true,
         membershipId: id
       }
