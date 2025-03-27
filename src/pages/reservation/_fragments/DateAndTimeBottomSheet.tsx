@@ -20,6 +20,7 @@ import {
 } from "../../../queries/useScheduleQueries.tsx"
 import { TimeSlot } from "../../../types/Schedule.ts"
 import { mapTimesToTimeSlots } from "../../../utils/formatToTimeSlot.ts"
+import CircularProgress from "@mui/material/CircularProgress"
 
 interface DateAndTimeBottomSheetProps {
   onClose: () => void
@@ -203,14 +204,6 @@ const DatePickerSection = ({
   addServices,
   b_idx,
 }: DatePickerSectionProps) => {
-  const isDateDisabled = (date: Dayjs) => {
-    if (!scheduleDate) return true
-
-    const scheduledDates = scheduleDate.map((item) => item.dates)
-
-    return !scheduledDates.includes(date.format("YYYY-MM-DD"))
-  }
-
   const [currentYearMonth, setCurrentYearMonth] = useState<Dayjs>(dayjs())
 
   const handleMonthChange = (newDate: Dayjs) => {
@@ -224,6 +217,18 @@ const DatePickerSection = ({
     b_idx,
   })
 
+  const isDateDisabled = (date: Dayjs) => {
+    // 로딩 중일 때는 모든 날짜를 활성화 상태로 표시
+    if (isLoading) return false
+
+    // 데이터가 없을 때는 모든 날짜를 비활성화
+    if (!scheduleDate) return true
+
+    const scheduledDates = scheduleDate.map((item) => item.dates)
+
+    return !scheduledDates.includes(date.format("YYYY-MM-DD"))
+  }
+
   useEffect(() => {
     if (isLoading) {
       return
@@ -232,20 +237,26 @@ const DatePickerSection = ({
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
-      <StyledDateCalendar
-        value={date}
-        onChange={handleDateSelect}
-        defaultValue={dayjs()}
-        shouldDisableDate={isDateDisabled}
-        views={["day"]}
-        sx={{
-          width: "100%",
-        }}
-        slots={{
-          calendarHeader: CalendarHeader,
-        }}
-        onMonthChange={handleMonthChange}
-      />
+      {isLoading ? (
+        <div className="flex justify-center items-center w-full h-[300px]">
+          <CircularProgress color="primary" />
+        </div>
+      ) : (
+        <StyledDateCalendar
+          value={date}
+          onChange={handleDateSelect}
+          defaultValue={dayjs()}
+          shouldDisableDate={isDateDisabled}
+          views={["day"]}
+          sx={{
+            width: "100%",
+          }}
+          slots={{
+            calendarHeader: CalendarHeader,
+          }}
+          onMonthChange={handleMonthChange}
+        />
+      )}
     </LocalizationProvider>
   )
 }
@@ -327,24 +338,32 @@ const TimePickerSection = ({
   }, [isLoading, times])
 
   return (
-    <div className="w-full grid grid-cols-4 gap-[9px]">
-      {timeSlots.map((slot) => (
-        <Button
-          key={slot.time}
-          fullCustom
-          onClick={() => handleTimeSelect(slot)}
-          className={clsx(
-            "h-10 px-2.5 rounded-lg text-sm font-normal flex justify-center items-center whitespace-nowrap",
-            selectedTime?.time === slot.time
-              ? "!bg-primary-300 !text-white !border-none hover:!bg-primary-300"
-              : "!bg-white !border !border-solid !border-gray-200 hover:!bg-[#f7f7f7]",
-            "!text-gray-700",
-            "disabled:!bg-gray-50 disabled:!text-gray-300 disabled:!border-gray-200",
-          )}
-        >
-          {slot.time}
-        </Button>
-      ))}
+    <div className="w-full">
+      {isLoading ? (
+        <div className="flex justify-center items-center w-full h-[100px]">
+          <CircularProgress color="primary" />
+        </div>
+      ) : (
+        <div className="grid grid-cols-4 gap-[9px]">
+          {timeSlots.map((slot) => (
+            <Button
+              key={slot.time}
+              fullCustom
+              onClick={() => handleTimeSelect(slot)}
+              className={clsx(
+                "h-10 px-2.5 rounded-lg text-sm font-normal flex justify-center items-center whitespace-nowrap",
+                selectedTime?.time === slot.time
+                  ? "!bg-primary-300 !text-white !border-none hover:!bg-primary-300"
+                  : "!bg-white !border !border-solid !border-gray-200 hover:!bg-[#f7f7f7]",
+                "!text-gray-700",
+                "disabled:!bg-gray-50 disabled:!text-gray-300 disabled:!border-gray-200",
+              )}
+            >
+              {slot.time}
+            </Button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
