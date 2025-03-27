@@ -58,10 +58,19 @@ const BranchDetail = () => {
     const fromReservation = sessionStorage.getItem("fromReservation")
     
     if (fromReservation === id) {
-      // 예약 페이지에서 돌아온 경우, 세션 스토리지를 초기화하고 
-      // 지점 목록 페이지(/branch)로 이동하거나 홈으로 이동
+      // 예약 페이지에서 돌아온 경우, 세션 스토리지를 초기화
       sessionStorage.removeItem("fromReservation")
-      navigate("/branch")
+      
+      // 현재 위치 객체에서 상태 정보 확인
+      const locationState = window.history.state?.usr || {}
+      
+      // 원래 경로가 지정되어 있으면 해당 경로로 이동
+      if (locationState?.originalPath && locationState?.originalPath !== `/branch/${id}`) {
+        navigate(locationState.originalPath)
+      } else {
+        // 지점 목록 페이지로 이동
+        navigate("/branch")
+      }
     } else {
       // 그 외의 경우 일반적인 뒤로가기
       navigate(-1)
@@ -82,8 +91,16 @@ const BranchDetail = () => {
     navigate(`/reservation/form`, {
       state: {
         originalPath: `/branch/${branch.b_idx}`,
-        fromBranchDetail: true
-      }
+        fromBranchDetail: true,
+        selectedBranch: {
+          b_idx: branch.b_idx,
+          name: branch.name,
+          address: branch.location?.address || '',
+          brand: branch.brand,
+          brandCode: branch.brandCode
+        }
+      },
+      replace: true // 히스토리 스택에 추가하지 않고 교체
     })
   }, [branch, navigate])
 

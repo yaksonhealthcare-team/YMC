@@ -88,57 +88,49 @@ const ReservationFormPage = () => {
     // 세션 스토리지에서 fromReservation 정보를 가져옴
     const fromReservation = sessionStorage.getItem("fromReservation")
     
-    // 세션 스토리지 정보가 있으면 초기화
+    // 세션 스토리지 정보가 있으면 초기화 (이전 방식과의 호환성 유지)
     if (fromReservation) {
       sessionStorage.removeItem("fromReservation")
     }
     
-    // fromSource에 따른 분기 처리
-    const referrerPath = document.referrer ? new URL(document.referrer).pathname : '';
+    // 현재 위치 객체에서 상태 정보 확인
+    const locationState = location.state || {}
     
     // 1. 지점 선택 화면에서 왔을 경우 (무한 루프 방지)
-    if (location.state?.fromBranchSelect || location.state?.selectedBranch) {
+    if (locationState.fromBranchSelect || locationState.selectedBranch) {
       // 원래 온 경로가 있으면 그 경로로, 없으면 홈으로
-      if (location.state?.originalPath) {
-        navigate(location.state.originalPath);
+      if (locationState.originalPath) {
+        navigate(locationState.originalPath, { replace: true });
       } else {
-        navigate("/");
+        navigate("/", { replace: true });
       }
     }
     // 2. 지점 상세 페이지에서 왔을 경우
-    else if (location.state?.fromBranchDetail) {
+    else if (locationState.fromBranchDetail) {
       // 지점 상세 페이지로 돌아갈 때 originalPath 사용
-      if (location.state?.originalPath) {
-        navigate(location.state.originalPath);
+      if (locationState.originalPath) {
+        navigate(locationState.originalPath, { replace: true });
       } else {
-        navigate("/branch");
+        navigate("/branch", { replace: true });
       }
     }
     // 3. 결제 완료 페이지에서 왔을 경우
-    else if (referrerPath.includes('/payment/complete')) {
-      navigate('/');
+    else if (document.referrer.includes('/payment/complete')) {
+      navigate('/', { replace: true });
     }
     // 4. 예약 상세 페이지에서 재예약으로 온 경우
-    else if (location.state?.fromReservationDetail) {
-      navigate('/member-history/reservation');
+    else if (locationState.fromReservationDetail) {
+      navigate('/member-history/reservation', { replace: true });
     }
-    // 5. 브랜드 상세 페이지에서 온 경우
-    else if (referrerPath.includes('/brand/')) {
-      navigate(-1);
+    // 5. 회원권 카드에서 온 경우
+    else if (locationState.fromMembershipCard) {
+      navigate('/member-history/membership', { replace: true });
     }
-    // 6. 회원권 카드에서 온 경우
-    else if (location.state?.fromMembershipCard) {
-      navigate('/member-history/membership');
+    // 6. 특정 경로로 돌아가야 하는 경우
+    else if (locationState.returnPath) {
+      navigate(locationState.returnPath, { replace: true });
     }
-    // 7. 홈 화면에서 온 경우
-    else if (referrerPath === '/' || referrerPath === '/home') {
-      navigate('/');
-    }
-    // 8. 특정 경로로 돌아가야 하는 경우
-    else if (location.state?.returnPath) {
-      navigate(location.state.returnPath);
-    }
-    // 9. 그 외 경우는 일반 뒤로가기
+    // 7. 그 외 경우는 일반 뒤로가기
     else {
       navigate(-1);
     }
@@ -380,9 +372,8 @@ const ReservationFormPage = () => {
         (membership) => membership.mp_idx === data.item,
       )
 
-      // 원래 경로 정보 확인 (location.state에서 가져오거나 document.referrer에서 추출)
-      const originalPath = location.state?.originalPath || 
-                          (document.referrer ? new URL(document.referrer).pathname : '/')
+      // 원래 경로 정보 확인
+      const originalPath = location.state?.originalPath || '/'
 
       navigate("/membership/branch-select", {
         state: {
@@ -403,7 +394,7 @@ const ReservationFormPage = () => {
           // 원래 경로 정보 저장
           originalPath
         },
-        replace: true // 히스토리 스택에 추가되지 않도록 설정
+        replace: true // 히스토리 스택에 추가되지 않고 교체하여 무한 루프 방지
       })
     } catch (error) {
       console.error("Navigation error:", error)
