@@ -105,7 +105,7 @@ const Step1SearchBranchList = ({
 
         <div className="mt-[28px]">
           <p className="text-gray-800 font-semibold mb-4">선택한 지점</p>
-          <div className="flex mt-[16px] space-x-2 overflow-x-auto whitespace-nowrap">
+          <div className="flex mt-[16px] space-x-2 overflow-x-auto whitespace-nowrap no-scrollbar">
             {selectedBranches.map((item, index) => (
               <div
                 key={index}

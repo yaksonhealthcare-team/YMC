@@ -13,6 +13,7 @@ interface PaymentCardProps {
   onCountChange: (cartId: string, newCount: number) => void
   onDelete: () => void
   onDeleteOption?: (cartIds: string[]) => void
+  branchName?: string
 }
 
 const PaymentCard = ({
@@ -24,7 +25,11 @@ const PaymentCard = ({
   onCountChange,
   onDelete,
   onDeleteOption,
+  branchName,
 }: PaymentCardProps) => {
+  const branchText =
+    branchType === "지점 회원권" && branchName ? branchName : branchType
+
   return (
     <div className="p-5 bg-white rounded-[20px] border border-gray-100">
       <div className="flex flex-col gap-1.5">
@@ -37,7 +42,7 @@ const PaymentCard = ({
           <div className="w-[1px] h-3 bg-gray-200 mx-1.5" />
           <span className="text-gray-500 text-12px font-r">{brand}</span>
           <div className="w-[1px] h-3 bg-gray-200 mx-1.5" />
-          <span className="text-gray-500 text-12px font-r">{branchType}</span>
+          <span className="text-gray-500 text-12px font-r">{branchText}</span>
         </div>
       </div>
 

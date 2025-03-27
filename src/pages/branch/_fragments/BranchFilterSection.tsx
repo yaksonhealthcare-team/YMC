@@ -11,7 +11,7 @@ const BranchFilterSection = ({
   onInitialize: () => void
 }) => {
   return (
-    <div className={"flex overflow-x-auto px-5 py-2 bg-white"}>
+    <div className={"flex overflow-x-auto px-5 py-2 bg-white no-scrollbar"}>
       <div className={"flex flex-none gap-2"}>
         {(currentFilter.brand || currentFilter.category) && (
           <Filter type={"reload"} onClick={performInitialize} />

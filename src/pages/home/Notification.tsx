@@ -10,7 +10,10 @@ import {
   NotificationFilter,
   NotificationSearchType,
 } from "../../types/Notification.ts"
-import { useNotifications } from "../../queries/useNotificationQueries.tsx"
+import {
+  useNotifications,
+  useReadNotification,
+} from "../../queries/useNotificationQueries.tsx"
 import useIntersection from "../../hooks/useIntersection.tsx"
 
 const filters = [
@@ -61,6 +64,19 @@ export const Notification = () => {
       : NotificationSearchType.ALL,
   })
 
+  const { mutate: markAsRead } = useReadNotification()
+
+  const handleNotificationClick = (notificationId: number) => {
+    // 이미 읽은 알림이 아닌 경우에만 API 호출
+    const notification = notifications?.pages
+      .flatMap((page) => page)
+      .find((item) => item.id === notificationId)
+
+    if (notification && !notification.isRead) {
+      markAsRead(notificationId)
+    }
+  }
+
   const { observerTarget } = useIntersection({
     onIntersect: () => {
       if (hasNextPage && !isFetchingNextPage) {
@@ -99,7 +115,10 @@ export const Notification = () => {
             {(notifications?.pages.flatMap((page) => page) || []).map(
               (notification, index) => (
                 <li key={index} className={`${index && "mt-4"}`}>
-                  <NotificationCard notification={notification} />
+                  <NotificationCard
+                    notification={notification}
+                    onClick={() => handleNotificationClick(notification.id)}
+                  />
                 </li>
               ),
             )}

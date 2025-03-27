@@ -8,6 +8,7 @@ import DateAndTime from "./DateAndTime"
 import { useCompleteVisit } from "queries/useReservationQueries"
 import { useOverlay } from "contexts/ModalContext"
 import ReserveTag from "./ReserveTag"
+import { useState, useEffect } from "react"
 
 interface ReserveCardProps {
   reservation: Reservation
@@ -20,7 +21,17 @@ export const ReserveCard = ({
 }: ReserveCardProps) => {
   const navigate = useNavigate()
   const { mutate: completeVisit } = useCompleteVisit()
-  const { openModal } = useOverlay()
+  const { openModal, overlayState } = useOverlay()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  // 오버레이 상태 감지
+  useEffect(() => {
+    if (overlayState.isOpen && overlayState.type === "modal") {
+      setIsModalOpen(true)
+    } else {
+      setIsModalOpen(false)
+    }
+  }, [overlayState])
 
   const classifyReservationStatus = (status: ReservationStatusCode) => {
     const statusGroups = {
@@ -68,14 +79,40 @@ export const ReserveCard = ({
   const getButton = (): ReactNode => {
     const statusType = classifyReservationStatus(reservation.statusCode)
     const now = new Date()
-    const reservationEndTime = new Date(reservation.date)
-    const [hours, minutes] = (reservation.duration ?? "00:00")
-      .split(":")
-      .map(Number)
-    reservationEndTime.setHours(reservationEndTime.getHours() + (hours ?? 0))
-    reservationEndTime.setMinutes(
-      reservationEndTime.getMinutes() + (minutes ?? 0),
-    )
+
+    // 원본 날짜를 복제하여 사용
+    const reservationDate = new Date(reservation.date)
+
+    // 날짜가 올바르게 파싱되었는지 확인
+    if (isNaN(reservationDate.getTime())) {
+      console.error("예약 날짜가 유효하지 않습니다:", reservation.date)
+      return null
+    }
+
+    // 소요 시간을 파싱
+    let hours = 0
+    let minutes = 0
+    if (reservation.duration) {
+      const durationParts = reservation.duration.split(":")
+      hours = parseInt(durationParts[0], 10) || 0
+      minutes = parseInt(durationParts[1], 10) || 0
+    }
+
+    // 예약 종료 시간 계산 (별도의 변수로 저장)
+    const reservationEndTime = new Date(reservationDate)
+    reservationEndTime.setHours(reservationEndTime.getHours() + hours)
+    reservationEndTime.setMinutes(reservationEndTime.getMinutes() + minutes)
+
+    // 현재 시간이 예약 날짜보다 이후인지 확인
+    const isReservationDatePassed = now.getTime() > reservationDate.getTime()
+
+    // 상세 로그 추가
+    console.log("ReserveCard 날짜 비교:", {
+      현재시간: now.toISOString(),
+      예약날짜: reservationDate.toISOString(),
+      예약날짜지남: isReservationDatePassed,
+      상태코드: reservation.statusCode,
+    })
 
     switch (statusType) {
       case "completed":
@@ -85,6 +122,8 @@ export const ReserveCard = ({
               variantType="primary"
               sizeType="xs"
               onClick={handleSatisfactionClick}
+              className={isModalOpen ? "opacity-50 cursor-not-allowed" : ""}
+              disabled={isModalOpen}
             >
               만족도 작성
             </Button>
@@ -97,12 +136,14 @@ export const ReserveCard = ({
           reservation.statusCode === "002" ||
           reservation.statusCode === "008"
         ) {
-          if (now > reservationEndTime) {
+          if (isReservationDatePassed) {
             return (
               <Button
                 variantType="primary"
                 sizeType="xs"
                 onClick={handleCompleteVisit}
+                className={isModalOpen ? "opacity-50 cursor-not-allowed" : ""}
+                disabled={isModalOpen}
               >
                 방문 완료
               </Button>

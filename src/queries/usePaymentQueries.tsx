@@ -7,7 +7,7 @@ import {
   fetchBankList,
   requestPayment,
 } from "../apis/payments.api.ts"
-import { PaymentRequest } from "../types/Payment.ts"
+import { PaymentRequest, PaymentHistory } from "../types/Payment.ts"
 import { queryClient } from "./clients.ts"
 
 export const usePaymentHistories = () =>
@@ -16,8 +16,20 @@ export const usePaymentHistories = () =>
     queryKey: queryKeys.payments.histories.list({ page: 1 }),
     queryFn: ({ pageParam = 1 }) => fetchPayments({ page: pageParam }),
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === 0) return undefined
-      return allPages.length + 1
+      if (!lastPage || lastPage.length === 0) {
+        return undefined
+      }
+
+      const currentPage = allPages.length
+      const totalPageCount = (
+        lastPage as PaymentHistory[] & { totalPageCount: number }
+      ).totalPageCount
+
+      if (currentPage >= totalPageCount) {
+        return undefined
+      }
+
+      return currentPage + 1
     },
     retry: false,
     staleTime: 1000 * 60 * 5, // 5분

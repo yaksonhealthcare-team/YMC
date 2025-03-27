@@ -31,6 +31,7 @@ export interface PaymentItem {
   mp_idx?: number
   r_date?: string
   r_memo?: string
+  branchName?: string
 }
 
 export interface PaymentHistoryItem {

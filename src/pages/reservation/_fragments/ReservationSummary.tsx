@@ -1,7 +1,7 @@
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import { Divider } from "@mui/material"
 import { ReservationDetail } from "queries/useReservationQueries"
-import { format, isValid } from "date-fns"
+import { format, isValid, differenceInCalendarDays } from "date-fns"
 import { ko } from "date-fns/locale"
 
 interface ReservationSummaryProps {
@@ -14,6 +14,18 @@ const ReservationSummary = ({ reservation }: ReservationSummaryProps) => {
   const hasProgramName = !!reservation.programName
   const hasDuration = !!reservation.duration
   const hasRequest = !!reservation.request
+  const today = new Date()
+
+  // 방문 예정일 경우 D-day 계산
+  const isUpcoming = reservation.statusCode === "001" // 예약완료 상태
+  const daysDiff = isUpcoming ? differenceInCalendarDays(date, today) : 0
+  // 오늘이면 D-day, 내일이면 D-1, 어제면 D+1로 표시
+  const dDayText =
+    daysDiff === 0
+      ? "D-day"
+      : daysDiff > 0
+        ? `D-${daysDiff}`
+        : `D+${Math.abs(daysDiff)}`
 
   const formatDate = (date: Date) => {
     if (!isValid(date)) {
@@ -35,6 +47,9 @@ const ReservationSummary = ({ reservation }: ReservationSummaryProps) => {
         <p className="text-[18px] font-b text-gray-700">
           {hasStatus ? reservation.status : "상태 정보 없음"}
         </p>
+        {isUpcoming && (
+          <span className="text-primary font-b text-[14px]">{dDayText}</span>
+        )}
       </div>
       <div className="mt-3 flex items-center">
         <CalendarIcon className="w-3.5 h-3.5 text-gray-500" />

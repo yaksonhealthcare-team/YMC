@@ -198,7 +198,11 @@ const ReservationCancelPage = () => {
           value={cancelReason}
           onChange={handleTextAreaChange}
           maxLength={100}
-          helperText="5자 이상 작성해주세요."
+          helperText={
+            cancelReason.length > 0 && cancelReason.length < 5
+              ? "5자 이상 작성해주세요."
+              : ""
+          }
           error={cancelReason.length > 0 && cancelReason.length < 5}
         />
       </div>

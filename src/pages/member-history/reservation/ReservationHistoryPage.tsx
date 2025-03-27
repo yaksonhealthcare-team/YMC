@@ -131,7 +131,7 @@ const ReservationHistoryPage = () => {
   }, [])
 
   return (
-    <div className="flex flex-col bg-system-bg min-h-[calc(100vh-82px)] overscroll-none">
+    <div className="flex flex-col bg-system-bg min-h-[calc(100vh-82px)]">
       <div className="px-5">
         <MainTabs />
       </div>

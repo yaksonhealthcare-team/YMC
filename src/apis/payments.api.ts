@@ -16,7 +16,7 @@ export const fetchPayments = async ({ page }: { page: number }) => {
     params: { page: page },
   })
 
-  return PaymentMapper.toHistoryEntities(data.body)
+  return PaymentMapper.toHistoryEntities(data.body, data.total_page_count)
 }
 
 export const fetchPayment = async (paymentId: string) => {

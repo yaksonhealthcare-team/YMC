@@ -44,8 +44,8 @@ export const updateNotificationSettings = async (
 }
 
 export const fetchUnreadNotificationsCount = async () => {
-  const { data } = await axiosClient.get<HTTPResponse<{ total_count: number }>>(
-    "/notifications/unread-count",
-  )
-  return data.body.total_count
+  const { data } = await axiosClient.get<
+    HTTPResponse<{ unread_count: string }>
+  >("/notifications/unread-count")
+  return parseInt(data.body.unread_count, 10) || 0
 }

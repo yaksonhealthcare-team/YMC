@@ -71,6 +71,7 @@ const ReservationDetailPage = () => {
     error,
   } = useReservationDetail(id ?? "")
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     if (reservation) {
@@ -93,12 +94,17 @@ const ReservationDetailPage = () => {
     setNavigation({ display: false })
   }, [navigate, setHeader, setNavigation])
 
-  // 바텀 시트 상태 감지
+  // 오버레이 상태 감지
   useEffect(() => {
-    if (overlayState.isOpen && overlayState.type === "bottomSheet") {
-      setIsBottomSheetOpen(true)
+    if (overlayState.isOpen) {
+      if (overlayState.type === "bottomSheet") {
+        setIsBottomSheetOpen(true)
+      } else if (overlayState.type === "modal") {
+        setIsModalOpen(true)
+      }
     } else {
       setIsBottomSheetOpen(false)
+      setIsModalOpen(false)
     }
   }, [overlayState])
 
@@ -206,14 +212,44 @@ const ReservationDetailPage = () => {
     if (!reservation) return null
 
     const now = new Date()
-    const reservationEndTime = new Date(reservation.date)
-    const [hours, minutes] = (reservation.duration || "00:00")
-      .split(":")
-      .map(Number)
-    reservationEndTime.setHours(reservationEndTime.getHours() + (hours || 0))
-    reservationEndTime.setMinutes(
-      reservationEndTime.getMinutes() + (minutes || 0),
-    )
+
+    // 원본 날짜를 복제하여 사용
+    const reservationDate = new Date(reservation.date)
+
+    // 날짜가 올바르게 파싱되었는지 확인 (예약 날짜가 유효한지)
+    if (isNaN(reservationDate.getTime())) {
+      console.error("예약 날짜가 유효하지 않습니다:", reservation.date)
+      return null
+    }
+
+    // 소요 시간을 파싱
+    let hours = 0
+    let minutes = 0
+    if (reservation.duration) {
+      const durationParts = reservation.duration.split(":")
+      hours = parseInt(durationParts[0], 10) || 0
+      minutes = parseInt(durationParts[1], 10) || 0
+    }
+
+    // 예약 종료 시간 계산 (별도의 변수로 저장)
+    const reservationEndTime = new Date(reservationDate)
+    reservationEndTime.setHours(reservationEndTime.getHours() + hours)
+    reservationEndTime.setMinutes(reservationEndTime.getMinutes() + minutes)
+
+    // 현재 시간이 예약 날짜(시작 시간)보다 이후인지 확인
+    const isReservationDatePassed = now.getTime() > reservationDate.getTime()
+
+    // 상세 로그 추가
+    console.log("날짜 비교 디버깅:", {
+      현재시간: now.toISOString(),
+      현재시간Timestamp: now.getTime(),
+      예약날짜: reservationDate.toISOString(),
+      예약날짜Timestamp: reservationDate.getTime(),
+      예약종료시간: reservationEndTime.toISOString(),
+      시간차이: now.getTime() - reservationDate.getTime(),
+      예약날짜지남: isReservationDatePassed,
+      상태코드: reservation.statusCode,
+    })
 
     switch (reservation.statusCode) {
       case "000": // 전체
@@ -225,7 +261,7 @@ const ReservationDetailPage = () => {
                 <Button
                   variantType="line"
                   sizeType="l"
-                  className="flex-1"
+                  className={`flex-1 ${isModalOpen ? "opacity-50 cursor-not-allowed" : ""}`}
                   onClick={() =>
                     navigate(`/reservation/${id}/satisfaction`, {
                       state: {
@@ -241,14 +277,16 @@ const ReservationDetailPage = () => {
                       },
                     })
                   }
+                  disabled={isModalOpen}
                 >
                   만족도 작성
                 </Button>
                 <Button
                   variantType="primary"
                   sizeType="l"
-                  className="flex-1"
+                  className={`flex-1 ${isModalOpen ? "opacity-50 cursor-not-allowed" : ""}`}
                   onClick={handleNavigateToReservationForm}
+                  disabled={isModalOpen}
                 >
                   다시 예약하기
                 </Button>
@@ -257,8 +295,9 @@ const ReservationDetailPage = () => {
               <Button
                 variantType="primary"
                 sizeType="l"
-                className="w-full"
+                className={`w-full ${isModalOpen ? "opacity-50 cursor-not-allowed" : ""}`}
                 onClick={handleNavigateToReservationForm}
+                disabled={isModalOpen}
               >
                 다시 예약하기
               </Button>
@@ -267,13 +306,14 @@ const ReservationDetailPage = () => {
         )
 
       case "001": // 예약완료
-        if (now > reservationEndTime) {
+        if (isReservationDatePassed) {
           return (
             <Button
               variantType="primary"
               sizeType="l"
-              className="w-full"
+              className={`w-full ${isModalOpen ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={handleCompleteVisit}
+              disabled={isModalOpen}
             >
               방문 완료하기
             </Button>
@@ -283,21 +323,23 @@ const ReservationDetailPage = () => {
           <Button
             variantType="primary"
             sizeType="l"
-            className="w-full"
+            className={`w-full ${isModalOpen ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={handleCancelReservation}
+            disabled={isModalOpen}
           >
             예약 취소하기
           </Button>
         )
 
       case "008": // 관리중
-        if (now > reservationEndTime) {
+        if (isReservationDatePassed) {
           return (
             <Button
               variantType="primary"
               sizeType="l"
-              className="w-full"
+              className={`w-full ${isModalOpen ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={handleCompleteVisit}
+              disabled={isModalOpen}
             >
               방문 완료하기
             </Button>
@@ -310,7 +352,7 @@ const ReservationDetailPage = () => {
           <Button
             variantType="primary"
             sizeType="l"
-            className="w-full"
+            className={`w-full ${isModalOpen ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={() => {
               // 현재 경로 가져오기
               const currentPath = window.location.pathname
@@ -335,6 +377,7 @@ const ReservationDetailPage = () => {
                 },
               })
             }}
+            disabled={isModalOpen}
           >
             다시 예약하기
           </Button>

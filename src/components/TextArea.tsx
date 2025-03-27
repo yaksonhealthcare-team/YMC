@@ -45,7 +45,6 @@ export const TextArea = ({
         value={value}
         onChange={onChange}
         error={isError}
-        helperText={isError ? helperText : ""}
         className="!bg-white"
         InputProps={{
           className: `!text-14px !font-r !text-gray-700 !rounded-xl !border-gray-200 ${
