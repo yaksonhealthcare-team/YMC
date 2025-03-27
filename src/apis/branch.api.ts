@@ -2,6 +2,7 @@ import {
   BranchDetail,
   BranchesWithCurrentAddress,
   BranchFilters,
+  BranchCategory,
 } from "../types/Branch.ts"
 import { axiosClient } from "../queries/clients.ts"
 import { Coordinate } from "../types/Coordinate.ts"
@@ -78,4 +79,28 @@ export const removeBranchBookmark = async (branchId: string) => {
       b_idx: branchId,
     },
   })
+}
+
+// 지점 카테고리 목록 조회
+export const fetchBranchCategories = async (
+  brandCode?: string,
+): Promise<BranchCategory[]> => {
+  try {
+    // 모든 카테고리를 가져오기 위해 브랜드 코드 파라미터를 제거
+    const { data } = await axiosClient.get("/categories/categories", {
+      params: {
+        // 브랜드 코드가 있을 때만 전달
+        ...(brandCode ? { brand_code: brandCode } : {}),
+      },
+    })
+
+    if (!data.body || !Array.isArray(data.body)) {
+      return []
+    }
+
+    // 브랜드 코드를 매퍼에 전달하여 현재 브랜드에 맞는 카테고리만 필터링
+    return BranchMapper.toCategoryEntities(data.body, brandCode)
+  } catch (error) {
+    return []
+  }
 }

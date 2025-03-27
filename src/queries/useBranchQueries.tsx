@@ -9,9 +9,14 @@ import {
   fetchBranch,
   addBranchBookmark,
   removeBranchBookmark,
+  fetchBranchCategories,
 } from "../apis/branch.api.ts"
 import { Coordinate } from "../types/Coordinate.ts"
-import { BranchSearchResponse, BranchDetail } from "../types/Branch"
+import {
+  BranchSearchResponse,
+  BranchDetail,
+  BranchCategory,
+} from "../types/Branch"
 import { axiosClient } from "./clients"
 
 interface BranchFilters {
@@ -130,5 +135,14 @@ export const useBranchUnbookmarkMutation = () => {
       queryClient.invalidateQueries({ queryKey: ["branchBookmarks"] })
     },
     retry: false,
+  })
+}
+
+export const useBranchCategories = (brandCode?: string) => {
+  return useQuery<BranchCategory[], Error>({
+    queryKey: ["branches", "categories", brandCode],
+    queryFn: () => fetchBranchCategories(brandCode),
+    staleTime: 0,
+    gcTime: 0,
   })
 }

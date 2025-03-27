@@ -6,6 +6,8 @@ import {
   BranchSearchResult,
   BranchBookmarkResponse,
   BranchBookmarkResult,
+  BranchCategory,
+  BranchCategoryResponse,
 } from "types/Branch"
 
 export class BranchMapper {
@@ -127,5 +129,39 @@ export class BranchMapper {
       availableMembershipCount: Number(dto.membership_count),
       isBookmarked: dto.is_bookmarked === "Y",
     }
+  }
+
+  static toCategoryEntities(
+    dto: BranchCategoryResponse[],
+    currentBrandCode?: string,
+  ): BranchCategory[] {
+    // 유효한 카테고리만 필터링 (sc_code가 비어있지 않은 항목)
+    const validCategories = dto.filter((category) => category.sc_code !== "")
+
+    // 필터링 및 변환
+    const filteredCategories = currentBrandCode
+      ? validCategories.filter(
+          (category) => category.brand_code === currentBrandCode,
+        )
+      : validCategories
+
+    // 중복 제거를 위한 Map 사용
+    const uniqueCategories = new Map<string, BranchCategory>()
+
+    // 카테고리 변환
+    filteredCategories.forEach((category) => {
+      // 이미 추가된 같은 코드의 카테고리가 없는 경우에만 추가
+      if (!uniqueCategories.has(category.sc_code)) {
+        uniqueCategories.set(category.sc_code, {
+          code: category.sc_code,
+          title: category.sc_name,
+        })
+      }
+    })
+
+    // Map을 배열로 변환
+    const result = Array.from(uniqueCategories.values())
+
+    return result
   }
 }

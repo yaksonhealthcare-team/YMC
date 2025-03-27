@@ -184,3 +184,16 @@ export interface BranchDetailResponse {
   membership_count: string
   is_bookmarked: string
 }
+
+export interface BranchCategory {
+  code: string
+  title: string
+}
+
+export interface BranchCategoryResponse {
+  brand_code: string
+  sc_code: string
+  prior: string
+  sc_name: string
+  sc_pic: string
+}

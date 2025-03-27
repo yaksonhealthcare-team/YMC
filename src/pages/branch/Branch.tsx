@@ -9,7 +9,10 @@ import BranchFilterList from "./_fragments/BranchFilterList.tsx"
 import { SearchFloatingButton } from "@components/SearchFloatingButton.tsx"
 import { useLocation, useNavigate } from "react-router-dom"
 import BranchMapSection from "./_fragments/BranchMapSection.tsx"
-import { useBranches } from "../../queries/useBranchQueries.tsx"
+import {
+  useBranches,
+  useBranchCategories,
+} from "../../queries/useBranchQueries.tsx"
 import { Branch as BranchType } from "../../types/Branch.ts"
 import { useBrands } from "../../queries/useBrandQueries.tsx"
 import { useGeolocation } from "../../hooks/useGeolocation.tsx"
@@ -18,6 +21,8 @@ import SearchIcon from "@components/icons/SearchIcon"
 import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import { useBranchLocationSelect } from "../../hooks/useBranchLocationSelect.ts"
 import { DEFAULT_COORDINATE } from "../../types/Coordinate.ts"
+import LoadingIndicator from "@components/LoadingIndicator.tsx"
+import { useQueryClient } from "@tanstack/react-query"
 
 const Branch = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -34,8 +39,13 @@ const Branch = () => {
     category: null,
   })
 
+  const queryClient = useQueryClient()
   const { data: brands } = useBrands()
-  // TODO: Category API 추가되면 여기에 useCategory로 추가하기 (+ useEffect dependencies)
+  const {
+    data: categories,
+    isLoading: isCategoriesLoading,
+    refetch: refetchCategories,
+  } = useBranchCategories(selectedFilter.brand?.code)
 
   const {
     data: result,
@@ -89,8 +99,25 @@ const Branch = () => {
     brand: FilterItem | null
     category: FilterItem | null
   }) => {
-    setSelectedFilter(newFilter)
-    refetch()
+    // 선택한 필터가 변경된 경우에만 상태 업데이트 및 API 호출
+    const brandChanged = selectedFilter.brand?.code !== newFilter.brand?.code
+    const categoryChanged =
+      selectedFilter.category?.code !== newFilter.category?.code
+
+    if (brandChanged || categoryChanged) {
+      // 상태 업데이트
+      setSelectedFilter(newFilter)
+
+      // 브랜드가 변경된 경우 카테고리 캐시 무효화
+      if (brandChanged) {
+        queryClient.invalidateQueries({
+          queryKey: ["branches", "categories"],
+        })
+      }
+
+      // 지점 목록 다시 조회
+      refetch()
+    }
   }
 
   const handleFilterReset = () => {
@@ -119,6 +146,20 @@ const Branch = () => {
     }
   }
 
+  // 브랜드 변경 처리 함수
+  const handleBrandChange = (brand: FilterItem | null) => {
+    if (selectedFilter.brand?.code !== brand?.code) {
+      // 상태 업데이트만 하고 API 직접 호출은 하지 않음
+      setSelectedFilter({
+        brand,
+        category: null,
+      })
+
+      // branches 목록을 즉시 새로고침하지 않음
+      // useEffect 의존성으로 인해 brand가 변경되면 자동으로 categories 쿼리가 실행됨
+    }
+  }
+
   useEffect(() => {
     setHeader({
       component: (
@@ -140,9 +181,11 @@ const Branch = () => {
                     title: brand.name,
                     code: brand.code,
                   }))}
-                  categories={MockFilters.categories}
+                  categories={categories || []}
+                  isLoading={isCategoriesLoading}
                   currentFilter={selectedFilter}
                   onApply={handleFilterChange}
+                  onBrandChange={handleBrandChange}
                 />,
               )
             }}
@@ -155,7 +198,7 @@ const Branch = () => {
     setNavigation({
       display: false,
     })
-  }, [selectedFilter, brands, address])
+  }, [selectedFilter, brands, address, categories, isCategoriesLoading])
 
   const renderScreen = () => {
     switch (screen) {
@@ -237,14 +280,3 @@ const BranchHeader = ({
 }
 
 export default Branch
-
-const MockFilters: {
-  categories: FilterItem[]
-} = {
-  categories: [
-    { code: "1", title: "애스테틱" },
-    { code: "2", title: "스파" },
-    { code: "3", title: "다이어트" },
-    { code: "4", title: "피부관리" },
-  ],
-}
