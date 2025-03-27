@@ -9,6 +9,10 @@ interface ApiResponse<T> {
   body: T
 }
 
+// 플랫폼 감지를 위한 변수
+const isReactNative =
+  typeof navigator !== "undefined" && navigator.product === "ReactNative"
+
 // 전역 에러 메시지 표시를 위한 함수
 let globalShowToast: ((message: string) => void) | null = null
 
@@ -16,11 +20,32 @@ export const setGlobalShowToast = (showToast: (message: string) => void) => {
   globalShowToast = showToast
 }
 
-const showErrorMessage = (message: string) => {
+// React Native 로깅을 위한 함수
+let reactNativeLogger:
+  | ((level: "info" | "error" | "warn", message: string, data?: any) => void)
+  | null = null
+
+export const setReactNativeLogger = (
+  logger: (
+    level: "info" | "error" | "warn",
+    message: string,
+    data?: any,
+  ) => void,
+) => {
+  reactNativeLogger = logger
+}
+
+const showErrorMessage = (message: string, errorData?: any) => {
   if (globalShowToast) {
     globalShowToast(message)
+  }
+
+  if (isReactNative && reactNativeLogger) {
+    // React Native 환경에서 로깅
+    reactNativeLogger("error", message, errorData)
   } else {
-    console.error(message)
+    // 웹 환경에서 로깅
+    console.error(message, errorData)
   }
 }
 
@@ -87,7 +112,11 @@ axiosClient.interceptors.response.use(
           ? JSON.parse(response.data.replace(/^\uFEFF/, ""))
           : response.data
     } catch (error) {
-      showErrorMessage("응답 데이터 처리 중 오류가 발생했습니다")
+      showErrorMessage("응답 데이터 처리 중 오류가 발생했습니다", {
+        responseData: response.data,
+        url: response.config?.url,
+        error,
+      })
       throw new Error("Response data is not a valid JSON string")
     }
 
@@ -102,6 +131,10 @@ axiosClient.interceptors.response.use(
           resultMessage: data.resultMessage,
         },
       }
+      showErrorMessage(data.resultMessage, {
+        resultCode: data.resultCode,
+        url: response.config?.url,
+      })
       throw error
     }
 
@@ -147,13 +180,25 @@ axiosClient.interceptors.response.use(
     // 에러 메시지 표시
     if (error.response) {
       // 서버에서 응답이 왔지만 에러인 경우
-      showErrorMessage(errorMessage)
+      showErrorMessage(errorMessage, {
+        code: errorCode,
+        response: error.response.data,
+        status: error.response.status,
+        url: originalRequest?.url,
+      })
     } else if (error.request) {
       // 요청은 보냈지만 응답이 없는 경우
-      showErrorMessage("서버와의 통신에 실패했습니다")
+      showErrorMessage("서버와의 통신에 실패했습니다", {
+        request: error.request,
+        url: originalRequest?.url,
+        method: originalRequest?.method,
+      })
     } else {
       // 요청 자체를 보내지 못한 경우
-      showErrorMessage("네트워크 연결을 확인해주세요")
+      showErrorMessage("네트워크 연결을 확인해주세요", {
+        error: error.message,
+        config: originalRequest,
+      })
     }
 
     return Promise.reject(error)
