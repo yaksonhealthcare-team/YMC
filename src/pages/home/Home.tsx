@@ -40,7 +40,6 @@ const Home = () => {
     useUserMemberships("T")
   const { user } = useAuth()
   const navigate = useNavigate()
-  const { clear } = useMembershipOptionsStore()
   const { data: unreadCount = 0 } = useUnreadNotificationsCount()
 
   const getDisplayCount = (count: number) => {

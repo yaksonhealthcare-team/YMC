@@ -114,8 +114,6 @@ const ReservationHistoryPage = () => {
     setReservationFilter(filter)
   }, [])
 
-  const { clear } = useMembershipOptionsStore()
-
   const handleReservationClick = () => {
     navigate("/reservation/form", {
       state: {
