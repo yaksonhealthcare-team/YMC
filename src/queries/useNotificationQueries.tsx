@@ -3,9 +3,10 @@ import {
   useQuery,
   useMutation,
   useQueryClient,
+  InfiniteData,
 } from "@tanstack/react-query"
 import { queryKeys } from "./query.keys.ts"
-import { NotificationFilters } from "../types/Notification.ts"
+import { Notification, NotificationFilters } from "../types/Notification.ts"
 import {
   fetchNotifications,
   getNotificationSettings,
@@ -73,11 +74,43 @@ export const useReadNotification = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: () => Promise.reject(new Error("Not implemented")),
-    retry: false,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notifications"] })
+    mutationFn: async (notificationId: number) => {
+      // 실제 API 호출 없이 클라이언트 측 캐시만 업데이트
+      return notificationId
     },
+    onSuccess: (notificationId) => {
+      // 알림 목록 캐시 업데이트
+      queryClient.setQueriesData(
+        { queryKey: ["notifications"] },
+        (oldData: InfiniteData<Notification[]> | undefined) => {
+          if (!oldData) return oldData
+
+          // pages 속성이 있는 무한 쿼리 데이터 처리
+          if (oldData.pages) {
+            return {
+              ...oldData,
+              pages: oldData.pages.map((page: Notification[]) =>
+                page.map((notification) =>
+                  notification.id === notificationId
+                    ? { ...notification, isRead: true }
+                    : notification,
+                ),
+              ),
+            }
+          }
+          return oldData
+        },
+      )
+
+      // 읽지 않은 알림 수 캐시 업데이트
+      queryClient.setQueryData(
+        ["unreadNotificationsCount"],
+        (oldCount: number | undefined) => {
+          return Math.max(0, (oldCount || 0) - 1)
+        },
+      )
+    },
+    retry: false,
   })
 }
 
