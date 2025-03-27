@@ -53,7 +53,20 @@ const BranchDetail = () => {
     }
   }, [branch])
 
-  const handleBack = useCallback(() => navigate(-1), [navigate])
+  const handleBack = useCallback(() => {
+    // 세션 스토리지를 확인하여 예약 페이지에서 돌아왔는지 확인
+    const fromReservation = sessionStorage.getItem("fromReservation")
+    
+    if (fromReservation === id) {
+      // 예약 페이지에서 돌아온 경우, 세션 스토리지를 초기화하고 
+      // 지점 목록 페이지(/branch)로 이동하거나 홈으로 이동
+      sessionStorage.removeItem("fromReservation")
+      navigate("/branch")
+    } else {
+      // 그 외의 경우 일반적인 뒤로가기
+      navigate(-1)
+    }
+  }, [navigate, id])
 
   const handleMembershipBannerClick = useCallback(() => {
     if (!branch) return
@@ -62,6 +75,10 @@ const BranchDetail = () => {
 
   const handleReservation = useCallback(() => {
     if (!branch) return
+    
+    // 예약 페이지로 이동하기 전에 세션 스토리지에 현재 지점 ID 저장
+    sessionStorage.setItem("fromReservation", branch.b_idx)
+    
     navigate(`/reservation/form`, {
       state: {
         originalPath: `/branch/${branch.b_idx}`,

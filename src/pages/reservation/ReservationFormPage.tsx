@@ -85,6 +85,14 @@ const ReservationFormPage = () => {
     })
     clear()
 
+    // 세션 스토리지에서 fromReservation 정보를 가져옴
+    const fromReservation = sessionStorage.getItem("fromReservation")
+    
+    // 세션 스토리지 정보가 있으면 초기화
+    if (fromReservation) {
+      sessionStorage.removeItem("fromReservation")
+    }
+    
     // fromSource에 따른 분기 처리
     const referrerPath = document.referrer ? new URL(document.referrer).pathname : '';
     
@@ -98,8 +106,13 @@ const ReservationFormPage = () => {
       }
     }
     // 2. 지점 상세 페이지에서 왔을 경우
-    else if (referrerPath.includes('/branch/')) {
-      navigate(-1);
+    else if (location.state?.fromBranchDetail) {
+      // 지점 상세 페이지로 돌아갈 때 originalPath 사용
+      if (location.state?.originalPath) {
+        navigate(location.state.originalPath);
+      } else {
+        navigate("/branch");
+      }
     }
     // 3. 결제 완료 페이지에서 왔을 경우
     else if (referrerPath.includes('/payment/complete')) {
