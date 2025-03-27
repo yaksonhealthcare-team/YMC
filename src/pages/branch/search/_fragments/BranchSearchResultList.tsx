@@ -59,9 +59,9 @@ const BranchSearchResultList = ({
   // 위치 정보를 로딩 중인 경우 로딩 표시
   if (locationLoading) {
     return (
-      <div className={"flex flex-col items-center justify-center mt-40"}>
+      <div className="flex flex-col items-center justify-center mt-40">
         <LoadingIndicator />
-        <p className={"mt-4 text-gray-500"}>
+        <p className="mt-4 text-gray-500">
           {"위치 정보를 불러오는 중입니다..."}
         </p>
       </div>
@@ -70,23 +70,25 @@ const BranchSearchResultList = ({
 
   // 지점 데이터 로딩 중이고 결과가 없는 경우
   if (branchesLoading && branches.length === 0) {
-    return <LoadingIndicator className={"self-center mt-40"} />
+    return <LoadingIndicator className="self-center mt-40" />
   }
 
   // 검색 결과가 없는 경우
   if (!branchesLoading && branches.length === 0) {
-    return <p className={"self-center mt-40"}>{"검색 결과가 없습니다."}</p>
+    return <p className="self-center mt-40">{"검색 결과가 없습니다."}</p>
   }
 
   return (
-    <ul className={"divide-y divide-gray-100 px-5 overflow-y-scroll"}>
-      {branches.map((branch, index) => (
-        <li key={index} className={"py-4"} onClick={() => onSelect(branch)}>
-          <BranchCard name={branch.name} address={branch.address} />
-        </li>
-      ))}
-      <div ref={observerTarget} className={"h-4"} />
-    </ul>
+    <div className="h-full overflow-y-auto">
+      <ul className="divide-y divide-gray-100 px-5">
+        {branches.map((branch, index) => (
+          <li key={index} className="py-4" onClick={() => onSelect(branch)}>
+            <BranchCard name={branch.name} address={branch.address} />
+          </li>
+        ))}
+        <div ref={observerTarget} className="h-4" />
+      </ul>
+    </div>
   )
 }
 

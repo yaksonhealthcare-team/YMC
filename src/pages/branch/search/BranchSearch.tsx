@@ -21,22 +21,24 @@ const BranchSearch = () => {
   }, [])
 
   return (
-    <div className={"flex flex-col overflow-y-hidden"}>
-      <div className={"px-5 pt-5 pb-6"}>
+    <div className="flex flex-col h-screen">
+      <div className="px-5 pt-5 pb-6 shrink-0">
         <SearchField
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={"지역 또는 지점명을 입력해주세요."}
         />
       </div>
-      {query.length === 0 ? (
-        <ActiveBranchList />
-      ) : (
-        <BranchSearchResultList
-          query={query}
-          onSelect={(branch) => navigate(`/branch/${branch.b_idx}`)}
-        />
-      )}
+      <div className="grow overflow-hidden">
+        {query.length === 0 ? (
+          <ActiveBranchList />
+        ) : (
+          <BranchSearchResultList
+            query={query}
+            onSelect={(branch) => navigate(`/branch/${branch.b_idx}`)}
+          />
+        )}
+      </div>
     </div>
   )
 }

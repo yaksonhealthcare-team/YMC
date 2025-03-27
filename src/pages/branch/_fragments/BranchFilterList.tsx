@@ -28,31 +28,35 @@ const BranchFilterList = ({
   const { mutate: removeBookmark } = useBranchUnbookmarkMutation()
 
   return (
-    <div className={"px-5 mt-4 overflow-hidden"}>
-      <p className={"font-m text-14px"}>
-        {"총 "}
-        <span>{branches.length}</span>
-        {"개의 지점을 찾았습니다."}
-      </p>
-      <ul className={"divide-y"}>
-        {branches.map((branch) => (
-          <BranchFilterListItem
-            key={branch.b_idx}
-            branch={branch}
-            onClick={() => onSelectBranch(branch)}
-            onClickFavorite={() => {
-              if (branch.isFavorite) {
-                removeBookmark(branch.b_idx)
-                showToast("즐겨찾기에서 삭제했어요.")
-              } else {
-                addBookmark(branch.b_idx)
-                showToast("즐겨찾기에 추가했어요.")
-              }
-            }}
-          />
-        ))}
-        <div ref={observerTarget} className={"h-4"} />
-      </ul>
+    <div className="flex flex-col h-full">
+      <div className="px-5 mt-4 mb-2">
+        <p className="font-m text-14px">
+          {"총 "}
+          <span>{branches.length}</span>
+          {"개의 지점을 찾았습니다."}
+        </p>
+      </div>
+      <div className="flex-1 overflow-y-auto">
+        <ul className="divide-y px-5">
+          {branches.map((branch) => (
+            <BranchFilterListItem
+              key={branch.b_idx}
+              branch={branch}
+              onClick={() => onSelectBranch(branch)}
+              onClickFavorite={() => {
+                if (branch.isFavorite) {
+                  removeBookmark(branch.b_idx)
+                  showToast("즐겨찾기에서 삭제했어요.")
+                } else {
+                  addBookmark(branch.b_idx)
+                  showToast("즐겨찾기에 추가했어요.")
+                }
+              }}
+            />
+          ))}
+          <div ref={observerTarget} className="h-4" />
+        </ul>
+      </div>
     </div>
   )
 }
@@ -66,18 +70,16 @@ export const BranchFilterListItem = ({
   onClick: (branch: Branch) => void
   onClickFavorite: (branch: Branch) => void
 }) => (
-  <li onClick={() => onClick(branch)} className={"cursor-pointer w-full flex"}>
-    <div className={"w-full py-4 gap-4 flex items-stretch"}>
+  <li onClick={() => onClick(branch)} className="cursor-pointer w-full flex">
+    <div className="w-full py-4 gap-4 flex items-stretch">
       <Image
-        className={
-          "border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"
-        }
+        className="border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"
         src={BranchPlaceholderImage}
-        alt={"지점 사진"}
+        alt="지점 사진"
       />
-      <div className={"w-full flex flex-col"}>
-        <div className={"flex justify-between mt-0.5"}>
-          <p className={"font-b text-16px"}>{branch.name}</p>
+      <div className="w-full flex flex-col">
+        <div className="flex justify-between mt-0.5">
+          <p className="font-b text-16px">{branch.name}</p>
           <button
             onClick={(e) => {
               e.stopPropagation()
@@ -87,22 +89,22 @@ export const BranchFilterListItem = ({
             {branch.isFavorite ? <HeartEnabledIcon /> : <HeartDisabledIcon />}
           </button>
         </div>
-        <div className={"flex items-center gap-[2.5px]"}>
+        <div className="flex items-center gap-[2.5px]">
           {branch.canBookToday && (
             <>
-              <p className={"font-r text-12px text-tag-green"}>
+              <p className="font-r text-12px text-tag-green">
                 {"당일 예약 가능"}
               </p>
-              <div className={"w-0.5 h-0.5 rounded-xl bg-gray-400"} />
+              <div className="w-0.5 h-0.5 rounded-xl bg-gray-400" />
             </>
           )}
           {branch.distanceInMeters && (
-            <p className={"font-r text-12px text-gray-400"}>
+            <p className="font-r text-12px text-gray-400">
               {branch.distanceInMeters}
             </p>
           )}
         </div>
-        <p className={"font-r text-14px text-start"}>{branch.address}</p>
+        <p className="font-r text-14px text-start">{branch.address}</p>
       </div>
     </div>
   </li>

@@ -21,7 +21,6 @@ import SearchIcon from "@components/icons/SearchIcon"
 import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import { useBranchLocationSelect } from "../../hooks/useBranchLocationSelect.ts"
 import { DEFAULT_COORDINATE } from "../../types/Coordinate.ts"
-import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useQueryClient } from "@tanstack/react-query"
 
 const Branch = () => {
@@ -41,11 +40,8 @@ const Branch = () => {
 
   const queryClient = useQueryClient()
   const { data: brands } = useBrands()
-  const {
-    data: categories,
-    isLoading: isCategoriesLoading,
-    refetch: refetchCategories,
-  } = useBranchCategories(selectedFilter.brand?.code)
+  const { data: categories, isLoading: isCategoriesLoading } =
+    useBranchCategories(selectedFilter.brand?.code)
 
   const {
     data: result,
