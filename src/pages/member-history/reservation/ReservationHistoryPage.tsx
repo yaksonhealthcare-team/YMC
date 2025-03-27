@@ -14,7 +14,6 @@ import {
   Reservation,
 } from "types/Reservation"
 import LoadingIndicator from "@components/LoadingIndicator"
-import { useMembershipOptionsStore } from "../../../hooks/useMembershipOptions"
 
 const ReservationContent = ({
   filterId,

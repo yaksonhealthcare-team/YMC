@@ -21,7 +21,6 @@ import { BrandSection } from "./../../pages/home/_fragments/BrandSection"
 import { EventSection } from "./../../pages/home/_fragments/EventSection"
 import { BusinessInfo } from "./../../pages/home/_fragments/BusinessInfo"
 import { ReserveCardSection } from "./../../pages/home/_fragments/ReserveCardSection"
-import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
