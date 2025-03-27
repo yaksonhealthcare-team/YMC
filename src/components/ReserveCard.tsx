@@ -79,14 +79,26 @@ export const ReserveCard = ({
   const getButton = (): ReactNode => {
     const statusType = classifyReservationStatus(reservation.statusCode)
     const now = new Date()
-    const reservationEndTime = new Date(reservation.date)
-    const [hours, minutes] = (reservation.duration ?? "00:00")
-      .split(":")
-      .map(Number)
-    reservationEndTime.setHours(reservationEndTime.getHours() + (hours ?? 0))
-    reservationEndTime.setMinutes(
-      reservationEndTime.getMinutes() + (minutes ?? 0),
-    )
+
+    // 원본 날짜를 복제하여 사용
+    const reservationDate = new Date(reservation.date.getTime())
+
+    // 소요 시간을 파싱
+    let hours = 0
+    let minutes = 0
+    if (reservation.duration) {
+      const durationParts = reservation.duration.split(":")
+      hours = parseInt(durationParts[0], 10) || 0
+      minutes = parseInt(durationParts[1], 10) || 0
+    }
+
+    // 예약 종료 시간 계산 (별도의 변수로 저장)
+    const reservationEndTime = new Date(reservationDate.getTime())
+    reservationEndTime.setHours(reservationEndTime.getHours() + hours)
+    reservationEndTime.setMinutes(reservationEndTime.getMinutes() + minutes)
+
+    // 현재 시간이 예약 종료 시간을 지났는지 확인
+    const isReservationPassed = now.getTime() > reservationEndTime.getTime()
 
     switch (statusType) {
       case "completed":
@@ -110,7 +122,7 @@ export const ReserveCard = ({
           reservation.statusCode === "002" ||
           reservation.statusCode === "008"
         ) {
-          if (now > reservationEndTime) {
+          if (isReservationPassed) {
             return (
               <Button
                 variantType="primary"

@@ -207,14 +207,33 @@ const ReservationDetailPage = () => {
     if (!reservation) return null
 
     const now = new Date()
-    const reservationEndTime = new Date(reservation.date)
-    const [hours, minutes] = (reservation.duration || "00:00")
-      .split(":")
-      .map(Number)
-    reservationEndTime.setHours(reservationEndTime.getHours() + (hours || 0))
-    reservationEndTime.setMinutes(
-      reservationEndTime.getMinutes() + (minutes || 0),
-    )
+
+    // 원본 날짜를 복제하여 사용
+    const reservationDate = new Date(reservation.date.getTime())
+
+    // 소요 시간을 파싱
+    let hours = 0
+    let minutes = 0
+    if (reservation.duration) {
+      const durationParts = reservation.duration.split(":")
+      hours = parseInt(durationParts[0], 10) || 0
+      minutes = parseInt(durationParts[1], 10) || 0
+    }
+
+    // 예약 종료 시간 계산 (별도의 변수로 저장)
+    const reservationEndTime = new Date(reservationDate.getTime())
+    reservationEndTime.setHours(reservationEndTime.getHours() + hours)
+    reservationEndTime.setMinutes(reservationEndTime.getMinutes() + minutes)
+
+    // 현재 시간이 예약 종료 시간을 지났는지 확인
+    const isReservationPassed = now.getTime() > reservationEndTime.getTime()
+
+    console.log("시간 비교:", {
+      now: now.toISOString(),
+      reservationDate: reservationDate.toISOString(),
+      reservationEndTime: reservationEndTime.toISOString(),
+      isReservationPassed,
+    })
 
     switch (reservation.statusCode) {
       case "000": // 전체
@@ -271,7 +290,7 @@ const ReservationDetailPage = () => {
         )
 
       case "001": // 예약완료
-        if (now > reservationEndTime) {
+        if (isReservationPassed) {
           return (
             <Button
               variantType="primary"
@@ -297,7 +316,7 @@ const ReservationDetailPage = () => {
         )
 
       case "008": // 관리중
-        if (now > reservationEndTime) {
+        if (isReservationPassed) {
           return (
             <Button
               variantType="primary"
