@@ -15,6 +15,7 @@ interface CartCardProps {
   onDelete: () => void
   onDeleteOption?: (cartIds: string[]) => void
   className?: string
+  branchName?: string
 }
 
 const CartCard = ({
@@ -27,7 +28,11 @@ const CartCard = ({
   onDelete,
   onDeleteOption,
   className,
+  branchName,
 }: CartCardProps) => {
+  const branchText =
+    branchType === "지점 회원권" && branchName ? branchName : branchType
+
   return (
     <div
       className={clsx(
@@ -46,7 +51,7 @@ const CartCard = ({
             <div className="w-[1px] h-3 bg-gray-200 mx-1.5" />
             <span className="text-gray-500 text-12px font-r">{brand}</span>
             <div className="w-[1px] h-3 bg-gray-200 mx-1.5" />
-            <span className="text-gray-500 text-12px font-r">{branchType}</span>
+            <span className="text-gray-500 text-12px font-r">{branchText}</span>
           </div>
         </div>
       </div>

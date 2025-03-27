@@ -32,6 +32,7 @@ interface CartItem {
   brand: string
   branchType: string
   duration: number
+  branchName?: string
 }
 
 const CartPage = () => {
@@ -189,6 +190,7 @@ const CartPage = () => {
               title={item.title}
               duration={item.duration}
               options={item.options}
+              branchName={item.branchName}
               onCountChange={(cartId, newCount) => {
                 handleUpdateItem(cartId, newCount)
               }}

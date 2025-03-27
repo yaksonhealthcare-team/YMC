@@ -49,6 +49,7 @@ export class CartMapper {
       options: [this.createOption(dto)],
       branchId: dto.branch.b_idx,
       brandCode: dto.branch.brand_code,
+      branchName: dto.branch.b_name,
     }
   }
 
@@ -66,6 +67,7 @@ export class CartMapper {
         ...item,
         branchId: dto.branch.b_idx,
         brandCode: dto.branch.brand_code,
+        branchName: dto.branch.b_name,
         options: [...item.options, this.createOption(dto)],
       }
     }
@@ -74,6 +76,7 @@ export class CartMapper {
       ...item,
       branchId: dto.branch.b_idx,
       brandCode: dto.branch.brand_code,
+      branchName: dto.branch.b_name,
       options: item.options.map((option, index) =>
         index === existingOptionIndex
           ? {

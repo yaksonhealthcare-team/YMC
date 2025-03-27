@@ -12,6 +12,7 @@ export interface CartItem {
   options: CartItemOption[]
   branchId: string
   brandCode: string
+  branchName?: string
 }
 
 export interface CartItemOption {

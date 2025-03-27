@@ -50,6 +50,7 @@ const PaymentProductSection = ({
                   : item.duration
               }
               options={[option]}
+              branchName={item.branchName}
               onCountChange={onCountChange}
               onDelete={() => onDelete(item.ss_idx.toString())}
               onDeleteOption={(cartIds) =>
