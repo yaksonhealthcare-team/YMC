@@ -1,8 +1,10 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { QueryClientProvider } from "@tanstack/react-query"
+import { useEffect } from "react"
 import ErrorBoundary from "./components/ErrorBoundary"
 import { queryClient } from "./queries/clients.ts"
 import { AppRouter } from "./router/router.tsx"
+import { initializeReactNativeLogger } from "./utils/reactNativeLogger"
 
 const theme = createTheme({
   // MUI 테마 설정
@@ -36,6 +38,18 @@ const theme = createTheme({
 })
 
 function App() {
+  // React Native 로깅 초기화
+  useEffect(() => {
+    // React Native WebView 환경 확인
+    const isWebView =
+      typeof window !== "undefined" && window.ReactNativeWebView !== undefined
+
+    if (isWebView) {
+      initializeReactNativeLogger()
+      console.info("React Native API 로깅이 초기화되었습니다.")
+    }
+  }, [])
+
   return (
     <ErrorBoundary>
       <ThemeProvider theme={theme}>
