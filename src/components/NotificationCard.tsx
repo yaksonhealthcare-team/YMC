@@ -14,25 +14,30 @@ export const NotificationCard = ({
   className,
 }: NotificationCardProps) => {
   const STYLES = {
-    container:
-      `flex flex-col justify-between ${!notification.isRead ? 'bg-[#F8F8F8]' : 'bg-white'} p-5 border border-gray-100 shadow-card rounded-[20px]`,
+    container: `flex flex-col justify-between ${!notification.isRead ? "bg-[#F8F8F8]" : "bg-white"} p-5 border border-gray-100 shadow-card rounded-[20px]`,
     header: {
       wrapper: "flex justify-between",
       title: {
         wrapper: "flex items-center",
-        text: `font-m text-14px ${notification.isRead ? 'text-gray-400' : 'text-primary flex gap-2 items-center'}`,
-        circle: 'w-[4px] h-[4px] bg-red-500 rounded-full'
+        text: `font-m text-14px ${notification.isRead ? "text-gray-400" : "text-primary flex gap-2 items-center"}`,
+        circle: "w-[4px] h-[4px] bg-red-500 rounded-full",
       },
       date: "font-r text-12px text-gray-400",
     },
     store: {
-      base: `mt-2 font-b text-16px ${notification.isRead ? 'text-gray-500' : 'text-gray-700'}`,
+      base: `mt-2 font-b text-16px ${notification.isRead ? "text-gray-500" : "text-gray-700"}`,
     },
     title: {
-      base: `mt-1 font-r text-14px ${notification.isRead ? 'text-gray-500' : 'text-gray-700'}`,
+      base: `mt-1 font-r text-14px ${notification.isRead ? "text-gray-500" : "text-gray-700"}`,
+    },
+    content: {
+      base: `mt-1 font-r text-14px ${notification.isRead ? "text-gray-400" : "text-gray-600"}`,
+    },
+    message: {
+      base: `mt-1 font-r text-12px ${notification.isRead ? "text-gray-400" : "text-gray-500"}`,
     },
     footer: {
-      wrapper: `mt-3 flex items-center font-r text-12px ${notification.isRead ? 'text-gray-500' : 'text-gray-700'}`,
+      wrapper: `mt-3 flex items-center font-r text-12px ${notification.isRead ? "text-gray-500" : "text-gray-700"}`,
       icon: "w-3.5 h-3.5",
       date: "ml-1.5",
       divider: "h-3 border-l border-gray-300 mx-1.5",
@@ -43,24 +48,30 @@ export const NotificationCard = ({
     <div onClick={onClick} className={clsx(STYLES.container, className)}>
       <div className={STYLES.header.wrapper}>
         <div className={STYLES.header.title.wrapper}>
-        <span className={STYLES.header.title.text} >
-          {notification.subCategory}
-          {!notification.isRead && <div className={STYLES.header.title.circle}/>}
-        </span>
+          <span className={STYLES.header.title.text}>
+            {notification.subCategory}
+            {!notification.isRead && (
+              <div className={STYLES.header.title.circle} />
+            )}
+          </span>
         </div>
         <span className={STYLES.header.date}>{notification.pushDate}</span>
       </div>
 
-      <span className={STYLES.store.base}>{notification.brandName}</span>
+      <span className={STYLES.store.base}>{notification.title}</span>
 
-      <span className={STYLES.title.base}>{notification.title}</span>
+      <span className={STYLES.content.base}>{notification.content}</span>
+
+      {notification.message && (
+        <span className={STYLES.message.base}>{notification.message}</span>
+      )}
 
       {notification.reservationDate && (
         <div className={STYLES.footer.wrapper}>
           <CalendarIcon className={STYLES.footer.icon} />
           <span className={STYLES.footer.date}>
-          {notification.reservationDate}
-        </span>
+            {notification.reservationDate}
+          </span>
         </div>
       )}
     </div>

@@ -5,6 +5,7 @@ export interface Notification {
   subCategory?: string
   title: string
   content: string
+  message?: string
   pushDate: string
   reservationDate?: string
   brandName?: string
