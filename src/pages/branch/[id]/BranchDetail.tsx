@@ -138,13 +138,19 @@ const BranchDetail = () => {
 
   useEffect(() => {
     setHeader({
+      display: true,
       left: "back",
       title: branch?.name || "지점 정보",
-      backgroundColor: "bg-white drop-shadow-md",
-      display: true,
+      onClickBack: handleBack,
+      backgroundColor: "bg-system-bg",
     })
     setNavigation({ display: false })
-  }, [branch?.name])
+
+    return () => {
+      setHeader({ display: false })
+      setNavigation({ display: true })
+    }
+  }, [setHeader, setNavigation, handleBack, branch?.name])
 
   if (!branch || isLoading) {
     return <LoadingIndicator className="min-h-screen" />
