@@ -310,6 +310,8 @@ const ReservationFormPage = () => {
     setData((prev) => ({
       ...prev,
       item: value,
+      date: null,
+      timeSlot: null,
       additionalServices: [],
     }))
   }
