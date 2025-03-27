@@ -28,8 +28,12 @@ export class PaymentMapper {
     }
   }
 
-  static toHistoryEntities(dtos: PaymentHistoryResponse[]): PaymentHistory[] {
-    return dtos.map((dto) => this.toHistoryEntity(dto))
+  static toHistoryEntities(
+    dtos: PaymentHistoryResponse[],
+    totalPageCount: number,
+  ): PaymentHistory[] & { totalPageCount: number } {
+    const entities = dtos.map((dto) => this.toHistoryEntity(dto))
+    return Object.assign(entities, { totalPageCount })
   }
 
   static toHistoryDetailEntity(
