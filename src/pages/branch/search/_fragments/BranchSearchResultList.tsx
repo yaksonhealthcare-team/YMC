@@ -5,6 +5,7 @@ import { useGeolocation } from "../../../../hooks/useGeolocation.tsx"
 import useIntersection from "../../../../hooks/useIntersection.tsx"
 import { Branch } from "../../../../types/Branch.ts"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
+import SearchIcon from "@components/icons/SearchIcon"
 
 interface BranchSearchResultListProps {
   query: string
@@ -75,7 +76,19 @@ const BranchSearchResultList = ({
 
   // 검색 결과가 없는 경우
   if (!branchesLoading && branches.length === 0) {
-    return <p className="self-center mt-40">{"검색 결과가 없습니다."}</p>
+    return (
+      <div className="flex flex-col items-center justify-center px-5 h-full">
+        <div className="mb-4 p-3 rounded-full bg-gray-100">
+          <SearchIcon className="w-6 h-6 text-gray-400" />
+        </div>
+        <p className="font-m text-16px text-gray-700 text-center">
+          {"검색 결과가 없습니다"}
+        </p>
+        <p className="mt-2 font-r text-14px text-gray-500 text-center">
+          {"다른 키워드로 검색해 보세요"}
+        </p>
+      </div>
+    )
   }
 
   return (
