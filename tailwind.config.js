@@ -89,5 +89,22 @@ export default {
       },
     },
   },
-  plugins: [tailwindScrollbarHide],
+  plugins: [
+    tailwindScrollbarHide,
+    function ({ addUtilities }) {
+      const newUtilities = {
+        ".no-scrollbar": {
+          "-ms-overflow-style": "none",
+          "scrollbar-width": "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+        },
+      }
+      addUtilities(newUtilities)
+    },
+  ],
+  corePlugins: {
+    // ...
+  },
 }
