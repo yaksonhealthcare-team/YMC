@@ -1,4 +1,6 @@
 import React, { createContext, ReactNode, useContext, useState } from "react"
+import { Dialog, DialogContent } from "@mui/material"
+import { Button } from "../components/Button"
 
 /**
  * 오버레이 타입을 정의하는 열거형
@@ -175,7 +177,7 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
     >
       {children}
       {toastMessage && (
-        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg z-[1100] min-w-[300px] max-w-[90%] text-center">
+        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg z-[9999] min-w-[300px] max-w-[90%] text-center">
           {toastMessage}
         </div>
       )}
@@ -212,14 +214,8 @@ const OverlayContainer: React.FC = () => {
     case OverlayTypes.MODAL: {
       const modalProps = content as ModalProps
       return (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-[1000] flex items-center justify-center"
-          onClick={() => closeOverlay()}
-        >
-          <div
-            className="bg-white rounded-lg p-5 mx-5 w-full max-w-sm"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-5 mx-5 w-full max-w-sm">
             <h2 className="text-lg font-semibold mb-2">{modalProps.title}</h2>
             <p className="text-gray-600 mb-5">{modalProps.message}</p>
             <div className="flex gap-2">
@@ -250,31 +246,56 @@ const OverlayContainer: React.FC = () => {
     }
 
     case OverlayTypes.BOTTOM_SHEET: {
-      const sheetOptions = options as BottomSheetOptions
+      const bottomSheetOptions = options
       return (
-        <>
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-[1000]"
-            onClick={closeOverlay}
-          />
-          <div
-            className={`fixed bottom-0 left-0 w-full bg-white rounded-t-lg z-[1000] ${
-              sheetOptions.height === "large" ? "h-screen" : "max-h-[90%]"
-            } overflow-auto transition-transform duration-300 ease-out`}
-          >
-            <div className="flex justify-center py-2">
-              <div className="w-10 h-1 bg-gray-300 rounded-full" />
+        <Dialog
+          open={isOpen}
+          onClose={closeOverlay}
+          keepMounted
+          fullWidth
+          maxWidth="sm"
+          className="z-[9000]"
+          PaperProps={{
+            style: {
+              position: "fixed",
+              bottom: 0,
+              margin: 0,
+              borderTopLeftRadius: 24,
+              borderTopRightRadius: 24,
+              maxHeight:
+                bottomSheetOptions.height === "large" ? "95vh" : "80vh",
+              minHeight:
+                bottomSheetOptions.height === "large" ? "95vh" : "auto",
+              overflowY: "auto",
+              width: "100%",
+            },
+          }}
+        >
+          <DialogContent className="p-0">
+            <div className="flex flex-col items-center">
+              <div className="w-[52px] h-[4px] bg-[#ECECEC] rounded-full mt-3 mb-4" />
+              {bottomSheetOptions.title && (
+                <h2 className="text-[18px] font-semibold mb-4 text-center">
+                  {bottomSheetOptions.title}
+                </h2>
+              )}
+              <div className="w-full text-center">{content}</div>
+              {bottomSheetOptions.buttons?.map((button, index) => (
+                <Button
+                  key={index}
+                  variantType="primary"
+                  onClick={button.onClick}
+                  fullWidth
+                  className={`mt-2 ${
+                    button.height === "large" ? "py-4" : "py-2"
+                  }`}
+                >
+                  {button.text}
+                </Button>
+              ))}
             </div>
-            <button
-              aria-label="close"
-              className="absolute top-2 right-2 p-2 text-gray-500 hover:text-gray-700"
-              onClick={closeOverlay}
-            >
-              &times;
-            </button>
-            <div className="p-4">{content as ReactNode}</div>
-          </div>
-        </>
+          </DialogContent>
+        </Dialog>
       )
     }
 
@@ -287,14 +308,8 @@ const OverlayContainer: React.FC = () => {
       }
 
       return (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-[1000] flex items-center justify-center"
-          onClick={closeOverlay}
-        >
-          <div
-            className="bg-white rounded-lg p-5 mx-5 w-full max-w-sm"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-5 mx-5 w-full max-w-sm">
             <h2 className="text-lg font-semibold mb-2">{alertProps.title}</h2>
             <p className="text-gray-600 mb-5">{alertProps.description}</p>
             <button
