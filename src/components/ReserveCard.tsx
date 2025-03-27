@@ -81,7 +81,13 @@ export const ReserveCard = ({
     const now = new Date()
 
     // 원본 날짜를 복제하여 사용
-    const reservationDate = new Date(reservation.date.getTime())
+    const reservationDate = new Date(reservation.date)
+
+    // 날짜가 올바르게 파싱되었는지 확인
+    if (isNaN(reservationDate.getTime())) {
+      console.error("예약 날짜가 유효하지 않습니다:", reservation.date)
+      return null
+    }
 
     // 소요 시간을 파싱
     let hours = 0
@@ -93,12 +99,20 @@ export const ReserveCard = ({
     }
 
     // 예약 종료 시간 계산 (별도의 변수로 저장)
-    const reservationEndTime = new Date(reservationDate.getTime())
+    const reservationEndTime = new Date(reservationDate)
     reservationEndTime.setHours(reservationEndTime.getHours() + hours)
     reservationEndTime.setMinutes(reservationEndTime.getMinutes() + minutes)
 
-    // 현재 시간이 예약 종료 시간을 지났는지 확인
-    const isReservationPassed = now.getTime() > reservationEndTime.getTime()
+    // 현재 시간이 예약 날짜보다 이후인지 확인
+    const isReservationDatePassed = now.getTime() > reservationDate.getTime()
+
+    // 상세 로그 추가
+    console.log("ReserveCard 날짜 비교:", {
+      현재시간: now.toISOString(),
+      예약날짜: reservationDate.toISOString(),
+      예약날짜지남: isReservationDatePassed,
+      상태코드: reservation.statusCode,
+    })
 
     switch (statusType) {
       case "completed":
@@ -122,7 +136,7 @@ export const ReserveCard = ({
           reservation.statusCode === "002" ||
           reservation.statusCode === "008"
         ) {
-          if (isReservationPassed) {
+          if (isReservationDatePassed) {
             return (
               <Button
                 variantType="primary"

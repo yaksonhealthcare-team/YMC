@@ -209,7 +209,13 @@ const ReservationDetailPage = () => {
     const now = new Date()
 
     // 원본 날짜를 복제하여 사용
-    const reservationDate = new Date(reservation.date.getTime())
+    const reservationDate = new Date(reservation.date)
+
+    // 날짜가 올바르게 파싱되었는지 확인 (예약 날짜가 유효한지)
+    if (isNaN(reservationDate.getTime())) {
+      console.error("예약 날짜가 유효하지 않습니다:", reservation.date)
+      return null
+    }
 
     // 소요 시간을 파싱
     let hours = 0
@@ -221,18 +227,23 @@ const ReservationDetailPage = () => {
     }
 
     // 예약 종료 시간 계산 (별도의 변수로 저장)
-    const reservationEndTime = new Date(reservationDate.getTime())
+    const reservationEndTime = new Date(reservationDate)
     reservationEndTime.setHours(reservationEndTime.getHours() + hours)
     reservationEndTime.setMinutes(reservationEndTime.getMinutes() + minutes)
 
-    // 현재 시간이 예약 종료 시간을 지났는지 확인
-    const isReservationPassed = now.getTime() > reservationEndTime.getTime()
+    // 현재 시간이 예약 날짜(시작 시간)보다 이후인지 확인
+    const isReservationDatePassed = now.getTime() > reservationDate.getTime()
 
-    console.log("시간 비교:", {
-      now: now.toISOString(),
-      reservationDate: reservationDate.toISOString(),
-      reservationEndTime: reservationEndTime.toISOString(),
-      isReservationPassed,
+    // 상세 로그 추가
+    console.log("날짜 비교 디버깅:", {
+      현재시간: now.toISOString(),
+      현재시간Timestamp: now.getTime(),
+      예약날짜: reservationDate.toISOString(),
+      예약날짜Timestamp: reservationDate.getTime(),
+      예약종료시간: reservationEndTime.toISOString(),
+      시간차이: now.getTime() - reservationDate.getTime(),
+      예약날짜지남: isReservationDatePassed,
+      상태코드: reservation.statusCode,
     })
 
     switch (reservation.statusCode) {
@@ -290,7 +301,7 @@ const ReservationDetailPage = () => {
         )
 
       case "001": // 예약완료
-        if (isReservationPassed) {
+        if (isReservationDatePassed) {
           return (
             <Button
               variantType="primary"
@@ -316,7 +327,7 @@ const ReservationDetailPage = () => {
         )
 
       case "008": // 관리중
-        if (isReservationPassed) {
+        if (isReservationDatePassed) {
           return (
             <Button
               variantType="primary"
