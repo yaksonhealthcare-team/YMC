@@ -89,11 +89,15 @@ const MembershipBranchList = ({
     } else {
       setSelectedBranch(branchData)
       if (location.state?.returnPath) {
+        const { fromReservation, originalPath } = location.state
         navigate(location.state.returnPath, {
           state: {
-            ...location.state,
             selectedBranch: branchData,
+            fromReservation,
+            fromBranchSelect: true,
+            originalPath
           },
+          replace: true
         })
       } else {
         setIsBottomSheetOpen(true)

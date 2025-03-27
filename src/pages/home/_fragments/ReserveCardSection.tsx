@@ -13,7 +13,12 @@ export const ReserveCardSection = () => {
 
   const handleReservationClick = () => {
     clear()
-    navigate("/reservation/form")
+    navigate("/reservation/form", {
+      state: {
+        originalPath: "/",
+        fromHome: true
+      }
+    })
   }
 
   return (

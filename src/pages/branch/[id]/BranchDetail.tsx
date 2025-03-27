@@ -62,7 +62,12 @@ const BranchDetail = () => {
 
   const handleReservation = useCallback(() => {
     if (!branch) return
-    navigate(`/reservation/form?branchId=${branch.b_idx}`)
+    navigate(`/reservation/form`, {
+      state: {
+        originalPath: `/branch/${branch.b_idx}`,
+        fromBranchDetail: true
+      }
+    })
   }, [branch, navigate])
 
   const handleBookmark = useCallback(() => {

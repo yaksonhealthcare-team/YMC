@@ -117,8 +117,12 @@ const ReservationHistoryPage = () => {
   const { clear } = useMembershipOptionsStore()
 
   const handleReservationClick = () => {
-    clear()
-    navigate("/reservation/form")
+    navigate("/reservation/form", {
+      state: {
+        originalPath: "/member-history/reservation",
+        fromReservationHistory: true
+      }
+    })
   }
 
   useEffect(() => {

@@ -62,8 +62,12 @@ const Home = () => {
   }, [])
 
   const handleReservationClick = () => {
-    clear()
-    navigate("/reservation/form")
+    navigate("/reservation/form", {
+      state: {
+        originalPath: "/",
+        fromHome: true
+      }
+    })
   }
 
   if (!user) return <SplashScreen />

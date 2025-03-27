@@ -63,7 +63,13 @@ export const MembershipCard = ({
 
   const handleReservationClick = (e: React.MouseEvent) => {
     e.stopPropagation()
-    navigate("/reservation/form")
+    navigate("/reservation/form", {
+      state: {
+        originalPath: "/member-history/membership",
+        fromMembershipCard: true,
+        membershipId: id
+      }
+    })
   }
 
   return (

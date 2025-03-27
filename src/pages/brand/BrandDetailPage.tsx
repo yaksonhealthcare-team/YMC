@@ -36,7 +36,13 @@ export const BrandDetailPage = () => {
       <div className="sticky bottom-0 w-full px-[20px] pb-[30px] pt-[12px] bg-white">
         <Button
           className="w-full !rounded-[12px]"
-          onClick={() => navigate("/reservation/form")}
+          onClick={() => navigate("/reservation/form", {
+            state: {
+              originalPath: location.pathname,
+              fromBrandDetail: true,
+              brandCode: brandCode
+            }
+          })}
         >
           예약하기
         </Button>
