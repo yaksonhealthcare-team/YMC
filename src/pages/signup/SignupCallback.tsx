@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { Gender } from "utils/gender"
 import { useNiceAuthCallback } from "utils/niceAuth"
+import { CircularProgress } from "@mui/material"
 
 const SignupCallback = () => {
   const { setSignupData } = useSignup()
@@ -49,8 +50,11 @@ const SignupCallback = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center">
-        <p>처리중입니다...</p>
+      <div className="flex flex-col items-center">
+        <CircularProgress color="primary" size={48} />
+        <p className="mt-4 text-16px font-medium text-[#212121]">
+          본인 인증 정보를 처리 중입니다...
+        </p>
       </div>
     </div>
   )

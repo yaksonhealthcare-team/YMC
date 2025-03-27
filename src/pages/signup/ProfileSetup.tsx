@@ -13,6 +13,7 @@ import { useProfileSetupSubmit } from "../../hooks/useProfileSetupSubmit"
 import { GenderSelect } from "@components/GenderSelect"
 import { Image } from "@components/common/Image"
 import { uploadImages } from "../../apis/image.api.ts"
+import { CircularProgress } from "@mui/material"
 
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -122,6 +123,16 @@ export const ProfileSetup = () => {
 
   return (
     <div className="flex flex-col px-5 pt-5 pb-7 gap-10">
+      {isSubmitting && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 flex flex-col items-center">
+            <CircularProgress color="primary" size={48} />
+            <p className="mt-4 text-16px font-medium text-[#212121]">
+              회원가입 처리 중...
+            </p>
+          </div>
+        </div>
+      )}
       <h1 className="text-[20px] font-bold leading-[30px] text-[#212121]">
         프로필을
         <br />
@@ -326,7 +337,7 @@ export const ProfileSetup = () => {
         }
         onClick={handleSignupSubmit}
       >
-        {isSubmitting ? "처리 중..." : "완료"}
+        완료
       </Button>
     </div>
   )
