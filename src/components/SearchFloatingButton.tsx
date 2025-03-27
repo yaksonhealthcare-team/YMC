@@ -1,8 +1,8 @@
 import clsx from "clsx"
 
 const BUTTON_STYLES = {
-  list: "px-3 py-2",
-  search: "px-3 py-2 bg-white",
+  list: "px-3 h-10",
+  search: "px-3 h-10 bg-white",
 } as const
 
 const BUTTON_ICONS = {
