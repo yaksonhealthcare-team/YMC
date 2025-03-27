@@ -54,6 +54,7 @@ const BranchMapSection = ({
   }, [brandCode, category])
 
   const fetchBranchesByCoords = async (coords: Coordinate) => {
+    if (!coords) return
     setCoords(coords)
     const { branches } = await fetchBranches({
       page: 1,
@@ -79,6 +80,14 @@ const BranchMapSection = ({
         setSelectedBranch(newBranch)
       }
     }
+  }
+
+  if (!coords) {
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        <div className="text-gray-500">위치 정보를 불러오는 중...</div>
+      </div>
+    )
   }
 
   return (
@@ -112,7 +121,9 @@ const BranchMapSection = ({
               } else {
                 await addBookmark(branch.b_idx)
               }
-              await fetchBranchesByCoords(coords)
+              if (coords) {
+                await fetchBranchesByCoords(coords)
+              }
             }}
           />
         )}

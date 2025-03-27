@@ -1,7 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom"
 import { useGeolocation } from "../../hooks/useGeolocation.tsx"
 import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
-import { DEFAULT_COORDINATE } from "../../types/Coordinate.ts"
 import { useBranches } from "../../queries/useBranchQueries.tsx"
 import { Branch, BranchSearchResult } from "../../types/Branch.ts"
 import { useIntersection } from "../../hooks/useIntersection.tsx"
@@ -27,13 +26,6 @@ const MembershipBranchList = ({
   const { location: geolocationLocation, error: _ } = useGeolocation()
   const { setSelectedBranch, setIsBottomSheetOpen } =
     useMembershipOptionsStore()
-
-  const coordinates = geolocationLocation
-    ? {
-        latitude: geolocationLocation.latitude,
-        longitude: geolocationLocation.longitude,
-      }
-    : DEFAULT_COORDINATE
 
   const debouncedQuery = useDebounce(query, 300)
 

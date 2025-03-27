@@ -6,10 +6,8 @@ import {
   useBranchBookmarkMutation,
   useBranchUnbookmarkMutation,
 } from "../../../queries/useBranchQueries.tsx"
-import { DEFAULT_COORDINATE } from "../../../types/Coordinate.ts"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useOverlay } from "../../../contexts/ModalContext.tsx"
-import { BranchDetail as BranchDetailType } from "../../../types/Branch.ts"
 import { useGeolocation } from "../../../hooks/useGeolocation.tsx"
 
 const MembershipAvailableBanner = lazy(

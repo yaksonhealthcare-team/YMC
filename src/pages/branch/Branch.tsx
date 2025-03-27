@@ -20,7 +20,6 @@ import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import SearchIcon from "@components/icons/SearchIcon"
 import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import { useBranchLocationSelect } from "../../hooks/useBranchLocationSelect.ts"
-import { DEFAULT_COORDINATE } from "../../types/Coordinate.ts"
 import { useQueryClient } from "@tanstack/react-query"
 
 const Branch = () => {

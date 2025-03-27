@@ -9,7 +9,6 @@ import { useBranches } from "../../queries/useBranchQueries.tsx"
 import useIntersection from "../../hooks/useIntersection.tsx"
 import BranchItem from "./BranchItem.tsx"
 import { useGeolocation } from "../../hooks/useGeolocation.tsx"
-import { DEFAULT_COORDINATE } from "../../types/Coordinate.ts"
 
 interface SearchBranchListProps {
   selectedBranches: Branch[]
