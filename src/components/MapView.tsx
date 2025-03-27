@@ -165,7 +165,7 @@ const MapView = ({
       {options?.showCurrentLocationButton && (
         <button
           onClick={handleCurrentLocationClick}
-          className="absolute bottom-4 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-50"
+          className="absolute bottom-10 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-50"
         >
           <CrosshairIcon className="w-6 h-6" />
         </button>
