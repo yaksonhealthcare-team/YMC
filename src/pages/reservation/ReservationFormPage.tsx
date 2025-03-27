@@ -120,7 +120,12 @@ const ReservationFormPage = () => {
     }
     // 4. 예약 상세 페이지에서 재예약으로 온 경우
     else if (locationState.fromReservationDetail) {
-      navigate('/member-history/reservation', { replace: true });
+      // originalPath가 있으면 해당 경로로 이동, 없으면 예약 목록으로 이동
+      if (locationState.originalPath) {
+        navigate(locationState.originalPath, { replace: true });
+      } else {
+        navigate('/member-history/reservation', { replace: true });
+      }
     }
     // 5. 회원권 카드에서 온 경우
     else if (locationState.fromMembershipCard) {

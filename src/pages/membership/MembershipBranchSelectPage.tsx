@@ -32,12 +32,13 @@ const MembershipBranchSelectPage = ({ onSelect, brandCode }: Props) => {
         // 예약 폼으로 돌아갈 때는 예약 관련 정보만 전달
         if (memoizedState?.returnPath) {
           // 필요한 예약 정보만 전달
-          const { fromReservation, originalPath } = memoizedState
+          const { fromReservation, originalPath, fromReservationDetail } = memoizedState
           navigate(memoizedState.returnPath, {
             state: {
               fromReservation,
               fromBranchSelect: true, // 지점 선택 페이지에서 왔음을 표시
-              originalPath // 원래 온 경로 정보 유지
+              originalPath, // 원래 온 경로 정보 유지
+              fromReservationDetail // 예약 상세에서 왔는지 여부 유지
             },
             replace: true // 히스토리 스택에 추가하지 않고 교체
           })
