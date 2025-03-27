@@ -105,22 +105,14 @@ export const ProfileSetup = () => {
               ...prev,
               profileUrl: uploadedUrls[0],
             }))
-
-            // 업로드된 URL을 바로 사용하기 위해 await
-            await handleSubmit()
-          } else {
-            // 이미지 URL이 반환되지 않았을 경우 기존 데이터로 진행
-            await handleSubmit()
           }
         } catch (error) {
           console.error("이미지 업로드 실패:", error)
           // 이미지 업로드 실패해도 회원가입은 계속 진행
-          await handleSubmit()
         }
-      } else {
-        // 프로필 이미지가 없는 경우 기존 로직대로 진행
-        await handleSubmit()
       }
+
+      await handleSubmit()
     } catch (error) {
       console.error("회원가입 실패:", error)
     } finally {
