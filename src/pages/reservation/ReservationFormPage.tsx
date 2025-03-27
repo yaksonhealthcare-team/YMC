@@ -615,7 +615,14 @@ const ReservationFormPage = () => {
           {!isMembershipsLoading && filteredMemberships.length > 0 ? (
             <MembershipSwiper
               membershipsData={{
-                ...(membershipsData?.pages[0] || {}),
+                ...(membershipsData?.pages[0] || {
+                  resultCode: "00",
+                  resultMessage: "",
+                  resultCount: 0,
+                  total_count: 0,
+                  total_page_count: 0,
+                  current_page: 0,
+                }),
                 body: filteredMemberships,
               }}
               selectedItem={data.item}
