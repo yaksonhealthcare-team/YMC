@@ -20,18 +20,31 @@ const Step1SearchBranchList = ({
   selectedBranches,
   setSelectedBranches,
 }: SearchBranchListProps) => {
-  const [searchText, setSearchText] = useState("")
-  const { location } = useGeolocation()
+  const [searchQuery, setSearchQuery] = useState("")
+  const { location: currentLocation } = useGeolocation()
+  const { observerTarget } = useIntersection({
+    onIntersect: () => {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage()
+      }
+    },
+  })
 
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useBranches({
-      search: searchText || undefined,
-      latitude: location?.latitude || DEFAULT_COORDINATE.latitude,
-      longitude: location?.longitude || DEFAULT_COORDINATE.longitude,
-    })
+  const {
+    data: branchPages,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useBranches({
+    latitude: currentLocation?.latitude,
+    longitude: currentLocation?.longitude,
+    search: searchQuery,
+    enabled: !!currentLocation,
+  })
 
   const branches =
-    data?.pages.flatMap((page) =>
+    branchPages?.pages.flatMap((page) =>
       page.body.result.map((branch) => ({
         b_idx: branch.b_idx,
         name: branch.b_name,
@@ -46,29 +59,20 @@ const Step1SearchBranchList = ({
       })),
     ) || []
 
-  const { observerTarget } = useIntersection({
-    onIntersect: () => {
-      if (hasNextPage && !isFetchingNextPage) {
-        fetchNextPage()
-      }
-    },
-  })
-
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(event.target.value)
+    setSearchQuery(event.target.value)
   }
 
   const handleSearchClear = () => {
-    setSearchText("")
+    setSearchQuery("")
   }
 
   const handleSelectBranch = (branch: Branch) => {
-    setSelectedBranches((prevSelected) => {
-      if (prevSelected.some((b) => b.b_idx === branch.b_idx)) {
-        return prevSelected.filter((b) => b.b_idx !== branch.b_idx)
-      }
-      return [...prevSelected, branch]
-    })
+    setSelectedBranches((prev) => [...prev, branch])
+  }
+
+  const handleRemoveBranch = (branch: Branch) => {
+    setSelectedBranches((prev) => prev.filter((b) => b.b_idx !== branch.b_idx))
   }
 
   return (
@@ -86,17 +90,17 @@ const Step1SearchBranchList = ({
         <div className="mt-[40px]">
           <CustomTextField
             type={"text"}
-            value={searchText}
+            value={searchQuery}
             onChange={handleSearchChange}
             placeholder="지점명 검색"
             iconLeft={<SearchIcon className="ml-[2px] w-[24px] h-[24px]" />}
             iconRight={
-              searchText && (
+              searchQuery && (
                 <IconButton
                   className="px-0 py-[15px] mr-[2px] h-full"
                   onClick={handleSearchClear}
                 >
-                  <CloseGrayFillIcon />
+                  <CloseGrayFillIcon className="w-[24px] h-[24px]" />
                 </IconButton>
               )
             }
@@ -113,7 +117,10 @@ const Step1SearchBranchList = ({
               >
                 {item.name}
                 <button
-                  onClick={() => handleSelectBranch(item)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleRemoveBranch(item)
+                  }}
                   className="ml-[4px] text-gray-500 hover:text-gray-700 focus:outline-none"
                   aria-label="Remove"
                 >
@@ -131,18 +138,17 @@ const Step1SearchBranchList = ({
         {!isLoading && (
           <>
             {branches.map((branch) => (
-              <button
+              <div
                 key={branch.b_idx}
                 className="w-full flex justify-between py-[16px] cursor-pointer border-b border-b-[#ECECEC] text-left"
                 onClick={() => handleSelectBranch(branch)}
                 aria-label={`${branch.name} 지점 선택`}
               >
                 <BranchItem branch={branch} />
-
                 {selectedBranches.some((b) => b.b_idx === branch.b_idx) && (
-                  <CheckIcon htmlColor="#F37165" />
+                  <CheckIcon className="w-[24px] h-[24px]" />
                 )}
-              </button>
+              </div>
             ))}
             <div ref={observerTarget} className={"h-4"} />
             {isFetchingNextPage && (

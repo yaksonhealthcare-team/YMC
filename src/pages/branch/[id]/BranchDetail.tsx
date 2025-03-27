@@ -10,6 +10,7 @@ import { DEFAULT_COORDINATE } from "../../../types/Coordinate.ts"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useOverlay } from "../../../contexts/ModalContext.tsx"
 import { BranchDetail as BranchDetailType } from "../../../types/Branch.ts"
+import { useGeolocation } from "../../../hooks/useGeolocation.tsx"
 
 const MembershipAvailableBanner = lazy(
   () => import("./_fragments/MembershipAvailableBanner.tsx"),
@@ -25,13 +26,17 @@ const BranchDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
+  const { location: currentLocation } = useGeolocation()
   const { showToast } = useOverlay()
-  const [selectedTab, setSelectedTab] = useState<BranchDetailTab>("programs")
+  const [activeTab, setActiveTab] = useState<BranchDetailTab>("programs")
 
-  const { data: branch, isLoading } = useBranch(id || "", {
-    latitude: DEFAULT_COORDINATE.latitude,
-    longitude: DEFAULT_COORDINATE.longitude,
-  }) as { data: BranchDetailType | undefined; isLoading: boolean }
+  const { data: branch, isLoading } = useBranch(
+    id!,
+    currentLocation || undefined,
+    {
+      enabled: !!currentLocation,
+    },
+  )
   const { mutate: addBookmark } = useBranchBookmarkMutation()
   const { mutate: removeBookmark } = useBranchUnbookmarkMutation()
 
@@ -85,11 +90,13 @@ const BranchDetail = () => {
 
   useEffect(() => {
     setHeader({
-      display: false,
-      backgroundColor: "bg-system-bg",
+      left: "back",
+      title: branch?.name || "지점 정보",
+      backgroundColor: "bg-white drop-shadow-md",
+      display: true,
     })
     setNavigation({ display: false })
-  }, [setHeader, setNavigation])
+  }, [branch?.name])
 
   if (!branch || isLoading) {
     return <LoadingIndicator className="min-h-screen" />
@@ -114,8 +121,8 @@ const BranchDetail = () => {
       </div>
       <Suspense fallback={<LoadingIndicator className="h-20" />}>
         <BranchTabs
-          selectedTab={selectedTab}
-          onChangeTab={(tab: BranchDetailTab) => setSelectedTab(tab)}
+          selectedTab={activeTab}
+          onChangeTab={(tab: BranchDetailTab) => setActiveTab(tab)}
           branch={branch}
         />
       </Suspense>

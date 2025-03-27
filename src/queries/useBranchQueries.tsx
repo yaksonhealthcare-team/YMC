@@ -27,6 +27,7 @@ interface BranchFilters {
   category?: string
   search?: string
   mp_idx?: string
+  enabled?: boolean
 }
 
 const queryKeys = {
@@ -64,13 +65,22 @@ export const useBranches = (filters: BranchFilters) =>
       return undefined
     },
     retry: false,
+    enabled: filters.enabled ?? true,
   })
 
-export const useBranch = (b_idx: string, coords: Coordinate) =>
+export const useBranch = (
+  b_idx: string,
+  coords?: Coordinate,
+  options?: { enabled?: boolean },
+) =>
   useQuery({
-    queryKey: queryKeys.branches.detail(b_idx, coords),
-    queryFn: () => fetchBranch(b_idx, coords),
+    queryKey: queryKeys.branches.detail(
+      b_idx,
+      coords || { latitude: 0, longitude: 0 },
+    ),
+    queryFn: () => fetchBranch(b_idx, coords || { latitude: 0, longitude: 0 }),
     retry: false,
+    enabled: options?.enabled ?? true,
   })
 
 export const useBranchBookmarksQuery = (coords?: Coordinate) => {

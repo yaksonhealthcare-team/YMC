@@ -1,6 +1,6 @@
 import MapView from "@components/MapView.tsx"
 import { Branch } from "../../../types/Branch.ts"
-import { Coordinate, DEFAULT_COORDINATE } from "../../../types/Coordinate.ts"
+import { Coordinate } from "../../../types/Coordinate.ts"
 import { useEffect, useState } from "react"
 import { fetchBranches } from "../../../apis/branch.api.ts"
 import { BranchFilterListItem } from "./BranchFilterList.tsx"
@@ -25,7 +25,7 @@ const BranchMapSection = ({
 }: BranchMapSectionProps) => {
   const navigate = useNavigate()
   const [branches, setBranches] = useState<Branch[]>([])
-  const [coords, setCoords] = useState<Coordinate>(DEFAULT_COORDINATE)
+  const [coords, setCoords] = useState<Coordinate | null>(null)
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
   const { location: selectedLocation } = useBranchLocationSelect()
   const { location: currentLocation } = useGeolocation()
@@ -35,19 +35,22 @@ const BranchMapSection = ({
 
   useEffect(() => {
     // 초기 로딩 시 현재 위치 또는 선택된 위치를 기준으로 지점 데이터 로드
-    const initialCoords =
-      selectedLocation?.coords || currentLocation || DEFAULT_COORDINATE
-    setCoords(initialCoords)
-    fetchBranchesByCoords(initialCoords)
+    const initialCoords = selectedLocation?.coords || currentLocation
+    if (initialCoords) {
+      setCoords(initialCoords)
+      fetchBranchesByCoords(initialCoords)
+    }
   }, [])
 
   useEffect(() => {
     // 브랜드 코드나 카테고리가 변경되면 분기에서 즉시 데이터 로드
-    setBranches([])
-    fetchBranchesByCoords(coords)
-    // 필터 변경 시 선택된 지점 초기화
-    setSelectedBranch(null)
-    onSelectBranch(null)
+    if (coords) {
+      setBranches([])
+      fetchBranchesByCoords(coords)
+      // 필터 변경 시 선택된 지점 초기화
+      setSelectedBranch(null)
+      onSelectBranch(null)
+    }
   }, [brandCode, category])
 
   const fetchBranchesByCoords = async (coords: Coordinate) => {

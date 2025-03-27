@@ -44,11 +44,12 @@ const MembershipBranchList = ({
     isFetchingNextPage,
     isLoading,
   } = useBranches({
-    latitude: coordinates.latitude,
-    longitude: coordinates.longitude,
+    latitude: geolocationLocation?.latitude,
+    longitude: geolocationLocation?.longitude,
     search: debouncedQuery,
     brandCode: location.state?.brand_code,
     mp_idx: location.state?.selectedItem,
+    enabled: !!geolocationLocation,
   })
 
   const branches = branchPages?.pages.flatMap((page) => page.body.result) || []

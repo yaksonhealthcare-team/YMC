@@ -50,16 +50,11 @@ const Branch = () => {
     isFetchingNextPage,
     refetch,
   } = useBranches({
-    latitude: (
-      selectedLocation?.coords ??
-      (currentLocation || DEFAULT_COORDINATE)
-    ).latitude,
-    longitude: (
-      selectedLocation?.coords ??
-      (currentLocation || DEFAULT_COORDINATE)
-    ).longitude,
+    latitude: (selectedLocation?.coords || currentLocation)?.latitude,
+    longitude: (selectedLocation?.coords || currentLocation)?.longitude,
     brandCode: selectedFilter.brand?.code,
     category: selectedFilter.category?.code,
+    enabled: !!(selectedLocation?.coords || currentLocation),
   })
 
   const address =
