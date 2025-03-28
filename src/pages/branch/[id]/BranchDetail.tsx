@@ -127,10 +127,7 @@ const BranchDetail = () => {
 
   useEffect(() => {
     setHeader({
-      left: "back",
-      title: branch?.name || "지점 정보",
-      backgroundColor: "bg-white drop-shadow-md",
-      display: true,
+      display: false,
     })
     setNavigation({ display: false })
   }, [branch?.name])
