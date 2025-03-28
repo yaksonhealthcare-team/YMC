@@ -6,6 +6,7 @@ import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect"
 import { useAddAddressBookmarkMutation } from "../../../queries/useAddressQueries"
 import { useOverlay } from "../../../contexts/ModalContext"
 import HeartDisabledIcon from "@assets/icons/HeartDisabledIcon.svg?react"
+import HeartEnabledIcon from "@assets/icons/HeartEnabledIcon.svg?react"
 
 const AddressConfirm = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -22,6 +23,7 @@ const AddressConfirm = () => {
     latitude: 0,
     longitude: 0,
   })
+  const [isBookmarked, setIsBookmarked] = useState(false)
 
   useEffect(() => {
     // 헤더 설정
@@ -46,6 +48,12 @@ const AddressConfirm = () => {
   const handleAddBookmark = () => {
     if (!coordinates || !address.road) return
 
+    if (isBookmarked) {
+      setIsBookmarked(false)
+      showToast("자주 쓰는 주소에서 삭제되었습니다.")
+      return
+    }
+
     openModal({
       title: "자주 쓰는 주소 등록",
       message: "이 주소를 자주 쓰는 주소로 등록하시겠습니까?",
@@ -60,10 +68,12 @@ const AddressConfirm = () => {
             onSuccess: (response) => {
               if (response.resultCode === "29") {
                 showToast("이미 등록된 주소입니다.")
+                setIsBookmarked(true)
                 return
               }
               if (response.resultCode === "00") {
                 showToast("자주 쓰는 주소로 등록되었습니다.")
+                setIsBookmarked(true)
                 return
               }
               showToast("주소 등록에 실패했습니다. 다시 시도해주세요.")
@@ -118,11 +128,21 @@ const AddressConfirm = () => {
 
       {/* 자주 쓰는 주소 등록 버튼 */}
       <div
-        className="flex justify-between items-center mx-5 mt-[41px] px-5 h-[56px] border border-[#ECECEC] rounded-[12px]"
+        className={`flex justify-between items-center mx-5 mt-[41px] px-5 h-[56px] rounded-[12px] ${
+          isBookmarked
+            ? "border border-[#F37165]"
+            : "border border-[#ECECEC]"
+        }`}
         onClick={handleAddBookmark}
       >
-        <div className="text-[14px] text-gray-400 font-m">자주 쓰는 주소로 등록</div>
-        <HeartDisabledIcon className="w-5 h-5 text-gray-400" />
+        <div className={`text-[14px] font-m ${isBookmarked ? "text-[#F37165]" : "text-gray-400"}`}>
+          자주 쓰는 주소로 등록
+        </div>
+        {isBookmarked ? (
+          <HeartEnabledIcon className="w-5 h-5 text-[#F37165]" />
+        ) : (
+          <HeartDisabledIcon className="w-5 h-5 text-gray-400" />
+        )}
       </div>
 
       {/* 하단 버튼 영역 */}
