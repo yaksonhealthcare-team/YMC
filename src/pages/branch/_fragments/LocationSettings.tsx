@@ -122,7 +122,7 @@ const LocationSettings = () => {
         address: "현재 위치",
         coords,
       })
-      navigate("/branch/location/confirm", {
+      navigate("/branch/location/picker", {
         state: {
           selectedLocation: {
             address: {
