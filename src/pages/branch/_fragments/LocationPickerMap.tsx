@@ -185,13 +185,6 @@ const LocationPickerMap = () => {
         <div className={"w-full h-[1px] bg-gray-50 mt-6"} />
         <div className={"w-full px-5 mt-3 flex gap-2"}>
           <Button
-            variantType={"line"}
-            className={"flex-1"}
-            onClick={handleAddBookmark}
-          >
-            {"자주 쓰는 주소로 등록"}
-          </Button>
-          <Button
             variantType={"primary"}
             className={"flex-1"}
             onClick={handleSetLocation}
