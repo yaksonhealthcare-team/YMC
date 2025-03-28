@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useLayout } from "../../../contexts/LayoutContext.tsx"
 import CloseIcon from "@assets/icons/CloseIcon.svg?react"
 import CrosshairIcon from "@assets/icons/CrosshairIcon.svg?react"
@@ -44,7 +44,7 @@ const LocationSettingsSearchBar = ({
   onBlur: () => void
 }) => {
   return (
-    <div className={"flex flex-col gap-6 px-5"}>
+    <div className={"flex flex-col gap-6 px-5 pt-[1px]"}>
       <SearchField
         placeholder="도로명, 건물명, 지번으로 검색하세요."
         value={text}
@@ -70,6 +70,7 @@ const LocationSettings = () => {
   const location = useLocation()
   const [address, setAddress] = useState("")
   const [isSearchFocused, setIsSearchFocused] = useState(false)
+  const searchTimeoutRef = useRef<number | null>(null)
   const { setLocation } = useBranchLocationSelect()
   const { mutate: addBookmark } = useAddAddressBookmarkMutation()
   const {
@@ -140,6 +141,19 @@ const LocationSettings = () => {
     }
   }
 
+  const handleFocus = () => {
+    setIsSearchFocused(true)
+  }
+
+  const handleBlur = () => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current)
+    }
+    searchTimeoutRef.current = window.setTimeout(() => {
+      setIsSearchFocused(false)
+    }, 150)
+  }
+
   const renderContent = () => {
     if (address.length > 0) {
       return (
@@ -182,8 +196,8 @@ const LocationSettings = () => {
         text={address}
         setText={setAddress}
         onClickCurrentLocation={handleCurrentLocationClick}
-        onFocus={() => setIsSearchFocused(true)}
-        onBlur={() => setIsSearchFocused(false)}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       />
       <Divider className="my-[24px] border-gray-50 border-b-[8px]" />
       {renderContent()}

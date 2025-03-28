@@ -229,7 +229,7 @@ const AddressConfirm = () => {
 
       {/* 하단 버튼 영역 */}
       <div className="fixed bottom-0 left-0 right-0 flex flex-col w-full bg-white border-t border-gray-50">
-        <div className="flex flex-col gap-2 p-5">
+        <div className="flex flex-col gap-2 p-5 pt-6 pb-8">
           <Button
             variantType="text"
             sizeType="l"
