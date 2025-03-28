@@ -7,6 +7,7 @@ import { useAddAddressBookmarkMutation } from "../../../queries/useAddressQuerie
 import { useOverlay } from "../../../contexts/ModalContext"
 import HeartDisabledIcon from "@assets/icons/HeartDisabledIcon.svg?react"
 import HeartEnabledIcon from "@assets/icons/HeartEnabledIcon.svg?react"
+import { Coordinate } from "../../../types/Coordinate"
 
 const AddressConfirm = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -42,21 +43,83 @@ const AddressConfirm = () => {
       if (locationAddress && coords) {
         // 주소가 객체인 경우(road, jibun 속성이 있는 경우)와 문자열인 경우 모두 처리
         if (typeof locationAddress === 'object') {
-          setAddress({
-            road: locationAddress.road || '',
-            jibun: locationAddress.jibun || '',
-          });
-        } else {
+          const roadAddress = locationAddress.road;
+          // "현재 위치"가 아닌 경우에만 설정
+          if (roadAddress && roadAddress !== "현재 위치") {
+            setAddress({
+              road: roadAddress,
+              jibun: locationAddress.jibun || '',
+            });
+          } else if (roadAddress === "현재 위치") {
+            // 여기서 좌표로 주소를 조회하는 로직을 추가할 수 있습니다
+            // 지금은 단순히 안내 메시지만 표시
+            setAddress({
+              road: "좌표에서 주소 확인 중...",
+              jibun: '',
+            });
+            
+            // 여기서 좌표로부터 주소를 조회하는 로직 구현 필요
+            fetchAddressFromCoords(coords);
+          }
+        } else if (locationAddress !== "현재 위치") {
           setAddress({
             road: locationAddress,
             jibun: '',
           });
+        } else {
+          // "현재 위치"인 경우 좌표로부터 주소 조회
+          setAddress({
+            road: "좌표에서 주소 확인 중...",
+            jibun: '',
+          });
+          
+          // 여기서 좌표로부터 주소를 조회하는 로직 구현 필요
+          fetchAddressFromCoords(coords);
         }
         
         setCoordinates(coords);
       }
     }
   }, [])
+
+  // 좌표로부터 주소를 조회하는 함수
+  const fetchAddressFromCoords = (coords: Coordinate) => {
+    // 네이버 맵스 API 사용
+    if (window.naver && window.naver.maps) {
+      const { naver } = window;
+      naver.maps.Service.reverseGeocode(
+        {
+          coords: new naver.maps.LatLng(coords.latitude, coords.longitude),
+          orders: [
+            naver.maps.Service.OrderType.ADDR,
+            naver.maps.Service.OrderType.ROAD_ADDR,
+          ].join(","),
+        },
+        (status, response) => {
+          if (status === naver.maps.Service.Status.OK) {
+            if (response?.v2?.address) {
+              setAddress({
+                jibun: response.v2.address.jibunAddress || "",
+                road: response.v2.address.roadAddress || response.v2.address.jibunAddress || "",
+              });
+            } else {
+              console.error("주소 정보가 없습니다:", response);
+              setAddress({
+                jibun: "",
+                road: "주소를 찾을 수 없습니다",
+              });
+            }
+          } else {
+            console.error("주소 검색 실패:", status);
+            setAddress({
+              jibun: "",
+              road: "주소를 찾을 수 없습니다",
+            });
+          }
+        }
+      );
+    }
+  };
 
   const handleAddBookmark = () => {
     if (!coordinates || !address.road) return

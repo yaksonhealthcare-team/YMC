@@ -129,7 +129,10 @@ const LocationSettings = () => {
       navigate("/branch/location/picker", {
         state: {
           selectedLocation: {
-            address: "현재 위치",
+            address: {
+              road: "현재 위치",
+              jibun: ""
+            },
             coords,
           },
         },

@@ -7,7 +7,7 @@ import { Coordinate } from "../../../types/Coordinate.ts"
 import { Button } from "@components/Button.tsx"
 import { fetchBranches } from "../../../apis/branch.api.ts"
 import { Branch } from "../../../types/Branch.ts"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect.ts"
 import { useAddAddressBookmarkMutation } from "../../../queries/useAddressQueries"
 import { useOverlay } from "../../../contexts/ModalContext"
@@ -15,6 +15,7 @@ import { useOverlay } from "../../../contexts/ModalContext"
 const LocationPickerMap = () => {
   const { naver } = window
   const navigate = useNavigate()
+  const routeLocation = useLocation()
   const { setHeader, setNavigation } = useLayout()
   const { location, loading } = useGeolocation()
   const { setLocation } = useBranchLocationSelect()
@@ -39,15 +40,42 @@ const LocationPickerMap = () => {
   }, [])
 
   useEffect(() => {
-    if (location) {
-      setCenter(location)
+    if (routeLocation.state?.selectedLocation?.coords) {
+      const { coords, address: locationAddress } = routeLocation.state.selectedLocation;
+      setCenter(coords);
+      
+      if (locationAddress) {
+        if (typeof locationAddress === 'object') {
+          setAddress({
+            road: locationAddress.road || '',
+            jibun: locationAddress.jibun || '',
+          });
+        } else {
+          setAddress({
+            road: locationAddress,
+            jibun: '',
+          });
+        }
+        
+        if (locationAddress.road === "현재 위치" || locationAddress === "현재 위치") {
+          setAddress(prev => ({
+            ...prev,
+            road: ""
+          }));
+        }
+      }
+      
+      setHasDragged(true);
+    } else if (location) {
+      setCenter(location);
     }
-  }, [location])
+  }, [routeLocation.state, location])
 
   useEffect(() => {
     if (!center) return
-    setAddressFromCoords(center)
-    fetchBranchesNearby(center)
+    
+    setAddressFromCoords(center);
+    fetchBranchesNearby(center);
   }, [center])
 
   const setAddressFromCoords = (coords: Coordinate) => {
@@ -59,11 +87,27 @@ const LocationPickerMap = () => {
           naver.maps.Service.OrderType.ROAD_ADDR,
         ].join(","),
       },
-      (_, response) => {
-        setAddress({
-          jibun: response.v2.address.jibunAddress,
-          road: response.v2.address.roadAddress,
-        })
+      (status, response) => {
+        if (status === naver.maps.Service.Status.OK) {
+          if (response?.v2?.address) {
+            setAddress({
+              jibun: response.v2.address.jibunAddress || "",
+              road: response.v2.address.roadAddress || response.v2.address.jibunAddress || "",
+            });
+          } else {
+            console.error("주소 정보가 없습니다:", response);
+            setAddress({
+              jibun: "",
+              road: "주소를 찾을 수 없습니다",
+            });
+          }
+        } else {
+          console.error("주소 검색 실패:", status);
+          setAddress({
+            jibun: "",
+            road: "주소를 찾을 수 없습니다",
+          });
+        }
       },
     )
   }
@@ -153,8 +197,19 @@ const LocationPickerMap = () => {
           showCurrentLocation: false,
           showCurrentLocationButton: true,
           onMoveMap: (newCenter) => {
-            setHasDragged(true)
-            setCenter(newCenter)
+            if (routeLocation.state?.selectedLocation) {
+              const isSignificantMove = 
+                Math.abs(newCenter.latitude - center.latitude) > 0.0001 || 
+                Math.abs(newCenter.longitude - center.longitude) > 0.0001;
+              
+              if (isSignificantMove) {
+                setHasDragged(true);
+              }
+            } else {
+              setHasDragged(true);
+            }
+            
+            setCenter(newCenter);
           },
         }}
       />
