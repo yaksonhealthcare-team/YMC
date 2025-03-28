@@ -14,6 +14,7 @@ import {
 import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect"
 import { useGeolocation } from "../../../hooks/useGeolocation.tsx"
 import { useOverlay } from "../../../contexts/ModalContext"
+import { Divider } from "@mui/material"
 
 const LocationSettingsHeader = ({
   onClickBack,
@@ -180,6 +181,7 @@ const LocationSettings = () => {
         onFocus={() => setIsSearchFocused(true)}
         onBlur={() => setIsSearchFocused(false)}
       />
+      <Divider className="my-[24px] border-gray-50 border-b-[8px]" />
       {renderContent()}
     </div>
   )
