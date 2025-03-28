@@ -109,7 +109,7 @@ const MyPageMenu = () => {
           type="button"
           key={item.id}
           onClick={() => handleClick(item)}
-          className="flex items-center justify-between h-12 w-full hover:bg-gray-50 transition-colors rounded-lg p-1"
+          className="flex items-center justify-between h-12 w-full rounded-lg p-1"
         >
           <div className="flex items-center gap-3">
             <item.icon className="w-4 h-4 text-gray-900" />
