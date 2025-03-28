@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { useLayout } from "../../../contexts/LayoutContext"
 import { Button } from "@components/Button"
 import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect"
-import { useAddAddressBookmarkMutation, useAddressBookmarks } from "../../../queries/useAddressQueries"
+import { useAddAddressBookmarkMutation, useAddressBookmarks, useDeleteAddressBookmarkMutation } from "../../../queries/useAddressQueries"
 import { useOverlay } from "../../../contexts/ModalContext"
 import HeartDisabledIcon from "@assets/icons/HeartDisabledIcon.svg?react"
 import HeartEnabledIcon from "@assets/icons/HeartEnabledIcon.svg?react"
@@ -15,6 +15,7 @@ const AddressConfirm = () => {
   const location = useLocation()
   const { setLocation } = useBranchLocationSelect()
   const { mutate: addBookmark } = useAddAddressBookmarkMutation()
+  const { mutate: deleteBookmark } = useDeleteAddressBookmarkMutation()
   const { openModal, showToast } = useOverlay()
   const [address, setAddress] = useState({
     road: "",
@@ -25,6 +26,7 @@ const AddressConfirm = () => {
     longitude: 0,
   })
   const [isBookmarked, setIsBookmarked] = useState(false)
+  const [bookmarkId, setBookmarkId] = useState<string | null>(null)
   const bookmarkProcessingRef = useRef(false);
   
   // 북마크 목록 가져오기
@@ -90,13 +92,19 @@ const AddressConfirm = () => {
   useEffect(() => {
     if (bookmarks.length > 0 && address.road) {
       // 현재 주소와 같은 주소가 북마크에 있는지 확인
-      const isAddressBookmarked = bookmarks.some(bookmark => 
+      const matchedBookmark = bookmarks.find(bookmark => 
         (bookmark.address === address.road) || 
         (Math.abs(parseFloat(bookmark.lat) - coordinates.latitude) < 0.0001 && 
          Math.abs(parseFloat(bookmark.lon) - coordinates.longitude) < 0.0001)
       );
       
-      setIsBookmarked(isAddressBookmarked);
+      if (matchedBookmark && matchedBookmark.csab_idx) {
+        setIsBookmarked(true);
+        setBookmarkId(matchedBookmark.csab_idx);
+      } else {
+        setIsBookmarked(false);
+        setBookmarkId(null);
+      }
     }
   }, [bookmarks, address.road, coordinates]);
 
@@ -142,14 +150,40 @@ const AddressConfirm = () => {
   const handleAddBookmark = () => {
     if (!coordinates || !address.road) return
 
-    if (isBookmarked) {
-      setIsBookmarked(false)
-      showToast("자주 쓰는 주소에서 삭제되었습니다.")
-      return
-    }
-
     // 이미 처리 중이면 중복 실행 방지
     if (bookmarkProcessingRef.current) {
+      return;
+    }
+
+    if (isBookmarked && bookmarkId) {
+      openModal({
+        title: "자주 쓰는 주소 삭제",
+        message: "이 주소를 자주 쓰는 주소에서 삭제하시겠습니까?",
+        onConfirm: () => {
+          // 처리 중 플래그 설정
+          bookmarkProcessingRef.current = true;
+          
+          deleteBookmark(bookmarkId, {
+            onSuccess: (response) => {
+              // 처리 완료 플래그 해제
+              bookmarkProcessingRef.current = false;
+              
+              if (response.resultCode === "00") {
+                setIsBookmarked(false);
+                setBookmarkId(null);
+              } else {
+                showToast("주소 삭제에 실패했습니다. 다시 시도해주세요.");
+              }
+            },
+            onError: (error) => {
+              // 에러 발생 시에도 처리 완료 플래그 해제
+              bookmarkProcessingRef.current = false;
+              console.error("Failed to delete bookmark:", error);
+              showToast("주소 삭제에 실패했습니다. 다시 시도해주세요.");
+            }
+          });
+        }
+      });
       return;
     }
 
