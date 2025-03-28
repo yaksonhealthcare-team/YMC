@@ -127,7 +127,7 @@ const LocationSettings = () => {
         lat: currentLocation.latitude.toString(),
         lon: currentLocation.longitude.toString(),
       })
-      navigate("/branch/location/picker", {
+      navigate("/branch/location/confirm", {
         state: {
           selectedLocation: {
             address: {
@@ -174,7 +174,7 @@ const LocationSettings = () => {
               lat: location.lat,
               lon: location.lon,
             })
-            navigate("/branch", {
+            navigate("/branch/location/confirm", {
               state: {
                 selectedLocation: {
                   address: location.address,
