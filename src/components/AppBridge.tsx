@@ -57,7 +57,7 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
           )
 
           // 서버의 Apple 콜백 API 호출 (환경 변수가 전체 URL이므로 마지막 경로만 추출)
-          const appleCallbackUrl = "/api/auth/apple_callback"
+          const appleCallbackUrl = "auth/apple_callback"
           await axiosClient.post(appleCallbackUrl, {
             code: data.authorizationCode,
           })
