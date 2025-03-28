@@ -101,6 +101,7 @@ const LocationSettings = () => {
   }, [])
 
   const handleCurrentLocationClick = () => {
+
     if (locationLoading) {
       showToast("위치 정보를 가져오는 중입니다.")
       return
@@ -125,7 +126,7 @@ const LocationSettings = () => {
         lat: currentLocation.latitude.toString(),
         lon: currentLocation.longitude.toString(),
       })
-      navigate("/branch", {
+      navigate("/branch/location/picker", {
         state: {
           selectedLocation: {
             address: "현재 위치",
