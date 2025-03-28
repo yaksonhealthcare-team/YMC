@@ -7,7 +7,6 @@ import { SearchField } from "@components/SearchField.tsx"
 import SavedLocationList from "./SavedLocationList.tsx"
 import LocationSearchResultList from "./LocationSearchResultList.tsx"
 import {
-  useAddAddressBookmarkMutation,
   useAddressBookmarks,
   useAddressSearch,
 } from "../../../queries/useAddressQueries.ts"
@@ -72,7 +71,6 @@ const LocationSettings = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const searchTimeoutRef = useRef<number | null>(null)
   const { setLocation } = useBranchLocationSelect()
-  const { mutate: addBookmark } = useAddAddressBookmarkMutation()
   const {
     location: currentLocation,
     error: locationError,

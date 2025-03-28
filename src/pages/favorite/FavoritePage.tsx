@@ -75,6 +75,7 @@ const FavoritePage = () => {
               branch={branch}
               onClick={handleBranchClick}
               onClickFavorite={handleToggleFavorite}
+              isFavorite={branch.isFavorite ?? true}
             />
           ))}
         </ul>

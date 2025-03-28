@@ -126,6 +126,7 @@ const BranchMapSection = ({
                 await fetchBranchesByCoords(coords)
               }
             }}
+            isFavorite={selectedBranch.isFavorite || false}
           />
         )}
       </div>

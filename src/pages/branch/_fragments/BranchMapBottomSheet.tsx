@@ -14,6 +14,7 @@ const BranchMapBottomSheet = ({ branch }: BranchMapBottomSheetProps) => {
         onClickFavorite={() => {
           console.log("TOGGLE FAVORITE")
         }}
+        isFavorite={branch.isFavorite || false}
       />
     </div>
   )
