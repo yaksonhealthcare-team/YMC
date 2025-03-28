@@ -48,35 +48,43 @@ const BranchFilterBottomSheet = ({
   }
 
   return (
-    <div className={"flex flex-col items-center justify-between px-5 min-h-[541px]"}>
-      <div className={"flex flex-col items-center gap-5"}>
-      <BranchFilterBottomSheetHeader onClose={performClose} />
-      <BranchFilterDivider />
-      <BranchFilterBottomSheetWrap
-        label={"브랜드 별"}
-        items={brands}
-        selectedItem={filter.brand}
-        onSelect={handleBrandChange}
-      />
-      <BranchFilterDivider />
-      <BranchFilterBottomSheetWrap
-        label={"카테고리 별"}
-        items={categories}
-        selectedItem={filter.category}
-        isLoading={isLoading}
-        onSelect={(category) => setFilter({ ...filter, category })}
-      />
+    <div className={"flex flex-col items-center h-[541px]"}>
+      <div className="w-full px-5">
+        <BranchFilterBottomSheetHeader onClose={performClose} />
       </div>
-      <BranchFilterBottomSheetFooter
-        onInitialize={() => {
-          setFilter({ brand: null, category: null })
-          onBrandChange?.(null)
-        }}
-        onApply={() => {
-          performApply(filter)
-          performClose()
-        }}
-      />
+      
+      <div className="w-full overflow-y-auto flex-1 px-5">
+        <div className={"flex flex-col items-center gap-5 w-full py-5"}>
+          <BranchFilterDivider />
+          <BranchFilterBottomSheetWrap
+            label={"브랜드 별"}
+            items={brands}
+            selectedItem={filter.brand}
+            onSelect={handleBrandChange}
+          />
+          <BranchFilterDivider />
+          <BranchFilterBottomSheetWrap
+            label={"카테고리 별"}
+            items={categories}
+            selectedItem={filter.category}
+            isLoading={isLoading}
+            onSelect={(category) => setFilter({ ...filter, category })}
+          />
+        </div>
+      </div>
+      
+      <div className="w-full px-5 mt-auto">
+        <BranchFilterBottomSheetFooter
+          onInitialize={() => {
+            setFilter({ brand: null, category: null })
+            onBrandChange?.(null)
+          }}
+          onApply={() => {
+            performApply(filter)
+            performClose()
+          }}
+        />
+      </div>
     </div>
   )
 }
@@ -168,7 +176,7 @@ const BranchFilterBottomSheetFooter = ({
   onApply: () => void
 }) => {
   return (
-    <div className={"w-full flex justify-around gap-2 pb-8"}>
+    <div className={"w-full flex justify-around gap-2 pb-8 mt-[30px]"}>
       <Button
         className={"w-1/2 rounded-xl"}
         variantType={"line"}
