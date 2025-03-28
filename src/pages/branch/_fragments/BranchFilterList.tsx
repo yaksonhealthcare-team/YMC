@@ -9,6 +9,7 @@ import {
 } from "../../../queries/useBranchQueries.tsx"
 import { useOverlay } from "../../../contexts/ModalContext.tsx"
 import { Image } from "@components/common/Image"
+import { useState, useCallback } from "react"
 
 interface BranchFilterListProps {
   branches: Branch[]
@@ -23,9 +24,37 @@ const BranchFilterList = ({
 }: BranchFilterListProps) => {
   const { observerTarget } = useIntersection({ onIntersect })
   const { showToast } = useOverlay()
+  
+  // 지역 상태로 북마크 상태를 관리합니다
+  const [localBranchStates, setLocalBranchStates] = useState<Record<string, boolean>>({})
 
   const { mutate: addBookmark } = useBranchBookmarkMutation()
   const { mutate: removeBookmark } = useBranchUnbookmarkMutation()
+  
+  // 북마크 토글 함수
+  const handleToggleFavorite = useCallback((branch: Branch) => {
+    // 로컬 상태 먼저 업데이트
+    setLocalBranchStates(prev => ({
+      ...prev,
+      [branch.b_idx]: !getIsFavorite(branch)
+    }))
+    
+    if (getIsFavorite(branch)) {
+      removeBookmark(branch.b_idx)
+      showToast("즐겨찾기에서 삭제했어요.")
+    } else {
+      addBookmark(branch.b_idx)
+      showToast("즐겨찾기에 추가했어요.")
+    }
+  }, [addBookmark, removeBookmark, showToast])
+  
+  // 브랜치의 실제 즐겨찾기 상태를 계산하는 함수
+  const getIsFavorite = useCallback((branch: Branch) => {
+    // 로컬 상태가 존재하면 로컬 상태를, 없으면 서버 상태를 사용
+    return branch.b_idx in localBranchStates 
+      ? localBranchStates[branch.b_idx] 
+      : branch.isFavorite
+  }, [localBranchStates])
 
   return (
     <div className="flex flex-col h-full">
@@ -37,15 +66,8 @@ const BranchFilterList = ({
               branch={branch}
               className={index === 0 ? "pt-1" : ""}
               onClick={() => onSelectBranch(branch)}
-              onClickFavorite={() => {
-                if (branch.isFavorite) {
-                  removeBookmark(branch.b_idx)
-                  showToast("즐겨찾기에서 삭제했어요.")
-                } else {
-                  addBookmark(branch.b_idx)
-                  showToast("즐겨찾기에 추가했어요.")
-                }
-              }}
+              onClickFavorite={() => handleToggleFavorite(branch)}
+              isFavorite={getIsFavorite(branch)}
             />
           ))}
           <div ref={observerTarget} className="h-4" />
@@ -60,11 +82,13 @@ export const BranchFilterListItem = ({
   className = "",
   onClick,
   onClickFavorite,
+  isFavorite,
 }: {
   branch: Branch
   className?: string
   onClick: (branch: Branch) => void
   onClickFavorite: (branch: Branch) => void
+  isFavorite: boolean
 }) => (
   <li
     onClick={() => onClick(branch)}
@@ -85,7 +109,7 @@ export const BranchFilterListItem = ({
               onClickFavorite(branch)
             }}
           >
-            {branch.isFavorite ? <HeartEnabledIcon /> : <HeartDisabledIcon />}
+            {isFavorite ? <HeartEnabledIcon /> : <HeartDisabledIcon />}
           </button>
         </div>
         <div className="flex items-center gap-[2.5px]">
