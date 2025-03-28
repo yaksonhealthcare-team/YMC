@@ -122,11 +122,6 @@ const LocationSettings = () => {
         address: "현재 위치",
         coords,
       })
-      addBookmark({
-        address: "현재 위치",
-        lat: currentLocation.latitude.toString(),
-        lon: currentLocation.longitude.toString(),
-      })
       navigate("/branch/location/confirm", {
         state: {
           selectedLocation: {
@@ -168,11 +163,6 @@ const LocationSettings = () => {
             setLocation({
               address: location.address,
               coords,
-            })
-            addBookmark({
-              address: location.address,
-              lat: location.lat,
-              lon: location.lon,
             })
             navigate("/branch/location/confirm", {
               state: {

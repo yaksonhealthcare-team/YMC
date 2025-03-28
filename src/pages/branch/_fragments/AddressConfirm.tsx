@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useLayout } from "../../../contexts/LayoutContext"
 import { Button } from "@components/Button"
 import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect"
-import { useAddAddressBookmarkMutation } from "../../../queries/useAddressQueries"
+import { useAddAddressBookmarkMutation, useAddressBookmarks } from "../../../queries/useAddressQueries"
 import { useOverlay } from "../../../contexts/ModalContext"
 import HeartDisabledIcon from "@assets/icons/HeartDisabledIcon.svg?react"
 import HeartEnabledIcon from "@assets/icons/HeartEnabledIcon.svg?react"
@@ -25,6 +25,10 @@ const AddressConfirm = () => {
     longitude: 0,
   })
   const [isBookmarked, setIsBookmarked] = useState(false)
+  const bookmarkProcessingRef = useRef(false);
+  
+  // 북마크 목록 가져오기
+  const { data: bookmarks = [] } = useAddressBookmarks();
 
   useEffect(() => {
     // 헤더 설정
@@ -81,6 +85,20 @@ const AddressConfirm = () => {
       }
     }
   }, [])
+  
+  // 북마크 목록이 변경되면 현재 주소가 북마크되어 있는지 확인
+  useEffect(() => {
+    if (bookmarks.length > 0 && address.road) {
+      // 현재 주소와 같은 주소가 북마크에 있는지 확인
+      const isAddressBookmarked = bookmarks.some(bookmark => 
+        (bookmark.address === address.road) || 
+        (Math.abs(parseFloat(bookmark.lat) - coordinates.latitude) < 0.0001 && 
+         Math.abs(parseFloat(bookmark.lon) - coordinates.longitude) < 0.0001)
+      );
+      
+      setIsBookmarked(isAddressBookmarked);
+    }
+  }, [bookmarks, address.road, coordinates]);
 
   // 좌표로부터 주소를 조회하는 함수
   const fetchAddressFromCoords = (coords: Coordinate) => {
@@ -130,10 +148,18 @@ const AddressConfirm = () => {
       return
     }
 
+    // 이미 처리 중이면 중복 실행 방지
+    if (bookmarkProcessingRef.current) {
+      return;
+    }
+
     openModal({
       title: "자주 쓰는 주소 등록",
       message: "이 주소를 자주 쓰는 주소로 등록하시겠습니까?",
       onConfirm: () => {
+        // 처리 중 플래그 설정
+        bookmarkProcessingRef.current = true;
+        
         addBookmark(
           {
             address: address.road,
@@ -142,6 +168,9 @@ const AddressConfirm = () => {
           },
           {
             onSuccess: (response) => {
+              // 처리 완료 플래그 해제
+              bookmarkProcessingRef.current = false;
+              
               if (response.resultCode === "29") {
                 showToast("이미 등록된 주소입니다.")
                 setIsBookmarked(true)
@@ -155,6 +184,8 @@ const AddressConfirm = () => {
               showToast("주소 등록에 실패했습니다. 다시 시도해주세요.")
             },
             onError: (error) => {
+              // 에러 발생 시에도 처리 완료 플래그 해제
+              bookmarkProcessingRef.current = false;
               console.error("Failed to add bookmark:", error)
               showToast("주소 등록에 실패했습니다. 다시 시도해주세요.")
             },
