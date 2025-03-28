@@ -36,12 +36,25 @@ const AddressConfirm = () => {
     setNavigation({ display: false })
 
     // 이전 화면에서 전달된 주소와 좌표 정보 확인
-    if (location.state?.address && location.state?.coords) {
-      setAddress({
-        road: location.state.address.road || location.state.address,
-        jibun: location.state.address.jibun || "",
-      })
-      setCoordinates(location.state.coords)
+    if (location.state?.selectedLocation) {
+      const { address: locationAddress, coords } = location.state.selectedLocation;
+      
+      if (locationAddress && coords) {
+        // 주소가 객체인 경우(road, jibun 속성이 있는 경우)와 문자열인 경우 모두 처리
+        if (typeof locationAddress === 'object') {
+          setAddress({
+            road: locationAddress.road || '',
+            jibun: locationAddress.jibun || '',
+          });
+        } else {
+          setAddress({
+            road: locationAddress,
+            jibun: '',
+          });
+        }
+        
+        setCoordinates(coords);
+      }
     }
   }, [])
 
@@ -92,7 +105,10 @@ const AddressConfirm = () => {
     navigate("/branch/location/picker", {
       state: {
         selectedLocation: {
-          address: address.road,
+          address: {
+            road: address.road,
+            jibun: address.jibun
+          },
           coords: coordinates,
         },
       },
@@ -109,7 +125,10 @@ const AddressConfirm = () => {
     navigate("/branch", {
       state: {
         selectedLocation: {
-          address: address.road,
+          address: {
+            road: address.road,
+            jibun: address.jibun
+          },
           coords: coordinates,
         },
       },
@@ -128,7 +147,7 @@ const AddressConfirm = () => {
 
       {/* 자주 쓰는 주소 등록 버튼 */}
       <div
-        className={`flex justify-between items-center mx-5 mt-[41px] px-5 h-[56px] rounded-[12px] ${
+        className={`flex justify-between items-center mx-5 mt-[24px] px-5 h-[56px] rounded-[12px] ${
           isBookmarked
             ? "border border-[#F37165]"
             : "border border-[#ECECEC]"

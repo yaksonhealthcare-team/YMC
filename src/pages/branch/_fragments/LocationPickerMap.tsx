@@ -91,7 +91,10 @@ const LocationPickerMap = () => {
     navigate("/branch/location/confirm", {
       state: {
         selectedLocation: {
-          address: address.road,
+          address: {
+            road: address.road,
+            jibun: address.jibun
+          },
           coords: center,
         },
       },
