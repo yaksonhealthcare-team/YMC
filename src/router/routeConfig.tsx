@@ -140,6 +140,9 @@ const OAuthCallback = lazy(() => import("../pages/oauth/OAuthCallback"))
 const LocationPickerMap = lazy(
   () => import("../pages/branch/_fragments/LocationPickerMap"),
 )
+const AddressConfirm = lazy(
+  () => import("../pages/branch/_fragments/AddressConfirm.tsx"),
+)
 const SignupCallback = lazy(() => import("../pages/signup/SignupCallback"))
 const PaymentCallbackPage = lazy(
   () => import("../pages/payment/PaymentCallbackPage"),
@@ -518,6 +521,11 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/branch/location/picker",
     element: <LocationPickerMap />,
+    auth: true,
+  },
+  {
+    path: "/branch/location/confirm",
+    element: <AddressConfirm />,
     auth: true,
   },
   {
