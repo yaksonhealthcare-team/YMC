@@ -48,7 +48,8 @@ const BranchFilterBottomSheet = ({
   }
 
   return (
-    <div className={"flex flex-col items-center gap-5 px-5"}>
+    <div className={"flex flex-col items-center justify-between px-5 min-h-[541px]"}>
+      <div className={"flex flex-col items-center gap-5"}>
       <BranchFilterBottomSheetHeader onClose={performClose} />
       <BranchFilterDivider />
       <BranchFilterBottomSheetWrap
@@ -65,7 +66,7 @@ const BranchFilterBottomSheet = ({
         isLoading={isLoading}
         onSelect={(category) => setFilter({ ...filter, category })}
       />
-      <div className={"h-20"} />
+      </div>
       <BranchFilterBottomSheetFooter
         onInitialize={() => {
           setFilter({ brand: null, category: null })
@@ -167,7 +168,7 @@ const BranchFilterBottomSheetFooter = ({
   onApply: () => void
 }) => {
   return (
-    <div className={"w-full flex justify-around gap-2"}>
+    <div className={"w-full flex justify-around gap-2 pb-8"}>
       <Button
         className={"w-1/2 rounded-xl"}
         variantType={"line"}
