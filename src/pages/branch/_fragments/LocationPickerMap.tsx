@@ -22,6 +22,7 @@ const LocationPickerMap = () => {
   const { openModal, showToast } = useOverlay()
   const [center, setCenter] = useState<Coordinate | null>(null)
   const [branches, setBranches] = useState<Branch[]>([])
+  const [hasDragged, setHasDragged] = useState(false)
   const [address, setAddress] = useState({
     jibun: "",
     road: "",
@@ -149,19 +150,22 @@ const LocationPickerMap = () => {
           showCurrentLocation: false,
           showCurrentLocationButton: true,
           onMoveMap: (newCenter) => {
+            setHasDragged(true)
             setCenter(newCenter)
           },
         }}
       />
-      <div
-        className={
-          "absolute top-2 left-5 right-5 bg-gray-700/70 py-2 rounded-md"
-        }
-      >
-        <p className={"text-center text-white font-m text-14px"}>
-          {"지도를 움직여 위치를 설정하세요."}
-        </p>
-      </div>
+      {!hasDragged && (
+        <div
+          className={
+            "absolute top-2 left-5 right-5 bg-gray-700/70 py-2 rounded-md"
+          }
+        >
+          <p className={"text-center text-white font-m text-14px"}>
+            {"지도를 움직여 위치를 설정하세요."}
+          </p>
+        </div>
+      )}
       <LocationSelectorPin
         className={
           "absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-[100%] pointer-events-none"
