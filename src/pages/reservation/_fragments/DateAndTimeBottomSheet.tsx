@@ -258,7 +258,7 @@ const DatePickerSection = ({
 
   // 커스텀 Calendar Header 렌더링 함수
   const CustomCalendarHeader = (props: PickersCalendarHeaderProps<Dayjs>) => {
-    const { currentMonth, onMonthChange, disabled } = props
+    const { onMonthChange, disabled } = props
     
     // displayDate는 우리가 관리하는 currentYearMonth 사용
     const displayDate = currentYearMonth
