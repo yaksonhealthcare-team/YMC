@@ -241,8 +241,12 @@ const DatePickerSection = ({
   const handleMonthChange = (newDate: Dayjs) => {
     // 로딩 상태 설정
     setIsMonthChanging(true)
-    // 새로운 년월 설정 - 이것은 API 요청용
-    setCurrentYearMonth(newDate)
+    
+    // 비동기 작업 처리를 위한 짧은 지연 추가
+    setTimeout(() => {
+      // 새로운 년월 설정 - 이것은 API 요청용
+      setCurrentYearMonth(newDate)
+    }, 10)
   }
 
   const { data: scheduleDate, isLoading } = useScheduleDateQueries({
@@ -251,6 +255,18 @@ const DatePickerSection = ({
     addServices,
     b_idx,
   })
+
+  // 디버깅용 함수
+  useEffect(() => {
+    if (scheduleDate) {
+      console.log('scheduleDate 데이터:', scheduleDate);
+    }
+  }, [scheduleDate]);
+
+  // 컴포넌트 마운트 시 초기화
+  useEffect(() => {
+    setIsMonthChanging(false);
+  }, []);
 
   // 데이터 로딩이 완료되면 상태 업데이트
   useEffect(() => {
@@ -264,11 +280,19 @@ const DatePickerSection = ({
     if (isLoading || isMonthChanging) return false
 
     // 데이터가 없을 때는 모든 날짜를 비활성화
-    if (!scheduleDate) return true
+    if (!scheduleDate || scheduleDate.length === 0) return true
 
-    const scheduledDates = scheduleDate.map((item) => item.dates)
+    // 해당 월이 아닌 날짜는 비활성화
+    if (date.month() !== currentYearMonth.month()) return true
 
-    return !scheduledDates.includes(date.format("YYYY-MM-DD"))
+    // 날짜 형식을 'YYYY-MM-DD'로 변환
+    const formattedDate = date.format("YYYY-MM-DD")
+    
+    // 사용 가능한 날짜 배열 확인
+    const availableDates = scheduleDate.map(item => item.dates)
+    
+    // formattedDate가 availableDates 배열에 있는지 확인
+    return !availableDates.includes(formattedDate)
   }
 
   // 이벤트 버블링 방지
@@ -286,7 +310,7 @@ const DatePickerSection = ({
             <CircularProgress color="primary" />
           </div>
         )}
-        {!isLoading || isMonthChanging ? (
+        {!(isLoading || isMonthChanging) ? (
           <StyledDateCalendar
             value={date}
             onChange={handleDateSelect}
@@ -305,6 +329,7 @@ const DatePickerSection = ({
               ),
             }}
             onMonthChange={handleMonthChange}
+            showDaysOutsideCurrentMonth
           />
         ) : (
           <div className="flex justify-center items-center h-[300px]">
