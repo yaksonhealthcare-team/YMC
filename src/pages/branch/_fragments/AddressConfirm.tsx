@@ -216,6 +216,15 @@ const AddressConfirm = () => {
             : "border border-[#ECECEC]"
         }`}
         onClick={handleAddBookmark}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleAddBookmark();
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label={isBookmarked ? "자주 쓰는 주소에서 삭제" : "자주 쓰는 주소로 등록"}
       >
         <div className={`text-[14px] font-m ${isBookmarked ? "text-[#F37165]" : "text-gray-400"}`}>
           자주 쓰는 주소로 등록

@@ -12,7 +12,6 @@ import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect.
 import { useAddressFromCoords } from "../../../hooks/useAddressFromCoords.ts"
 
 const LocationPickerMap = () => {
-  const { naver } = window
   const navigate = useNavigate()
   const routeLocation = useLocation()
   const { setHeader, setNavigation } = useLayout()
