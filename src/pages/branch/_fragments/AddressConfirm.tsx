@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useLayout } from "../../../contexts/LayoutContext"
 import { Button } from "@components/Button"
@@ -7,20 +7,18 @@ import { useAddAddressBookmarkMutation, useAddressBookmarks, useDeleteAddressBoo
 import { useOverlay } from "../../../contexts/ModalContext"
 import HeartDisabledIcon from "@assets/icons/HeartDisabledIcon.svg?react"
 import HeartEnabledIcon from "@assets/icons/HeartEnabledIcon.svg?react"
-import { Coordinate } from "../../../types/Coordinate"
+import { useAddressFromCoords } from "../../../hooks/useAddressFromCoords"
 
 const AddressConfirm = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const location = useLocation()
+  const routeLocation = useLocation()
   const { setLocation } = useBranchLocationSelect()
   const { mutate: addBookmark } = useAddAddressBookmarkMutation()
   const { mutate: deleteBookmark } = useDeleteAddressBookmarkMutation()
   const { openModal, showToast } = useOverlay()
-  const [address, setAddress] = useState({
-    road: "",
-    jibun: "",
-  })
+  const { address, fetchAddressFromCoords, updateAddressInfo } = useAddressFromCoords()
+  
   const [coordinates, setCoordinates] = useState({
     latitude: 0,
     longitude: 0,
@@ -31,7 +29,7 @@ const AddressConfirm = () => {
   
   // 북마크 목록 가져오기
   const { data: bookmarks = [] } = useAddressBookmarks();
-
+  
   useEffect(() => {
     // 헤더 설정
     setHeader({
@@ -41,10 +39,10 @@ const AddressConfirm = () => {
       display: true,
     })
     setNavigation({ display: false })
-
+    
     // 이전 화면에서 전달된 주소와 좌표 정보 확인
-    if (location.state?.selectedLocation) {
-      const { address: locationAddress, coords } = location.state.selectedLocation;
+    if (routeLocation.state?.selectedLocation) {
+      const { address: locationAddress, coords } = routeLocation.state.selectedLocation;
       
       if (locationAddress && coords) {
         // 주소가 객체인 경우(road, jibun 속성이 있는 경우)와 문자열인 경우 모두 처리
@@ -52,34 +50,15 @@ const AddressConfirm = () => {
           const roadAddress = locationAddress.road;
           // "현재 위치"가 아닌 경우에만 설정
           if (roadAddress && roadAddress !== "현재 위치") {
-            setAddress({
-              road: roadAddress,
-              jibun: locationAddress.jibun || '',
-            });
+            updateAddressInfo(locationAddress);
           } else if (roadAddress === "현재 위치") {
-            // 여기서 좌표로 주소를 조회하는 로직을 추가할 수 있습니다
-            // 지금은 단순히 안내 메시지만 표시
-            setAddress({
-              road: "좌표에서 주소 확인 중...",
-              jibun: '',
-            });
-            
-            // 여기서 좌표로부터 주소를 조회하는 로직 구현 필요
+            // 좌표로부터 주소를 조회하는 로직
             fetchAddressFromCoords(coords);
           }
         } else if (locationAddress !== "현재 위치") {
-          setAddress({
-            road: locationAddress,
-            jibun: '',
-          });
+          updateAddressInfo(locationAddress);
         } else {
           // "현재 위치"인 경우 좌표로부터 주소 조회
-          setAddress({
-            road: "좌표에서 주소 확인 중...",
-            jibun: '',
-          });
-          
-          // 여기서 좌표로부터 주소를 조회하는 로직 구현 필요
           fetchAddressFromCoords(coords);
         }
         
@@ -107,54 +86,13 @@ const AddressConfirm = () => {
       }
     }
   }, [bookmarks, address.road, coordinates]);
-
-  // 좌표로부터 주소를 조회하는 함수
-  const fetchAddressFromCoords = (coords: Coordinate) => {
-    // 네이버 맵스 API 사용
-    if (window.naver && window.naver.maps) {
-      const { naver } = window;
-      naver.maps.Service.reverseGeocode(
-        {
-          coords: new naver.maps.LatLng(coords.latitude, coords.longitude),
-          orders: [
-            naver.maps.Service.OrderType.ADDR,
-            naver.maps.Service.OrderType.ROAD_ADDR,
-          ].join(","),
-        },
-        (status, response) => {
-          if (status === naver.maps.Service.Status.OK) {
-            if (response?.v2?.address) {
-              setAddress({
-                jibun: response.v2.address.jibunAddress || "",
-                road: response.v2.address.roadAddress || response.v2.address.jibunAddress || "",
-              });
-            } else {
-              console.error("주소 정보가 없습니다:", response);
-              setAddress({
-                jibun: "",
-                road: "주소를 찾을 수 없습니다",
-              });
-            }
-          } else {
-            console.error("주소 검색 실패:", status);
-            setAddress({
-              jibun: "",
-              road: "주소를 찾을 수 없습니다",
-            });
-          }
-        }
-      );
-    }
-  };
-
+  
   const handleAddBookmark = () => {
     if (!coordinates || !address.road) return
-
     // 이미 처리 중이면 중복 실행 방지
     if (bookmarkProcessingRef.current) {
       return;
     }
-
     if (isBookmarked && bookmarkId) {
       openModal({
         title: "자주 쓰는 주소 삭제",
@@ -186,7 +124,6 @@ const AddressConfirm = () => {
       });
       return;
     }
-
     openModal({
       title: "자주 쓰는 주소 등록",
       message: "이 주소를 자주 쓰는 주소로 등록하시겠습니까?",
@@ -228,7 +165,7 @@ const AddressConfirm = () => {
       },
     })
   }
-
+  
   const handleOpenMap = () => {
     navigate("/branch/location/picker", {
       state: {
@@ -242,10 +179,9 @@ const AddressConfirm = () => {
       },
     })
   }
-
+  
   const handleRegisterAddress = () => {
     if (!coordinates || !address.road) return
-
     setLocation({
       address: address.road,
       coords: coordinates,
@@ -262,7 +198,7 @@ const AddressConfirm = () => {
       },
     })
   }
-
+  
   return (
     <div className="flex flex-col h-full bg-white">
       {/* 주소 정보 */}
@@ -272,7 +208,6 @@ const AddressConfirm = () => {
           <div className="mt-2 text-[14px] text-gray-500">{address.jibun}</div>
         )}
       </div>
-
       {/* 자주 쓰는 주소 등록 버튼 */}
       <div
         className={`flex justify-between items-center mx-5 mt-[24px] px-5 h-[56px] rounded-[12px] ${
@@ -291,7 +226,6 @@ const AddressConfirm = () => {
           <HeartDisabledIcon className="w-5 h-5 text-gray-400" />
         )}
       </div>
-
       {/* 하단 버튼 영역 */}
       <div className="fixed bottom-0 left-0 right-0 flex flex-col w-full bg-white border-t border-gray-50">
         <div className="flex flex-col gap-2 p-5 pt-6 pb-8">
