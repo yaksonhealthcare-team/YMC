@@ -151,7 +151,12 @@ const ReservationFormPage = () => {
     }
     // 5. 회원권 카드에서 온 경우
     else if (locationState.fromMembershipCard) {
-      navigate("/member-history/membership", { replace: true })
+      // originalPath가 '/'(홈)인 경우 홈으로 이동, 아니면 예약 히스토리로 이동
+      if (locationState.originalPath === '/') {
+        navigate("/", { replace: true })
+      } else {
+        navigate("/member-history/reservation", { replace: true })
+      }
     }
     // 6. 특정 경로로 돌아가야 하는 경우
     else if (locationState.returnPath) {
