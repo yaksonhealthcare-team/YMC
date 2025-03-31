@@ -48,25 +48,27 @@ const DateAndTimeBottomSheet = ({
     if (selectedDate && date && !selectedDate.isSame(date, 'day')) {
       setSelectedTime(null)
       setSelectedDate(date)
-      onSelect(date, null)
     } else {
       setSelectedDate(date)
-      onSelect(date, selectedTime)
     }
   }
 
   const handleTimeSelect = (time: TimeSlot | null) => {
     setSelectedTime(time)
-    onSelect(selectedDate, time)
   }
 
   const handleComplete = () => {
+    onSelect(selectedDate, selectedTime)
+    onClose()
+  }
+
+  const handleClose = () => {
     onClose()
   }
 
   return (
     <div className={"flex flex-col items-center gap-5 px-5 pb-[100px]"}>
-      <DateAndTimeBottomSheetHeader onClose={onClose} />
+      <DateAndTimeBottomSheetHeader onClose={handleClose} />
       <div className="w-full h-px bg-gray-100" />
       <DatePickerSection
         date={selectedDate}
