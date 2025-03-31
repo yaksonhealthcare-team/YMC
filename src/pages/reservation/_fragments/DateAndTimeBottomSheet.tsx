@@ -44,31 +44,6 @@ const DateAndTimeBottomSheet = ({
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(initialDate)
   const [selectedTime, setSelectedTime] = useState<TimeSlot | null>(initialTime)
 
-  // 컴포넌트가 마운트될 때 한 번만 실행
-  useEffect(() => {
-    // 새로고침 방지 이벤트 등록
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault()
-      e.returnValue = ''
-      return ''
-    }
-
-    // 폼 제출 방지
-    const handleSubmit = (e: Event) => {
-      e.preventDefault()
-      e.stopPropagation()
-      return false
-    }
-
-    window.addEventListener('beforeunload', handleBeforeUnload)
-    document.addEventListener('submit', handleSubmit, true)
-    
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
-      document.removeEventListener('submit', handleSubmit, true)
-    }
-  }, [])
-
   const handleDateSelect = (date: Dayjs | null) => {
     setSelectedDate(date)
     onSelect(date, selectedTime)
@@ -83,14 +58,8 @@ const DateAndTimeBottomSheet = ({
     onClose()
   }
 
-  // 이벤트 버블링 중지
-  const stopPropagation = (e: React.MouseEvent) => {
-    e.stopPropagation()
-  }
-
   return (
-    // 이벤트 버블링 중지를 위해 onMouseDown 이벤트 핸들러 추가
-    <div className="flex flex-col items-center gap-5 px-5 pb-[100px]" onMouseDown={stopPropagation}>
+    <div className={"flex flex-col items-center gap-5 px-5 pb-[100px]"}>
       <DateAndTimeBottomSheetHeader onClose={onClose} />
       <div className="w-full h-px bg-gray-100" />
       <DatePickerSection
@@ -236,17 +205,9 @@ const DatePickerSection = ({
   b_idx,
 }: DatePickerSectionProps) => {
   const [currentYearMonth, setCurrentYearMonth] = useState<Dayjs>(dayjs())
-  const [isMonthChanging, setIsMonthChanging] = useState<boolean>(false)
 
   const handleMonthChange = (newDate: Dayjs) => {
-    // 로딩 상태 설정
-    setIsMonthChanging(true)
-    
-    // 비동기 작업 처리를 위한 짧은 지연 추가
-    setTimeout(() => {
-      // 새로운 년월 설정 - 이것은 API 요청용
-      setCurrentYearMonth(newDate)
-    }, 10)
+    setCurrentYearMonth(newDate)
   }
 
   const { data: scheduleDate, isLoading } = useScheduleDateQueries({
@@ -256,127 +217,71 @@ const DatePickerSection = ({
     b_idx,
   })
 
-  // 디버깅용 함수
-  useEffect(() => {
-    if (scheduleDate) {
-      console.log('scheduleDate 데이터:', scheduleDate);
-    }
-  }, [scheduleDate]);
-
-  // 컴포넌트 마운트 시 초기화
-  useEffect(() => {
-    setIsMonthChanging(false);
-  }, []);
-
-  // 데이터 로딩이 완료되면 상태 업데이트
-  useEffect(() => {
-    if (!isLoading && isMonthChanging) {
-      setIsMonthChanging(false)
-    }
-  }, [isLoading, isMonthChanging])
-
   const isDateDisabled = (date: Dayjs) => {
     // 로딩 중일 때는 모든 날짜를 활성화 상태로 표시
-    if (isLoading || isMonthChanging) return false
+    if (isLoading) return false
 
     // 데이터가 없을 때는 모든 날짜를 비활성화
-    if (!scheduleDate || scheduleDate.length === 0) return true
+    if (!scheduleDate) return true
 
-    // 해당 월이 아닌 날짜는 비활성화
-    if (date.month() !== currentYearMonth.month()) return true
+    const scheduledDates = scheduleDate.map((item) => item.dates)
 
-    // 날짜 형식을 'YYYY-MM-DD'로 변환
-    const formattedDate = date.format("YYYY-MM-DD")
-    
-    // 사용 가능한 날짜 배열 확인
-    const availableDates = scheduleDate.map(item => item.dates)
-    
-    // formattedDate가 availableDates 배열에 있는지 확인
-    return !availableDates.includes(formattedDate)
+    return !scheduledDates.includes(date.format("YYYY-MM-DD"))
   }
 
-  // 이벤트 버블링 방지
-  const preventEventBubbling = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-  }
+  useEffect(() => {
+    if (isLoading) {
+      return
+    }
+  }, [scheduleDate, isLoading])
 
   return (
-    <div className="relative" onClick={preventEventBubbling}>
-      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
-        {/* 로딩 오버레이 표시 */}
-        {(isLoading || isMonthChanging) && (
-          <div className="absolute inset-0 flex justify-center items-center bg-white bg-opacity-70 z-10">
-            <CircularProgress color="primary" />
-          </div>
-        )}
-        {!(isLoading || isMonthChanging) ? (
-          <StyledDateCalendar
-            value={date}
-            onChange={handleDateSelect}
-            defaultValue={dayjs()}
-            shouldDisableDate={isDateDisabled}
-            views={["day"]}
-            sx={{
-              width: "100%",
-            }}
-            slots={{
-              calendarHeader: (props) => (
-                <CalendarHeader 
-                  {...props} 
-                  isLoading={isLoading || isMonthChanging}
-                />
-              ),
-            }}
-            onMonthChange={handleMonthChange}
-            showDaysOutsideCurrentMonth
-          />
-        ) : (
-          <div className="flex justify-center items-center h-[300px]">
-            <CircularProgress color="primary" />
-          </div>
-        )}
-      </LocalizationProvider>
-    </div>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
+      {isLoading ? (
+        <div className="flex justify-center items-center w-full h-[300px]">
+          <CircularProgress color="primary" />
+        </div>
+      ) : (
+        <StyledDateCalendar
+          value={date}
+          onChange={handleDateSelect}
+          defaultValue={dayjs()}
+          shouldDisableDate={isDateDisabled}
+          views={["day"]}
+          sx={{
+            width: "100%",
+          }}
+          slots={{
+            calendarHeader: CalendarHeader,
+          }}
+          onMonthChange={handleMonthChange}
+        />
+      )}
+    </LocalizationProvider>
   )
 }
 
-interface CustomCalendarHeaderProps extends PickersCalendarHeaderProps<Dayjs> {
-  isLoading: boolean;
-}
-
-const CalendarHeader = (props: CustomCalendarHeaderProps) => {
-  const { currentMonth, onMonthChange, disabled, isLoading } = props
+const CalendarHeader = (props: PickersCalendarHeaderProps<Dayjs>) => {
+  const { currentMonth, onMonthChange, disabled } = props
   const currentDate = dayjs(currentMonth)
 
-  const handlePreviousMonth = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // 이벤트 전파 및 기본 동작 방지
-    e.preventDefault()
-    e.stopPropagation()
-    
-    if (!disabled && !isLoading) {
-      // 로딩 중이 아닐 때만 월 변경 허용
+  const handlePreviousMonth = () => {
+    if (!disabled) {
       onMonthChange(currentDate.subtract(1, "month"), "left")
     }
   }
 
-  const handleNextMonth = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // 이벤트 전파 및 기본 동작 방지
-    e.preventDefault()
-    e.stopPropagation()
-    
-    if (!disabled && !isLoading) {
-      // 로딩 중이 아닐 때만 월 변경 허용
+  const handleNextMonth = () => {
+    if (!disabled) {
       onMonthChange(currentDate.add(1, "month"), "right")
     }
   }
 
-  const isPrevDisabled = currentDate.isSame(dayjs(), "month") || isLoading
+  const isPrevDisabled = currentDate.isSame(dayjs(), "month")
 
   return (
     <div className="relative flex justify-center items-center w-[168px] mx-auto mb-6">
       <button
-        type="button"
         onClick={handlePreviousMonth}
         disabled={isPrevDisabled}
         className={`absolute left-0 w-4 h-4 flex items-center justify-center ${
@@ -389,12 +294,8 @@ const CalendarHeader = (props: CustomCalendarHeaderProps) => {
         {`${currentDate.year()}년 ${currentDate.month() + 1}월`}
       </span>
       <button
-        type="button"
         onClick={handleNextMonth}
-        disabled={isLoading}
-        className={`absolute right-0 w-4 h-4 flex items-center justify-center ${
-          isLoading ? "opacity-30 cursor-not-allowed" : "cursor-pointer"
-        }`}
+        className="absolute right-0 w-4 h-4 flex items-center justify-center cursor-pointer"
       >
         <CaretRigthIcon className="w-4 h-4" />
       </button>
