@@ -4,8 +4,7 @@ import { Pagination } from "swiper/modules"
 import "swiper/css"
 import "swiper/css/pagination"
 import { MembershipRadioCard } from "../pages/reservation/_fragments/MembershipRadioCard"
-import type { Swiper as SwiperType } from "swiper"
-import { useState, useEffect, useMemo } from "react"
+import { useMemo, useEffect } from "react"
 import { MyMembership } from "types/Membership"
 import { ListResponse } from "apis/membership.api"
 
@@ -22,8 +21,6 @@ export const MembershipSwiper = ({
   onChangeItem,
   initialMembershipId,
 }: MembershipSwiperProps) => {
-  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null)
-  
   // 초기 회원권 ID가 있으면 해당 회원권의 인덱스를 찾고 초기 activeIndex로 설정
   const initialIndex = useMemo(() => {
     if (initialMembershipId && membershipsData.body.length > 0) {
@@ -34,8 +31,6 @@ export const MembershipSwiper = ({
     }
     return 0
   }, [initialMembershipId, membershipsData.body])
-  
-  const [activeIndex, setActiveIndex] = useState(initialIndex)
   
   // 회원권 ID가 있고 아직 선택되지 않았으면 해당 회원권 선택
   useEffect(() => {
@@ -69,9 +64,7 @@ export const MembershipSwiper = ({
           pagination={{
             clickable: true,
           }}
-          onSwiper={setSwiperInstance}
           initialSlide={initialIndex}
-          onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
         >
           <style>
             {`
