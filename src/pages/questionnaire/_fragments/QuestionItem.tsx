@@ -103,9 +103,7 @@ export const QuestionItem = ({
           return true
         }
         return (
-          !!currentValue &&
-          typeof currentValue === "string" &&
-          currentValue.trim().length > 0
+          typeof currentValue === "string" && currentValue.trim().length > 0
         )
 
       case "C": {
@@ -130,7 +128,7 @@ export const QuestionItem = ({
 
   const handleTextChange = (value: string) => {
     if (value.length <= 100) {
-      formik.setFieldValue(`${fieldName}_text`, value)
+      formik.setFieldValue(`${fieldName}`, value)
     }
   }
 
@@ -285,6 +283,7 @@ export const QuestionItem = ({
       const value = formik.values[fieldName]
       return (
         <CustomTextField
+          name={fieldName}
           value={typeof value === "string" ? value : ""}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             const value = e.target.value
