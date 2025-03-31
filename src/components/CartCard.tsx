@@ -40,19 +40,21 @@ const CartCard = ({
         className,
       )}
     >
-      <div className="flex justify-between items-start">
-        <div className="flex flex-col gap-1.5">
-          <p className="text-gray-700 text-16px font-sb">{title}</p>
-          <div className="flex items-center gap-1.5">
-            <ClockIcon className="w-3.5 h-3.5 text-gray-500" />
-            <span className="text-gray-500 text-12px font-r">
-              {duration}분 소요
-            </span>
-            <div className="w-[1px] h-3 bg-gray-200 mx-1.5" />
-            <span className="text-gray-500 text-12px font-r">{brand}</span>
-            <div className="w-[1px] h-3 bg-gray-200 mx-1.5" />
-            <span className="text-gray-500 text-12px font-r">{branchText}</span>
+      <div className="flex justify-between items-start pb-1">
+        <div className="w-full flex flex-col">
+          <div className="w-full flex items-center justify-between mb-[12px]">
+            <p className="flex items-center justify-center bg-gray-100 px-[6px] py-[2px] rounded-[4px]">
+              <span className="text-gray-500 text-12px font-r">{branchText}</span>
+            </p>
+            <div className="flex items-center gap-1">
+              <ClockIcon className="w-[14px] text-primary" />
+              <span className="text-gray-500 text-14px font-r">
+                {duration}분 소요
+              </span>
+            </div>
           </div>
+          <p className="text-gray-700 text-14px mb-[4px]">{brand}</p>
+          <p className="text-gray-700 text-16px font-sb">{title}</p>
         </div>
       </div>
 
