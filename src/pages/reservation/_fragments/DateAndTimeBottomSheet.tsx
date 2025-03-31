@@ -45,8 +45,14 @@ const DateAndTimeBottomSheet = ({
   const [selectedTime, setSelectedTime] = useState<TimeSlot | null>(initialTime)
 
   const handleDateSelect = (date: Dayjs | null) => {
-    setSelectedDate(date)
-    onSelect(date, selectedTime)
+    if (selectedDate && date && !selectedDate.isSame(date, 'day')) {
+      setSelectedTime(null)
+      setSelectedDate(date)
+      onSelect(date, null)
+    } else {
+      setSelectedDate(date)
+      onSelect(date, selectedTime)
+    }
   }
 
   const handleTimeSelect = (time: TimeSlot | null) => {
