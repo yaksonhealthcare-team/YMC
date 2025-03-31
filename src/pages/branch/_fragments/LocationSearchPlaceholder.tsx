@@ -30,6 +30,7 @@ const LocationSearchPlaceholder = ({
     )
   }
 
+  // 포커스가 없을 때의 기본 안내 메시지
   return (
     <div className={"flex flex-col items-center justify-center px-5 py-6"}>
       <p className={"text-gray-400 font-r text-14px"}>

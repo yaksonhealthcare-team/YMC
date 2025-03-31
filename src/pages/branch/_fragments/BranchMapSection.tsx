@@ -104,6 +104,7 @@ const BranchMapSection = ({
           onMoveMap: fetchBranchesByCoords,
           showCurrentLocationButton: true,
           showCurrentLocation: true,
+          currentLocationButtonPosition: selectedBranch ? "transition-transform -translate-y-32 duration-300" : "transition-transform translate-y-0 duration-300",
         }}
       />
       <div
@@ -125,6 +126,7 @@ const BranchMapSection = ({
                 await fetchBranchesByCoords(coords)
               }
             }}
+            isFavorite={selectedBranch.isFavorite || false}
           />
         )}
       </div>

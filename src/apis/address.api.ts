@@ -97,7 +97,12 @@ export const deleteAddressBookmark = async (
   csab_idx: string,
 ): Promise<AddressBookmarkDeleteResponse> => {
   const { data } = await axiosClient.delete<AddressBookmarkDeleteResponse>(
-    `/address/bookmarks?csab_idx=${csab_idx}`,
+    `/address/bookmarks`,
+    {
+      data: {
+        csab_idx,
+      }
+    }
   )
   return data
 }

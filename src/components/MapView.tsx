@@ -14,6 +14,7 @@ interface MapViewProps {
     showCurrentLocation?: boolean
     onMoveMap?: (coordinate: Coordinate) => void
     onSelectBranch?: (branch: Branch) => void
+    currentLocationButtonPosition?: string
   }
 }
 
@@ -165,7 +166,7 @@ const MapView = ({
       {options?.showCurrentLocationButton && (
         <button
           onClick={handleCurrentLocationClick}
-          className="absolute bottom-4 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-50"
+          className={`absolute bottom-10 right-4 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 ${options.currentLocationButtonPosition || ""}`}
         >
           <CrosshairIcon className="w-6 h-6" />
         </button>

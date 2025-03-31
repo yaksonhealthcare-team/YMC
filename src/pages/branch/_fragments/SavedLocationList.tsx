@@ -5,6 +5,7 @@ import {
 import { useNavigate } from "react-router-dom"
 import LocationSearchResultList from "./LocationSearchResultList"
 import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect"
+import LocationSearchPlaceholder from "./LocationSearchPlaceholder"
 
 interface SavedLocationListProps {
   isSearchFocused?: boolean
@@ -17,6 +18,10 @@ const SavedLocationList = ({
   const { data: bookmarks = [] } = useAddressBookmarks()
   const { mutate: deleteBookmark } = useDeleteAddressBookmarkMutation()
   const { setLocation } = useBranchLocationSelect()
+
+  if (isSearchFocused) {
+    return <LocationSearchPlaceholder isSearchFocused={true} />
+  }
 
   return (
     <div className={"flex flex-col py-6 h-full overflow-y-scroll"}>
@@ -43,7 +48,7 @@ const SavedLocationList = ({
             },
           })
         }}
-        isSearchFocused={isSearchFocused}
+        isSearchFocused={false}
       />
     </div>
   )

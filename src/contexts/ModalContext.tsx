@@ -210,12 +210,35 @@ const OverlayContainer: React.FC = () => {
 
   if (!isOpen || !content) return null
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      closeOverlay()
+    }
+  }
+  
+  const handleContentKeyDown = (e: React.KeyboardEvent) => {
+    e.stopPropagation()
+  }
+
   switch (type) {
     case OverlayTypes.MODAL: {
       const modalProps = content as ModalProps
       return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg p-5 mx-5 w-full max-w-sm">
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+          onClick={closeOverlay}
+          onKeyDown={handleKeyDown}
+          role="dialog"
+          aria-modal="true"
+          tabIndex={0}
+        >
+          <div 
+            className="bg-white rounded-lg p-5 mx-5 w-full max-w-sm"
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={handleContentKeyDown}
+            role="document"
+            tabIndex={-1}
+          >
             <h2 className="text-lg font-semibold mb-2">{modalProps.title}</h2>
             <p className="text-gray-600 mb-5">{modalProps.message}</p>
             <div className="flex gap-2">
@@ -308,8 +331,21 @@ const OverlayContainer: React.FC = () => {
       }
 
       return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg p-5 mx-5 w-full max-w-sm">
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+          onClick={closeOverlay}
+          onKeyDown={handleKeyDown}
+          role="dialog"
+          aria-modal="true"
+          tabIndex={0}
+        >
+          <div 
+            className="bg-white rounded-lg p-5 mx-5 w-full max-w-sm"
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={handleContentKeyDown}
+            role="document"
+            tabIndex={-1}
+          >
             <h2 className="text-lg font-semibold mb-2">{alertProps.title}</h2>
             <p className="text-gray-600 mb-5">{alertProps.description}</p>
             <button

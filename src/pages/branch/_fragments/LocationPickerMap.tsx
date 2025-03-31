@@ -7,26 +7,22 @@ import { Coordinate } from "../../../types/Coordinate.ts"
 import { Button } from "@components/Button.tsx"
 import { fetchBranches } from "../../../apis/branch.api.ts"
 import { Branch } from "../../../types/Branch.ts"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect.ts"
-import { useAddAddressBookmarkMutation } from "../../../queries/useAddressQueries"
-import { useOverlay } from "../../../contexts/ModalContext"
+import { useAddressFromCoords } from "../../../hooks/useAddressFromCoords.ts"
 
 const LocationPickerMap = () => {
-  const { naver } = window
   const navigate = useNavigate()
+  const routeLocation = useLocation()
   const { setHeader, setNavigation } = useLayout()
   const { location, loading } = useGeolocation()
   const { setLocation } = useBranchLocationSelect()
-  const { mutate: addBookmark } = useAddAddressBookmarkMutation()
-  const { openModal, showToast } = useOverlay()
+  const { address, fetchAddressFromCoords, updateAddressInfo } = useAddressFromCoords()
   const [center, setCenter] = useState<Coordinate | null>(null)
   const [branches, setBranches] = useState<Branch[]>([])
-  const [address, setAddress] = useState({
-    jibun: "",
-    road: "",
-  })
+  const [hasDragged, setHasDragged] = useState(false)
 
+  // 초기 화면 설정
   useEffect(() => {
     setHeader({
       left: "back",
@@ -37,36 +33,27 @@ const LocationPickerMap = () => {
     setNavigation({ display: false })
   }, [])
 
+  // 위치 초기화
   useEffect(() => {
-    if (location) {
+    if (routeLocation.state?.selectedLocation?.coords) {
+      const { coords, address: locationAddress } = routeLocation.state.selectedLocation
+      setCenter(coords)
+      updateAddressInfo(locationAddress)
+      setHasDragged(true)
+    } else if (location) {
       setCenter(location)
     }
-  }, [location])
+  }, [routeLocation.state, location])
 
+  // 중심 좌표 변경 시 관련 데이터 업데이트
   useEffect(() => {
     if (!center) return
-    setAddressFromCoords(center)
+    
+    fetchAddressFromCoords(center)
     fetchBranchesNearby(center)
   }, [center])
 
-  const setAddressFromCoords = (coords: Coordinate) => {
-    naver.maps.Service.reverseGeocode(
-      {
-        coords: new naver.maps.LatLng(coords.latitude, coords.longitude),
-        orders: [
-          naver.maps.Service.OrderType.ADDR,
-          naver.maps.Service.OrderType.ROAD_ADDR,
-        ].join(","),
-      },
-      (_, response) => {
-        setAddress({
-          jibun: response.v2.address.jibunAddress,
-          road: response.v2.address.roadAddress,
-        })
-      },
-    )
-  }
-
+  // 주변 지점 가져오기
   const fetchBranchesNearby = async (coords: Coordinate) => {
     try {
       const result = await fetchBranches({
@@ -80,6 +67,24 @@ const LocationPickerMap = () => {
     }
   }
 
+  // 위치 이동 감지 및 처리
+  const handleMapMove = (newCenter: Coordinate) => {
+    if (routeLocation.state?.selectedLocation && center) {
+      const isSignificantMove = 
+        Math.abs(newCenter.latitude - center.latitude) > 0.0001 || 
+        Math.abs(newCenter.longitude - center.longitude) > 0.0001
+      
+      if (isSignificantMove) {
+        setHasDragged(true)
+      }
+    } else {
+      setHasDragged(true)
+    }
+    
+    setCenter(newCenter)
+  }
+
+  // 위치 설정 및 페이지 이동
   const handleSetLocation = () => {
     if (!center || !address.road) return
 
@@ -87,51 +92,20 @@ const LocationPickerMap = () => {
       address: address.road,
       coords: center,
     })
-    navigate("/branch", {
+    navigate("/branch/location/confirm", {
       state: {
         selectedLocation: {
-          address: address.road,
+          address: {
+            road: address.road,
+            jibun: address.jibun
+          },
           coords: center,
         },
       },
     })
   }
 
-  const handleAddBookmark = () => {
-    if (!center || !address.road) return
-
-    openModal({
-      title: "자주 쓰는 주소 등록",
-      message: "이 주소를 자주 쓰는 주소로 등록하시겠습니까?",
-      onConfirm: () => {
-        addBookmark(
-          {
-            address: address.road,
-            lat: center.latitude.toString(),
-            lon: center.longitude.toString(),
-          },
-          {
-            onSuccess: (response) => {
-              if (response.resultCode === "29") {
-                showToast("이미 등록된 주소입니다.")
-                return
-              }
-              if (response.resultCode === "00") {
-                showToast("자주 쓰는 주소로 등록되었습니다.")
-                return
-              }
-              showToast("주소 등록에 실패했습니다. 다시 시도해주세요.")
-            },
-            onError: (error) => {
-              console.error("Failed to add bookmark:", error)
-              showToast("주소 등록에 실패했습니다. 다시 시도해주세요.")
-            },
-          },
-        )
-      },
-    })
-  }
-
+  // 로딩 상태 표시
   if (loading || !center) {
     return (
       <div className="flex items-center justify-center w-full h-full">
@@ -148,20 +122,20 @@ const LocationPickerMap = () => {
         options={{
           showCurrentLocation: false,
           showCurrentLocationButton: true,
-          onMoveMap: (newCenter) => {
-            setCenter(newCenter)
-          },
+          onMoveMap: handleMapMove,
         }}
       />
-      <div
-        className={
-          "absolute top-2 left-5 right-5 bg-gray-700/70 py-2 rounded-md"
-        }
-      >
-        <p className={"text-center text-white font-m text-14px"}>
-          {"지도를 움직여 위치를 설정하세요."}
-        </p>
-      </div>
+      {!hasDragged && (
+        <div
+          className={
+            "absolute top-2 left-5 right-5 bg-gray-700/70 py-2 rounded-md"
+          }
+        >
+          <p className={"text-center text-white font-m text-14px"}>
+            {"지도를 움직여 위치를 설정하세요."}
+          </p>
+        </div>
+      )}
       <LocationSelectorPin
         className={
           "absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-[100%] pointer-events-none"
@@ -180,13 +154,6 @@ const LocationPickerMap = () => {
         )}
         <div className={"w-full h-[1px] bg-gray-50 mt-6"} />
         <div className={"w-full px-5 mt-3 flex gap-2"}>
-          <Button
-            variantType={"line"}
-            className={"flex-1"}
-            onClick={handleAddBookmark}
-          >
-            {"자주 쓰는 주소로 등록"}
-          </Button>
           <Button
             variantType={"primary"}
             className={"flex-1"}
