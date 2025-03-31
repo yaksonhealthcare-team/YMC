@@ -19,7 +19,9 @@ export const Number = (props: NumberProps) => {
     <>
       <div className="flex items-center">
         <button
-          className="flex justify-center items-center w-6 h-6 border rounded-l"
+          className={clsx("flex justify-center items-center w-6 h-6 border rounded-l", {
+            "bg-gray-50 border-gray-100": isMinusDisabled
+          })}
           onClick={onClickMinus}
           disabled={isMinusDisabled}
         >
