@@ -17,7 +17,7 @@ export class UserMapper {
       },
       marketingAgreed: response.marketing_yn === "Y",
       point: response.points,
-      profileURL: response.profileURL,
+      profileURL: response.profileURL || undefined,
       thirdPartyType: response.thirdPartyType,
       gender: response.sex as "M" | "F",
       birthdate: response.birthdate || "",
@@ -35,7 +35,7 @@ export class UserMapper {
       addr1: dto.address1,
       addr2: dto.address2,
       sex: dto.sex,
-      profileURL: dto.profileUrl,
+      profileURL: dto.profileUrl || "",
       marketing_yn: dto.marketingAgreed ? "Y" : "N",
     }
   }
