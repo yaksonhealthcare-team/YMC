@@ -204,22 +204,34 @@ const DatePickerSection = ({
   addServices,
   b_idx,
 }: DatePickerSectionProps) => {
-  const [currentYearMonth, setCurrentYearMonth] = useState<Dayjs>(dayjs())
+  const [currentYearMonth, setCurrentYearMonth] = useState<Dayjs>(date || dayjs())
+  const [isMonthChanging, setIsMonthChanging] = useState(false)
 
   const handleMonthChange = (newDate: Dayjs) => {
+    setIsMonthChanging(true)
     setCurrentYearMonth(newDate)
   }
 
-  const { data: scheduleDate, isLoading } = useScheduleDateQueries({
+  const { data: scheduleDate, isLoading, isFetching } = useScheduleDateQueries({
     membershipIndex,
     searchDate: currentYearMonth,
     addServices,
     b_idx,
   })
 
+  useEffect(() => {
+    // 데이터 로딩이 완료되면 월 변경 상태 초기화
+    if (!isLoading && !isFetching && isMonthChanging) {
+      setIsMonthChanging(false)
+    }
+  }, [isLoading, isFetching, isMonthChanging])
+
   const isDateDisabled = (date: Dayjs) => {
-    // 로딩 중일 때는 모든 날짜를 활성화 상태로 표시
-    if (isLoading) return false
+    // 로딩 중일 때는 모든 날짜를 활성화 상태로 표시하지 않음
+    if (isLoading || isFetching) {
+      // 현재 보고 있는 월과 동일한 월의 날짜는 일단 활성화
+      return date.month() !== currentYearMonth.month()
+    }
 
     // 데이터가 없을 때는 모든 날짜를 비활성화
     if (!scheduleDate) return true
@@ -229,77 +241,98 @@ const DatePickerSection = ({
     return !scheduledDates.includes(date.format("YYYY-MM-DD"))
   }
 
+  // 초기 날짜가 변경되면 currentYearMonth도 업데이트
   useEffect(() => {
-    if (isLoading) {
-      return
+    if (date) {
+      setCurrentYearMonth(date)
     }
-  }, [scheduleDate, isLoading])
+  }, [date])
+
+  // 커스텀 Calendar Header 렌더링 함수
+  const CustomCalendarHeader = (props: PickersCalendarHeaderProps<Dayjs>) => {
+    const { currentMonth, onMonthChange, disabled } = props
+    
+    // displayDate는 우리가 관리하는 currentYearMonth 사용
+    const displayDate = currentYearMonth
+
+    const handlePreviousMonth = () => {
+      if (!disabled && !isLoading && !isFetching) {
+        const prevMonth = displayDate.subtract(1, "month")
+        onMonthChange(prevMonth, "left")
+        setCurrentYearMonth(prevMonth)
+        setIsMonthChanging(true)
+      }
+    }
+
+    const handleNextMonth = () => {
+      if (!disabled && !isLoading && !isFetching) {
+        const nextMonth = displayDate.add(1, "month")
+        onMonthChange(nextMonth, "right")
+        setCurrentYearMonth(nextMonth)
+        setIsMonthChanging(true)
+      }
+    }
+
+    const isPrevDisabled = displayDate.isSame(dayjs(), "month") || disabled || isLoading || isFetching
+    const isNextDisabled = disabled || isLoading || isFetching
+    
+    return (
+      <div className="relative flex justify-center items-center w-[168px] mx-auto mb-6">
+        <button
+          onClick={handlePreviousMonth}
+          disabled={isPrevDisabled}
+          className={`absolute left-0 w-4 h-4 flex items-center justify-center ${
+            isPrevDisabled ? "opacity-30 cursor-not-allowed" : "cursor-pointer"
+          }`}
+        >
+          <CaretLeftIcon className="w-4 h-4" />
+        </button>
+        <span className="text-[18px] font-bold text-[#212121]">
+          {`${displayDate.year()}년 ${displayDate.month() + 1}월`}
+        </span>
+        <button
+          onClick={handleNextMonth}
+          disabled={isNextDisabled}
+          className={`absolute right-0 w-4 h-4 flex items-center justify-center ${
+            isNextDisabled ? "opacity-30 cursor-not-allowed" : "cursor-pointer"
+          }`}
+        >
+          <CaretRigthIcon className="w-4 h-4" />
+        </button>
+      </div>
+    )
+  }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
-      {isLoading ? (
+      {isLoading && !isMonthChanging ? (
         <div className="flex justify-center items-center w-full h-[300px]">
           <CircularProgress color="primary" />
         </div>
       ) : (
-        <StyledDateCalendar
-          value={date}
-          onChange={handleDateSelect}
-          defaultValue={dayjs()}
-          shouldDisableDate={isDateDisabled}
-          views={["day"]}
-          sx={{
-            width: "100%",
-          }}
-          slots={{
-            calendarHeader: CalendarHeader,
-          }}
-          onMonthChange={handleMonthChange}
-        />
+        <div className="relative">
+          {(isFetching || isMonthChanging) && (
+            <div className="absolute top-0 left-0 w-full h-full bg-white/70 z-10 flex justify-center items-center">
+              <CircularProgress color="primary" size={30} />
+            </div>
+          )}
+          <StyledDateCalendar
+            value={date}
+            onChange={handleDateSelect}
+            defaultValue={dayjs()}
+            shouldDisableDate={isDateDisabled}
+            views={["day"]}
+            sx={{
+              width: "100%",
+            }}
+            slots={{
+              calendarHeader: CustomCalendarHeader,
+            }}
+            onMonthChange={handleMonthChange}
+          />
+        </div>
       )}
     </LocalizationProvider>
-  )
-}
-
-const CalendarHeader = (props: PickersCalendarHeaderProps<Dayjs>) => {
-  const { currentMonth, onMonthChange, disabled } = props
-  const currentDate = dayjs(currentMonth)
-
-  const handlePreviousMonth = () => {
-    if (!disabled) {
-      onMonthChange(currentDate.subtract(1, "month"), "left")
-    }
-  }
-
-  const handleNextMonth = () => {
-    if (!disabled) {
-      onMonthChange(currentDate.add(1, "month"), "right")
-    }
-  }
-
-  const isPrevDisabled = currentDate.isSame(dayjs(), "month")
-
-  return (
-    <div className="relative flex justify-center items-center w-[168px] mx-auto mb-6">
-      <button
-        onClick={handlePreviousMonth}
-        disabled={isPrevDisabled}
-        className={`absolute left-0 w-4 h-4 flex items-center justify-center ${
-          isPrevDisabled ? "opacity-30 cursor-not-allowed" : "cursor-pointer"
-        }`}
-      >
-        <CaretLeftIcon className="w-4 h-4" />
-      </button>
-      <span className="text-[18px] font-bold text-[#212121]">
-        {`${currentDate.year()}년 ${currentDate.month() + 1}월`}
-      </span>
-      <button
-        onClick={handleNextMonth}
-        className="absolute right-0 w-4 h-4 flex items-center justify-center cursor-pointer"
-      >
-        <CaretRigthIcon className="w-4 h-4" />
-      </button>
-    </div>
   )
 }
 
@@ -320,7 +353,7 @@ const TimePickerSection = ({
   selectedDate,
   b_idx,
 }: TimePickerSectionProps) => {
-  const { data: times, isLoading } = useScheduleTimesQueries({
+  const { data: times, isLoading, isFetching } = useScheduleTimesQueries({
     membershipIndex,
     searchDate: selectedDate,
     addServices,
@@ -330,12 +363,13 @@ const TimePickerSection = ({
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([])
 
   useEffect(() => {
-    if (isLoading || !times) {
+    if (!times) {
+      setTimeSlots([])
       return
     }
 
     setTimeSlots(mapTimesToTimeSlots(times))
-  }, [isLoading, times])
+  }, [times])
 
   return (
     <div className="w-full">
@@ -344,24 +378,39 @@ const TimePickerSection = ({
           <CircularProgress color="primary" />
         </div>
       ) : (
-        <div className="grid grid-cols-4 gap-[9px]">
-          {timeSlots.map((slot) => (
-            <Button
-              key={slot.time}
-              fullCustom
-              onClick={() => handleTimeSelect(slot)}
-              className={clsx(
-                "h-10 px-2.5 rounded-lg text-sm font-normal flex justify-center items-center whitespace-nowrap",
-                selectedTime?.time === slot.time
-                  ? "!bg-primary-300 !text-white !border-none hover:!bg-primary-300"
-                  : "!bg-white !border !border-solid !border-gray-200 hover:!bg-[#f7f7f7]",
-                "!text-gray-700",
-                "disabled:!bg-gray-50 disabled:!text-gray-300 disabled:!border-gray-200",
-              )}
-            >
-              {slot.time}
-            </Button>
-          ))}
+        <div className="relative">
+          {isFetching && (
+            <div className="absolute top-0 left-0 w-full h-full bg-white/70 z-10 flex justify-center items-center">
+              <CircularProgress color="primary" size={24} />
+            </div>
+          )}
+          <div className="grid grid-cols-4 gap-[9px]">
+            {timeSlots.length > 0 ? (
+              timeSlots.map((slot) => (
+                <Button
+                  key={slot.time}
+                  fullCustom
+                  onClick={() => handleTimeSelect(slot)}
+                  className={clsx(
+                    "h-10 px-2.5 rounded-lg text-sm font-normal flex justify-center items-center whitespace-nowrap",
+                    selectedTime?.time === slot.time
+                      ? "!bg-primary-300 !text-white !border-none hover:!bg-primary-300"
+                      : "!bg-white !border !border-solid !border-gray-200 hover:!bg-[#f7f7f7]",
+                    "!text-gray-700",
+                    "disabled:!bg-gray-50 disabled:!text-gray-300 disabled:!border-gray-200",
+                  )}
+                >
+                  {slot.time}
+                </Button>
+              ))
+            ) : (
+              <div className="col-span-4 p-4 bg-[#f7f7f7] rounded-lg">
+                <div className="text-center text-[#212121] text-sm">
+                  이 날짜에 가능한 시간이 없습니다.
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
