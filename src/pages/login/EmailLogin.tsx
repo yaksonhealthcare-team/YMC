@@ -27,6 +27,7 @@ const EmailLogin = () => {
   })
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [fcmToken, setFcmToken] = useState<string | null>(null)
 
   const isFormValid = formData.email.length > 0 && formData.password.length > 0
 
@@ -38,6 +39,9 @@ const EmailLogin = () => {
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
+    requestForToken().then((token) => {
+      setFcmToken(token)
+    })
   }, [])
 
   const validateEmail = (email: string) => {
@@ -57,7 +61,6 @@ const EmailLogin = () => {
 
     try {
       setIsLoading(true)
-      const fcmToken = await requestForToken()
 
       const { accessToken } = await loginWithEmail({
         username: formData.email,
