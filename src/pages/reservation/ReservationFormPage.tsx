@@ -17,9 +17,8 @@ import { useCreateReservationMutation } from "../../queries/useReservationQuerie
 import { MembershipSwiper } from "@components/MembershipSwiper"
 // import { AdditionalServiceCard } from "@components/AdditionalServiceCard"
 import { ReservationFormSection } from "./_fragments/ReservationFormSection"
-import { ReservationSummarySection } from "./_fragments/ReservationSummarySection"
+// import { ReservationSummarySection } from "./_fragments/ReservationSummarySection"
 import { useErrorHandler } from "hooks/useErrorHandler"
-import { parsePrice } from "utils/format"
 import { formatDateForAPI } from "utils/date"
 import { toNumber } from "utils/number"
 import { createAdditionalManagementOrder } from "apis/order.api"
@@ -63,7 +62,9 @@ const ReservationFormPage = () => {
     membershipId: location.state?.fromReservation?.membershipId,
   })
 
-  const [allMemberships, setAllMemberships] = useState<typeof filteredMemberships>([])
+  const [allMemberships, setAllMemberships] = useState<
+    typeof filteredMemberships
+  >([])
 
   // Queries
   const { data: consultationCount } = useQuery({
@@ -152,7 +153,7 @@ const ReservationFormPage = () => {
     // 5. 회원권 카드에서 온 경우
     else if (locationState.fromMembershipCard) {
       // originalPath가 '/'(홈)인 경우 홈으로 이동, 아니면 예약 히스토리로 이동
-      if (locationState.originalPath === '/') {
+      if (locationState.originalPath === "/") {
         navigate("/", { replace: true })
       } else {
         navigate("/member-history/reservation", { replace: true })
@@ -554,12 +555,6 @@ const ReservationFormPage = () => {
     }
   }
 
-  // Calculations
-  const totalPrice = data.additionalServices.reduce((sum, service) => {
-    const optionPrice = service.options?.[0]?.ss_price
-    return sum + (optionPrice ? parsePrice(optionPrice) : 0)
-  }, 0)
-
   // Render Sections
 
   if (isMembershipsLoading) {
@@ -687,13 +682,6 @@ const ReservationFormPage = () => {
           )
         }
       />
-
-      {data.item !== "상담 예약" && (
-        <ReservationSummarySection
-          additionalServices={data.additionalServices}
-          totalPrice={totalPrice}
-        />
-      )}
 
       <FixedButtonContainer className="bg-white">
         <Button
