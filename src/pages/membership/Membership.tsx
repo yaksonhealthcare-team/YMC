@@ -69,10 +69,6 @@ const MembershipPage = () => {
   const handleBrandChange = (_: React.SyntheticEvent, value: string) => {
     setSearchParams({ brand_code: value })
     setSelectedCategory(undefined)
-    const container = document.querySelector(".max-w-\\[500px\\]")
-    if (container) {
-      container.scrollTop = 0
-    }
   }
 
   const isLastDisplayedBrand = (code: string) =>
@@ -81,10 +77,6 @@ const MembershipPage = () => {
   // 카테고리 변경 시
   const handleCategoryChange = (category?: string) => {
     setSelectedCategory(category)
-    const container = document.querySelector(".max-w-\\[500px\\]")
-    if (container) {
-      container.scrollTop = 0
-    }
   }
 
   if (
@@ -98,7 +90,7 @@ const MembershipPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-system-bg overflow-y-auto scrollbar-hide flex justify-center">
+    <div className="min-h-screen bg-system-bg flex justify-center">
       <div className="w-full max-w-[500px] relative">
         {/* 고정 영역 */}
         <div className="fixed top-[48px] left-1/2 -translate-x-1/2 w-full max-w-[500px] z-10 bg-system-bg">
