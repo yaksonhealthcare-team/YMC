@@ -55,13 +55,13 @@ const BranchFilterBottomSheet = ({
   }
 
   return (
-    <div className={"flex flex-col items-center h-[541px]"}>
-      <div className="w-full px-5">
+    <div className={"flex flex-col h-full"}>
+      <div className="w-full px-5 py-4 bg-white sticky top-0 z-10">
         <BranchFilterBottomSheetHeader onClose={performClose} />
       </div>
 
-      <div className="w-full overflow-y-auto flex-1 px-5">
-        <div className={"flex flex-col items-center gap-5 w-full py-5"}>
+      <div className="w-full flex-1 overflow-y-auto px-5">
+        <div className={"flex flex-col gap-6 w-full py-4"}>
           <BranchFilterDivider />
           <BranchFilterBottomSheetWrap
             label={"브랜드 별"}
@@ -87,7 +87,7 @@ const BranchFilterBottomSheet = ({
         </div>
       </div>
 
-      <div className="w-full px-5 mt-auto">
+      <div className="w-full px-5 py-4 border-t border-gray-100 bg-white sticky bottom-0 z-10">
         <BranchFilterBottomSheetFooter
           onInitialize={() => {
             setFilter({ brand: null, category: null })
@@ -108,25 +108,14 @@ const BranchFilterBottomSheetHeader = ({
 }: {
   onClose: () => void
 }) => (
-  <>
-    <Divider
-      sx={{
-        width: "52px",
-        height: "1.5px",
-        borderRadius: "100px",
-        bgcolor: "gray.200",
-        margin: "0 auto",
-      }}
-    />
-    <div className={"w-full"}>
-      <div className={"flex justify-between"}>
-        <p className={"font-sb text-18px"}>{"지점 필터"}</p>
-        <button onClick={onClose}>
-          <CloseIcon />
-        </button>
-      </div>
+  <div className={"w-full"}>
+    <div className={"flex justify-between items-center"}>
+      <p className={"font-sb text-18px"}>{"지점 필터"}</p>
+      <button onClick={onClose}>
+        <CloseIcon />
+      </button>
     </div>
-  </>
+  </div>
 )
 
 const BranchFilterDivider = () => (
@@ -154,7 +143,7 @@ const BranchFilterBottomSheetWrap = ({
           <LoadingIndicator size={32} />
         </div>
       ) : items.length > 0 ? (
-        <div className={"flex flex-wrap gap-2"}>
+        <div className={"flex flex-wrap gap-2 w-full"}>
           <Filter
             type={"default"}
             state={!selectedItem ? "active" : "default"}
@@ -190,7 +179,7 @@ const BranchFilterBottomSheetFooter = ({
   onApply: () => void
 }) => {
   return (
-    <div className={"w-full flex justify-around gap-2 pb-8 mt-[30px]"}>
+    <div className={"w-full flex justify-around gap-2"}>
       <Button
         className={"w-1/2 rounded-xl"}
         variantType={"line"}
