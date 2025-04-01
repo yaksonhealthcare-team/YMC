@@ -203,7 +203,7 @@ const ReservationDetailPage = () => {
         membershipId: reservation.membershipId,
       },
       fromReservationDetail: true,
-      originalPath: currentPath
+      originalPath: currentPath,
     }
     navigate("/reservation/form", { state })
   }
@@ -356,7 +356,7 @@ const ReservationDetailPage = () => {
             onClick={() => {
               // 현재 경로 가져오기
               const currentPath = window.location.pathname
-              
+
               navigate("/reservation/form", {
                 state: {
                   fromReservation: {
@@ -373,7 +373,7 @@ const ReservationDetailPage = () => {
                     membershipId: reservation.membershipId,
                   },
                   fromReservationDetail: true,
-                  originalPath: currentPath
+                  originalPath: currentPath,
                 },
               })
             }}
@@ -418,7 +418,7 @@ const ReservationDetailPage = () => {
           membershipName={reservation.membershipName}
           branchName={reservation.branchName}
           remainingCount={reservation.remainingCount}
-          membershipId={reservation.membershipId}
+          membershipId={reservation.mp_idx}
         />
       )}
       {!isBottomSheetOpen && (

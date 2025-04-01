@@ -62,6 +62,7 @@ export interface ReservationResponse {
   b_addr: string
   r_date: string
   p_idx: string
+  mp_idx: string
   ps_name: string
   r_take_time: string
   visit: string
