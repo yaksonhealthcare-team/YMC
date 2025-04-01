@@ -93,7 +93,7 @@ const MembershipPage = () => {
     <div className="min-h-screen bg-system-bg">
       <div className="w-full max-w-[500px] mx-auto relative">
         {/* 고정 영역 */}
-        <div className="fixed top-[48px] left-1/2 -translate-x-1/2 w-full max-w-[500px] z-10 bg-system-bg">
+        <div className="sticky top-[48px] left-0 w-full z-10 bg-system-bg">
           {/* 안내 메시지 */}
           {cartCount === 0 && (
             <div className="w-full bg-[#92443D]">
@@ -199,7 +199,7 @@ const MembershipPage = () => {
         </div>
 
         {/* 회원권 목록 */}
-        <div className="pt-[145px] pb-[96px] bg-system-bg">
+        <div className="pb-[96px] bg-system-bg">
           <div className="max-w-[500px] min-w-[375px] mx-auto">
             <div className="px-5 py-6">
               {membershipsData.pages[0].body.length === 0 ? (
