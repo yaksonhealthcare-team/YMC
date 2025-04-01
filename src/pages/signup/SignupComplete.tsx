@@ -20,14 +20,14 @@ export const SignupComplete = () => {
   const handleExistingUser = async () => {
     try {
       setIsLoading(true)
-      const crmUser = await fetchCRMUser()
-      if (crmUser && crmUser.brands && crmUser.brands.length > 0) {
-        navigate("/signup/branch")
-      } else {
-        navigate("/questionnaire/common")
+      if (!user?.name || !user?.phone) {
+        throw new Error("사용자 정보가 없습니다")
       }
+      await fetchCRMUser(user.name, user.phone)
+      navigate("/signup/branch")
     } catch (error) {
-      navigate("/questionnaire/common")
+      console.error("CRM 사용자 조회 실패:", error)
+      navigate("/signup/branch")
     } finally {
       setIsLoading(false)
     }

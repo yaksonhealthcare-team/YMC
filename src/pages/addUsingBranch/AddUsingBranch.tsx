@@ -1,60 +1,26 @@
-import { Button } from "@components/Button.tsx"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useErrorHandler } from "../../hooks/useErrorHandler"
-import { useSaveVisitedStoreMutation } from "../../queries/useVisitedStoreQueries"
-import { Branch } from "../../types/Branch.ts"
+import { Button } from "@components/Button.tsx"
 import Step1SearchBranchList from "./Step1SearchBranchList.tsx"
 import Step2SelectedBranchList from "./Step2SelectedBranchList.tsx"
 import Step3Finish from "./Step3Finish.tsx"
+import { Branch } from "../../types/Branch.ts"
+import { postVisitedStore } from "../../apis/user.api"
 
 const AddUsingBranch = () => {
-  const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const [pageStep, setPageStep] = useState(1)
   const [selectedBranches, setSelectedBranches] = useState<Branch[]>([])
-  const { handleError } = useErrorHandler()
-  const { mutateAsync: saveVisitedStoreMutation } =
-    useSaveVisitedStoreMutation()
-
-  const handleBack = () => {
-    if (pageStep === 1) {
-      navigate(-1)
-    } else {
-      setPageStep(pageStep - 1)
-    }
-  }
-
-  useEffect(() => {
-    setHeader({
-      display: true,
-      left: "back",
-      onClickBack: handleBack,
-      right:
-        pageStep !== 3 ? (
-          <button
-            className="font-medium text-gray-500 text-[16px]"
-            onClick={() => navigate("/")}
-          >
-            건너뛰기
-          </button>
-        ) : undefined,
-      backgroundColor: "bg-white",
-    })
-    setNavigation({ display: false })
-  }, [setHeader, setNavigation, pageStep])
 
   const handleSaveVisitedStores = async () => {
     try {
-      // 선택된 모든 매장에 대해 순차적으로 저장
-      for (const branch of selectedBranches) {
-        await saveVisitedStoreMutation(branch.b_idx)
-      }
+      // 선택된 모든 지점에 대해 visited_store API 호출
+      await Promise.all(
+        selectedBranches.map((branch) => postVisitedStore(branch.b_idx)),
+      )
+      setPageStep(3)
     } catch (error) {
-      handleError(error, "방문 매장 저장 중 오류가 발생했습니다")
-    } finally {
-      setPageStep(pageStep + 1)
+      console.error("방문 지점 저장 실패:", error)
     }
   }
 
