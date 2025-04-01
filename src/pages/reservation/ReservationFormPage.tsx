@@ -285,17 +285,24 @@ const ReservationFormPage = () => {
           (m) => m.mp_idx === location.state.fromReservation.membershipId,
         )
 
-        if (
-          isSubscribed &&
-          (!membership || Number(membership.remain_amount) <= 0)
-        ) {
-          await openModal({
-            title: "알림",
-            message: "해당 회원권의 잔여 횟수가 없습니다.",
-            onConfirm: () => {
-              navigate("/member-history/reservation", { replace: true })
-            },
-          })
+        if (isSubscribed) {
+          if (!membership) {
+            await openModal({
+              title: "알림",
+              message: "해당 회원권 정보를 찾을 수 없습니다.",
+              onConfirm: () => {
+                navigate("/member-history/reservation", { replace: true })
+              },
+            })
+          } else if (Number(membership.remain_amount) <= 0) {
+            await openModal({
+              title: "알림",
+              message: "해당 회원권의 잔여 횟수가 없습니다.",
+              onConfirm: () => {
+                navigate("/member-history/reservation", { replace: true })
+              },
+            })
+          }
         }
       }
     }
