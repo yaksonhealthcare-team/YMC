@@ -200,8 +200,8 @@ const ReservationDetailPage = () => {
         request: reservation.request || "",
         additionalServices: reservation.additionalServices || [],
         remainingCount: reservation.remainingCount,
-        membershipId: reservation.membershipId,
       },
+      membershipId: reservation.membershipId,
       fromReservationDetail: true,
       originalPath: currentPath
     }
@@ -370,8 +370,8 @@ const ReservationDetailPage = () => {
                     request: reservation.request || "",
                     additionalServices: reservation.additionalServices || [],
                     remainingCount: reservation.remainingCount,
-                    membershipId: reservation.membershipId,
                   },
+                  membershipId: reservation.membershipId,
                   fromReservationDetail: true,
                   originalPath: currentPath
                 },
