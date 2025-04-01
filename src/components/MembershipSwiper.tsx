@@ -36,7 +36,6 @@ export const MembershipSwiper = ({
   useEffect(() => {
     if (
       initialMembershipId && 
-      !selectedItem && 
       membershipsData.body.length > 0
     ) {
       const membership = membershipsData.body.find(
@@ -47,7 +46,7 @@ export const MembershipSwiper = ({
         onChangeItem(initialMembershipId)
       }
     }
-  }, [initialMembershipId, selectedItem, membershipsData.body, onChangeItem])
+  }, [initialMembershipId, membershipsData.body, onChangeItem])
 
   return (
     <Box className="w-full pb-[20px]">

@@ -630,6 +630,7 @@ const ReservationFormPage = () => {
           </div>
           {!isMembershipsLoading && allMemberships.length > 0 ? (
             <MembershipSwiper
+              key={location.state?.membershipId || data.membershipId || 'membership-swiper'}
               membershipsData={{
                 ...(membershipsData?.pages[0] || {
                   resultCode: "00",
@@ -643,7 +644,7 @@ const ReservationFormPage = () => {
               }}
               selectedItem={data.item}
               onChangeItem={handleOnChangeItem}
-              initialMembershipId={location.state?.membershipId}
+              initialMembershipId={location.state?.membershipId || data.membershipId}
             />
           ) : (
             <Button
