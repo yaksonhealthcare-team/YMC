@@ -17,7 +17,7 @@ const app = initializeApp(firebaseConfig)
 export const auth = getAuth(app)
 
 // FCM 설정
-export const messaging = getMessaging(app)
+const messaging = getMessaging(app)
 
 // 알림 권한 요청
 export async function requestNotificationPermission(): Promise<boolean> {
@@ -39,8 +39,7 @@ export async function requestNotificationPermission(): Promise<boolean> {
 export async function requestForToken() {
   try {
     // ReactNative WebView 환경 감지
-    const isReactNativeWebView =
-      typeof window !== "undefined" && window.ReactNativeWebView !== undefined
+    const isReactNativeWebView = window.ReactNativeWebView !== undefined
 
     if (isReactNativeWebView) {
       console.log("ReactNative WebView 환경입니다.")
@@ -48,8 +47,7 @@ export async function requestForToken() {
     }
 
     // ServiceWorker API 지원 확인
-    const hasServiceWorker =
-      typeof window !== "undefined" && "serviceWorker" in navigator
+    const hasServiceWorker = "serviceWorker" in navigator
 
     if (hasServiceWorker) {
       // 알림 권한 요청
