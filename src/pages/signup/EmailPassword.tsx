@@ -32,6 +32,9 @@ export const EmailPassword = () => {
       display: true,
       left: "back",
       backgroundColor: "white",
+      onClickBack: () => {
+        navigate("/login", { replace: true })
+      },
     })
     setNavigation({ display: false })
   }, [])
