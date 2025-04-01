@@ -23,12 +23,14 @@ import { fetchUser } from "../../apis/auth.api.ts"
 import { Gender } from "../../utils/gender.ts"
 import { GenderSelect } from "@components/GenderSelect"
 import { uploadImages } from "../../apis/image.api.ts"
+import CircularProgress from "@mui/material/CircularProgress"
 
 const EditProfile = () => {
   const { user, login } = useAuth()
   const { setNavigation, setHeader } = useLayout()
   const { openBottomSheet, closeOverlay, showToast } = useOverlay()
   const navigate = useNavigate()
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const [gender, setGender] = useState<Gender>(user?.gender || "M")
   const [address, setAddress] = useState({
@@ -81,6 +83,7 @@ const EditProfile = () => {
   const handleSubmit = async () => {
     if (!user || !hasChanges()) return
 
+    setIsSubmitting(true)
     try {
       let finalProfileUrl = profileImageUrl || ""
 
@@ -98,6 +101,7 @@ const EditProfile = () => {
         } catch (error) {
           console.error("이미지 업로드 실패:", error)
           showToast("이미지 업로드에 실패했습니다.")
+          setIsSubmitting(false)
           return
         }
       }
@@ -127,6 +131,8 @@ const EditProfile = () => {
     } catch (error) {
       console.error("프로필 수정 실패:", error)
       showToast("프로필 수정에 실패했습니다.")
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -216,6 +222,13 @@ const EditProfile = () => {
 
   return (
     <div className={"w-full h-full flex flex-col overflow-y-scroll"}>
+      {isSubmitting && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 flex flex-col items-center">
+            <CircularProgress color="primary" size={48} />
+          </div>
+        </div>
+      )}
       <div className={"self-center mt-5"}>
         <ProfileImageButton
           profileImageUrl={profileImageUrl}
