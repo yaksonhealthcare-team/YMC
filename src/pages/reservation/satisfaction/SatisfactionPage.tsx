@@ -87,16 +87,6 @@ const SatisfactionPage = () => {
     }))
   }
 
-  const handleSelectAll = (grade: Grade) => {
-    if (!reviewQuestions) return
-
-    const newForm = { ...form }
-    reviewQuestions.forEach((question) => {
-      newForm[question.rs_idx] = grade
-    })
-    setForm(newForm)
-  }
-
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setForm((prev) => ({
       ...prev,
@@ -248,27 +238,6 @@ const SatisfactionPage = () => {
 
         {/* 만족도 평가 */}
         <div className="space-y-8 pt-2">
-          {/* 전체 선택 버튼 */}
-          <div>
-            <div className="flex gap-2">
-              {(["L", "M", "H"] as const).map((grade) => (
-                <button
-                  key={grade}
-                  onClick={() => handleSelectAll(grade)}
-                  className={clsx(
-                    "flex-1 h-10 rounded-lg text-14px font-m",
-                    "border border-gray-100 text-gray-900 hover:bg-gray-50",
-                  )}
-                >
-                  {GRADE_TEXT[grade]}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* 구분선 */}
-          <div className="h-px bg-gray-100 my-4"></div>
-
           {reviewQuestions?.map((question) => (
             <div key={question.rs_idx} className="space-y-4">
               <h3 className="text-16px font-sb text-gray-900">
