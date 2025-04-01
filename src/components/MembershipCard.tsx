@@ -70,7 +70,7 @@ export const MembershipCard = ({
       state: {
         originalPath: currentPath,
         fromMembershipCard: true,
-        membershipId: id
+        membershipId: id.toString()
       }
     })
   }

@@ -63,6 +63,8 @@ const ReservationFormPage = () => {
     membershipId: location.state?.fromReservation?.membershipId,
   })
 
+  const [allMemberships, setAllMemberships] = useState<typeof filteredMemberships>([])
+
   // Queries
   const { data: consultationCount } = useQuery({
     queryKey: ["consultation-count"],
@@ -84,6 +86,13 @@ const ReservationFormPage = () => {
       ),
     )
   }, [membershipsData, selectedBranch])
+
+  // 최초 로드 시와 회원권 데이터가 변경될 때만 전체 회원권 목록 업데이트
+  useEffect(() => {
+    if (membershipsData?.pages[0]?.body) {
+      setAllMemberships(membershipsData.pages[0].body)
+    }
+  }, [membershipsData])
 
   // Navigation Handler
   const handleBack = useCallback(() => {
@@ -142,7 +151,12 @@ const ReservationFormPage = () => {
     }
     // 5. 회원권 카드에서 온 경우
     else if (locationState.fromMembershipCard) {
-      navigate("/member-history/membership", { replace: true })
+      // originalPath가 '/'(홈)인 경우 홈으로 이동, 아니면 예약 히스토리로 이동
+      if (locationState.originalPath === '/') {
+        navigate("/", { replace: true })
+      } else {
+        navigate("/member-history/reservation", { replace: true })
+      }
     }
     // 6. 특정 경로로 돌아가야 하는 경우
     else if (locationState.returnPath) {
@@ -614,7 +628,7 @@ const ReservationFormPage = () => {
               </div>
             </RadioCard>
           </div>
-          {!isMembershipsLoading && filteredMemberships.length > 0 ? (
+          {!isMembershipsLoading && allMemberships.length > 0 ? (
             <MembershipSwiper
               membershipsData={{
                 ...(membershipsData?.pages[0] || {
@@ -625,10 +639,11 @@ const ReservationFormPage = () => {
                   total_page_count: 0,
                   current_page: 0,
                 }),
-                body: filteredMemberships,
+                body: allMemberships,
               }}
               selectedItem={data.item}
               onChangeItem={handleOnChangeItem}
+              initialMembershipId={location.state?.membershipId}
             />
           ) : (
             <Button
