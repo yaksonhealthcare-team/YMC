@@ -16,6 +16,13 @@ export interface AddressBookmark {
   isBaseAddress: boolean
 }
 
+interface ApiResponse<T> {
+  resultCode: string
+  resultMessage: string
+  resultCount: number
+  body: T
+}
+
 interface AddressBookmarkResponse {
   resultCode: string
   resultMessage: string
@@ -29,34 +36,17 @@ interface AddressBookmarkResponse {
   }>
 }
 
-interface AddressBookmarkAddResponse {
-  resultCode: string
-  resultMessage: string
-  resultCount: number
-  body: null
-}
-
-interface AddressBookmarkDeleteResponse {
-  resultCode: string
-  resultMessage: string
-  resultCount: number
-  body: null
-}
-
 interface AddressSearchResponse {
   resultCode: string
   resultMessage: string
   resultCount: number
   body: {
-    result: Array<{
-      brand_code: string
-      b_idx: string
-      b_name: string
+    result: {
       b_addr: string
       b_lat: string
       b_lon: string
-      b_addressbookmark: string
-    }>
+      b_name?: string
+    }[]
   }
 }
 
@@ -74,19 +64,26 @@ export const searchAddress = async (keyword: string): Promise<Location[]> => {
     address: item.b_addr || "",
     lat: item.b_lat || "0",
     lon: item.b_lon || "0",
+    name: item.b_name || "",
   }))
 }
 
 export const getAddressBookmarks = async (): Promise<Location[]> => {
   const { data } =
     await axiosClient.get<AddressBookmarkResponse>("/address/bookmarks")
-  return data.body
+  return data.body.map((item) => ({
+    csab_idx: item.csab_idx,
+    address: item.address,
+    lat: item.lat,
+    lon: item.lon,
+    base_address: item.base_address,
+  }))
 }
 
 export const addAddressBookmark = async (
   bookmark: Omit<Location, "csab_idx">,
-): Promise<AddressBookmarkAddResponse> => {
-  const { data } = await axiosClient.post<AddressBookmarkAddResponse>(
+): Promise<ApiResponse<null>> => {
+  const { data } = await axiosClient.post<ApiResponse<null>>(
     "/address/bookmarks",
     bookmark,
   )
@@ -95,14 +92,14 @@ export const addAddressBookmark = async (
 
 export const deleteAddressBookmark = async (
   csab_idx: string,
-): Promise<AddressBookmarkDeleteResponse> => {
-  const { data } = await axiosClient.delete<AddressBookmarkDeleteResponse>(
+): Promise<ApiResponse<null>> => {
+  const { data } = await axiosClient.delete<ApiResponse<null>>(
     `/address/bookmarks`,
     {
       data: {
         csab_idx,
-      }
-    }
+      },
+    },
   )
   return data
 }

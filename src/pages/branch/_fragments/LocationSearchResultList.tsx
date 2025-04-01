@@ -31,7 +31,14 @@ const LocationSearchResultList = ({
             onClick={() => onClick(location)}
           >
             <PinIcon className={"w-4 h-4"} />
-            <p className={"flex-1 font-b text-14px"}>{location.address}</p>
+            <div className="flex-1">
+              <p className={"font-b text-14px"}>
+                {location.name || "지점명 없음"}
+              </p>
+              <p className={"text-12px text-gray-500 mt-1"}>
+                {location.address}
+              </p>
+            </div>
             {type === "saved" && onDelete && (
               <button
                 onClick={(e) => {
