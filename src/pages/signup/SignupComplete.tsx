@@ -33,6 +33,10 @@ export const SignupComplete = () => {
     }
   }
 
+  const handleNewUser = () => {
+    navigate("/mypage/questionnaire/common")
+  }
+
   return (
     <div className="flex flex-col items-center px-5 pt-[144px]">
       <div className="flex flex-col items-center gap-7">
@@ -61,9 +65,7 @@ export const SignupComplete = () => {
       <div className="fixed bottom-0 left-0 right-0 border-t border-[#F8F8F8] bg-white p-3">
         <div className="flex flex-col gap-2">
           <button
-            onClick={() => {
-              navigate("/questionnaire/common")
-            }}
+            onClick={handleNewUser}
             className="h-12 px-4 py-3 text-primary text-16px font-semibold"
           >
             처음 이용해요
