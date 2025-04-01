@@ -101,7 +101,7 @@ const Branch = () => {
       // 브랜드가 변경된 경우 카테고리 캐시 무효화
       if (brandChanged) {
         queryClient.invalidateQueries({
-          queryKey: ["branches", "categories"],
+          queryKey: ["branches", "categories", newFilter.brand?.code],
         })
       }
 
@@ -143,10 +143,19 @@ const Branch = () => {
 
   // 브랜드 변경 처리 함수
   const handleBrandChange = (brand: FilterItem | null) => {
-    handleFilterChange({
+    // 카테고리 캐시 무효화
+    queryClient.invalidateQueries({
+      queryKey: ["branches", "categories", brand?.code],
+    })
+
+    // 상태 업데이트
+    setSelectedFilter({
       brand,
       category: null,
     })
+
+    // 지점 목록 다시 조회
+    refetch()
   }
 
   useEffect(() => {

@@ -152,7 +152,7 @@ export const useBranchCategories = (brandCode?: string) => {
   return useQuery<BranchCategory[], Error>({
     queryKey: ["branches", "categories", brandCode],
     queryFn: () => fetchBranchCategories(brandCode),
-    staleTime: 0,
-    gcTime: 0,
+    staleTime: 5 * 60 * 1000, // 5분
+    gcTime: 30 * 60 * 1000, // 30분
   })
 }

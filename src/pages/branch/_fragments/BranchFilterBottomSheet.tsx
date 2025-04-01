@@ -1,7 +1,7 @@
 import { Divider } from "@mui/material"
 import CloseIcon from "@assets/icons/CloseIcon.svg?react"
 import { Filter } from "@components/Filter.tsx"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@components/Button.tsx"
 import ReloadIcon from "@components/icons/ReloadIcon.tsx"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
@@ -41,9 +41,16 @@ const BranchFilterBottomSheet = ({
     category: FilterItem | null
   }>(currentFilter)
 
+  // currentFilter가 변경될 때 내부 filter 상태 업데이트
+  useEffect(() => {
+    setFilter(currentFilter)
+  }, [currentFilter])
+
   // 브랜드 변경 시 부모 컴포넌트에 알림
   const handleBrandChange = (brand: FilterItem | null) => {
-    setFilter({ ...filter, brand, category: null })
+    // 내부 상태 즉시 업데이트
+    setFilter((prev) => ({ ...prev, brand, category: null }))
+    // 부모 컴포넌트에 알림
     onBrandChange?.(brand)
   }
 
@@ -52,7 +59,7 @@ const BranchFilterBottomSheet = ({
       <div className="w-full px-5">
         <BranchFilterBottomSheetHeader onClose={performClose} />
       </div>
-      
+
       <div className="w-full overflow-y-auto flex-1 px-5">
         <div className={"flex flex-col items-center gap-5 w-full py-5"}>
           <BranchFilterDivider />
@@ -64,15 +71,22 @@ const BranchFilterBottomSheet = ({
           />
           <BranchFilterDivider />
           <BranchFilterBottomSheetWrap
+            key={`category-${filter.brand?.code || "all"}`}
             label={"카테고리 별"}
-            items={categories}
+            items={
+              filter.brand?.code
+                ? categories.filter((cat) =>
+                    cat.code.startsWith(filter.brand!.code),
+                  )
+                : categories
+            }
             selectedItem={filter.category}
             isLoading={isLoading}
             onSelect={(category) => setFilter({ ...filter, category })}
           />
         </div>
       </div>
-      
+
       <div className="w-full px-5 mt-auto">
         <BranchFilterBottomSheetFooter
           onInitialize={() => {
