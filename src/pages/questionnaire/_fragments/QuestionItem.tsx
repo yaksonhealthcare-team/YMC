@@ -6,7 +6,7 @@ import {
   QuestionOption,
 } from "types/Questionnaire"
 import BirthDateInput from "./BirthDateInput"
-import { useEffect } from "react"
+import { useEffect, Fragment } from "react"
 import clsx from "clsx"
 import FilledCheckIcon from "@components/icons/FilledCheckIcon"
 import { TextArea } from "@components/TextArea"
@@ -29,7 +29,9 @@ export const QuestionItem = ({
   onValidationChange,
 }: QuestionItemProps) => {
   const isOptionSelected = (optionIdx: string): boolean => {
-    const values = (value || []) as OptionValue[]
+    if (!value) return false
+    if (typeof value === "string") return false
+    const values = value as OptionValue[]
     return values.some((v) => v.csso_idx === optionIdx)
   }
 
@@ -71,16 +73,20 @@ export const QuestionItem = ({
     const hasSelectedSubjectiveOption = question.options.some(
       (option) =>
         option.option_type === "2" &&
-        (value as OptionValue[])?.some(
-          (value) => value.csso_idx === option.csso_idx,
-        ),
+        (() => {
+          if (!currentValue || typeof currentValue === "string") return false
+          const values = currentValue as OptionValue[]
+          return values.some((v) => v.csso_idx === option.csso_idx)
+        })(),
     )
     if (hasSelectedSubjectiveOption) {
-      const textFieldValue = value as string
-      if (!textFieldValue || textFieldValue.trim().length === 0) {
+      if (!currentValue || typeof currentValue === "string") return false
+      const values = currentValue as OptionValue[]
+      const selectedOption = values[0]
+      if (!selectedOption?.text || selectedOption.text.trim().length === 0) {
         return false
       }
-      if (textFieldValue.length > 100) {
+      if (selectedOption.text.length > 100) {
         return false
       }
     }
@@ -115,7 +121,7 @@ export const QuestionItem = ({
           (opt) => opt.csso_idx === currentValue[0].csso_idx,
         )
         if (selectedOption?.option_type === "2") {
-          const textValue = value as string
+          const textValue = (currentValue[0] as OptionValue).text
           return !!textValue && textValue.trim().length > 0
         }
 
@@ -129,12 +135,51 @@ export const QuestionItem = ({
 
   const handleTextChange = (textValue: string) => {
     if (textValue.length <= 100) {
-      onChange(textValue)
+      if (question.options.some((opt) => opt.option_type === "2")) {
+        if (!value || typeof value === "string") {
+          const selectedOption = question.options.find(
+            (opt) => opt.option_type === "2",
+          )
+          if (selectedOption) {
+            onChange([{ csso_idx: selectedOption.csso_idx, text: textValue }])
+          }
+          return
+        }
+
+        const currentValue = value as OptionValue[]
+        const selectedOption = currentValue.find((v) =>
+          question.options.find(
+            (opt) => opt.csso_idx === v.csso_idx && opt.option_type === "2",
+          ),
+        )
+
+        if (!selectedOption) return
+
+        const updatedValue = currentValue.map((v) =>
+          v.csso_idx === selectedOption.csso_idx
+            ? { ...v, text: textValue }
+            : v,
+        )
+
+        onChange(updatedValue)
+      } else {
+        onChange(textValue)
+      }
     }
   }
 
   const handleOptionChange = (optionIdx: string, checked: boolean) => {
-    const currentValues = (value || []) as OptionValue[]
+    if (!value) {
+      onChange([{ csso_idx: optionIdx }])
+      return
+    }
+
+    if (typeof value === "string") {
+      onChange([{ csso_idx: optionIdx }])
+      return
+    }
+
+    const currentValues = value as OptionValue[]
     let newValues: OptionValue[]
 
     if (question.answer_type === "M") {
@@ -144,7 +189,14 @@ export const QuestionItem = ({
         newValues = currentValues.filter((v) => v.csso_idx !== optionIdx)
       }
     } else {
-      newValues = [{ csso_idx: optionIdx }]
+      // 단일 선택의 경우, 기존 선택된 옵션의 text 값을 유지
+      const existingOption = currentValues.find((v) => v.csso_idx === optionIdx)
+      newValues = [
+        {
+          csso_idx: optionIdx,
+          ...(existingOption || {}),
+        },
+      ]
     }
 
     onChange(newValues)
@@ -159,10 +211,19 @@ export const QuestionItem = ({
     totalOptionCount?: number,
   ) => {
     const inputType = question.answer_type === "M" ? "checkbox" : "radio"
+    let textValue = ""
+
+    if (value && typeof value !== "string" && Array.isArray(value)) {
+      const currentValue = value as OptionValue[]
+      const selectedOption = currentValue.find(
+        (v) => v.csso_idx === option.csso_idx,
+      )
+      textValue = selectedOption?.text || ""
+    }
 
     if (hasOptionImage) {
       return (
-        <>
+        <Fragment key={option.csso_idx}>
           <label
             className={clsx(
               "flex flex-col justify-center items-center gap-[15px] aspect-square border rounded-[16px] p-3 cursor-pointer",
@@ -198,17 +259,17 @@ export const QuestionItem = ({
               <TextArea
                 id={`${fieldName}_text`}
                 placeholder="주관식 답변을 입력해주세요."
-                value={(value as string) || ""}
+                value={textValue}
                 onChange={(e) => onTextChange(e.target.value)}
                 maxLength={100}
               />
             </div>
           )}
-        </>
+        </Fragment>
       )
     } else {
       return (
-        <>
+        <Fragment key={option.csso_idx}>
           <label
             className={clsx(
               "flex gap-3 w-full border rounded-[12px] p-[15px] cursor-pointer",
@@ -237,13 +298,13 @@ export const QuestionItem = ({
               <TextArea
                 id={`${fieldName}_text`}
                 placeholder="주관식 답변을 입력해주세요."
-                value={(value as string) || ""}
+                value={textValue}
                 onChange={(e) => onTextChange(e.target.value)}
                 maxLength={100}
               />
             </div>
           )}
-        </>
+        </Fragment>
       )
     }
   }
