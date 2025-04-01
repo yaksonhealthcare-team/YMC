@@ -106,7 +106,7 @@ const ReservationHistoryPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const [reservationFilter, setReservationFilter] = useState<FilterItem>(
-    reservationFilters[0],
+    reservationFilters[1],
   )
 
   const handleFilterChange = useCallback((filter: FilterItem) => {
@@ -117,8 +117,8 @@ const ReservationHistoryPage = () => {
     navigate("/reservation/form", {
       state: {
         originalPath: "/member-history/reservation",
-        fromReservationHistory: true
-      }
+        fromReservationHistory: true,
+      },
     })
   }
 
