@@ -38,7 +38,7 @@ const NoticeDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white p-5">
+    <div className="bg-white p-5">
       <div className="flex flex-col gap-6">
         <NoticeHeader notice={notice} />
         <div className="w-full h-[1px] bg-[#ECECEC] rounded-[1px]"></div>
@@ -73,7 +73,7 @@ const NoticeContent: React.FC<{ notice: Notice }> = ({ notice }) => {
         {notice.contents}
       </div>
       {notice.files?.length > 0 && notice.files[0].fileurl && (
-        <div className="mt-4">
+        <div className="mt-4 mb-[24px]">
           <Image
             src={notice.files[0].fileurl}
             alt="공지사항 이미지"
