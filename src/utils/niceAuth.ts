@@ -15,6 +15,13 @@ export interface NiceAuthResponse {
     token_version_id: string
     di: string
     ci: string
+    is_social_exist: {
+      E: string
+      G: string
+      K: string
+      N: string
+      A: string
+    }
   }
 }
 

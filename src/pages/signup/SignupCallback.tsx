@@ -22,7 +22,38 @@ const SignupCallback = () => {
       if (!userData) return
 
       try {
-        console.log(userData)
+        // 소셜 계정 존재 여부 확인
+        const isSocialExist = userData.is_social_exist
+        const existingProviders = Object.entries(isSocialExist)
+          .filter(([_, value]) => value === "Y")
+          .map(([key]) => key)
+
+        if (existingProviders.length > 0) {
+          const providerNames = {
+            E: "이메일",
+            G: "구글",
+            K: "카카오",
+            N: "네이버",
+            A: "애플",
+          }
+
+          const providerText = existingProviders
+            .map(
+              (provider) =>
+                providerNames[provider as keyof typeof providerNames],
+            )
+            .join(", ")
+
+          openModal({
+            title: "알림",
+            message: `${providerText}로 이미 가입된 계정입니다.`,
+            onConfirm: () => {
+              navigate("/login", { replace: true })
+            },
+          })
+          return
+        }
+
         setSignupData((prev) => ({
           ...prev,
           name: userData.name,
