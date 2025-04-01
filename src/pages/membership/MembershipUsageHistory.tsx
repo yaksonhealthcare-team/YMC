@@ -83,7 +83,7 @@ const MembershipUsageHistory = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-[calc(100vh-82px)]">
+      <div className="h-[calc(100vh-82px)] bg-system-bg flex justify-center items-center">
         <CircularProgress />
       </div>
     )
@@ -91,7 +91,7 @@ const MembershipUsageHistory = () => {
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-[calc(100vh-82px)] text-gray-500">
+      <div className="h-[calc(100vh-82px)] bg-system-bg flex justify-center items-center text-gray-500">
         <p>{error}</p>
       </div>
     )
@@ -99,56 +99,58 @@ const MembershipUsageHistory = () => {
 
   if (!memberShipDetail) {
     return (
-      <div className="flex justify-center items-center h-[calc(100vh-82px)] text-gray-500">
+      <div className="h-[calc(100vh-82px)] bg-system-bg flex justify-center items-center text-gray-500">
         <p>내역이 없습니다.</p>
       </div>
     )
   }
 
   return (
-    <div className="px-[20px] pt-[16px] pb-[100px] overflow-y-scroll min-h-[calc(100vh-82px)] bg-system-bg">
-      <MembershipCard
-        id={parseInt(memberShipDetail.mp_idx)}
-        title={memberShipDetail.service_name || memberShipDetail.s_type}
-        count={`${memberShipDetail.remain_amount}회 / ${memberShipDetail.buy_amount}회`}
-        startDate={
-          memberShipDetail.pay_date
-            ? memberShipDetail.pay_date.split(" ")[0]
-            : ""
-        }
-        endDate={
-          memberShipDetail.expiration_date
-            ? memberShipDetail.expiration_date.split(" ")[0]
-            : ""
-        }
-        status={
-          memberShipDetail.status === "사용가능"
-            ? MembershipStatus.ACTIVE
-            : memberShipDetail.status === "사용완료"
-              ? MembershipStatus.INACTIVE
-              : MembershipStatus.EXPIRED
-        }
-        serviceType={memberShipDetail.s_type.replace("회원권", "").trim()}
-        showReserveButton={false}
-        showHistoryButton={false}
-      />
-      <div>
-        <p className="text-[14px] font-sb mt-[40px] mb-[16px]">
-          <span className="text-primary-300">
-            {memberShipDetail.reservations?.length || 0}건
-          </span>
-          의 이용내역이 있습니다.
-        </p>
-      </div>
-      <div className="flex flex-col gap-[12px]">
-        {memberShipDetail.reservations?.map((history) => (
-          <ReservationThumbnail
-            key={`history-${history.r_idx}`}
-            title={history.ps_name}
-            date={new Date(history.r_date)}
-            onClick={() => navigate(`/reservation/${history.r_idx}`)}
-          />
-        ))}
+    <div className="h-[calc(100vh-82px)] bg-system-bg overflow-y-auto">
+      <div className="px-[20px] pt-[16px] pb-[100px]">
+        <MembershipCard
+          id={parseInt(memberShipDetail.mp_idx)}
+          title={memberShipDetail.service_name || memberShipDetail.s_type}
+          count={`${memberShipDetail.remain_amount}회 / ${memberShipDetail.buy_amount}회`}
+          startDate={
+            memberShipDetail.pay_date
+              ? memberShipDetail.pay_date.split(" ")[0]
+              : ""
+          }
+          endDate={
+            memberShipDetail.expiration_date
+              ? memberShipDetail.expiration_date.split(" ")[0]
+              : ""
+          }
+          status={
+            memberShipDetail.status === "사용가능"
+              ? MembershipStatus.ACTIVE
+              : memberShipDetail.status === "사용완료"
+                ? MembershipStatus.INACTIVE
+                : MembershipStatus.EXPIRED
+          }
+          serviceType={memberShipDetail.s_type.replace("회원권", "").trim()}
+          showReserveButton={false}
+          showHistoryButton={false}
+        />
+        <div>
+          <p className="text-[14px] font-sb mt-[40px] mb-[16px]">
+            <span className="text-primary-300">
+              {memberShipDetail.reservations?.length || 0}건
+            </span>
+            의 이용내역이 있습니다.
+          </p>
+        </div>
+        <div className="flex flex-col gap-[12px]">
+          {memberShipDetail.reservations?.map((history) => (
+            <ReservationThumbnail
+              key={`history-${history.r_idx}`}
+              title={history.ps_name}
+              date={new Date(history.r_date)}
+              onClick={() => navigate(`/reservation/${history.r_idx}`)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )
