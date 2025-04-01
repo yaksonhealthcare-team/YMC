@@ -1,5 +1,4 @@
 import { useState, useCallback, useMemo } from "react"
-import { useFormik } from "formik"
 import { useNavigate } from "react-router-dom"
 import {
   Question,
@@ -39,23 +38,32 @@ export const useQuestionnaire = ({
   const [isCurrentValid, setIsCurrentValid] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
   const [navigationStack, setNavigationStack] = useState<number[]>([0])
+  const [formValues, setFormValues] = useState<QuestionnaireFormValues>({})
 
-  const formik = useFormik<QuestionnaireFormValues>({
-    initialValues: {} as QuestionnaireFormValues,
-    onSubmit: async (values) => {
-      try {
-        await submitMutation.mutateAsync(values)
-        navigate("/questionnaire/complete", {
-          state: {
-            returnPath,
-            returnText,
-          },
-        })
-      } catch (error) {
-        showToast("문진 제출에 실패했습니다")
-      }
-    },
-  })
+  const handleSubmit = async () => {
+    try {
+      await submitMutation.mutateAsync(formValues)
+      navigate("/questionnaire/complete", {
+        state: {
+          returnPath,
+          returnText,
+        },
+      })
+    } catch (error) {
+      showToast("문진 제출에 실패했습니다")
+    }
+  }
+
+  const handleFieldChange = (
+    fieldName: QuestionFieldName,
+    value: QuestionnaireFormValues[QuestionFieldName],
+  ) => {
+    setFormValues((prev) => ({
+      ...prev,
+      [fieldName]: value,
+    }))
+    setHasChanges(true)
+  }
 
   // 실제 답변해야 할 질문 수 계산
   const { totalQuestions, currentQuestionNumber } = useMemo(() => {
@@ -92,7 +100,7 @@ export const useQuestionnaire = ({
 
       // 현재 질문에 대한 답변 확인
       const fieldName = getFieldName(question)
-      const answer = formik.values[fieldName]
+      const answer = formValues[fieldName]
 
       if (Array.isArray(answer) && answer.length > 0) {
         const selectedOption = question.options.find(
@@ -120,7 +128,7 @@ export const useQuestionnaire = ({
       totalQuestions: count,
       currentQuestionNumber: currentNumber,
     }
-  }, [questions, currentIndex, formik.values])
+  }, [questions, currentIndex, formValues])
 
   const handleNext = useCallback(() => {
     if (!questions) return
@@ -128,7 +136,7 @@ export const useQuestionnaire = ({
     if (currentIndex < questions.length - 1) {
       const currentQuestion = questions[currentIndex]
       const currentFieldName = getFieldName(currentQuestion)
-      const currentValue = formik.values[currentFieldName]
+      const currentValue = formValues[currentFieldName]
 
       // 현재 선택된 옵션의 next_cssq_idx 확인
       let nextQuestionIdx = currentIndex + 1
@@ -152,9 +160,9 @@ export const useQuestionnaire = ({
       setNavigationStack((prev) => [...prev, nextQuestionIdx])
       setCurrentIndex(nextQuestionIdx)
     } else {
-      formik.handleSubmit()
+      handleSubmit()
     }
-  }, [questions, currentIndex, formik])
+  }, [questions, currentIndex, formValues, handleSubmit])
 
   const handlePrev = useCallback(() => {
     if (navigationStack.length > 1) {
@@ -177,7 +185,8 @@ export const useQuestionnaire = ({
     hasChanges,
     totalQuestions,
     currentQuestionNumber,
-    formik,
+    formValues,
+    handleFieldChange,
     setIsCurrentValid,
     setHasChanges,
     handleNext,

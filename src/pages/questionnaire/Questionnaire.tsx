@@ -49,7 +49,8 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
     hasChanges,
     totalQuestions,
     currentQuestionNumber,
-    formik,
+    formValues,
+    handleFieldChange,
     setIsCurrentValid,
     setHasChanges,
     handleNext,
@@ -62,11 +63,11 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
 
   // 폼 값이 변경될 때마다 hasChanges를 true로 설정
   useEffect(() => {
-    const hasValues = Object.values(formik.values).some((value) =>
+    const hasValues = Object.values(formValues).some((value) =>
       Array.isArray(value) ? value.length > 0 : Boolean(value),
     )
     setHasChanges(hasValues)
-  }, [formik.values, setHasChanges])
+  }, [formValues, setHasChanges])
 
   if (isLoading || !questions) {
     return <LoadingIndicator className="min-h-screen" />
@@ -78,7 +79,10 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
       <div className="p-5">
         <QuestionItem
           question={questions[currentIndex]}
-          formik={formik}
+          value={formValues[getFieldName(questions[currentIndex])]}
+          onChange={(value) =>
+            handleFieldChange(getFieldName(questions[currentIndex]), value)
+          }
           fieldName={getFieldName(questions[currentIndex])}
           onValidationChange={setIsCurrentValid}
         />
