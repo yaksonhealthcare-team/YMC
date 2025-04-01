@@ -132,6 +132,7 @@ const MembershipUsageHistory = () => {
           serviceType={memberShipDetail.s_type.replace("회원권", "").trim()}
           showReserveButton={false}
           showHistoryButton={false}
+          branchs={memberShipDetail.branchs}
         />
         <div>
           <p className="text-[14px] font-sb mt-[40px] mb-[16px]">

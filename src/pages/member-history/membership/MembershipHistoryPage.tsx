@@ -80,6 +80,7 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
                   status={getStatusFromString(membership.status)}
                   showReserveButton={false}
                   serviceType={membership.s_type.replace("회원권", "").trim()}
+                  branchs={membership.branchs}
                 />
               </div>
             )),
