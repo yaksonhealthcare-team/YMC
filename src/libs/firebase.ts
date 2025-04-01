@@ -38,7 +38,20 @@ export async function requestNotificationPermission(): Promise<boolean> {
 // FCM 토큰 가져오기
 export async function requestForToken() {
   try {
-    if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+    // ReactNative WebView 환경 감지
+    const isReactNativeWebView =
+      typeof window !== "undefined" && window.ReactNativeWebView !== undefined
+
+    if (isReactNativeWebView) {
+      console.log("ReactNative WebView 환경입니다.")
+      return null
+    }
+
+    // ServiceWorker API 지원 확인
+    const hasServiceWorker =
+      typeof window !== "undefined" && "serviceWorker" in navigator
+
+    if (hasServiceWorker) {
       // 알림 권한 요청
       const permissionGranted = await requestNotificationPermission()
       if (!permissionGranted) {
@@ -51,7 +64,7 @@ export async function requestForToken() {
       })
       return currentToken
     }
-    console.log("FCM not supported")
+
     return null
   } catch (error) {
     console.log("An error occurred while retrieving token:", error)
