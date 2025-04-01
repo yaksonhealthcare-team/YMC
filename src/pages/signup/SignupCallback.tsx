@@ -6,14 +6,6 @@ import { Gender } from "utils/gender"
 import { useNiceAuthCallback } from "utils/niceAuth"
 import { CircularProgress } from "@mui/material"
 
-const providerNames = {
-  E: "이메일",
-  G: "구글",
-  K: "카카오",
-  N: "네이버",
-  A: "애플",
-} as const
-
 const SignupCallback = () => {
   const { setSignupData } = useSignup()
   const [searchParams] = useSearchParams()
@@ -39,13 +31,6 @@ const SignupCallback = () => {
           .map(([key]) => key)
 
         if (existingProviders.length > 0) {
-          const providerText = existingProviders
-            .map(
-              (provider) =>
-                providerNames[provider as keyof typeof providerNames],
-            )
-            .join(", ")
-
           openModal({
             title: "알림",
             message: "이미 가입된 고객입니다",
