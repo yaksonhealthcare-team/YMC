@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@components/Button.tsx"
 import ReloadIcon from "@components/icons/ReloadIcon.tsx"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
+import { useBranchCategories } from "../../../queries/useBranchQueries"
 
 export type FilterItem = {
   code: string
@@ -18,9 +19,7 @@ type FilterState = {
 
 interface BranchFilterBottomSheetProps {
   brands: FilterItem[]
-  categories: FilterItem[]
   currentFilter: FilterState
-  isLoading?: boolean
   onApply: (filter: FilterState) => void
   onBrandChange?: (brand: FilterItem | null) => void
   onClose: () => void
@@ -28,14 +27,14 @@ interface BranchFilterBottomSheetProps {
 
 const BranchFilterBottomSheet = ({
   brands,
-  categories,
   currentFilter,
-  isLoading = false,
   onApply: performApply,
   onBrandChange,
   onClose: performClose,
 }: BranchFilterBottomSheetProps) => {
   const [filter, setFilter] = useState<FilterState>(currentFilter)
+  const { data: categories = [], isLoading: isCategoriesLoading } =
+    useBranchCategories(filter.brand?.code)
 
   useEffect(() => {
     setFilter(currentFilter)
@@ -56,10 +55,6 @@ const BranchFilterBottomSheet = ({
     performClose()
   }
 
-  const filteredCategories = filter.brand?.code
-    ? categories.filter((cat) => cat.code.startsWith(filter.brand!.code))
-    : categories
-
   return (
     <div className="flex flex-col h-full">
       <div className="w-full px-5 py-4 bg-white sticky top-0 z-10">
@@ -79,9 +74,9 @@ const BranchFilterBottomSheet = ({
           <BranchFilterSection
             key={`category-${filter.brand?.code || "all"}`}
             label="카테고리 별"
-            items={filteredCategories}
+            items={categories}
             selectedItem={filter.category}
-            isLoading={isLoading}
+            isLoading={isCategoriesLoading}
             onSelect={(category) => setFilter({ ...filter, category })}
           />
         </div>
