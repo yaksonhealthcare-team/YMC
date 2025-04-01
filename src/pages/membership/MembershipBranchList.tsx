@@ -89,17 +89,17 @@ const MembershipBranchList = ({
             selectedBranch: branchData,
             fromReservation,
             fromBranchSelect: true,
-            originalPath
+            originalPath,
           },
-          replace: true
+          replace: true,
         })
       } else {
         setIsBottomSheetOpen(true)
         navigate(-1 as never, {
-          state: { 
+          state: {
             fromBranchSelect: true,
-            selectedBranch: branchData 
-          }
+            selectedBranch: branchData,
+          },
         })
       }
     }
@@ -124,14 +124,6 @@ const MembershipBranchList = ({
                 <p className="font-b text-16px">{branch.b_name}</p>
               </div>
               <div className="flex items-center gap-[2.5px]">
-                {branch.reserve === "Y" && (
-                  <>
-                    <p className="font-r text-12px text-tag-green">
-                      당일 예약 가능
-                    </p>
-                    <div className="w-0.5 h-0.5 rounded-xl bg-gray-400" />
-                  </>
-                )}
                 {branch.distance && (
                   <p className="font-r text-12px text-gray-400">
                     {branch.distance}
