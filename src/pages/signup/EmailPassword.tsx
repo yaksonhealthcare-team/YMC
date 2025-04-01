@@ -7,11 +7,14 @@ import { useSignup } from "../../contexts/SignupContext.tsx"
 import PasswordCustomInput from "@components/input/PasswordCustomInput.tsx"
 import validateEmail from "../../utils/emailValidator.ts"
 import { CircularProgress } from "@mui/material"
+import { checkEmail } from "../../apis/auth.api.ts"
+import { useOverlay } from "../../contexts/ModalContext.tsx"
 
 export const EmailPassword = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const { signupData, setSignupData } = useSignup()
+  const { showToast } = useOverlay()
   const isSocialSignup = !!sessionStorage.getItem("socialSignupInfo")
   const [isLoading, setIsLoading] = useState(false)
 
@@ -88,7 +91,6 @@ export const EmailPassword = () => {
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newEmail = e.target.value
     setForm((prev) => ({ ...prev, email: newEmail }))
-    validateEmailField(newEmail)
   }
 
   const validateForm = () => {
@@ -127,19 +129,33 @@ export const EmailPassword = () => {
     return !Object.values(newErrors).some((error) => error !== "")
   }
 
-  const handleNavigateToNext = () => {
-    if (validateForm()) {
-      setIsLoading(true)
-      try {
-        setSignupData((prev) => ({
-          ...prev,
-          email: form.email,
-          ...(isSocialSignup ? {} : { password: form.password }),
-        }))
-        navigate("/signup/profile")
-      } finally {
+  const handleNavigateToNext = async () => {
+    if (!validateForm()) {
+      return
+    }
+
+    setIsLoading(true)
+    try {
+      // 이메일 중복 확인
+      const exists = await checkEmail(form.email)
+      if (exists) {
+        showToast("이미 사용중인 이메일입니다")
+        setErrors((prev) => ({ ...prev, email: "이미 사용중인 이메일입니다" }))
         setIsLoading(false)
+        return
       }
+
+      setSignupData((prev) => ({
+        ...prev,
+        email: form.email,
+        ...(isSocialSignup ? {} : { password: form.password }),
+      }))
+      navigate("/signup/profile")
+    } catch (error) {
+      console.error("이메일 중복확인 에러:", error)
+      showToast("일시적인 오류가 발생했습니다. 다시 시도해주세요")
+    } finally {
+      setIsLoading(false)
     }
   }
 

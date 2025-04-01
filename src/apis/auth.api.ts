@@ -205,3 +205,14 @@ export const findEmail = async ({
 
   return data.body[0].email
 }
+
+export const checkEmail = async (email: string): Promise<boolean> => {
+  const { data } = await axiosClient.post<HTTPResponse<null>>(
+    "/auth/signup/check-id",
+    {
+      email,
+    },
+  )
+  // resultCode가 "23"이면 이메일이 중복된 경우
+  return data.resultCode === "23"
+}

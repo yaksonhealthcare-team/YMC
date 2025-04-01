@@ -122,7 +122,14 @@ axiosClient.interceptors.response.use(
 
     const data = parsedData as ApiResponse<unknown>
 
-    if (data.resultCode !== "00") {
+    // 이메일 중복확인 API는 resultCode "23"을 정상 응답으로 처리
+    if (
+      data.resultCode !== "00" &&
+      !(
+        response.config?.url?.includes("/auth/signup/check-id") &&
+        data.resultCode === "23"
+      )
+    ) {
       const error = new AxiosError()
       error.response = {
         ...response,
