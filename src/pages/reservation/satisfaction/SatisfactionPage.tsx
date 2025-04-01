@@ -16,6 +16,7 @@ import LoadingIndicator from "../../../components/LoadingIndicator"
 import { Image } from "@components/common/Image"
 import { useQueryClient } from "@tanstack/react-query"
 import { validateFile, escapeHtml } from "utils/sanitize"
+import { useOverlay } from "contexts/ModalContext"
 
 type SatisfactionPageParams = {
   id: string
@@ -52,6 +53,7 @@ const SatisfactionPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const queryClient = useQueryClient()
+  const { showToast } = useOverlay()
   const createReviewMutation = useCreateReviewMutation()
   const {
     data: reviewQuestions,
@@ -170,6 +172,8 @@ const SatisfactionPage = () => {
         {
           onSuccess: () => {
             setIsSubmitting(false)
+            // 토스트 메시지 표시
+            showToast("만족도 작성이 완료되었습니다.")
             // 예약 리스트와 상세 정보 쿼리 무효화
             queryClient.invalidateQueries({ queryKey: ["reservations"] })
             queryClient.invalidateQueries({
@@ -179,13 +183,13 @@ const SatisfactionPage = () => {
           },
           onError: () => {
             setIsSubmitting(false)
-            alert("리뷰 등록에 실패했습니다. 다시 시도해주세요.")
+            showToast("리뷰 등록에 실패했습니다. 다시 시도해주세요.")
           },
         },
       )
     } catch (error) {
       console.error("이미지 업로드 또는 리뷰 생성 중 오류 발생:", error)
-      alert("리뷰 등록에 실패했습니다. 다시 시도해주세요.")
+      showToast("리뷰 등록에 실패했습니다. 다시 시도해주세요.")
       setIsSubmitting(false)
     }
   }
