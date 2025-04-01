@@ -73,7 +73,7 @@ const NoticeContent: React.FC<{ notice: Notice }> = ({ notice }) => {
         {notice.contents}
       </div>
       {notice.files?.length > 0 && notice.files[0].fileurl && (
-        <div className="mt-4">
+        <div className="mt-4 mb-[24px]">
           <Image
             src={notice.files[0].fileurl}
             alt="공지사항 이미지"
