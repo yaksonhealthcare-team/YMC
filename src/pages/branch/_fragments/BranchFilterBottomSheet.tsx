@@ -11,18 +11,17 @@ export type FilterItem = {
   title: string
 }
 
+type FilterState = {
+  brand: FilterItem | null
+  category: FilterItem | null
+}
+
 interface BranchFilterBottomSheetProps {
   brands: FilterItem[]
   categories: FilterItem[]
-  currentFilter: { brand: FilterItem | null; category: FilterItem | null }
+  currentFilter: FilterState
   isLoading?: boolean
-  onApply: ({
-    brand,
-    category,
-  }: {
-    brand: FilterItem | null
-    category: FilterItem | null
-  }) => void
+  onApply: (filter: FilterState) => void
   onBrandChange?: (brand: FilterItem | null) => void
   onClose: () => void
 }
@@ -36,50 +35,51 @@ const BranchFilterBottomSheet = ({
   onBrandChange,
   onClose: performClose,
 }: BranchFilterBottomSheetProps) => {
-  const [filter, setFilter] = useState<{
-    brand: FilterItem | null
-    category: FilterItem | null
-  }>(currentFilter)
+  const [filter, setFilter] = useState<FilterState>(currentFilter)
 
-  // currentFilter가 변경될 때 내부 filter 상태 업데이트
   useEffect(() => {
     setFilter(currentFilter)
   }, [currentFilter])
 
-  // 브랜드 변경 시 부모 컴포넌트에 알림
   const handleBrandChange = (brand: FilterItem | null) => {
-    // 내부 상태 즉시 업데이트
     setFilter((prev) => ({ ...prev, brand, category: null }))
-    // 부모 컴포넌트에 알림
     onBrandChange?.(brand)
   }
 
+  const handleInitialize = () => {
+    setFilter({ brand: null, category: null })
+    onBrandChange?.(null)
+  }
+
+  const handleApply = () => {
+    performApply(filter)
+    performClose()
+  }
+
+  const filteredCategories = filter.brand?.code
+    ? categories.filter((cat) => cat.code.startsWith(filter.brand!.code))
+    : categories
+
   return (
-    <div className={"flex flex-col h-full"}>
+    <div className="flex flex-col h-full">
       <div className="w-full px-5 py-4 bg-white sticky top-0 z-10">
         <BranchFilterBottomSheetHeader onClose={performClose} />
       </div>
 
       <div className="w-full flex-1 overflow-y-auto px-5">
-        <div className={"flex flex-col gap-6 w-full py-4"}>
+        <div className="flex flex-col gap-6 w-full py-4">
           <BranchFilterDivider />
-          <BranchFilterBottomSheetWrap
-            label={"브랜드 별"}
+          <BranchFilterSection
+            label="브랜드 별"
             items={brands}
             selectedItem={filter.brand}
             onSelect={handleBrandChange}
           />
           <BranchFilterDivider />
-          <BranchFilterBottomSheetWrap
+          <BranchFilterSection
             key={`category-${filter.brand?.code || "all"}`}
-            label={"카테고리 별"}
-            items={
-              filter.brand?.code
-                ? categories.filter((cat) =>
-                    cat.code.startsWith(filter.brand!.code),
-                  )
-                : categories
-            }
+            label="카테고리 별"
+            items={filteredCategories}
             selectedItem={filter.category}
             isLoading={isLoading}
             onSelect={(category) => setFilter({ ...filter, category })}
@@ -89,14 +89,8 @@ const BranchFilterBottomSheet = ({
 
       <div className="w-full px-5 py-4 border-t border-gray-100 bg-white sticky bottom-0 z-10">
         <BranchFilterBottomSheetFooter
-          onInitialize={() => {
-            setFilter({ brand: null, category: null })
-            onBrandChange?.(null)
-          }}
-          onApply={() => {
-            performApply(filter)
-            performClose()
-          }}
+          onInitialize={handleInitialize}
+          onApply={handleApply}
         />
       </div>
     </div>
@@ -108,9 +102,9 @@ const BranchFilterBottomSheetHeader = ({
 }: {
   onClose: () => void
 }) => (
-  <div className={"w-full"}>
-    <div className={"flex justify-between items-center"}>
-      <p className={"font-sb text-18px"}>{"지점 필터"}</p>
+  <div className="w-full">
+    <div className="flex justify-between items-center">
+      <p className="font-sb text-18px">지점 필터</p>
       <button onClick={onClose}>
         <CloseIcon />
       </button>
@@ -118,85 +112,97 @@ const BranchFilterBottomSheetHeader = ({
   </div>
 )
 
-const BranchFilterDivider = () => (
-  <div className={"w-full bg-gray-100 h-[1px]"} />
-)
+const BranchFilterDivider = () => <div className="w-full bg-gray-100 h-[1px]" />
 
-const BranchFilterBottomSheetWrap = ({
-  label,
-  items,
-  selectedItem,
-  isLoading = false,
-  onSelect,
-}: {
+interface BranchFilterSectionProps {
   label: string
   items: FilterItem[]
   selectedItem: FilterItem | null
   isLoading?: boolean
   onSelect: (item: FilterItem | null) => void
-}) => {
-  return (
-    <div className={"flex flex-col w-full items-start gap-3"}>
-      <p className={"text-start font-sb text-16px"}>{label}</p>
-      {isLoading ? (
+}
+
+const BranchFilterSection = ({
+  label,
+  items,
+  selectedItem,
+  isLoading = false,
+  onSelect,
+}: BranchFilterSectionProps) => {
+  const renderContent = () => {
+    if (isLoading) {
+      return (
         <div className="flex justify-center items-center w-full py-4">
           <LoadingIndicator size={32} />
         </div>
-      ) : items.length > 0 ? (
-        <div className={"flex flex-wrap gap-2 w-full"}>
-          <Filter
-            type={"default"}
-            state={!selectedItem ? "active" : "default"}
-            label={"전체"}
-            onClick={() => onSelect(null)}
-          />
-          {items.map((item, index) => (
-            <Filter
-              key={index}
-              type={"default"}
-              state={item.code === selectedItem?.code ? "active" : "default"}
-              label={item.title}
-              onClick={() => onSelect(item)}
-            />
-          ))}
-        </div>
-      ) : (
+      )
+    }
+
+    if (items.length === 0) {
+      return (
         <div className="flex justify-center items-center w-full py-4 text-gray-500">
-          {label === "카테고리 별" && items.length === 0
+          {label === "카테고리 별"
             ? "카테고리 정보가 없습니다"
             : "데이터가 없습니다"}
         </div>
-      )}
+      )
+    }
+
+    return (
+      <div className="flex flex-wrap gap-2 w-full">
+        <Filter
+          type="default"
+          state={!selectedItem ? "active" : "default"}
+          label="전체"
+          onClick={() => onSelect(null)}
+        />
+        {items.map((item) => (
+          <Filter
+            key={item.code}
+            type="default"
+            state={item.code === selectedItem?.code ? "active" : "default"}
+            label={item.title}
+            onClick={() => onSelect(item)}
+          />
+        ))}
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex flex-col w-full items-start gap-3">
+      <p className="text-start font-sb text-16px">{label}</p>
+      {renderContent()}
     </div>
   )
+}
+
+interface BranchFilterBottomSheetFooterProps {
+  onInitialize: () => void
+  onApply: () => void
 }
 
 const BranchFilterBottomSheetFooter = ({
   onInitialize,
   onApply,
-}: {
-  onInitialize: () => void
-  onApply: () => void
-}) => {
-  return (
-    <div className={"w-full flex justify-around gap-2"}>
-      <Button
-        className={"w-1/2 rounded-xl"}
-        variantType={"line"}
-        iconLeft={<ReloadIcon htmlColor={"#F37165"} />}
-        onClick={onInitialize}
-      >
-        {"초기화"}
-      </Button>
-      <Button
-        className={"w-1/2 rounded-xl"}
-        variantType={"primary"}
-        onClick={onApply}
-      >
-        {"적용하기"}
-      </Button>
-    </div>
-  )
-}
+}: BranchFilterBottomSheetFooterProps) => (
+  <div className="w-full flex justify-around gap-2">
+    <Button
+      className="w-1/2 rounded-xl"
+      variantType="line"
+      iconLeft={<ReloadIcon htmlColor="#F37165" />}
+      onClick={onInitialize}
+    >
+      초기화
+    </Button>
+    <Button
+      className="w-1/2 rounded-xl"
+      variantType="primary"
+      onClick={onApply}
+    >
+      적용하기
+    </Button>
+  </div>
+)
 
 export default BranchFilterBottomSheet
