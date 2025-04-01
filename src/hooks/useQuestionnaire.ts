@@ -140,6 +140,26 @@ export const useQuestionnaire = ({
         }
       }
 
+      // 다음 질문의 필드값 초기화
+      const nextQuestion = questions[nextQuestionIdx]
+      const nextFieldName = getFieldName(nextQuestion)
+
+      setFormValues((prev) => {
+        const next = { ...prev }
+        // 숫자 입력 필드인 경우 빈 문자열로 초기화
+        if (nextQuestion.contents_type === "3") {
+          next[nextFieldName] = ""
+        } else {
+          // 옵션 선택 필드인 경우 빈 배열로 초기화
+          next[nextFieldName] = nextQuestion.options.length > 0 ? [] : ""
+        }
+        // 주관식 텍스트 필드 초기화
+        if (nextQuestion.options.some((opt) => opt.option_type === "2")) {
+          next[`${nextFieldName}_text`] = ""
+        }
+        return next
+      })
+
       setNavigationStack((prev) => [...prev, nextQuestionIdx])
       setCurrentIndex(nextQuestionIdx)
     } else {
