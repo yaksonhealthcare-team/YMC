@@ -1,6 +1,6 @@
 import { axiosClient } from "../queries/clients"
 import { HTTPResponse } from "../types/HTTPResponse"
-import { Terms, TermsResponse } from "../types/Terms"
+import { TermsResponse } from "../types/Terms"
 
 export const fetchTerms = async (
   termsCategoryIdx: number = 0,
