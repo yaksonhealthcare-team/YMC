@@ -40,20 +40,6 @@ export const useQuestionnaire = ({
   const [navigationStack, setNavigationStack] = useState<number[]>([0])
   const [formValues, setFormValues] = useState<QuestionnaireFormValues>({})
 
-  const handleSubmit = async () => {
-    try {
-      await submitMutation.mutateAsync(formValues)
-      navigate("/questionnaire/complete", {
-        state: {
-          returnPath,
-          returnText,
-        },
-      })
-    } catch (error) {
-      showToast("문진 제출에 실패했습니다")
-    }
-  }
-
   const handleFieldChange = (
     fieldName: QuestionFieldName,
     value: QuestionnaireFormValues[QuestionFieldName],
@@ -130,7 +116,7 @@ export const useQuestionnaire = ({
     }
   }, [questions, currentIndex, formValues])
 
-  const handleNext = useCallback(() => {
+  const handleNext = useCallback(async () => {
     if (!questions) return
 
     if (currentIndex < questions.length - 1) {
@@ -138,7 +124,6 @@ export const useQuestionnaire = ({
       const currentFieldName = getFieldName(currentQuestion)
       const currentValue = formValues[currentFieldName]
 
-      // 현재 선택된 옵션의 next_cssq_idx 확인
       let nextQuestionIdx = currentIndex + 1
       if (Array.isArray(currentValue) && currentValue.length > 0) {
         const selectedOption = currentQuestion.options.find(
@@ -146,7 +131,6 @@ export const useQuestionnaire = ({
         )
 
         if (selectedOption?.next_cssq_idx) {
-          // next_cssq_idx가 있는 경우 해당 질문으로 이동
           const targetIndex = questions.findIndex(
             (q) => q.cssq_idx === selectedOption.next_cssq_idx,
           )
@@ -156,13 +140,31 @@ export const useQuestionnaire = ({
         }
       }
 
-      // 이동 경로 스택에 현재 인덱스 추가
       setNavigationStack((prev) => [...prev, nextQuestionIdx])
       setCurrentIndex(nextQuestionIdx)
     } else {
-      handleSubmit()
+      try {
+        await submitMutation.mutateAsync(formValues)
+        navigate("/questionnaire/complete", {
+          state: {
+            returnPath,
+            returnText,
+          },
+        })
+      } catch (error) {
+        showToast("문진 제출에 실패했습니다")
+      }
     }
-  }, [questions, currentIndex, formValues, handleSubmit])
+  }, [
+    questions,
+    currentIndex,
+    formValues,
+    submitMutation,
+    navigate,
+    returnPath,
+    returnText,
+    showToast,
+  ])
 
   const handlePrev = useCallback(() => {
     if (navigationStack.length > 1) {

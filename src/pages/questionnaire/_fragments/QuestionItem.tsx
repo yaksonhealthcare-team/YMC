@@ -267,7 +267,7 @@ export const QuestionItem = ({
       case "1":
         return (
           <div className="flex flex-wrap gap-2">
-            {question.options.map((option, index) =>
+            {question.options.map((option) =>
               renderOptionItem(
                 option,
                 hasOptionImage(question.options),
