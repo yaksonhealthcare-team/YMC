@@ -55,7 +55,7 @@ const ReservationContent = ({
   }
 
   return (
-    <div className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto scrollbar-hide">
+    <div className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto scrollbar-hide" key={`reservation-content-${filterId}`}>
       <div className="space-y-3">
         {reservations.map((reservation: Reservation) => (
           <ReserveCard key={reservation.id} reservation={reservation} />
