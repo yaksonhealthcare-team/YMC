@@ -48,7 +48,7 @@ const SignupCallback = () => {
 
           openModal({
             title: "알림",
-            message: `${providerText}로 이미 가입된 계정입니다.`,
+            message: "이미 가입된 고객입니다",
             onConfirm: () => {
               navigate("/login", { replace: true })
             },
