@@ -194,8 +194,6 @@ const Branch = () => {
                     title: brand.name,
                     code: brand.code,
                   }))}
-                  categories={categories || []}
-                  isLoading={isCategoriesLoading}
                   currentFilter={selectedFilter}
                   onApply={handleFilterChange}
                   onBrandChange={handleBrandChange}

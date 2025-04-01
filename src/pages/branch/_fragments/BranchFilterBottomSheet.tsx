@@ -1,4 +1,3 @@
-import { Divider } from "@mui/material"
 import CloseIcon from "@assets/icons/CloseIcon.svg?react"
 import { Filter } from "@components/Filter.tsx"
 import { useState, useEffect } from "react"
