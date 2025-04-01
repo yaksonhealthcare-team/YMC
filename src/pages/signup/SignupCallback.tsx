@@ -1,6 +1,6 @@
 import { useOverlay } from "contexts/ModalContext"
 import { useSignup } from "contexts/SignupContext"
-import { useEffect } from "react"
+import { useEffect, useCallback, useRef } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { Gender } from "utils/gender"
 import { useNiceAuthCallback } from "utils/niceAuth"
@@ -12,17 +12,35 @@ const SignupCallback = () => {
   const { openModal } = useOverlay()
   const navigate = useNavigate()
   const { parseNiceAuthData } = useNiceAuthCallback()
+  const isProcessing = useRef(false)
 
-  useEffect(() => {
-    const jsonData = searchParams.get("jsonData")
-
-    const handleVerification = async () => {
-      // 공통 유틸리티로 나이스 인증 데이터 파싱
-      const userData = parseNiceAuthData(jsonData, "/signup/terms")
-      if (!userData) return
+  const handleVerification = useCallback(
+    async (jsonData: string) => {
+      if (isProcessing.current) return
+      isProcessing.current = true
 
       try {
-        console.log(userData)
+        // 공통 유틸리티로 나이스 인증 데이터 파싱
+        const userData = parseNiceAuthData(jsonData, "/signup/terms")
+        if (!userData) return
+
+        // 소셜 계정 존재 여부 확인
+        const isSocialExist = userData.is_social_exist
+        const existingProviders = Object.entries(isSocialExist)
+          .filter(([_, value]) => value === "Y")
+          .map(([key]) => key)
+
+        if (existingProviders.length > 0) {
+          openModal({
+            title: "알림",
+            message: "이미 가입된 고객입니다",
+            onConfirm: () => {
+              navigate("/login", { replace: true })
+            },
+          })
+          return
+        }
+
         setSignupData((prev) => ({
           ...prev,
           name: userData.name,
@@ -42,11 +60,19 @@ const SignupCallback = () => {
             navigate("/signup/terms", { replace: true })
           },
         })
+      } finally {
+        isProcessing.current = false
       }
-    }
+    },
+    [navigate, openModal, parseNiceAuthData, setSignupData],
+  )
 
-    handleVerification()
-  }, [searchParams, navigate, openModal, setSignupData, parseNiceAuthData])
+  useEffect(() => {
+    const jsonData = searchParams.get("jsonData")
+    if (jsonData && !isProcessing.current) {
+      handleVerification(jsonData)
+    }
+  }, []) // 빈 의존성 배열로 한 번만 실행
 
   return (
     <div className="flex items-center justify-center min-h-screen">

@@ -3,7 +3,7 @@ import CustomTextField from "../../../components/CustomTextField"
 import { isInRange } from "../../../utils/number"
 
 interface BirthDateInputProps {
-  value: string
+  value: string | undefined
   onChange: (value: string) => void
   onValidationChange: (isValid: boolean) => void
 }
@@ -50,6 +50,13 @@ const BirthDateInput = ({
   }
 
   useEffect(() => {
+    if (!value) {
+      setYear("")
+      setMonth("")
+      setDay("")
+      return
+    }
+
     const [y, m, d] = value.split("-")
     setYear(y || "")
     setMonth(m || "")

@@ -34,6 +34,7 @@ export interface ReservationDetail extends Reservation {
   request?: string
   remainingDays?: string
   membershipId?: string
+  mp_idx?: string
 }
 
 export const useUpcomingReservations = () => {
@@ -94,6 +95,7 @@ export const useReservationDetail = (reservationId: string) => {
         phone: data.b_tel,
         address: data.b_addr,
         membershipId: data.mp_idx,
+        mp_idx: data.mp_idx,
       }
 
       return detail

@@ -4,7 +4,7 @@ import { Button } from "@components/Button"
 import { Tag } from "@components/Tag"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import MembershipTag from "./MembershipTag"
-import { MembershipStatus } from "types/Membership"
+import { MembershipStatus, BranchInfo } from "types/Membership"
 import { formatDateRange } from "../utils/date"
 
 const STYLES = {
@@ -37,6 +37,7 @@ interface MembershipProps {
   showReserveButton?: boolean
   showHistoryButton?: boolean
   className?: string
+  branchs?: BranchInfo[]
 }
 
 export const MembershipCard = ({
@@ -50,6 +51,7 @@ export const MembershipCard = ({
   showReserveButton = false,
   showHistoryButton = true,
   className,
+  branchs,
 }: MembershipProps) => {
   const navigate = useNavigate()
 
@@ -65,13 +67,13 @@ export const MembershipCard = ({
     e.stopPropagation()
     // 현재 경로 가져오기
     const currentPath = window.location.pathname
-    
+
     navigate("/reservation/form", {
       state: {
         originalPath: currentPath,
         fromMembershipCard: true,
-        membershipId: id.toString()
-      }
+        membershipId: id.toString(),
+      },
     })
   }
 
@@ -80,7 +82,14 @@ export const MembershipCard = ({
       <div className={STYLES.content}>
         <div className={STYLES.tags}>
           <MembershipTag status={status} />
-          {serviceType && <Tag type="rect" title={serviceType} />}
+          {serviceType && (
+            <Tag
+              type="rect"
+              title={
+                branchs && branchs.length > 0 ? branchs[0].b_name : serviceType
+              }
+            />
+          )}
         </div>
 
         <span className={STYLES.title}>{title}</span>
@@ -107,7 +116,7 @@ export const MembershipCard = ({
             variantType="primary"
             sizeType="xs"
             onClick={handleReservationClick}
-           className="text-[14px]"
+            className="text-[14px]"
           >
             예약하기
           </Button>

@@ -16,9 +16,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 export const auth = getAuth(app)
 
-// FCM 설정
-export const messaging = getMessaging(app)
-
 // 알림 권한 요청
 export async function requestNotificationPermission(): Promise<boolean> {
   try {
@@ -38,7 +35,15 @@ export async function requestNotificationPermission(): Promise<boolean> {
 // FCM 토큰 가져오기
 export async function requestForToken() {
   try {
-    if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+    if (window.ReactNativeWebView) {
+      console.log("ReactNative WebView 환경입니다.")
+      return null
+    }
+
+    // ServiceWorker API 지원 확인
+    const hasServiceWorker = "serviceWorker" in navigator
+
+    if (hasServiceWorker) {
       // 알림 권한 요청
       const permissionGranted = await requestNotificationPermission()
       if (!permissionGranted) {
@@ -46,12 +51,12 @@ export async function requestForToken() {
         return null
       }
 
-      const currentToken = await getToken(messaging, {
+      const currentToken = await getToken(getMessaging(app), {
         vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
       })
       return currentToken
     }
-    console.log("FCM not supported")
+
     return null
   } catch (error) {
     console.log("An error occurred while retrieving token:", error)
@@ -62,7 +67,7 @@ export async function requestForToken() {
 // FCM 메시지 수신 핸들러
 export const onMessageListener = () =>
   new Promise((resolve) => {
-    onMessage(messaging, (payload) => {
+    onMessage(getMessaging(app), (payload) => {
       resolve(payload)
     })
   })

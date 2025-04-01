@@ -20,17 +20,21 @@ export const SignupComplete = () => {
   const handleExistingUser = async () => {
     try {
       setIsLoading(true)
-      const crmUser = await fetchCRMUser()
-      if (crmUser && crmUser.brands && crmUser.brands.length > 0) {
-        navigate("/signup/branch")
-      } else {
-        navigate("/questionnaire/common")
+      if (!user?.name || !user?.phone) {
+        throw new Error("사용자 정보가 없습니다")
       }
+      await fetchCRMUser(user.name, user.phone)
+      navigate("/signup/branch")
     } catch (error) {
-      navigate("/questionnaire/common")
+      console.error("CRM 사용자 조회 실패:", error)
+      navigate("/signup/branch")
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleNewUser = () => {
+    navigate("/mypage/questionnaire/common")
   }
 
   return (
@@ -61,9 +65,7 @@ export const SignupComplete = () => {
       <div className="fixed bottom-0 left-0 right-0 border-t border-[#F8F8F8] bg-white p-3">
         <div className="flex flex-col gap-2">
           <button
-            onClick={() => {
-              navigate("/questionnaire/common")
-            }}
+            onClick={handleNewUser}
             className="h-12 px-4 py-3 text-primary text-16px font-semibold"
           >
             처음 이용해요

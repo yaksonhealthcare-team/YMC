@@ -49,6 +49,7 @@ export const MembershipCardSection = ({
                 status={getStatusFromString(membership.status)}
                 showReserveButton={true}
                 serviceType={membership.s_type.replace("회원권", "").trim()}
+                branchs={membership.branchs}
               />
             </SwiperSlide>
           )

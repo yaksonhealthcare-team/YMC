@@ -204,7 +204,7 @@ const ReservationDetailPage = () => {
       },
       membershipId: reservation.membershipId,
       fromReservationDetail: true,
-      originalPath: currentPath
+      originalPath: currentPath,
     }
     navigate("/reservation/form", { state })
   }
@@ -396,7 +396,7 @@ const ReservationDetailPage = () => {
           membershipName={reservation.membershipName}
           branchName={reservation.branchName}
           remainingCount={reservation.remainingCount}
-          membershipId={reservation.membershipId}
+          membershipId={reservation.mp_idx}
         />
       )}
       {!isBottomSheetOpen && (

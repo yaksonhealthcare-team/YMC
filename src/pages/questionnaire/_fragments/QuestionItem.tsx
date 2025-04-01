@@ -1,4 +1,3 @@
-import { FormikProps } from "formik"
 import {
   OptionValue,
   Question,
@@ -7,7 +6,7 @@ import {
   QuestionOption,
 } from "types/Questionnaire"
 import BirthDateInput from "./BirthDateInput"
-import { useEffect } from "react"
+import { useEffect, Fragment } from "react"
 import clsx from "clsx"
 import FilledCheckIcon from "@components/icons/FilledCheckIcon"
 import { TextArea } from "@components/TextArea"
@@ -16,24 +15,28 @@ import { Image } from "@components/common/Image"
 
 interface QuestionItemProps {
   question: Question
-  formik: FormikProps<QuestionnaireFormValues>
+  value: QuestionnaireFormValues[QuestionFieldName]
+  onChange: (value: QuestionnaireFormValues[QuestionFieldName]) => void
   fieldName: QuestionFieldName
   onValidationChange: (isValid: boolean) => void
 }
 
 export const QuestionItem = ({
   question,
-  formik,
+  value,
+  onChange,
   fieldName,
   onValidationChange,
 }: QuestionItemProps) => {
   const isOptionSelected = (optionIdx: string): boolean => {
-    const values = (formik.values[fieldName] || []) as OptionValue[]
+    if (!value) return false
+    if (typeof value === "string") return false
+    const values = value as OptionValue[]
     return values.some((v) => v.csso_idx === optionIdx)
   }
 
   const checkValidation = () => {
-    const currentValue = formik.values[fieldName]
+    const currentValue = value
 
     if (question.cssq_idx === "1" || question.contents_type === "4") {
       if (!currentValue || typeof currentValue !== "string") return false
@@ -70,16 +73,20 @@ export const QuestionItem = ({
     const hasSelectedSubjectiveOption = question.options.some(
       (option) =>
         option.option_type === "2" &&
-        (formik.values[fieldName] as OptionValue[])?.some(
-          (value) => value.csso_idx === option.csso_idx,
-        ),
+        (() => {
+          if (!currentValue || typeof currentValue === "string") return false
+          const values = currentValue as OptionValue[]
+          return values.some((v) => v.csso_idx === option.csso_idx)
+        })(),
     )
     if (hasSelectedSubjectiveOption) {
-      const textFieldValue = formik.values[`${fieldName}_text`] as string
-      if (!textFieldValue || textFieldValue.trim().length === 0) {
+      if (!currentValue || typeof currentValue === "string") return false
+      const values = currentValue as OptionValue[]
+      const selectedOption = values[0]
+      if (!selectedOption?.text || selectedOption.text.trim().length === 0) {
         return false
       }
-      if (textFieldValue.length > 100) {
+      if (selectedOption.text.length > 100) {
         return false
       }
     }
@@ -114,7 +121,7 @@ export const QuestionItem = ({
           (opt) => opt.csso_idx === currentValue[0].csso_idx,
         )
         if (selectedOption?.option_type === "2") {
-          const textValue = formik.values[`${fieldName}_text`] as string
+          const textValue = (currentValue[0] as OptionValue).text
           return !!textValue && textValue.trim().length > 0
         }
 
@@ -126,14 +133,53 @@ export const QuestionItem = ({
     }
   }
 
-  const handleTextChange = (value: string) => {
-    if (value.length <= 100) {
-      formik.setFieldValue(`${fieldName}`, value)
+  const handleTextChange = (textValue: string) => {
+    if (textValue.length <= 100) {
+      if (question.options.some((opt) => opt.option_type === "2")) {
+        if (!value || typeof value === "string") {
+          const selectedOption = question.options.find(
+            (opt) => opt.option_type === "2",
+          )
+          if (selectedOption) {
+            onChange([{ csso_idx: selectedOption.csso_idx, text: textValue }])
+          }
+          return
+        }
+
+        const currentValue = value as OptionValue[]
+        const selectedOption = currentValue.find((v) =>
+          question.options.find(
+            (opt) => opt.csso_idx === v.csso_idx && opt.option_type === "2",
+          ),
+        )
+
+        if (!selectedOption) return
+
+        const updatedValue = currentValue.map((v) =>
+          v.csso_idx === selectedOption.csso_idx
+            ? { ...v, text: textValue }
+            : v,
+        )
+
+        onChange(updatedValue)
+      } else {
+        onChange(textValue)
+      }
     }
   }
 
   const handleOptionChange = (optionIdx: string, checked: boolean) => {
-    const currentValues = (formik.values[fieldName] || []) as OptionValue[]
+    if (!value) {
+      onChange([{ csso_idx: optionIdx }])
+      return
+    }
+
+    if (typeof value === "string") {
+      onChange([{ csso_idx: optionIdx }])
+      return
+    }
+
+    const currentValues = value as OptionValue[]
     let newValues: OptionValue[]
 
     if (question.answer_type === "M") {
@@ -143,10 +189,17 @@ export const QuestionItem = ({
         newValues = currentValues.filter((v) => v.csso_idx !== optionIdx)
       }
     } else {
-      newValues = [{ csso_idx: optionIdx }]
+      // 단일 선택의 경우, 기존 선택된 옵션의 text 값을 유지
+      const existingOption = currentValues.find((v) => v.csso_idx === optionIdx)
+      newValues = [
+        {
+          csso_idx: optionIdx,
+          ...(existingOption || {}),
+        },
+      ]
     }
 
-    formik.setFieldValue(fieldName, newValues)
+    onChange(newValues)
   }
 
   const renderOptionItem = (
@@ -158,10 +211,19 @@ export const QuestionItem = ({
     totalOptionCount?: number,
   ) => {
     const inputType = question.answer_type === "M" ? "checkbox" : "radio"
+    let textValue = ""
+
+    if (value && typeof value !== "string" && Array.isArray(value)) {
+      const currentValue = value as OptionValue[]
+      const selectedOption = currentValue.find(
+        (v) => v.csso_idx === option.csso_idx,
+      )
+      textValue = selectedOption?.text || ""
+    }
 
     if (hasOptionImage) {
       return (
-        <>
+        <Fragment key={option.csso_idx}>
           <label
             className={clsx(
               "flex flex-col justify-center items-center gap-[15px] aspect-square border rounded-[16px] p-3 cursor-pointer",
@@ -197,17 +259,17 @@ export const QuestionItem = ({
               <TextArea
                 id={`${fieldName}_text`}
                 placeholder="주관식 답변을 입력해주세요."
-                value={(formik.values[`${fieldName}_text`] as string) || ""}
+                value={textValue}
                 onChange={(e) => onTextChange(e.target.value)}
                 maxLength={100}
               />
             </div>
           )}
-        </>
+        </Fragment>
       )
     } else {
       return (
-        <>
+        <Fragment key={option.csso_idx}>
           <label
             className={clsx(
               "flex gap-3 w-full border rounded-[12px] p-[15px] cursor-pointer",
@@ -236,106 +298,90 @@ export const QuestionItem = ({
               <TextArea
                 id={`${fieldName}_text`}
                 placeholder="주관식 답변을 입력해주세요."
-                value={(formik.values[`${fieldName}_text`] as string) || ""}
+                value={textValue}
                 onChange={(e) => onTextChange(e.target.value)}
                 maxLength={100}
               />
             </div>
           )}
-        </>
+        </Fragment>
       )
     }
   }
 
   const hasOptionImage = (options: QuestionOption[]): boolean => {
-    return options.some(
-      (option) =>
-        option.option_image_url !== undefined && option.option_image_url !== "",
-    )
+    return options.some((option) => option.option_image_url)
   }
 
-  useEffect(() => {
-    const isValid = checkValidation()
-    onValidationChange(isValid)
-  }, [formik.values, fieldName])
-
   const renderBirthDateInput = () => {
-    const value = formik.values[fieldName]
     return (
       <BirthDateInput
-        value={typeof value === "string" ? value : ""}
-        onChange={(inputValue: string) =>
-          formik.setFieldValue(fieldName, inputValue)
-        }
+        value={value as string}
+        onChange={handleTextChange}
         onValidationChange={onValidationChange}
       />
     )
   }
 
   const renderQuestion = () => {
-    const hasImage = hasOptionImage(question.options)
+    switch (question.contents_type) {
+      case "1":
+        return (
+          <div className="flex flex-wrap gap-2">
+            {question.options.map((option) =>
+              renderOptionItem(
+                option,
+                hasOptionImage(question.options),
+                isOptionSelected(option.csso_idx),
+                handleOptionChange,
+                handleTextChange,
+                question.options.length,
+              ),
+            )}
+          </div>
+        )
 
-    if (question.cssq_idx === "1" || question.contents_type === "4") {
-      return renderBirthDateInput()
+      case "2":
+        return (
+          <div className="flex flex-col gap-2">
+            {question.options.map((option) =>
+              renderOptionItem(
+                option,
+                hasOptionImage(question.options),
+                isOptionSelected(option.csso_idx),
+                handleOptionChange,
+                handleTextChange,
+              ),
+            )}
+          </div>
+        )
+
+      case "3":
+        return (
+          <CustomTextField
+            type="number"
+            value={value as string}
+            onChange={(e) => handleTextChange(e.target.value)}
+            placeholder="숫자를 입력해주세요."
+          />
+        )
+
+      case "4":
+        return renderBirthDateInput()
+
+      default:
+        return null
     }
-
-    if (question.contents_type === "3") {
-      const value = formik.values[fieldName]
-      return (
-        <CustomTextField
-          name={fieldName}
-          value={typeof value === "string" ? value : ""}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            const value = e.target.value
-            formik.setFieldValue(fieldName, value === "" ? "" : value)
-          }}
-          placeholder="숫자를 입력해 주세요"
-          type="number"
-        />
-      )
-    }
-
-    if (question.options.length > 0) {
-      return (
-        <div
-          className={clsx(
-            "flex flex-wrap gap-2",
-            hasImage ? "justify-between" : "flex-col",
-          )}
-        >
-          {question.options.map((option) => {
-            const checked = isOptionSelected(option.csso_idx)
-            return renderOptionItem(
-              option,
-              hasImage,
-              checked,
-              handleOptionChange,
-              handleTextChange,
-              question.options.length,
-            )
-          })}
-        </div>
-      )
-    }
-
-    const value = formik.values[fieldName]
-    return (
-      <TextArea
-        value={typeof value === "string" ? value : ""}
-        onChange={(e) => handleTextChange(e.target.value)}
-        placeholder="입력해 주세요"
-        maxLength={500}
-      />
-    )
   }
+
+  useEffect(() => {
+    const isValid = checkValidation()
+    onValidationChange(isValid)
+  }, [value, question, onValidationChange])
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2">
-        <p className="text-gray-700 text-18px font-sb">
-          {question.question_text}
-        </p>
-      </div>
+      <div className="text-lg font-semibold">{question.question_text}</div>
       {renderQuestion()}
     </div>
   )

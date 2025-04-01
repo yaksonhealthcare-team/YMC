@@ -14,6 +14,7 @@ import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect"
 import { useGeolocation } from "../../../hooks/useGeolocation.tsx"
 import { useOverlay } from "../../../contexts/ModalContext"
 import { Divider } from "@mui/material"
+import useDebounce from "../../../hooks/useDebounce"
 
 const LocationSettingsHeader = ({
   onClickBack,
@@ -78,7 +79,8 @@ const LocationSettings = () => {
   } = useGeolocation()
   const { showToast } = useOverlay()
 
-  const { data: searchResults = [] } = useAddressSearch(address)
+  const debouncedAddress = useDebounce(address, 300)
+  const { data: searchResults = [] } = useAddressSearch(debouncedAddress)
   useAddressBookmarks()
 
   const handleCloseButtonClicked = () => {
@@ -100,7 +102,6 @@ const LocationSettings = () => {
   }, [])
 
   const handleCurrentLocationClick = () => {
-
     if (locationLoading) {
       showToast("위치 정보를 가져오는 중입니다.")
       return
@@ -125,7 +126,7 @@ const LocationSettings = () => {
           selectedLocation: {
             address: {
               road: "현재 위치",
-              jibun: ""
+              jibun: "",
             },
             coords,
           },

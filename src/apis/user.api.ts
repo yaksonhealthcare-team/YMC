@@ -12,8 +12,26 @@ export const fetchVisitedStores = async () => {
   return data
 }
 
-export const fetchCRMUser = async (): Promise<CRMUserResponse> => {
-  const { data } =
-    await axiosClient.get<HTTPResponse<CRMUserResponse>>("/me/crm")
+export const fetchCRMUser = async (
+  name: string,
+  hp: string,
+): Promise<CRMUserResponse> => {
+  const { data } = await axiosClient.get<HTTPResponse<CRMUserResponse>>(
+    "/me/crm",
+    {
+      params: {
+        name,
+        hp,
+      },
+    },
+  )
   return data.body
+}
+
+export const postVisitedStore = async (storeId: string) => {
+  const response = await axiosClient.post<HTTPResponse<{ message: string }>>(
+    "/me/visited_stores",
+    { storeId },
+  )
+  return response.data
 }

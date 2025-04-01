@@ -47,6 +47,7 @@ export interface QuestionnaireResultResponse {
 
 export interface OptionValue {
   csso_idx: string
+  text?: string
 }
 
 export interface QuestionnaireFormValues {

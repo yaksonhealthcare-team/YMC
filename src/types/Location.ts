@@ -4,4 +4,5 @@ export interface Location {
   lat: string
   lon: string
   base_address?: "Y" | "N"
+  name?: string
 }
