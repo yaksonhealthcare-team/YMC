@@ -38,7 +38,7 @@ const NoticeDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white p-5">
+    <div className="bg-white p-5">
       <div className="flex flex-col gap-6">
         <NoticeHeader notice={notice} />
         <div className="w-full h-[1px] bg-[#ECECEC] rounded-[1px]"></div>
