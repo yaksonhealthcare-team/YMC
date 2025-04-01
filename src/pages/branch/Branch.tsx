@@ -143,21 +143,10 @@ const Branch = () => {
 
   // 브랜드 변경 처리 함수
   const handleBrandChange = (brand: FilterItem | null) => {
-    if (selectedFilter.brand?.code !== brand?.code) {
-      // 상태 업데이트만 하고 API 직접 호출은 하지 않음
-      setSelectedFilter({
-        brand,
-        category: null,
-      })
-
-      // branches 목록을 즉시 새로고침하지 않음
-      // useEffect 의존성으로 인해 brand가 변경되면 자동으로 categories 쿼리가 실행됨
-
-      // 지도 화면에 있을 경우 선택된 지점 초기화
-      if (screen === "map") {
-        setSelectedBranch(null)
-      }
-    }
+    handleFilterChange({
+      brand,
+      category: null,
+    })
   }
 
   useEffect(() => {
