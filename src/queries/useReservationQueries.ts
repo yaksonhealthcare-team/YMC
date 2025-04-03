@@ -94,7 +94,7 @@ export const useReservationDetail = (reservationId: string) => {
         longitude: Number(data.b_lon),
         phone: data.b_tel,
         address: data.b_addr,
-        membershipId: data.p_idx,
+        membershipId: data.mp_idx,
         mp_idx: data.mp_idx,
       }
 

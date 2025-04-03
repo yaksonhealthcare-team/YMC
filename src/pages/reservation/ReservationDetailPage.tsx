@@ -192,7 +192,7 @@ const ReservationDetailPage = () => {
       fromReservation: {
         item:
           reservation.type === ReservationType.MANAGEMENT
-            ? reservation.membershipName
+            ? reservation.membershipId
             : "상담 예약",
         branch: reservation.branchId,
         date: dayjs(reservation.date).format("YYYY-MM-DD"),
@@ -202,6 +202,7 @@ const ReservationDetailPage = () => {
         remainingCount: reservation.remainingCount,
         membershipId: reservation.membershipId,
       },
+      membershipId: reservation.membershipId,
       fromReservationDetail: true,
       originalPath: currentPath,
     }
@@ -353,30 +354,7 @@ const ReservationDetailPage = () => {
             variantType="primary"
             sizeType="l"
             className={`w-full ${isModalOpen ? "opacity-50 cursor-not-allowed" : ""}`}
-            onClick={() => {
-              // 현재 경로 가져오기
-              const currentPath = window.location.pathname
-
-              navigate("/reservation/form", {
-                state: {
-                  fromReservation: {
-                    item:
-                      reservation.type === ReservationType.MANAGEMENT
-                        ? reservation.membershipName
-                        : "상담 예약",
-                    branch: reservation.store,
-                    date: dayjs(reservation.date).format("YYYY-MM-DD"),
-                    timeSlot: { time: reservation.duration },
-                    request: reservation.request || "",
-                    additionalServices: reservation.additionalServices || [],
-                    remainingCount: reservation.remainingCount,
-                    membershipId: reservation.membershipId,
-                  },
-                  fromReservationDetail: true,
-                  originalPath: currentPath,
-                },
-              })
-            }}
+            onClick={handleNavigateToReservationForm}
             disabled={isModalOpen}
           >
             다시 예약하기
