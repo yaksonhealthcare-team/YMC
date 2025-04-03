@@ -82,9 +82,11 @@ const LocationPickerMap = () => {
 
       if (isSignificantMove) {
         setHasDragged(true)
+        fetchAddressFromCoords(newCenter)
       }
     } else {
       setHasDragged(true)
+      fetchAddressFromCoords(newCenter)
     }
 
     setCenter(newCenter)
