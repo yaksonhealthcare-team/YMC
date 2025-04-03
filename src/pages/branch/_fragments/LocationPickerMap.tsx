@@ -45,6 +45,7 @@ const LocationPickerMap = () => {
       setHasDragged(true)
     } else if (location) {
       setCenter(location)
+      fetchAddressFromCoords(location)
     }
   }, [routeLocation.state, location])
 
