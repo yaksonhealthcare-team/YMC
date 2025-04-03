@@ -22,10 +22,10 @@ export const MembershipActiveBranchList = ({ onBranchSelect, brandCode }: Props)
 
   // 사용 가능한 지점 목록
   const availableBranches: BranchInfo[] =
-    location.state?.availableBranches || []
+    location.state?.availableBranches ?? []
   
   // 현재 선택된 브랜드 코드
-  const currentBrandCode = brandCode || location.state?.brand_code || ""
+  const currentBrandCode = brandCode ?? location.state?.brand_code ?? ""
 
   // TODO: 백엔드 auth/me 에 brandCode 필드 추가 후 이용중인 지점 정상적으로 출력되는지 확인 필요
   // 사용자의 활성 지점과 사용 가능한 지점을 필터링

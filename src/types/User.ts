@@ -21,6 +21,7 @@ export interface User {
     b_idx: string
     brandName: string
     address: string
+    brandCode: string
   }[]
   gender: "M" | "F"
   birthdate: string
@@ -46,6 +47,7 @@ export interface UserResponse {
     b_idx: string
     b_name: string
     addr: string
+    brand_code: string
   }[]
 }
 

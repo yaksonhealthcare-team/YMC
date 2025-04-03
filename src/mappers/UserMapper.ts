@@ -25,6 +25,7 @@ export class UserMapper {
         b_idx: brand.b_idx,
         brandName: brand.b_name,
         address: brand.addr,
+        brandCode: brand.brand_code,
       })),
     }
   }
