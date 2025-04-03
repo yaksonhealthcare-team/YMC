@@ -9,6 +9,7 @@ import { useBranches } from "../../queries/useBranchQueries.tsx"
 import useIntersection from "../../hooks/useIntersection.tsx"
 import BranchItem from "./BranchItem.tsx"
 import { useGeolocation } from "../../hooks/useGeolocation.tsx"
+import { useDebounce } from "../../hooks/useDebounce"
 
 interface SearchBranchListProps {
   selectedBranches: Branch[]
@@ -20,6 +21,7 @@ const Step1SearchBranchList = ({
   setSelectedBranches,
 }: SearchBranchListProps) => {
   const [searchQuery, setSearchQuery] = useState("")
+  const debouncedSearchQuery = useDebounce(searchQuery, 300)
   const { location: currentLocation } = useGeolocation()
   const { observerTarget } = useIntersection({
     onIntersect: () => {
@@ -38,7 +40,7 @@ const Step1SearchBranchList = ({
   } = useBranches({
     latitude: currentLocation?.latitude,
     longitude: currentLocation?.longitude,
-    search: searchQuery,
+    search: debouncedSearchQuery,
     enabled: !!currentLocation,
   })
 

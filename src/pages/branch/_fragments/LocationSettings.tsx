@@ -14,7 +14,7 @@ import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect"
 import { useGeolocation } from "../../../hooks/useGeolocation.tsx"
 import { useOverlay } from "../../../contexts/ModalContext"
 import { Divider } from "@mui/material"
-import useDebounce from "../../../hooks/useDebounce"
+import { useDebounce } from "../../../hooks/useDebounce"
 
 const LocationSettingsHeader = ({
   onClickBack,
