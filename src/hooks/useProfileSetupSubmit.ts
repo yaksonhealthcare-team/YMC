@@ -48,7 +48,7 @@ export const useProfileSetupSubmit = () => {
           post: signupData.postCode,
           addr1: signupData.address1,
           addr2: signupData.address2 || "",
-          marketing_yn: signupData.marketingYn ? "Y" : "N",
+          marketing_yn: socialInfo.SocialRefreshToken ? "Y" : "N",
           brand_code: signupData.brandCodes || [],
           profileUrl: signupData.profileUrl,
         },
