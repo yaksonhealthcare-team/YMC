@@ -61,10 +61,6 @@ const ReservationFormPage = () => {
       location.state?.fromReservation?.additionalServices || [],
   })
 
-  const [allMemberships, setAllMemberships] = useState<
-    typeof filteredMemberships
-  >([])
-
   // Queries
   const { data: consultationCount } = useQuery({
     queryKey: ["consultation-count"],
@@ -81,18 +77,12 @@ const ReservationFormPage = () => {
     if (!selectedBranch) return membershipsData.pages[0].body
 
     return membershipsData.pages[0].body.filter((membership) =>
+      membership.s_type !== "지점 회원권" || 
       membership.branchs?.some(
         (branch) => branch.b_idx === selectedBranch.b_idx,
       ),
     )
   }, [membershipsData, selectedBranch])
-
-  // 최초 로드 시와 회원권 데이터가 변경될 때만 전체 회원권 목록 업데이트
-  useEffect(() => {
-    if (membershipsData?.pages[0]?.body) {
-      setAllMemberships(membershipsData.pages[0].body)
-    }
-  }, [membershipsData])
 
   // Navigation Handler
   const handleBack = useCallback(() => {
@@ -656,7 +646,7 @@ const ReservationFormPage = () => {
               </div>
             </RadioCard>
           </div>
-          {!isMembershipsLoading && allMemberships.length > 0 ? (
+          {!isMembershipsLoading && filteredMemberships.length > 0 ? (
             <MembershipSwiper
               key={
                 location.state?.membershipId ||
@@ -672,7 +662,7 @@ const ReservationFormPage = () => {
                   total_page_count: 0,
                   current_page: 0,
                 }),
-                body: allMemberships,
+                body: filteredMemberships,
               }}
               selectedItem={data.item}
               onChangeItem={handleOnChangeItem}

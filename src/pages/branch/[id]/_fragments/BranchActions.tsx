@@ -13,7 +13,7 @@ const BranchActions = memo(
     return (
       <div
         className={
-          "fixed bottom-0 left-0 right-0 flex flex-col items-center justify-center w-full bg-white"
+          "z-10 fixed bottom-0 left-0 right-0 flex flex-col items-center justify-center w-full bg-white"
         }
       >
         <BranchDetailBottomActionBar
