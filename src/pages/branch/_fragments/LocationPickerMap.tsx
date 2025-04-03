@@ -145,7 +145,7 @@ const LocationPickerMap = () => {
         center={center}
         branches={branches}
         options={{
-          showCurrentLocation: false,
+          showCurrentLocation: true,
           showCurrentLocationButton: true,
           onMoveMap: handleMapMove,
           onSelectBranch: handleSelectBranch,

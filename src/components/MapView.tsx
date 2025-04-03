@@ -90,11 +90,21 @@ const MapView = ({
           })
         }
 
+        // 현재 위치 마커 표시 옵션이 활성화된 경우
         if (options?.showCurrentLocation) {
           getCurrentLocation({
             onSuccess: (coords) => {
               if (!mounted) return
               setCurrentLocation(coords)
+              // 현재 위치로 지도 중심 이동
+              if (mapInstance.current) {
+                mapInstance.current.setCenter(
+                  new window.naver.maps.LatLng(
+                    coords.latitude,
+                    coords.longitude,
+                  ),
+                )
+              }
             },
           })
         }
