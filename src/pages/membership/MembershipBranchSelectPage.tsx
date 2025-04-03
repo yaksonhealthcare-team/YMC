@@ -4,6 +4,7 @@ import { Branch } from "../../types/Branch"
 import { SearchField } from "../../components/SearchField"
 import { useLocation, useNavigate } from "react-router-dom"
 import MembershipBranchList from "./MembershipBranchList.tsx"
+import { useDebounce } from "../../hooks/useDebounce"
 
 interface Props {
   onSelect?: (branch: Branch) => void
@@ -15,9 +16,10 @@ const MembershipBranchSelectPage = ({ onSelect, brandCode }: Props) => {
   const { setHeader, setNavigation } = useLayout()
   const location = useLocation()
   const navigate = useNavigate()
+  const debouncedQuery = useDebounce(query, 300)
+  const currentBrandCode = brandCode || location.state?.brand_code
 
   const memoizedState = useMemo(() => location.state, [location.state])
-  const currentBrandCode = brandCode || location.state?.brand_code
 
   // 헤더 설정
   useEffect(() => {
@@ -27,20 +29,21 @@ const MembershipBranchSelectPage = ({ onSelect, brandCode }: Props) => {
       backgroundColor: "bg-white",
       display: true,
       onClickBack: () => {
-        // 복잡한 네비게이션 상태 관리 대신, 
+        // 복잡한 네비게이션 상태 관리 대신,
         // 지점 선택 -> 예약 폼 사이의 무한 루프를 방지하기 위해
         // 예약 폼으로 돌아갈 때는 예약 관련 정보만 전달
         if (memoizedState?.returnPath) {
           // 필요한 예약 정보만 전달
-          const { fromReservation, originalPath, fromReservationDetail } = memoizedState
+          const { fromReservation, originalPath, fromReservationDetail } =
+            memoizedState
           navigate(memoizedState.returnPath, {
             state: {
               fromReservation,
               fromBranchSelect: true, // 지점 선택 페이지에서 왔음을 표시
               originalPath, // 원래 온 경로 정보 유지
-              fromReservationDetail // 예약 상세에서 왔는지 여부 유지
+              fromReservationDetail, // 예약 상세에서 왔는지 여부 유지
             },
-            replace: true // 히스토리 스택에 추가하지 않고 교체
+            replace: true, // 히스토리 스택에 추가하지 않고 교체
           })
         } else {
           // 일반 뒤로가기
@@ -83,7 +86,7 @@ const MembershipBranchSelectPage = ({ onSelect, brandCode }: Props) => {
         />
       </div>
 
-      <MembershipBranchList onSelect={onSelect} query={query} />
+      <MembershipBranchList onSelect={onSelect} query={debouncedQuery} />
     </div>
   )
 }

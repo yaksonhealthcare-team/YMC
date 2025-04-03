@@ -4,11 +4,13 @@ import ActiveBranchList from "./_fragments/ActiveBranchList.tsx"
 import BranchSearchResultList from "./_fragments/BranchSearchResultList.tsx"
 import { SearchField } from "@components/SearchField.tsx"
 import { useNavigate } from "react-router-dom"
+import { useDebounce } from "../../../hooks/useDebounce"
 
 const BranchSearch = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const [query, setQuery] = useState("")
+  const debouncedQuery = useDebounce(query, 300)
 
   useEffect(() => {
     setHeader({
@@ -34,7 +36,7 @@ const BranchSearch = () => {
           <ActiveBranchList />
         ) : (
           <BranchSearchResultList
-            query={query}
+            query={debouncedQuery}
             onSelect={(branch) => navigate(`/branch/${branch.b_idx}`)}
           />
         )}
