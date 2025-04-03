@@ -402,22 +402,42 @@ const ReservationFormPage = () => {
       return
     }
     try {
-      // 선택된 회원권 찾기
+      // 상담 예약인 경우와 회원권 예약인 경우를 구분
+      if (data.item === "상담 예약") {
+        navigate("/membership/branch-select", {
+          state: {
+            returnPath: "/reservation/form",
+            selectedItem: data.item,
+            brand_code: BRAND_CODE,
+            isConsultation: true, // 상담 예약임을 표시
+            // 현재 상태 정보 저장
+            fromReservation: {
+              item: data.item,
+              date: data.date,
+              timeSlot: data.timeSlot,
+              request: data.request,
+              additionalServices: data.additionalServices,
+              membershipId: data.membershipId,
+            },
+            // 원래 경로 정보 저장
+            originalPath: location.state?.originalPath || "/",
+          },
+          replace: true,
+        })
+        return
+      }
+
+      // 회원권 예약인 경우 기존 로직 유지
       const selectedMembership = membershipsData?.pages[0]?.body?.find(
         (membership) => membership.mp_idx === data.item,
       )
-
-      // 원래 경로 정보 확인
-      const originalPath = location.state?.originalPath || "/"
 
       navigate("/membership/branch-select", {
         state: {
           returnPath: "/reservation/form",
           selectedItem: data.item,
           brand_code: BRAND_CODE,
-          // 회원권의 branchs 정보 전달
           availableBranches: selectedMembership?.branchs || [],
-          // 현재 상태 정보 저장
           fromReservation: {
             item: data.item,
             date: data.date,
@@ -426,10 +446,9 @@ const ReservationFormPage = () => {
             additionalServices: data.additionalServices,
             membershipId: data.membershipId,
           },
-          // 원래 경로 정보 저장
-          originalPath,
+          originalPath: location.state?.originalPath || "/",
         },
-        replace: true, // 히스토리 스택에 추가되지 않고 교체하여 무한 루프 방지
+        replace: true,
       })
     } catch (error) {
       console.error("Navigation error:", error)

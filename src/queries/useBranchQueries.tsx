@@ -28,6 +28,7 @@ interface BranchFilters {
   search?: string
   mp_idx?: string
   enabled?: boolean
+  isConsultation?: boolean
 }
 
 const queryKeys = {
@@ -43,7 +44,9 @@ export const useBranches = (filters: BranchFilters) =>
     queryKey: queryKeys.branches.list(filters),
     queryFn: async ({ pageParam = 1 }) => {
       const { data } = await axiosClient.get<BranchSearchResponse>(
-        "/branches/branches",
+        filters.isConsultation
+          ? "/branches/consultation-branches"
+          : "/branches/branches",
         {
           params: {
             page: pageParam,
@@ -55,6 +58,11 @@ export const useBranches = (filters: BranchFilters) =>
           },
         },
       )
+
+      if (data.resultCode !== "00") {
+        throw new Error(data.resultMessage || "API 오류가 발생했습니다.")
+      }
+
       return data
     },
     getNextPageParam: (lastPage) => {

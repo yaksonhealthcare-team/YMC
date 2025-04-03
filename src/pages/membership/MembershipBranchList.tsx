@@ -35,12 +35,15 @@ const MembershipBranchList = ({
     fetchNextPage,
     isFetchingNextPage,
     isLoading,
+    isError,
+    error,
   } = useBranches({
     latitude: geolocationLocation?.latitude,
     longitude: geolocationLocation?.longitude,
     search: debouncedQuery,
     brandCode: location.state?.brand_code,
     mp_idx: location.state?.selectedItem,
+    isConsultation: location.state?.isConsultation,
     enabled: !!geolocationLocation,
   })
 
@@ -147,8 +150,24 @@ const MembershipBranchList = ({
     )
   }
 
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center h-full fixed inset-0 bg-white z-10">
+        <div className="text-center text-gray-500">
+          {error instanceof Error
+            ? error.message
+            : "지점 목록을 불러오는데 실패했습니다"}
+        </div>
+      </div>
+    )
+  }
+
   // 검색어가 없고 사용 가능한 지점 목록이 있으면 해당 지점만 표시
   if (query?.length === 0) {
+    // 상담 예약인 경우 모든 지점 표시
+    if (location.state?.isConsultation) {
+      return renderBranchList(filteredBranches)
+    }
     // 사용 가능한 지점이 있는 경우 바로 지점 목록을 보여줌
     if (availableBranches.length > 0) {
       return renderBranchList(filteredBranches)
