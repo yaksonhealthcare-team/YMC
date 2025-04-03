@@ -178,7 +178,7 @@ const MembershipBranchList = ({
 
   if (filteredBranches.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center px-5 h-full">
+      <div className="flex flex-col items-center justify-center px-5 min-h-[200px]">
         <div className="mb-4 p-3 rounded-full bg-gray-100">
           <SearchIcon className="w-6 h-6 text-gray-400" />
         </div>
