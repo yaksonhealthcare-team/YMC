@@ -42,7 +42,7 @@ export const Radio = ({
               position: "absolute",
               top: "6px",
               left: "6px",
-              backgroundColor: "white",
+              backgroundColor: "bg-white",
               borderRadius: "9999px",
             }}
           />

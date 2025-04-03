@@ -26,7 +26,7 @@ export const TermsAgreement = () => {
     setHeader({
       display: true,
       left: "back",
-      backgroundColor: "white",
+      backgroundColor: "bg-white",
       onClickBack: () => {
         sessionStorage.removeItem("socialSignupInfo")
         navigate("/login", { replace: true })

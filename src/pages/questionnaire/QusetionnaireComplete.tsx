@@ -22,7 +22,7 @@ const QuestionnaireComplete = () => {
       display: true,
       title: "",
       left: "back",
-      backgroundColor: "white",
+      backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
   }, [setHeader, setNavigation])

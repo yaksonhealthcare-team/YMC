@@ -39,21 +39,21 @@ export const AdditionalServiceCard = ({
               width: 20,
               height: 20,
               padding: 0,
-              backgroundColor: "white",
+              backgroundColor: "bg-white",
               "& .MuiSvgIcon-root": {
                 width: 20,
                 height: 20,
               },
               "&.Mui-checked": {
                 color: "#F37165",
-                backgroundColor: "white",
+                backgroundColor: "bg-white",
               },
               "&:not(.Mui-checked)": {
                 color: "#DDDDDD",
-                backgroundColor: "white",
+                backgroundColor: "bg-white",
               },
               "&:hover": {
-                backgroundColor: "white",
+                backgroundColor: "bg-white",
               },
             }}
           />

@@ -34,7 +34,7 @@ export const EmailPassword = () => {
     setHeader({
       display: true,
       left: "back",
-      backgroundColor: "white",
+      backgroundColor: "bg-white",
       onClickBack: () => {
         navigate("/login", { replace: true })
       },
