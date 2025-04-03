@@ -45,9 +45,7 @@ export const useBranches = (filters: BranchFilters) =>
     queryKey: queryKeys.branches.list(filters),
     queryFn: async ({ pageParam = 1 }) => {
       const { data } = await axiosClient.get<BranchSearchResponse>(
-        filters.isConsultation
-          ? "/branches/consultation-branches"
-          : "/branches/branches",
+        "/branches/branches",
         {
           params: {
             page: pageParam,
@@ -55,7 +53,7 @@ export const useBranches = (filters: BranchFilters) =>
             nowlon: filters.longitude,
             search: filters.search,
             brand_code: filters.brandCode,
-            mp_idx: filters.mp_idx,
+            mp_idx: filters.isConsultation ? "상담 예약" : filters.mp_idx,
             s_idx: filters.s_idx,
           },
         },
