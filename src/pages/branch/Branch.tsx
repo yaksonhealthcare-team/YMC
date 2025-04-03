@@ -21,11 +21,13 @@ import SearchIcon from "@components/icons/SearchIcon"
 import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import { useBranchLocationSelect } from "../../hooks/useBranchLocationSelect.ts"
 import { useQueryClient } from "@tanstack/react-query"
+import LoadingIndicator from "@components/LoadingIndicator.tsx"
 
 const Branch = () => {
   const { setHeader, setNavigation } = useLayout()
   const { openBottomSheet, closeOverlay } = useOverlay()
-  const { location: currentLocation } = useGeolocation()
+  const { location: currentLocation, loading: locationLoading } =
+    useGeolocation()
   const { location: selectedLocation } = useBranchLocationSelect()
   const [screen, setScreen] = useState<"list" | "map">("list")
   const [selectedBranch, setSelectedBranch] = useState<BranchType | null>(null)
@@ -44,8 +46,9 @@ const Branch = () => {
 
   const {
     data: result,
-    fetchNextPage,
+    isLoading: branchesLoading,
     hasNextPage,
+    fetchNextPage,
     isFetchingNextPage,
     refetch,
   } = useBranches({
@@ -260,6 +263,15 @@ const Branch = () => {
           />
         )
     }
+  }
+
+  // 위치 정보를 로딩 중인 경우 로딩 표시
+  if (locationLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <LoadingIndicator />
+      </div>
+    )
   }
 
   return (

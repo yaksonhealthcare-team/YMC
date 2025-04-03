@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom"
 import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect.ts"
 import { useGeolocation } from "../../../hooks/useGeolocation.tsx"
 import { BranchFilterListItem } from "./BranchFilterList.tsx"
+import LoadingIndicator from "@components/LoadingIndicator.tsx"
 
 interface BranchMapSectionProps {
   brandCode?: string
@@ -27,7 +28,8 @@ const BranchMapSection = ({
   const navigate = useNavigate()
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
   const { location: selectedLocation } = useBranchLocationSelect()
-  const { location: currentLocation } = useGeolocation()
+  const { location: currentLocation, loading: locationLoading } =
+    useGeolocation()
   const [coords, setCoords] = useState<Coordinate | null>(null)
 
   const { mutateAsync: addBookmark } = useBranchBookmarkMutation()
@@ -47,10 +49,10 @@ const BranchMapSection = ({
     onSelectBranch(null)
   }, [brandCode, category])
 
-  if (!coords) {
+  if (locationLoading || !coords) {
     return (
-      <div className="flex items-center justify-center w-full h-full">
-        <div className="text-gray-500">위치 정보를 불러오는 중...</div>
+      <div className="flex items-center justify-center min-h-[200px]">
+        <LoadingIndicator />
       </div>
     )
   }
