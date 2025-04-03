@@ -45,17 +45,35 @@ export const NotificationCard = ({
   } as const
 
   return (
-    <div onClick={onClick} className={clsx(STYLES.container, className)}>
+    <button
+      onClick={onClick}
+      className={clsx(
+        STYLES.container,
+        className,
+        "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded",
+      )}
+      aria-label={`${notification.subCategory} 알림${!notification.isRead ? " (새 알림)" : " (읽음)"}: ${notification.title}. ${notification.content}${notification.message ? `. ${notification.message}` : ""}${notification.reservationDate ? `. 예약일: ${notification.reservationDate}` : ""}`}
+      aria-pressed={!notification.isRead}
+    >
       <div className={STYLES.header.wrapper}>
         <div className={STYLES.header.title.wrapper}>
           <span className={STYLES.header.title.text}>
             {notification.subCategory}
             {!notification.isRead && (
-              <div className={STYLES.header.title.circle} />
+              <div
+                className={STYLES.header.title.circle}
+                role="status"
+                aria-label="읽지 않음"
+              />
             )}
           </span>
         </div>
-        <span className={STYLES.header.date}>{notification.pushDate}</span>
+        <span
+          className={STYLES.header.date}
+          aria-label={`작성일: ${notification.pushDate}`}
+        >
+          {notification.pushDate}
+        </span>
       </div>
 
       <span className={STYLES.store.base}>{notification.title}</span>
@@ -68,13 +86,16 @@ export const NotificationCard = ({
 
       {notification.reservationDate && (
         <div className={STYLES.footer.wrapper}>
-          <CalendarIcon className={STYLES.footer.icon} />
-          <span className={STYLES.footer.date}>
+          <CalendarIcon className={STYLES.footer.icon} aria-hidden="true" />
+          <span
+            className={STYLES.footer.date}
+            aria-label={`예약일: ${notification.reservationDate}`}
+          >
             {notification.reservationDate}
           </span>
         </div>
       )}
-    </div>
+    </button>
   )
 }
 

@@ -48,9 +48,13 @@ const ReviewFormPage = () => {
       display: true,
       title: "만족도 작성",
       left: (
-        <div onClick={() => navigate(-1)}>
+        <button
+          onClick={() => navigate(-1)}
+          className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+          aria-label="뒤로가기"
+        >
           <CaretLeftIcon className="w-5 h-5" />
-        </div>
+        </button>
       ),
       backgroundColor: "bg-white",
     })

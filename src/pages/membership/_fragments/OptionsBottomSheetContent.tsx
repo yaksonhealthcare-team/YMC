@@ -253,8 +253,8 @@ export const OptionsBottomSheetContent = ({
     navigate(".", {
       state: {
         s_idx: membershipId,
-        brand_code: brandCode
-      }
+        brand_code: brandCode,
+      },
     })
   }
 
@@ -265,13 +265,18 @@ export const OptionsBottomSheetContent = ({
         {serviceType === "지점 회원권" && (
           <button
             className={
-              "w-full border border-gray-100 rounded-xl px-4 py-3 flex justify-between mb-3 items-center"
+              "w-full border border-gray-100 rounded-xl px-4 py-3 flex justify-between mb-3 items-center focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2"
             }
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
               openBranchSelectModal()
             }}
+            aria-label={
+              selectedBranch
+                ? `선택된 지점: ${selectedBranch.name}`
+                : "지점 선택하기"
+            }
           >
             <span
               className={`${selectedBranch ? "" : "text-[#bdbdbd]"} text-base font-normal leading-normal`}
@@ -285,12 +290,15 @@ export const OptionsBottomSheetContent = ({
         <div className="w-full relative">
           <button
             className={clsx(
-              "w-full h-[52px] px-4 py-3 bg-white flex justify-between items-center",
+              "w-full h-[52px] px-4 py-3 bg-white flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
               isDropdownOpen
                 ? "rounded-t-xl border border-[#ebebeb] border-b-0"
                 : "rounded-xl border border-[#ebebeb]",
             )}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            aria-label="관리 횟수 선택"
+            aria-expanded={isDropdownOpen}
+            aria-haspopup="listbox"
           >
             <span className="text-[#bdbdbd] text-base font-normal leading-normal">
               관리 횟수를 선택해주세요
@@ -307,12 +315,14 @@ export const OptionsBottomSheetContent = ({
               {options.map((option, index) => (
                 <button
                   key={option.ss_idx}
-                  className={`w-full px-4 py-3.5 text-left text-[#212121] text-sm font-normal border-b border-[#ebebeb] hover:bg-gray-50 
+                  className={`w-full px-4 py-3.5 text-left text-[#212121] text-sm font-normal border-b border-[#ebebeb] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2
                   ${index === options.length - 1 ? "rounded-b-xl border-b-0" : ""}`}
                   onClick={() => {
                     handleSelectOption(option)
                     setIsDropdownOpen(false)
                   }}
+                  aria-label={`${option.ss_count}회 선택`}
+                  role="option"
                 >
                   {option.ss_count}
                 </button>
@@ -338,15 +348,23 @@ export const OptionsBottomSheetContent = ({
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <button
-                      className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center"
+                      className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2"
                       onClick={() => handleCountChange(option, count - 1)}
+                      aria-label={`${option.ss_count}회 수량 감소`}
                     >
                       -
                     </button>
-                    <span className="w-8 text-center">{count}</span>
+                    <span
+                      className="w-8 text-center"
+                      role="status"
+                      aria-label={`현재 수량 ${count}개`}
+                    >
+                      {count}
+                    </span>
                     <button
-                      className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center"
+                      className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2"
                       onClick={() => handleCountChange(option, count + 1)}
+                      aria-label={`${option.ss_count}회 수량 증가`}
                     >
                       +
                     </button>

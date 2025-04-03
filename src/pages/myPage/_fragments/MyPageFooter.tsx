@@ -1,5 +1,15 @@
 import { useOverlay } from "contexts/ModalContext"
 import { useNavigate } from "react-router-dom"
+import clsx from "clsx"
+
+const BUTTON_STYLES = {
+  base: clsx(
+    "font-sb text-14px text-gray-400",
+    "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+    "hover:text-gray-600 transition-colors duration-200",
+    "rounded px-2 py-1",
+  ),
+} as const
 
 const MyPageFooter = () => {
   const navigate = useNavigate()
@@ -13,25 +23,41 @@ const MyPageFooter = () => {
       onCancel: () => {},
     })
   }
+
   return (
-    <div className="flex flex-col items-center gap-4 mt-8 mb-20">
-      <div className="flex items-center gap-3">
-        <span
+    <footer
+      className="flex flex-col items-center gap-4 mt-8 mb-20"
+      role="contentinfo"
+    >
+      <nav className="flex items-center gap-3" aria-label="푸터 메뉴">
+        <button
           onClick={() => navigate("/terms")}
-          className="font-sb text-14px text-gray-400"
+          className={BUTTON_STYLES.base}
+          aria-label="이용약관 페이지로 이동"
         >
           이용약관
-        </span>
-        <div className="w-[1px] h-3.5 bg-gray-200" />
-        <span
+        </button>
+        <div
+          className="w-[1px] h-3.5 bg-gray-200"
+          role="separator"
+          aria-hidden="true"
+        />
+        <button
           onClick={handleOnClickLogout}
-          className="font-sb text-14px text-gray-400"
+          className={BUTTON_STYLES.base}
+          aria-label="로그아웃 확인 모달 열기"
         >
           로그아웃
-        </span>
+        </button>
+      </nav>
+      <div
+        className="font-r text-12px text-gray-300"
+        role="contentinfo"
+        aria-label="앱 버전 정보"
+      >
+        v.1.1.4 version
       </div>
-      <span className="font-r text-12px text-gray-300">v.1.1.4 version</span>
-    </div>
+    </footer>
   )
 }
 

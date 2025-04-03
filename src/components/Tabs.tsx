@@ -1,96 +1,111 @@
 import { Tab, Tabs } from "@mui/material"
+import { useCallback } from "react"
 import clsx from "clsx"
-
-const TAB_STYLES = {
-  "1depth": {
-    base: "font-sb text-16px px-[12px] py-[14px] min-w-0",
-    active: "text-primary",
-    inactive: "text-gray-700",
-    indicator: {},
-  },
-  "2depth": {
-    base: "font-sb text-14px",
-    active: "text-gray-700",
-    inactive: "text-gray-400 border-gray-200",
-    indicator: { borderBottom: "2px solid black" },
-  },
-  "3depth": {
-    base: "font-sb text-14px",
-    active: "text-gray-700",
-    inactive: "text-gray-400 border-gray-200",
-    indicator: { borderBottom: "2px solid black" },
-  },
-  "scroll": {
-    base: "font-sb text-14px whitespace-nowrap",
-    active: "text-gray-700",
-    inactive: "text-gray-400 border-gray-200",
-    indicator: { borderBottom: "2px solid black" },
-  },
-  "fit": {
-    base: "font-sb text-14px",
-    active: "text-gray-700",
-    inactive: "text-gray-400 border-gray-200",
-    indicator: { borderBottom: "2px solid black" },
-  },
-} as const
-
-const CONTAINER_STYLES = {
-  "1depth": "",
-  "2depth": "border-b border-gray-200 space-x-4",
-  "3depth": "border-b border-gray-200 space-x-4",
-  "scroll": "border-b border-gray-200 space-x-2",
-  "fit": "border-b border-gray-200 space-x-4",
-} as const
 
 interface TabItem {
   label: string
   value: string
+  disabled?: boolean
 }
 
 interface CustomTabsProps {
-  type: keyof typeof TAB_STYLES
+  type?: "1depth" | "2depth" | "3depth" | "scroll" | "fit"
   tabs: TabItem[]
-  onChange: (value: string) => void
-  activeTab: string
+  onChange?: (value: string) => void
+  activeTab?: string
+  className?: string
 }
 
 export const CustomTabs = ({
-  type,
+  type = "fit",
   tabs,
   onChange,
-  activeTab,
+  activeTab: propActiveTab,
+  className,
 }: CustomTabsProps) => {
-  const validActiveTab = tabs.some((tab) => tab.value === activeTab)
-    ? activeTab
-    : tabs[0]?.value || ""
+  const validActiveTab = tabs.some((tab) => tab.value === propActiveTab)
+  const activeTab = validActiveTab ? propActiveTab : tabs[0]?.value || ""
+
+  const handleChange = useCallback(
+    (_: React.SyntheticEvent, newValue: string) => {
+      onChange?.(newValue)
+    },
+    [onChange],
+  )
+
+  const getTypeStyles = (type: string, isActive: boolean) => {
+    switch (type) {
+      case "1depth":
+        return clsx(
+          "font-sb text-16px px-[12px] py-[14px] min-w-0",
+          isActive ? "text-primay" : "text-gray-700",
+        )
+      case "2depth":
+        return clsx(
+          "font-sb text-14px",
+          isActive ? "text-gray-700" : "text-gray-400 border-gray-200",
+        )
+      case "3depth":
+        return clsx(
+          "font-sb text-14px",
+          isActive ? "text-gray-700" : "text-gray-400 border-gray-200",
+        )
+      case "scroll":
+        return clsx(
+          "font-sb text-14px",
+          isActive ? "text-gray-700" : "text-gray-400 border-gray-200",
+          "whitespace-nowrap",
+        )
+      case "fit":
+        return clsx(
+          `font-sb text-14px w-1/${tabs.length}`,
+          isActive ? "text-gray-700" : "text-gray-400 border-gray-200",
+        )
+      default:
+        return ""
+    }
+  }
+
+  const getIndicatorStyles = (type: string) => {
+    switch (type) {
+      case "1depth":
+        return {}
+      default:
+        return { borderBottom: "2px solid black" }
+    }
+  }
 
   return (
-    <Tabs
-      centered={type !== "scroll"}
-      value={validActiveTab}
-      onChange={(_, newValue) => onChange(newValue)}
-      variant={type === "scroll" ? "scrollable" : "standard"}
-      scrollButtons={type === "scroll" ? "auto" : undefined}
-      TabIndicatorProps={{
-        sx: TAB_STYLES[type].indicator,
-      }}
-      className={clsx("flex", CONTAINER_STYLES[type])}
-    >
-      {tabs.map((tab) => (
-        <Tab
-          key={tab.value}
-          label={tab.label}
-          value={tab.value}
-          className={clsx(
-            TAB_STYLES[type].base,
-            validActiveTab === tab.value
-              ? TAB_STYLES[type].active
-              : TAB_STYLES[type].inactive,
-            type === "fit" && `w-1/${tabs.length}`,
-          )}
-        />
-      ))}
-    </Tabs>
+    <div role="tablist" aria-label="탭 메뉴" className={clsx(className)}>
+      <Tabs
+        centered
+        value={activeTab}
+        onChange={handleChange}
+        variant={type === "scroll" ? "scrollable" : "standard"}
+        scrollButtons={type === "scroll" ? "auto" : undefined}
+        TabIndicatorProps={{
+          sx: getIndicatorStyles(type),
+        }}
+        className={clsx(
+          "flex",
+          type === "1depth" ? undefined : "border-b border-gray-200",
+          type === "scroll" ? "space-x-2" : "space-x-4",
+        )}
+      >
+        {tabs.map((tab) => (
+          <Tab
+            key={tab.value}
+            label={tab.label}
+            value={tab.value}
+            disabled={tab.disabled}
+            role="tab"
+            aria-selected={activeTab === tab.value}
+            aria-controls={`tabpanel-${tab.value}`}
+            className={clsx(getTypeStyles(type, activeTab === tab.value))}
+          />
+        ))}
+      </Tabs>
+    </div>
   )
 }
 

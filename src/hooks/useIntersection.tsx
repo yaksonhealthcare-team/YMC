@@ -6,12 +6,12 @@ interface UseIntersectionProps {
   enabled?: boolean
 }
 
-export const useIntersection = ({
+export const useIntersection = <T extends HTMLElement = HTMLDivElement>({
   onIntersect,
   threshold = 0.1,
   enabled = true,
 }: UseIntersectionProps) => {
-  const observerTarget = useRef<HTMLDivElement | null>(null)
+  const observerTarget = useRef<T | null>(null)
 
   const handleIntersect = useCallback(
     ([entry]: IntersectionObserverEntry[]) => {

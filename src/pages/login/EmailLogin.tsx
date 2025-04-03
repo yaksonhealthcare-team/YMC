@@ -115,6 +115,7 @@ const EmailLogin = () => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 표시"}
             >
               {showPassword ? (
                 <EyeSlashIcon className="w-6 h-6 text-[#BDBDBD]" />
@@ -136,6 +137,7 @@ const EmailLogin = () => {
               ? "bg-[#ECECEC] !text-[#9E9E9E] hover:bg-[#ECECEC]"
               : ""
           }
+          aria-label="로그인"
         >
           {isLoading ? (
             <CircularProgress size={24} className="text-[#9E9E9E]" />
@@ -150,6 +152,7 @@ const EmailLogin = () => {
         <button
           onClick={() => navigate("/find-account")}
           className="font-m text-16px text-[#757575]"
+          aria-label="이메일 비밀번호 찾기"
         >
           이메일 / 비밀번호 찾기
         </button>

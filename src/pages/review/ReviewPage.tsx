@@ -66,8 +66,13 @@ const ReviewPage = () => {
         <span className="text-gray-500 text-sm font-medium">
           데이터를 불러오는데 실패했습니다.
         </span>
-        <Button variantType="primary" sizeType="m" onClick={() => refetch()}>
-          다시 시도
+        <Button
+          variantType="primary"
+          sizeType="m"
+          onClick={() => refetch()}
+          aria-label="리뷰 새로고침"
+        >
+          새로고침
         </Button>
       </div>
     )

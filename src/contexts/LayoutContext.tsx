@@ -234,12 +234,17 @@ const NavButton = ({
   }
 
   return (
-    <div
+    <button
       className={"py-3 flex-1 flex flex-col gap-1 items-center cursor-pointer"}
       onClick={handleClick}
       style={{ color: active ? "#F37165" : "#BDBDBD" }}
+      aria-label={`${title} 메뉴`}
     >
-      <img src={active ? activeIcon : inactiveIcon} width={32} />
+      <img
+        src={active ? activeIcon : inactiveIcon}
+        width={32}
+        alt={`${title} 아이콘`}
+      />
       <Typography
         variant={"body2"}
         className={
@@ -250,7 +255,7 @@ const NavButton = ({
       >
         {title}
       </Typography>
-    </div>
+    </button>
   )
 }
 

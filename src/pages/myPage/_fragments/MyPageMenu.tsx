@@ -103,26 +103,34 @@ const MyPageMenu = () => {
   }
 
   return (
-    <div className="bg-white rounded-[20px] border border-gray-100 p-5 space-y-4">
+    <nav
+      className="bg-white rounded-[20px] border border-gray-100 p-5 space-y-4"
+      aria-label="마이페이지 메뉴"
+    >
       {menuItems.map((item) => (
         <button
           type="button"
           key={item.id}
           onClick={() => handleClick(item)}
-          className="flex items-center justify-between h-12 w-full rounded-lg p-1"
+          className="flex items-center justify-between h-12 w-full rounded-lg p-1 focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2"
+          aria-label={`${item.title}${item.external ? " (외부 링크)" : ""}`}
         >
           <div className="flex items-center gap-3">
-            <item.icon className="w-4 h-4 text-gray-900" />
+            <item.icon className="w-4 h-4 text-gray-900" aria-hidden="true" />
             <span
               className={`text-16px text-gray-900 ${item.id === "notice" ? "font-semibold" : "font-m"}`}
+              aria-hidden="true"
             >
               {item.title}
             </span>
           </div>
-          <CaretRightIcon className="w-3 h-3 text-gray-900" />
+          <CaretRightIcon
+            className="w-3 h-3 text-gray-900"
+            aria-hidden="true"
+          />
         </button>
       ))}
-    </div>
+    </nav>
   )
 }
 

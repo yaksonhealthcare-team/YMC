@@ -16,20 +16,45 @@ const BUTTON_ICONS = {
   membership: "/assets/floatingIcons/membership.png",
 } as const
 
-const BASE_BUTTON_STYLES =
-  "fixed z-10 bottom-24 right-5 shadow-floatingButton rounded-full flex items-center justify-center bg-white"
+const BUTTON_LABELS = {
+  location: "위치 선택",
+  top: "맨 위로 이동",
+  search: "검색",
+  reserve: "예약하기",
+  membership: "멤버십",
+} as const
+
+const BASE_BUTTON_STYLES = clsx(
+  "fixed z-10 bottom-24 right-5",
+  "shadow-floatingButton rounded-full",
+  "flex items-center justify-center",
+  "bg-white hover:bg-gray-50",
+  "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+  "transition-colors duration-200",
+)
 
 interface FloatingButtonProps {
   type: keyof typeof BUTTON_STYLES
   onClick: () => void
+  className?: string
 }
 
-export const FloatingButton = ({ type, onClick }: FloatingButtonProps) => (
+export const FloatingButton = ({
+  type,
+  onClick,
+  className,
+}: FloatingButtonProps) => (
   <button
     onClick={onClick}
-    className={clsx(BASE_BUTTON_STYLES, BUTTON_STYLES[type])}
+    className={clsx(BASE_BUTTON_STYLES, BUTTON_STYLES[type], className)}
+    aria-label={BUTTON_LABELS[type]}
   >
-    <img src={BUTTON_ICONS[type]} alt={`${type} button`} />
+    <img
+      src={BUTTON_ICONS[type]}
+      alt=""
+      className="w-6 h-6"
+      aria-hidden="true"
+    />
   </button>
 )
 

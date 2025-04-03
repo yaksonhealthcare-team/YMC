@@ -105,10 +105,17 @@ export const MembershipCard = ({
 
       <div className={STYLES.actions.wrapper}>
         {showHistoryButton && (
-          <div className={STYLES.actions.history} onClick={handleHistoryClick}>
+          <button
+            className={clsx(
+              STYLES.actions.history,
+              "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded",
+            )}
+            onClick={handleHistoryClick}
+            aria-label="이용 기록"
+          >
             <span className={STYLES.actions.historyText}>이용내역</span>
             <CaretRightIcon className={STYLES.actions.historyIcon} />
-          </div>
+          </button>
         )}
         {/* TODO: 예약 필요 정보와 함께 이동 필요 */}
         {showReservationButton && (

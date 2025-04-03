@@ -44,7 +44,7 @@ const LeftSection = ({
   onClickLeft,
   onClickBack,
 }: HeaderProps) => (
-  <button 
+  <button
     onClick={type.startsWith("back") ? onClickBack : onClickLeft}
     className="flex items-center h-full"
   >
@@ -76,7 +76,7 @@ const TitleSection = ({ type, title, onClickLocation }: HeaderProps) => (
       {title}
     </span>
     {type === "location" && (
-      <button onClick={onClickLocation}>
+      <button onClick={onClickLocation} aria-label="위치 선택">
         <CaretDownIcon className="w-4 h-4" />
       </button>
     )}

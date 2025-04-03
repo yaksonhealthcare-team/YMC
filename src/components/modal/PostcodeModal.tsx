@@ -22,10 +22,15 @@ const PostcodeModal = ({
     <div
       className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50"
       onClick={() => setIsPostcodeOpen(false)}
+      role="dialog"
+      aria-modal="true"
+      aria-label="주소 검색"
     >
       <div
         className="w-[90%] max-w-[430px] h-[90%] min-h-[480px] max-h-[530px] bg-white overflow-hidden shadow-md !font-11px"
         onClick={(e) => e.stopPropagation()}
+        role="document"
+        tabIndex={-1}
       >
         <DaumPostcode onComplete={onComplete} style={{ height: "100%" }} />
       </div>

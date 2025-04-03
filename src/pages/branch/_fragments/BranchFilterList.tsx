@@ -11,12 +11,14 @@ import { useOverlay } from "../../../contexts/ModalContext.tsx"
 import { Image } from "@components/common/Image"
 import { useState, useCallback } from "react"
 import LoadingIndicator from "@components/LoadingIndicator"
+import clsx from "clsx"
 
 interface BranchFilterListProps {
   branches: Branch[]
   onIntersect: () => void
   onSelectBranch: (branch: Branch) => void
   isLoading?: boolean
+  className?: string
 }
 
 interface BranchFilterListItemProps {
@@ -34,54 +36,74 @@ const BranchFilterListItem = ({
   onClickFavorite,
   isFavorite,
 }: BranchFilterListItemProps) => (
-  <li
-    onClick={() => onClick(branch)}
-    onKeyDown={(e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        onClick(branch)
-      }
-    }}
-    role="button"
-    tabIndex={0}
-    className={`cursor-pointer w-full flex ${className}`}
-  >
-    <div className="w-full py-4 gap-4 flex items-stretch">
-      <Image
-        className="border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"
-        src={BranchPlaceholderImage}
-        alt="지점 사진"
-      />
-      <div className="w-full flex flex-col">
-        <div className="flex justify-between mt-0.5">
-          <p className="font-b text-16px">{branch.name}</p>
-          <button
-            onClick={(e) => {
-              e.stopPropagation()
-              onClickFavorite(branch)
-            }}
-            aria-label={isFavorite ? "즐겨찾기 해제" : "즐겨찾기 추가"}
+  <li role="option" aria-selected="false">
+    <button
+      onClick={() => onClick(branch)}
+      className={clsx(
+        "cursor-pointer w-full flex",
+        "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded-lg",
+        className,
+      )}
+      aria-label={`${branch.name} 지점 선택 ${branch.canBookToday ? "당일 예약 가능" : ""} ${branch.distanceInMeters ? `${branch.distanceInMeters} 거리` : ""} ${branch.address}`}
+    >
+      <div className="w-full py-4 gap-4 flex items-stretch">
+        <Image
+          className="border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"
+          src={BranchPlaceholderImage}
+          alt={`${branch.name} 지점 사진`}
+          loading="lazy"
+        />
+        <div className="w-full flex flex-col">
+          <div className="flex justify-between mt-0.5">
+            <p className="font-b text-16px">{branch.name}</p>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                onClickFavorite(branch)
+              }}
+              className={clsx(
+                "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded-lg p-1",
+                "transition-transform hover:scale-110",
+              )}
+              aria-label={`${branch.name} 지점 ${isFavorite ? "즐겨찾기 해제" : "즐겨찾기 추가"}`}
+              aria-pressed={isFavorite}
+            >
+              {isFavorite ? (
+                <HeartEnabledIcon aria-hidden="true" />
+              ) : (
+                <HeartDisabledIcon aria-hidden="true" />
+              )}
+            </button>
+          </div>
+          <div
+            className="flex items-center gap-[2.5px]"
+            role="group"
+            aria-label="지점 정보"
           >
-            {isFavorite ? <HeartEnabledIcon /> : <HeartDisabledIcon />}
-          </button>
-        </div>
-        <div className="flex items-center gap-[2.5px]">
-          {branch.canBookToday && (
-            <>
-              <p className="font-r text-12px text-tag-green">
-                {"당일 예약 가능"}
+            {branch.canBookToday && (
+              <>
+                <p className="font-r text-12px text-tag-green" role="status">
+                  {"당일 예약 가능"}
+                </p>
+                <div
+                  className="w-0.5 h-0.5 rounded-xl bg-gray-400"
+                  aria-hidden="true"
+                />
+              </>
+            )}
+            {branch.distanceInMeters && (
+              <p className="font-r text-12px text-gray-400">
+                {branch.distanceInMeters}
               </p>
-              <div className="w-0.5 h-0.5 rounded-xl bg-gray-400" />
-            </>
-          )}
-          {branch.distanceInMeters && (
-            <p className="font-r text-12px text-gray-400">
-              {branch.distanceInMeters}
-            </p>
-          )}
+            )}
+          </div>
+          <address className="font-r text-14px text-start not-italic">
+            {branch.address}
+          </address>
         </div>
-        <p className="font-r text-14px text-start">{branch.address}</p>
       </div>
-    </div>
+    </button>
   </li>
 )
 
@@ -90,8 +112,9 @@ const BranchFilterList = ({
   onIntersect,
   onSelectBranch,
   isLoading,
+  className,
 }: BranchFilterListProps) => {
-  const { observerTarget } = useIntersection({
+  const { observerTarget } = useIntersection<HTMLLIElement>({
     onIntersect,
   })
 
@@ -151,7 +174,11 @@ const BranchFilterList = ({
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-full">
+      <div
+        className="flex justify-center items-center h-full"
+        role="status"
+        aria-label="로딩 중"
+      >
         <LoadingIndicator size={24} />
       </div>
     )
@@ -159,9 +186,13 @@ const BranchFilterList = ({
 
   if (branches.length === 0) {
     return (
-      <div className="flex flex-col h-full">
+      <div className={clsx("flex flex-col h-full", className)}>
         <div className="px-5 flex-none bg-white">
-          <p className="font-m text-14px text-gray-700">
+          <p
+            className="font-m text-14px text-gray-700"
+            role="status"
+            aria-live="polite"
+          >
             {"총 "}
             <span className="font-b">0</span>
             {"개의 지점을 찾았습니다."}
@@ -169,7 +200,7 @@ const BranchFilterList = ({
         </div>
         <div className="flex-1 overflow-y-auto">
           <div className="flex justify-center items-center h-full">
-            <p className="font-m text-14px text-gray-400">
+            <p className="font-m text-14px text-gray-400" role="status">
               {"검색 결과가 없습니다."}
             </p>
           </div>
@@ -179,16 +210,25 @@ const BranchFilterList = ({
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className={clsx("flex flex-col h-full", className)}>
       <div className="px-5 flex-none bg-white">
-        <p className="font-m text-14px text-gray-700">
+        <p
+          className="font-m text-14px text-gray-700"
+          role="status"
+          aria-live="polite"
+        >
           {"총 "}
           <span className="font-b">{branches.length}</span>
           {"개의 지점을 찾았습니다."}
         </p>
       </div>
       <div className="flex-1 overflow-y-auto">
-        <ul className="divide-y px-5">
+        <ul
+          className="divide-y px-5"
+          role="listbox"
+          aria-label="지점 목록"
+          tabIndex={0}
+        >
           {branches.map((branch, index) => (
             <BranchFilterListItem
               key={branch.b_idx}
@@ -199,7 +239,7 @@ const BranchFilterList = ({
               isFavorite={getIsFavorite(branch)}
             />
           ))}
-          <div ref={observerTarget} className="h-4" />
+          <li ref={observerTarget} className="h-4" aria-hidden="true" />
         </ul>
       </div>
     </div>

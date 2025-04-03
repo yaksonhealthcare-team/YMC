@@ -28,7 +28,15 @@ const DevPage = () => {
       display: true,
       title: "Home",
       right: <div>Header Right</div>,
-      left: <div onClick={() => navigate(-1)}>{"<"} Back</div>,
+      left: (
+        <button
+          onClick={() => navigate(-1)}
+          className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+          aria-label="뒤로가기"
+        >
+          {"<"} Back
+        </button>
+      ),
     })
     setNavigation({ display: true })
   }, [])

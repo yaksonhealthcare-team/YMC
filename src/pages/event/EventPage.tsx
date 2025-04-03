@@ -36,40 +36,25 @@ const EventPage = () => {
         />
         <div className="flex px-5">
           <button
-            className={clsx(
-              "flex-1 py-3 font-sb text-16px relative",
-              selectedTab === "ALL" ? "text-primary" : "text-gray-700",
-            )}
             onClick={() => setSelectedTab("ALL")}
+            className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+            aria-label="전체 이벤트"
           >
             전체
-            {selectedTab === "ALL" && (
-              <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary" />
-            )}
           </button>
           <button
-            className={clsx(
-              "flex-1 py-3 font-sb text-16px relative",
-              selectedTab === "ING" ? "text-primary" : "text-gray-700",
-            )}
             onClick={() => setSelectedTab("ING")}
+            className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+            aria-label="진행중인 이벤트"
           >
             진행중
-            {selectedTab === "ING" && (
-              <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary" />
-            )}
           </button>
           <button
-            className={clsx(
-              "flex-1 py-3 font-sb text-16px relative",
-              selectedTab === "END" ? "text-primary" : "text-gray-700",
-            )}
             onClick={() => setSelectedTab("END")}
+            className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+            aria-label="종료된 이벤트"
           >
             종료
-            {selectedTab === "END" && (
-              <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary" />
-            )}
           </button>
         </div>
       </div>

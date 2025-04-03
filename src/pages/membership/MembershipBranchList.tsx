@@ -116,8 +116,9 @@ const MembershipBranchList = ({
       {branches.map((branch) => (
         <li key={branch.b_idx}>
           <button
-            className="w-full px-5 py-4 gap-4 flex items-stretch"
             onClick={() => handleBranchSelect(branch)}
+            className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+            aria-label={`${branch.name} 선택`}
           >
             <Image
               className="border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"

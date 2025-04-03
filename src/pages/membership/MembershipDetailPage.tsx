@@ -238,14 +238,13 @@ const MembershipDetailPage = () => {
       {/* Bottom Fixed Button */}
       <div className="fixed bottom-0 left-0 right-0 h-[94px] bg-white border-t border-gray-50">
         <div className="px-5 pt-3">
-          <Button
+          <button
             onClick={handlePurchaseClick}
-            variantType="primary"
-            sizeType="l"
-            className="w-full"
+            className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+            aria-label="구매하기"
           >
             구매하기
-          </Button>
+          </button>
         </div>
       </div>
     </div>

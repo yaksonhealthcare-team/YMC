@@ -8,6 +8,7 @@ import PointIcon from "@assets/icons/PointIcon.svg?react"
 import { useAuth } from "../../../contexts/AuthContext"
 import { useOverlay } from "../../../contexts/ModalContext"
 import { Button } from "@components/Button"
+import clsx from "clsx"
 
 const MyPagePointMembership = () => {
   const navigate = useNavigate()
@@ -16,7 +17,7 @@ const MyPagePointMembership = () => {
 
   const handleOpenQuestionnaire = () => {
     openBottomSheet(
-      <div className="flex flex-col">
+      <div className="flex flex-col" role="dialog" aria-label="문진 종류 선택">
         <div className="px-5 pt-4 pb-8 flex flex-col gap-2 text-center text-18px font-sb text-gray-900">
           {"보고 싶은 문진 종류를 선택해주세요."}
         </div>
@@ -28,6 +29,7 @@ const MyPagePointMembership = () => {
                 closeOverlay()
               }}
               className="w-full"
+              aria-label="예약 문진 작성하기"
             >
               <Button className="w-full" variantType="line" sizeType="l">
                 {"예약 문진"}
@@ -39,6 +41,7 @@ const MyPagePointMembership = () => {
                 closeOverlay()
               }}
               className="w-full"
+              aria-label="공통 문진 작성하기"
             >
               <Button className="w-full" variantType="primary" sizeType="l">
                 {"공통 문진"}
@@ -52,16 +55,18 @@ const MyPagePointMembership = () => {
 
   const handleOpenUserLevel = () => {
     openBottomSheet(
-      <div className={"flex flex-col"}>
+      <div className={"flex flex-col"} role="dialog" aria-label="회원등급 안내">
         <p className={"font-sb text-18px px-5 pt-4"}>회원등급 안내</p>
         <div className={"px-7 py-6"}>
-          <table className={"w-full border-collapse"}>
+          <table className={"w-full border-collapse"} role="grid">
             <thead>
-              <tr className={"bg-system-bg"}>
+              <tr className={"bg-system-bg"} role="row">
                 <th
                   className={
                     "p-3 pl-5 text-16px font-medium text-gray-900 text-left w-[100px]"
                   }
+                  scope="col"
+                  role="columnheader"
                 >
                   등급
                 </th>
@@ -69,41 +74,68 @@ const MyPagePointMembership = () => {
                   className={
                     "p-3 text-16px font-medium text-gray-900 text-left"
                   }
+                  scope="col"
+                  role="columnheader"
                 >
                   최근 1년간 누적 결제 금액
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr className={"border-b border-gray-100"}>
-                <td className={"p-3 pl-5 text-16px text-left w-[100px]"}>
+              <tr className={"border-b border-gray-100"} role="row">
+                <td
+                  className={"p-3 pl-5 text-16px text-left w-[100px]"}
+                  role="gridcell"
+                >
                   A등급
                 </td>
-                <td className={"p-3 text-16px text-left"}>1,000만원 이상</td>
+                <td className={"p-3 text-16px text-left"} role="gridcell">
+                  1,000만원 이상
+                </td>
               </tr>
-              <tr className={"border-b border-gray-100"}>
-                <td className={"p-3 pl-5 text-16px text-left w-[100px]"}>
+              <tr className={"border-b border-gray-100"} role="row">
+                <td
+                  className={"p-3 pl-5 text-16px text-left w-[100px]"}
+                  role="gridcell"
+                >
                   B등급
                 </td>
-                <td className={"p-3 text-16px text-left"}>330만원 이상</td>
+                <td className={"p-3 text-16px text-left"} role="gridcell">
+                  330만원 이상
+                </td>
               </tr>
-              <tr className={"border-b border-gray-100"}>
-                <td className={"p-3 pl-5 text-16px text-left w-[100px]"}>
+              <tr className={"border-b border-gray-100"} role="row">
+                <td
+                  className={"p-3 pl-5 text-16px text-left w-[100px]"}
+                  role="gridcell"
+                >
                   C등급
                 </td>
-                <td className={"p-3 text-16px text-left"}>150만원 이상</td>
+                <td className={"p-3 text-16px text-left"} role="gridcell">
+                  150만원 이상
+                </td>
               </tr>
-              <tr className={"border-b border-gray-100"}>
-                <td className={"p-3 pl-5 text-16px text-left w-[100px]"}>
+              <tr className={"border-b border-gray-100"} role="row">
+                <td
+                  className={"p-3 pl-5 text-16px text-left w-[100px]"}
+                  role="gridcell"
+                >
                   D등급
                 </td>
-                <td className={"p-3 text-16px text-left"}>30만원 이상</td>
+                <td className={"p-3 text-16px text-left"} role="gridcell">
+                  30만원 이상
+                </td>
               </tr>
-              <tr className={"border-b border-gray-100"}>
-                <td className={"p-3 pl-5 text-16px text-left w-[100px]"}>
+              <tr className={"border-b border-gray-100"} role="row">
+                <td
+                  className={"p-3 pl-5 text-16px text-left w-[100px]"}
+                  role="gridcell"
+                >
                   E등급
                 </td>
-                <td className={"p-3 text-16px text-left"}>기본 등급</td>
+                <td className={"p-3 text-16px text-left"} role="gridcell">
+                  기본 등급
+                </td>
               </tr>
             </tbody>
           </table>
@@ -113,47 +145,72 @@ const MyPagePointMembership = () => {
   }
 
   return (
-    <div className="flex gap-2">
+    <div
+      className="flex gap-2"
+      role="group"
+      aria-label="마이페이지 포인트 및 회원등급"
+    >
       <button
         type="button"
-        className="w-[101px] h-24 bg-white rounded-2xl border border-gray-100 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-gray-50 transition-colors"
+        className={clsx(
+          "w-[101px] h-24 bg-white rounded-2xl border border-gray-100",
+          "flex flex-col items-center justify-center gap-2",
+          "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+          "hover:bg-gray-50 transition-colors duration-200",
+        )}
         onClick={handleOpenQuestionnaire}
+        aria-label="내 문진 작성하기"
       >
-        <PersonalCardIcon className="w-6 h-6" />
+        <PersonalCardIcon className="w-6 h-6" aria-hidden="true" />
         <span className="font-m text-14px text-gray-500">내 문진</span>
       </button>
       <div className="flex-1 h-24 px-5 py-3 bg-white rounded-2xl border border-gray-100 flex flex-col justify-center gap-2">
         <button
           type="button"
-          className="flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors rounded-lg p-1 w-full"
+          className={clsx(
+            "flex justify-between items-center w-full",
+            "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+            "hover:bg-gray-50 transition-colors duration-200",
+            "rounded-lg p-1",
+          )}
           onClick={() => navigate("/point")}
+          aria-label={`포인트 ${user?.point ?? 0}P 확인하기`}
         >
           <div className="flex items-center gap-2">
-            <PointIcon className="w-4 h-4" />
+            <PointIcon className="w-4 h-4" aria-hidden="true" />
             <span className="font-m text-14px text-gray-500">포인트</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="font-sb text-16px text-gray-900">
               {`${user?.point ?? 0}P`}
             </span>
-            <CaretRightIcon className="w-3 h-3" />
+            <CaretRightIcon className="w-3 h-3" aria-hidden="true" />
           </div>
         </button>
-        <Divider className="border-gray-100" />
+        <Divider className="border-gray-100" role="separator" />
         <button
           type="button"
-          className="flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors rounded-lg p-1 w-full"
+          className={clsx(
+            "flex justify-between items-center w-full",
+            "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+            "hover:bg-gray-50 transition-colors duration-200",
+            "rounded-lg p-1",
+          )}
           onClick={handleOpenUserLevel}
+          aria-label={`회원등급 ${user?.level ?? "일반"} 안내`}
         >
           <div className="flex items-center gap-2">
-            <CrownIcon className="w-4 h-4" />
+            <CrownIcon className="w-4 h-4" aria-hidden="true" />
             <span className="font-m text-14px text-gray-500">회원등급</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="font-sb text-16px text-gray-900">
               {user?.level ?? "일반"}
             </span>
-            <InformationIcon className="w-4 h-4 text-gray-400" />
+            <InformationIcon
+              className="w-4 h-4 text-gray-400"
+              aria-hidden="true"
+            />
           </div>
         </button>
       </div>

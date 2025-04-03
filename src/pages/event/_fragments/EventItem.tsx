@@ -9,10 +9,7 @@ const EventItem: React.FC<{ event: Event }> = ({ event }) => {
   const thumbnail = event.files.find((file) => file.fileurl.length > 0)
 
   return (
-    <div
-      className="bg-white py-4 flex items-start gap-4"
-      onClick={() => navigate(`/event/${event.code}`)}
-    >
+    <div className="bg-white py-4 flex items-start gap-4">
       {thumbnail && (
         <Image
           src={thumbnail.fileurl}
@@ -39,6 +36,13 @@ const EventItem: React.FC<{ event: Event }> = ({ event }) => {
           </div>
         </div>
       </div>
+      <button
+        onClick={() => navigate(`/event/${event.code}`)}
+        className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+        aria-label={`${event.title} 이벤트`}
+      >
+        {/* Placeholder for the button */}
+      </button>
     </div>
   )
 }

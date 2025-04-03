@@ -1,6 +1,7 @@
 import React, { createContext, ReactNode, useContext, useState } from "react"
 import { Dialog, DialogContent } from "@mui/material"
 import { Button } from "../components/Button"
+import clsx from "clsx"
 
 /**
  * 오버레이 타입을 정의하는 열거형
@@ -24,7 +25,7 @@ interface ModalProps {
 interface BottomSheetButton {
   text: string
   onClick: () => void
-  variant?: "text" | "outlined" | "contained"
+  variant?: "text" | "line" | "primary" | "secondary" | "gray" | "grayLine"
   height?: "default" | "large"
 }
 
@@ -206,170 +207,152 @@ export const useOverlay = (): OverlayContextValue => {
  */
 const OverlayContainer: React.FC = () => {
   const { overlayState, closeOverlay } = useOverlay()
-  const { isOpen, type, content, options } = overlayState
-
-  if (!isOpen || !content) return null
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
       closeOverlay()
     }
   }
-  
+
   const handleContentKeyDown = (e: React.KeyboardEvent) => {
     e.stopPropagation()
   }
 
-  switch (type) {
-    case OverlayTypes.MODAL: {
-      const modalProps = content as ModalProps
-      return (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
-          onClick={closeOverlay}
-          onKeyDown={handleKeyDown}
-          role="dialog"
-          aria-modal="true"
-          tabIndex={0}
-        >
-          <div 
-            className="bg-white rounded-lg p-5 mx-5 w-full max-w-sm"
-            onClick={(e) => e.stopPropagation()}
-            onKeyDown={handleContentKeyDown}
-            role="document"
-            tabIndex={-1}
+  if (!overlayState.isOpen) return null
+
+  const renderContent = () => {
+    switch (overlayState.type) {
+      case OverlayTypes.MESSAGE_BOX: {
+        return (
+          <div
+            className="fixed inset-0 flex items-center justify-center z-[9999] bg-black/40"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="message-box-title"
           >
-            <h2 className="text-lg font-semibold mb-2">{modalProps.title}</h2>
-            <p className="text-gray-600 mb-5">{modalProps.message}</p>
-            <div className="flex gap-2">
-              {modalProps.onCancel && (
-                <button
-                  className="flex-1 py-3 bg-gray-100 text-gray-900 rounded-lg font-medium"
-                  onClick={() => {
-                    modalProps.onCancel?.()
-                    closeOverlay()
-                  }}
-                >
-                  취소
-                </button>
-              )}
+            <div
+              className="bg-white rounded-2xl p-6 w-[320px] max-w-[90%]"
+              role="document"
+              onKeyDown={handleContentKeyDown}
+            >
+              <h2 id="message-box-title" className="text-lg font-bold mb-4">
+                {(overlayState as MessageBoxState).options.title}
+              </h2>
+              <p className="text-gray-600 mb-6">
+                {(overlayState as MessageBoxState).content}
+              </p>
               <button
-                className="flex-1 py-3 bg-primary text-white rounded-lg font-medium"
-                onClick={() => {
-                  modalProps.onConfirm()
-                  closeOverlay()
-                }}
+                className="w-full bg-primary text-white py-3 rounded-lg"
+                onClick={closeOverlay}
+                autoFocus
               >
                 확인
               </button>
             </div>
           </div>
-        </div>
-      )
-    }
-
-    case OverlayTypes.BOTTOM_SHEET: {
-      const bottomSheetOptions = options
-      return (
-        <Dialog
-          open={isOpen}
-          onClose={closeOverlay}
-          keepMounted
-          fullWidth
-          maxWidth="sm"
-          className="z-[9000]"
-          PaperProps={{
-            style: {
-              position: "fixed",
-              bottom: 0,
-              margin: 0,
-              borderTopLeftRadius: 24,
-              borderTopRightRadius: 24,
-              maxHeight:
-                bottomSheetOptions.height === "large" ? "95vh" : "80vh",
-              minHeight:
-                bottomSheetOptions.height === "large" ? "95vh" : "auto",
-              overflowY: "auto",
-              width: "100%",
-            },
-          }}
-        >
-          <DialogContent className="p-0">
-            <div className="flex flex-col items-center">
-              <div className="w-[52px] h-[4px] bg-[#ECECEC] rounded-full mt-3 mb-4" />
-              {bottomSheetOptions.title && (
-                <h2 className="text-[18px] font-semibold mb-4 text-center">
-                  {bottomSheetOptions.title}
-                </h2>
-              )}
-              <div className="w-full text-center">{content}</div>
-              {bottomSheetOptions.buttons?.map((button, index) => (
-                <Button
-                  key={index}
-                  variantType="primary"
-                  onClick={button.onClick}
-                  fullWidth
-                  className={`mt-2 ${
-                    button.height === "large" ? "py-4" : "py-2"
-                  }`}
-                >
-                  {button.text}
-                </Button>
-              ))}
-            </div>
-          </DialogContent>
-        </Dialog>
-      )
-    }
-
-    case OverlayTypes.MESSAGE_BOX: {
-      const messageBoxOptions = options as MessageBoxOptions
-      const alertProps: AlertProps = {
-        title: messageBoxOptions.title || "메시지",
-        description: content as string,
-        onClose: closeOverlay,
+        )
       }
 
-      return (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
-          onClick={closeOverlay}
-          onKeyDown={handleKeyDown}
-          role="dialog"
-          aria-modal="true"
-          tabIndex={0}
-        >
-          <div 
-            className="bg-white rounded-lg p-5 mx-5 w-full max-w-sm"
-            onClick={(e) => e.stopPropagation()}
-            onKeyDown={handleContentKeyDown}
-            role="document"
-            tabIndex={-1}
+      case OverlayTypes.BOTTOM_SHEET: {
+        const bottomSheetState = overlayState as BottomSheetState
+        return (
+          <div
+            className="fixed inset-0 z-[9999]"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="bottom-sheet-title"
           >
-            <h2 className="text-lg font-semibold mb-2">{alertProps.title}</h2>
-            <p className="text-gray-600 mb-5">{alertProps.description}</p>
-            <button
-              className="w-full py-3 bg-primary text-white rounded-lg font-medium"
-              onClick={(e) => {
-                e.preventDefault()
-                closeOverlay()
-                alertProps.onClose?.()
-              }}
+            <div
+              className="fixed inset-0 bg-black/40"
+              onClick={closeOverlay}
+              role="button"
+              tabIndex={-1}
+              aria-label="닫기"
+            />
+            <div
+              className={clsx(
+                "fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl p-6 transform transition-transform duration-300",
+                bottomSheetState.options.height === "large"
+                  ? "min-h-[80vh]"
+                  : "min-h-[30vh]",
+              )}
+              role="document"
+              onKeyDown={handleContentKeyDown}
             >
-              확인
-            </button>
+              {bottomSheetState.options.title && (
+                <h2 id="bottom-sheet-title" className="text-lg font-bold mb-4">
+                  {bottomSheetState.options.title}
+                </h2>
+              )}
+              {bottomSheetState.content}
+              {bottomSheetState.options.buttons && (
+                <div className="flex gap-2 mt-4">
+                  {bottomSheetState.options.buttons.map((button, index) => (
+                    <Button
+                      key={index}
+                      onClick={button.onClick}
+                      variantType={button.variant || "primary"}
+                      className="flex-1"
+                    >
+                      {button.text}
+                    </Button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      )
+        )
+      }
+
+      case OverlayTypes.MODAL: {
+        const modalState = overlayState as ModalState
+        return (
+          <Dialog
+            open={true}
+            onClose={closeOverlay}
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
+          >
+            <DialogContent>
+              <div className="p-6">
+                <h2 id="modal-title" className="text-lg font-bold mb-4">
+                  {modalState.content.title}
+                </h2>
+                <p id="modal-description" className="text-gray-600 mb-6">
+                  {modalState.content.message}
+                </p>
+                <div className="flex gap-2">
+                  {modalState.content.onCancel && (
+                    <Button
+                      onClick={modalState.content.onCancel}
+                      variantType="line"
+                      className="flex-1"
+                    >
+                      취소
+                    </Button>
+                  )}
+                  <Button
+                    onClick={modalState.content.onConfirm}
+                    variantType="primary"
+                    className="flex-1"
+                  >
+                    확인
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )
+      }
+
+      default:
+        return null
     }
-
-    default:
-      return null
   }
-}
 
-interface AlertProps {
-  title: string
-  description: string
-  onClose?: () => void
+  return (
+    <div onKeyDown={handleKeyDown} className="relative">
+      {renderContent()}
+    </div>
+  )
 }

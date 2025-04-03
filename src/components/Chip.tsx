@@ -1,6 +1,6 @@
 import clsx from "clsx"
 
-interface ChipProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ChipProps extends React.HTMLAttributes<HTMLButtonElement> {
   type?: "default" | "finish" | "strong"
   title: string
   onClick?: () => void
@@ -16,15 +16,17 @@ export const Chip = (props: ChipProps) => {
   }
 
   return (
-    <>
-      <div
-        className={clsx(
-          "py-[3px] px-2 font-m text-12px rounded-full",
-          styles[type],
-        )}
-      >
-        <span>{title}</span>
-      </div>
-    </>
+    <button
+      onClick={props.onClick}
+      className={clsx(
+        "py-[3px] px-2 font-m text-12px rounded-full",
+        styles[type],
+        "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+      )}
+      aria-label={`${title} ${type === "finish" ? "완료됨" : type === "strong" ? "강조됨" : ""}`}
+      aria-pressed={type === "strong"}
+    >
+      {title}
+    </button>
   )
 }

@@ -16,7 +16,11 @@ const CartIcon = () => {
   }
 
   return (
-    <div className="relative inline-block" onClick={moveToCartPage}>
+    <button
+      className="relative inline-block focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+      onClick={moveToCartPage}
+      aria-label="장바구니"
+    >
       <svg
         width="24"
         height="24"
@@ -51,7 +55,7 @@ const CartIcon = () => {
           {count > 99 ? "99+" : count}
         </div>
       )}
-    </div>
+    </button>
   )
 }
 

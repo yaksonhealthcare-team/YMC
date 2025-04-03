@@ -33,9 +33,13 @@ export const Notification = () => {
       display: true,
       title: "알림",
       right: (
-        <div onClick={() => navigate("/settings/notifications")}>
+        <button
+          onClick={() => navigate("/settings/notifications")}
+          className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+          aria-label="알림 설정"
+        >
           <SettingIcon className="w-6 h-6" />
-        </div>
+        </button>
       ),
       left: "back",
       onClickBack: () => navigate(-1),

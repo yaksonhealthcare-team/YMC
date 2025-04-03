@@ -29,11 +29,25 @@ export const Filter = ({
 }: FilterProps) => (
   <Button
     variant="outlined"
-    className={clsx(FILTER_STYLES[state], BUTTON_BASE_STYLES)}
+    className={clsx(
+      FILTER_STYLES[state],
+      BUTTON_BASE_STYLES,
+      "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+    )}
     onClick={onClick}
-    endIcon={type === "arrow" ? <CaretDownIcon /> : undefined}
+    endIcon={
+      type === "arrow" ? <CaretDownIcon aria-hidden="true" /> : undefined
+    }
+    aria-label={
+      type === "reload"
+        ? "새로고침"
+        : type === "arrow"
+          ? `${label} ${state === "active" ? "선택됨" : "선택"}`
+          : `${label} ${state === "active" ? "활성화됨" : ""}`
+    }
+    aria-pressed={state === "active"}
   >
-    {type === "reload" ? <ReloadIcon /> : label}
+    {type === "reload" ? <ReloadIcon aria-hidden="true" /> : label}
   </Button>
 )
 

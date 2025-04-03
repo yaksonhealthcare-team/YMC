@@ -173,13 +173,23 @@ const Home = () => {
           buttonArea={
             <div className="relative">
               <button
-                className="w-11 h-11 bg-primary-300 text-white rounded-full shadow-lg flex justify-center items-center relative"
+                className="w-11 h-11 bg-primary-300 text-white rounded-full shadow-lg flex justify-center items-center relative focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 hover:bg-primary-400 transition-colors duration-200"
                 onClick={() => navigate("/notification")}
+                aria-label={`알림${unreadCount > 0 ? `, ${unreadCount}개의 새로운 알림이 있습니다` : ""}`}
+                aria-live="polite"
+                aria-atomic="true"
               >
-                <NotiIcon className="text-white w-6 h-6" />
+                <NotiIcon className="text-white w-6 h-6" aria-hidden="true" />
                 {unreadCount > 0 && (
-                  <div className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-white border border-primary rounded-full flex items-center justify-center px-1">
-                    <span className="text-primary text-[10px] leading-none font-m">
+                  <div
+                    className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-white border border-primary rounded-full flex items-center justify-center px-1"
+                    role="status"
+                    aria-label={`${unreadCount}개의 새로운 알림`}
+                  >
+                    <span
+                      className="text-primary text-[10px] leading-none font-m"
+                      aria-hidden="true"
+                    >
                       {getDisplayCount(unreadCount)}
                     </span>
                   </div>
@@ -204,6 +214,7 @@ const Home = () => {
           onClick={() => {
             navigate("/branch")
           }}
+          aria-label="지점 검색하기"
         />
       </Container>
     </div>

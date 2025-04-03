@@ -150,32 +150,33 @@ export const ReserveCard = ({
   }
 
   return (
-    <div
+    <button
       className={clsx(
         `flex justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px] w-full text-left cursor-pointer`,
+        `focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2`,
         className,
       )}
       onClick={() => navigate(`/reservation/${reservation.id}`)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          navigate(`/reservation/${reservation.id}`)
-        }
-      }}
+      aria-label={`${reservation.store} ${reservation.programName} ${reservation.visit}회차 예약 상세보기. ${classifyReservationStatus(reservation.statusCode) === "upcoming" ? "예정된 예약" : classifyReservationStatus(reservation.statusCode) === "completed" ? "완료된 예약" : classifyReservationStatus(reservation.statusCode) === "cancelled" ? "취소된 예약" : "진행 중인 예약"}. ${reservation.remainingDays ? `남은 일수: ${reservation.remainingDays}일` : ""}`}
+      aria-pressed={
+        classifyReservationStatus(reservation.statusCode) === "progressing"
+      }
       role="button"
-      tabIndex={0}
-      aria-label={`${reservation.store} ${reservation.programName} 예약 상세보기`}
     >
       <div className="flex flex-col w-full">
         <div className="flex w-full items-center gap-1.5">
-          <span className="font-b text-16px text-gray-700">
+          <span className="font-b text-16px text-gray-700" aria-hidden="true">
             {reservation.store}
           </span>
         </div>
         <div className="mt-1">
-          <span className="font-r text-14px text-gray-700">
+          <span className="font-r text-14px text-gray-700" aria-hidden="true">
             {reservation.programName}
           </span>
-          <span className="ml-1.5 font-sb text-14px text-primary">
+          <span
+            className="ml-1.5 font-sb text-14px text-primary"
+            aria-hidden="true"
+          >
             {reservation.visit}회차
           </span>
         </div>
@@ -188,7 +189,7 @@ export const ReserveCard = ({
         />
         {getButton()}
       </div>
-    </div>
+    </button>
   )
 }
 
