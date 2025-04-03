@@ -6,7 +6,6 @@ import CustomTextField from "@components/CustomTextField"
 import { Dayjs } from "dayjs"
 import { TimeSlot } from "types/Schedule"
 import { Branch } from "types/Branch"
-import { formatDate } from "utils/date"
 
 interface ReservationFormSectionProps {
   data: {
@@ -33,6 +32,29 @@ export const ReservationFormSection = ({
 }: ReservationFormSectionProps) => {
   const theme = useTheme()
 
+  const formatReservationDateTime = (
+    date: Dayjs | null,
+    timeSlot: TimeSlot | null,
+  ) => {
+    if (!date || !timeSlot || !timeSlot.time) return ""
+
+    try {
+      const dateStr = date.format("YYYY.MM.DD")
+      const [hoursStr, minutesStr] = timeSlot.time.split(":")
+      const hours = parseInt(hoursStr, 10)
+      const minutes = parseInt(minutesStr, 10)
+
+      if (isNaN(hours) || isNaN(minutes)) return ""
+
+      const ampm = hours < 12 ? "오전" : "오후"
+      const hour12 = hours % 12 || 12
+      return `${dateStr} ${ampm} ${hour12}:${minutes.toString().padStart(2, "0")}`
+    } catch (error) {
+      console.error("날짜/시간 포맷팅 에러:", error)
+      return ""
+    }
+  }
+
   return (
     <section className="px-5 py-6 border-b-8 border-[#f7f7f7]">
       <div className="flex flex-col gap-6 [&_p:first-child]:text-16px [&_p:first-child]:font-sb">
@@ -46,11 +68,7 @@ export const ReservationFormSection = ({
         />
         <CustomInputButton
           label="예약 일시"
-          value={
-            data.date && data.timeSlot
-              ? `${formatDate(data.date.toDate(), "yyyy.MM.dd")} ${data.timeSlot.time}`
-              : ""
-          }
+          value={formatReservationDateTime(data.date, data.timeSlot)}
           placeholder="예약 날짜를 선택해주세요."
           iconRight={
             <CalendarIcon className="w-6 h-6" color={theme.palette.grey[300]} />
