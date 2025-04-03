@@ -14,7 +14,7 @@ export function useAddressFromCoords() {
 
   const fetchAddressFromCoords = (coords: Coordinate) => {
     const { naver } = window
-    if (!naver || !naver.maps) return
+    if (!naver || !naver.maps || !naver.maps.Service) return
 
     naver.maps.Service.reverseGeocode(
       {
@@ -29,10 +29,15 @@ export function useAddressFromCoords() {
           if (response?.v2?.address) {
             setAddress({
               jibun: response.v2.address.jibunAddress || "",
-              road: response.v2.address.roadAddress || response.v2.address.jibunAddress || "",
+              road:
+                response.v2.address.roadAddress ||
+                response.v2.address.jibunAddress ||
+                "",
             })
           } else {
-            setDefaultAddressError(`주소 정보가 없습니다: ${JSON.stringify(response)}`)
+            setDefaultAddressError(
+              `주소 정보가 없습니다: ${JSON.stringify(response)}`,
+            )
           }
         } else {
           setDefaultAddressError(`주소 검색 실패: ${status}`)
@@ -52,27 +57,28 @@ export function useAddressFromCoords() {
   const updateAddressInfo = (locationAddress: AddressInfo | string) => {
     if (!locationAddress) return
 
-    if (typeof locationAddress === 'object') {
+    if (typeof locationAddress === "object") {
       setAddress({
-        road: locationAddress.road || '',
-        jibun: locationAddress.jibun || '',
+        road: locationAddress.road || "",
+        jibun: locationAddress.jibun || "",
       })
     } else {
       setAddress({
         road: locationAddress,
-        jibun: '',
+        jibun: "",
       })
     }
 
     // 현재 위치일 경우 처리
-    const isCurrentLocation = 
-      (typeof locationAddress === 'object' && locationAddress.road === "현재 위치") || 
+    const isCurrentLocation =
+      (typeof locationAddress === "object" &&
+        locationAddress.road === "현재 위치") ||
       locationAddress === "현재 위치"
-    
+
     if (isCurrentLocation) {
-      setAddress(prev => ({
+      setAddress((prev) => ({
         ...prev,
-        road: ""
+        road: "",
       }))
     }
   }
@@ -85,4 +91,4 @@ export function useAddressFromCoords() {
   }
 }
 
-export type { AddressInfo } 
+export type { AddressInfo }
