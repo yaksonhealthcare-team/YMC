@@ -45,9 +45,17 @@ const MapView = ({
         options?.onSelectBranch?.(branch)
 
         if (mapInstance.current) {
-          mapInstance.current.setCenter(
-            new window.naver.maps.LatLng(branch.latitude, branch.longitude),
+          const newCenter = new window.naver.maps.LatLng(
+            branch.latitude,
+            branch.longitude,
           )
+          mapInstance.current.setCenter(newCenter)
+
+          // 마커 클릭 시에도 위치 업데이트 이벤트 발생
+          options?.onMoveMap?.({
+            latitude: branch.latitude,
+            longitude: branch.longitude,
+          })
         }
       },
     },

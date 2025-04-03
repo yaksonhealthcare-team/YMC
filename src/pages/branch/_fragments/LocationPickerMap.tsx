@@ -22,6 +22,7 @@ const LocationPickerMap = () => {
   const [center, setCenter] = useState<Coordinate | null>(null)
   const [branches, setBranches] = useState<Branch[]>([])
   const [hasDragged, setHasDragged] = useState(false)
+  const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
 
   // 초기 화면 설정
   useEffect(() => {
@@ -86,6 +87,12 @@ const LocationPickerMap = () => {
     setCenter(newCenter)
   }
 
+  // 지점 선택 처리
+  const handleSelectBranch = (branch: Branch) => {
+    setSelectedBranch(branch)
+    setHasDragged(true)
+  }
+
   // 위치 설정 및 페이지 이동
   const handleSetLocation = () => {
     if (!center || !address.road) return
@@ -102,7 +109,10 @@ const LocationPickerMap = () => {
             jibun: address.jibun,
           },
           coords: center,
-          name: routeLocation.state?.selectedLocation?.name || "",
+          name:
+            selectedBranch?.name ||
+            routeLocation.state?.selectedLocation?.name ||
+            "",
         },
       },
     })
@@ -126,6 +136,7 @@ const LocationPickerMap = () => {
           showCurrentLocation: false,
           showCurrentLocationButton: true,
           onMoveMap: handleMapMove,
+          onSelectBranch: handleSelectBranch,
         }}
       />
       {!hasDragged && (
