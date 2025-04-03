@@ -10,7 +10,7 @@ import { HTTPResponse } from "../types/HTTPResponse.ts"
 export const fetchReservations = async (
   status: ReservationStatusCode,
   page: number,
-): Promise<Reservation[]> => {
+): Promise<{ reservations: Reservation[]; total_count: number }> => {
   const { data } = await axiosClient.get<HTTPResponse<ReservationResponse[]>>(
     "/reservation/reservations",
     {
@@ -25,7 +25,10 @@ export const fetchReservations = async (
     throw new Error(data.resultMessage || "API 오류가 발생했습니다.")
   }
 
-  return ReservationMapper.toReservationEntities(data.body)
+  return {
+    reservations: ReservationMapper.toReservationEntities(data.body),
+    total_count: data.total_count,
+  }
 }
 
 export const fetchReservationDetail = async (

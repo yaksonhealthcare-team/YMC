@@ -5,11 +5,17 @@ export const useConsultationCount = () => {
   return useQuery({
     queryKey: ["consultationCount"],
     queryFn: async () => {
-      const reservations = await fetchReservations("001", 1)
-      const completedReservations = await fetchReservations("002", 1)
+      const { reservations: upcomingReservations } = await fetchReservations(
+        "001",
+        1,
+      )
+      const { reservations: completedReservations } = await fetchReservations(
+        "002",
+        1,
+      )
 
       const consultationReservations = [
-        ...reservations,
+        ...upcomingReservations,
         ...completedReservations,
       ].filter((reservation) => reservation.type === "상담예약")
 

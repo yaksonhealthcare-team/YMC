@@ -5,7 +5,6 @@ import { ReserveCard } from "@components/ReserveCard"
 import { EmptyCard } from "@components/EmptyCard"
 import { useUpcomingReservations } from "queries/useReservationQueries"
 import { useMembershipOptionsStore } from "hooks/useMembershipOptions"
-import { Button } from "@components/Button"
 import LoadingIndicator from "@components/LoadingIndicator"
 
 export function ReserveCardSection() {

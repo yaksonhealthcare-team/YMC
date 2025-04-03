@@ -10,11 +10,13 @@ import { getStatusFromString } from "utils/membership"
 interface MembershipCardSectionProps {
   memberships: MyMembership[]
   isLoading: boolean
+  totalCount: number
 }
 
 export const MembershipCardSection = ({
   memberships,
   isLoading,
+  totalCount,
 }: MembershipCardSectionProps) => {
   const navigate = useNavigate()
 
@@ -63,7 +65,7 @@ export const MembershipCardSection = ({
       <Title
         type="arrow"
         title="보유 회원권"
-        count={`${memberships.length}개`}
+        count={`${totalCount}개`}
         onClick={() => navigate(`/member-history/membership`)}
       />
       {renderContent()}

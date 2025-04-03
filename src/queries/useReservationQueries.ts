@@ -41,6 +41,10 @@ export const useUpcomingReservations = () => {
   return useQuery({
     queryKey: ["upcomingReservations"],
     queryFn: () => fetchReservations("001", 1),
+    select: (data) => ({
+      reservations: data.reservations,
+      total_count: data.total_count,
+    }),
     retry: false,
   })
 }
@@ -50,8 +54,8 @@ export const useReservations = (status: ReservationStatusCode = "000") => {
     queryKey: ["reservations", status],
     queryFn: ({ pageParam = 1 }) => fetchReservations(status, pageParam),
     initialPageParam: 1,
-    getNextPageParam: (lastPage: Reservation[], pages) => {
-      if (lastPage.length < 10) return undefined
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.reservations.length < 10) return undefined
       return pages.length + 1
     },
     retry: false,
