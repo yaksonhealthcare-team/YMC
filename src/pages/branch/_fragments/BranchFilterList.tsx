@@ -19,146 +19,30 @@ interface BranchFilterListProps {
   isLoading?: boolean
 }
 
-const BranchFilterList = ({
-  branches,
-  onIntersect,
-  onSelectBranch,
-  isLoading = false,
-}: BranchFilterListProps) => {
-  const { observerTarget } = useIntersection({ onIntersect })
-  const { showToast } = useOverlay()
-
-  // 지역 상태로 북마크 상태를 관리합니다
-  const [localBranchStates, setLocalBranchStates] = useState<
-    Record<string, boolean>
-  >({})
-
-  const { mutate: addBookmark } = useBranchBookmarkMutation()
-  const { mutate: removeBookmark } = useBranchUnbookmarkMutation()
-
-  // 북마크 토글 함수
-  const handleToggleFavorite = useCallback(
-    (branch: Branch) => {
-      // 로컬 상태 먼저 업데이트
-      setLocalBranchStates((prev) => ({
-        ...prev,
-        [branch.b_idx]: !getIsFavorite(branch),
-      }))
-
-      if (getIsFavorite(branch)) {
-        removeBookmark(branch.b_idx)
-        showToast("즐겨찾기에서 삭제했어요.")
-      } else {
-        addBookmark(branch.b_idx)
-        showToast("즐겨찾기에 추가했어요.")
-      }
-    },
-    [addBookmark, removeBookmark, showToast],
-  )
-
-  // 브랜치의 실제 즐겨찾기 상태를 계산하는 함수
-  const getIsFavorite = useCallback(
-    (branch: Branch) => {
-      // 로컬 상태가 존재하면 로컬 상태를, 없으면 서버 상태를 사용
-      return branch.b_idx in localBranchStates
-        ? localBranchStates[branch.b_idx]
-        : branch.isFavorite
-    },
-    [localBranchStates],
-  )
-
-  if (isLoading) {
-    return (
-      <div className="flex flex-col h-full">
-        <div className="flex-1 overflow-y-auto">
-          <div className="flex justify-center items-center h-full">
-            <LoadingIndicator size={32} />
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (branches.length === 0) {
-    return (
-      <div className="flex flex-col h-full">
-        <div className="px-5 flex-none bg-white">
-          <p className="font-m text-14px text-gray-700">
-            {"총 "}
-            <span className="font-b">0</span>
-            {"개의 지점을 찾았습니다."}
-          </p>
-        </div>
-        <div className="flex-1 overflow-y-auto">
-          <div className="flex justify-center items-center h-full">
-            <p className="font-m text-14px text-gray-400">
-              {"검색 결과가 없습니다."}
-            </p>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="flex flex-col h-full">
-      <div className="px-5 flex-none bg-white">
-        <p className="font-m text-14px text-gray-700">
-          {"총 "}
-          <span className="font-b">{branches.length}</span>
-          {"개의 지점을 찾았습니다."}
-        </p>
-      </div>
-      <div className="flex-1 overflow-y-auto">
-        <ul className="divide-y px-5">
-          {branches.map((branch, index) => (
-            <BranchFilterListItem
-              key={branch.b_idx}
-              branch={branch}
-              className={index === 0 ? "pt-1" : ""}
-              onClick={() => onSelectBranch(branch)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  onSelectBranch(branch)
-                }
-              }}
-              role="button"
-              tabIndex={0}
-              onClickFavorite={() => handleToggleFavorite(branch)}
-              isFavorite={getIsFavorite(branch)}
-            />
-          ))}
-          <div ref={observerTarget} className="h-4" />
-        </ul>
-      </div>
-    </div>
-  )
-}
-
-export const BranchFilterListItem = ({
-  branch,
-  className = "",
-  onClick,
-  onKeyDown,
-  role,
-  tabIndex,
-  onClickFavorite,
-  isFavorite,
-}: {
+interface BranchFilterListItemProps {
   branch: Branch
   className?: string
   onClick: (branch: Branch) => void
-  onKeyDown: (e: React.KeyboardEvent<HTMLLIElement>) => void
-  role: string
-  tabIndex: number
   onClickFavorite: (branch: Branch) => void
   isFavorite: boolean
-}) => (
+}
+
+const BranchFilterListItem = ({
+  branch,
+  className = "",
+  onClick,
+  onClickFavorite,
+  isFavorite,
+}: BranchFilterListItemProps) => (
   <li
     onClick={() => onClick(branch)}
-    onKeyDown={onKeyDown}
-    role={role}
-    tabIndex={tabIndex}
+    onKeyDown={(e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        onClick(branch)
+      }
+    }}
+    role="button"
+    tabIndex={0}
     className={`cursor-pointer w-full flex ${className}`}
   >
     <div className="w-full py-4 gap-4 flex items-stretch">
@@ -200,3 +84,126 @@ export const BranchFilterListItem = ({
     </div>
   </li>
 )
+
+const BranchFilterList = ({
+  branches,
+  onIntersect,
+  onSelectBranch,
+  isLoading,
+}: BranchFilterListProps) => {
+  const { observerTarget } = useIntersection({
+    onIntersect,
+  })
+
+  const { mutate: bookmark } = useBranchBookmarkMutation()
+  const { mutate: unbookmark } = useBranchUnbookmarkMutation()
+  const { openModal } = useOverlay()
+
+  const [favoriteBranches, setFavoriteBranches] = useState<Set<string>>(
+    new Set(),
+  )
+
+  const handleToggleFavorite = useCallback(
+    (branch: Branch) => {
+      if (favoriteBranches.has(branch.b_idx)) {
+        unbookmark(branch.b_idx, {
+          onSuccess: () => {
+            setFavoriteBranches((prev) => {
+              const next = new Set(prev)
+              next.delete(branch.b_idx)
+              return next
+            })
+          },
+          onError: () => {
+            openModal({
+              title: "즐겨찾기 해제 실패",
+              message: "즐겨찾기 해제에 실패했습니다. 다시 시도해주세요.",
+              onConfirm: () => {},
+            })
+          },
+        })
+      } else {
+        bookmark(branch.b_idx, {
+          onSuccess: () => {
+            setFavoriteBranches((prev) => {
+              const next = new Set(prev)
+              next.add(branch.b_idx)
+              return next
+            })
+          },
+          onError: () => {
+            openModal({
+              title: "즐겨찾기 추가 실패",
+              message: "즐겨찾기 추가에 실패했습니다. 다시 시도해주세요.",
+              onConfirm: () => {},
+            })
+          },
+        })
+      }
+    },
+    [bookmark, unbookmark, openModal, favoriteBranches],
+  )
+
+  const getIsFavorite = useCallback(
+    (branch: Branch) => favoriteBranches.has(branch.b_idx),
+    [favoriteBranches],
+  )
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <LoadingIndicator size={24} />
+      </div>
+    )
+  }
+
+  if (branches.length === 0) {
+    return (
+      <div className="flex flex-col h-full">
+        <div className="px-5 flex-none bg-white">
+          <p className="font-m text-14px text-gray-700">
+            {"총 "}
+            <span className="font-b">0</span>
+            {"개의 지점을 찾았습니다."}
+          </p>
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          <div className="flex justify-center items-center h-full">
+            <p className="font-m text-14px text-gray-400">
+              {"검색 결과가 없습니다."}
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex flex-col h-full">
+      <div className="px-5 flex-none bg-white">
+        <p className="font-m text-14px text-gray-700">
+          {"총 "}
+          <span className="font-b">{branches.length}</span>
+          {"개의 지점을 찾았습니다."}
+        </p>
+      </div>
+      <div className="flex-1 overflow-y-auto">
+        <ul className="divide-y px-5">
+          {branches.map((branch, index) => (
+            <BranchFilterListItem
+              key={branch.b_idx}
+              branch={branch}
+              className={index === 0 ? "pt-1" : ""}
+              onClick={onSelectBranch}
+              onClickFavorite={handleToggleFavorite}
+              isFavorite={getIsFavorite(branch)}
+            />
+          ))}
+          <div ref={observerTarget} className="h-4" />
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+export default BranchFilterList
