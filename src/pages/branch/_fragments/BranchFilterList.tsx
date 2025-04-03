@@ -10,17 +10,20 @@ import {
 import { useOverlay } from "../../../contexts/ModalContext.tsx"
 import { Image } from "@components/common/Image"
 import { useState, useCallback } from "react"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 interface BranchFilterListProps {
   branches: Branch[]
   onIntersect: () => void
   onSelectBranch: (branch: Branch) => void
+  isLoading?: boolean
 }
 
 const BranchFilterList = ({
   branches,
   onIntersect,
   onSelectBranch,
+  isLoading = false,
 }: BranchFilterListProps) => {
   const { observerTarget } = useIntersection({ onIntersect })
   const { showToast } = useOverlay()
@@ -63,6 +66,39 @@ const BranchFilterList = ({
     },
     [localBranchStates],
   )
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col h-full">
+        <div className="flex-1 overflow-y-auto">
+          <div className="flex justify-center items-center h-full">
+            <LoadingIndicator size={32} />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (branches.length === 0) {
+    return (
+      <div className="flex flex-col h-full">
+        <div className="px-5 flex-none bg-white">
+          <p className="font-m text-14px text-gray-700">
+            {"총 "}
+            <span className="font-b">0</span>
+            {"개의 지점을 찾았습니다."}
+          </p>
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          <div className="flex justify-center items-center h-full">
+            <p className="font-m text-14px text-gray-400">
+              {"검색 결과가 없습니다."}
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col h-full">

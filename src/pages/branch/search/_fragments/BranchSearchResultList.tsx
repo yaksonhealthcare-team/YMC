@@ -6,6 +6,7 @@ import useIntersection from "../../../../hooks/useIntersection.tsx"
 import { Branch } from "../../../../types/Branch.ts"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import SearchIcon from "@components/icons/SearchIcon"
+import BranchFilterList from "../../_fragments/BranchFilterList"
 
 interface BranchSearchResultListProps {
   query: string
@@ -97,19 +98,21 @@ const BranchSearchResultList = ({
 
   return (
     <div className="h-full overflow-y-auto">
-      <ul className="divide-y divide-gray-100 px-5">
-        {branches.map((branch, index) => (
-          <li key={index} className="py-4" onClick={() => onSelect(branch)}>
-            <BranchCard name={branch.name} address={branch.address} />
-          </li>
-        ))}
-        <div ref={observerTarget} className="h-4" />
-        {isFetchingNextPage && (
-          <div className="flex justify-center py-4">
-            <LoadingIndicator size={24} />
-          </div>
-        )}
-      </ul>
+      <BranchFilterList
+        branches={branches}
+        onIntersect={() => {
+          if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage()
+          }
+        }}
+        onSelectBranch={onSelect}
+        isLoading={branchesLoading}
+      />
+      {isFetchingNextPage && (
+        <div className="flex justify-center py-4">
+          <LoadingIndicator size={24} />
+        </div>
+      )}
     </div>
   )
 }
