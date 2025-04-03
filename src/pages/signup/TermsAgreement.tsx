@@ -1,6 +1,7 @@
 import { fetchEncryptDataForNice } from "@apis/pass.api"
 import { Button } from "@components/Button"
 import CheckFillCircleIcon from "@components/icons/CheckFillCircleIcon.tsx"
+import LoadingIndicator from "@components/LoadingIndicator"
 import { Checkbox } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -19,6 +20,7 @@ export const TermsAgreement = () => {
     location: false,
     marketing: false,
   })
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     setHeader({
@@ -70,8 +72,25 @@ export const TermsAgreement = () => {
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     event.preventDefault()
-    const data = await fetchEncryptDataForNice()
-    await checkByNice(data)
+    setIsLoading(true)
+    try {
+      const data = await fetchEncryptDataForNice()
+      await checkByNice(data)
+    } catch (error) {
+      console.error("PASS 인증 처리 중 오류 발생:", error)
+      setIsLoading(false)
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <LoadingIndicator />
+        <p className="mt-4 text-16px font-medium text-[#212121]">
+          본인 인증 정보를 처리 중입니다...
+        </p>
+      </div>
+    )
   }
 
   return (
