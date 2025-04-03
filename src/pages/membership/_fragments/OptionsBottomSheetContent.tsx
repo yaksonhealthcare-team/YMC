@@ -16,6 +16,7 @@ import { Branch } from "types/Branch.ts"
 import { useNavigate } from "react-router-dom"
 import { formatPrice, parsePrice } from "utils/format"
 import { createPortal } from "react-dom"
+import { useLayout } from "../../../contexts/LayoutContext"
 
 interface Props {
   serviceType?: string
@@ -47,6 +48,7 @@ export const OptionsBottomSheetContent = ({
   } = useMembershipOptionsStore()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const { openModal, closeOverlay } = useOverlay()
+  const { setNavigation } = useLayout()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -133,6 +135,9 @@ export const OptionsBottomSheetContent = ({
       await addCart(cartItems)
       await queryClient.refetchQueries({ queryKey: ["carts"] })
 
+      // 네비게이션 상태를 명시적으로 false로 설정
+      setNavigation({ display: false })
+
       openModal({
         title: "장바구니 담기 완료",
         message:
@@ -193,6 +198,9 @@ export const OptionsBottomSheetContent = ({
         },
       )
 
+      // 네비게이션 상태를 명시적으로 false로 설정
+      setNavigation({ display: false })
+
       // 스토어가 업데이트된 후에 네비게이션 실행
       navigate("/payment", { replace: true })
 
@@ -212,6 +220,8 @@ export const OptionsBottomSheetContent = ({
     setIsDropdownOpen(false)
     // 모달 닫기
     setIsModalOpen(false)
+    // 네비게이션 상태를 명시적으로 false로 설정
+    setNavigation({ display: false })
     // 오버레이 닫기
     onClose()
   }

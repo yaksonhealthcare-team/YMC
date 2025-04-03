@@ -163,10 +163,8 @@ const MembershipDetailPage = () => {
         duration={parseInt(membership.s_time || "0")}
         brandCode={brandCode}
         onClose={() => {
-          // 바텀시트가 닫힐 때 헤더를 다시 설정합니다
-          setTimeout(() => {
-            setMembershipHeader()
-          }, 50) // 약간의 지연 추가
+          setMembershipHeader()
+          setNavigation({ display: false })
           closeOverlay()
         }}
       />,
@@ -181,11 +179,7 @@ const MembershipDetailPage = () => {
         <div className={"flex items-center justify-between px-5 py-3 h-[48px]"}>
           <div
             onClick={() => {
-              if (location.state?.fromBranchSelect) {
-                navigate("/membership", { replace: true })
-              } else {
-                navigate(`/membership?brand_code=${brandCode}`)
-              }
+              navigate(-1)
             }}
           >
             <CaretLeftIcon className={"w-5 h-5"} />
@@ -197,16 +191,17 @@ const MembershipDetailPage = () => {
     })
   }
 
-  // 초기 마운트 및 location.state 변경 시 헤더 설정
+  // 초기 마운트 시 헤더 설정
   useEffect(() => {
     clear()
     setMembershipHeader()
     setNavigation({ display: false })
 
+    // 컴포넌트가 언마운트될 때 네비게이션 설정을 명시적으로 설정
     return () => {
-      setNavigation({ display: true })
+      setNavigation({ display: false })
     }
-  }, [location.state, brandCode, navigate, setHeader, setNavigation])
+  }, [brandCode, navigate, setHeader, setNavigation, clear])
 
   if (!membership) return <LoadingIndicator className="min-h-screen" />
 

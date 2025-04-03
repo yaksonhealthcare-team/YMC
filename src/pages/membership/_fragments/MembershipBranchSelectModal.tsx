@@ -18,42 +18,48 @@ export const MembershipBranchSelectModal = ({
   onClose,
   brandCode,
 }: Props) => {
-  const { setHeader } = useLayout()
+  const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const currentBrandCode = brandCode || searchParams.get("brand_code") || "001"
 
   // 모달이 닫힐 때 헤더를 복원
   useEffect(() => {
+    // 네비게이션 상태를 명시적으로 false로 설정
+    setNavigation({ display: false })
+
     return () => {
       // 모달이 닫힐 때 원래 회원권 상세 페이지의 헤더를 복원
-      setTimeout(() => {
-        setHeader({
-          display: true,
-          component: (
-            <div className={"flex items-center justify-between px-5 py-3 h-[48px]"}>
-              <button
-                onClick={() => {
+      setHeader({
+        display: true,
+        component: (
+          <div
+            className={"flex items-center justify-between px-5 py-3 h-[48px]"}
+          >
+            <button
+              onClick={() => {
+                navigate(`/membership?brand_code=${currentBrandCode}`)
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
                   navigate(`/membership?brand_code=${currentBrandCode}`)
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    navigate(`/membership?brand_code=${currentBrandCode}`)
-                  }
-                }}
-                className="focus:outline-none focus:ring-2 focus:ring-primary-300 rounded"
-                aria-label="뒤로 가기"
-              >
-                <CaretLeftIcon className={"w-5 h-5"} />
-              </button>
-              <CartIcon />
-            </div>
-          ),
-          backgroundColor: "bg-white",
-        });
-      }, 100);
-    };
-  }, []);
+                }
+              }}
+              className="focus:outline-none focus:ring-2 focus:ring-primary-300 rounded"
+              aria-label="뒤로 가기"
+            >
+              <CaretLeftIcon className={"w-5 h-5"} />
+            </button>
+            <CartIcon />
+          </div>
+        ),
+        backgroundColor: "bg-white",
+      })
+
+      // 네비게이션 상태를 명시적으로 false로 설정
+      setNavigation({ display: false })
+    }
+  }, [setHeader, setNavigation, navigate, currentBrandCode])
 
   return (
     <div
@@ -67,8 +73,8 @@ export const MembershipBranchSelectModal = ({
         <Header title="지점 선택" type="back_title" onClickBack={onClose} />
         <MembershipBranchSelectPage
           onSelect={(branch) => {
-            onBranchSelect(branch);
-            onClose();
+            onBranchSelect(branch)
+            onClose()
           }}
           brandCode={brandCode}
         />

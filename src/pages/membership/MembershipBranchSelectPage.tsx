@@ -55,7 +55,7 @@ const MembershipBranchSelectPage = ({ onSelect, brandCode }: Props) => {
 
     return () => {
       setHeader({ display: false })
-      setNavigation({ display: true })
+      // 네비게이션 상태는 변경하지 않음
     }
   }, [setHeader, setNavigation, navigate, memoizedState])
 
