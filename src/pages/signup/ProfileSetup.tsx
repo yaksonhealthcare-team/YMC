@@ -39,7 +39,8 @@ export const ProfileSetup = () => {
     setHeader({
       display: true,
       left: "back",
-      backgroundColor: "white",
+      backgroundColor: "bg-white",
+      title: "프로필 설정",
     })
     setNavigation({ display: false })
   }, [setHeader, setNavigation])
@@ -266,6 +267,7 @@ export const ProfileSetup = () => {
               variantType="primary"
               sizeType="s"
               onClick={() => setIsPostcodeOpen(true)}
+              className="whitespace-nowrap min-w-[100px]"
             >
               우편번호 검색
             </Button>
