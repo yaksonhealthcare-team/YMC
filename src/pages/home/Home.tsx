@@ -63,8 +63,8 @@ const Home = () => {
     navigate("/reservation/form", {
       state: {
         originalPath: "/",
-        fromHome: true
-      }
+        fromHome: true,
+      },
     })
   }
 
@@ -169,18 +169,18 @@ const Home = () => {
           buttonArea={
             <div className="relative">
               <button
-                className="w-11 h-11 bg-primary-300 text-white rounded-full shadow-lg flex justify-center items-center"
+                className="w-11 h-11 bg-primary-300 text-white rounded-full shadow-lg flex justify-center items-center relative"
                 onClick={() => navigate("/notification")}
               >
                 <NotiIcon className="text-white w-6 h-6" />
+                {unreadCount > 0 && (
+                  <div className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-white border border-primary rounded-full flex items-center justify-center px-1">
+                    <span className="text-primary text-[10px] leading-none font-m">
+                      {getDisplayCount(unreadCount)}
+                    </span>
+                  </div>
+                )}
               </button>
-              {unreadCount > 0 && (
-                <div className="absolute -top-0.5 right-1 min-w-[18px] h-[18px] bg-white border border-primary rounded-full flex items-center justify-center px-1">
-                  <span className="text-primary text-[10px] leading-none font-m">
-                    {getDisplayCount(unreadCount)}
-                  </span>
-                </div>
-              )}
             </div>
           }
         />
