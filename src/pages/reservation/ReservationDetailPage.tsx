@@ -205,6 +205,10 @@ const ReservationDetailPage = () => {
       membershipId: reservation.membershipId,
       fromReservationDetail: true,
       originalPath: currentPath,
+      selectedBranch: {
+        b_idx: reservation.branchId,
+        b_name: reservation.store,
+      },
     }
     navigate("/reservation/form", { state })
   }

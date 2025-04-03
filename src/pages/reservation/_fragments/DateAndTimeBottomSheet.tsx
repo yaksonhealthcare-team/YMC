@@ -45,7 +45,7 @@ const DateAndTimeBottomSheet = ({
   const [selectedTime, setSelectedTime] = useState<TimeSlot | null>(initialTime)
 
   const handleDateSelect = (date: Dayjs | null) => {
-    if (selectedDate && date && !selectedDate.isSame(date, 'day')) {
+    if (selectedDate && date && !selectedDate.isSame(date, "day")) {
       setSelectedTime(null)
       setSelectedDate(date)
     } else {
@@ -212,7 +212,9 @@ const DatePickerSection = ({
   addServices,
   b_idx,
 }: DatePickerSectionProps) => {
-  const [currentYearMonth, setCurrentYearMonth] = useState<Dayjs>(date || dayjs())
+  const [currentYearMonth, setCurrentYearMonth] = useState<Dayjs>(
+    date || dayjs(),
+  )
   const [isMonthChanging, setIsMonthChanging] = useState(false)
 
   const handleMonthChange = (newDate: Dayjs) => {
@@ -220,7 +222,11 @@ const DatePickerSection = ({
     setCurrentYearMonth(newDate)
   }
 
-  const { data: scheduleDate, isLoading, isFetching } = useScheduleDateQueries({
+  const {
+    data: scheduleDate,
+    isLoading,
+    isFetching,
+  } = useScheduleDateQueries({
     membershipIndex,
     searchDate: currentYearMonth,
     addServices,
@@ -259,7 +265,7 @@ const DatePickerSection = ({
   // 커스텀 Calendar Header 렌더링 함수
   const CustomCalendarHeader = (props: PickersCalendarHeaderProps<Dayjs>) => {
     const { onMonthChange, disabled } = props
-    
+
     // displayDate는 우리가 관리하는 currentYearMonth 사용
     const displayDate = currentYearMonth
 
@@ -281,9 +287,13 @@ const DatePickerSection = ({
       }
     }
 
-    const isPrevDisabled = displayDate.isSame(dayjs(), "month") || disabled || isLoading || isFetching
+    const isPrevDisabled =
+      displayDate.isSame(dayjs(), "month") ||
+      disabled ||
+      isLoading ||
+      isFetching
     const isNextDisabled = disabled || isLoading || isFetching
-    
+
     return (
       <div className="relative flex justify-center items-center w-[168px] mx-auto mb-6">
         <button
@@ -361,7 +371,11 @@ const TimePickerSection = ({
   selectedDate,
   b_idx,
 }: TimePickerSectionProps) => {
-  const { data: times, isLoading, isFetching } = useScheduleTimesQueries({
+  const {
+    data: times,
+    isLoading,
+    isFetching,
+  } = useScheduleTimesQueries({
     membershipIndex,
     searchDate: selectedDate,
     addServices,
@@ -378,6 +392,13 @@ const TimePickerSection = ({
 
     setTimeSlots(mapTimesToTimeSlots(times))
   }, [times])
+
+  const formatTimeDisplay = (time: string) => {
+    const [hours, minutes] = time.split(":").map(Number)
+    const ampm = hours < 12 ? "오전" : "오후"
+    const hour12 = hours % 12 || 12
+    return `${ampm} ${hour12}:${minutes.toString().padStart(2, "0")}`
+  }
 
   return (
     <div className="w-full">
@@ -408,7 +429,7 @@ const TimePickerSection = ({
                     "disabled:!bg-gray-50 disabled:!text-gray-300 disabled:!border-gray-200",
                   )}
                 >
-                  {slot.time}
+                  {formatTimeDisplay(slot.time)}
                 </Button>
               ))
             ) : (
