@@ -278,47 +278,48 @@ const ReservationFormPage = () => {
 
   // 회원권 유효성 검사
   useEffect(() => {
-    let isSubscribed = true
+    let isSubscribed = true;
+    let modalOpened = false;
 
     const checkMembershipValidity = async () => {
-      if (location.state?.fromReservation?.membershipId && membershipsData) {
+      if (location.state?.fromReservation?.membershipId && membershipsData && isSubscribed && !modalOpened) {
         const membership = membershipsData.pages[0]?.body?.find(
           (m) => m.mp_idx === location.state.fromReservation.membershipId,
-        )
+        );
 
-        if (isSubscribed) {
-          if (!membership) {
-            await openModal({
-              title: "알림",
-              message: "해당 회원권 정보를 찾을 수 없습니다.",
-              onConfirm: () => {
-                navigate("/member-history/reservation", { replace: true })
-              },
-            })
-          } else if (Number(membership.remain_amount) <= 0) {
-            await openModal({
-              title: "알림",
-              message: "해당 회원권의 잔여 횟수가 없습니다.",
-              onConfirm: () => {
-                navigate("/member-history/reservation", { replace: true })
-              },
-            })
-          }
+        if (!membership) {
+          modalOpened = true;
+          openModal({
+            title: "알림",
+            message: "해당 회원권 정보를 찾을 수 없습니다.",
+            onConfirm: () => {
+              navigate("/member-history/reservation", { replace: true });
+            },
+          });
+        } else if (Number(membership.remain_amount) <= 0) {
+          modalOpened = true;
+          openModal({
+            title: "알림",
+            message: "해당 회원권의 잔여 횟수가 없습니다.",
+            onConfirm: () => {
+              navigate("/member-history/reservation", { replace: true });
+            },
+          });
         }
       }
-    }
+    };
 
-    checkMembershipValidity()
+    checkMembershipValidity();
 
     return () => {
-      isSubscribed = false
-    }
+      isSubscribed = false;
+    };
   }, [
     location.state?.fromReservation?.membershipId,
     membershipsData,
     openModal,
     navigate,
-  ])
+  ]);
 
   // Cleanup on unmount
   useEffect(() => {
