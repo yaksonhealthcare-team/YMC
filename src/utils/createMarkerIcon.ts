@@ -65,6 +65,18 @@ export const createMarkerIcon = (
       "bookmark": TherapistBookmarkPin,
       "active-bookmark": TherapistActiveBookmarkPin,
     },
+    "yakson": {
+      "default": TherapistPin,
+      "active": TherapistActivePin,
+      "bookmark": TherapistBookmarkPin,
+      "active-bookmark": TherapistActiveBookmarkPin,
+    },
+    "yerihan": {
+      "default": TherapistPin,
+      "active": TherapistActivePin,
+      "bookmark": TherapistBookmarkPin,
+      "active-bookmark": TherapistActiveBookmarkPin,
+    },
   } as const
 
   const brandKey = branch.brand as keyof typeof iconMap

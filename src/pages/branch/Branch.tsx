@@ -183,32 +183,25 @@ const Branch = () => {
               <SearchIcon className={"w-6 h-6"} />
             </button>
           </div>
-          <BranchFilterSection
-            currentFilter={selectedFilter}
-            onInitialize={handleFilterReset}
-            onClick={() => {
-              openBottomSheet(
-                <BranchFilterBottomSheet
-                  onClose={closeOverlay}
-                  brands={(brands || []).map((brand) => ({
-                    title: brand.name,
-                    code: brand.code,
-                  }))}
-                  currentFilter={selectedFilter}
-                  onApply={handleFilterChange}
-                  onBrandChange={handleBrandChange}
-                />,
-              )
-            }}
-          />
-          <div className="px-5 py-3 flex-none bg-white border-b border-gray-100">
-            <p className="font-m text-14px text-gray-700">
-              {"총 "}
-              <span className="font-b">
-                {result?.pages[0]?.total_count || 0}
-              </span>
-              {"개의 지점을 찾았습니다."}
-            </p>
+          <div className="border-b border-gray-100">
+            <BranchFilterSection
+              currentFilter={selectedFilter}
+              onInitialize={handleFilterReset}
+              onClick={() => {
+                openBottomSheet(
+                  <BranchFilterBottomSheet
+                    onClose={closeOverlay}
+                    brands={(brands || []).map((brand) => ({
+                      title: brand.name,
+                      code: brand.code,
+                    }))}
+                    currentFilter={selectedFilter}
+                    onApply={handleFilterChange}
+                    onBrandChange={handleBrandChange}
+                  />,
+                )
+              }}
+            />
           </div>
         </div>
       ),
@@ -225,6 +218,7 @@ const Branch = () => {
     categories,
     isCategoriesLoading,
     result?.pages[0]?.total_count,
+    screen,
   ])
 
   const renderScreen = () => {
@@ -253,7 +247,9 @@ const Branch = () => {
   }
 
   return (
-    <div className="relative flex flex-col h-screen pt-[80px]">
+    <div
+      className={`relative flex flex-col h-screen ${screen === "list" ? "pt-[60px]" : "pt-[0px]"}`}
+    >
       {renderScreen()}
       <div
         className={`fixed bottom-10 left-1/2 -translate-x-1/2 ${selectedBranch ? "transition-transform -translate-y-32 duration-300" : "transition-transform translate-y-0 duration-300"}`}

@@ -24,42 +24,57 @@ const BranchFilterList = ({
 }: BranchFilterListProps) => {
   const { observerTarget } = useIntersection({ onIntersect })
   const { showToast } = useOverlay()
-  
+
   // 지역 상태로 북마크 상태를 관리합니다
-  const [localBranchStates, setLocalBranchStates] = useState<Record<string, boolean>>({})
+  const [localBranchStates, setLocalBranchStates] = useState<
+    Record<string, boolean>
+  >({})
 
   const { mutate: addBookmark } = useBranchBookmarkMutation()
   const { mutate: removeBookmark } = useBranchUnbookmarkMutation()
-  
+
   // 북마크 토글 함수
-  const handleToggleFavorite = useCallback((branch: Branch) => {
-    // 로컬 상태 먼저 업데이트
-    setLocalBranchStates(prev => ({
-      ...prev,
-      [branch.b_idx]: !getIsFavorite(branch)
-    }))
-    
-    if (getIsFavorite(branch)) {
-      removeBookmark(branch.b_idx)
-      showToast("즐겨찾기에서 삭제했어요.")
-    } else {
-      addBookmark(branch.b_idx)
-      showToast("즐겨찾기에 추가했어요.")
-    }
-  }, [addBookmark, removeBookmark, showToast])
-  
+  const handleToggleFavorite = useCallback(
+    (branch: Branch) => {
+      // 로컬 상태 먼저 업데이트
+      setLocalBranchStates((prev) => ({
+        ...prev,
+        [branch.b_idx]: !getIsFavorite(branch),
+      }))
+
+      if (getIsFavorite(branch)) {
+        removeBookmark(branch.b_idx)
+        showToast("즐겨찾기에서 삭제했어요.")
+      } else {
+        addBookmark(branch.b_idx)
+        showToast("즐겨찾기에 추가했어요.")
+      }
+    },
+    [addBookmark, removeBookmark, showToast],
+  )
+
   // 브랜치의 실제 즐겨찾기 상태를 계산하는 함수
-  const getIsFavorite = useCallback((branch: Branch) => {
-    // 로컬 상태가 존재하면 로컬 상태를, 없으면 서버 상태를 사용
-    return branch.b_idx in localBranchStates 
-      ? localBranchStates[branch.b_idx] 
-      : branch.isFavorite
-  }, [localBranchStates])
+  const getIsFavorite = useCallback(
+    (branch: Branch) => {
+      // 로컬 상태가 존재하면 로컬 상태를, 없으면 서버 상태를 사용
+      return branch.b_idx in localBranchStates
+        ? localBranchStates[branch.b_idx]
+        : branch.isFavorite
+    },
+    [localBranchStates],
+  )
 
   return (
     <div className="flex flex-col h-full">
+      <div className="px-5 flex-none bg-white">
+        <p className="font-m text-14px text-gray-700">
+          {"총 "}
+          <span className="font-b">{branches.length}</span>
+          {"개의 지점을 찾았습니다."}
+        </p>
+      </div>
       <div className="flex-1 overflow-y-auto">
-        <ul className="divide-y px-5 pt-3">
+        <ul className="divide-y px-5">
           {branches.map((branch, index) => (
             <BranchFilterListItem
               key={branch.b_idx}
