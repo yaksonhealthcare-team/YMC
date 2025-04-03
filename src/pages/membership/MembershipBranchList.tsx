@@ -28,6 +28,7 @@ const MembershipBranchList = ({
     useMembershipOptionsStore()
 
   const debouncedQuery = useDebounce(query, 300)
+  const s_idx = location.state?.s_idx ?? location.state?.membershipId
 
   const {
     data: branchPages,
@@ -41,17 +42,18 @@ const MembershipBranchList = ({
     latitude: geolocationLocation?.latitude,
     longitude: geolocationLocation?.longitude,
     search: debouncedQuery,
-    brandCode: location.state?.brand_code,
+    brandCode: undefined,
     mp_idx: location.state?.selectedItem,
+    s_idx: s_idx,
     isConsultation: location.state?.isConsultation,
     enabled: !!geolocationLocation,
   })
 
-  const branches = branchPages?.pages.flatMap((page) => page.body.result) || []
+  const branches = branchPages?.pages.flatMap((page) => page.body.result) ?? []
 
   // 사용 가능한 지점 목록이 지정된 경우 해당 지점만 필터링
   const availableBranches: BranchInfo[] =
-    location.state?.availableBranches || []
+    location.state?.availableBranches ?? []
 
   // 서버에서 이미 필터링된 결과를 사용
   const filteredBranches = branches

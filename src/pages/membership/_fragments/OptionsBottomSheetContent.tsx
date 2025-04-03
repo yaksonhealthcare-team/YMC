@@ -247,6 +247,17 @@ export const OptionsBottomSheetContent = ({
     setIsModalOpen(false)
   }
 
+  const openBranchSelectModal = () => {
+    setIsModalOpen(true)
+    // s_idx 정보를 모달에 전달
+    navigate(".", {
+      state: {
+        s_idx: membershipId,
+        brand_code: brandCode
+      }
+    })
+  }
+
   return (
     <div className="flex flex-col max-h-[610px] min-h-[500px]">
       {/* 콘텐츠 영역 */}
@@ -259,7 +270,7 @@ export const OptionsBottomSheetContent = ({
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
-              setIsModalOpen(true)
+              openBranchSelectModal()
             }}
           >
             <span

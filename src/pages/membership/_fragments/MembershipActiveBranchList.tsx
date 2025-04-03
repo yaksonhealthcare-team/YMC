@@ -13,31 +13,43 @@ interface BranchInfo {
 
 interface Props {
   onBranchSelect: (branch: Branch) => void
+  brandCode?: string
 }
 
-export const MembershipActiveBranchList = ({ onBranchSelect }: Props) => {
+export const MembershipActiveBranchList = ({ onBranchSelect, brandCode }: Props) => {
   const { user } = useAuth()
   const location = useLocation()
 
   // 사용 가능한 지점 목록
   const availableBranches: BranchInfo[] =
-    location.state?.availableBranches || []
+    location.state?.availableBranches ?? []
+  
+  // 현재 선택된 브랜드 코드
+  const currentBrandCode = brandCode ?? location.state?.brand_code ?? ""
 
+  // TODO: 백엔드 auth/me 에 brandCode 필드 추가 후 이용중인 지점 정상적으로 출력되는지 확인 필요
   // 사용자의 활성 지점과 사용 가능한 지점을 필터링
   const filteredBranches = useMemo(() => {
     if (!user?.brands?.length) return []
-
+    
     if (availableBranches.length === 0) {
-      return user.brands as BranchInfo[] // 사용 가능한 지점 목록이 없으면 모든 활성 지점 표시
+      // 브랜드 코드가 있는 경우 해당 브랜드만 필터링
+      if (currentBrandCode) {
+        return (user.brands as BranchInfo[]).filter(
+          (brand) => brand.brandCode === currentBrandCode
+        )
+      }
+      return user.brands as BranchInfo[] // 필터링 없이 모든 활성 지점 표시
     }
 
-    // 사용자의 활성 지점 중 사용 가능한 지점만 필터링
+    // 사용 가능한 지점 목록이 있는 경우, 사용자의 활성 지점과 교차 필터링
     return (user.brands as BranchInfo[]).filter((brand) =>
       availableBranches.some(
-        (availableBranch: BranchInfo) => availableBranch.b_idx === brand.b_idx,
+        (availableBranch: BranchInfo) => availableBranch.b_idx === brand.b_idx
+        && (currentBrandCode ? brand.brandCode === currentBrandCode : true)
       ),
     )
-  }, [user?.brands, availableBranches])
+  }, [user?.brands, availableBranches, currentBrandCode])
 
   if (!filteredBranches.length) {
     return (
