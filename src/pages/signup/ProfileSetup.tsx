@@ -99,6 +99,7 @@ export const ProfileSetup = () => {
           const uploadedUrls = await uploadImages({
             fileToUpload: [profileImageFile],
             nextUrl: "/auth/signup",
+            isSignup: "Y",
           })
 
           if (uploadedUrls && uploadedUrls.length > 0) {

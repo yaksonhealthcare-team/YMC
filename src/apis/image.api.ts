@@ -3,6 +3,7 @@ import { axiosClient } from "../queries/clients.ts"
 export interface FileUploadRequest {
   fileToUpload: File[]
   nextUrl: string
+  isSignup?: "Y" | "N"
 }
 
 export interface FileUploadResponse {
@@ -33,6 +34,10 @@ export const uploadImages = async (
     "nextUrl",
     `${import.meta.env.VITE_API_BASE_URL}${request.nextUrl}`,
   )
+
+  if (request.isSignup) {
+    formData.append("isSignup", request.isSignup)
+  }
 
   const { data } = await axiosClient.post<FileUploadResponse>(
     "/images/images",
