@@ -74,7 +74,6 @@ const LocationPickerMap = () => {
   const handleMapMove = (newCenter: Coordinate) => {
     setCenter(newCenter)
     fetchAddressFromCoords(newCenter)
-    fetchBranchesNearby(newCenter)
   }
 
   // 지점 선택 처리
@@ -86,7 +85,6 @@ const LocationPickerMap = () => {
     }
     setCenter(newCenter)
     fetchAddressFromCoords(newCenter)
-    fetchBranchesNearby(newCenter)
   }
 
   // 위치 설정 및 페이지 이동
