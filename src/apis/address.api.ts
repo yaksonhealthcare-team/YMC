@@ -33,6 +33,7 @@ interface AddressBookmarkResponse {
     lat: string
     lon: string
     base_address: "Y" | "N"
+    b_name?: string
   }>
 }
 
@@ -73,10 +74,12 @@ export const getAddressBookmarks = async (): Promise<Location[]> => {
     await axiosClient.get<AddressBookmarkResponse>("/address/bookmarks")
   return data.body.map((item) => ({
     csab_idx: item.csab_idx,
+    b_idx: item.csab_idx,
     address: item.address,
     lat: item.lat,
     lon: item.lon,
     base_address: item.base_address,
+    name: item.b_name || "",
   }))
 }
 
@@ -91,13 +94,13 @@ export const addAddressBookmark = async (
 }
 
 export const deleteAddressBookmark = async (
-  csab_idx: string,
+  b_idx: string,
 ): Promise<ApiResponse<null>> => {
   const { data } = await axiosClient.delete<ApiResponse<null>>(
     `/address/bookmarks`,
     {
       data: {
-        csab_idx,
+        b_idx,
       },
     },
   )

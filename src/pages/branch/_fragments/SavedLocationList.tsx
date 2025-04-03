@@ -29,7 +29,9 @@ const SavedLocationList = ({
       <LocationSearchResultList
         type="saved"
         locations={bookmarks}
-        onDelete={deleteBookmark}
+        onDelete={(id) => {
+          deleteBookmark(id)
+        }}
         onClick={(location) => {
           const coords = {
             latitude: parseFloat(location.lat),

@@ -33,10 +33,10 @@ const LocationSearchResultList = ({
             <PinIcon className={"w-4 h-4"} />
             <div className="flex-1">
               <p className={"font-b text-14px"}>
-                {location.name || "지점명 없음"}
+                {location.name || location.address}
               </p>
               <p className={"text-12px text-gray-500 mt-1"}>
-                {location.address}
+                {location.name ? location.address : ""}
               </p>
             </div>
             {type === "saved" && onDelete && (
@@ -44,7 +44,7 @@ const LocationSearchResultList = ({
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
-                  onDelete(location.csab_idx!)
+                  onDelete(location.b_idx || location.csab_idx!)
                 }}
               >
                 <HeartEnabledIcon className={"w-5 h-5"} />

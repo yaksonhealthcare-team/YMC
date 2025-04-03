@@ -17,7 +17,8 @@ const LocationPickerMap = () => {
   const { setHeader, setNavigation } = useLayout()
   const { location, loading } = useGeolocation()
   const { setLocation } = useBranchLocationSelect()
-  const { address, fetchAddressFromCoords, updateAddressInfo } = useAddressFromCoords()
+  const { address, fetchAddressFromCoords, updateAddressInfo } =
+    useAddressFromCoords()
   const [center, setCenter] = useState<Coordinate | null>(null)
   const [branches, setBranches] = useState<Branch[]>([])
   const [hasDragged, setHasDragged] = useState(false)
@@ -36,7 +37,8 @@ const LocationPickerMap = () => {
   // 위치 초기화
   useEffect(() => {
     if (routeLocation.state?.selectedLocation?.coords) {
-      const { coords, address: locationAddress } = routeLocation.state.selectedLocation
+      const { coords, address: locationAddress } =
+        routeLocation.state.selectedLocation
       setCenter(coords)
       updateAddressInfo(locationAddress)
       setHasDragged(true)
@@ -48,7 +50,7 @@ const LocationPickerMap = () => {
   // 중심 좌표 변경 시 관련 데이터 업데이트
   useEffect(() => {
     if (!center) return
-    
+
     fetchAddressFromCoords(center)
     fetchBranchesNearby(center)
   }, [center])
@@ -70,17 +72,17 @@ const LocationPickerMap = () => {
   // 위치 이동 감지 및 처리
   const handleMapMove = (newCenter: Coordinate) => {
     if (routeLocation.state?.selectedLocation && center) {
-      const isSignificantMove = 
-        Math.abs(newCenter.latitude - center.latitude) > 0.0001 || 
+      const isSignificantMove =
+        Math.abs(newCenter.latitude - center.latitude) > 0.0001 ||
         Math.abs(newCenter.longitude - center.longitude) > 0.0001
-      
+
       if (isSignificantMove) {
         setHasDragged(true)
       }
     } else {
       setHasDragged(true)
     }
-    
+
     setCenter(newCenter)
   }
 
@@ -97,9 +99,10 @@ const LocationPickerMap = () => {
         selectedLocation: {
           address: {
             road: address.road,
-            jibun: address.jibun
+            jibun: address.jibun,
           },
           coords: center,
+          name: routeLocation.state?.selectedLocation?.name || "",
         },
       },
     })

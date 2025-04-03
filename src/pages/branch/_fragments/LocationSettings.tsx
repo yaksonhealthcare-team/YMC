@@ -129,6 +129,7 @@ const LocationSettings = () => {
               jibun: "",
             },
             coords,
+            name: "",
           },
         },
       })
