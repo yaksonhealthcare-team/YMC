@@ -23,7 +23,7 @@ const LocationSearchResultList = ({
   }
 
   return (
-    <ul className={"px-5 divide-y divide-gray-100 overflow-y-scroll"}>
+    <ul className={"px-5 divide-y divide-gray-100"}>
       {locations.map((location, index) => (
         <li key={location.csab_idx ?? index} className={"py-4"}>
           <div

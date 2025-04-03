@@ -24,7 +24,7 @@ const SavedLocationList = ({
   }
 
   return (
-    <div className={"flex flex-col py-6 h-full overflow-y-scroll"}>
+    <div className={"flex flex-col py-6 h-full"}>
       <p className={"px-5 font-sb text-16px"}>{"자주 쓰는 주소"}</p>
       <LocationSearchResultList
         type="saved"
