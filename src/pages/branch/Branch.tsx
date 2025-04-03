@@ -251,6 +251,7 @@ const Branch = () => {
               }
             }}
             onSelectBranch={handleBranchSelect}
+            isLoading={branchesLoading}
           />
         )
       case "map":
