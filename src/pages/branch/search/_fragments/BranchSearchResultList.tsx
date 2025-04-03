@@ -1,8 +1,6 @@
-import BranchCard from "@components/BranchCard.tsx"
 import useDebounce from "../../../../hooks/useDebounce.tsx"
 import { useBranches } from "../../../../queries/useBranchQueries.tsx"
 import { useGeolocation } from "../../../../hooks/useGeolocation.tsx"
-import useIntersection from "../../../../hooks/useIntersection.tsx"
 import { Branch } from "../../../../types/Branch.ts"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import SearchIcon from "@components/icons/SearchIcon"
@@ -49,14 +47,6 @@ const BranchSearchResultList = ({
         brand: "therapist",
       })),
     ) || []
-
-  const { observerTarget } = useIntersection({
-    onIntersect: () => {
-      if (hasNextPage && !isFetchingNextPage) {
-        fetchNextPage()
-      }
-    },
-  })
 
   // 위치 정보를 로딩 중인 경우 로딩 표시
   if (locationLoading) {
