@@ -139,9 +139,16 @@ export const useCancelReservation = () => {
 }
 
 export const useCreateReservationMutation = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: (params: CreateReservationRequest) => createReservation(params),
     retry: false,
+    onSuccess: () => {
+      // 예약 목록 쿼리 무효화
+      queryClient.invalidateQueries({ queryKey: ["reservations"] })
+      queryClient.invalidateQueries({ queryKey: ["upcomingReservations"] })
+    },
   })
 }
 
