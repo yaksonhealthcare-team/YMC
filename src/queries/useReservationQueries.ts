@@ -148,6 +148,19 @@ export const useCreateReservationMutation = () => {
       // 예약 목록 쿼리 무효화
       queryClient.invalidateQueries({ queryKey: ["reservations"] })
       queryClient.invalidateQueries({ queryKey: ["upcomingReservations"] })
+      // 모든 예약 상태에 대한 쿼리 무효화
+      queryClient.invalidateQueries({
+        queryKey: ["reservations", "000"], // 전체
+      })
+      queryClient.invalidateQueries({
+        queryKey: ["reservations", "001"], // 예약완료
+      })
+      queryClient.invalidateQueries({
+        queryKey: ["reservations", "002"], // 방문완료
+      })
+      queryClient.invalidateQueries({
+        queryKey: ["reservations", "003"], // 예약취소
+      })
     },
   })
 }
