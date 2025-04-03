@@ -50,9 +50,9 @@ export const createRoutes = () => {
 }
 
 export const AppRouter = () => (
-  <AppBridge>
-    <AuthProvider>
+  <AuthProvider>
+    <AppBridge>
       <RouterProvider router={createRoutes()} />
-    </AuthProvider>
-  </AppBridge>
+    </AppBridge>
+  </AuthProvider>
 )
