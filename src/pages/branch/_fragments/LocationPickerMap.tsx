@@ -17,8 +17,7 @@ const LocationPickerMap = () => {
   const { setHeader, setNavigation } = useLayout()
   const { location, loading } = useGeolocation()
   const { setLocation } = useBranchLocationSelect()
-  const { address, fetchAddressFromCoords, updateAddressInfo } =
-    useAddressFromCoords()
+  const { address, fetchAddressFromCoords } = useAddressFromCoords()
   const [center, setCenter] = useState<Coordinate | null>(null)
   const [branches, setBranches] = useState<Branch[]>([])
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
@@ -36,18 +35,26 @@ const LocationPickerMap = () => {
 
   // 위치 초기화
   useEffect(() => {
+    let initialCoords: Coordinate | null = null
+
+    // 1. 이전 페이지(LocationSettings)에서 state로 좌표를 전달받은 경우
     if (routeLocation.state?.selectedLocation?.coords) {
-      const { coords, address: locationAddress } =
-        routeLocation.state.selectedLocation
-      setCenter(coords)
-      updateAddressInfo(locationAddress)
-      fetchBranchesNearby(coords)
-    } else if (location) {
-      setCenter(location)
-      fetchAddressFromCoords(location)
-      fetchBranchesNearby(location)
+      initialCoords = routeLocation.state.selectedLocation.coords
     }
-  }, [routeLocation.state, location])
+    // 2. state가 없고, 현재 위치(geolocation)를 성공적으로 가져온 경우
+    else if (location) {
+      initialCoords = location
+    }
+
+    // 유효한 초기 좌표가 결정된 경우
+    if (initialCoords) {
+      setCenter(initialCoords) // 지도 중심 설정
+      fetchAddressFromCoords(initialCoords) // 좌표로 실제 주소 가져오기 (항상 호출)
+      fetchBranchesNearby(initialCoords) // 좌표로 주변 지점 가져오기 (항상 호출)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [routeLocation.state, location]) // 의존성 배열은 그대로 두거나, 필요시 lint 경고에 따라 fetch 함수 추가
 
   // 주변 지점 가져오기
   const fetchBranchesNearby = async (coords: Coordinate) => {
