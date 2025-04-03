@@ -62,12 +62,12 @@ const MapView = ({
     let mounted = true
 
     const initializeMap = () => {
-      if (!mounted || !mapRef.current || !center || !isLoaded) {
+      if (!mapRef.current || !center || mapInstance.current) {
         return
       }
 
       try {
-        mapInstance.current = new window.naver.maps.Map("map", {
+        mapInstance.current = new window.naver.maps.Map(mapRef.current, {
           center: new window.naver.maps.LatLng(
             center.latitude,
             center.longitude,
@@ -78,14 +78,13 @@ const MapView = ({
         if (!mounted) return
         setIsMapInitialized(true)
 
-        // 드래그 종료 시에만 위치 업데이트
         if (options?.onMoveMap && mapInstance.current) {
           const map = mapInstance.current
           window.naver.maps.Event.addListener(map, "dragend", () => {
-            const center = map.getCenter()
+            const currentCenter = map.getCenter()
             options?.onMoveMap?.({
-              latitude: center.y,
-              longitude: center.x,
+              latitude: currentCenter.y,
+              longitude: currentCenter.x,
             })
           })
         }
@@ -93,48 +92,65 @@ const MapView = ({
         if (options?.showCurrentLocation) {
           getCurrentLocation({
             onSuccess: (coords) => {
-              if (!mounted) return
-              setCurrentLocation(coords)
+              if (mounted) {
+                setCurrentLocation(coords)
+              }
             },
           })
         }
-      } catch (error) {
-        // 지도 초기화 중 오류 발생
+      } catch (e) {
+        console.error("Failed to initialize map:", e)
       }
     }
 
-    if (isLoaded && center) {
-      // mapRef가 설정될 때까지 대기
+    if (isLoaded && !mapInstance.current) {
       if (!mapRef.current) {
         const checkMapRef = setInterval(() => {
           if (mapRef.current) {
             clearInterval(checkMapRef)
-            initializeMap()
+            if (mounted) initializeMap()
           }
         }, 100)
 
         return () => {
+          mounted = false
           clearInterval(checkMapRef)
         }
+      } else {
+        initializeMap()
       }
-
-      initializeMap()
     }
 
     return () => {
       mounted = false
-      if (mapInstance.current) {
-        mapInstance.current = null
-        setIsMapInitialized(false)
+    }
+  }, [
+    isLoaded,
+    center?.latitude,
+    center?.longitude,
+    options?.onMoveMap,
+    options?.showCurrentLocation,
+  ])
+
+  useEffect(() => {
+    if (isMapInitialized && mapInstance.current && center) {
+      const currentMapCenter = mapInstance.current.getCenter()
+      const newCenterLatLng = new window.naver.maps.LatLng(
+        center.latitude,
+        center.longitude,
+      )
+
+      if (!currentMapCenter.equals(newCenterLatLng)) {
+        mapInstance.current.setCenter(newCenterLatLng)
       }
     }
-  }, [center, isLoaded])
+  }, [center, isMapInitialized])
 
   useEffect(() => {
     if (isMapInitialized && currentLocation && mapInstance.current) {
       updateCurrentLocationMarker(currentLocation)
     }
-  }, [currentLocation, isMapInitialized])
+  }, [currentLocation, isMapInitialized, updateCurrentLocationMarker])
 
   const handleCurrentLocationClick = () => {
     getCurrentLocation({
