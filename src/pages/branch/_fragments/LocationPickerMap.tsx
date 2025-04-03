@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState } from "react"
 import { useLayout } from "../../../contexts/LayoutContext.tsx"
 import MapView from "@components/MapView.tsx"
 import { useGeolocation } from "../../../hooks/useGeolocation.tsx"
@@ -34,23 +34,6 @@ const LocationPickerMap = () => {
     setNavigation({ display: false })
   }, [])
 
-  // 주변 지점 가져오기
-  const fetchBranchesNearby = useCallback(
-    async (coords: Coordinate) => {
-      try {
-        const result = await fetchBranches({
-          page: 1,
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-        })
-        setBranches(result.branches)
-      } catch (error) {
-        console.error("Failed to fetch branches:", error)
-      }
-    },
-    [setBranches],
-  )
-
   // 위치 초기화
   useEffect(() => {
     if (routeLocation.state?.selectedLocation?.coords) {
@@ -64,13 +47,21 @@ const LocationPickerMap = () => {
       fetchAddressFromCoords(location)
       fetchBranchesNearby(location)
     }
-  }, [
-    routeLocation.state,
-    location,
-    fetchAddressFromCoords,
-    fetchBranchesNearby,
-    updateAddressInfo,
-  ])
+  }, [routeLocation.state, location])
+
+  // 주변 지점 가져오기
+  const fetchBranchesNearby = async (coords: Coordinate) => {
+    try {
+      const result = await fetchBranches({
+        page: 1,
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+      })
+      setBranches(result.branches)
+    } catch (error) {
+      console.error("Failed to fetch branches:", error)
+    }
+  }
 
   // 위치 이동 감지 및 처리
   const handleMapMove = (newCenter: Coordinate) => {
