@@ -1,9 +1,16 @@
 import { ReactNode } from "react"
 
-const PageContainer = ({ children }: { children: ReactNode }) => {
+interface PageContainerProps {
+  children: ReactNode
+  className?: string
+}
+
+const PageContainer = ({ children, className }: PageContainerProps) => {
   return (
-    <div className="bg-gray-50 h-screen max-h-full overflow-x-hidden">
-      <div className="max-w-[500px] mx-auto bg-white h-full max-h-full overflow-y-scroll overflow-x-hidden flex flex-col scrollbar-hide">
+    <div
+      className={`h-screen max-h-full overflow-x-hidden ${className || "bg-system-bg"}`}
+    >
+      <div className="max-w-[500px] mx-auto h-full max-h-full overflow-y-scroll overflow-x-hidden flex flex-col scrollbar-hide">
         {children}
       </div>
     </div>

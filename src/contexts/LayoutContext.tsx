@@ -70,6 +70,13 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
     }
   }, [header, navigation.display])
 
+  // html과 body의 배경색 설정
+  useEffect(() => {
+    const color = header.backgroundColor === "bg-white" ? "#FFFFFF" : "#F8F5F2"
+    document.documentElement.style.backgroundColor = color
+    document.body.style.backgroundColor = color
+  }, [header.backgroundColor])
+
   const setTitle = (title: string) => {
     setHeader((prev) => ({
       ...prev,
@@ -97,12 +104,9 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
         <div
           className={`fixed w-full max-w-[500px]`}
           style={{
-            backgroundColor:
-              headerConfig.backgroundColor === "white"
-                ? "white"
-                : headerConfig.backgroundColor?.startsWith("bg-")
-                  ? extractColor(headerConfig.backgroundColor)
-                  : "#F8F5F2",
+            backgroundColor: extractColor(
+              headerConfig.backgroundColor || "bg-system-bg",
+            ),
           }}
         >
           <Header
@@ -139,7 +143,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
         setTitle,
       }}
     >
-      <PageContainer>
+      <PageContainer className={header.backgroundColor || "bg-system-bg"}>
         {header.display && renderHeader()}
         {children}
         {navigation.display && (
@@ -258,7 +262,7 @@ const extractColor = (className: string): string => {
     case "bg-system-bg":
       return "#F8F5F2"
     default:
-      return "#FFFFFF"
+      return "#F8F5F2" // 기본값을 시스템 배경색으로 변경
   }
 }
 
