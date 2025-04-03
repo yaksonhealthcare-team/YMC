@@ -10,7 +10,7 @@ const PageContainer = ({ children, className }: PageContainerProps) => {
     <div
       className={`h-screen max-h-full overflow-x-hidden ${className || "bg-system-bg"}`}
     >
-      <div className="max-w-[500px] mx-auto h-full max-h-full overflow-y-scroll overflow-x-hidden flex flex-col scrollbar-hide bg-white">
+      <div className="max-w-[500px] mx-auto h-full max-h-full overflow-y-auto overflow-x-hidden flex flex-col scrollbar-hide bg-white">
         {children}
       </div>
     </div>
