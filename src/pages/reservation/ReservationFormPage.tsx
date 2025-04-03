@@ -77,6 +77,7 @@ const ReservationFormPage = () => {
     if (!selectedBranch) return membershipsData.pages[0].body
 
     return membershipsData.pages[0].body.filter((membership) =>
+      membership.s_type !== "지점 회원권" || 
       membership.branchs?.some(
         (branch) => branch.b_idx === selectedBranch.b_idx,
       ),
