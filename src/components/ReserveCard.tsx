@@ -106,14 +106,6 @@ export const ReserveCard = ({
     // 현재 시간이 예약 날짜보다 이후인지 확인
     const isReservationDatePassed = now.getTime() > reservationDate.getTime()
 
-    // 상세 로그 추가
-    console.log("ReserveCard 날짜 비교:", {
-      현재시간: now.toISOString(),
-      예약날짜: reservationDate.toISOString(),
-      예약날짜지남: isReservationDatePassed,
-      상태코드: reservation.statusCode,
-    })
-
     switch (statusType) {
       case "completed":
         if (reservation.reviewPositiveYn === "Y") {
