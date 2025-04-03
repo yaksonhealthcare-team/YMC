@@ -10,6 +10,7 @@ import useIntersection from "../../hooks/useIntersection.tsx"
 import BranchItem from "./BranchItem.tsx"
 import { useGeolocation } from "../../hooks/useGeolocation.tsx"
 import { useDebounce } from "../../hooks/useDebounce"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 interface SearchBranchListProps {
   selectedBranches: Branch[]
@@ -153,7 +154,9 @@ const Step1SearchBranchList = ({
             ))}
             <div ref={observerTarget} className={"h-4"} />
             {isFetchingNextPage && (
-              <p className="text-center text-gray-500 py-4">로딩 중...</p>
+              <div className="flex justify-center py-4">
+                <LoadingIndicator size={24} />
+              </div>
             )}
           </>
         )}
