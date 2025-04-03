@@ -60,7 +60,7 @@ const BranchSearchResultList = ({
   // 위치 정보를 로딩 중인 경우 로딩 표시
   if (locationLoading) {
     return (
-      <div className="flex flex-col items-center justify-center mt-40">
+      <div className="flex flex-col items-center justify-center min-h-[200px]">
         <LoadingIndicator />
         <p className="mt-4 text-gray-500">
           {"위치 정보를 불러오는 중입니다..."}
@@ -71,13 +71,17 @@ const BranchSearchResultList = ({
 
   // 지점 데이터 로딩 중이고 결과가 없는 경우
   if (branchesLoading && branches.length === 0) {
-    return <LoadingIndicator className="self-center mt-40" />
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[200px]">
+        <LoadingIndicator />
+      </div>
+    )
   }
 
   // 검색 결과가 없는 경우
   if (!branchesLoading && branches.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center px-5 h-full">
+      <div className="flex flex-col items-center justify-center px-5 min-h-[200px] mt-8">
         <div className="mb-4 p-3 rounded-full bg-gray-100">
           <SearchIcon className="w-6 h-6 text-gray-400" />
         </div>
@@ -100,6 +104,11 @@ const BranchSearchResultList = ({
           </li>
         ))}
         <div ref={observerTarget} className="h-4" />
+        {isFetchingNextPage && (
+          <div className="flex justify-center py-4">
+            <LoadingIndicator size={24} />
+          </div>
+        )}
       </ul>
     </div>
   )
