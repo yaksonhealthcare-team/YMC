@@ -25,12 +25,14 @@ const SignupCallback = () => {
         if (!userData) return
 
         // 소셜 계정 존재 여부 확인
-        const isSocialExist = userData.is_social_exist
-        const existingProviders = Object.entries(isSocialExist)
-          .filter(([_, value]) => value === "Y")
-          .map(([key]) => key)
+        const isSocialExist: { [key: string]: string } =
+          userData.is_social_exist
+        const currentProvider = sessionStorage.getItem("socialSignupInfo")
+          ? (JSON.parse(sessionStorage.getItem("socialSignupInfo") || "{}")
+              .provider as string)
+          : null
 
-        if (existingProviders.length > 0) {
+        if (currentProvider && isSocialExist[currentProvider] === "Y") {
           openModal({
             title: "알림",
             message: "이미 가입된 고객입니다",
