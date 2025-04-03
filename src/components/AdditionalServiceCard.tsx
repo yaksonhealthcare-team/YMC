@@ -23,7 +23,12 @@ export const AdditionalServiceCard = ({
         <p className="text-[#212121] text-16px font-m leading-[23.68px]">
           {option.s_name}
         </p>
-        <div onClick={(e) => e.stopPropagation()}>
+        <button
+          type="button"
+          onClick={(e) => e.stopPropagation()}
+          aria-label={`${option.s_name} ${isChecked ? "선택 해제" : "선택"}`}
+          className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+        >
           <Checkbox
             checked={isChecked}
             onChange={(e) => {
@@ -57,7 +62,7 @@ export const AdditionalServiceCard = ({
               },
             }}
           />
-        </div>
+        </button>
       </div>
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
