@@ -276,9 +276,10 @@ const ReservationFormPage = () => {
   }, [location.state, setSelectedBranch])
 
   // 회원권 유효성 검사
+  const [modalOpened, setModalOpened] = useState(false);
+  
   useEffect(() => {
     let isSubscribed = true
-    let modalOpened = false
 
     const checkMembershipValidity = async () => {
       if (
@@ -292,21 +293,21 @@ const ReservationFormPage = () => {
         )
 
         if (!membership) {
-          modalOpened = true
+          setModalOpened(true);
           openModal({
             title: "알림",
             message: "해당 회원권 정보를 찾을 수 없습니다.",
             onConfirm: () => {
-              navigate("/member-history/reservation", { replace: true })
+              navigate("/member-history/reservation",{ replace: true })
             },
           })
         } else if (Number(membership.remain_amount) <= 0) {
-          modalOpened = true
+          setModalOpened(true);
           openModal({
             title: "알림",
             message: "해당 회원권의 잔여 횟수가 없습니다.",
             onConfirm: () => {
-              navigate("/member-history/reservation", { replace: true })
+              navigate("/member-history/reservation",{ replace: true })
             },
           })
         }
@@ -323,6 +324,7 @@ const ReservationFormPage = () => {
     membershipsData,
     openModal,
     navigate,
+    modalOpened
   ])
 
   // Cleanup on unmount
