@@ -58,9 +58,9 @@ const BirthDateInput = ({
     }
 
     const [y, m, d] = value.split("-")
-    setYear(y || "")
-    setMonth(m || "")
-    setDay(d || "")
+    if (y !== year) setYear(y || "")
+    if (m !== month && m !== month.padStart(2, "0")) setMonth(m || "")
+    if (d !== day && d !== day.padStart(2, "0")) setDay(d || "")
   }, [value])
 
   useEffect(() => {
