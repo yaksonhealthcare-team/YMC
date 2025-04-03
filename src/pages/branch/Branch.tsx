@@ -58,6 +58,21 @@ const Branch = () => {
 
   const address =
     result?.pages[0]?.body?.current_addr || "서울 강남구 테헤란로78길 14-10"
+
+  // 브랜드 코드와 브랜드 타입 매핑
+  const getBrandType = (brandCode: string) => {
+    switch (brandCode) {
+      case "001":
+        return "yakson"
+      case "003":
+        return "dalia"
+      case "004":
+        return "diet"
+      default:
+        return "therapist"
+    }
+  }
+
   const branches =
     result?.pages.flatMap((page) =>
       page.body.result.map((branch) => ({
@@ -70,7 +85,7 @@ const Branch = () => {
         distanceInMeters: branch.distance,
         isFavorite: branch.b_bookmark === "Y",
         brandCode: branch.brand_code,
-        brand: "therapist",
+        brand: getBrandType(branch.brand_code),
       })),
     ) || []
 
@@ -241,6 +256,7 @@ const Branch = () => {
             brandCode={selectedFilter.brand?.code}
             category={selectedFilter.category?.code}
             onSelectBranch={setSelectedBranch}
+            branches={branches}
           />
         )
     }

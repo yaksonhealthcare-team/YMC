@@ -1,6 +1,7 @@
 import { Branch } from "../types/Branch.ts"
 import { Coordinate } from "../types/Coordinate.ts"
 import { useEffect, useRef } from "react"
+import { createMarkerIcon } from "../utils/createMarkerIcon"
 
 interface UseNaverMapBranchMarkersProps {
   map: naver.maps.Map | null
@@ -73,14 +74,10 @@ export const useNaverMapBranchMarkers = ({
               branch.longitude,
             ),
             map,
-            icon: {
-              content: `<div class="w-6 h-6 bg-white rounded-full border-2 border-primary flex items-center justify-center ${
-                Number(branch.b_idx) === selectedBranchId ? "border-2" : ""
-              }">
-                <div class="w-2 h-2 bg-primary rounded-full"></div>
-              </div>`,
-              anchor: new window.naver.maps.Point(12, 12),
-            },
+            icon: createMarkerIcon(
+              branch,
+              Number(branch.b_idx) === selectedBranchId ? "active" : "default",
+            ),
           })
 
           if (options.onClickMarker) {
@@ -128,12 +125,7 @@ export const useNaverMapBranchMarkers = ({
           coordinate.longitude,
         ),
         map,
-        icon: {
-          content: `<div class="w-6 h-6 bg-blue-500 rounded-full border-2 border-white flex items-center justify-center">
-            <div class="w-2 h-2 bg-white rounded-full"></div>
-          </div>`,
-          anchor: new window.naver.maps.Point(12, 12),
-        },
+        icon: createMarkerIcon(null, "current-location"),
       })
     } catch (error) {
       // 현재 위치 마커 업데이트 중 오류 발생
