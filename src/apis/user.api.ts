@@ -28,10 +28,10 @@ export const fetchCRMUser = async (
   return data.body
 }
 
-export const postVisitedStore = async (storeId: string) => {
+export const postVisitedStore = async (b_idx: string) => {
   const response = await axiosClient.post<HTTPResponse<{ message: string }>>(
     "/me/visited_stores",
-    { storeId },
+    { b_idx },
   )
   return response.data
 }
