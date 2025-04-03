@@ -18,6 +18,7 @@ const MembershipBranchSelectPage = ({ onSelect, brandCode }: Props) => {
   const navigate = useNavigate()
   const debouncedQuery = useDebounce(query, 300)
   const currentBrandCode = brandCode || location.state?.brand_code
+  const s_idx = location.state?.s_idx || location.state?.membershipId
 
   const memoizedState = useMemo(() => location.state, [location.state])
 

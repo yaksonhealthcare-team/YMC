@@ -28,6 +28,7 @@ const MembershipBranchList = ({
     useMembershipOptionsStore()
 
   const debouncedQuery = useDebounce(query, 300)
+  const s_idx = location.state?.s_idx || location.state?.membershipId
 
   const {
     data: branchPages,
@@ -43,6 +44,7 @@ const MembershipBranchList = ({
     search: debouncedQuery,
     brandCode: location.state?.brand_code,
     mp_idx: location.state?.selectedItem,
+    s_idx: s_idx,
     isConsultation: location.state?.isConsultation,
     enabled: !!geolocationLocation,
   })

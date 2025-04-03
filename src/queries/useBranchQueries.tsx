@@ -27,6 +27,7 @@ interface BranchFilters {
   category?: string
   search?: string
   mp_idx?: string
+  s_idx?: string
   enabled?: boolean
   isConsultation?: boolean
 }
@@ -55,6 +56,7 @@ export const useBranches = (filters: BranchFilters) =>
             search: filters.search,
             brand_code: filters.brandCode,
             mp_idx: filters.mp_idx,
+            s_idx: filters.s_idx,
           },
         },
       )
