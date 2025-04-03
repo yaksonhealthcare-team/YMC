@@ -52,8 +52,10 @@ const LocationPickerMap = () => {
   useEffect(() => {
     if (!center) return
 
-    fetchAddressFromCoords(center)
-    fetchBranchesNearby(center)
+    // 드래그로 인한 지도 이동일 때만 주변 지점을 가져옴
+    if (hasDragged) {
+      fetchBranchesNearby(center)
+    }
   }, [center])
 
   // 주변 지점 가져오기
@@ -91,10 +93,16 @@ const LocationPickerMap = () => {
   const handleSelectBranch = (branch: Branch) => {
     setSelectedBranch(branch)
     setHasDragged(true)
-    setCenter({
+
+    // 주소 업데이트를 먼저 수행
+    const newCenter = {
       latitude: branch.latitude,
       longitude: branch.longitude,
-    })
+    }
+    fetchAddressFromCoords(newCenter)
+
+    // 그 다음 중심 좌표 업데이트
+    setCenter(newCenter)
   }
 
   // 위치 설정 및 페이지 이동

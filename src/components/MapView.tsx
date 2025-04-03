@@ -25,7 +25,7 @@ const MapView = ({
 }: MapViewProps) => {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstance = useRef<naver.maps.Map | null>(null)
-  const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
+  const [selectedBranch] = useState<Branch | null>(null)
   const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(
     null,
   )
@@ -41,24 +41,19 @@ const MapView = ({
     options: {
       showCurrentLocationMarker: options?.showCurrentLocation,
       onClickMarker: (branch) => {
-        setSelectedBranch(branch)
-        options?.onSelectBranch?.(branch)
+        if (!mapInstance.current) return
 
-        if (mapInstance.current) {
-          const newCenter = new window.naver.maps.LatLng(
-            branch.latitude,
-            branch.longitude,
-          )
-          mapInstance.current.setCenter(newCenter)
-
-          // 마커 클릭 시 즉시 위치 업데이트 이벤트 발생
-          if (options?.onMoveMap) {
-            options.onMoveMap({
-              latitude: branch.latitude,
-              longitude: branch.longitude,
-            })
-          }
+        // 지점 선택 이벤트를 먼저 발생시킴
+        if (options?.onSelectBranch) {
+          options.onSelectBranch(branch)
         }
+
+        // 지도 이동은 이벤트 발생 후에 처리
+        const newCenter = new window.naver.maps.LatLng(
+          branch.latitude,
+          branch.longitude,
+        )
+        mapInstance.current.setCenter(newCenter)
       },
     },
   })
