@@ -51,11 +51,13 @@ const MapView = ({
           )
           mapInstance.current.setCenter(newCenter)
 
-          // 마커 클릭 시에도 위치 업데이트 이벤트 발생
-          options?.onMoveMap?.({
-            latitude: branch.latitude,
-            longitude: branch.longitude,
-          })
+          // 마커 클릭 시 즉시 위치 업데이트 이벤트 발생
+          if (options?.onMoveMap) {
+            options.onMoveMap({
+              latitude: branch.latitude,
+              longitude: branch.longitude,
+            })
+          }
         }
       },
     },

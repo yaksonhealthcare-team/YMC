@@ -91,6 +91,10 @@ const LocationPickerMap = () => {
   const handleSelectBranch = (branch: Branch) => {
     setSelectedBranch(branch)
     setHasDragged(true)
+    setCenter({
+      latitude: branch.latitude,
+      longitude: branch.longitude,
+    })
   }
 
   // 위치 설정 및 페이지 이동
