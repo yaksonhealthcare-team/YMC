@@ -189,6 +189,7 @@ const Home = () => {
         <MembershipCardSection
           memberships={availableMemberships}
           isLoading={membershipLoading}
+          totalCount={memberships?.pages[0]?.total_count ?? 0}
         />
         <BrandSection />
         <EventSection />
