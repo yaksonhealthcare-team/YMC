@@ -27,7 +27,7 @@ const LocationPickerMap = () => {
     setHeader({
       left: "back",
       title: "위치 확인",
-      backgroundColor: "bg-white drop-shadow-md",
+      backgroundColor: "bg-[#ffffff]",
       display: true,
     })
     setNavigation({ display: false })
