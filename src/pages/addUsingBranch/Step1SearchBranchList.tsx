@@ -144,6 +144,13 @@ const Step1SearchBranchList = ({
                 key={branch.b_idx}
                 className="w-full flex justify-between py-[16px] cursor-pointer border-b border-b-[#ECECEC] text-left"
                 onClick={() => handleSelectBranch(branch)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    handleSelectBranch(branch)
+                  }
+                }}
+                role="button"
+                tabIndex={0}
                 aria-label={`${branch.name} 지점 선택`}
               >
                 <BranchItem branch={branch} />

@@ -117,6 +117,13 @@ const BranchFilterList = ({
               branch={branch}
               className={index === 0 ? "pt-1" : ""}
               onClick={() => onSelectBranch(branch)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  onSelectBranch(branch)
+                }
+              }}
+              role="button"
+              tabIndex={0}
               onClickFavorite={() => handleToggleFavorite(branch)}
               isFavorite={getIsFavorite(branch)}
             />
@@ -132,17 +139,26 @@ export const BranchFilterListItem = ({
   branch,
   className = "",
   onClick,
+  onKeyDown,
+  role,
+  tabIndex,
   onClickFavorite,
   isFavorite,
 }: {
   branch: Branch
   className?: string
   onClick: (branch: Branch) => void
+  onKeyDown: (e: React.KeyboardEvent<HTMLLIElement>) => void
+  role: string
+  tabIndex: number
   onClickFavorite: (branch: Branch) => void
   isFavorite: boolean
 }) => (
   <li
     onClick={() => onClick(branch)}
+    onKeyDown={onKeyDown}
+    role={role}
+    tabIndex={tabIndex}
     className={`cursor-pointer w-full flex ${className}`}
   >
     <div className="w-full py-4 gap-4 flex items-stretch">
@@ -159,6 +175,7 @@ export const BranchFilterListItem = ({
               e.stopPropagation()
               onClickFavorite(branch)
             }}
+            aria-label={isFavorite ? "즐겨찾기 해제" : "즐겨찾기 추가"}
           >
             {isFavorite ? <HeartEnabledIcon /> : <HeartDisabledIcon />}
           </button>
@@ -183,5 +200,3 @@ export const BranchFilterListItem = ({
     </div>
   </li>
 )
-
-export default BranchFilterList

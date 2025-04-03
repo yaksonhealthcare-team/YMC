@@ -156,6 +156,11 @@ export const ReserveCard = ({
         className,
       )}
       onClick={() => navigate(`/reservation/${reservation.id}`)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          navigate(`/reservation/${reservation.id}`)
+        }
+      }}
       role="button"
       tabIndex={0}
       aria-label={`${reservation.store} ${reservation.programName} 예약 상세보기`}
