@@ -21,7 +21,6 @@ const LocationPickerMap = () => {
     useAddressFromCoords()
   const [center, setCenter] = useState<Coordinate | null>(null)
   const [branches, setBranches] = useState<Branch[]>([])
-  const [hasDragged, setHasDragged] = useState(false)
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
 
   // 초기 화면 설정
@@ -42,22 +41,13 @@ const LocationPickerMap = () => {
         routeLocation.state.selectedLocation
       setCenter(coords)
       updateAddressInfo(locationAddress)
-      setHasDragged(true)
+      fetchBranchesNearby(coords)
     } else if (location) {
       setCenter(location)
       fetchAddressFromCoords(location)
+      fetchBranchesNearby(location)
     }
   }, [routeLocation.state, location])
-
-  // 중심 좌표 변경 시 관련 데이터 업데이트
-  useEffect(() => {
-    if (!center) return
-
-    // 드래그로 인한 지도 이동일 때만 주변 지점을 가져옴
-    if (hasDragged) {
-      fetchBranchesNearby(center)
-    }
-  }, [center])
 
   // 주변 지점 가져오기
   const fetchBranchesNearby = async (coords: Coordinate) => {
@@ -75,37 +65,21 @@ const LocationPickerMap = () => {
 
   // 위치 이동 감지 및 처리
   const handleMapMove = (newCenter: Coordinate) => {
-    if (routeLocation.state?.selectedLocation && center) {
-      const isSignificantMove =
-        Math.abs(newCenter.latitude - center.latitude) > 0.0001 ||
-        Math.abs(newCenter.longitude - center.longitude) > 0.0001
-
-      if (isSignificantMove) {
-        setHasDragged(true)
-        fetchAddressFromCoords(newCenter)
-      }
-    } else {
-      setHasDragged(true)
-      fetchAddressFromCoords(newCenter)
-    }
-
     setCenter(newCenter)
+    fetchAddressFromCoords(newCenter)
+    fetchBranchesNearby(newCenter)
   }
 
   // 지점 선택 처리
   const handleSelectBranch = (branch: Branch) => {
     setSelectedBranch(branch)
-    setHasDragged(true)
-
-    // 주소 업데이트를 먼저 수행
     const newCenter = {
       latitude: branch.latitude,
       longitude: branch.longitude,
     }
-    fetchAddressFromCoords(newCenter)
-
-    // 그 다음 중심 좌표 업데이트
     setCenter(newCenter)
+    fetchAddressFromCoords(newCenter)
+    fetchBranchesNearby(newCenter)
   }
 
   // 위치 설정 및 페이지 이동
@@ -154,17 +128,6 @@ const LocationPickerMap = () => {
           onSelectBranch: handleSelectBranch,
         }}
       />
-      {!hasDragged && (
-        <div
-          className={
-            "absolute top-2 left-5 right-5 bg-gray-700/70 py-2 rounded-md"
-          }
-        >
-          <p className={"text-center text-white font-m text-14px"}>
-            {"지도를 움직여 위치를 설정하세요."}
-          </p>
-        </div>
-      )}
       <LocationSelectorPin
         className={
           "absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-[100%] pointer-events-none"
