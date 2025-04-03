@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useCallback, useMemo } from "react"
 import { Coordinate } from "../types/Coordinate.ts"
 import CrosshairIcon from "@assets/icons/CrosshairIcon.svg?react"
 import { Branch } from "../types/Branch.ts"
@@ -32,30 +32,40 @@ const MapView = ({
   const [isMapInitialized, setIsMapInitialized] = useState(false)
   const { isLoaded, error } = useNaverMap()
 
+  const handleClickMarker = useCallback(
+    (branch: Branch) => {
+      if (!mapInstance.current) return
+
+      // 지점 선택 이벤트를 먼저 발생시킴
+      if (options?.onSelectBranch) {
+        options.onSelectBranch(branch)
+      }
+
+      // 지도 이동은 이벤트 발생 후에 처리
+      const newCenter = new window.naver.maps.LatLng(
+        branch.latitude,
+        branch.longitude,
+      )
+      mapInstance.current.setCenter(newCenter)
+    },
+    [options?.onSelectBranch],
+  )
+
+  const markerOptions = useMemo(
+    () => ({
+      showCurrentLocationMarker: options?.showCurrentLocation,
+      onClickMarker: handleClickMarker,
+    }),
+    [options?.showCurrentLocation, handleClickMarker],
+  )
+
   const { updateCurrentLocationMarker } = useNaverMapBranchMarkers({
     map: mapInstance.current,
     branches,
     selectedBranchId: selectedBranch?.b_idx
       ? Number(selectedBranch.b_idx)
       : null,
-    options: {
-      showCurrentLocationMarker: options?.showCurrentLocation,
-      onClickMarker: (branch) => {
-        if (!mapInstance.current) return
-
-        // 지점 선택 이벤트를 먼저 발생시킴
-        if (options?.onSelectBranch) {
-          options.onSelectBranch(branch)
-        }
-
-        // 지도 이동은 이벤트 발생 후에 처리
-        const newCenter = new window.naver.maps.LatLng(
-          branch.latitude,
-          branch.longitude,
-        )
-        mapInstance.current.setCenter(newCenter)
-      },
-    },
+    options: markerOptions,
   })
 
   useEffect(() => {
