@@ -51,6 +51,10 @@ const Home = () => {
     return memberships.pages[0].body
   }, [memberships])
 
+  const totalMembershipCount = useMemo(() => {
+    return memberships?.pages[0]?.total_count ?? 0
+  }, [memberships])
+
   useEffect(() => {
     setHeader({
       display: false,
@@ -189,7 +193,7 @@ const Home = () => {
         <MembershipCardSection
           memberships={availableMemberships}
           isLoading={membershipLoading}
-          totalCount={memberships?.pages[0]?.total_count ?? 0}
+          totalCount={totalMembershipCount}
         />
         <BrandSection />
         <EventSection />
