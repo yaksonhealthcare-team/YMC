@@ -36,7 +36,6 @@ export async function requestNotificationPermission(): Promise<boolean> {
 export async function requestForToken() {
   try {
     if (window.ReactNativeWebView) {
-      console.log("ReactNative WebView 환경입니다.")
       return null
     }
 
@@ -47,7 +46,6 @@ export async function requestForToken() {
       // 알림 권한 요청
       const permissionGranted = await requestNotificationPermission()
       if (!permissionGranted) {
-        console.log("알림 권한이 거부되었습니다.")
         return null
       }
 
