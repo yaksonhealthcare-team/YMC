@@ -87,9 +87,9 @@ export const useGeolocation = (options: GeolocationOptions = {}) => {
     }
 
     const defaultOptions: GeolocationOptions = {
-      enableHighAccuracy: false,
+      enableHighAccuracy: true,
       timeout: 5000,
-      maximumAge: Infinity,
+      maximumAge: 0,
       ...options,
     }
 
