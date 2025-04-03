@@ -42,7 +42,7 @@ const MembershipBranchList = ({
     latitude: geolocationLocation?.latitude,
     longitude: geolocationLocation?.longitude,
     search: debouncedQuery,
-    brandCode: location.state?.brand_code,
+    brandCode: undefined,
     mp_idx: location.state?.selectedItem,
     s_idx: s_idx,
     isConsultation: location.state?.isConsultation,
