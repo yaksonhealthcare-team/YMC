@@ -254,53 +254,58 @@ const OverlayContainer: React.FC = () => {
       }
 
       case OverlayTypes.BOTTOM_SHEET: {
-        const bottomSheetState = overlayState as BottomSheetState
+        const bottomSheetOptions = overlayState.options as BottomSheetOptions
         return (
-          <div
-            className="fixed inset-0 z-[9999]"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="bottom-sheet-title"
+          <Dialog
+            open={overlayState.isOpen}
+            onClose={closeOverlay}
+            keepMounted
+            fullWidth
+            maxWidth="sm"
+            className="z-[9000]"
+            PaperProps={{
+              style: {
+                position: "fixed",
+                bottom: 0,
+                margin: 0,
+                borderTopLeftRadius: 24,
+                borderTopRightRadius: 24,
+                maxHeight:
+                  bottomSheetOptions.height === "large" ? "95vh" : "80vh",
+                minHeight:
+                  bottomSheetOptions.height === "large" ? "95vh" : "auto",
+                overflowY: "auto",
+                width: "100%",
+              },
+            }}
           >
-            <div
-              className="fixed inset-0 bg-black/40"
-              onClick={closeOverlay}
-              role="button"
-              tabIndex={-1}
-              aria-label="닫기"
-            />
-            <div
-              className={clsx(
-                "fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl p-6 transform transition-transform duration-300",
-                bottomSheetState.options.height === "large"
-                  ? "min-h-[80vh]"
-                  : "min-h-[30vh]",
-              )}
-              role="document"
-              onKeyDown={handleContentKeyDown}
-            >
-              {bottomSheetState.options.title && (
-                <h2 id="bottom-sheet-title" className="text-lg font-bold mb-4">
-                  {bottomSheetState.options.title}
-                </h2>
-              )}
-              {bottomSheetState.content}
-              {bottomSheetState.options.buttons && (
-                <div className="flex gap-2 mt-4">
-                  {bottomSheetState.options.buttons.map((button, index) => (
-                    <Button
-                      key={index}
-                      onClick={button.onClick}
-                      variantType={button.variant || "primary"}
-                      className="flex-1"
-                    >
-                      {button.text}
-                    </Button>
-                  ))}
+            <DialogContent className="p-0">
+              <div className="flex flex-col items-center">
+                <div className="w-10 h-1 bg-gray-300 rounded-full my-4" />
+                {bottomSheetOptions.title && (
+                  <h2 className="text-[18px] font-semibold mb-4 text-center">
+                    {bottomSheetOptions.title}
+                  </h2>
+                )}
+                <div className="w-full text-center">
+                  {overlayState.content as ReactNode}
                 </div>
-              )}
-            </div>
-          </div>
+                {bottomSheetOptions.buttons?.map((button, index) => (
+                  <Button
+                    key={index}
+                    variantType="primary"
+                    onClick={button.onClick}
+                    fullWidth
+                    className={`mt-2 ${
+                      button.height === "large" ? "py-4" : "py-2"
+                    }`}
+                  >
+                    {button.text}
+                  </Button>
+                ))}
+              </div>
+            </DialogContent>
+          </Dialog>
         )
       }
 
