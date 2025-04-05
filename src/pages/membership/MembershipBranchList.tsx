@@ -38,6 +38,7 @@ const MembershipBranchList = ({
     isLoading,
     isError,
     error,
+    isFetching,
   } = useBranches({
     latitude: geolocationLocation?.latitude,
     longitude: geolocationLocation?.longitude,
@@ -145,9 +146,10 @@ const MembershipBranchList = ({
     </ul>
   )
 
-  if (isLoading) {
+  // 초기 데이터 로딩 상태 (완전히 빈 상태일 때)
+  if (isLoading && !branches.length) {
     return (
-      <div className="flex items-center justify-center h-full fixed inset-0 bg-white z-10">
+      <div className="flex items-center justify-center h-full min-h-[200px]">
         <LoadingIndicator />
       </div>
     )
@@ -155,7 +157,7 @@ const MembershipBranchList = ({
 
   if (isError) {
     return (
-      <div className="flex items-center justify-center h-full fixed inset-0 bg-white z-10">
+      <div className="flex items-center justify-center h-full min-h-[200px]">
         <div className="text-center text-gray-500">
           {error instanceof Error
             ? error.message
@@ -177,6 +179,15 @@ const MembershipBranchList = ({
     }
     // 사용 가능한 지점이 없는 경우 기존 활성 지점 목록 표시
     return <MembershipActiveBranchList onBranchSelect={handleBranchSelect} />
+  }
+
+  // 검색 결과 불러오는 중인 경우 (초기 로딩 이후 검색 시 로딩)
+  if (debouncedQuery && isFetching && !isFetchingNextPage) {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <LoadingIndicator />
+      </div>
+    )
   }
 
   if (filteredBranches.length === 0) {
