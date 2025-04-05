@@ -16,17 +16,26 @@ export const MembershipRadioCard = ({
     return date.split(" ")[0].replace(/-/g, ".")
   }
 
+  // 지점 회원권인 경우 지점명을 표시하는 로직 추가
+  const displayType = () => {
+    if (
+      membership.s_type === "지점 회원권" &&
+      membership.branchs &&
+      membership.branchs.length === 1
+    ) {
+      // 지점이 하나만 있는 경우 해당 지점명 표시
+      return `${membership.branchs[0].b_name}`
+    }
+    return membership.s_type
+  }
+
   return (
-    <RadioCard
-      checked={checked}
-      value={value}
-      className="items-start"
-    >
+    <RadioCard checked={checked} value={value} className="items-start">
       <div className="w-[206px] flex-col justify-start items-start gap-4">
         <div className="self-stretch flex-col justify-start items-start gap-3">
           <div className="px-[6px] py-[2px] bg-gray-100 rounded-[4px] justify-center items-center inline-flex mb-3">
-          <div className="text-center text-gray-500 text-12px font-m">
-              {membership.s_type}
+            <div className="text-center text-gray-500 text-12px font-m">
+              {displayType()}
             </div>
           </div>
           <div className="self-stretch flex-col justify-start items-start gap-2">
