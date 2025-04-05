@@ -31,7 +31,7 @@ export const Title = ({
       className={clsx("flex justify-between items-center", className)}
       role="banner"
     >
-      <div>
+      <div className="flex items-center">
         <HeadingTag className={TITLE_STYLES.title}>{title}</HeadingTag>
         {count && (
           <span className={TITLE_STYLES.count} aria-label={`${count}개의 항목`}>
