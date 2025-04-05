@@ -1,7 +1,6 @@
 import React, { createContext, ReactNode, useContext, useState } from "react"
 import { Dialog, DialogContent } from "@mui/material"
 import { Button } from "../components/Button"
-import clsx from "clsx"
 
 /**
  * 오버레이 타입을 정의하는 열거형

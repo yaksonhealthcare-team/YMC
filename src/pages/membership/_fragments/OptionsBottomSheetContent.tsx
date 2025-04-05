@@ -307,11 +307,10 @@ export const OptionsBottomSheetContent = ({
 
           {isDropdownOpen && (
             <div className="absolute z-10 w-full bg-white rounded-b-xl border border-[#dddddd] flex flex-col">
-              {options.map((option, index) => (
+              {options.map((option) => (
                 <button
                   key={option.ss_idx}
-                  className={`w-full px-4 py-3.5 text-left text-[#212121] text-sm font-normal border-b border-[#ebebeb] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2
-                  ${index === options.length - 1 ? "rounded-b-xl border-b-0" : ""}`}
+                  className={`w-full px-4 py-3.5 text-left text-[#212121] text-sm font-normal border-b border-[#ebebeb] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2`}
                   onClick={() => {
                     handleSelectOption(option)
                     setIsDropdownOpen(false)
@@ -329,7 +328,7 @@ export const OptionsBottomSheetContent = ({
         {/* 선택된 옵션들 */}
         <div className="mt-5">
           <div className="flex flex-col gap-4">
-            {selectedOptions.map(({ option, count }, index) => (
+            {selectedOptions.map(({ option, count }) => (
               <div key={option.ss_idx} className="flex flex-col gap-4">
                 <div className="flex justify-between items-center">
                   <span className="font-m text-16px text-gray-900">
