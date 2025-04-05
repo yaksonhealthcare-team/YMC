@@ -1,5 +1,5 @@
 import MainTabs from "../_fragments/MainTabs"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef } from "react"
 import { Button } from "@components/Button"
 import clsx from "clsx"
 import { ReserveCard } from "@components/ReserveCard"
@@ -14,6 +14,7 @@ import {
   Reservation,
 } from "types/Reservation"
 import LoadingIndicator from "@components/LoadingIndicator"
+import { useReservationStore } from "stores/reservationStore"
 
 const ReservationContent = ({
   filterId,
@@ -108,13 +109,15 @@ const FilterContent = ({
 const ReservationHistoryPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
-  const [reservationFilter, setReservationFilter] = useState<FilterItem>(
-    reservationFilters[1],
-  )
+  const { filter: reservationFilter, setFilter: setReservationFilter } =
+    useReservationStore()
 
-  const handleFilterChange = useCallback((filter: FilterItem) => {
-    setReservationFilter(filter)
-  }, [])
+  const handleFilterChange = useCallback(
+    (filter: FilterItem) => {
+      setReservationFilter(filter)
+    },
+    [setReservationFilter],
+  )
 
   const handleReservationClick = () => {
     navigate("/reservation/form", {
