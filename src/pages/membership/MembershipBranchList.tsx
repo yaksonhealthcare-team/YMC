@@ -118,7 +118,7 @@ const MembershipBranchList = ({
           <button
             onClick={() => handleBranchSelect(branch)}
             className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
-            aria-label={`${branch.name} 선택`}
+            aria-label={`${branch.b_name} 선택`}
           >
             <Image
               className="border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"

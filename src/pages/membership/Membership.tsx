@@ -203,36 +203,24 @@ const MembershipPage = () => {
         </div>
 
         {/* 회원권 목록 */}
-        <div className="pb-[96px] bg-system-bg">
-          <div className="max-w-[500px] min-w-[375px] mx-auto">
-            <div className="px-5 py-6">
-              {membershipsData.pages[0].body.length === 0 ? (
-                <div className="flex justify-center items-center h-[200px] text-gray-600">
-                  준비중 입니다
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {membershipsData.pages.map((page) =>
-                    page.body.map((membership: MembershipItem) => (
-                      <MembershipCard
-                        key={membership.s_idx}
-                        membership={membership}
-                        onClick={() =>
-                          navigate(
-                            `/membership/${membership.s_idx}?brand_code=${brandCode}`,
-                          )
-                        }
-                      />
-                    )),
-                  )}
-                  <div ref={observerTarget} className="h-4" />
-                  {isFetchingNextPage && (
-                    <LoadingIndicator className="min-h-[100px]" />
-                  )}
-                </div>
-              )}
-            </div>
+        <div className="px-5 pb-32">
+          <div className="grid grid-cols-1 gap-3">
+            {membershipsData.pages.map((page) =>
+              page.body.map((membership: MembershipItem) => (
+                <MembershipCard
+                  key={membership.s_idx}
+                  membership={membership}
+                  onClick={() =>
+                    navigate(`/membership/${membership.s_idx}`, {
+                      state: { brandCode },
+                    })
+                  }
+                />
+              )),
+            )}
           </div>
+          <div ref={observerTarget} className="h-4" />
+          {isFetchingNextPage && <LoadingIndicator className="min-h-[100px]" />}
         </div>
       </div>
     </div>

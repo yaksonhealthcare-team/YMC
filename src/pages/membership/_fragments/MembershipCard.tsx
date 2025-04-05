@@ -1,8 +1,6 @@
 import { MembershipItem } from "../../../types/Membership"
-import ClockIcon from "@assets/icons/ClockIcon.svg?react"
-import { Tag } from "@components/Tag"
+import { calculateDiscountRate } from "../../../utils/number"
 import { formatPrice, parsePrice } from "../../../utils/format"
-import calculateDiscountRate from "../../../utils/calculateDiscountRate"
 import clsx from "clsx"
 
 interface MembershipCardProps {
@@ -43,83 +41,43 @@ export const MembershipCard = ({
       aria-label={`${membership.brand_name} ${membership.s_name} ${membership.s_type?.replace("회원권", "").trim()} ${membership.s_time !== "0" ? `${membership.s_time}분 소요` : ""} ${firstOption ? `${formatPrice(firstOption.ss_price)}원부터` : ""} ${hasDiscount ? `${discountRate}% 할인` : ""}${disabled ? " (비활성화됨)" : ""}`}
       aria-disabled={disabled}
     >
-      <div className="flex flex-col">
-        <div className="flex justify-between items-center mb-3">
-          <Tag
-            type="rect"
-            title={membership.s_type?.replace("회원권", "").trim()}
-          />
-          {membership.s_time !== "0" && (
-            <div className="flex items-center gap-1 text-gray-500">
-              <ClockIcon
-                className="w-4 h-4 text-[#F37165]"
-                aria-hidden="true"
-              />
-              <span
-                className="text-sm"
-                aria-label={`소요 시간 ${membership.s_time}분`}
-              >
-                {membership.s_time}분 소요
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2">
+            <span className="text-primary font-sb text-14px">
+              {membership.brand_name || "약손명가"}
+            </span>
+            <div className="px-[6px] py-[2px] bg-gray-100 rounded-[4px] justify-center items-center inline-flex">
+              <span className="text-gray-500 text-12px font-m">
+                {membership.s_type?.replace("회원권", "").trim()}
               </span>
             </div>
-          )}
-        </div>
-        <span
-          className="text-14px mb-1"
-          aria-label={`브랜드: ${membership.brand_name}`}
-        >
-          {membership.brand_name}
-        </span>
-        <div className="flex justify-between items-start">
-          <h3
-            className="text-gray-700 text-base font-semibold"
-            aria-label={`서비스명: ${membership.s_name}`}
-          >
-            {membership.s_name}
+          </div>
+          <h3 className="text-gray-900 font-sb text-16px">
+            {membership.s_name || "데이터가 없습니다"}
           </h3>
         </div>
-      </div>
-
-      {firstOption && (
-        <div className="mt-4 flex flex-col">
-          {hasDiscount && (
-            <div className="flex justify-end">
-              <span
-                className="text-gray-400 font-r text-14px line-through"
-                aria-label={`정상가 ${formatPrice(firstOption.original_price)}원`}
-              >
-                {formatPrice(firstOption.original_price)}원
-              </span>
-            </div>
-          )}
-          <div
-            className={`flex ${hasDiscount ? "justify-between" : "justify-end"} items-center mt-1`}
-          >
+        {firstOption && (
+          <div className="flex items-baseline gap-2">
             {hasDiscount && (
-              <span
-                className="text-primary font-b text-18px"
-                aria-label={`${discountRate}% 할인`}
-              >
+              <span className="text-primary font-b text-18px">
                 {discountRate}%
               </span>
             )}
             <div className="flex items-baseline gap-1">
-              <span
-                className="text-gray-900 font-b text-18px"
-                aria-label={`할인가 ${formatPrice(firstOption.ss_price)}원`}
-              >
+              <span className="text-gray-900 font-b text-18px">
                 {formatPrice(firstOption.ss_price)}원
               </span>
-              <span
-                className="text-gray-900 font-r text-12px"
-                aria-hidden="true"
-              >
-                부터~
-              </span>
+              <span className="text-gray-900 font-r text-12px">부터~</span>
             </div>
+            {hasDiscount && (
+              <span className="text-gray-400 font-r text-14px line-through">
+                {formatPrice(firstOption.original_price)}원
+              </span>
+            )}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </button>
   )
 }

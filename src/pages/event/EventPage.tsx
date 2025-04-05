@@ -5,7 +5,6 @@ import { useState, useLayoutEffect } from "react"
 import { EmptyCard } from "@components/EmptyCard"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import Header from "@components/Header"
-import clsx from "clsx"
 import { useLayout } from "../../contexts/LayoutContext"
 import { Image } from "@components/common/Image"
 
