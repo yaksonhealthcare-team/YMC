@@ -44,7 +44,7 @@ const BranchFilterListItem = ({
         "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded-lg",
         className,
       )}
-      aria-label={`${branch.name} 지점 선택 ${branch.canBookToday ? "당일 예약 가능" : ""} ${branch.distanceInMeters ? `${branch.distanceInMeters} 거리` : ""} ${branch.address}`}
+      aria-label={`${branch.name} 지점 선택 ${branch.distanceInMeters ? `${branch.distanceInMeters} 거리` : ""} ${branch.address}`}
     >
       <div className="w-full py-4 gap-4 flex items-stretch">
         <Image
@@ -81,17 +81,6 @@ const BranchFilterListItem = ({
             role="group"
             aria-label="지점 정보"
           >
-            {branch.canBookToday && (
-              <>
-                <p className="font-r text-12px text-tag-green" role="status">
-                  {"당일 예약 가능"}
-                </p>
-                <div
-                  className="w-0.5 h-0.5 rounded-xl bg-gray-400"
-                  aria-hidden="true"
-                />
-              </>
-            )}
             {branch.distanceInMeters && (
               <p className="font-r text-12px text-gray-400">
                 {branch.distanceInMeters}
