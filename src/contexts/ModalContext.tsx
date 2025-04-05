@@ -318,31 +318,29 @@ const OverlayContainer: React.FC = () => {
             aria-describedby="modal-description"
           >
             <DialogContent>
-              <div className="p-6">
-                <h2 id="modal-title" className="text-lg font-bold mb-4">
-                  {modalState.content.title}
-                </h2>
-                <p id="modal-description" className="text-gray-600 mb-6">
-                  {modalState.content.message}
-                </p>
-                <div className="flex gap-2">
-                  {modalState.content.onCancel && (
-                    <Button
-                      onClick={modalState.content.onCancel}
-                      variantType="line"
-                      className="flex-1"
-                    >
-                      취소
-                    </Button>
-                  )}
+              <h2 id="modal-title" className="text-lg font-bold mb-4">
+                {modalState.content.title}
+              </h2>
+              <p id="modal-description" className="text-gray-600 mb-6">
+                {modalState.content.message}
+              </p>
+              <div className="flex gap-2">
+                {modalState.content.onCancel && (
                   <Button
-                    onClick={modalState.content.onConfirm}
-                    variantType="primary"
+                    onClick={modalState.content.onCancel}
+                    variantType="line"
                     className="flex-1"
                   >
-                    확인
+                    취소
                   </Button>
-                </div>
+                )}
+                <Button
+                  onClick={modalState.content.onConfirm}
+                  variantType="primary"
+                  className="flex-1"
+                >
+                  확인
+                </Button>
               </div>
             </DialogContent>
           </Dialog>
