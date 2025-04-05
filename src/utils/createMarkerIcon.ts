@@ -72,10 +72,10 @@ export const createMarkerIcon = (
       "active-bookmark": TherapistActiveBookmarkPin,
     },
     "yerihan": {
-      "default": TherapistPin,
-      "active": TherapistActivePin,
-      "bookmark": TherapistBookmarkPin,
-      "active-bookmark": TherapistActiveBookmarkPin,
+      "default": DietPin,
+      "active": DietActivePin,
+      "bookmark": DietBookmarkPin,
+      "active-bookmark": DietActiveBookmarkPin,
     },
   } as const
 
