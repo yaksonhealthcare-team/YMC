@@ -8,6 +8,7 @@ import {
   ListResponse,
 } from "../apis/membership.api"
 import { MyMembership, MembershipItem } from "../types/Membership"
+import { createUserContextQueryKey } from "./queryKeyFactory"
 
 export const useMembershipList = (brandCode: string, scCode?: string) => {
   return useInfiniteQuery<ListResponse<MembershipItem>>({
@@ -46,7 +47,7 @@ export const useMembershipCategories = (brandCode: string) => {
 
 export const useUserMemberships = (searchType?: string) => {
   return useInfiniteQuery<ListResponse<MyMembership>>({
-    queryKey: ["memberships", "user", searchType],
+    queryKey: createUserContextQueryKey(["memberships", "user", searchType]),
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
       fetchUserMemberships(searchType, Number(pageParam)),

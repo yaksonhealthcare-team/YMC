@@ -13,6 +13,7 @@ import {
   CreateReservationRequest,
 } from "apis/reservation.api"
 import { Reservation, ReservationStatusCode } from "types/Reservation"
+import { createUserContextQueryKey } from "../queries/queryKeyFactory"
 
 export interface ReservationDetail extends Reservation {
   services: Array<{
@@ -39,7 +40,7 @@ export interface ReservationDetail extends Reservation {
 
 export const useUpcomingReservations = () => {
   return useQuery({
-    queryKey: ["upcomingReservations"],
+    queryKey: createUserContextQueryKey(["upcomingReservations"]),
     queryFn: () => fetchReservations("001", 1),
     select: (data) => ({
       reservations: data.reservations,
@@ -51,7 +52,7 @@ export const useUpcomingReservations = () => {
 
 export const useReservations = (status: ReservationStatusCode = "000") => {
   return useInfiniteQuery({
-    queryKey: ["reservations", status],
+    queryKey: createUserContextQueryKey(["reservations", status]),
     queryFn: ({ pageParam = 1 }) => fetchReservations(status, pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) => {
@@ -64,7 +65,7 @@ export const useReservations = (status: ReservationStatusCode = "000") => {
 
 export const useReservationDetail = (reservationId: string) => {
   return useQuery({
-    queryKey: ["reservationDetail", reservationId],
+    queryKey: createUserContextQueryKey(["reservationDetail", reservationId]),
     queryFn: () => fetchReservationDetail(reservationId),
     select: (data) => {
       if (!data) return null
@@ -114,7 +115,9 @@ export const useCompleteVisit = () => {
   return useMutation({
     mutationFn: (r_idx: string) => completeVisit(r_idx),
     onSuccess: (_, r_idx) => {
-      queryClient.invalidateQueries({ queryKey: ["reservationDetail", r_idx] })
+      queryClient.invalidateQueries({
+        queryKey: createUserContextQueryKey(["reservationDetail", r_idx]),
+      })
     },
     retry: false,
   })
@@ -134,9 +137,14 @@ export const useCancelReservation = () => {
     retry: false,
     onSuccess: (_, variables) => {
       // 예약 목록과 상세 정보 쿼리 무효화
-      queryClient.invalidateQueries({ queryKey: ["reservations"] })
       queryClient.invalidateQueries({
-        queryKey: ["reservationDetail", variables.reservationId],
+        queryKey: createUserContextQueryKey(["reservations"]),
+      })
+      queryClient.invalidateQueries({
+        queryKey: createUserContextQueryKey([
+          "reservationDetail",
+          variables.reservationId,
+        ]),
       })
     },
   })
@@ -150,20 +158,24 @@ export const useCreateReservationMutation = () => {
     retry: false,
     onSuccess: () => {
       // 예약 목록 쿼리 무효화
-      queryClient.invalidateQueries({ queryKey: ["reservations"] })
-      queryClient.invalidateQueries({ queryKey: ["upcomingReservations"] })
+      queryClient.invalidateQueries({
+        queryKey: createUserContextQueryKey(["reservations"]),
+      })
+      queryClient.invalidateQueries({
+        queryKey: createUserContextQueryKey(["upcomingReservations"]),
+      })
       // 모든 예약 상태에 대한 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: ["reservations", "000"], // 전체
+        queryKey: createUserContextQueryKey(["reservations", "000"]), // 전체
       })
       queryClient.invalidateQueries({
-        queryKey: ["reservations", "001"], // 예약완료
+        queryKey: createUserContextQueryKey(["reservations", "001"]), // 예약완료
       })
       queryClient.invalidateQueries({
-        queryKey: ["reservations", "002"], // 방문완료
+        queryKey: createUserContextQueryKey(["reservations", "002"]), // 방문완료
       })
       queryClient.invalidateQueries({
-        queryKey: ["reservations", "003"], // 예약취소
+        queryKey: createUserContextQueryKey(["reservations", "003"]), // 예약취소
       })
     },
   })

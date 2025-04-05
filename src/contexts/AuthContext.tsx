@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react"
 import SplashScreen from "@components/Splash.tsx"
 import { User } from "../types/User.ts"
 import { fetchUser } from "../apis/auth.api.ts"
+import { queryClient } from "../queries/clients.ts"
 
 type AuthContextType = {
   user: User | null
@@ -60,7 +61,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = () => {
     setUser(null)
     localStorage.removeItem("accessToken")
+    localStorage.removeItem("refreshToken")
     sessionStorage.removeItem("socialSignupInfo")
+
+    // 모든 쿼리 캐시 초기화
+    queryClient.clear()
   }
 
   const value = { user, login, logout, isLoading } as AuthContextType
