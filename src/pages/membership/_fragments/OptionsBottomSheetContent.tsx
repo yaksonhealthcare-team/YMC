@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useMemo, useState, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import { useOverlay } from "../../../contexts/ModalContext"
 import { useLayout } from "../../../contexts/LayoutContext"
@@ -15,6 +15,8 @@ import clsx from "clsx"
 import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import XCircleIcon from "@components/icons/XCircleIcon.tsx"
+import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
+import CartIcon from "@components/icons/CartIcon.tsx"
 
 interface OptionsBottomSheetContentProps {
   serviceType: string
@@ -43,14 +45,41 @@ export const OptionsBottomSheetContent = ({
   onClose,
 }: OptionsBottomSheetContentProps) => {
   const navigate = useNavigate()
-  const { openModal, closeOverlay } = useOverlay()
-  const { setNavigation } = useLayout()
+  const { openModal, closeOverlay, showToast } = useOverlay()
+  const { setNavigation, setHeader } = useLayout()
   const { setItems, setBranch } = usePaymentStore()
 
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([])
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+
+  // 회원권 상세 페이지 헤더 설정 함수
+  const setMembershipDetailHeader = useCallback(() => {
+    setHeader({
+      display: true,
+      component: (
+        <div className={"flex items-center justify-between px-5 py-3 h-[48px]"}>
+          <div
+            onClick={() => navigate(-1)}
+            className="focus:outline-none focus:ring-2 focus:ring-primary-300 rounded"
+          >
+            <CaretLeftIcon className={"w-5 h-5"} />
+          </div>
+          <CartIcon />
+        </div>
+      ),
+      backgroundColor: "bg-white",
+    })
+  }, [setHeader, navigate])
+
+  // useEffect로 헤더 상태 관리
+  useEffect(() => {
+    // 모달이 열려있지 않을 때만 회원권 상세 헤더 설정
+    if (!isModalOpen) {
+      setMembershipDetailHeader()
+    }
+  }, [isModalOpen, setMembershipDetailHeader])
 
   const totalPrice = useMemo(
     () =>
@@ -217,6 +246,8 @@ export const OptionsBottomSheetContent = ({
     setIsDropdownOpen(false)
     // 네비게이션 상태를 명시적으로 false로 설정
     setNavigation({ display: false })
+    // 회원권 상세 페이지 헤더 복원
+    setMembershipDetailHeader()
     // 오버레이 닫기
     onClose()
   }
@@ -225,7 +256,10 @@ export const OptionsBottomSheetContent = ({
     if (selectedOptions.length === 0) {
       handleClose()
     } else {
-      handleAddToCart()
+      // 버튼이 비활성화 상태일 때는 장바구니에 담지 않음
+      if (!isButtonDisabled) {
+        handleAddToCart()
+      }
     }
   }
 
@@ -240,10 +274,16 @@ export const OptionsBottomSheetContent = ({
   const handleBranchSelect = (branch: Branch) => {
     setSelectedBranch(branch)
     setIsModalOpen(false)
+
+    // 지점 선택 후 헤더가 사라지는 문제 해결을 위해 회원권 상세 페이지 헤더를 명시적으로 복원
+    setMembershipDetailHeader()
   }
 
   const openBranchSelectModal = () => {
+    // 모달을 열기 전에 회원권 상세 헤더 설정 확인
+    setMembershipDetailHeader()
     setIsModalOpen(true)
+
     // s_idx 정보를 모달에 전달
     navigate(".", {
       state: {
@@ -290,7 +330,14 @@ export const OptionsBottomSheetContent = ({
                 ? "rounded-t-xl border border-[#ebebeb] border-b-0"
                 : "rounded-xl border border-[#ebebeb]",
             )}
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            onClick={() => {
+              if (serviceType === "지점 회원권" && !selectedBranch) {
+                // 토스트 메시지 표시
+                showToast("지점을 먼저 선택해주세요")
+                return
+              }
+              setIsDropdownOpen(!isDropdownOpen)
+            }}
             aria-label="관리 횟수 선택"
             aria-expanded={isDropdownOpen}
             aria-haspopup="listbox"
@@ -403,6 +450,7 @@ export const OptionsBottomSheetContent = ({
                 "flex-1",
                 selectedOptions.length === 0 && "!text-[#BDBDBD]",
               )}
+              disabled={selectedOptions.length === 0 ? false : isButtonDisabled}
             >
               {selectedOptions.length === 0 ? "닫기" : "장바구니 담기"}
             </Button>
@@ -423,7 +471,12 @@ export const OptionsBottomSheetContent = ({
         createPortal(
           <MembershipBranchSelectModal
             onBranchSelect={handleBranchSelect}
-            onClose={() => setIsModalOpen(false)}
+            onClose={() => {
+              setIsModalOpen(false)
+
+              // 모달이 닫힐 때 헤더가 사라지는 문제 해결을 위해 회원권 상세 페이지 헤더를 명시적으로 복원
+              setMembershipDetailHeader()
+            }}
             brandCode={brandCode}
           />,
           document.body,

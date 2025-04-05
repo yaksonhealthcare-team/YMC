@@ -25,41 +25,15 @@ export const MembershipBranchSelectModal = ({
 
   // 모달이 닫힐 때 헤더를 복원
   useEffect(() => {
-    // 네비게이션 상태를 명시적으로 false로 설정
+    // 모달이 열릴 때 네비게이션 숨김
     setNavigation({ display: false })
 
     return () => {
-      // 모달이 닫힐 때 원래 회원권 상세 페이지의 헤더를 복원
-      setHeader({
-        display: true,
-        component: (
-          <div
-            className={"flex items-center justify-between px-5 py-3 h-[48px]"}
-          >
-            <button
-              onClick={() => {
-                navigate(`/membership?brand_code=${currentBrandCode}`)
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  navigate(`/membership?brand_code=${currentBrandCode}`)
-                }
-              }}
-              className="focus:outline-none focus:ring-2 focus:ring-primary-300 rounded"
-              aria-label="뒤로 가기"
-            >
-              <CaretLeftIcon className={"w-5 h-5"} />
-            </button>
-            <CartIcon />
-          </div>
-        ),
-        backgroundColor: "bg-white",
-      })
-
-      // 네비게이션 상태를 명시적으로 false로 설정
+      // 모달이 닫힐 때는 헤더를 설정하지 않음 (onClose 함수에서 처리)
+      // 네비게이션 상태만 명시적으로 false로 설정
       setNavigation({ display: false })
     }
-  }, [setHeader, setNavigation, navigate, currentBrandCode])
+  }, [setNavigation])
 
   return (
     <div
