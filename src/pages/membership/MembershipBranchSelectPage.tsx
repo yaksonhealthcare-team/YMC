@@ -63,7 +63,7 @@ const MembershipBranchSelectPage = ({ onSelect, brandCode }: Props) => {
   useEffect(() => {
     if (location.state?.brand_code !== currentBrandCode) {
       navigate(location.pathname, {
-        replace: true,
+        replace: true, // 히스토리에 새 항목 추가하지 않고 현재 상태 교체
         state: {
           ...location.state,
           brand_code: currentBrandCode,

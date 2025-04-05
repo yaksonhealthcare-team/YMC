@@ -3,9 +3,6 @@ import { Branch } from "../../../types/Branch"
 import MembershipBranchSelectPage from "../MembershipBranchSelectPage"
 import { useEffect } from "react"
 import { useLayout } from "../../../contexts/LayoutContext"
-import { useNavigate, useSearchParams } from "react-router-dom"
-import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
-import CartIcon from "@components/icons/CartIcon.tsx"
 
 interface Props {
   onBranchSelect: (branch: Branch) => void
@@ -18,10 +15,7 @@ export const MembershipBranchSelectModal = ({
   onClose,
   brandCode,
 }: Props) => {
-  const { setHeader, setNavigation } = useLayout()
-  const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
-  const currentBrandCode = brandCode || searchParams.get("brand_code") || "001"
+  const { setNavigation } = useLayout()
 
   // 모달이 닫힐 때 헤더를 복원
   useEffect(() => {
@@ -44,7 +38,16 @@ export const MembershipBranchSelectModal = ({
         className="fixed inset-0 bg-white h-full w-full"
         style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0 }}
       >
-        <Header title="지점 선택" type="back_title" onClickBack={onClose} />
+        <div className="bg-white">
+          <Header
+            title="지점 선택"
+            type="back_title"
+            onClickBack={() => {
+              // history.back()을 사용하는 대신 직접 onClose 호출
+              onClose()
+            }}
+          />
+        </div>
         <MembershipBranchSelectPage
           onSelect={(branch) => {
             onBranchSelect(branch)

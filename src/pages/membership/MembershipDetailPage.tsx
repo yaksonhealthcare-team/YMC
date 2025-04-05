@@ -67,7 +67,13 @@ const MembershipDetailPage = () => {
         <div className={"flex items-center justify-between px-5 py-3 h-[48px]"}>
           <div
             onClick={() => {
-              navigate(-1)
+              if (location.state?.fromBranchSelect) {
+                const originalPath =
+                  location.state?.originalPath || "/membership"
+                navigate(originalPath, { replace: true })
+              } else {
+                navigate(-1)
+              }
             }}
           >
             <CaretLeftIcon className={"w-5 h-5"} />

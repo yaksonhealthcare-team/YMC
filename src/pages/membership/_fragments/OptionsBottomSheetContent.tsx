@@ -59,7 +59,11 @@ export const OptionsBottomSheetContent = ({
     setHeader({
       display: true,
       component: (
-        <div className={"flex items-center justify-between px-5 py-3 h-[48px]"}>
+        <div
+          className={
+            "flex items-center justify-between px-5 py-3 h-[48px] bg-white"
+          }
+        >
           <div
             onClick={() => navigate(-1)}
             className="focus:outline-none focus:ring-2 focus:ring-primary-300 rounded"
@@ -277,6 +281,15 @@ export const OptionsBottomSheetContent = ({
 
     // 지점 선택 후 헤더가 사라지는 문제 해결을 위해 회원권 상세 페이지 헤더를 명시적으로 복원
     setMembershipDetailHeader()
+
+    // 히스토리 관리 - 현재 URL 상태를 replace하여 히스토리에서 중복 항목 제거
+    navigate(".", {
+      replace: true,
+      state: {
+        s_idx: membershipId,
+        brand_code: brandCode,
+      },
+    })
   }
 
   const openBranchSelectModal = () => {
@@ -284,12 +297,13 @@ export const OptionsBottomSheetContent = ({
     setMembershipDetailHeader()
     setIsModalOpen(true)
 
-    // s_idx 정보를 모달에 전달
+    // s_idx 정보를 모달에 전달 (히스토리에 추가하지 않도록 replace: true 설정)
     navigate(".", {
       state: {
         s_idx: membershipId,
         brand_code: brandCode,
       },
+      replace: true, // 히스토리 스택에 추가하지 않고 현재 상태를 대체
     })
   }
 
@@ -476,6 +490,15 @@ export const OptionsBottomSheetContent = ({
 
               // 모달이 닫힐 때 헤더가 사라지는 문제 해결을 위해 회원권 상세 페이지 헤더를 명시적으로 복원
               setMembershipDetailHeader()
+
+              // 히스토리 정리 - 현재 URL 상태를 replace하여 히스토리에서 중복 항목 제거
+              navigate(".", {
+                replace: true,
+                state: {
+                  s_idx: membershipId,
+                  brand_code: brandCode,
+                },
+              })
             }}
             brandCode={brandCode}
           />,
