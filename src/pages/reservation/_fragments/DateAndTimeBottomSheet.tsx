@@ -54,20 +54,12 @@ const DateAndTimeBottomSheet = ({
   }
 
   const handleTimeSelect = (time: TimeSlot | null) => {
-    console.log("시간 선택:", time)
     setSelectedTime(time)
   }
 
   const handleComplete = () => {
     if (selectedDate && selectedTime) {
-      console.log(
-        "선택된 날짜와 시간:",
-        selectedDate.format("YYYY-MM-DD"),
-        selectedTime,
-      )
       onSelect(selectedDate, selectedTime)
-    } else {
-      console.error("날짜 또는 시간이 선택되지 않았습니다")
     }
     onClose()
   }

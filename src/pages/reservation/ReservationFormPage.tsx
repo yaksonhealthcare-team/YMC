@@ -390,18 +390,12 @@ const ReservationFormPage = () => {
         date={data.date}
         time={data.timeSlot}
         onSelect={(date, timeSlot) => {
-          console.log(
-            "예약 날짜/시간 선택됨:",
-            date?.format("YYYY-MM-DD"),
-            timeSlot?.time,
-          )
           setData((prev) => {
             const newData = {
               ...prev,
               date,
               timeSlot,
             }
-            console.log("업데이트된 데이터:", newData)
             return newData
           })
         }}

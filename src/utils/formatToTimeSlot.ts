@@ -1,19 +1,15 @@
 import { ScheduleTime, TimeSlot } from "../types/Schedule.ts"
 
 export const mapTimesToTimeSlots = (times: ScheduleTime[]): TimeSlot[] => {
-  console.log("원본 시간 데이터:", times)
-
   return times.map((item) => {
     try {
       const timeString = item.times
-      console.log("시간 문자열:", timeString)
 
       // 시간 형식이 "HHMM"인 경우 (예: "1330")
       if (/^\d{4}$/.test(timeString)) {
         const hours = parseInt(timeString.substring(0, 2), 10)
         const minutes = timeString.substring(2)
         const formattedTime = `${hours}:${minutes}`
-        console.log("파싱된 시간:", formattedTime)
 
         return {
           time: formattedTime,
@@ -27,10 +23,8 @@ export const mapTimesToTimeSlots = (times: ScheduleTime[]): TimeSlot[] => {
           code: timeString.replace(":", ""),
         }
       }
-      // 다른 형식의 경우 그대로 반환하되 로그 남김
+      // 다른 형식의 경우 그대로 반환
       else {
-        console.warn("알 수 없는 시간 형식:", timeString)
-
         // "오전 9:30"같은 형식인지 확인
         const koreanTimePattern = /(오전|오후)\s+(\d{1,2}):(\d{2})/
         const match = timeString.match(koreanTimePattern)
@@ -64,7 +58,6 @@ export const mapTimesToTimeSlots = (times: ScheduleTime[]): TimeSlot[] => {
         }
       }
     } catch (error) {
-      console.error("시간 파싱 오류:", error, item)
       // 오류 발생 시 원본 값 그대로 반환
       return {
         time: String(item.times),

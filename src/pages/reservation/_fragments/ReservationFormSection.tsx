@@ -37,13 +37,11 @@ export const ReservationFormSection = ({
     timeSlot: TimeSlot | null,
   ) => {
     if (!date || !timeSlot || !timeSlot.time) {
-      console.log("날짜 또는 시간이 없음:", { date: date?.format(), timeSlot })
       return ""
     }
 
     try {
       const dateStr = date.format("YYYY.MM.DD")
-      console.log("시간슬롯 값:", timeSlot)
 
       // 시간이 이미 "HH:MM" 형식인 경우
       if (/^\d{1,2}:\d{2}$/.test(timeSlot.time)) {
@@ -54,7 +52,6 @@ export const ReservationFormSection = ({
         const ampm = hours < 12 ? "오전" : "오후"
         const hour12 = hours % 12 || 12
         const formattedTime = `${dateStr} ${ampm} ${hour12}:${minutes.toString().padStart(2, "0")}`
-        console.log("포맷된 예약 일시:", formattedTime)
         return formattedTime
       }
       // 이미 포맷된 시간 (오전/오후 포함)인지 확인
@@ -66,11 +63,9 @@ export const ReservationFormSection = ({
       }
       // 알 수 없는 형식
       else {
-        console.warn("알 수 없는 시간 형식:", timeSlot.time)
         return `${dateStr} ${timeSlot.time}`
       }
     } catch (error) {
-      console.error("날짜/시간 포맷팅 에러:", error)
       return ""
     }
   }
