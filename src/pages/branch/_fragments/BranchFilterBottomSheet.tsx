@@ -44,6 +44,10 @@ const BranchFilterBottomSheet = ({
     onBrandChange?.(brand)
   }
 
+  const handleCategoryChange = (category: FilterItem | null) => {
+    setFilter((prev) => ({ ...prev, category }))
+  }
+
   const handleInitialize = () => {
     setFilter({ brand: null, category: null })
     onBrandChange?.(null)
@@ -76,7 +80,7 @@ const BranchFilterBottomSheet = ({
             items={categories}
             selectedItem={filter.category}
             isLoading={isCategoriesLoading}
-            onSelect={(category) => setFilter({ ...filter, category })}
+            onSelect={handleCategoryChange}
           />
         </div>
       </div>
