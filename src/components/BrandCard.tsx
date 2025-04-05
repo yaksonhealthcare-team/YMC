@@ -47,11 +47,15 @@ export const BrandCard = ({
         role="img"
         aria-label={`${brandName} 로고`}
       >
-        <Image
-          src={brandSrc}
-          alt={`${brandName} 로고 이미지`}
-          className="w-full h-full object-contain p-2"
-        />
+        {brandSrc ? (
+          <Image
+            src={brandSrc}
+            alt={`${brandName} 로고 이미지`}
+            className="w-full h-full object-contain p-2"
+          />
+        ) : (
+          <div className="w-full h-full bg-white rounded-full"></div>
+        )}
       </div>
       <span
         className={clsx(
