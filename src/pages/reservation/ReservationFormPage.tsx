@@ -390,11 +390,20 @@ const ReservationFormPage = () => {
         date={data.date}
         time={data.timeSlot}
         onSelect={(date, timeSlot) => {
-          setData((prev) => ({
-            ...prev,
-            date,
-            timeSlot,
-          }))
+          console.log(
+            "예약 날짜/시간 선택됨:",
+            date?.format("YYYY-MM-DD"),
+            timeSlot?.time,
+          )
+          setData((prev) => {
+            const newData = {
+              ...prev,
+              date,
+              timeSlot,
+            }
+            console.log("업데이트된 데이터:", newData)
+            return newData
+          })
         }}
         membershipIndex={data.item === "상담 예약" ? 0 : Number(data.item)}
         addServices={data.additionalServices.map((service) =>
