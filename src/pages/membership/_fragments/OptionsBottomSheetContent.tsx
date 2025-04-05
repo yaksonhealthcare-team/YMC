@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useOverlay } from "../../../contexts/ModalContext"
 import { useLayout } from "../../../contexts/LayoutContext"
@@ -13,8 +13,6 @@ import { createPortal } from "react-dom"
 import { MembershipBranchSelectModal } from "./MembershipBranchSelectModal"
 import clsx from "clsx"
 import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
-import XCircleIcon from "@components/icons/XCircleIcon.tsx"
-import { Divider } from "@mui/material"
 
 interface OptionsBottomSheetContentProps {
   serviceType: string
@@ -49,7 +47,6 @@ export const OptionsBottomSheetContent = ({
 
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([])
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const totalPrice = useMemo(
@@ -176,8 +173,6 @@ export const OptionsBottomSheetContent = ({
     // 선택된 지점 초기화
     setSelectedBranch(null)
     // 드롭다운 닫기
-    setIsDropdownOpen(false)
-    // 모달 닫기
     setIsModalOpen(false)
     // 네비게이션 상태를 명시적으로 false로 설정
     setNavigation({ display: false })
