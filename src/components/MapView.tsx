@@ -5,7 +5,6 @@ import { Branch } from "../types/Branch.ts"
 import { useNaverMapBranchMarkers } from "../hooks/useNaverMapBranchMarkers.tsx"
 import { getCurrentLocation } from "../utils/getCurrentLocation.ts"
 import { useNaverMap } from "../hooks/useNaverMap.ts"
-import { useDebounce } from "../hooks/useDebounce.ts"
 
 interface MapViewProps {
   center: Coordinate
@@ -32,25 +31,6 @@ const MapView = ({
   )
   const [isMapInitialized, setIsMapInitialized] = useState(false)
   const { isLoaded, error } = useNaverMap()
-
-  // onMoveMap 최신 상태를 유지하기 위한 ref
-  const onMoveMapRef = useRef(options?.onMoveMap)
-  useEffect(() => {
-    onMoveMapRef.current = options?.onMoveMap
-  }, [options?.onMoveMap])
-
-  const handleMapMove = useCallback(() => {
-    if (mapInstance.current && onMoveMapRef.current) {
-      const currentCenter = mapInstance.current.getCenter()
-      onMoveMapRef.current({
-        latitude: currentCenter.y,
-        longitude: currentCenter.x,
-      })
-    }
-  }, []) // ref는 의존성 배열에 포함하지 않음
-
-  // 컴포넌트 최상위 레벨에서 useDebounce 호출
-  const debouncedMapMoveHandler = useDebounce(handleMapMove, 500)
 
   const handleClickMarker = useCallback(
     (branch: Branch) => {
@@ -88,10 +68,8 @@ const MapView = ({
     options: markerOptions,
   })
 
-  // 지도 초기화 및 이벤트 리스너 설정 useEffect
   useEffect(() => {
     let mounted = true
-    let dragEndListener: naver.maps.MapEventListener | null = null
 
     const initializeMap = () => {
       if (!mapRef.current || !center || mapInstance.current) {
@@ -110,13 +88,15 @@ const MapView = ({
         if (!mounted) return
         setIsMapInitialized(true)
 
-        // dragend 이벤트 리스너 설정 (디바운스 핸들러 사용)
         if (options?.onMoveMap && mapInstance.current) {
-          dragEndListener = window.naver.maps.Event.addListener(
-            mapInstance.current,
-            "dragend",
-            debouncedMapMoveHandler,
-          )
+          const map = mapInstance.current
+          window.naver.maps.Event.addListener(map, "dragend", () => {
+            const currentCenter = map.getCenter()
+            options?.onMoveMap?.({
+              latitude: currentCenter.y,
+              longitude: currentCenter.x,
+            })
+          })
         }
 
         if (options?.showCurrentLocation) {
@@ -145,33 +125,23 @@ const MapView = ({
         return () => {
           mounted = false
           clearInterval(checkMapRef)
-          // 컴포넌트 언마운트 시 리스너 제거
-          if (dragEndListener) {
-            window.naver.maps.Event.removeListener(dragEndListener)
-          }
         }
       } else {
         initializeMap()
       }
     }
 
-    // 컴포넌트 언마운트 또는 의존성 변경 시 리스너 제거
     return () => {
       mounted = false
-      if (dragEndListener) {
-        window.naver.maps.Event.removeListener(dragEndListener)
-      }
     }
   }, [
     isLoaded,
-    center?.latitude, // center 변경 시 재초기화 방지를 위해 의존성에서 제거 고려
-    center?.longitude, // center 변경 시 재초기화 방지를 위해 의존성에서 제거 고려
-    debouncedMapMoveHandler, // 디바운스 핸들러를 의존성에 추가
+    center?.latitude,
+    center?.longitude,
+    options?.onMoveMap,
     options?.showCurrentLocation,
-    // options?.onMoveMap 은 ref로 관리하므로 의존성에서 제거
   ])
 
-  // 지도 센터 이동 useEffect (지도 초기화와 분리)
   useEffect(() => {
     if (isMapInitialized && mapInstance.current && center) {
       const currentMapCenter = mapInstance.current.getCenter()
