@@ -273,12 +273,12 @@ const OverlayContainer: React.FC = () => {
                   bottomSheetOptions.height === "large" ? "95vh" : "80vh",
                 minHeight:
                   bottomSheetOptions.height === "large" ? "95vh" : "auto",
-                overflowY: "auto",
+                overflowY: "hidden",
                 width: "100%",
               },
             }}
           >
-            <DialogContent className="p-0">
+            <DialogContent className="p-0 scrollbar-hide overflow-y-auto">
               <div className="flex flex-col items-center">
                 <div className="w-10 h-1 bg-gray-300 rounded-full my-4" />
                 {bottomSheetOptions.title && (
