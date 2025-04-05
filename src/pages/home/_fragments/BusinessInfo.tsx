@@ -9,15 +9,15 @@ export const BusinessInfo = () => {
         (주) 약손명가 헬스케어
       </span>
       <div className="flex flex-col gap-1">
-        <span className="font-r text-12px text-gray-500">대표자 : 홍길동</span>
+        <span className="font-r text-12px text-gray-500">대표자 : 이석진</span>
         <span className="font-r text-12px text-gray-500">
-          주소 : 서울특별시 강남구 테헤란로 10길, 동성빌딩
+          주소 : 서울특별시 강남구 봉은사로 68길 8, DECKS 빌딩 2층
         </span>
         <span className="font-r text-12px text-gray-500">
-          번호 : 02-1234-1234
+          번호 : 02-518-0408
         </span>
         <span className="font-r text-12px text-gray-500">
-          통신판매업 번호 : 0000-0000-0000
+          통신판매업 번호 : 제2021-서울강남-05818호
         </span>
       </div>
       <div className="flex items-center gap-3">
