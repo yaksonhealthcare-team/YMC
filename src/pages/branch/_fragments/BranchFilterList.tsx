@@ -19,6 +19,7 @@ interface BranchFilterListProps {
   onSelectBranch: (branch: Branch) => void
   isLoading?: boolean
   className?: string
+  totalCount?: number
 }
 
 interface BranchFilterListItemProps {
@@ -106,6 +107,7 @@ const BranchFilterList = ({
   onSelectBranch,
   isLoading,
   className,
+  totalCount = 0,
 }: BranchFilterListProps) => {
   const { observerTarget } = useIntersection<HTMLLIElement>({
     onIntersect,
@@ -177,7 +179,7 @@ const BranchFilterList = ({
     )
   }
 
-  if (branches.length === 0) {
+  if (totalCount === 0) {
     return (
       <div className={clsx("flex flex-col h-full", className)}>
         <div className="px-5 flex-none bg-white">
@@ -211,7 +213,7 @@ const BranchFilterList = ({
           aria-live="polite"
         >
           {"총 "}
-          <span className="font-b">{branches.length}</span>
+          <span className="font-b">{totalCount}</span>
           {"개의 지점을 찾았습니다."}
         </p>
       </div>

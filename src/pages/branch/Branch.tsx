@@ -253,6 +253,7 @@ const Branch = () => {
             }}
             onSelectBranch={handleBranchSelect}
             isLoading={branchesLoading}
+            totalCount={branchPaginationData?.pages[0].total_count}
           />
         )
       case "map":

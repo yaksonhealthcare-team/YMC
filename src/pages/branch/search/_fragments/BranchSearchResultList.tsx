@@ -32,6 +32,44 @@ const BranchSearchResultList = ({
     search: debouncedQuery,
   })
 
+  // 위치 정보를 로딩 중인 경우 로딩 표시
+  if (locationLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[200px]">
+        <LoadingIndicator />
+        <p className="mt-4 text-gray-500">
+          {"위치 정보를 불러오는 중입니다..."}
+        </p>
+      </div>
+    )
+  }
+
+  // 지점 데이터 로딩 중이고 결과가 없는 경우
+  if (branchesLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[200px]">
+        <LoadingIndicator />
+      </div>
+    )
+  }
+
+  // 검색 결과가 없는 경우
+  if (!branchesLoading && branchPaginationData?.pages[0].total_count === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center px-5 min-h-[200px] mt-8">
+        <div className="mb-4 p-3 rounded-full bg-gray-100">
+          <SearchIcon className="w-6 h-6 text-gray-400" />
+        </div>
+        <p className="font-m text-16px text-gray-700 text-center">
+          {"검색 결과가 없습니다"}
+        </p>
+        <p className="mt-2 font-r text-14px text-gray-500 text-center">
+          {"다른 키워드로 검색해 보세요"}
+        </p>
+      </div>
+    )
+  }
+
   const branches =
     branchPaginationData?.pages.flatMap((page) =>
       page.body.result.map((branch) => ({
@@ -48,44 +86,6 @@ const BranchSearchResultList = ({
       })),
     ) || []
 
-  // 위치 정보를 로딩 중인 경우 로딩 표시
-  if (locationLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[200px]">
-        <LoadingIndicator />
-        <p className="mt-4 text-gray-500">
-          {"위치 정보를 불러오는 중입니다..."}
-        </p>
-      </div>
-    )
-  }
-
-  // 지점 데이터 로딩 중이고 결과가 없는 경우
-  if (branchesLoading && branches.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[200px]">
-        <LoadingIndicator />
-      </div>
-    )
-  }
-
-  // 검색 결과가 없는 경우
-  if (!branchesLoading && branches.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center px-5 min-h-[200px] mt-8">
-        <div className="mb-4 p-3 rounded-full bg-gray-100">
-          <SearchIcon className="w-6 h-6 text-gray-400" />
-        </div>
-        <p className="font-m text-16px text-gray-700 text-center">
-          {"검색 결과가 없습니다"}
-        </p>
-        <p className="mt-2 font-r text-14px text-gray-500 text-center">
-          {"다른 키워드로 검색해 보세요"}
-        </p>
-      </div>
-    )
-  }
-
   return (
     <div className="h-full overflow-y-auto">
       <BranchFilterList
@@ -97,6 +97,7 @@ const BranchSearchResultList = ({
         }}
         onSelectBranch={onSelect}
         isLoading={branchesLoading}
+        totalCount={branchPaginationData?.pages[0].total_count}
       />
       {isFetchingNextPage && (
         <div className="flex justify-center py-4">
