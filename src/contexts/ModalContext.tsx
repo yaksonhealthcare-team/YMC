@@ -228,21 +228,26 @@ const OverlayContainer: React.FC = () => {
             role="dialog"
             aria-modal="true"
             aria-labelledby="message-box-title"
+            onClick={closeOverlay}
           >
             <div
-              className="bg-white rounded-2xl p-6 w-[320px] max-w-[90%]"
+              className="bg-white rounded-lg p-5 mx-5 w-full max-w-sm"
               role="document"
               onKeyDown={handleContentKeyDown}
+              onClick={(e) => e.stopPropagation()}
             >
-              <h2 id="message-box-title" className="text-lg font-bold mb-4">
-                {(overlayState as MessageBoxState).options.title}
+              <h2 id="message-box-title" className="text-lg font-semibold mb-2">
+                {(overlayState as MessageBoxState).options.title || "메시지"}
               </h2>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600 mb-5">
                 {(overlayState as MessageBoxState).content}
               </p>
               <button
-                className="w-full bg-primary text-white py-3 rounded-lg"
-                onClick={closeOverlay}
+                className="w-full bg-primary text-white py-3 rounded-lg font-medium"
+                onClick={(e) => {
+                  e.preventDefault()
+                  closeOverlay()
+                }}
                 autoFocus
               >
                 확인
@@ -273,14 +278,14 @@ const OverlayContainer: React.FC = () => {
                   bottomSheetOptions.height === "large" ? "95vh" : "80vh",
                 minHeight:
                   bottomSheetOptions.height === "large" ? "95vh" : "auto",
-                overflowY: "hidden",
+                overflowY: "auto",
                 width: "100%",
               },
             }}
           >
-            <DialogContent className="p-0 scrollbar-hide overflow-y-auto">
+            <DialogContent className="p-0">
               <div className="flex flex-col items-center">
-                <div className="w-10 h-1 bg-gray-300 rounded-full my-4" />
+                <div className="w-[52px] h-[4px] bg-[#ECECEC] rounded-full mt-3 mb-4" />
                 {bottomSheetOptions.title && (
                   <h2 className="text-[18px] font-semibold mb-4 text-center">
                     {bottomSheetOptions.title}
@@ -318,26 +323,32 @@ const OverlayContainer: React.FC = () => {
             aria-describedby="modal-description"
           >
             <DialogContent>
-              <h2 id="modal-title" className="text-lg font-bold mb-4">
+              <h2 id="modal-title" className="text-lg font-semibold mb-2">
                 {modalState.content.title}
               </h2>
-              <p id="modal-description" className="text-gray-600 mb-6">
+              <p id="modal-description" className="text-gray-600 mb-5">
                 {modalState.content.message}
               </p>
               <div className="flex gap-2">
                 {modalState.content.onCancel && (
                   <Button
-                    onClick={modalState.content.onCancel}
+                    onClick={() => {
+                      modalState.content.onCancel?.()
+                      closeOverlay()
+                    }}
                     variantType="line"
-                    className="flex-1"
+                    className="flex-1 py-3 bg-gray-100 text-gray-900 rounded-lg font-medium"
                   >
                     취소
                   </Button>
                 )}
                 <Button
-                  onClick={modalState.content.onConfirm}
+                  onClick={() => {
+                    modalState.content.onConfirm()
+                    closeOverlay()
+                  }}
                   variantType="primary"
-                  className="flex-1"
+                  className="flex-1 py-3 bg-primary text-white rounded-lg font-medium"
                 >
                   확인
                 </Button>
