@@ -70,8 +70,6 @@ export const useReservationDetail = (reservationId: string) => {
     select: (data) => {
       if (!data) return null
 
-      console.log("API Response Data:", data)
-
       const detail: ReservationDetail = {
         id: data.r_idx,
         store: data.b_name,

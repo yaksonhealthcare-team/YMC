@@ -244,18 +244,6 @@ const ReservationDetailPage = () => {
     // 현재 시간이 예약 날짜(시작 시간)보다 이후인지 확인
     const isReservationDatePassed = now.getTime() > reservationDate.getTime()
 
-    // 상세 로그 추가
-    console.log("날짜 비교 디버깅:", {
-      현재시간: now.toISOString(),
-      현재시간Timestamp: now.getTime(),
-      예약날짜: reservationDate.toISOString(),
-      예약날짜Timestamp: reservationDate.getTime(),
-      예약종료시간: reservationEndTime.toISOString(),
-      시간차이: now.getTime() - reservationDate.getTime(),
-      예약날짜지남: isReservationDatePassed,
-      상태코드: reservation.statusCode,
-    })
-
     switch (reservation.statusCode) {
       case "000": // 전체
       case "002": // 방문완료
