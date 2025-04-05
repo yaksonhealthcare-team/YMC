@@ -19,7 +19,7 @@ const BranchSearchResultList = ({
   const { location, loading: locationLoading } = useGeolocation()
 
   const {
-    data: branchPages,
+    data: branchPaginationData,
     isLoading: branchesLoading,
     hasNextPage,
     fetchNextPage,
@@ -33,7 +33,7 @@ const BranchSearchResultList = ({
   })
 
   const branches =
-    branchPages?.pages.flatMap((page) =>
+    branchPaginationData?.pages.flatMap((page) =>
       page.body.result.map((branch) => ({
         b_idx: branch.b_idx,
         name: branch.b_name,
