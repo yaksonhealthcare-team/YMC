@@ -87,99 +87,22 @@ const ReservationFormPage = () => {
 
   // Navigation Handler
   const handleBack = useCallback(() => {
-    // 먼저 모든 상태를 초기화
-    setData({
-      item: undefined,
-      branch: undefined,
-      date: null,
-      timeSlot: null,
-      request: "",
-      additionalServices: [],
-    })
-    clear()
-
-    // 세션 스토리지에서 fromReservation 정보를 가져옴
-    const fromReservation = sessionStorage.getItem("fromReservation")
-
-    // 세션 스토리지 정보가 있으면 초기화 (이전 방식과의 호환성 유지)
-    if (fromReservation) {
-      sessionStorage.removeItem("fromReservation")
-    }
-
-    // 현재 위치 객체에서 상태 정보 확인
-    const locationState = location.state || {}
-
-    // 1. 지점 선택 화면에서 왔을 경우 (무한 루프 방지)
-    if (locationState.fromBranchSelect || locationState.selectedBranch) {
-      // 원래 온 경로가 있으면 그 경로로, 없으면 홈으로
-      if (locationState.originalPath) {
-        navigate(locationState.originalPath, { replace: true })
-      } else {
-        navigate("/", { replace: true })
-      }
-    }
-    // 2. 지점 상세 페이지에서 왔을 경우
-    else if (locationState.fromBranchDetail) {
-      // 지점 상세 페이지로 돌아갈 때 originalPath 사용
-      if (locationState.originalPath) {
-        navigate(locationState.originalPath, { replace: true })
-      } else {
-        navigate("/branch", { replace: true })
-      }
-    }
-    // 3. 결제 완료 페이지에서 왔을 경우
-    else if (document.referrer.includes("/payment/complete")) {
-      navigate("/", { replace: true })
-    }
-    // 4. 예약 상세 페이지에서 재예약으로 온 경우
-    else if (locationState.fromReservationDetail) {
-      // originalPath가 있으면 해당 경로로 이동, 없으면 예약 목록으로 이동
-      if (locationState.originalPath) {
-        navigate(locationState.originalPath, { replace: true })
-      } else {
-        navigate("/member-history/reservation", { replace: true })
-      }
-    }
-    // 5. 회원권 카드에서 온 경우
-    else if (locationState.fromMembershipCard) {
-      // originalPath가 '/'(홈)인 경우 홈으로 이동, 아니면 예약 히스토리로 이동
-      if (locationState.originalPath === "/") {
-        navigate("/", { replace: true })
-      } else {
-        navigate("/member-history/reservation", { replace: true })
-      }
-    }
-    // 6. 특정 경로로 돌아가야 하는 경우
-    else if (locationState.returnPath) {
-      navigate(locationState.returnPath, { replace: true })
-    }
-    // 7. 그 외 경우는 일반 뒤로가기
-    else {
-      navigate(-1)
-    }
-  }, [clear, navigate, location])
+    navigate(-1)
+  }, [])
 
   // Layout Effects
   useEffect(() => {
-    const cleanupRef = { shouldNavigate: true }
-
     setHeader({
       display: true,
       title: "예약하기",
       left: "back",
       onClickBack: () => {
-        if (cleanupRef.shouldNavigate) {
-          handleBack()
-        }
+        handleBack()
       },
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
-
-    return () => {
-      cleanupRef.shouldNavigate = false
-    }
-  }, [handleBack])
+  }, [])
 
   // 지점 자동 선택
   useEffect(() => {
@@ -290,7 +213,7 @@ const ReservationFormPage = () => {
             message: "해당 회원권 정보를 찾을 수 없습니다.",
             onConfirm: () => {
               closeOverlay()
-              navigate("/member-history/reservation", { replace: true })
+              handleBack()
             },
           })
         } else if (Number(membership.remain_amount) <= 0) {
@@ -300,7 +223,7 @@ const ReservationFormPage = () => {
             message: "해당 회원권의 잔여 횟수가 없습니다.",
             onConfirm: () => {
               closeOverlay()
-              navigate("/member-history/reservation", { replace: true })
+              handleBack()
             },
           })
         }
