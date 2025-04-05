@@ -54,6 +54,7 @@ const DateAndTimeBottomSheet = ({
   }
 
   const handleTimeSelect = (time: TimeSlot | null) => {
+    console.log("시간 선택:", time)
     setSelectedTime(time)
   }
 
@@ -62,7 +63,7 @@ const DateAndTimeBottomSheet = ({
       console.log(
         "선택된 날짜와 시간:",
         selectedDate.format("YYYY-MM-DD"),
-        selectedTime.time,
+        selectedTime,
       )
       onSelect(selectedDate, selectedTime)
     } else {
@@ -431,7 +432,7 @@ const TimePickerSection = ({
                   onClick={() => handleTimeSelect(slot)}
                   className={clsx(
                     "h-10 px-2.5 rounded-lg text-sm font-normal flex justify-center items-center whitespace-nowrap",
-                    selectedTime?.time === slot.time
+                    selectedTime?.code === slot.code
                       ? "!bg-primary-300 !text-white !border-none hover:!bg-primary-300"
                       : "!bg-white !border !border-solid !border-gray-200 hover:!bg-[#f7f7f7]",
                     "!text-gray-700",
