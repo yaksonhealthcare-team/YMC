@@ -321,8 +321,16 @@ const OverlayContainer: React.FC = () => {
             onClose={closeOverlay}
             aria-labelledby="modal-title"
             aria-describedby="modal-description"
+            PaperProps={{
+              style: {
+                borderRadius: "0.5rem",
+                maxWidth: "90%",
+                width: "400px",
+                margin: "20px",
+              },
+            }}
           >
-            <DialogContent>
+            <DialogContent className="p-6">
               <h2 id="modal-title" className="text-lg font-semibold mb-2">
                 {modalState.content.title}
               </h2>
@@ -337,7 +345,7 @@ const OverlayContainer: React.FC = () => {
                       closeOverlay()
                     }}
                     variantType="line"
-                    className="flex-1 py-3 bg-gray-100 text-gray-900 rounded-lg font-medium"
+                    className="flex-1 py-3 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-gray-50"
                   >
                     취소
                   </Button>
@@ -348,7 +356,7 @@ const OverlayContainer: React.FC = () => {
                     closeOverlay()
                   }}
                   variantType="primary"
-                  className="flex-1 py-3 bg-primary text-white rounded-lg font-medium"
+                  className="flex-1 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90"
                 >
                   확인
                 </Button>
