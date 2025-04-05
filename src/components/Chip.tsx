@@ -21,7 +21,7 @@ export const Chip = (props: ChipProps) => {
       className={clsx(
         "py-[3px] px-2 font-m text-12px rounded-full",
         styles[type],
-        "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+        "",
       )}
       aria-label={`${title} ${type === "finish" ? "완료됨" : type === "strong" ? "강조됨" : ""}`}
       aria-pressed={type === "strong"}

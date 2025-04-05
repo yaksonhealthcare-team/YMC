@@ -31,7 +31,7 @@ const DevPage = () => {
       left: (
         <button
           onClick={() => navigate(-1)}
-          className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+          className=" rounded"
           aria-label="뒤로가기"
         >
           {"<"} Back

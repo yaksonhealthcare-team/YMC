@@ -153,7 +153,7 @@ export const ReserveCard = ({
     <button
       className={clsx(
         `flex justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px] w-full text-left cursor-pointer`,
-        `focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2`,
+        ``,
         className,
       )}
       onClick={() => navigate(`/reservation/${reservation.id}`)}

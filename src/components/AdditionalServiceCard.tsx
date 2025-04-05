@@ -27,7 +27,7 @@ export const AdditionalServiceCard = ({
           type="button"
           onClick={(e) => e.stopPropagation()}
           aria-label={`${option.s_name} ${isChecked ? "선택 해제" : "선택"}`}
-          className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+          className=" rounded"
         >
           <Checkbox
             checked={isChecked}

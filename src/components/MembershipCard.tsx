@@ -106,10 +106,7 @@ export const MembershipCard = ({
       <div className={STYLES.actions.wrapper}>
         {showHistoryButton && (
           <button
-            className={clsx(
-              STYLES.actions.history,
-              "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded",
-            )}
+            className={clsx(STYLES.actions.history, " rounded")}
             onClick={handleHistoryClick}
             aria-label="이용 기록"
           >

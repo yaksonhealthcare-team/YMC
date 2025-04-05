@@ -5,7 +5,7 @@ import clsx from "clsx"
 const BUTTON_STYLES = {
   base: clsx(
     "font-sb text-14px text-gray-400",
-    "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+    "",
     "hover:text-gray-600 transition-colors duration-200",
     "rounded px-2 py-1",
   ),

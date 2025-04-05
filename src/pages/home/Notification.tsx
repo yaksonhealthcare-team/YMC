@@ -35,7 +35,7 @@ export const Notification = () => {
       right: (
         <button
           onClick={() => navigate("/settings/notifications")}
-          className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+          className=" rounded"
           aria-label="알림 설정"
         >
           <SettingIcon className="w-6 h-6" />

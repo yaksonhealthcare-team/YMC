@@ -36,21 +36,21 @@ const EventPage = () => {
         <div className="flex px-5">
           <button
             onClick={() => setSelectedTab("ALL")}
-            className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+            className=" rounded"
             aria-label="전체 이벤트"
           >
             전체
           </button>
           <button
             onClick={() => setSelectedTab("ING")}
-            className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+            className=" rounded"
             aria-label="진행중인 이벤트"
           >
             진행중
           </button>
           <button
             onClick={() => setSelectedTab("END")}
-            className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+            className=" rounded"
             aria-label="종료된 이벤트"
           >
             종료

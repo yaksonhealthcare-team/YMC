@@ -112,7 +112,7 @@ const MyPageMenu = () => {
           type="button"
           key={item.id}
           onClick={() => handleClick(item)}
-          className="flex items-center justify-between h-12 w-full rounded-lg p-1 focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2"
+          className="flex items-center justify-between h-12 w-full rounded-lg p-1 "
           aria-label={`${item.title}${item.external ? " (외부 링크)" : ""}`}
         >
           <div className="flex items-center gap-3">

@@ -161,7 +161,7 @@ const MembershipHistoryPage = () => {
 
       <MembershipContent filterId={membershipFilter.id} />
       <button
-        className="fixed bottom-[98px] right-5 w-14 h-14 bg-primary-300 text-white rounded-full shadow-lg hover:bg-primary-400 focus:outline-none focus:bg-primary-500 focus:ring-opacity-50 transition-colors duration-200 z-10"
+        className="fixed bottom-[98px] right-5 w-14 h-14 bg-primary-300 text-white rounded-full shadow-lg hover:bg-primary-400  transition-colors duration-200 z-10"
         onClick={() => navigate("/membership")}
       >
         <AddMembershipIcon className="w-8 h-8 mx-auto text-white" />

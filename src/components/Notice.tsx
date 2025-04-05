@@ -15,7 +15,7 @@ export const Notice = (props: NoticeProps) => {
     <button
       className={clsx(
         "h-10 flex justify-between items-center p-y-3 px-4 text-primary w-full",
-        "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+        "",
         "hover:bg-primary-50 transition-colors duration-200",
         "rounded-lg",
         className,

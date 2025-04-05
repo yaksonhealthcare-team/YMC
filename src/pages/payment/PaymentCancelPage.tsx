@@ -183,7 +183,7 @@ const PaymentCancelPage = () => {
             <div className={"mt-10"}>
               <textarea
                 className={
-                  "w-full rounded-lg border border-gray-200 resize-none active:border-gray-500 focus:border-gray-500 outline-none py-3 px-4"
+                  "w-full rounded-lg border border-gray-200 resize-none active:border-gray-500 outline-none py-3 px-4"
                 }
                 placeholder={"취소 사유를 입력해주세요"}
                 rows={5}

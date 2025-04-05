@@ -46,7 +46,7 @@ export const Number = (props: NumberProps) => {
       <button
         className={clsx(
           "flex justify-center items-center w-6 h-6 border rounded-l",
-          "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+          "",
           {
             "bg-gray-50 border-gray-100": isMinusDisabled,
             "hover:bg-gray-50": !isMinusDisabled,
@@ -77,7 +77,7 @@ export const Number = (props: NumberProps) => {
       <button
         className={clsx(
           "flex justify-center items-center w-6 h-6 border rounded-r",
-          "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+          "",
           {
             "bg-gray-50 border-gray-100": isPlusDisabled,
             "hover:bg-gray-50": !isPlusDisabled,

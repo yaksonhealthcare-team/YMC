@@ -42,11 +42,7 @@ export const Title = ({
       {type === "arrow" && onClick && (
         <button
           onClick={onClick}
-          className={clsx(
-            "flex justify-between p-1",
-            className,
-            "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded-lg",
-          )}
+          className={clsx("flex justify-between p-1", className, " rounded-lg")}
           aria-label={`${title} ${count ? `${count}개의` : ""} 전체 목록 보기`}
         >
           <CaretRightIcon className={TITLE_STYLES.arrow} aria-hidden="true" />

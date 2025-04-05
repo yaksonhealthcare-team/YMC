@@ -37,13 +37,17 @@ const BranchFilterListItem = ({
   isFavorite,
 }: BranchFilterListItemProps) => (
   <li role="option" aria-selected="false">
-    <button
+    <div
       onClick={() => onClick(branch)}
-      className={clsx(
-        "cursor-pointer w-full flex",
-        "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded-lg",
-        className,
-      )}
+      className={clsx("cursor-pointer w-full flex", " rounded-lg", className)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+          onClick(branch)
+        }
+      }}
       aria-label={`${branch.name} 지점 선택 ${branch.distanceInMeters ? `${branch.distanceInMeters} 거리` : ""} ${branch.address}`}
     >
       <div className="w-full py-4 gap-4 flex items-stretch">
@@ -63,7 +67,7 @@ const BranchFilterListItem = ({
                 onClickFavorite(branch)
               }}
               className={clsx(
-                "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded-lg p-1",
+                " rounded-lg p-1",
                 "transition-transform hover:scale-110",
               )}
               aria-label={`${branch.name} 지점 ${isFavorite ? "즐겨찾기 해제" : "즐겨찾기 추가"}`}
@@ -92,7 +96,7 @@ const BranchFilterListItem = ({
           </address>
         </div>
       </div>
-    </button>
+    </div>
   </li>
 )
 

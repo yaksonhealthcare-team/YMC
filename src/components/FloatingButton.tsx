@@ -29,7 +29,7 @@ const BASE_BUTTON_STYLES = clsx(
   "shadow-floatingButton rounded-full",
   "flex items-center justify-center",
   "bg-white hover:bg-gray-50",
-  "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+  "",
   "transition-colors duration-200",
 )
 

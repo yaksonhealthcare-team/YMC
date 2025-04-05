@@ -29,11 +29,7 @@ export const Filter = ({
 }: FilterProps) => (
   <Button
     variant="outlined"
-    className={clsx(
-      FILTER_STYLES[state],
-      BUTTON_BASE_STYLES,
-      "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
-    )}
+    className={clsx(FILTER_STYLES[state], BUTTON_BASE_STYLES, "")}
     onClick={onClick}
     endIcon={
       type === "arrow" ? <CaretDownIcon aria-hidden="true" /> : undefined

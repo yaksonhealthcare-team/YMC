@@ -17,7 +17,7 @@ const CartIcon = () => {
 
   return (
     <button
-      className="relative inline-block focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+      className="relative inline-block  rounded"
       onClick={moveToCartPage}
       aria-label="장바구니"
     >

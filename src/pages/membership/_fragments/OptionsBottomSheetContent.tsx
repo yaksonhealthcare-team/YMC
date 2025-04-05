@@ -64,10 +64,7 @@ export const OptionsBottomSheetContent = ({
             "flex items-center justify-between px-5 py-3 h-[48px] bg-white"
           }
         >
-          <div
-            onClick={() => navigate(-1)}
-            className="focus:outline-none focus:ring-2 focus:ring-primary-300 rounded"
-          >
+          <div onClick={() => navigate(-1)} className="rounded">
             <CaretLeftIcon className={"w-5 h-5"} />
           </div>
           <CartIcon />
@@ -314,7 +311,7 @@ export const OptionsBottomSheetContent = ({
         {serviceType === "지점 회원권" && (
           <button
             className={
-              "w-full border border-gray-100 rounded-xl px-4 py-3 flex justify-between mb-3 items-center focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2"
+              "w-full border border-gray-100 rounded-xl px-4 py-3 flex justify-between mb-3 items-center "
             }
             onClick={(e) => {
               e.preventDefault()
@@ -339,7 +336,7 @@ export const OptionsBottomSheetContent = ({
         <div className="w-full relative">
           <button
             className={clsx(
-              "w-full h-[52px] px-4 py-3 bg-white flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+              "w-full h-[52px] px-4 py-3 bg-white flex justify-between items-center ",
               isDropdownOpen
                 ? "rounded-t-xl border border-[#ebebeb] border-b-0"
                 : "rounded-xl border border-[#ebebeb]",
@@ -371,7 +368,7 @@ export const OptionsBottomSheetContent = ({
               {options.map((option) => (
                 <button
                   key={option.ss_idx}
-                  className={`w-full px-4 py-3.5 text-left text-[#212121] text-sm font-normal border-b border-[#ebebeb] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2`}
+                  className={`w-full px-4 py-3.5 text-left text-[#212121] text-sm font-normal border-b border-[#ebebeb] hover:bg-gray-50 `}
                   onClick={() => {
                     handleSelectOption(option)
                     setIsDropdownOpen(false)
@@ -403,7 +400,7 @@ export const OptionsBottomSheetContent = ({
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <button
-                      className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2"
+                      className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center "
                       onClick={() => handleCountChange(option, count - 1)}
                       aria-label={`${option.ss_count}회 수량 감소`}
                     >
@@ -417,7 +414,7 @@ export const OptionsBottomSheetContent = ({
                       {count}
                     </span>
                     <button
-                      className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2"
+                      className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center "
                       onClick={() => handleCountChange(option, count + 1)}
                       aria-label={`${option.ss_count}회 수량 증가`}
                     >

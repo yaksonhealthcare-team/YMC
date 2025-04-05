@@ -28,7 +28,7 @@ export const BrandCard = ({
       onClick={onClick}
       className={clsx(
         "flex flex-col items-center gap-2 p-2",
-        "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+        "",
         "rounded-lg transition-colors duration-200",
         "disabled:opacity-50 disabled:cursor-not-allowed",
         className,

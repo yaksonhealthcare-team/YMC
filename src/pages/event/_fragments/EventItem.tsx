@@ -38,7 +38,7 @@ const EventItem: React.FC<{ event: Event }> = ({ event }) => {
       </div>
       <button
         onClick={() => navigate(`/event/${event.code}`)}
-        className="focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded"
+        className=" rounded"
         aria-label={`${event.title} 이벤트`}
       >
         {/* Placeholder for the button */}

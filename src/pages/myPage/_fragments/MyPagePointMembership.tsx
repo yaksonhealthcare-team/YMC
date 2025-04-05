@@ -155,7 +155,7 @@ const MyPagePointMembership = () => {
         className={clsx(
           "w-[101px] h-24 bg-white rounded-2xl border border-gray-100",
           "flex flex-col items-center justify-center gap-2",
-          "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+          "",
           "hover:bg-gray-50 transition-colors duration-200",
         )}
         onClick={handleOpenQuestionnaire}
@@ -169,7 +169,7 @@ const MyPagePointMembership = () => {
           type="button"
           className={clsx(
             "flex justify-between items-center w-full",
-            "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+            "",
             "hover:bg-gray-50 transition-colors duration-200",
             "rounded-lg p-1",
           )}
@@ -192,7 +192,7 @@ const MyPagePointMembership = () => {
           type="button"
           className={clsx(
             "flex justify-between items-center w-full",
-            "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2",
+            "",
             "hover:bg-gray-50 transition-colors duration-200",
             "rounded-lg p-1",
           )}
