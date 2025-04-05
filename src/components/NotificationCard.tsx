@@ -45,13 +45,9 @@ export const NotificationCard = ({
   } as const
 
   return (
-    <button
+    <div
       onClick={onClick}
-      className={clsx(
-        STYLES.container,
-        className,
-        "focus:outline-none focus:ring-2 focus:ring-[#F37165] focus:ring-offset-2 rounded",
-      )}
+      className={clsx(STYLES.container, className)}
       aria-label={`${notification.subCategory} 알림${!notification.isRead ? " (새 알림)" : " (읽음)"}: ${notification.title}. ${notification.content}${notification.message ? `. ${notification.message}` : ""}${notification.reservationDate ? `. 예약일: ${notification.reservationDate}` : ""}`}
       aria-pressed={!notification.isRead}
     >
@@ -95,7 +91,7 @@ export const NotificationCard = ({
           </span>
         </div>
       )}
-    </button>
+    </div>
   )
 }
 
