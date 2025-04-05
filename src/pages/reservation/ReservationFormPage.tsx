@@ -289,6 +289,7 @@ const ReservationFormPage = () => {
             title: "알림",
             message: "해당 회원권 정보를 찾을 수 없습니다.",
             onConfirm: () => {
+              closeOverlay()
               navigate("/member-history/reservation", { replace: true })
             },
           })
@@ -298,6 +299,7 @@ const ReservationFormPage = () => {
             title: "알림",
             message: "해당 회원권의 잔여 횟수가 없습니다.",
             onConfirm: () => {
+              closeOverlay()
               navigate("/member-history/reservation", { replace: true })
             },
           })
@@ -317,8 +319,8 @@ const ReservationFormPage = () => {
     location.state?.fromReservation?.membershipId,
     membershipsData,
     openModal,
+    closeOverlay,
     navigate,
-    // modalOpened 의존성 제거
   ])
 
   // Cleanup on unmount
