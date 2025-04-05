@@ -21,7 +21,7 @@ export const SwiperBrandCard = ({
 
   return (
     <div className={`w-full overflow-x-auto scrollbar-hide ${className}`}>
-      <div className="flex gap-4 pb-2 pr-5">
+      <div className="flex pb-2 pr-5">
         {displayedBrands.map((brand, index) => (
           <div
             key={`${brand.code}-${index}`}
