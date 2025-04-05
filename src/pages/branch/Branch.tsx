@@ -45,7 +45,7 @@ const Branch = () => {
     useBranchCategories(selectedFilter.brand?.code)
 
   const {
-    data: result,
+    data: branchPaginationData,
     isLoading: branchesLoading,
     hasNextPage,
     fetchNextPage,
@@ -60,7 +60,8 @@ const Branch = () => {
   })
 
   const address =
-    result?.pages[0]?.body?.current_addr || "서울 강남구 테헤란로78길 14-10"
+    branchPaginationData?.pages[0]?.body?.current_addr ||
+    "서울 강남구 테헤란로78길 14-10"
 
   // 브랜드 코드와 브랜드 타입 매핑
   const getBrandType = (brandCode: string) => {
@@ -77,7 +78,7 @@ const Branch = () => {
   }
 
   const branches =
-    result?.pages.flatMap((page) =>
+    branchPaginationData?.pages.flatMap((page) =>
       page.body.result.map((branch) => ({
         b_idx: branch.b_idx,
         name: branch.b_name,
@@ -235,7 +236,7 @@ const Branch = () => {
     address,
     categories,
     isCategoriesLoading,
-    result?.pages[0]?.total_count,
+    branchPaginationData?.pages[0]?.total_count,
     screen,
   ])
 
