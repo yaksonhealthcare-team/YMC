@@ -76,11 +76,12 @@ const ReservationFormPage = () => {
 
     if (!selectedBranch) return membershipsData.pages[0].body
 
-    return membershipsData.pages[0].body.filter((membership) =>
-      membership.s_type !== "지점 회원권" || 
-      membership.branchs?.some(
-        (branch) => branch.b_idx === selectedBranch.b_idx,
-      ),
+    return membershipsData.pages[0].body.filter(
+      (membership) =>
+        membership.s_type !== "지점 회원권" ||
+        membership.branchs?.some(
+          (branch) => branch.b_idx === selectedBranch.b_idx,
+        ),
     )
   }, [membershipsData, selectedBranch])
 
@@ -266,8 +267,8 @@ const ReservationFormPage = () => {
   }, [location.state, setSelectedBranch])
 
   // 회원권 유효성 검사
-  const [modalOpened, setModalOpened] = useState(false);
-  
+  const [modalOpened, setModalOpened] = useState(false)
+
   useEffect(() => {
     let isSubscribed = true
 
@@ -283,28 +284,31 @@ const ReservationFormPage = () => {
         )
 
         if (!membership) {
-          setModalOpened(true);
+          setModalOpened(true)
           openModal({
             title: "알림",
             message: "해당 회원권 정보를 찾을 수 없습니다.",
             onConfirm: () => {
-              navigate("/member-history/reservation",{ replace: true })
+              navigate("/member-history/reservation", { replace: true })
             },
           })
         } else if (Number(membership.remain_amount) <= 0) {
-          setModalOpened(true);
+          setModalOpened(true)
           openModal({
             title: "알림",
             message: "해당 회원권의 잔여 횟수가 없습니다.",
             onConfirm: () => {
-              navigate("/member-history/reservation",{ replace: true })
+              navigate("/member-history/reservation", { replace: true })
             },
           })
         }
       }
     }
 
-    checkMembershipValidity()
+    // 이미 모달이 열려있지 않은 경우에만 유효성 검사 실행
+    if (!modalOpened) {
+      checkMembershipValidity()
+    }
 
     return () => {
       isSubscribed = false
@@ -314,7 +318,7 @@ const ReservationFormPage = () => {
     membershipsData,
     openModal,
     navigate,
-    modalOpened
+    // modalOpened 의존성 제거
   ])
 
   // Cleanup on unmount
