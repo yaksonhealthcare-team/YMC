@@ -74,17 +74,6 @@ const ReservationDetailPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    if (reservation) {
-      console.log("Reservation loaded, initializing map with:", {
-        branchId: reservation.branchId,
-        branchName: reservation.branchName,
-        store: reservation.store,
-        status: reservation.statusCode,
-      })
-    }
-  }, [reservation])
-
-  useEffect(() => {
     setHeader({
       display: true,
       title: "예약 상세",
