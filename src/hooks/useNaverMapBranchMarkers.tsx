@@ -104,7 +104,7 @@ export const useNaverMapBranchMarkers = ({
       clearMarkers()
       clearEventListeners()
     }
-  }, [map, branches, selectedBranchId, options.onClickMarker])
+  }, [map, branches, selectedBranchId])
 
   const updateCurrentLocationMarker = (coordinate: Coordinate) => {
     if (!map || !window.naver?.maps) {
