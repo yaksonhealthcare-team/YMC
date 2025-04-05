@@ -62,7 +62,7 @@ const FavoritePage = () => {
 
   return (
     <div className="h-screen max-h-full bg-white">
-      <div className="px-5 mt-4 overflow-hidden">
+      <div className="px-5 mt-4 overflow-hidden pb-[82px]">
         <p className="font-m text-14px">
           {"총 "}
           <span>{favoriteBranches.length}</span>
