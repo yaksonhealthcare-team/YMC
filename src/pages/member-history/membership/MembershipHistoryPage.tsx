@@ -1,5 +1,5 @@
 import { useLayout } from "../../../contexts/LayoutContext"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect } from "react"
 import { useUserMemberships } from "../../../queries/useMembershipQueries"
 import useIntersection from "../../../hooks/useIntersection"
 import LoadingIndicator from "@components/LoadingIndicator"
@@ -14,6 +14,7 @@ import { Button } from "@components/Button"
 import clsx from "clsx"
 import AddMembershipIcon from "@assets/icons/AddMembershipIcon.svg?react"
 import { getStatusFromString } from "../../../utils/membership"
+import { useMembershipStore } from "stores/membershipStore"
 
 const MembershipContent = ({ filterId }: { filterId: string }) => {
   const { setHeader, setNavigation } = useLayout()
@@ -52,7 +53,10 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
   }
 
   return (
-    <div className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto scrollbar-hide" key={`membership-content-${filterId}`}>
+    <div
+      className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto scrollbar-hide"
+      key={`membership-content-${filterId}`}
+    >
       {!memberships?.pages[0].body?.length ? (
         <div className="flex justify-center items-center p-4">
           회원권 내역이 없습니다.
@@ -127,12 +131,15 @@ const FilterContent = ({
 const MembershipHistoryPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
-  const [membershipFilter, setMembershipFilter] =
-    useState<MyMembershipFilterItem>(myMembershipFilters[0])
+  const { filter: membershipFilter, setFilter: setMembershipFilter } =
+    useMembershipStore()
 
-  const handleFilterChange = useCallback((filter: MyMembershipFilterItem) => {
-    setMembershipFilter(filter)
-  }, [])
+  const handleFilterChange = useCallback(
+    (filter: MyMembershipFilterItem) => {
+      setMembershipFilter(filter)
+    },
+    [setMembershipFilter],
+  )
 
   useEffect(() => {
     setHeader({
