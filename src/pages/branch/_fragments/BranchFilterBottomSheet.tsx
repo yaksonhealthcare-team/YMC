@@ -41,7 +41,6 @@ const BranchFilterBottomSheet = ({
 
   const handleBrandChange = (brand: FilterItem | null) => {
     setFilter((prev) => ({ ...prev, brand, category: null }))
-    onBrandChange?.(brand)
   }
 
   const handleCategoryChange = (category: FilterItem | null) => {
