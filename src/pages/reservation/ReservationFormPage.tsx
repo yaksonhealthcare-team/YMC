@@ -106,8 +106,6 @@ const ReservationFormPage = () => {
 
   // 지점 자동 선택
   useEffect(() => {
-    let isSubscribed = true
-
     const setBranchFromReservation = async () => {
       if (!membershipsData?.pages[0]?.body || isMembershipsLoading) {
         return
@@ -124,7 +122,7 @@ const ReservationFormPage = () => {
             (b) => b.b_idx === location.state.fromReservation.branch,
           )
 
-        if (isSubscribed && branch) {
+        if (branch) {
           const branchData = {
             b_idx: branch.b_idx,
             name: branch.b_name,
@@ -143,10 +141,6 @@ const ReservationFormPage = () => {
     }
 
     setBranchFromReservation()
-
-    return () => {
-      isSubscribed = false
-    }
   }, [
     location.state?.fromReservation?.branch,
     membershipsData,
@@ -156,36 +150,24 @@ const ReservationFormPage = () => {
 
   // Data Effects
   useEffect(() => {
-    let isSubscribed = true
-
-    if (selectedBranch && isSubscribed) {
+    if (selectedBranch) {
       setData((prev) => ({
         ...prev,
         branch: selectedBranch.b_idx,
       }))
     }
-
-    return () => {
-      isSubscribed = false
-    }
   }, [selectedBranch])
 
   useEffect(() => {
-    let isSubscribed = true
-
-    if (location.state?.selectedBranch && isSubscribed) {
+    if (location.state?.selectedBranch) {
       setSelectedBranch(location.state.selectedBranch)
     }
 
-    if (location.state?.selectedItem && isSubscribed) {
+    if (location.state?.selectedItem) {
       setData((prev) => ({
         ...prev,
         item: location.state.selectedItem,
       }))
-    }
-
-    return () => {
-      isSubscribed = false
     }
   }, [location.state, setSelectedBranch])
 
@@ -193,13 +175,10 @@ const ReservationFormPage = () => {
   const [modalOpened, setModalOpened] = useState(false)
 
   useEffect(() => {
-    let isSubscribed = true
-
     const checkMembershipValidity = async () => {
       if (
         location.state?.fromReservation?.membershipId &&
         membershipsData &&
-        isSubscribed &&
         !modalOpened
       ) {
         const membership = membershipsData.pages[0]?.body?.find(
@@ -233,10 +212,6 @@ const ReservationFormPage = () => {
     // 이미 모달이 열려있지 않은 경우에만 유효성 검사 실행
     if (!modalOpened) {
       checkMembershipValidity()
-    }
-
-    return () => {
-      isSubscribed = false
     }
   }, [
     location.state?.fromReservation?.membershipId,
