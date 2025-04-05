@@ -141,6 +141,7 @@ const ReservationDetailPage = () => {
       title: "방문 완료",
       message: "방문을 완료하시겠습니까?",
       onConfirm: handleVisitConfirm,
+      onCancel: () => {},
     })
   }
 
