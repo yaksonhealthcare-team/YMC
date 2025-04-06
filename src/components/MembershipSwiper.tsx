@@ -4,7 +4,7 @@ import { Pagination } from "swiper/modules"
 import "swiper/css"
 import "swiper/css/pagination"
 import { MembershipRadioCard } from "../pages/reservation/_fragments/MembershipRadioCard"
-import { useMemo, useEffect } from "react"
+import { useMemo } from "react"
 import { MyMembership } from "types/Membership"
 import { ListResponse } from "apis/membership.api"
 
@@ -25,28 +25,12 @@ export const MembershipSwiper = ({
   const initialIndex = useMemo(() => {
     if (initialMembershipId && membershipsData.body.length > 0) {
       const index = membershipsData.body.findIndex(
-        (membership) => membership.mp_idx === initialMembershipId
+        (membership) => membership.mp_idx === initialMembershipId,
       )
       return index !== -1 ? index : 0
     }
     return 0
   }, [initialMembershipId, membershipsData.body])
-  
-  // 회원권 ID가 있고 아직 선택되지 않았으면 해당 회원권 선택
-  useEffect(() => {
-    if (
-      initialMembershipId && 
-      membershipsData.body.length > 0
-    ) {
-      const membership = membershipsData.body.find(
-        (m) => m.mp_idx === initialMembershipId
-      )
-      
-      if (membership) {
-        onChangeItem(initialMembershipId)
-      }
-    }
-  }, [initialMembershipId, membershipsData.body, onChangeItem])
 
   return (
     <Box className="w-full pb-[20px]">
