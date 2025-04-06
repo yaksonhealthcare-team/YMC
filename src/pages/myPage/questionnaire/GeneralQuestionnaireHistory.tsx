@@ -21,7 +21,11 @@ const GeneralQuestionnaireHistory = () => {
     setNavigation({ display: false })
   }, [questionnaire])
 
-  if ((questionnaire?.length || 0) === 0) {
+  if (!questionnaire) {
+    return null
+  }
+
+  if (questionnaire.length === 0) {
     return (
       <QuestionnaireHistoryNotExist
         onStartQuestionnaire={() =>
