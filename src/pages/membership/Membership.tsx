@@ -1,4 +1,3 @@
-import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import CartIcon from "@components/icons/CartIcon"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { Tab, Tabs } from "@mui/material"
@@ -51,22 +50,19 @@ const MembershipPage = () => {
   })
 
   useEffect(() => {
-    fetchCartCount().then((count) => setCartCount(count))
-    setHeader({
-      display: true,
-      title: "회원권 구매",
-      left: (
-        <button
-          onClick={() => navigate(-1)}
-          className=" rounded"
-          aria-label="뒤로가기"
-        >
-          <CaretLeftIcon className="w-5 h-5" />
-        </button>
-      ),
-      right: <CartIcon />,
+    setNavigation({ display: false })
+    fetchCartCount().then((count) => {
+      setCartCount(count)
+      setHeader({
+        display: true,
+        title: "회원권 구매",
+        left: "back",
+        onClickBack: () => {
+          navigate(-1)
+        },
+        right: <CartIcon />,
+      })
     })
-    setNavigation({ display: true })
   }, [])
 
   // 브랜드 변경 시
@@ -94,7 +90,7 @@ const MembershipPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-system-bg">
+    <div className="bg-system-bg">
       <div className="w-full max-w-[500px] mx-auto relative">
         {/* 고정 영역 */}
         <div className="sticky top-[48px] left-0 w-full z-10 bg-system-bg">
