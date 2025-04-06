@@ -89,7 +89,7 @@ const MembershipBranchList = ({
 
   // 지점 목록 렌더링 컴포넌트 추출
   const renderBranchList = (branches: BranchSearchResult[]) => (
-    <ul className="overflow-y-scroll h-full divide-y divide-gray-100">
+    <ul className="h-full overflow-y-auto divide-y divide-gray-100">
       {branches.map((branch) => (
         <li key={branch.b_idx}>
           <button
@@ -168,7 +168,7 @@ const MembershipBranchList = ({
     )
   }
 
-  return renderBranchList(filteredBranches)
+  return <div className="h-full">{renderBranchList(filteredBranches)}</div>
 }
 
 export default MembershipBranchList

@@ -37,7 +37,7 @@ export const MembershipBranchSelectModal = ({
       style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0 }}
     >
       <div
-        className="fixed inset-0 bg-white h-full w-full"
+        className="fixed inset-0 bg-white h-full w-full flex flex-col"
         style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0 }}
       >
         <div className="bg-white">
@@ -50,14 +50,16 @@ export const MembershipBranchSelectModal = ({
             }}
           />
         </div>
-        <MembershipBranchSelectPage
-          onSelect={(branch) => {
-            onBranchSelect(branch)
-            onClose()
-          }}
-          brandCode={brandCode}
-          memberShipId={memberShipId}
-        />
+        <div className="flex-1 overflow-hidden">
+          <MembershipBranchSelectPage
+            onSelect={(branch) => {
+              onBranchSelect(branch)
+              onClose()
+            }}
+            brandCode={brandCode}
+            memberShipId={memberShipId}
+          />
+        </div>
       </div>
     </div>
   )

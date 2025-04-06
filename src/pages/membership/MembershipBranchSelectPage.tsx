@@ -64,7 +64,7 @@ const MembershipBranchSelectPage = ({
   ])
 
   return (
-    <div className={"flex flex-col overflow-y-hidden"}>
+    <div className={"flex flex-col h-full"}>
       <div className={"px-5 pt-5 pb-6 border-b-8 border-gray-50"}>
         <SearchField
           onChange={(e) => setQuery(e.target.value)}
@@ -72,11 +72,13 @@ const MembershipBranchSelectPage = ({
         />
       </div>
 
-      <MembershipBranchList
-        onSelect={onSelect}
-        query={debouncedQuery}
-        memberShipId={memberShipId}
-      />
+      <div className="flex-1 overflow-y-auto">
+        <MembershipBranchList
+          onSelect={onSelect}
+          query={debouncedQuery}
+          memberShipId={memberShipId}
+        />
+      </div>
     </div>
   )
 }
