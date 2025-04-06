@@ -1,6 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom"
 import { useReservationFormStore } from "../../stores/reservationFormStore"
-import { BranchInfo } from "../../types/Membership"
 import { Branch, BranchSearchResult } from "../../types/Branch"
 import { useBranches } from "../../queries/useBranchQueries"
 import { useGeolocation } from "../../hooks/useGeolocation"
@@ -10,7 +9,6 @@ import LoadingIndicator from "@components/LoadingIndicator"
 import BranchPlaceholderImage from "@assets/images/BranchPlaceholderImage.png"
 import { Image } from "@components/common/Image"
 import SearchIcon from "@components/icons/SearchIcon"
-import { MembershipActiveBranchList } from "./_fragments/MembershipActiveBranchList"
 
 interface MembershipBranchListProps {
   onSelect?: (branch: Branch) => void
@@ -50,10 +48,6 @@ const MembershipBranchList = ({
   })
 
   const branches = branchPages?.pages.flatMap((page) => page.body.result) ?? []
-
-  // 사용 가능한 지점 목록이 지정된 경우 해당 지점만 필터링
-  const availableBranches: BranchInfo[] =
-    location.state?.availableBranches ?? []
 
   // 서버에서 이미 필터링된 결과를 사용
   const filteredBranches = branches
@@ -145,20 +139,6 @@ const MembershipBranchList = ({
         </div>
       </div>
     )
-  }
-
-  // 검색어가 없고 사용 가능한 지점 목록이 있으면 해당 지점만 표시
-  if (query?.length === 0) {
-    // 상담 예약인 경우 모든 지점 표시
-    if (location.state?.isConsultation) {
-      return renderBranchList(filteredBranches)
-    }
-    // 사용 가능한 지점이 있는 경우 바로 지점 목록을 보여줌
-    if (availableBranches.length > 0) {
-      return renderBranchList(filteredBranches)
-    }
-    // 사용 가능한 지점이 없는 경우 기존 활성 지점 목록 표시
-    return <MembershipActiveBranchList onBranchSelect={handleBranchSelect} />
   }
 
   // 검색 결과 불러오는 중인 경우 (초기 로딩 이후 검색 시 로딩)
