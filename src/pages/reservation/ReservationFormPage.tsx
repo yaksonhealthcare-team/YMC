@@ -89,6 +89,10 @@ const ReservationFormPage = () => {
   }, [])
 
   useEffect(() => {
+    if (showBranchModal) {
+      return
+    }
+
     setHeader({
       display: true,
       title: "예약하기",
@@ -99,7 +103,7 @@ const ReservationFormPage = () => {
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
-  }, [])
+  }, [showBranchModal])
 
   // 지점 자동 선택
   useEffect(() => {

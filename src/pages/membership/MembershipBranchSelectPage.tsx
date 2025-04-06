@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { useLayout } from "../../contexts/LayoutContext"
 import { Branch } from "../../types/Branch"
 import { SearchField } from "../../components/SearchField"
@@ -24,8 +24,6 @@ const MembershipBranchSelectPage = ({
   const debouncedQuery = useDebounce(query, 300)
   const currentBrandCode = brandCode || location.state?.brand_code
 
-  const memoizedState = useMemo(() => location.state, [location.state])
-
   // 헤더 설정
   useEffect(() => {
     setHeader({
@@ -38,12 +36,7 @@ const MembershipBranchSelectPage = ({
       },
     })
     setNavigation({ display: false })
-
-    return () => {
-      setHeader({ display: false })
-      // 네비게이션 상태는 변경하지 않음
-    }
-  }, [setHeader, setNavigation, navigate, memoizedState])
+  }, [])
 
   // 브랜드 코드 설정
   useEffect(() => {
