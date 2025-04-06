@@ -6,7 +6,6 @@ import { RadioGroup } from "@mui/material"
 import { Button } from "@components/Button"
 import { useOverlay } from "contexts/ModalContext"
 import DateAndTimeBottomSheet from "./_fragments/DateAndTimeBottomSheet"
-import dayjs from "dayjs"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useCreateReservationMutation } from "../../queries/useReservationQueries"
@@ -41,21 +40,6 @@ const ReservationFormPage = () => {
 
   // 초기 데이터 설정
   useEffect(() => {
-    // location.state에서 데이터를 가져온 경우에만 설정
-    if (location.state?.fromReservation) {
-      setFormData({
-        item: location.state.fromReservation.item,
-        branch: location.state.fromReservation.branch,
-        date: location.state.fromReservation.date
-          ? dayjs(location.state.fromReservation.date)
-          : null,
-        timeSlot: location.state.fromReservation.timeSlot || null,
-        request: location.state.fromReservation.request || "",
-        additionalServices:
-          location.state.fromReservation.additionalServices || [],
-      })
-    }
-
     // URL에서 membershipId가 있는 경우 설정
     if (membershipIdFromUrl) {
       setFormData({
@@ -104,53 +88,6 @@ const ReservationFormPage = () => {
     })
     setNavigation({ display: false })
   }, [showBranchModal])
-
-  // 지점 자동 선택
-  useEffect(() => {
-    const setBranchFromReservation = async () => {
-      if (
-        !userMembershipPaginationData?.pages[0]?.body ||
-        isMembershipsLoading
-      ) {
-        return
-      }
-
-      if (location.state?.fromReservation?.branch) {
-        const branch = userMembershipPaginationData.pages[0].body
-          .find((membership) =>
-            membership.branchs?.some(
-              (b) => b.b_idx === location.state.fromReservation.branch,
-            ),
-          )
-          ?.branchs?.find(
-            (b) => b.b_idx === location.state.fromReservation.branch,
-          )
-
-        if (branch) {
-          const branchData = {
-            b_idx: branch.b_idx,
-            name: branch.b_name,
-            address: "",
-            latitude: 0,
-            longitude: 0,
-            canBookToday: true,
-            distanceInMeters: null,
-            isFavorite: false,
-            brandCode: BRAND_CODE,
-            brand: "약손명가",
-          }
-          setSelectedBranch(branchData)
-        }
-      }
-    }
-
-    setBranchFromReservation()
-  }, [
-    location.state?.fromReservation?.branch,
-    userMembershipPaginationData,
-    setSelectedBranch,
-    isMembershipsLoading,
-  ])
 
   useEffect(() => {
     if (location.state?.selectedBranch) {

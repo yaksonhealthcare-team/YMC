@@ -14,6 +14,7 @@ import FixedButtonContainer from "@components/FixedButtonContainer"
 import { ReservationType } from "types/Reservation"
 import { Skeleton } from "@mui/material"
 import { useOverlay } from "contexts/ModalContext"
+import { useReservationFormStore } from "stores/reservationFormStore"
 
 const LoadingSkeleton = () => (
   <div className="flex-1 px-[20px] pt-[16px] pb-[150px] bg-system-bg">
@@ -71,6 +72,7 @@ const ReservationDetailPage = () => {
   } = useReservationDetail(id ?? "")
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { setFormData } = useReservationFormStore()
 
   useEffect(() => {
     setHeader({
@@ -174,30 +176,17 @@ const ReservationDetailPage = () => {
   const handleNavigateToReservationForm = () => {
     if (!reservation) return
 
-    // 현재 경로 가져오기
-    const currentPath = window.location.pathname
-
-    const state = {
-      fromReservation: {
-        item:
-          reservation.type === ReservationType.MANAGEMENT
-            ? reservation.membershipId
-            : "상담 예약",
-        branch: reservation.branchId,
-        request: reservation.request || "",
-        additionalServices: reservation.additionalServices || [],
-        remainingCount: reservation.remainingCount,
-      },
-      fromReservationDetail: true,
-      originalPath: currentPath,
-      selectedBranch: {
-        b_idx: reservation.branchId,
-        b_name: reservation.store,
-      },
-    }
-    navigate(`/reservation/form?membershipId=${reservation.membershipId}`, {
-      state,
+    setFormData({
+      item:
+        reservation.type === ReservationType.MANAGEMENT
+          ? reservation.membershipId
+          : "상담 예약",
+      branch: reservation.branchId,
+      request: reservation.request ?? "",
+      membershipId: reservation.membershipId,
     })
+
+    navigate(`/reservation/form?membershipId=${reservation.membershipId}`)
   }
 
   const renderActionButtons = () => {
