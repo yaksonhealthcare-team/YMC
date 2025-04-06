@@ -67,15 +67,17 @@ const ReservationFormPage = () => {
     queryFn: getConsultationCount,
   })
   const { mutateAsync: createReservation } = useCreateReservationMutation()
-  const { data: membershipsData, isLoading: isMembershipsLoading } =
-    useUserMemberships("T")
+  const {
+    data: userMembershipPaginationData,
+    isLoading: isMembershipsLoading,
+  } = useUserMemberships("T")
 
   // 지점 선택 시 해당 지점의 회원권만 필터링
   const filteredMemberships = useMemo(() => {
-    if (!membershipsData?.pages[0]?.body) return []
+    if (!userMembershipPaginationData?.pages[0]?.body) return []
 
-    return membershipsData.pages[0].body
-  }, [membershipsData])
+    return userMembershipPaginationData.pages[0].body
+  }, [userMembershipPaginationData])
 
   // Navigation Handler
   const handleBack = useCallback(() => {
@@ -99,12 +101,15 @@ const ReservationFormPage = () => {
   // 지점 자동 선택
   useEffect(() => {
     const setBranchFromReservation = async () => {
-      if (!membershipsData?.pages[0]?.body || isMembershipsLoading) {
+      if (
+        !userMembershipPaginationData?.pages[0]?.body ||
+        isMembershipsLoading
+      ) {
         return
       }
 
       if (location.state?.fromReservation?.branch) {
-        const branch = membershipsData.pages[0].body
+        const branch = userMembershipPaginationData.pages[0].body
           .find((membership) =>
             membership.branchs?.some(
               (b) => b.b_idx === location.state.fromReservation.branch,
@@ -135,7 +140,7 @@ const ReservationFormPage = () => {
     setBranchFromReservation()
   }, [
     location.state?.fromReservation?.branch,
-    membershipsData,
+    userMembershipPaginationData,
     setSelectedBranch,
     isMembershipsLoading,
   ])
@@ -170,10 +175,10 @@ const ReservationFormPage = () => {
     const checkMembershipValidity = async () => {
       if (
         location.state?.fromReservation?.membershipId &&
-        membershipsData &&
+        userMembershipPaginationData &&
         !modalOpened
       ) {
-        const membership = membershipsData.pages[0]?.body?.find(
+        const membership = userMembershipPaginationData.pages[0]?.body?.find(
           (m) => m.mp_idx === location.state.fromReservation.membershipId,
         )
 
@@ -207,7 +212,7 @@ const ReservationFormPage = () => {
     }
   }, [
     location.state?.fromReservation?.membershipId,
-    membershipsData,
+    userMembershipPaginationData,
     openModal,
     closeOverlay,
     navigate,
@@ -236,9 +241,10 @@ const ReservationFormPage = () => {
     if (!data.item || data.item === "상담 예약") return
 
     // 선택된 회원권 찾기
-    const selectedMembership = membershipsData?.pages[0]?.body?.find(
-      (membership) => membership.mp_idx === data.item,
-    )
+    const selectedMembership =
+      userMembershipPaginationData?.pages[0]?.body?.find(
+        (membership) => membership.mp_idx === data.item,
+      )
 
     // 단일 지점만 있는 경우 자동 선택
     if (
@@ -261,7 +267,7 @@ const ReservationFormPage = () => {
       }
       setSelectedBranch(branch)
     }
-  }, [data.item, membershipsData])
+  }, [data.item, userMembershipPaginationData])
 
   const handleOpenCalendar = () => {
     if (!data.item) {
@@ -331,9 +337,10 @@ const ReservationFormPage = () => {
       }
 
       // 회원권 예약인 경우 기존 로직 유지
-      const selectedMembership = membershipsData?.pages[0]?.body?.find(
-        (membership) => membership.mp_idx === data.item,
-      )
+      const selectedMembership =
+        userMembershipPaginationData?.pages[0]?.body?.find(
+          (membership) => membership.mp_idx === data.item,
+        )
 
       navigate("/membership/branch-select", {
         state: {
@@ -357,7 +364,7 @@ const ReservationFormPage = () => {
       console.error("Navigation error:", error)
       handleError(new Error("지점 선택 페이지로 이동할 수 없습니다."))
     }
-  }, [data, navigate, handleError, membershipsData, location])
+  }, [data, navigate, handleError, userMembershipPaginationData, location])
 
   // Validation
   const validateReservationData = () => {
@@ -553,7 +560,7 @@ const ReservationFormPage = () => {
                 "membership-swiper"
               }
               membershipsData={{
-                ...(membershipsData?.pages[0] || {
+                ...(userMembershipPaginationData?.pages[0] || {
                   resultCode: "00",
                   resultMessage: "",
                   resultCount: 0,
@@ -586,7 +593,7 @@ const ReservationFormPage = () => {
             * 상담 예약은 월간 {consultationCount?.maxCount ?? 0}회까지 이용
             가능합니다.
           </p>
-          {!membershipsData?.pages[0]?.body?.length && (
+          {!userMembershipPaginationData?.pages[0]?.body?.length && (
             <p className="text-gray-500 text-14px">
               * 관리 프로그램은 회원권 구매 후 예약이 가능합니다.
             </p>
@@ -604,7 +611,7 @@ const ReservationFormPage = () => {
         onNavigateBranchSelect={handleNavigateBranchSelect}
         disableBranchSelection={
           data.item !== "상담 예약" &&
-          !!membershipsData?.pages[0]?.body?.find(
+          !!userMembershipPaginationData?.pages[0]?.body?.find(
             (membership) =>
               membership.mp_idx === data.item &&
               membership.branchs?.length === 1,
