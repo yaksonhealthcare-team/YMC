@@ -6,15 +6,10 @@ import CustomTextField from "@components/CustomTextField"
 import { Dayjs } from "dayjs"
 import { TimeSlot } from "types/Schedule"
 import { Branch } from "types/Branch"
+import { ReservationFormData } from "../../../stores/reservationFormStore"
 
 interface ReservationFormSectionProps {
-  data: {
-    item?: string
-    branch?: string
-    date: Dayjs | null
-    timeSlot: TimeSlot | null
-    request: string
-  }
+  data: ReservationFormData
   selectedBranch: Branch | null
   onOpenCalendar: () => void
   onChangeRequest: (value: string) => void
