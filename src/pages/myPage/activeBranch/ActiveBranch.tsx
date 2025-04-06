@@ -21,7 +21,7 @@ const InformationBottomSheet = ({ onClose }: InformationBottomSheetProps) => (
       유선으로 문의하여 주세요.
     </p>
     <div className="mt-10 h-[1px] bg-gray-50 w-full" />
-    <div className="flex gap-2 w-full justify-stretch mt-3 px-5">
+    <div className="flex gap-2 w-full justify-stretch my-3 px-5">
       <Button className="w-full" variantType="primary" onClick={onClose}>
         <p>확인</p>
       </Button>
