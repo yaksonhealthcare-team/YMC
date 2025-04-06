@@ -87,25 +87,7 @@ const MembershipBranchList = ({
       onSelect(branchData)
     } else {
       setSelectedBranch(branchData)
-      if (location.state?.returnPath) {
-        const { fromReservation, originalPath } = location.state
-        navigate(location.state.returnPath, {
-          state: {
-            selectedBranch: branchData,
-            fromReservation,
-            fromBranchSelect: true,
-            originalPath,
-          },
-          replace: true,
-        })
-      } else {
-        navigate(-1 as never, {
-          state: {
-            fromBranchSelect: true,
-            selectedBranch: branchData,
-          },
-        })
-      }
+      navigate(-1)
     }
   }
 
