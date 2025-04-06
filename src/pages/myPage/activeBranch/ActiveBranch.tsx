@@ -67,7 +67,7 @@ const ActiveBranch = () => {
         {user.brands.map((branch) => (
           <li
             key={branch.b_idx}
-            className="p-5 rounded-2xl border border-gray-100 hover:bg-gray-50 transition-colors"
+            className="p-5 rounded-2xl border border-gray-100"
           >
             <BranchCard name={branch.brandName} address={branch.address} />
           </li>
