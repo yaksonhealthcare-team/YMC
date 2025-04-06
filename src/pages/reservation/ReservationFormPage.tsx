@@ -21,6 +21,8 @@ import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { getConsultationCount } from "../../apis/reservation.api"
 import { useQuery } from "@tanstack/react-query"
 import { useReservationFormStore } from "../../stores/reservationFormStore"
+import { MembershipBranchSelectModal } from "../membership/_fragments/MembershipBranchSelectModal"
+import { Branch } from "../../types/Branch"
 
 const BRAND_CODE = "001" // 약손명가
 
@@ -32,6 +34,7 @@ const ReservationFormPage = () => {
   const [searchParams] = useSearchParams()
   const membershipIdFromUrl = searchParams.get("membershipId")
   const { handleError } = useErrorHandler()
+  const [showBranchModal, setShowBranchModal] = useState(false)
 
   const { formData, setFormData, selectedBranch, setSelectedBranch, clearAll } =
     useReservationFormStore()
@@ -312,65 +315,24 @@ const ReservationFormPage = () => {
     }
 
     try {
-      // 상담 예약인 경우와 회원권 예약인 경우를 구분
-      if (formData.item === "상담 예약") {
-        navigate("/membership/branch-select", {
-          state: {
-            returnPath: "/reservation/form",
-            selectedItem: formData.item,
-            brand_code: BRAND_CODE,
-            isConsultation: true, // 상담 예약임을 표시
-            // 현재 상태 정보 저장
-            fromReservation: {
-              item: formData.item,
-              date: formData.date,
-              timeSlot: formData.timeSlot,
-              request: formData.request,
-              additionalServices: formData.additionalServices,
-              membershipId: formData.membershipId,
-            },
-            // 원래 경로 정보 저장
-            originalPath: location.state?.originalPath || "/",
-          },
-        })
-        return
-      }
-
-      // 회원권 예약인 경우 기존 로직 유지
-      const selectedMembership =
-        userMembershipPaginationData?.pages[0]?.body?.find(
-          (membership) => membership.mp_idx === formData.item,
-        )
-
-      navigate("/membership/branch-select", {
-        state: {
-          returnPath: "/reservation/form",
-          selectedItem: formData.item,
-          brand_code: BRAND_CODE,
-          availableBranches: selectedMembership?.branchs || [],
-          fromReservation: {
-            item: formData.item,
-            date: formData.date,
-            timeSlot: formData.timeSlot,
-            request: formData.request,
-            additionalServices: formData.additionalServices,
-            membershipId: formData.membershipId,
-          },
-          originalPath: location.state?.originalPath || "/",
-        },
-      })
+      setShowBranchModal(true)
     } catch (error) {
-      console.error("Navigation error:", error)
-      handleError(new Error("지점 선택 페이지로 이동할 수 없습니다."))
+      console.error("Modal open error:", error)
+      handleError(new Error("지점 선택 모달을 열 수 없습니다."))
     }
-  }, [
-    formData,
-    navigate,
-    handleError,
-    userMembershipPaginationData,
-    location,
-    formData.membershipId,
-  ])
+  }, [formData, handleError])
+
+  const handleBranchSelect = useCallback(
+    (branch: Branch) => {
+      setSelectedBranch(branch)
+      setShowBranchModal(false)
+    },
+    [setSelectedBranch],
+  )
+
+  const handleCloseBranchModal = useCallback(() => {
+    setShowBranchModal(false)
+  }, [])
 
   // Validation
   const validateReservationData = () => {
@@ -499,6 +461,18 @@ const ReservationFormPage = () => {
   // Main Render
   return (
     <div className="flex-1 space-y-3 pb-32 overflow-y-auto overflow-x-hidden">
+      {showBranchModal && (
+        <MembershipBranchSelectModal
+          onBranchSelect={handleBranchSelect}
+          onClose={handleCloseBranchModal}
+          brandCode={
+            userMembershipPaginationData?.pages[0]?.body?.find(
+              (membership) => membership.mp_idx === formData.item,
+            )?.branchs?.[0]?.brandCode || BRAND_CODE
+          }
+        />
+      )}
+
       <section className="px-5 pt-2 pb-6 border-b-8 border-[#f7f7f7]">
         <h2 className="text-gray-700 text-18px font-sb leading-[148%] tracking-[-0.09px] mb-4">
           원하는 예약을 선택해주세요.
