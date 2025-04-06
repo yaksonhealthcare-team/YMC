@@ -14,7 +14,6 @@ import FixedButtonContainer from "@components/FixedButtonContainer"
 import { ReservationType } from "types/Reservation"
 import { Skeleton } from "@mui/material"
 import { useOverlay } from "contexts/ModalContext"
-import dayjs from "dayjs"
 
 const LoadingSkeleton = () => (
   <div className="flex-1 px-[20px] pt-[16px] pb-[150px] bg-system-bg">
@@ -185,8 +184,6 @@ const ReservationDetailPage = () => {
             ? reservation.membershipId
             : "상담 예약",
         branch: reservation.branchId,
-        date: dayjs(reservation.date).format("YYYY-MM-DD"),
-        timeSlot: { time: reservation.duration },
         request: reservation.request || "",
         additionalServices: reservation.additionalServices || [],
         remainingCount: reservation.remainingCount,
