@@ -30,7 +30,7 @@ export const MembershipSwiper = ({
       return index !== -1 ? index : 0
     }
     return 0
-  }, [initialMembershipId, membershipsData.body])
+  }, [initialMembershipId, membershipsData])
 
   return (
     <Box className="w-full pb-[20px]">
