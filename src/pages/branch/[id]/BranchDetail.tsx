@@ -94,28 +94,7 @@ const BranchDetail = () => {
     // 예약 페이지로 이동하기 전에 세션 스토리지에 현재 지점 ID 저장
     sessionStorage.setItem("fromReservation", branch.b_idx)
 
-    navigate(`/reservation/form`, {
-      state: {
-        originalPath: `/branch/${branch.b_idx}`,
-        fromBranchDetail: true,
-        selectedBranch: {
-          b_idx: branch.b_idx,
-          name: branch.name,
-          address: branch.location?.address || "",
-          latitude: branch.location?.latitude || 0,
-          longitude: branch.location?.longitude || 0,
-          canBookToday: true,
-          distanceInMeters: null,
-          isFavorite: false,
-          brandCode: branch.brandCode,
-          brand: branch.brand,
-        },
-        fromReservation: {
-          branch: branch.b_idx,
-        },
-      },
-      replace: true,
-    })
+    navigate(`/reservation/form?branchId=${branch.b_idx}`)
   }, [branch, navigate])
 
   const handleBookmark = useCallback(() => {
@@ -145,12 +124,7 @@ const BranchDetail = () => {
       backgroundColor: "bg-system-bg",
     })
     setNavigation({ display: false })
-
-    return () => {
-      setHeader({ display: false })
-      setNavigation({ display: true })
-    }
-  }, [setHeader, setNavigation, handleBack, branch?.name])
+  }, [])
 
   if (!branch || isLoading) {
     return <LoadingIndicator className="min-h-screen" />

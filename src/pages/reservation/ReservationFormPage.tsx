@@ -31,6 +31,7 @@ const ReservationFormPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const [searchParams] = useSearchParams()
+  const branchIdFromUrl = searchParams.get("branchId")
   const membershipIdFromUrl = searchParams.get("membershipId")
   const { handleError } = useErrorHandler()
   const [showBranchModal, setShowBranchModal] = useState(false)
@@ -99,47 +100,51 @@ const ReservationFormPage = () => {
         item: location.state.selectedItem,
       })
     }
-  }, [location.state, setSelectedBranch, setFormData])
-
-  // 회원권 유효성 검사
-  const [modalOpened, setModalOpened] = useState(false)
+  }, [location.state])
 
   // URL의 membershipId를 사용하여 회원권 자동 선택
   useEffect(() => {
-    if (membershipIdFromUrl && memberships.length > 0 && !formData.item) {
+    if (memberships.length === 0) return
+
+    if (formData.item === "상담 예약") {
+      return
+    }
+
+    if (formData.item) {
+      const selectedMembership = memberships.find(
+        (membership) => membership.mp_idx === formData.item,
+      )
+
+      // 단일 지점만 있는 경우 자동 선택
+      if (
+        selectedMembership?.branchs &&
+        selectedMembership.branchs.length === 1
+      ) {
+        const singleBranch = selectedMembership.branchs[0]
+        const branch = {
+          b_idx: singleBranch.b_idx,
+          name: singleBranch.b_name,
+          address: "",
+          latitude: 0,
+          longitude: 0,
+          canBookToday: true,
+          distanceInMeters: null,
+          isFavorite: false,
+          brandCode: BRAND_CODE,
+          brand: "약손명가",
+        }
+        setSelectedBranch(branch)
+      }
+      return
+    }
+
+    if (membershipIdFromUrl) {
       const foundMembership = memberships.find(
         (m) => m.mp_idx === membershipIdFromUrl,
       )
 
       if (foundMembership) {
-        setFormData({
-          item: membershipIdFromUrl,
-          membershipId: membershipIdFromUrl,
-        })
-      }
-    }
-  }, [membershipIdFromUrl, memberships, formData.item, setFormData])
-
-  useEffect(() => {
-    const checkMembershipValidity = async () => {
-      const membershipIdToCheck = membershipIdFromUrl
-
-      if (membershipIdToCheck && userMembershipPaginationData && !modalOpened) {
-        const membership = userMembershipPaginationData.pages[0]?.body?.find(
-          (m) => m.mp_idx === membershipIdToCheck,
-        )
-
-        if (!membership) {
-          setModalOpened(true)
-          openModal({
-            title: "알림",
-            message: "해당 회원권 정보를 찾을 수 없습니다.",
-            onConfirm: () => {
-              closeOverlay()
-            },
-          })
-        } else if (Number(membership.remain_amount) <= 0) {
-          setModalOpened(true)
+        if (Number(foundMembership.remain_amount) <= 0) {
           openModal({
             title: "알림",
             message: "해당 회원권의 잔여 횟수가 없습니다.",
@@ -148,21 +153,41 @@ const ReservationFormPage = () => {
               handleBack()
             },
           })
+          return
         }
+
+        setFormData({
+          item: membershipIdFromUrl,
+          membershipId: membershipIdFromUrl,
+        })
+        return
       }
+
+      openModal({
+        title: "알림",
+        message: "해당 회원권 정보를 찾을 수 없습니다.",
+        onConfirm: () => {
+          closeOverlay()
+        },
+      })
+      return
     }
 
-    // 이미 모달이 열려있지 않은 경우에만 유효성 검사 실행
-    if (!modalOpened) {
-      checkMembershipValidity()
+    if (branchIdFromUrl) {
+      // 지점 ID가 포함된 회원권 찾기
+      const membershipWithBranch = memberships.find((membership) =>
+        membership.branchs?.some((branch) => branch.b_idx === branchIdFromUrl),
+      )
+
+      if (membershipWithBranch) {
+        // 해당 회원권 선택
+        setFormData({
+          item: membershipWithBranch.mp_idx,
+          membershipId: membershipWithBranch.mp_idx,
+        })
+      }
     }
-  }, [
-    membershipIdFromUrl,
-    userMembershipPaginationData,
-    openModal,
-    closeOverlay,
-    navigate,
-  ])
+  }, [memberships, formData.item])
 
   // Cleanup on unmount
   useEffect(() => {
@@ -180,39 +205,6 @@ const ReservationFormPage = () => {
       additionalServices: [],
     })
   }
-
-  // 회원권에 단일 지점만 있는 경우 자동으로 선택
-  useEffect(() => {
-    if (!formData.item || formData.item === "상담 예약") return
-
-    // 선택된 회원권 찾기
-    const selectedMembership =
-      userMembershipPaginationData?.pages[0]?.body?.find(
-        (membership) => membership.mp_idx === formData.item,
-      )
-
-    // 단일 지점만 있는 경우 자동 선택
-    if (
-      selectedMembership?.branchs &&
-      selectedMembership.branchs.length === 1
-    ) {
-      const singleBranch = selectedMembership.branchs[0]
-      const branch = {
-        b_idx: singleBranch.b_idx,
-        name: singleBranch.b_name,
-        // Branch 인터페이스 필수 필드
-        address: "",
-        latitude: 0,
-        longitude: 0,
-        canBookToday: true,
-        distanceInMeters: null,
-        isFavorite: false,
-        brandCode: BRAND_CODE,
-        brand: "약손명가",
-      }
-      setSelectedBranch(branch)
-    }
-  }, [formData.item, userMembershipPaginationData])
 
   const handleOpenCalendar = () => {
     if (!formData.item) {
