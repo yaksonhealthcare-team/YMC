@@ -58,8 +58,7 @@ const ReservationFormPage = () => {
     request: location.state?.fromReservation?.request || "",
     additionalServices:
       location.state?.fromReservation?.additionalServices || [],
-    membershipId:
-      membershipIdFromUrl || location.state?.fromReservation?.membershipId,
+    membershipId: membershipIdFromUrl || undefined,
   })
 
   const { data: consultationCount } = useQuery({
@@ -191,8 +190,7 @@ const ReservationFormPage = () => {
 
   useEffect(() => {
     const checkMembershipValidity = async () => {
-      const membershipIdToCheck =
-        membershipIdFromUrl || location.state?.fromReservation?.membershipId
+      const membershipIdToCheck = membershipIdFromUrl
 
       if (membershipIdToCheck && userMembershipPaginationData && !modalOpened) {
         const membership = userMembershipPaginationData.pages[0]?.body?.find(
@@ -227,7 +225,7 @@ const ReservationFormPage = () => {
       checkMembershipValidity()
     }
   }, [
-    location.state?.fromReservation?.membershipId,
+    membershipIdFromUrl,
     userMembershipPaginationData,
     openModal,
     closeOverlay,
@@ -370,7 +368,7 @@ const ReservationFormPage = () => {
             timeSlot: data.timeSlot,
             request: data.request,
             additionalServices: data.additionalServices,
-            membershipId: membershipIdFromUrl || data.membershipId,
+            membershipId: data.membershipId,
           },
           originalPath: location.state?.originalPath || "/",
         },
@@ -386,7 +384,7 @@ const ReservationFormPage = () => {
     handleError,
     userMembershipPaginationData,
     location,
-    membershipIdFromUrl,
+    data.membershipId,
   ])
 
   // Validation
