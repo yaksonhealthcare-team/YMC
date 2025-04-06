@@ -20,7 +20,6 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
 import MembershipPlaceholderImage from "@assets/images/MembershipPlaceholderImage.jpg"
 import CartIcon from "@components/icons/CartIcon.tsx"
-import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { Image } from "@components/common/Image"
 import { Button } from "@components/Button"
@@ -34,7 +33,6 @@ const MembershipDetailPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const { data: membership } = useMembershipDetail(id!)
   const { openBottomSheet, closeOverlay } = useOverlay()
-  const { clear } = useMembershipOptionsStore()
 
   // 구매하기 버튼 클릭 시 바텀시트 열기
   const handlePurchaseClick = () => {
@@ -87,7 +85,6 @@ const MembershipDetailPage = () => {
 
   // 초기 마운트 시 헤더 설정
   useEffect(() => {
-    clear()
     setMembershipHeader()
     setNavigation({ display: false })
 
@@ -95,7 +92,7 @@ const MembershipDetailPage = () => {
     return () => {
       setNavigation({ display: false })
     }
-  }, [brandCode, navigate, setHeader, setNavigation, clear])
+  }, [brandCode, navigate, setHeader, setNavigation])
 
   if (!membership) return <LoadingIndicator className="min-h-screen" />
 

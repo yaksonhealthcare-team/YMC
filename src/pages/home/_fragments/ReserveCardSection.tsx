@@ -4,13 +4,11 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import { ReserveCard } from "@components/ReserveCard"
 import { EmptyCard } from "@components/EmptyCard"
 import { useUpcomingReservations } from "queries/useReservationQueries"
-import { useMembershipOptionsStore } from "hooks/useMembershipOptions"
 import LoadingIndicator from "@components/LoadingIndicator"
 
 export function ReserveCardSection() {
   const navigate = useNavigate()
   const { data: upcomingReservations, isLoading } = useUpcomingReservations()
-  const { clear } = useMembershipOptionsStore()
 
   if (isLoading) {
     return <LoadingIndicator className="flex-1" />
@@ -26,7 +24,6 @@ export function ReserveCardSection() {
   const totalReservationCount = upcomingReservations.total_count
 
   const handleReservationClick = () => {
-    clear()
     navigate("/reservation/form", {
       state: {
         originalPath: "/",

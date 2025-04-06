@@ -1,16 +1,16 @@
 import { useLocation, useNavigate } from "react-router-dom"
-import { useGeolocation } from "../../hooks/useGeolocation.tsx"
-import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions.ts"
-import { useBranches } from "../../queries/useBranchQueries.tsx"
-import { Branch, BranchSearchResult } from "../../types/Branch.ts"
-import { useIntersection } from "../../hooks/useIntersection.tsx"
-import { BranchInfo } from "../../types/Membership.ts"
-import LoadingIndicator from "@components/LoadingIndicator.tsx"
-import { Image } from "@components/common/Image"
+import { useReservationFormStore } from "../../stores/reservationFormStore"
+import { BranchInfo } from "../../types/Membership"
+import { Branch, BranchSearchResult } from "../../types/Branch"
+import { useBranches } from "../../queries/useBranchQueries"
+import { useGeolocation } from "../../hooks/useGeolocation"
+import { useIntersection } from "../../hooks/useIntersection"
+import { useDebounce } from "../../hooks/useDebounce"
+import LoadingIndicator from "@components/LoadingIndicator"
 import BranchPlaceholderImage from "@assets/images/BranchPlaceholderImage.png"
-import { MembershipActiveBranchList } from "./_fragments/MembershipActiveBranchList.tsx"
-import useDebounce from "../../hooks/useDebounce.tsx"
+import { Image } from "@components/common/Image"
 import SearchIcon from "@components/icons/SearchIcon"
+import { MembershipActiveBranchList } from "./_fragments/MembershipActiveBranchList"
 
 interface MembershipBranchListProps {
   onSelect?: (branch: Branch) => void
@@ -24,8 +24,7 @@ const MembershipBranchList = ({
   const location = useLocation()
   const navigate = useNavigate()
   const { location: geolocationLocation, error: _ } = useGeolocation()
-  const { setSelectedBranch, setIsBottomSheetOpen } =
-    useMembershipOptionsStore()
+  const { setSelectedBranch } = useReservationFormStore()
 
   const debouncedQuery = useDebounce(query, 300)
   const s_idx = location.state?.s_idx ?? location.state?.membershipId
@@ -100,7 +99,6 @@ const MembershipBranchList = ({
           replace: true,
         })
       } else {
-        setIsBottomSheetOpen(true)
         navigate(-1 as never, {
           state: {
             fromBranchSelect: true,

@@ -8,7 +8,6 @@ import { useOverlay } from "contexts/ModalContext"
 import DateAndTimeBottomSheet from "./_fragments/DateAndTimeBottomSheet"
 import dayjs from "dayjs"
 import FixedButtonContainer from "@components/FixedButtonContainer"
-import { useMembershipOptionsStore } from "../../hooks/useMembershipOptions"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useCreateReservationMutation } from "../../queries/useReservationQueries"
 import { MembershipSwiper } from "@components/MembershipSwiper"
@@ -32,11 +31,10 @@ const ReservationFormPage = () => {
   const location = useLocation()
   const [searchParams] = useSearchParams()
   const membershipIdFromUrl = searchParams.get("membershipId")
-  const { selectedBranch, clear, setSelectedBranch } =
-    useMembershipOptionsStore()
   const { handleError } = useErrorHandler()
 
-  const { formData, setFormData, resetFormData } = useReservationFormStore()
+  const { formData, setFormData, selectedBranch, setSelectedBranch, clearAll } =
+    useReservationFormStore()
 
   // 초기 데이터 설정
   useEffect(() => {
@@ -147,15 +145,6 @@ const ReservationFormPage = () => {
     isMembershipsLoading,
   ])
 
-  // Data Effects
-  useEffect(() => {
-    if (selectedBranch) {
-      setFormData({
-        branch: selectedBranch.b_idx,
-      })
-    }
-  }, [selectedBranch, setFormData])
-
   useEffect(() => {
     if (location.state?.selectedBranch) {
       setSelectedBranch(location.state.selectedBranch)
@@ -234,10 +223,9 @@ const ReservationFormPage = () => {
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      clear() // 컴포넌트 언마운트 시 상태 초기화
-      resetFormData() // 예약 폼 데이터 초기화
+      clearAll() // 컴포넌트 언마운트 시 상태 초기화
     }
-  }, [clear, resetFormData])
+  }, [clearAll])
 
   // Handlers
   const handleOnChangeItem = (value: string) => {
