@@ -190,9 +190,7 @@ const ReservationDetailPage = () => {
         request: reservation.request || "",
         additionalServices: reservation.additionalServices || [],
         remainingCount: reservation.remainingCount,
-        membershipId: reservation.membershipId,
       },
-      membershipId: reservation.membershipId,
       fromReservationDetail: true,
       originalPath: currentPath,
       selectedBranch: {
@@ -200,7 +198,9 @@ const ReservationDetailPage = () => {
         b_name: reservation.store,
       },
     }
-    navigate("/reservation/form", { state })
+    navigate(`/reservation/form?membershipId=${reservation.membershipId}`, {
+      state,
+    })
   }
 
   const renderActionButtons = () => {
