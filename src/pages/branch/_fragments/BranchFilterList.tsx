@@ -219,7 +219,7 @@ const BranchFilterList = ({
       </div>
       <div className="flex-1 overflow-y-auto">
         <ul
-          className="divide-y px-5"
+          className="divide-y px-5 pb-[82px]"
           role="listbox"
           aria-label="지점 목록"
           tabIndex={0}
