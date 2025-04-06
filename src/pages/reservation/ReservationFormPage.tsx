@@ -48,7 +48,6 @@ const ReservationFormPage = () => {
     useMembershipOptionsStore()
   const { handleError } = useErrorHandler()
 
-  // State
   const [data, setData] = useState<FormDataType>({
     item: location.state?.fromReservation?.item || undefined,
     branch: location.state?.fromReservation?.branch || undefined,
@@ -61,7 +60,6 @@ const ReservationFormPage = () => {
       location.state?.fromReservation?.additionalServices || [],
   })
 
-  // Queries
   const { data: consultationCount } = useQuery({
     queryKey: ["consultation-count"],
     queryFn: getConsultationCount,
@@ -72,19 +70,16 @@ const ReservationFormPage = () => {
     isLoading: isMembershipsLoading,
   } = useUserMemberships("T")
 
-  // 지점 선택 시 해당 지점의 회원권만 필터링
   const filteredMemberships = useMemo(() => {
     if (!userMembershipPaginationData?.pages[0]?.body) return []
 
     return userMembershipPaginationData.pages[0].body
   }, [userMembershipPaginationData])
 
-  // Navigation Handler
   const handleBack = useCallback(() => {
     navigate(-1)
   }, [])
 
-  // Layout Effects
   useEffect(() => {
     setHeader({
       display: true,
