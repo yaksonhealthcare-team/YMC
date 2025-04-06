@@ -70,8 +70,12 @@ const ReservationFormPage = () => {
     isLoading: isMembershipsLoading,
   } = useUserMemberships("T")
 
-  const filteredMemberships = useMemo(() => {
-    if (!userMembershipPaginationData?.pages[0]?.body) return []
+  const memberships = useMemo(() => {
+    if (
+      !userMembershipPaginationData ||
+      userMembershipPaginationData.pages.length === 0
+    )
+      return []
 
     return userMembershipPaginationData.pages[0].body
   }, [userMembershipPaginationData])
@@ -547,7 +551,7 @@ const ReservationFormPage = () => {
               </div>
             </RadioCard>
           </div>
-          {!isMembershipsLoading && filteredMemberships.length > 0 ? (
+          {!isMembershipsLoading && memberships.length > 0 ? (
             <MembershipSwiper
               membershipsData={{
                 ...(userMembershipPaginationData?.pages[0] || {
@@ -558,7 +562,7 @@ const ReservationFormPage = () => {
                   total_page_count: 0,
                   current_page: 0,
                 }),
-                body: filteredMemberships,
+                body: memberships,
               }}
               selectedItem={data.item}
               onChangeItem={handleOnChangeItem}
