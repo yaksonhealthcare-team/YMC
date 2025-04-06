@@ -27,7 +27,7 @@ const QuestionnaireHistoryNotExist = ({
       <div
         className={"flex flex-col border-t border-gray-50 px-5 pb-8 pt-3 gap-2"}
       >
-        <Button variantType={"text"} onClick={() => navigate("/")}>
+        <Button variantType={"text"} onClick={() => navigate(-1)}>
           {"나중에 등록할래요"}
         </Button>
         <Button variantType={"primary"} onClick={onStartQuestionnaire}>
