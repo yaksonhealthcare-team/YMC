@@ -68,11 +68,10 @@ export const MembershipCard = ({
     // 현재 경로 가져오기
     const currentPath = window.location.pathname
 
-    navigate("/reservation/form", {
+    navigate(`/reservation/form?membershipId=${id}`, {
       state: {
         originalPath: currentPath,
         fromMembershipCard: true,
-        membershipId: id.toString(),
       },
     })
   }

@@ -1,6 +1,6 @@
 import { useLayout } from "contexts/LayoutContext"
 import { useEffect, useState, useCallback, useMemo } from "react"
-import { useNavigate, useLocation } from "react-router-dom"
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom"
 import { RadioCard } from "@components/RadioCard"
 import { AdditionalManagement } from "types/Membership"
 import { RadioGroup } from "@mui/material"
@@ -44,6 +44,8 @@ const ReservationFormPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const location = useLocation()
+  const [searchParams] = useSearchParams()
+  const membershipIdFromUrl = searchParams.get("membershipId")
   const { selectedBranch, clear, setSelectedBranch } =
     useMembershipOptionsStore()
   const { handleError } = useErrorHandler()
@@ -58,6 +60,8 @@ const ReservationFormPage = () => {
     request: location.state?.fromReservation?.request || "",
     additionalServices:
       location.state?.fromReservation?.additionalServices || [],
+    membershipId:
+      membershipIdFromUrl || location.state?.fromReservation?.membershipId,
   })
 
   const { data: consultationCount } = useQuery({
@@ -170,15 +174,31 @@ const ReservationFormPage = () => {
   // 회원권 유효성 검사
   const [modalOpened, setModalOpened] = useState(false)
 
+  // URL의 membershipId를 사용하여 회원권 자동 선택
+  useEffect(() => {
+    if (membershipIdFromUrl && memberships.length > 0 && !data.item) {
+      const foundMembership = memberships.find(
+        (m) => m.mp_idx === membershipIdFromUrl,
+      )
+
+      if (foundMembership) {
+        setData((prev) => ({
+          ...prev,
+          item: membershipIdFromUrl,
+          membershipId: membershipIdFromUrl,
+        }))
+      }
+    }
+  }, [membershipIdFromUrl, memberships, data.item])
+
   useEffect(() => {
     const checkMembershipValidity = async () => {
-      if (
-        location.state?.fromReservation?.membershipId &&
-        userMembershipPaginationData &&
-        !modalOpened
-      ) {
+      const membershipIdToCheck =
+        membershipIdFromUrl || location.state?.fromReservation?.membershipId
+
+      if (membershipIdToCheck && userMembershipPaginationData && !modalOpened) {
         const membership = userMembershipPaginationData.pages[0]?.body?.find(
-          (m) => m.mp_idx === location.state.fromReservation.membershipId,
+          (m) => m.mp_idx === membershipIdToCheck,
         )
 
         if (!membership) {
@@ -353,7 +373,7 @@ const ReservationFormPage = () => {
             timeSlot: data.timeSlot,
             request: data.request,
             additionalServices: data.additionalServices,
-            membershipId: data.membershipId,
+            membershipId: membershipIdFromUrl || data.membershipId,
           },
           originalPath: location.state?.originalPath || "/",
         },
@@ -363,7 +383,14 @@ const ReservationFormPage = () => {
       console.error("Navigation error:", error)
       handleError(new Error("지점 선택 페이지로 이동할 수 없습니다."))
     }
-  }, [data, navigate, handleError, userMembershipPaginationData, location])
+  }, [
+    data,
+    navigate,
+    handleError,
+    userMembershipPaginationData,
+    location,
+    membershipIdFromUrl,
+  ])
 
   // Validation
   const validateReservationData = () => {
@@ -566,9 +593,7 @@ const ReservationFormPage = () => {
               }}
               selectedItem={data.item}
               onChangeItem={handleOnChangeItem}
-              initialMembershipId={
-                location.state?.membershipId || data.membershipId
-              }
+              initialMembershipId={membershipIdFromUrl || data.membershipId}
             />
           ) : (
             <Button
