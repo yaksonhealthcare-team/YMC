@@ -549,11 +549,6 @@ const ReservationFormPage = () => {
           </div>
           {!isMembershipsLoading && filteredMemberships.length > 0 ? (
             <MembershipSwiper
-              key={
-                location.state?.membershipId ||
-                data.membershipId ||
-                "membership-swiper"
-              }
               membershipsData={{
                 ...(userMembershipPaginationData?.pages[0] || {
                   resultCode: "00",
