@@ -74,16 +74,8 @@ const ReservationFormPage = () => {
   const filteredMemberships = useMemo(() => {
     if (!membershipsData?.pages[0]?.body) return []
 
-    if (!selectedBranch) return membershipsData.pages[0].body
-
-    return membershipsData.pages[0].body.filter(
-      (membership) =>
-        membership.s_type !== "지점 회원권" ||
-        membership.branchs?.some(
-          (branch) => branch.b_idx === selectedBranch.b_idx,
-        ),
-    )
-  }, [membershipsData, selectedBranch])
+    return membershipsData.pages[0].body
+  }, [membershipsData])
 
   // Navigation Handler
   const handleBack = useCallback(() => {
