@@ -206,7 +206,6 @@ const ReservationFormPage = () => {
             message: "해당 회원권 정보를 찾을 수 없습니다.",
             onConfirm: () => {
               closeOverlay()
-              handleBack()
             },
           })
         } else if (Number(membership.remain_amount) <= 0) {
