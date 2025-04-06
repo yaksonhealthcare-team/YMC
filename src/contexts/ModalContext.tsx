@@ -272,14 +272,13 @@ const OverlayContainer: React.FC = () => {
                 position: "fixed",
                 bottom: 0,
                 margin: 0,
-                borderTopLeftRadius: 24,
-                borderTopRightRadius: 24,
                 maxHeight:
                   bottomSheetOptions.height === "large" ? "95vh" : "80vh",
                 minHeight:
                   bottomSheetOptions.height === "large" ? "95vh" : "auto",
                 overflowY: "auto",
                 width: "100%",
+                borderRadius: "24px 24px 0 0",
               },
             }}
           >
