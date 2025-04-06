@@ -8,12 +8,14 @@ interface Props {
   onBranchSelect: (branch: Branch) => void
   onClose: () => void
   brandCode: string
+  memberShipId?: string
 }
 
 export const MembershipBranchSelectModal = ({
   onBranchSelect,
   onClose,
   brandCode,
+  memberShipId,
 }: Props) => {
   const { setNavigation } = useLayout()
 
@@ -54,6 +56,7 @@ export const MembershipBranchSelectModal = ({
             onClose()
           }}
           brandCode={brandCode}
+          memberShipId={memberShipId}
         />
       </div>
     </div>

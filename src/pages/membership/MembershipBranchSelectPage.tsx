@@ -9,9 +9,14 @@ import { useDebounce } from "../../hooks/useDebounce"
 interface Props {
   onSelect?: (branch: Branch) => void
   brandCode?: string
+  memberShipId?: string
 }
 
-const MembershipBranchSelectPage = ({ onSelect, brandCode }: Props) => {
+const MembershipBranchSelectPage = ({
+  onSelect,
+  brandCode,
+  memberShipId,
+}: Props) => {
   const [query, setQuery] = useState("")
   const { setHeader, setNavigation } = useLayout()
   const location = useLocation()
@@ -67,7 +72,11 @@ const MembershipBranchSelectPage = ({ onSelect, brandCode }: Props) => {
         />
       </div>
 
-      <MembershipBranchList onSelect={onSelect} query={debouncedQuery} />
+      <MembershipBranchList
+        onSelect={onSelect}
+        query={debouncedQuery}
+        memberShipId={memberShipId}
+      />
     </div>
   )
 }

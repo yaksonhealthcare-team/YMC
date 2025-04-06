@@ -13,11 +13,13 @@ import SearchIcon from "@components/icons/SearchIcon"
 interface MembershipBranchListProps {
   onSelect?: (branch: Branch) => void
   query?: string
+  memberShipId?: string
 }
 
 const MembershipBranchList = ({
   onSelect,
   query,
+  memberShipId,
 }: MembershipBranchListProps) => {
   const location = useLocation()
   const navigate = useNavigate()
@@ -41,7 +43,7 @@ const MembershipBranchList = ({
     longitude: geolocationLocation?.longitude,
     search: debouncedQuery,
     brandCode: undefined,
-    mp_idx: location.state?.selectedItem,
+    mp_idx: memberShipId || location.state?.selectedItem,
     s_idx: s_idx,
     isConsultation: location.state?.isConsultation,
     enabled: !!geolocationLocation,

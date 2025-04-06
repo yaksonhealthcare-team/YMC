@@ -470,6 +470,7 @@ const ReservationFormPage = () => {
               (membership) => membership.mp_idx === formData.item,
             )?.branchs?.[0]?.brandCode || BRAND_CODE
           }
+          memberShipId={formData.membershipId}
         />
       )}
 
@@ -547,7 +548,7 @@ const ReservationFormPage = () => {
               }}
               selectedItem={formData.item}
               onChangeItem={handleOnChangeItem}
-              initialMembershipId={membershipIdFromUrl || formData.membershipId}
+              initialMembershipId={formData.membershipId}
             />
           ) : (
             <Button
