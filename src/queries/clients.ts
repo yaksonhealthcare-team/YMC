@@ -66,7 +66,6 @@ const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 30000, // 30초 타임아웃
   timeoutErrorMessage: "요청 시간이 초과되었습니다. 다시 시도해주세요.",
-  withCredentials: true,
 })
 
 axiosClient.interceptors.request.use((config) => {
@@ -76,9 +75,6 @@ axiosClient.interceptors.request.use((config) => {
 const refreshToken = async () => {
   const response = await axios.get(
     `${import.meta.env.VITE_API_BASE_URL}/auth/crypto/tokenreissue.php`,
-    {
-      withCredentials: true,
-    },
   )
 
   const { accessToken } = response.data.body

@@ -181,13 +181,7 @@ export const withdrawal = async () => {
 }
 
 export const logout = async () => {
-  const response = await axiosClient.post(
-    "/auth/logout",
-    {},
-    {
-      withCredentials: true,
-    },
-  )
+  const response = await axiosClient.post("/auth/logout", {})
   return response.data
 }
 
