@@ -1,6 +1,7 @@
 import { QueryClient } from "@tanstack/react-query"
 import axios, { AxiosError } from "axios"
 import { ERROR_CODES, getErrorMessage } from "../types/Error"
+import { useAuthStore } from "../stores/auth.store"
 
 interface ApiResponse<T> {
   resultCode: string
@@ -73,8 +74,19 @@ axiosClient.interceptors.request.use((config) => {
 })
 
 const refreshToken = async () => {
+  const refreshToken = useAuthStore.getState().refreshToken
+
+  if (!refreshToken) {
+    throw new Error("No refresh token available")
+  }
+
   const response = await axios.get(
     `${import.meta.env.VITE_API_BASE_URL}/auth/crypto/tokenreissue.php`,
+    {
+      headers: {
+        Authorization: `Bearer ${refreshToken}`,
+      },
+    },
   )
 
   const { accessToken } = response.data.body

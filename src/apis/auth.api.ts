@@ -2,12 +2,17 @@ import { UserMapper } from "../mappers/UserMapper.ts"
 import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
 import { UpdateUserProfileRequest, User, UserResponse } from "../types/User.ts"
+import { useAuthStore } from "../stores/auth.store"
 
 interface SignInResponseBody {
   accessToken: string
 }
 
-export interface SignInResponse extends HTTPResponse<SignInResponseBody[]> {}
+export interface SignInResponse extends HTTPResponse<SignInResponseBody[]> {
+  headers?: {
+    refreshToken?: string
+  }
+}
 
 export const loginWithEmail = async ({
   username,
@@ -29,10 +34,17 @@ export const loginWithEmail = async ({
     deviceType: deviceType,
   })
 
-  axiosClient.defaults.headers.common.Authorization = `Bearer ${data.body[0].accessToken}`
+  const accessToken = data.body[0].accessToken
+  const refreshToken = data.headers?.refreshToken
+
+  if (refreshToken) {
+    useAuthStore.getState().setRefreshToken(refreshToken)
+  }
+
+  axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`
 
   return {
-    accessToken: data.body[0].accessToken,
+    accessToken,
   }
 }
 
@@ -79,6 +91,11 @@ export const signupWithSocial = async ({
     thirdPartyType,
     ...processedUserInfo,
   })
+
+  const refreshToken = response.data.headers?.refreshToken
+  if (refreshToken) {
+    useAuthStore.getState().setRefreshToken(refreshToken)
+  }
 
   return response.data
 }
@@ -128,6 +145,11 @@ export const signup = async (signupData: SignupFormData) => {
 
   const { data } = await axiosClient.post("/auth/signup/email", requestData)
 
+  const refreshToken = data.headers?.refreshToken
+  if (refreshToken) {
+    useAuthStore.getState().setRefreshToken(refreshToken)
+  }
+
   return data
 }
 
@@ -161,10 +183,17 @@ export async function signinWithSocial(
       request,
     )
 
-    axiosClient.defaults.headers.common.Authorization = `Bearer ${data.body[0].accessToken}`
+    const accessToken = data.body[0].accessToken
+    const refreshToken = data.headers?.refreshToken
+
+    if (refreshToken) {
+      useAuthStore.getState().setRefreshToken(refreshToken)
+    }
+
+    axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`
 
     return {
-      accessToken: data.body[0].accessToken,
+      accessToken,
     }
   } catch (error: any) {
     // 401 에러는 사용자를 찾을 수 없는 경우
@@ -182,6 +211,7 @@ export const withdrawal = async () => {
 
 export const logout = async () => {
   const response = await axiosClient.post("/auth/logout", {})
+  useAuthStore.getState().clearRefreshToken()
   return response.data
 }
 
