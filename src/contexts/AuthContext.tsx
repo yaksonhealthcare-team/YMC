@@ -61,7 +61,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = () => {
     setUser(null)
     localStorage.removeItem("accessToken")
-    localStorage.removeItem("refreshToken")
     sessionStorage.removeItem("socialSignupInfo")
 
     // 모든 쿼리 캐시 초기화

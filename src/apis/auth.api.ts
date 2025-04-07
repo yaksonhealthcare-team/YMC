@@ -21,7 +21,6 @@ export const loginWithEmail = async ({
   deviceToken?: string | null
   deviceType?: "android" | "ios" | "web"
 }): Promise<{
-  refreshToken: string
   accessToken: string
 }> => {
   const { data } = await axiosClient.post("/auth/signin/email", {
@@ -32,7 +31,6 @@ export const loginWithEmail = async ({
   })
 
   return {
-    refreshToken: data.Header[0].refreshToken,
     accessToken: data.body[0].accessToken,
   }
 }
@@ -147,7 +145,6 @@ export interface SignInWithSocialRequest {
 }
 
 export interface SignInWithSocialResponse {
-  refreshToken: string
   accessToken: string
 }
 
@@ -168,7 +165,6 @@ export async function signinWithSocial(
     )
 
     return {
-      refreshToken: data.body[0].refreshToken,
       accessToken: data.body[0].accessToken,
     }
   } catch (error: any) {

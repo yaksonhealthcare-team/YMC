@@ -80,23 +80,21 @@ axiosClient.interceptors.request.use((config) => {
 
 const refreshToken = async (originalRequest: InternalAxiosRequestConfig) => {
   try {
-    const refreshToken = localStorage.getItem("refreshToken")
-    const response = await axios.post(
-      "https://devapi.yaksonhc.com/api/auth/refresh",
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/auth/crypto/tokenreissue.php`,
       {
-        refresh_token: refreshToken,
+        withCredentials: true, // 쿠키를 포함하여 요청
       },
     )
 
-    const { access_token } = response.data
-    localStorage.setItem("accessToken", access_token)
+    const { accessToken } = response.data.body
+    localStorage.setItem("accessToken", accessToken)
 
-    originalRequest.headers.Authorization = `Bearer ${access_token}`
+    originalRequest.headers.Authorization = `Bearer ${accessToken}`
     return axiosClient(originalRequest)
   } catch (error) {
     // 리프레시 토큰도 만료되었을 경우
     localStorage.removeItem("accessToken")
-    localStorage.removeItem("refreshToken")
     window.location.href = "/login"
     return Promise.reject(error)
   }
