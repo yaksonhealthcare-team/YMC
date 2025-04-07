@@ -1,6 +1,8 @@
 import { QueryClient } from "@tanstack/react-query"
-import axios, { AxiosError } from "axios"
-import { getErrorMessage } from "../types/Error"
+import axios, { AxiosResponse, AxiosRequestConfig, AxiosError } from "axios"
+import { getErrorMessage, ERROR_CODES } from "../types/Error"
+import { useAuthStore } from "../stores/auth.store"
+import { refreshAccessToken } from "../apis/auth.api"
 
 interface ApiResponse<T> {
   resultCode: string
@@ -72,6 +74,29 @@ axiosClient.interceptors.request.use(async (config) => {
   return config
 })
 
+// 요청 재시도를 위한 변수
+let isRefreshing = false
+let failedQueue: {
+  resolve: (value: AxiosResponse<any> | Promise<AxiosResponse<any>>) => void
+  reject: (reason?: any) => void
+  config: AxiosRequestConfig
+}[] = []
+
+// 대기 중인 요청 처리
+const processQueue = (error: any, token: string | null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error)
+    } else if (token) {
+      prom.config.headers = prom.config.headers || {}
+      prom.config.headers.Authorization = `Bearer ${token}`
+      prom.resolve(axiosClient(prom.config))
+    }
+  })
+
+  failedQueue = []
+}
+
 axiosClient.interceptors.response.use(
   async (response) => {
     let parsedData
@@ -91,6 +116,70 @@ axiosClient.interceptors.response.use(
     }
 
     const data = parsedData as ApiResponse<unknown>
+
+    // 액세스 토큰 만료 처리
+    if (data.resultCode === ERROR_CODES.TOKEN_EXPIRED) {
+      if (isRefreshing) {
+        // 이미 토큰 갱신 중이면 대기열에 추가
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject, config: response.config })
+        })
+      }
+
+      isRefreshing = true
+
+      try {
+        // 토큰 갱신 시도
+        const newToken = await refreshAccessToken()
+
+        if (newToken) {
+          // 토큰 갱신 성공
+          const config = response.config
+          config.headers.Authorization = `Bearer ${newToken}`
+
+          // 대기 중인 요청들 처리
+          processQueue(null, newToken)
+
+          // 현재 요청 재시도
+          return axiosClient(config)
+        } else {
+          // 토큰 갱신 실패
+          processQueue(new Error("토큰 갱신 실패"), null)
+
+          // 로그인 페이지로 리다이렉트
+          if (typeof window !== "undefined") {
+            window.location.href = "/signin"
+          }
+
+          return Promise.reject({
+            response: {
+              data: data,
+              status: 401,
+            },
+          })
+        }
+      } catch (error) {
+        processQueue(error, null)
+
+        // 토큰 만료 에러 메시지 표시
+        showErrorMessage(getErrorMessage(ERROR_CODES.TOKEN_EXPIRED), {
+          code: ERROR_CODES.TOKEN_EXPIRED,
+          url: response.config?.url,
+        })
+
+        // 리프레시 토큰 초기화
+        useAuthStore.getState().clearRefreshToken()
+
+        // 로그인 페이지로 리다이렉트
+        if (typeof window !== "undefined") {
+          window.location.href = "/signin"
+        }
+
+        return Promise.reject(error)
+      } finally {
+        isRefreshing = false
+      }
+    }
 
     // 이메일 중복확인 API는 resultCode "23"을 정상 응답으로 처리
     if (

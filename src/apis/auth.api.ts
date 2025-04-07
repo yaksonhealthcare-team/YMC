@@ -51,42 +51,47 @@ export const loginWithEmail = async ({
   }
 }
 
-const fetchAccessToken = async () => {
-  const refreshToken = useAuthStore.getState().refreshToken
+export const refreshAccessToken = async (): Promise<string | null> => {
+  try {
+    const refreshToken = useAuthStore.getState().refreshToken
 
-  if (!refreshToken) {
-    return {
-      accessToken: null,
+    if (!refreshToken) {
+      return null
     }
-  }
 
-  const response = await axios.get(
-    `${import.meta.env.VITE_API_BASE_URL}/auth/crypto/tokenreissue.php`,
-    {
-      headers: {
-        Authorization: `Bearer ${refreshToken}`,
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_BASE_URL}/auth/crypto/tokenreissue.php`,
+      {
+        headers: {
+          Authorization: `Bearer ${refreshToken}`,
+        },
       },
-    },
-  )
+    )
 
-  const { accessToken } = response.data.body
-  return {
-    accessToken,
+    if (response.data.resultCode !== "00") {
+      // 리프레시 토큰 만료 또는 유효하지 않음
+      useAuthStore.getState().clearRefreshToken()
+      return null
+    }
+
+    const { accessToken } = response.data.body
+
+    // 새 액세스 토큰 저장
+    if (accessToken) {
+      axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`
+    }
+
+    return accessToken
+  } catch (error) {
+    console.error("토큰 갱신 중 오류 발생:", error)
+    useAuthStore.getState().clearRefreshToken()
+    return null
   }
 }
 
 export const fetchUser = async (): Promise<User> => {
   const response =
     await axiosClient.get<HTTPResponse<UserResponse[]>>("/auth/me")
-
-  if (response.data.resultMessage === "Access token expired") {
-    const { accessToken } = await fetchAccessToken()
-    axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`
-    return UserMapper.toEntity(
-      (await axiosClient.get<HTTPResponse<UserResponse[]>>("/auth/me")).data
-        .body[0],
-    )
-  }
 
   return UserMapper.toEntity(response.data.body[0])
 }
@@ -116,7 +121,6 @@ export const signupWithSocial = async ({
   thirdPartyType: string
   userInfo: Record<string, unknown>
 }) => {
-  // di 값의 + 문자를 %2B로 변환
   const processedUserInfo = {
     ...userInfo,
     di: userInfo.di,
