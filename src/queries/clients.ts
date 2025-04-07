@@ -69,7 +69,11 @@ const axiosClient = axios.create({
   timeoutErrorMessage: "요청 시간이 초과되었습니다. 다시 시도해주세요.",
 })
 
-axiosClient.interceptors.request.use((config) => {
+axiosClient.interceptors.request.use(async (config) => {
+  if (!config.headers.Authorization) {
+    const { accessToken } = await refreshToken()
+    config.headers.Authorization = `Bearer ${accessToken}`
+  }
   return config
 })
 
@@ -114,11 +118,6 @@ axiosClient.interceptors.response.use(
     }
 
     const data = parsedData as ApiResponse<unknown>
-
-    // 토큰 만료 체크 (성공 응답에서도 처리)
-    if (data.resultMessage === "Access token expired") {
-      return Promise.reject(new Error("Access token expired"))
-    }
 
     // 이메일 중복확인 API는 resultCode "23"을 정상 응답으로 처리
     if (
