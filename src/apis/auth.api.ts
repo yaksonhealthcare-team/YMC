@@ -9,9 +9,11 @@ interface SignInResponseBody {
 }
 
 export interface SignInResponse extends HTTPResponse<SignInResponseBody[]> {
-  headers?: {
-    refreshToken?: string
-  }
+  Header: [
+    {
+      refreshToken: string
+    },
+  ]
 }
 
 export const loginWithEmail = async ({
@@ -35,7 +37,7 @@ export const loginWithEmail = async ({
   })
 
   const accessToken = data.body[0].accessToken
-  const refreshToken = data.headers?.refreshToken
+  const refreshToken = data.Header[0].refreshToken
 
   if (refreshToken) {
     useAuthStore.getState().setRefreshToken(refreshToken)
@@ -92,7 +94,7 @@ export const signupWithSocial = async ({
     ...processedUserInfo,
   })
 
-  const refreshToken = response.data.headers?.refreshToken
+  const refreshToken = response.data.Header[0].refreshToken
   if (refreshToken) {
     useAuthStore.getState().setRefreshToken(refreshToken)
   }
@@ -145,7 +147,7 @@ export const signup = async (signupData: SignupFormData) => {
 
   const { data } = await axiosClient.post("/auth/signup/email", requestData)
 
-  const refreshToken = data.headers?.refreshToken
+  const refreshToken = data.Header[0].refreshToken
   if (refreshToken) {
     useAuthStore.getState().setRefreshToken(refreshToken)
   }
@@ -184,7 +186,7 @@ export async function signinWithSocial(
     )
 
     const accessToken = data.body[0].accessToken
-    const refreshToken = data.headers?.refreshToken
+    const refreshToken = data.Header[0].refreshToken
 
     if (refreshToken) {
       useAuthStore.getState().setRefreshToken(refreshToken)
