@@ -117,16 +117,18 @@ const EditProfile = () => {
       await updateUserProfile(updatedData)
 
       // 최신 사용자 정보 가져오기
-      const token = localStorage.getItem("accessToken")
-      if (token) {
-        const updatedUser = await fetchUser(token)
+      try {
+        const updatedUser = await fetchUser()
         if (updatedUser) {
-          login({ user: updatedUser, token: token.replace("Bearer ", "") })
+          login({ user: updatedUser })
           showToast("프로필이 성공적으로 수정되었습니다.")
           navigate(-1)
         } else {
           showToast("프로필 수정에 실패했습니다.")
         }
+      } catch (error) {
+        console.error("사용자 정보 가져오기 실패:", error)
+        showToast("프로필 수정에 실패했습니다.")
       }
     } catch (error) {
       console.error("프로필 수정 실패:", error)

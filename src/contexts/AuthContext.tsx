@@ -13,18 +13,6 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>(null)
 
-const validateUserSession = async (
-  token: string,
-): Promise<{ isValid: boolean; user: User | null }> => {
-  try {
-    const user = await fetchUser(token)
-    return { isValid: true, user: user }
-  } catch (error) {
-    console.error(error)
-    return { isValid: false, user: null }
-  }
-}
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -32,12 +20,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    if (user) {
+      return
+    }
+
     const loadUser = async () => {
       try {
         const user = await fetchUser()
         setUser(user)
       } catch (error) {
         console.error("Failed to validate user session", error)
+        setUser(null)
       } finally {
         setIsLoading(false)
       }

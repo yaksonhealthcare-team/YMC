@@ -1,5 +1,5 @@
 import { QueryClient } from "@tanstack/react-query"
-import axios, { AxiosError, InternalAxiosRequestConfig } from "axios"
+import axios, { AxiosError } from "axios"
 import { ERROR_CODES, getErrorMessage } from "../types/Error"
 
 interface ApiResponse<T> {
@@ -72,21 +72,17 @@ axiosClient.interceptors.request.use((config) => {
   return config
 })
 
-const refreshToken = async (originalRequest: InternalAxiosRequestConfig) => {
-  try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_API_BASE_URL}/auth/crypto/tokenreissue.php`,
-      {
-        withCredentials: true,
-      },
-    )
+const refreshToken = async () => {
+  const response = await axios.get(
+    `${import.meta.env.VITE_API_BASE_URL}/auth/crypto/tokenreissue.php`,
+    {
+      withCredentials: true,
+    },
+  )
 
-    const { accessToken } = response.data.body
-    originalRequest.headers.Authorization = `Bearer ${accessToken}`
-    return axiosClient(originalRequest)
-  } catch (error) {
-    window.location.href = "/login"
-    throw error
+  const { accessToken } = response.data.body
+  return {
+    accessToken,
   }
 }
 
@@ -145,29 +141,16 @@ axiosClient.interceptors.response.use(
 
     const originalRequest = error.config
 
-    // 토큰이 만료되었을 때 (401 에러)
-    if (error.response?.status === 401 && !originalRequest?._retry) {
-      refreshToken(originalRequest)
-    }
-
-    // 예상된 에러 케이스 처리
-    switch (errorCode) {
-      case ERROR_CODES.TOKEN_EXPIRED:
-        if (!originalRequest?._retry) {
-          refreshToken(originalRequest)
-        }
-        break
-
-      case ERROR_CODES.REFRESH_TOKEN_EXPIRED:
-        window.location.href = "/login"
-        break
-
-      case ERROR_CODES.INVALID_TOKEN:
-      case ERROR_CODES.UNAUTHORIZED:
-        if (window.location.pathname !== "/login") {
-          window.location.href = "/login"
-        }
-        break
+    // 토큰이 만료되었을 때 (401 에러) 또는 TOKEN_EXPIRED 에러 코드
+    if (
+      (error.response?.status === 401 ||
+        errorCode === ERROR_CODES.TOKEN_EXPIRED) &&
+      !originalRequest?._retry
+    ) {
+      originalRequest._retry = true
+      const { accessToken } = await refreshToken()
+      originalRequest.headers.common.Authorization = `Bearer ${accessToken}`
+      return axiosClient(originalRequest)
     }
 
     // 에러 메시지 표시
@@ -194,7 +177,7 @@ axiosClient.interceptors.response.use(
       })
     }
 
-    return Promise.reject(error)
+    return error
   },
 )
 
