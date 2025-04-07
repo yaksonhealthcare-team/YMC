@@ -4,7 +4,6 @@ import { HTTPResponse } from "../types/HTTPResponse.ts"
 import { UpdateUserProfileRequest, User, UserResponse } from "../types/User.ts"
 
 interface SignInResponseBody {
-  refreshToken: string
   accessToken: string
 }
 
@@ -30,19 +29,17 @@ export const loginWithEmail = async ({
     deviceType: deviceType,
   })
 
+  axiosClient.defaults.headers.common.Authorization = `Bearer ${data.body[0].accessToken}`
+
   return {
     accessToken: data.body[0].accessToken,
   }
 }
 
-export const fetchUser = async (token: string): Promise<User> => {
+export const fetchUser = async (): Promise<User> => {
   const {
     data: { body: response },
-  } = await axiosClient.get<HTTPResponse<UserResponse[]>>("/auth/me", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
+  } = await axiosClient.get<HTTPResponse<UserResponse[]>>("/auth/me")
   return UserMapper.toEntity(response[0])
 }
 
@@ -163,6 +160,8 @@ export async function signinWithSocial(
       "/auth/signin/social",
       request,
     )
+
+    axiosClient.defaults.headers.common.Authorization = `Bearer ${data.body[0].accessToken}`
 
     return {
       accessToken: data.body[0].accessToken,

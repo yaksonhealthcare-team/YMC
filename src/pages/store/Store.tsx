@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react"
 import { useLayout } from "contexts/LayoutContext"
+import { axiosClient } from "queries/clients"
 
 const Store = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null)
@@ -17,7 +18,7 @@ const Store = () => {
         iframeRef.current.contentWindow.postMessage(
           {
             type: "AUTH_TOKEN",
-            accessToken: localStorage.getItem("accessToken"),
+            accessToken: axiosClient.defaults.headers.common.Authorization,
           },
           "https://devmall.yaksonhc.com/",
         )

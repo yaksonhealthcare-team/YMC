@@ -69,12 +69,6 @@ const axiosClient = axios.create({
 })
 
 axiosClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken") || null
-
-  if (token && config.headers.Authorization !== `Bearer ${token}`) {
-    config.headers.Authorization = `Bearer ${token}`
-  }
-
   return config
 })
 
@@ -83,20 +77,16 @@ const refreshToken = async (originalRequest: InternalAxiosRequestConfig) => {
     const response = await axios.get(
       `${import.meta.env.VITE_API_BASE_URL}/auth/crypto/tokenreissue.php`,
       {
-        withCredentials: true, // 쿠키를 포함하여 요청
+        withCredentials: true,
       },
     )
 
     const { accessToken } = response.data.body
-    localStorage.setItem("accessToken", accessToken)
-
     originalRequest.headers.Authorization = `Bearer ${accessToken}`
     return axiosClient(originalRequest)
   } catch (error) {
-    // 리프레시 토큰도 만료되었을 경우
-    localStorage.removeItem("accessToken")
     window.location.href = "/login"
-    return Promise.reject(error)
+    throw error
   }
 }
 
@@ -169,8 +159,6 @@ axiosClient.interceptors.response.use(
         break
 
       case ERROR_CODES.REFRESH_TOKEN_EXPIRED:
-        localStorage.removeItem("accessToken")
-        localStorage.removeItem("refreshToken")
         window.location.href = "/login"
         break
 

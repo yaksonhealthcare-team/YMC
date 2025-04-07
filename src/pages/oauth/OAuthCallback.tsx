@@ -58,7 +58,7 @@ const OAuthCallback = () => {
         try {
           const fcmToken = await requestForToken()
 
-          const result = await signinWithSocial({
+          await signinWithSocial({
             SocialAccessToken: socialData.SocialAccessToken,
             thirdPartyType: getProviderCode(provider),
             socialId: socialData.socialId,
@@ -67,8 +67,8 @@ const OAuthCallback = () => {
             id_token: socialData.id_token,
             SocialRefreshToken: socialData.SocialRefreshToken,
           })
-          const user = await fetchUser(result.accessToken)
-          login({ user, token: result.accessToken })
+          const user = await fetchUser()
+          login({ user })
           navigate("/", { replace: true })
           return
         } catch (error) {

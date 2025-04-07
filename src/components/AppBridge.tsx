@@ -87,7 +87,7 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
           ? getProviderCode(data.provider)
           : data.provider
 
-      const { accessToken } = await signinWithSocial({
+      await signinWithSocial({
         SocialAccessToken: data.accessToken,
         socialId: data.socialId,
         thirdPartyType: providerCode,
@@ -96,8 +96,8 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
         id_token: data.idToken,
         SocialRefreshToken: data.refreshToken,
       })
-      const user = await fetchUser(accessToken)
-      login({ user, token: accessToken })
+      const user = await fetchUser()
+      login({ user })
       window.location.href = "/"
       return
     } catch (error) {

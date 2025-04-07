@@ -62,17 +62,16 @@ const EmailLogin = () => {
     try {
       setIsLoading(true)
 
-      const { accessToken } = await loginWithEmail({
+      await loginWithEmail({
         username: formData.email,
         password: formData.password,
         deviceToken: fcmToken ?? "",
         deviceType: "web",
       })
-      const user = await fetchUser(accessToken)
+      const user = await fetchUser()
 
       login({
         user: user,
-        token: accessToken,
       })
       navigate("/")
     } catch (error) {

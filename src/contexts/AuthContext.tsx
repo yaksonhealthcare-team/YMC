@@ -6,7 +6,7 @@ import { queryClient } from "../queries/clients.ts"
 
 type AuthContextType = {
   user: User | null
-  login: (userData: { user: User; token: string }) => void
+  login: (userData: { user: User }) => void
   logout: () => void
   isLoading: boolean
 } | null
@@ -33,29 +33,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const loadUser = async () => {
-      const storedToken = localStorage.getItem("accessToken")
-      if (storedToken) {
-        try {
-          const { isValid, user } = await validateUserSession(storedToken)
-          if (isValid && user) {
-            setUser(user || null)
-          } else {
-            localStorage.removeItem("accessToken")
-          }
-        } catch (error) {
-          console.error("Failed to validate user session", error)
-          localStorage.removeItem("accessToken")
-        }
+      try {
+        const user = await fetchUser()
+        setUser(user)
+      } catch (error) {
+        console.error("Failed to validate user session", error)
+      } finally {
+        setIsLoading(false)
       }
-      setIsLoading(false)
     }
 
     loadUser()
   }, [])
 
-  const login = ({ user, token }: { user: User; token: string }) => {
+  const login = ({ user }: { user: User }) => {
     setUser(user)
-    localStorage.setItem("accessToken", token)
   }
 
   const logout = async () => {
@@ -65,7 +57,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       console.error("로그아웃 중 오류 발생:", error)
     } finally {
       setUser(null)
-      localStorage.removeItem("accessToken")
       sessionStorage.removeItem("socialSignupInfo")
 
       // 모든 쿼리 캐시 초기화

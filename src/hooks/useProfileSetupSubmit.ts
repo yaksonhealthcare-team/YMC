@@ -66,7 +66,7 @@ export const useProfileSetupSubmit = () => {
         )
       }
 
-      const { accessToken } = await signinWithSocial({
+      await signinWithSocial({
         thirdPartyType: socialInfo.thirdPartyType,
         SocialAccessToken: response.body[0].accessToken,
         socialId: socialInfo.socialId,
@@ -76,8 +76,8 @@ export const useProfileSetupSubmit = () => {
         deviceType: socialInfo.deviceType,
       })
 
-      const user = await fetchUser(accessToken)
-      login({ user, token: accessToken })
+      const user = await fetchUser()
+      login({ user })
       cleanup()
       navigate("/signup/complete")
     } catch (error: unknown) {
@@ -115,13 +115,13 @@ export const useProfileSetupSubmit = () => {
 
       await signup(signupFormData)
 
-      const { accessToken } = await loginWithEmail({
+      await loginWithEmail({
         username: signupData.email,
         password: signupData.password,
       })
 
-      const user = await fetchUser(accessToken)
-      login({ user, token: accessToken })
+      const user = await fetchUser()
+      login({ user })
       cleanup()
       navigate("/signup/complete")
     } catch (error: unknown) {
