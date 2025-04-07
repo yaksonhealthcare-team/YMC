@@ -181,6 +181,17 @@ export const withdrawal = async () => {
   return response.data
 }
 
+export const logout = async () => {
+  const response = await axiosClient.post(
+    "/auth/logout",
+    {},
+    {
+      withCredentials: true,
+    },
+  )
+  return response.data
+}
+
 export const findEmail = async ({
   name,
   mobileNumber,

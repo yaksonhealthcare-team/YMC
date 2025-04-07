@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react"
 import SplashScreen from "@components/Splash.tsx"
 import { User } from "../types/User.ts"
-import { fetchUser } from "../apis/auth.api.ts"
+import { fetchUser, logout as logoutApi } from "../apis/auth.api.ts"
 import { queryClient } from "../queries/clients.ts"
 
 type AuthContextType = {
@@ -58,13 +58,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem("accessToken", token)
   }
 
-  const logout = () => {
-    setUser(null)
-    localStorage.removeItem("accessToken")
-    sessionStorage.removeItem("socialSignupInfo")
+  const logout = async () => {
+    try {
+      await logoutApi()
+    } catch (error) {
+      console.error("로그아웃 중 오류 발생:", error)
+    } finally {
+      setUser(null)
+      localStorage.removeItem("accessToken")
+      sessionStorage.removeItem("socialSignupInfo")
 
-    // 모든 쿼리 캐시 초기화
-    queryClient.clear()
+      // 모든 쿼리 캐시 초기화
+      queryClient.clear()
+    }
   }
 
   const value = { user, login, logout, isLoading } as AuthContextType
