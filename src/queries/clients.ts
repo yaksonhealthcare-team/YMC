@@ -96,7 +96,7 @@ const refreshToken = async () => {
 }
 
 axiosClient.interceptors.response.use(
-  (response) => {
+  async (response) => {
     let parsedData
 
     try {
@@ -114,6 +114,11 @@ axiosClient.interceptors.response.use(
     }
 
     const data = parsedData as ApiResponse<unknown>
+
+    // 토큰 만료 체크 (성공 응답에서도 처리)
+    if (data.resultMessage === "Access token expired") {
+      throw new Error("Access token expired")
+    }
 
     // 이메일 중복확인 API는 resultCode "23"을 정상 응답으로 처리
     if (
