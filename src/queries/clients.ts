@@ -72,7 +72,9 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(async (config) => {
   if (!config.headers.Authorization) {
     const { accessToken } = await refreshToken()
-    config.headers.Authorization = `Bearer ${accessToken}`
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`
+    }
   }
   return config
 })
@@ -81,7 +83,9 @@ const refreshToken = async () => {
   const refreshToken = useAuthStore.getState().refreshToken
 
   if (!refreshToken) {
-    throw new Error("No refresh token available")
+    return {
+      accessToken: null,
+    }
   }
 
   const response = await axios.get(
@@ -163,8 +167,10 @@ axiosClient.interceptors.response.use(
     ) {
       originalRequest._retry = true
       const { accessToken } = await refreshToken()
-      originalRequest.headers.common.Authorization = `Bearer ${accessToken}`
-      return axiosClient(originalRequest)
+      if (accessToken) {
+        originalRequest.headers.common.Authorization = `Bearer ${accessToken}`
+        return axiosClient(originalRequest)
+      }
     }
 
     // 에러 메시지 표시
