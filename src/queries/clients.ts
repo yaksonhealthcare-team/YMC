@@ -150,10 +150,11 @@ axiosClient.interceptors.response.use(
 
     const originalRequest = error.config
 
-    // 토큰이 만료되었을 때 (401 에러) 또는 TOKEN_EXPIRED 에러 코드
+    // 토큰이 만료되었을 때 (401 에러) 또는 TOKEN_EXPIRED 에러 코드 또는 Access token expired 메시지
     if (
       (error.response?.status === 401 ||
-        errorCode === ERROR_CODES.TOKEN_EXPIRED) &&
+        errorCode === ERROR_CODES.TOKEN_EXPIRED ||
+        errorMessage === "Access token expired") &&
       !originalRequest?._retry
     ) {
       originalRequest._retry = true
