@@ -3,6 +3,7 @@ import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
 import { UpdateUserProfileRequest, User, UserResponse } from "../types/User.ts"
 import { useAuthStore } from "../stores/auth.store"
+import axios from "axios"
 
 interface SignInResponseBody {
   accessToken: string
@@ -50,11 +51,44 @@ export const loginWithEmail = async ({
   }
 }
 
+const fetchAccessToken = async () => {
+  const refreshToken = useAuthStore.getState().refreshToken
+
+  if (!refreshToken) {
+    return {
+      accessToken: null,
+    }
+  }
+
+  const response = await axios.get(
+    `${import.meta.env.VITE_API_BASE_URL}/auth/crypto/tokenreissue.php`,
+    {
+      headers: {
+        Authorization: `Bearer ${refreshToken}`,
+      },
+    },
+  )
+
+  const { accessToken } = response.data.body
+  return {
+    accessToken,
+  }
+}
+
 export const fetchUser = async (): Promise<User> => {
-  const {
-    data: { body: response },
-  } = await axiosClient.get<HTTPResponse<UserResponse[]>>("/auth/me")
-  return UserMapper.toEntity(response[0])
+  const response =
+    await axiosClient.get<HTTPResponse<UserResponse[]>>("/auth/me")
+
+  if (response.data.resultMessage === "Access token expired") {
+    const { accessToken } = await fetchAccessToken()
+    axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`
+    return UserMapper.toEntity(
+      (await axiosClient.get<HTTPResponse<UserResponse[]>>("/auth/me")).data
+        .body[0],
+    )
+  }
+
+  return UserMapper.toEntity(response.data.body[0])
 }
 
 export const resetPassword = async (

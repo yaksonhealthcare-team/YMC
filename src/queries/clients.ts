@@ -1,7 +1,6 @@
 import { QueryClient } from "@tanstack/react-query"
 import axios, { AxiosError } from "axios"
-import { ERROR_CODES, getErrorMessage } from "../types/Error"
-import { useAuthStore } from "../stores/auth.store"
+import { getErrorMessage } from "../types/Error"
 
 interface ApiResponse<T> {
   resultCode: string
@@ -70,38 +69,8 @@ const axiosClient = axios.create({
 })
 
 axiosClient.interceptors.request.use(async (config) => {
-  if (!config.headers.Authorization) {
-    const { accessToken } = await refreshToken()
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`
-    }
-  }
   return config
 })
-
-const refreshToken = async () => {
-  const refreshToken = useAuthStore.getState().refreshToken
-
-  if (!refreshToken) {
-    return {
-      accessToken: null,
-    }
-  }
-
-  const response = await axios.get(
-    `${import.meta.env.VITE_API_BASE_URL}/auth/crypto/tokenreissue.php`,
-    {
-      headers: {
-        Authorization: `Bearer ${refreshToken}`,
-      },
-    },
-  )
-
-  const { accessToken } = response.data.body
-  return {
-    accessToken,
-  }
-}
 
 axiosClient.interceptors.response.use(
   async (response) => {
@@ -157,21 +126,6 @@ axiosClient.interceptors.response.use(
       error.response?.data?.resultMessage || getErrorMessage(errorCode)
 
     const originalRequest = error.config
-
-    // 토큰이 만료되었을 때 (401 에러) 또는 TOKEN_EXPIRED 에러 코드 또는 Access token expired 메시지
-    if (
-      (error.response?.status === 401 ||
-        errorCode === ERROR_CODES.TOKEN_EXPIRED ||
-        errorMessage === "Access token expired") &&
-      !originalRequest?._retry
-    ) {
-      originalRequest._retry = true
-      const { accessToken } = await refreshToken()
-      if (accessToken) {
-        originalRequest.headers.common.Authorization = `Bearer ${accessToken}`
-        return axiosClient(originalRequest)
-      }
-    }
 
     // 에러 메시지 표시
     if (error.response) {
