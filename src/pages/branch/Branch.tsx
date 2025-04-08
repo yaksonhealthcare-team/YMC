@@ -22,6 +22,7 @@ import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import { useBranchLocationSelect } from "../../hooks/useBranchLocationSelect.ts"
 import { useQueryClient } from "@tanstack/react-query"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
+import { Coordinate } from "types/Coordinate.ts"
 
 const Branch = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -32,11 +33,17 @@ const Branch = () => {
   const [screen, setScreen] = useState<"list" | "map">("list")
   const [selectedBranch, setSelectedBranch] = useState<BranchType | null>(null)
   const [selectedFilter, setSelectedFilter] = useState<{
+    latitude?: number
+    longitude?: number
     brand: FilterItem | null
     category: FilterItem | null
+    enabled: boolean
   }>({
     brand: null,
     category: null,
+    latitude: (selectedLocation?.coords || currentLocation)?.latitude,
+    longitude: (selectedLocation?.coords || currentLocation)?.longitude,
+    enabled: !!(selectedLocation?.coords || currentLocation),
   })
 
   const queryClient = useQueryClient()
@@ -52,11 +59,11 @@ const Branch = () => {
     isFetchingNextPage,
     refetch,
   } = useBranches({
-    latitude: (selectedLocation?.coords || currentLocation)?.latitude,
-    longitude: (selectedLocation?.coords || currentLocation)?.longitude,
+    latitude: selectedFilter.latitude,
+    longitude: selectedFilter.longitude,
     brandCode: selectedFilter.brand?.code,
     category: selectedFilter.category?.code,
-    enabled: !!(selectedLocation?.coords || currentLocation),
+    enabled: selectedFilter.enabled,
   })
 
   const address =
@@ -115,7 +122,11 @@ const Branch = () => {
 
     if (brandChanged || categoryChanged) {
       // 상태 업데이트
-      setSelectedFilter(newFilter)
+      setSelectedFilter((prev) => ({
+        ...prev,
+        brand: newFilter.brand,
+        category: newFilter.category,
+      }))
 
       // 브랜드가 변경된 경우 카테고리 캐시 무효화
       if (brandChanged) {
@@ -133,7 +144,12 @@ const Branch = () => {
   }
 
   const handleFilterReset = () => {
-    setSelectedFilter({ brand: null, category: null })
+    setSelectedFilter((prev) => ({
+      ...prev,
+      brand: null,
+      category: null,
+      enabled: false,
+    }))
     refetch()
     // 필터 초기화 시 선택된 지점 초기화
     setSelectedBranch(null)
@@ -168,10 +184,11 @@ const Branch = () => {
     })
 
     // 상태 업데이트
-    setSelectedFilter({
+    setSelectedFilter((prev) => ({
+      ...prev,
       brand,
       category: null,
-    })
+    }))
 
     // 지점 목록 다시 조회
     refetch()
@@ -204,7 +221,10 @@ const Branch = () => {
           </div>
           <div className="border-b border-gray-100">
             <BranchFilterSection
-              currentFilter={selectedFilter}
+              currentFilter={{
+                brand: selectedFilter.brand,
+                category: selectedFilter.category,
+              }}
               onInitialize={handleFilterReset}
               onClick={() => {
                 openBottomSheet(
@@ -214,7 +234,10 @@ const Branch = () => {
                       title: brand.name,
                       code: brand.code,
                     }))}
-                    currentFilter={selectedFilter}
+                    currentFilter={{
+                      brand: selectedFilter.brand,
+                      category: selectedFilter.category,
+                    }}
                     onApply={handleFilterChange}
                     onBrandChange={handleBrandChange}
                   />,
@@ -240,6 +263,15 @@ const Branch = () => {
     screen,
   ])
 
+  const handleMapMove = (newCenter: Coordinate) => {
+    setSelectedFilter((prev) => ({
+      ...prev,
+      latitude: newCenter.latitude,
+      longitude: newCenter.longitude,
+    }))
+    refetch()
+  }
+
   const renderScreen = () => {
     switch (screen) {
       case "list":
@@ -263,6 +295,7 @@ const Branch = () => {
             category={selectedFilter.category?.code}
             onSelectBranch={setSelectedBranch}
             branches={branches}
+            onMoveMap={handleMapMove}
           />
         )
     }

@@ -15,8 +15,9 @@ import LoadingIndicator from "@components/LoadingIndicator.tsx"
 interface BranchMapSectionProps {
   brandCode?: string
   category?: string
-  onSelectBranch: (branch: Branch | null) => void
   branches: Branch[]
+  onSelectBranch: (branch: Branch | null) => void
+  onMoveMap: (newCenter: Coordinate) => void
 }
 
 const BranchMapSection = ({
@@ -24,14 +25,14 @@ const BranchMapSection = ({
   category,
   onSelectBranch,
   branches,
+  onMoveMap,
 }: BranchMapSectionProps) => {
   const navigate = useNavigate()
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
   const { location: selectedLocation } = useBranchLocationSelect()
   const { location: currentLocation, loading: locationLoading } =
     useGeolocation()
-  const [coords, setCoords] = useState<Coordinate | null>(null)
-
+  const [center, setCenter] = useState<Coordinate | null>(null)
   const { mutateAsync: addBookmark } = useBranchBookmarkMutation()
   const { mutateAsync: removeBookmark } = useBranchUnbookmarkMutation()
 
@@ -39,7 +40,7 @@ const BranchMapSection = ({
     // 초기 로딩 시 현재 위치 또는 선택된 위치를 기준으로 설정
     const initialCoords = selectedLocation?.coords || currentLocation
     if (initialCoords) {
-      setCoords(initialCoords)
+      setCenter(initialCoords)
     }
   }, [])
 
@@ -49,7 +50,7 @@ const BranchMapSection = ({
     onSelectBranch(null)
   }, [brandCode, category])
 
-  if (locationLoading || !coords) {
+  if (locationLoading || !center) {
     return (
       <div className="flex items-center justify-center min-h-[200px]">
         <LoadingIndicator />
@@ -57,10 +58,15 @@ const BranchMapSection = ({
     )
   }
 
+  // 위치 이동 감지 및 처리
+  const handleMapMove = (newCenter: Coordinate) => {
+    onMoveMap(newCenter)
+  }
+
   return (
     <div className={"relative flex flex-col flex-1 h-full overflow-hidden"}>
       <MapView
-        center={coords}
+        center={center}
         branches={branches}
         options={{
           onSelectBranch: (branch) => {
@@ -68,9 +74,7 @@ const BranchMapSection = ({
             setSelectedBranch(branch)
             onSelectBranch?.(branch)
           },
-          onMoveMap: (newCoords) => {
-            setCoords(newCoords)
-          },
+          onMoveMap: handleMapMove,
           showCurrentLocationButton: true,
           showCurrentLocation: true,
           currentLocationButtonPosition: selectedBranch
