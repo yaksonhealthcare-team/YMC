@@ -146,11 +146,6 @@ axiosClient.interceptors.response.use(
           // 토큰 갱신 실패
           processQueue(new Error("토큰 갱신 실패"), null)
 
-          // 로그인 페이지로 리다이렉트
-          if (typeof window !== "undefined") {
-            window.location.href = "/signin"
-          }
-
           return Promise.reject({
             response: {
               data: data,
@@ -169,11 +164,6 @@ axiosClient.interceptors.response.use(
 
         // 리프레시 토큰 초기화
         useAuthStore.getState().clearRefreshToken()
-
-        // 로그인 페이지로 리다이렉트
-        if (typeof window !== "undefined") {
-          window.location.href = "/signin"
-        }
 
         return Promise.reject(error)
       } finally {
