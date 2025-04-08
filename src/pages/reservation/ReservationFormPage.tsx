@@ -185,6 +185,14 @@ const ReservationFormPage = () => {
           item: membershipWithBranch.mp_idx,
           membershipId: membershipWithBranch.mp_idx,
         })
+      } else {
+        openModal({
+          title: "알림",
+          message: "해당 지점의 회원권 정보를 찾을 수 없습니다.",
+          onConfirm: () => {
+            closeOverlay()
+          },
+        })
       }
     }
   }, [memberships, formData.item])
