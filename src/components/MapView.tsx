@@ -134,13 +134,7 @@ const MapView = ({
     return () => {
       mounted = false
     }
-  }, [
-    isLoaded,
-    center?.latitude,
-    center?.longitude,
-    options?.onMoveMap,
-    options?.showCurrentLocation,
-  ])
+  }, [isLoaded, center, options])
 
   useEffect(() => {
     if (isMapInitialized && mapInstance.current && center) {
