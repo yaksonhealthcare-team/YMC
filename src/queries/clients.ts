@@ -68,6 +68,7 @@ const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 30000, // 30초 타임아웃
   timeoutErrorMessage: "요청 시간이 초과되었습니다. 다시 시도해주세요.",
+  withCredentials: true,
 })
 
 axiosClient.interceptors.request.use(async (config) => {
@@ -146,6 +147,9 @@ axiosClient.interceptors.response.use(
           // 토큰 갱신 실패
           processQueue(new Error("토큰 갱신 실패"), null)
 
+          // 인증 상태 업데이트
+          useAuthStore.getState().setAuthenticated(false)
+
           return Promise.reject({
             response: {
               data: data,
@@ -162,8 +166,8 @@ axiosClient.interceptors.response.use(
           url: response.config?.url,
         })
 
-        // 리프레시 토큰 초기화
-        useAuthStore.getState().clearRefreshToken()
+        // 인증 상태 업데이트
+        useAuthStore.getState().setAuthenticated(false)
 
         return Promise.reject(error)
       } finally {

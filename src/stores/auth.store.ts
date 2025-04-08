@@ -2,17 +2,15 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
 interface AuthState {
-  refreshToken: string | null
-  setRefreshToken: (token: string | null) => void
-  clearRefreshToken: () => void
+  isAuthenticated: boolean
+  setAuthenticated: (value: boolean) => void
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      refreshToken: null,
-      setRefreshToken: (token) => set({ refreshToken: token }),
-      clearRefreshToken: () => set({ refreshToken: null }),
+      isAuthenticated: false,
+      setAuthenticated: (value) => set({ isAuthenticated: value }),
     }),
     {
       name: "auth-storage",

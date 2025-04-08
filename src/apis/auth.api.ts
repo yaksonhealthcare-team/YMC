@@ -12,7 +12,7 @@ interface SignInResponseBody {
 export interface SignInResponse extends HTTPResponse<SignInResponseBody[]> {
   Header: [
     {
-      refreshToken: string
+      // refreshToken 필드가 더 이상 존재하지 않음 (쿠키로 대체됨)
     },
   ]
 }
@@ -38,11 +38,8 @@ export const loginWithEmail = async ({
   })
 
   const accessToken = data.body[0].accessToken
-  const refreshToken = data.Header[0].refreshToken
-
-  if (refreshToken) {
-    useAuthStore.getState().setRefreshToken(refreshToken)
-  }
+  // 인증 상태 설정
+  useAuthStore.getState().setAuthenticated(true)
 
   axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`
 
@@ -53,24 +50,18 @@ export const loginWithEmail = async ({
 
 export const refreshAccessToken = async (): Promise<string | null> => {
   try {
-    const refreshToken = useAuthStore.getState().refreshToken
-
-    if (!refreshToken) {
-      return null
-    }
-
+    // refreshToken이 쿠키에 있으므로 명시적으로 가져올 필요 없음
+    // 자동으로 쿠키가 요청과 함께 전송됨
     const response = await axios.get(
       `${import.meta.env.VITE_API_BASE_URL}/auth/crypto/tokenreissue.php`,
       {
-        headers: {
-          Authorization: `Bearer ${refreshToken}`,
-        },
+        withCredentials: true, // 쿠키를 요청과 함께 전송하기 위해 필요
       },
     )
 
     if (response.data.resultCode !== "00") {
       // 리프레시 토큰 만료 또는 유효하지 않음
-      useAuthStore.getState().clearRefreshToken()
+      useAuthStore.getState().setAuthenticated(false)
       return null
     }
 
@@ -84,7 +75,7 @@ export const refreshAccessToken = async (): Promise<string | null> => {
     return accessToken
   } catch (error) {
     console.error("토큰 갱신 중 오류 발생:", error)
-    useAuthStore.getState().clearRefreshToken()
+    useAuthStore.getState().setAuthenticated(false)
     return null
   }
 }
@@ -127,15 +118,17 @@ export const signupWithSocial = async ({
     token_version_id: userInfo.token_version_id,
   }
 
-  const response = await axiosClient.post("/auth/signup/social", {
-    thirdPartyType,
-    ...processedUserInfo,
-  })
+  const response = await axiosClient.post(
+    "/auth/signup/social",
+    {
+      thirdPartyType,
+      ...processedUserInfo,
+    },
+    { withCredentials: true },
+  ) // 쿠키를 받기 위해 추가
 
-  const refreshToken = response.data.Header[0].refreshToken
-  if (refreshToken) {
-    useAuthStore.getState().setRefreshToken(refreshToken)
-  }
+  // 인증 상태 설정
+  useAuthStore.getState().setAuthenticated(true)
 
   return response.data
 }
@@ -183,12 +176,12 @@ const createSignupRequest = ({
 export const signup = async (signupData: SignupFormData) => {
   const requestData = createSignupRequest(signupData)
 
-  const { data } = await axiosClient.post("/auth/signup/email", requestData)
+  const { data } = await axiosClient.post("/auth/signup/email", requestData, {
+    withCredentials: true,
+  }) // 쿠키를 받기 위해 추가
 
-  const refreshToken = data.Header[0].refreshToken
-  if (refreshToken) {
-    useAuthStore.getState().setRefreshToken(refreshToken)
-  }
+  // 인증 상태 설정
+  useAuthStore.getState().setAuthenticated(true)
 
   return data
 }
@@ -221,14 +214,12 @@ export async function signinWithSocial(
     const { data } = await axiosClient.post<SignInResponse>(
       "/auth/signin/social",
       request,
+      { withCredentials: true }, // 쿠키를 받기 위해 추가
     )
 
     const accessToken = data.body[0].accessToken
-    const refreshToken = data.Header[0].refreshToken
-
-    if (refreshToken) {
-      useAuthStore.getState().setRefreshToken(refreshToken)
-    }
+    // 인증 상태 설정
+    useAuthStore.getState().setAuthenticated(true)
 
     axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`
 
@@ -250,8 +241,13 @@ export const withdrawal = async () => {
 }
 
 export const logout = async () => {
-  const response = await axiosClient.post("/auth/logout", {})
-  useAuthStore.getState().clearRefreshToken()
+  const response = await axiosClient.post(
+    "/auth/logout",
+    {},
+    { withCredentials: true },
+  ) // 쿠키를 보내기 위해 추가
+  // 인증 상태 업데이트
+  useAuthStore.getState().setAuthenticated(false)
   return response.data
 }
 
