@@ -7,8 +7,6 @@ import {
   useSearchParams,
 } from "react-router-dom"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
-import { useOverlay } from "../../contexts/ModalContext.tsx"
-import OptionsBottomSheetContent from "./_fragments/OptionsBottomSheetContent.tsx"
 import ClockIcon from "@assets/icons/ClockIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
 import NoteIcon from "@assets/icons/NoteIcon.svg?react"
@@ -22,7 +20,6 @@ import MembershipPlaceholderImage from "@assets/images/MembershipPlaceholderImag
 import CartIcon from "@components/icons/CartIcon.tsx"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { Image } from "@components/common/Image"
-import { Button } from "@components/Button"
 
 const MembershipDetailPage = () => {
   const { id } = useParams()
@@ -32,30 +29,30 @@ const MembershipDetailPage = () => {
   const brandCode = searchParams.get("brand_code") || "001"
   const { setHeader, setNavigation } = useLayout()
   const { data: membership } = useMembershipDetail(id!)
-  const { openBottomSheet, closeOverlay } = useOverlay()
+  // const { openBottomSheet, closeOverlay } = useOverlay()
 
   // 구매하기 버튼 클릭 시 바텀시트 열기
-  const handlePurchaseClick = () => {
-    if (!membership) return
+  // const handlePurchaseClick = () => {
+  //   if (!membership) return
 
-    openBottomSheet(
-      <OptionsBottomSheetContent
-        key={location.pathname}
-        serviceType={membership.s_type}
-        options={membership.options || []}
-        membershipId={id!}
-        brand={membership.brand_name || "No Name"}
-        title={membership.s_name || "No Name"}
-        duration={parseInt(membership.s_time || "0")}
-        brandCode={brandCode}
-        onClose={() => {
-          setMembershipHeader()
-          setNavigation({ display: false })
-          closeOverlay()
-        }}
-      />,
-    )
-  }
+  //   openBottomSheet(
+  //     <OptionsBottomSheetContent
+  //       key={location.pathname}
+  //       serviceType={membership.s_type}
+  //       options={membership.options || []}
+  //       membershipId={id!}
+  //       brand={membership.brand_name || "No Name"}
+  //       title={membership.s_name || "No Name"}
+  //       duration={parseInt(membership.s_time || "0")}
+  //       brandCode={brandCode}
+  //       onClose={() => {
+  //         setMembershipHeader()
+  //         setNavigation({ display: false })
+  //         closeOverlay()
+  //       }}
+  //     />,
+  //   )
+  // }
 
   // 회원권 상세 페이지 헤더 설정 함수
   const setMembershipHeader = () => {
@@ -211,7 +208,7 @@ const MembershipDetailPage = () => {
       </div>
 
       {/* Bottom Fixed Button */}
-      <div className="fixed bottom-0 left-0 right-0 h-[94px] bg-white border-t border-gray-50">
+      {/* <div className="fixed bottom-0 left-0 right-0 h-[94px] bg-white border-t border-gray-50">
         <div className="px-5 pt-3">
           <Button
             onClick={handlePurchaseClick}
@@ -222,7 +219,7 @@ const MembershipDetailPage = () => {
             구매하기
           </Button>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

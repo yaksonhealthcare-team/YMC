@@ -497,8 +497,8 @@ const ReservationFormPage = () => {
               onChangeItem={handleOnChangeItem}
               initialMembershipId={formData.membershipId}
             />
-          ) : (
-            <Button
+          ) : null}
+          {/* <Button
               variantType="secondary"
               sizeType="l"
               onClick={() => navigate("/membership")}
@@ -506,8 +506,7 @@ const ReservationFormPage = () => {
             >
               회원권 구매하기
               <CaretRightIcon className="w-5 h-6" />
-            </Button>
-          )}
+            </Button> */}
         </RadioGroup>
         <div className="flex flex-col mt-[16px]">
           <p className="text-gray-500 text-14px">
