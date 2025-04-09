@@ -17,7 +17,6 @@ import { formatPrice, parsePrice } from "../../utils/format"
 import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
 import MembershipPlaceholderImage from "@assets/images/MembershipPlaceholderImage.jpg"
-import CartIcon from "@components/icons/CartIcon.tsx"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { Image } from "@components/common/Image"
 
@@ -73,7 +72,7 @@ const MembershipDetailPage = () => {
           >
             <CaretLeftIcon className={"w-5 h-5"} />
           </div>
-          <CartIcon />
+          {/* <CartIcon /> */}
         </div>
       ),
       backgroundColor: "bg-white",

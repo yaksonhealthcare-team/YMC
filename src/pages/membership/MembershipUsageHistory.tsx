@@ -5,7 +5,6 @@ import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import { MembershipCard } from "@components/MembershipCard"
 import { MembershipStatus, MembershipDetailWithHistory } from "types/Membership"
 import DateAndTime from "@components/DateAndTime"
-import CartIcon from "@components/icons/CartIcon.tsx"
 import { fetchMembershipUsageHistory } from "../../apis/membership.api"
 import { CircularProgress } from "@mui/material"
 
@@ -72,7 +71,7 @@ const MembershipUsageHistory = () => {
       display: true,
       title: "회원권 이용내역",
       left: "back",
-      right: <CartIcon />,
+      // right: <CartIcon />,
     })
     setNavigation({
       display: true,

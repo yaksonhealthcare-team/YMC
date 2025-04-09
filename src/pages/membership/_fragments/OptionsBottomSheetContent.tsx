@@ -16,7 +16,6 @@ import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
 import XCircleIcon from "@components/icons/XCircleIcon.tsx"
 import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
-import CartIcon from "@components/icons/CartIcon.tsx"
 
 interface OptionsBottomSheetContentProps {
   serviceType: string
@@ -67,7 +66,7 @@ export const OptionsBottomSheetContent = ({
           <div onClick={() => navigate(-1)} className="rounded">
             <CaretLeftIcon className={"w-5 h-5"} />
           </div>
-          <CartIcon />
+          {/* <CartIcon /> */}
         </div>
       ),
       backgroundColor: "bg-white",

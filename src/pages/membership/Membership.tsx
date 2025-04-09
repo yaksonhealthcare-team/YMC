@@ -1,4 +1,3 @@
-import CartIcon from "@components/icons/CartIcon"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { Tab, Tabs } from "@mui/material"
 import { useLayout } from "contexts/LayoutContext"
@@ -60,7 +59,7 @@ const MembershipPage = () => {
         onClickBack: () => {
           navigate(-1)
         },
-        right: <CartIcon />,
+        // right: <CartIcon />,
       })
     })
   }, [])
