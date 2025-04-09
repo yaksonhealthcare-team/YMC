@@ -7,6 +7,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useLayout } from "../../contexts/LayoutContext"
 import { checkByNice } from "../../utils/niceCheck"
+import { useSignup } from "../../contexts/SignupContext"
 
 window.name = "Parent_window"
 
@@ -21,6 +22,7 @@ export const TermsAgreement = () => {
     marketing: false,
   })
   const [isLoading, setIsLoading] = useState(false)
+  const { setSignupData } = useSignup()
 
   useEffect(() => {
     setHeader({
@@ -72,6 +74,10 @@ export const TermsAgreement = () => {
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     event.preventDefault()
+    setSignupData((prev) => ({
+      ...prev,
+      marketingYn: agreements.marketing,
+    }))
     setIsLoading(true)
     try {
       const data = await fetchEncryptDataForNice()
