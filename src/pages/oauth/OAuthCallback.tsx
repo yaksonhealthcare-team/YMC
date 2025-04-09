@@ -75,7 +75,6 @@ const OAuthCallback = () => {
             if (error.response?.status === 401) {
               const socialSignupInfo = {
                 provider: getProviderCode(provider),
-                id: parsedData.Header[0].id,
                 ...socialData,
               }
 
