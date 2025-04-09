@@ -22,7 +22,7 @@ export const TermsAgreement = () => {
     marketing: false,
   })
   const [isLoading, setIsLoading] = useState(false)
-  const { setSignupData } = useSignup()
+  const { setSignupData, signupData } = useSignup()
 
   useEffect(() => {
     setHeader({
@@ -74,10 +74,14 @@ export const TermsAgreement = () => {
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     event.preventDefault()
-    setSignupData((prev) => ({
-      ...prev,
-      marketingYn: agreements.marketing,
-    }))
+    setSignupData((prev) => {
+      const updatedData = {
+        ...prev,
+        marketingYn: agreements.marketing,
+      }
+      sessionStorage.setItem("signupData", JSON.stringify(updatedData))
+      return updatedData
+    })
     setIsLoading(true)
     try {
       const data = await fetchEncryptDataForNice()

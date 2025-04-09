@@ -43,15 +43,30 @@ const SignupCallback = () => {
           return
         }
 
-        setSignupData((prev) => ({
-          ...prev,
-          name: userData.name,
-          mobileNumber: userData.hp,
-          birthDate: userData.birthdate,
-          gender: userData.sex as Gender,
-          di: userData.di,
-          tokenVersionId: userData.token_version_id,
-        }))
+        const storedSignupData = sessionStorage.getItem("signupData")
+        if (storedSignupData) {
+          const parsedData = JSON.parse(storedSignupData)
+          setSignupData((prev) => ({
+            ...prev,
+            ...parsedData,
+            name: userData.name,
+            mobileNumber: userData.hp,
+            birthDate: userData.birthdate,
+            gender: userData.sex as Gender,
+            di: userData.di,
+            tokenVersionId: userData.token_version_id,
+          }))
+        } else {
+          setSignupData((prev) => ({
+            ...prev,
+            name: userData.name,
+            mobileNumber: userData.hp,
+            birthDate: userData.birthdate,
+            gender: userData.sex as Gender,
+            di: userData.di,
+            tokenVersionId: userData.token_version_id,
+          }))
+        }
         navigate("/signup/email")
       } catch (error) {
         console.error("회원가입 처리 오류:", error)

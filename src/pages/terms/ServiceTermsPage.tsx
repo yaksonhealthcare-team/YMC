@@ -16,10 +16,6 @@ const ServiceTermsPage = () => {
     setNavigation({ display: false })
   }, [])
 
-  useEffect(() => {
-    console.log("termsData:", termsData)
-  }, [termsData])
-
   if (isLoading) {
     return <LoadingIndicator className="min-h-screen" />
   }
@@ -28,9 +24,6 @@ const ServiceTermsPage = () => {
     (category) => category.terms_category_idx === "1",
   )
   const terms = categoryTerms?.terms_list?.[0]
-
-  console.log("categoryTerms:", categoryTerms)
-  console.log("terms:", terms)
 
   return (
     <div className={"px-5 py-4"}>
