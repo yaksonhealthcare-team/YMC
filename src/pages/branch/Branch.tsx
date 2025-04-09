@@ -9,10 +9,7 @@ import BranchFilterList from "./_fragments/BranchFilterList.tsx"
 import { SearchFloatingButton } from "@components/SearchFloatingButton.tsx"
 import { useLocation, useNavigate } from "react-router-dom"
 import BranchMapSection from "./_fragments/BranchMapSection.tsx"
-import {
-  useBranches,
-  useBranchCategories,
-} from "../../queries/useBranchQueries.tsx"
+import { useBranches } from "../../queries/useBranchQueries.tsx"
 import { Branch as BranchType } from "../../types/Branch.ts"
 import { useBrands } from "../../queries/useBrandQueries.tsx"
 import { useGeolocation } from "../../hooks/useGeolocation.tsx"
@@ -48,8 +45,8 @@ const Branch = () => {
 
   const queryClient = useQueryClient()
   const { data: brands } = useBrands()
-  const { data: categories, isLoading: isCategoriesLoading } =
-    useBranchCategories(selectedFilter.brand?.code)
+  // const { data: categories, isLoading: isCategoriesLoading } =
+  //   useBranchCategories(selectedFilter.brand?.code)
 
   const {
     data: branchPaginationData,
@@ -257,8 +254,8 @@ const Branch = () => {
     selectedFilter,
     brands,
     address,
-    categories,
-    isCategoriesLoading,
+    // categories,
+    // isCategoriesLoading,
     branchPaginationData?.pages[0]?.total_count,
     screen,
   ])

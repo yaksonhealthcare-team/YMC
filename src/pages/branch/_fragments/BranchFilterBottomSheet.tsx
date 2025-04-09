@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { Button } from "@components/Button.tsx"
 import ReloadIcon from "@components/icons/ReloadIcon.tsx"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
-import { useBranchCategories } from "../../../queries/useBranchQueries"
 
 export type FilterItem = {
   code: string
@@ -32,8 +31,8 @@ const BranchFilterBottomSheet = ({
   onClose: performClose,
 }: BranchFilterBottomSheetProps) => {
   const [filter, setFilter] = useState<FilterState>(currentFilter)
-  const { data: categories = [], isLoading: isCategoriesLoading } =
-    useBranchCategories(filter.brand?.code)
+  // const { data: categories = [], isLoading: isCategoriesLoading } =
+  //   useBranchCategories(filter.brand?.code)
 
   useEffect(() => {
     setFilter(currentFilter)
@@ -43,9 +42,9 @@ const BranchFilterBottomSheet = ({
     setFilter((prev) => ({ ...prev, brand, category: null }))
   }
 
-  const handleCategoryChange = (category: FilterItem | null) => {
-    setFilter((prev) => ({ ...prev, category }))
-  }
+  // const handleCategoryChange = (category: FilterItem | null) => {
+  //   setFilter((prev) => ({ ...prev, category }))
+  // }
 
   const handleInitialize = () => {
     setFilter({ brand: null, category: null })
@@ -73,14 +72,14 @@ const BranchFilterBottomSheet = ({
             onSelect={handleBrandChange}
           />
           <BranchFilterDivider />
-          <BranchFilterSection
+          {/* <BranchFilterSection
             key={`category-${filter.brand?.code || "all"}`}
             label="카테고리 별"
             items={categories}
             selectedItem={filter.category}
             isLoading={isCategoriesLoading}
             onSelect={handleCategoryChange}
-          />
+          /> */}
         </div>
       </div>
 
