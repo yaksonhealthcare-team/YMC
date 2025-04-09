@@ -80,7 +80,18 @@ export function initializeReactNativeLogger() {
     },
     (error) => {
       logToReactNative("API_REQUEST_ERROR", "요청 전송 중 오류 발생", error)
-      return Promise.reject(error)
+      return error
+    },
+  )
+
+  axiosClient.interceptors.response.use(
+    (response) => {
+      logToReactNative("API_RESPONSE", "응답 수신", response)
+      return response
+    },
+    (error) => {
+      logToReactNative("API_RESPONSE_ERROR", "응답 처리 중 오류 발생", error)
+      return error
     },
   )
 }
