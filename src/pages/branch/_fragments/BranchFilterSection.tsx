@@ -22,12 +22,12 @@ const BranchFilterSection = ({
           label={currentFilter.brand?.title ?? "브랜드"}
           onClick={onClick}
         />
-        <Filter
+        {/* <Filter
           type={"arrow"}
           state={!currentFilter.category ? "default" : "active"}
           label={currentFilter.category?.title ?? "카테고리"}
           onClick={onClick}
-        />
+        /> */}
       </div>
     </div>
   )

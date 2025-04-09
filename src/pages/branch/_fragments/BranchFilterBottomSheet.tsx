@@ -71,7 +71,7 @@ const BranchFilterBottomSheet = ({
             selectedItem={filter.brand}
             onSelect={handleBrandChange}
           />
-          <BranchFilterDivider />
+          {/* <BranchFilterDivider /> */}
           {/* <BranchFilterSection
             key={`category-${filter.brand?.code || "all"}`}
             label="카테고리 별"
