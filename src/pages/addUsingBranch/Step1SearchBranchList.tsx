@@ -70,7 +70,12 @@ const Step1SearchBranchList = ({
   }
 
   const handleSelectBranch = (branch: Branch) => {
-    setSelectedBranches((prev) => [...prev, branch])
+    setSelectedBranches((prev) => {
+      if (prev.some((b) => b.b_idx === branch.b_idx)) {
+        return prev.filter((b) => b.b_idx !== branch.b_idx)
+      }
+      return [...prev, branch]
+    })
   }
 
   const handleRemoveBranch = (branch: Branch) => {
