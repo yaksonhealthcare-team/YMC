@@ -311,8 +311,8 @@ export const ProfileSetup = () => {
           />
         </div>
 
-        {/* 추천인 코드 */}
-        <div className="flex flex-col gap-2">
+        {/* 추천인 코드 -- 약손명가 헬스케어 팀의 요청으로 임시 숨김 처리 */}
+        {/* <div className="flex flex-col gap-2">
           <div className="flex items-center gap-0.5">
             <span className="text-14px font-medium text-black">추천인</span>
             <span className="text-14px text-[#A2A5AA]">(선택)</span>
@@ -324,7 +324,7 @@ export const ProfileSetup = () => {
             }
             placeholder="추천인 코드 입력"
           />
-        </div>
+        </div> */}
       </div>
 
       <Button
