@@ -55,6 +55,7 @@ export const useBranches = (filters: BranchFilters) =>
             brand_code: filters.brandCode,
             mp_idx: filters.isConsultation ? "상담 예약" : filters.mp_idx,
             s_idx: filters.s_idx,
+            sc_code: filters.category,
           },
         },
       )
