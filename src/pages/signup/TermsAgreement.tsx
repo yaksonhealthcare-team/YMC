@@ -22,7 +22,7 @@ export const TermsAgreement = () => {
     marketing: false,
   })
   const [isLoading, setIsLoading] = useState(false)
-  const { setSignupData, signupData } = useSignup()
+  const { setSignupData } = useSignup()
 
   useEffect(() => {
     setHeader({
