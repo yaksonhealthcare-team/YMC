@@ -34,7 +34,12 @@ export const SignupComplete = () => {
   }
 
   const handleNewUser = () => {
-    navigate("/mypage/questionnaire/common")
+    console.log("[SignupComplete] 문진페이지로 이동, state:", {
+      fromSignup: true,
+    })
+    navigate("/mypage/questionnaire/common", {
+      state: { fromSignup: true },
+    })
   }
 
   return (

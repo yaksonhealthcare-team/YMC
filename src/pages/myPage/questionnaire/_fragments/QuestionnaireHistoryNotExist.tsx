@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import DocumentEditIcon from "@assets/icons/DocumentEditIcon.svg?react"
 import { Button } from "@components/Button.tsx"
 
@@ -8,6 +8,17 @@ const QuestionnaireHistoryNotExist = ({
   onStartQuestionnaire: () => void
 }) => {
   const navigate = useNavigate()
+  const location = useLocation()
+  const state = location.state || {}
+  const fromSignup = Boolean(state.fromSignup)
+
+  const handleLater = () => {
+    if (fromSignup) {
+      navigate("/")
+    } else {
+      navigate(-1)
+    }
+  }
 
   return (
     <div className={"flex flex-col justify-between h-full"}>
@@ -27,7 +38,7 @@ const QuestionnaireHistoryNotExist = ({
       <div
         className={"flex flex-col border-t border-gray-50 px-5 pb-8 pt-3 gap-2"}
       >
-        <Button variantType={"text"} onClick={() => navigate(-1)}>
+        <Button variantType={"text"} onClick={handleLater}>
           {"나중에 등록할래요"}
         </Button>
         <Button variantType={"primary"} onClick={onStartQuestionnaire}>
