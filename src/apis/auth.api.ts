@@ -241,14 +241,11 @@ export const withdrawal = async () => {
 }
 
 export const logout = async () => {
-  const response = await axiosClient.post(
-    "/auth/logout",
-    {},
-    { withCredentials: true },
-  ) // 쿠키를 보내기 위해 추가
-  // 인증 상태 업데이트
+  // axiosClient의 기본 Authorization 헤더 제거
+  delete axiosClient.defaults.headers.common.Authorization
+
+  // 클라이언트 측 인증 상태 업데이트
   useAuthStore.getState().setAuthenticated(false)
-  return response.data
 }
 
 export const findEmail = async ({
