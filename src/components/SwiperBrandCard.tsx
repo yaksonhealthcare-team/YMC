@@ -94,7 +94,7 @@ export const SwiperBrandCard = ({
         {displayedBrands.map((brand, index) => (
           <div
             key={`${brand.code}-${index}`}
-            className={index === displayedBrands.length - 1 ? "pr-5" : "pr-3"}
+            className={index === displayedBrands.length - 1 ? "pr-5" : ""}
           >
             <BrandCard
               name={brand.name}
