@@ -266,9 +266,15 @@ const ReservationFormPage = () => {
   const handleBranchSelect = useCallback(
     (branch: Branch) => {
       setSelectedBranch(branch)
+      setFormData({
+        ...formData,
+        branch: branch.b_idx,
+        timeSlot: null,
+        date: null,
+      })
       setShowBranchModal(false)
     },
-    [setSelectedBranch],
+    [setSelectedBranch, setFormData],
   )
 
   const handleCloseBranchModal = useCallback(() => {
