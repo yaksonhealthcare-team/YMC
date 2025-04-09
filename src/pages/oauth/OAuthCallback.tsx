@@ -42,7 +42,6 @@ const OAuthCallback = () => {
         if (socialData.next_action_type === "signup") {
           const socialSignupInfo = {
             provider: getProviderCode(provider),
-            id: parsedData.Header[0].id,
             ...socialData,
           }
 
