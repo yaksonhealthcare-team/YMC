@@ -5,6 +5,7 @@ import { useAuth } from "contexts/AuthContext"
 import { useOverlay } from "contexts/ModalContext"
 import { Button } from "@components/Button"
 import { useWithdrawal } from "queries/useAuthQueries"
+import { useWithdrawalGuideMessage } from "../../hooks/useGuideMessages"
 
 const WithdrawalPage = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -13,6 +14,7 @@ const WithdrawalPage = () => {
   const { openModal } = useOverlay()
   const [isAgreed, setIsAgreed] = useState(false)
   const { mutateAsync: withdrawal } = useWithdrawal()
+  const { withdrawalMessage, isLoading: isGuideMessageLoading } = useWithdrawalGuideMessage()
 
   useEffect(() => {
     setHeader({
@@ -59,10 +61,8 @@ const WithdrawalPage = () => {
         <h3 className="text-gray-700 text-16px font-sb">회원탈퇴 안내</h3>
         <div className="p-4 bg-gray-50 rounded-lg">
           <p className="text-gray-600 text-14px font-r whitespace-pre-line">
-            {`• 탈퇴 시 모든 회원 정보가 삭제되며 복구할 수 없습니다.
-• 진행 중인 예약이 있는 경우 탈퇴가 불가능합니다.
-• 보유하신 회원권과 포인트는 모두 소멸되며 환불되지 않습니다.
-• 작성하신 리뷰는 삭제되지 않습니다.`}
+            {!isGuideMessageLoading && withdrawalMessage ? withdrawalMessage : 
+            `• 탈퇴 시 모든 회원 정보가 삭제되며 복구할 수 없습니다.`}
           </p>
         </div>
       </div>

@@ -13,6 +13,7 @@ import {
 } from "queries/useReservationQueries"
 import { escapeHtml } from "utils/sanitize"
 import LoadingIndicator from "@components/LoadingIndicator"
+import { useReservationGuideMessages } from "../../hooks/useGuideMessages"
 
 interface ReservationDetailView {
   branchName: string
@@ -37,6 +38,7 @@ const ReservationCancelPage = () => {
   const { mutate: cancelReservation } = useCancelReservation()
   const { data: reservationDetail, isLoading: isDetailLoading } =
     useReservationDetail(id ?? "")
+  const { reservationCancelMessage, isLoading: isGuideMessageLoading } = useReservationGuideMessages()
 
   useEffect(() => {
     setHeader({
@@ -207,13 +209,13 @@ const ReservationCancelPage = () => {
         />
       </div>
 
-      <div className="flex gap-1 px-[20px] pb-[40px]">
-        <span className="text-gray-500">*</span>
-        <p className="font-r text-14px text-gray-500">
-          예약 당일 취소, 노쇼의 경우 예약시 차감된 회원권 횟수가 반환되지
-          않습니다.
-        </p>
-      </div>
+      {!isGuideMessageLoading && reservationCancelMessage && (
+        <div className="flex gap-1 px-[20px] pb-[40px]">
+          <p className="font-r text-14px text-gray-500">
+            {reservationCancelMessage}
+          </p>
+        </div>
+      )}
 
       <FixedButtonContainer className="!bg-white">
         <Button

@@ -12,6 +12,7 @@ import { useOverlay } from "../../contexts/ModalContext.tsx"
 import { AxiosError } from "axios"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { escapeHtml } from "utils/sanitize"
+import { usePaymentGuideMessages } from "../../hooks/useGuideMessages"
 
 const PaymentCancelItemCard = ({
   item,
@@ -60,6 +61,7 @@ const PaymentCancelPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const { showToast } = useOverlay()
+  const { paymentCancelMessage, isLoading: isGuideMessageLoading } = usePaymentGuideMessages()
 
   const [step, setStep] = useState<"select" | "form">("select")
   const [selectedItems, setSelectedItems] = useState<string[]>([])
@@ -152,11 +154,11 @@ const PaymentCancelPage = () => {
                   />
                 </li>
               ))}
-              <p className={"text-14px text-gray-500"}>
-                {
-                  "* 이미 사용 중이거나, 사용 완료된 회원권은 결제 취소가 불가능합니다."
-                }
-              </p>
+              {(!isGuideMessageLoading && paymentCancelMessage) && (
+                <p className={"text-14px text-gray-500"}>
+                  {paymentCancelMessage}
+                </p>
+              )}
             </ul>
           </div>
           <div className={"border-t border-gray-100 px-5 pt-3 pb-8"}>
@@ -200,11 +202,11 @@ const PaymentCancelPage = () => {
                 <p>{`${reason.length} / ${MAX_REASON_LENGTH}`}</p>
               </div>
             </div>
-            <p className={"text-14px text-gray-500 mt-4"}>
-              {
-                "* 이미 사용 중이거나, 사용 완료된 회원권은 결제 취소가 불가능합니다."
-              }
-            </p>
+            {(!isGuideMessageLoading && paymentCancelMessage) && (
+              <p className={"text-14px text-gray-500 mt-4"}>
+                {paymentCancelMessage}
+              </p>
+            )}
           </div>
           <div className={"border-t border-gray-100 px-5 pt-3 pb-8"}>
             <Button

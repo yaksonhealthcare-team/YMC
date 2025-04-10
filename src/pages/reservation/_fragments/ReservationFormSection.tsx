@@ -7,6 +7,7 @@ import { Dayjs } from "dayjs"
 import { TimeSlot } from "types/Schedule"
 import { Branch } from "types/Branch"
 import { ReservationFormData } from "../../../stores/reservationFormStore"
+import { useReservationGuideMessages } from "../../../hooks/useGuideMessages"
 
 interface ReservationFormSectionProps {
   data: ReservationFormData
@@ -26,6 +27,7 @@ export const ReservationFormSection = ({
   disableBranchSelection = false,
 }: ReservationFormSectionProps) => {
   const theme = useTheme()
+  const { reservationMessage, isLoading: isGuideMessageLoading } = useReservationGuideMessages()
 
   const formatReservationDateTime = (
     date: Dayjs | null,
@@ -99,10 +101,11 @@ export const ReservationFormSection = ({
             onChangeRequest(value)
           }}
         />
-        <p className="text-gray-500 text-sm">
-          * 예약 당일 취소, 노쇼의 경우 예약시 차감된 회원권 횟수가 반환되지
-          않습니다.
-        </p>
+        {!isGuideMessageLoading && reservationMessage && (
+          <p className="text-gray-500 text-sm">
+            {reservationMessage}
+          </p>
+        )}
       </div>
     </section>
   )
