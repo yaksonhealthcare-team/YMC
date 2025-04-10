@@ -139,12 +139,12 @@ const BranchDetail = () => {
             onShare={handleShare}
             onBack={handleBack}
           />
-          {branch.availableMembershipCount > 0 && (
+          {/* {branch.availableMembershipCount > 0 && (
             <MembershipAvailableBanner
               availableMembershipCount={branch.availableMembershipCount}
               onClick={handleMembershipBannerClick}
             />
-          )}
+          )} */}
         </Suspense>
       </div>
       <Suspense fallback={<LoadingIndicator className="h-20" />}>
