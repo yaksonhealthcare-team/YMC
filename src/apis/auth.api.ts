@@ -17,6 +17,8 @@ export interface SignInResponse extends HTTPResponse<SignInResponseBody[]> {
   ]
 }
 
+export type DeviceType = "android" | "ios" | "web"
+
 export const loginWithEmail = async ({
   username,
   password,
@@ -26,7 +28,7 @@ export const loginWithEmail = async ({
   username: string
   password: string
   deviceToken?: string | null
-  deviceType?: "android" | "ios" | "web"
+  deviceType?: DeviceType
 }): Promise<{
   accessToken: string
 }> => {
