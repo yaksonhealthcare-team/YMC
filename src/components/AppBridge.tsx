@@ -5,12 +5,7 @@ import { axiosClient } from "queries/clients"
 import React, { useEffect } from "react"
 
 const AppBridge = ({ children }: { children?: React.ReactNode }) => {
-  if (!window.ReactNativeWebView) {
-    return <>{children}</>
-  }
-
   const { login } = useAuth()
-
   useEffect(() => {
     if (window.ReactNativeWebView) {
       window.ReactNativeWebView.onMessage = (data: string) => {
@@ -44,7 +39,11 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
         }
       }
     }
-  }, [])
+  }, [window.ReactNativeWebView])
+
+  if (!window.ReactNativeWebView) {
+    return <>{children}</>
+  }
 
   const handleSocialLogin = async (data: any) => {
     try {
