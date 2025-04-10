@@ -26,8 +26,8 @@ export const MembershipCardSection = ({
       return (
         <EmptyCard
           title={`사용 가능한 회원권이 없어요.\n회원권 구매 후 예약이 가능해요.`}
-          button="회원권 구매하기"
-          onClick={() => navigate("/membership")}
+          // button="회원권 구매하기"
+          // onClick={() => navigate("/membership")}
         />
       )
     }
