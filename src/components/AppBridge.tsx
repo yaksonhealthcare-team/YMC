@@ -39,7 +39,7 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
         }
       }
     }
-  }, [window.ReactNativeWebView])
+  }, [])
 
   if (!window.ReactNativeWebView) {
     return <>{children}</>
