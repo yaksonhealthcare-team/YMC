@@ -3,10 +3,14 @@ interface PaymentAgreementSectionProps {
   onAgreementChange: (checked: boolean) => void
 }
 
+import { usePaymentGuideMessages } from "../../../hooks/useGuideMessages"
+
 const PaymentAgreementSection = ({
   isAgreed,
   onAgreementChange,
 }: PaymentAgreementSectionProps) => {
+  const { paymentMessage, isLoading: isGuideMessageLoading } = usePaymentGuideMessages()
+  
   return (
     <>
       <div className="p-5">
@@ -36,12 +40,13 @@ const PaymentAgreementSection = ({
         </label>
       </div>
 
-      <div className="px-5 py-3 bg-gray-50">
-        <p className="text-gray-500 text-12px font-m">
-          결제 유의사항이 들어가는 곳입니다. 결제 유의사항이 들어가는 곳입니다.
-          결제 유의사항이 들어가는 곳입니다. 결제 유의사항이 들어가는 곳입니다.
-        </p>
-      </div>
+      {(!isGuideMessageLoading && paymentMessage) && (
+        <div className="px-5 py-3 bg-gray-50">
+          <p className="text-gray-500 text-12px font-m">
+            {paymentMessage}
+          </p>
+        </div>
+      )}
     </>
   )
 }
