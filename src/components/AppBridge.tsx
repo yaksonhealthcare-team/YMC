@@ -1,13 +1,8 @@
-import {
-  fetchUser,
-  loginWithEmail,
-  signinWithSocial,
-  UserNotFoundError,
-} from "@apis/auth.api"
+import { fetchUser, signinWithSocial, UserNotFoundError } from "@apis/auth.api"
 import { useAuth } from "contexts/AuthContext"
-import React, { useEffect } from "react"
 import { SocialSignupInfo } from "contexts/SignupContext"
-import { axiosClient } from "../queries/clients"
+import { axiosClient } from "queries/clients"
+import React, { useEffect } from "react"
 
 const AppBridge = ({ children }: { children?: React.ReactNode }) => {
   if (!window.ReactNativeWebView) {
@@ -39,11 +34,11 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
             case "SOCIAL_LOGIN":
               handleSocialLogin(result.data)
               break
-            case "LOGIN":
-              handleLogin(result.data)
+            case "FCM_TOKEN":
+              handleFcmToken(result.data)
               break
-            case "LOGOUT":
-              handleLogout()
+            case "DEVICE_TYPE":
+              handleDeviceType(result.data)
               break
           }
         }
@@ -165,33 +160,12 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
     }
   }
 
-  const handleLogin = async (data: any) => {
-    try {
-      const { email, password, deviceToken, deviceType } = data
-      await loginWithEmail({
-        username: email,
-        password,
-        deviceToken,
-        deviceType,
-      })
-      const user = await fetchUser()
-      login({ user })
-      window.location.href = "/"
-      return
-    } catch (error) {
-      window.ReactNativeWebView?.postMessage(
-        JSON.stringify({
-          type: "CONSOLE_LOG",
-          data: `Webview Received message: ${error}`,
-        }),
-      )
-      alert("로그인에 실패했습니다")
-    }
+  const handleDeviceType = async (data: any) => {
+    localStorage.setItem("deviceType", data.deviceType)
   }
 
-  const handleLogout = () => {
-    console.log("로그아웃 처리")
-    // TODO: 로그아웃 로직 구현
+  const handleFcmToken = async (data: any) => {
+    localStorage.setItem("fcmToken", data.fcmToken)
   }
 
   return <>{children}</>
