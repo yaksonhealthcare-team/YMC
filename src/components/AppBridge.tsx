@@ -1,4 +1,9 @@
-import { fetchUser, signinWithSocial, UserNotFoundError } from "@apis/auth.api"
+import {
+  fetchUser,
+  loginWithEmail,
+  signinWithSocial,
+  UserNotFoundError,
+} from "@apis/auth.api"
 import { useAuth } from "contexts/AuthContext"
 import React, { useEffect } from "react"
 import { SocialSignupInfo } from "contexts/SignupContext"
@@ -34,6 +39,9 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
             case "SOCIAL_LOGIN":
               handleSocialLogin(result.data)
               break
+            case "LOGIN":
+              handleLogin(result.data)
+              break
             case "LOGOUT":
               handleLogout()
               break
@@ -62,13 +70,7 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
             code: data.authorizationCode,
           })
 
-          // 콜백 로그 출력
-          window.ReactNativeWebView?.postMessage(
-            JSON.stringify({
-              type: "CONSOLE_LOG",
-              data: "Apple 로그인 콜백 호출 완료",
-            }),
-          )
+          return
         } catch (callbackError: any) {
           // 콜백 오류 상세 정보 로그 출력
           window.ReactNativeWebView?.postMessage(
@@ -160,6 +162,30 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
         return "A"
       default:
         return provider as "K" | "N" | "G" | "A"
+    }
+  }
+
+  const handleLogin = async (data: any) => {
+    try {
+      const { email, password, deviceToken, deviceType } = data
+      await loginWithEmail({
+        username: email,
+        password,
+        deviceToken,
+        deviceType,
+      })
+      const user = await fetchUser()
+      login({ user })
+      window.location.href = "/"
+      return
+    } catch (error) {
+      window.ReactNativeWebView?.postMessage(
+        JSON.stringify({
+          type: "CONSOLE_LOG",
+          data: `Webview Received message: ${error}`,
+        }),
+      )
+      alert("로그인에 실패했습니다")
     }
   }
 

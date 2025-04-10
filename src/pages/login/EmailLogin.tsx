@@ -50,17 +50,27 @@ const EmailLogin = () => {
   }
 
   const handleSubmit = async () => {
-    if (!formData.email || !validateEmail(formData.email)) {
-      showToast("올바른 이메일을 입력해주세요")
-      return
-    }
-    if (!formData.password) {
-      showToast("비밀번호를 입력해주세요")
-      return
-    }
-
     try {
       setIsLoading(true)
+      if (!formData.email || !validateEmail(formData.email)) {
+        showToast("올바른 이메일을 입력해주세요")
+        return
+      }
+      if (!formData.password) {
+        showToast("비밀번호를 입력해주세요")
+        return
+      }
+
+      if (window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            type: "LOGIN",
+            email: formData.email,
+            password: formData.password,
+          }),
+        )
+        return
+      }
 
       await loginWithEmail({
         username: formData.email,
