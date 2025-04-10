@@ -161,11 +161,11 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
   }
 
   const handleDeviceType = async (data: any) => {
-    localStorage.setItem("deviceType", data.deviceType)
+    localStorage.setItem("DEVICE_TYPE", data.deviceType)
   }
 
   const handleFcmToken = async (data: any) => {
-    localStorage.setItem("fcmToken", data.fcmToken)
+    localStorage.setItem("FCM_TOKEN", data.fcmToken)
   }
 
   return <>{children}</>

@@ -65,8 +65,8 @@ const EmailLogin = () => {
         await loginWithEmail({
           username: formData.email,
           password: formData.password,
-          deviceToken: localStorage.getItem("fcmToken"),
-          deviceType: localStorage.getItem("deviceType") as DeviceType,
+          deviceToken: localStorage.getItem("FCM_TOKEN"),
+          deviceType: localStorage.getItem("DEVICE_TYPE") as DeviceType,
         })
 
         const user = await fetchUser()
