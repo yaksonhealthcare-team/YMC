@@ -10,9 +10,9 @@ import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useOverlay } from "../../../contexts/ModalContext.tsx"
 import { useGeolocation } from "../../../hooks/useGeolocation.tsx"
 
-const MembershipAvailableBanner = lazy(
-  () => import("./_fragments/MembershipAvailableBanner.tsx"),
-)
+// const MembershipAvailableBanner = lazy(
+//   () => import("./_fragments/MembershipAvailableBanner.tsx"),
+// )
 const BranchHeader = lazy(() => import("./_fragments/BranchHeader"))
 const BranchTabs = lazy(() => import("./_fragments/BranchTabs"))
 const BranchActions = lazy(() => import("./_fragments/BranchActions"))
@@ -83,10 +83,10 @@ const BranchDetail = () => {
     }
   }, [navigate, id])
 
-  const handleMembershipBannerClick = useCallback(() => {
-    if (!branch) return
-    navigate(`/membership?brand=${branch.brandCode}`)
-  }, [branch, navigate])
+  // const handleMembershipBannerClick = useCallback(() => {
+  //   if (!branch) return
+  //   navigate(`/membership?brand=${branch.brandCode}`)
+  // }, [branch, navigate])
 
   const handleReservation = useCallback(() => {
     if (!branch) return
