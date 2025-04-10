@@ -7,7 +7,7 @@ import { useOverlay } from "../../contexts/ModalContext"
 import { useLayout } from "../../contexts/LayoutContext"
 import EyeIcon from "../../assets/icons/EyeIcon.svg?react"
 import EyeSlashIcon from "../../assets/icons/EyeSlashIcon.svg?react"
-import { fetchUser, loginWithEmail } from "../../apis/auth.api.ts"
+import { DeviceType, fetchUser, loginWithEmail } from "../../apis/auth.api.ts"
 import { CircularProgress } from "@mui/material"
 import { requestForToken } from "../../libs/firebase.ts"
 
@@ -62,13 +62,19 @@ const EmailLogin = () => {
       }
 
       if (window.ReactNativeWebView) {
-        window.ReactNativeWebView.postMessage(
-          JSON.stringify({
-            type: "LOGIN",
-            email: formData.email,
-            password: formData.password,
-          }),
-        )
+        await loginWithEmail({
+          username: formData.email,
+          password: formData.password,
+          deviceToken: localStorage.getItem("fcmToken"),
+          deviceType: localStorage.getItem("deviceType") as DeviceType,
+        })
+
+        const user = await fetchUser()
+
+        login({
+          user: user,
+        })
+        navigate("/")
         return
       }
 
