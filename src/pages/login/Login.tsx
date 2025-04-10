@@ -14,13 +14,6 @@ import { getGoogleLoginUrl } from "../../libs/google"
 import { getNaverLoginUrl } from "../../libs/naver"
 import { CircularProgress } from "@mui/material"
 
-declare global {
-  interface Window {
-    osType?: "ios" | "android" | "web"
-    fcmToken?: string
-  }
-}
-
 const Login = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
