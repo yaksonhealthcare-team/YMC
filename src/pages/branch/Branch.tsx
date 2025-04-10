@@ -40,7 +40,7 @@ const Branch = () => {
     category: null,
     latitude: (selectedLocation?.coords || currentLocation)?.latitude,
     longitude: (selectedLocation?.coords || currentLocation)?.longitude,
-    enabled: !!(selectedLocation?.coords || currentLocation),
+    enabled: true,
   })
 
   const queryClient = useQueryClient()
