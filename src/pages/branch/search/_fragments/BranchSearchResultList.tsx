@@ -15,7 +15,6 @@ const BranchSearchResultList = ({
   query,
   onSelect,
 }: BranchSearchResultListProps) => {
-  const debouncedQuery = useDebounce(query, 300)
   const { location, loading: locationLoading } = useGeolocation()
 
   const {
@@ -29,7 +28,7 @@ const BranchSearchResultList = ({
     latitude: location?.latitude,
     longitude: location?.longitude,
     brandCode: "",
-    search: debouncedQuery,
+    search: query,
   })
 
   // 위치 정보를 로딩 중인 경우 로딩 표시
