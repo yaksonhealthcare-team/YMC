@@ -24,7 +24,7 @@ export const BrandDetailPage = () => {
 
   return (
     <div className="relative w-full h-full flex flex-col">
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto pb-[100px]">
         {brandDetail?.descriptionImageUrls?.map((url, index) => (
           <div key={index} className="w-full">
             <Image
