@@ -8,36 +8,44 @@ import React, { useEffect } from "react"
 const AppBridge = ({ children }: { children?: React.ReactNode }) => {
   const { login } = useAuth()
   useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      const data = JSON.parse(event.data)
+
+      // TODO: 개발 환경일 때만 로그 찍도록
+      window.ReactNativeWebView?.postMessage(
+        JSON.stringify({
+          type: "CONSOLE_LOG",
+          data: `Received message: ${data}`,
+        }),
+      )
+
+      let result
+      try {
+        result = JSON.parse(data)
+      } catch {
+        result = data
+      }
+
+      if (result.type) {
+        switch (result.type) {
+          case "SOCIAL_LOGIN":
+            handleSocialLogin(result.data)
+            break
+          case "FCM_TOKEN":
+            handleFcmToken(result.data)
+            break
+          case "DEVICE_TYPE":
+            handleDeviceType(result.data)
+            break
+        }
+      }
+    }
+
     if (window.ReactNativeWebView) {
-      window.ReactNativeWebView.onMessage = (data: string) => {
-        // TODO: 개발 환경일 때만 로그 찍도록
-        window.ReactNativeWebView?.postMessage(
-          JSON.stringify({
-            type: "CONSOLE_LOG",
-            data: `Received message: ${data}`,
-          }),
-        )
+      window.addEventListener("message", handleMessage)
 
-        let result
-        try {
-          result = JSON.parse(data)
-        } catch {
-          result = data
-        }
-
-        if (result.type) {
-          switch (result.type) {
-            case "SOCIAL_LOGIN":
-              handleSocialLogin(result.data)
-              break
-            case "FCM_TOKEN":
-              handleFcmToken(result.data)
-              break
-            case "DEVICE_TYPE":
-              handleDeviceType(result.data)
-              break
-          }
-        }
+      return () => {
+        window.removeEventListener("message", handleMessage)
       }
     }
   }, [window.ReactNativeWebView])
