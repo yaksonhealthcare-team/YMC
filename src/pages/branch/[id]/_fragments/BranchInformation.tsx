@@ -91,7 +91,7 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
               <p>{branch.phoneNumber}</p>
             </IconSection>
           </div>
-          {branch.images.length > 0 && branch.images[0] !== "" && (
+          {branch.images && branch.images.length > 0 && (
             <button
               className={"relative"}
               onClick={() => setOpenImageModal(true)}

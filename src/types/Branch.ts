@@ -135,7 +135,9 @@ export interface BranchBookmarkResult {
 
 export interface BranchDetailResponse {
   b_idx: string
-  img_lists: string[]
+  img_lists: {
+    com_file_url: string
+  }[]
   brand_code: string
   brand_name: string
   b_name: string

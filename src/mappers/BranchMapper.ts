@@ -88,7 +88,7 @@ export class BranchMapper {
       name: dto.b_name,
       brand: dto.brand_name,
       brandCode: dto.brand_code,
-      images: dto.img_lists,
+      images: dto.img_lists.flatMap((item) => item.com_file_url),
       location: {
         address: dto.location.b_addr,
         latitude: Number(dto.location.b_lat),
