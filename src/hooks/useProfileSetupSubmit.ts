@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import {
   fetchUser,
   loginWithEmail,
+  setAccessToken,
   signinWithSocial,
   signup,
   signupWithSocial,
@@ -66,7 +67,7 @@ export const useProfileSetupSubmit = () => {
         )
       }
 
-      await signinWithSocial({
+      const signinResponse = await signinWithSocial({
         thirdPartyType: socialInfo.thirdPartyType,
         SocialAccessToken: response.body[0].accessToken,
         socialId: socialInfo.socialId,
@@ -75,6 +76,16 @@ export const useProfileSetupSubmit = () => {
         deviceToken: socialInfo.deviceToken,
         deviceType: socialInfo.deviceType,
       })
+
+      if (!signinResponse.data.body[0]?.accessToken) {
+        throw new Error(
+          signinResponse?.data.resultMessage ||
+            "로그인 응답에 accessToken이 없습니다",
+        )
+      }
+
+      const accessToken = signinResponse.data.body[0].accessToken
+      setAccessToken(accessToken)
 
       const user = await fetchUser()
       login({ user })

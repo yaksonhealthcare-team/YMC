@@ -2,7 +2,11 @@ import LoadingIndicator from "@components/LoadingIndicator"
 import { AxiosError } from "axios"
 import { useEffect, useRef } from "react"
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"
-import { fetchUser, signinWithSocial } from "../../apis/auth.api"
+import {
+  fetchUser,
+  setAccessToken,
+  signinWithSocial,
+} from "../../apis/auth.api"
 import { useAuth } from "../../contexts/AuthContext"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useOverlay } from "../../contexts/ModalContext"
@@ -57,7 +61,7 @@ const OAuthCallback = () => {
         try {
           const fcmToken = await requestForToken()
 
-          await signinWithSocial({
+          const signinResponse = await signinWithSocial({
             SocialAccessToken: socialData.SocialAccessToken,
             thirdPartyType: getProviderCode(provider),
             socialId: socialData.socialId,
@@ -66,6 +70,10 @@ const OAuthCallback = () => {
             id_token: socialData.id_token,
             SocialRefreshToken: socialData.SocialRefreshToken,
           })
+
+          const accessToken = signinResponse.data.body[0].accessToken
+          setAccessToken(accessToken)
+
           const user = await fetchUser()
           login({ user })
           navigate("/", { replace: true })

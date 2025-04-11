@@ -1,5 +1,9 @@
-import { DeviceType, fetchUser, signinWithSocial } from "@apis/auth.api"
-import { AxiosError } from "axios"
+import {
+  DeviceType,
+  fetchUser,
+  setAccessToken,
+  signinWithSocial,
+} from "@apis/auth.api"
 import { useAuth } from "contexts/AuthContext"
 import { SocialSignupInfo } from "contexts/SignupContext"
 import { axiosClient } from "queries/clients"
@@ -8,7 +12,7 @@ import React, { useEffect } from "react"
 const AppBridge = ({ children }: { children?: React.ReactNode }) => {
   const { login } = useAuth()
   useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
+    const handleMessage = async (event: MessageEvent) => {
       const data = JSON.parse(event.data)
 
       // TODO: 개발 환경일 때만 로그 찍도록
@@ -19,23 +23,16 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
         }),
       )
 
-      let result
-      try {
-        result = JSON.parse(data)
-      } catch {
-        result = data
-      }
-
-      if (result.type) {
-        switch (result.type) {
+      if (data.type) {
+        switch (data.type) {
           case "SOCIAL_LOGIN":
-            handleSocialLogin(result.data)
+            handleSocialLogin(data.data)
             break
           case "FCM_TOKEN":
-            handleFcmToken(result.data)
+            handleFcmToken(data.data)
             break
           case "DEVICE_TYPE":
-            handleDeviceType(result.data)
+            handleDeviceType(data.data)
             break
         }
       }
@@ -82,13 +79,19 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
     }
 
     try {
+      window.ReactNativeWebView?.postMessage(
+        JSON.stringify({
+          type: "CONSOLE_LOG",
+          data: `소셜 로그인 처리 중 오류: ${JSON.stringify(data)}`,
+        }),
+      )
       // 소셜 로그인 처리 - provider가 문자열인 경우 적절한 코드로 변환
       const providerCode =
         typeof data.provider === "string"
           ? getProviderCode(data.provider)
           : data.provider
 
-      await signinWithSocial({
+      const signinResponse = await signinWithSocial({
         SocialAccessToken: data.accessToken,
         socialId: data.socialId,
         thirdPartyType: providerCode,
@@ -97,37 +100,45 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
         id_token: data.idToken,
         SocialRefreshToken: data.refreshToken,
       })
+
+      const accessToken = signinResponse.data.body[0].accessToken
+      setAccessToken(accessToken)
+
       const user = await fetchUser()
       login({ user })
       window.location.href = "/"
       return
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        if (error.response?.status === 401) {
-          const providerCode =
-            typeof data.provider === "string"
-              ? getProviderCode(data.provider)
-              : data.provider
+    } catch (error: any) {
+      window.ReactNativeWebView?.postMessage(
+        JSON.stringify({
+          type: "CONSOLE_LOG",
+          data: `소셜 로그인 처리 중 오류: ${JSON.stringify(error)}`,
+        }),
+      )
+      if (error.response.status === 401) {
+        window.location.href = "/signup/terms"
 
-          const socialSignupInfo: SocialSignupInfo = {
-            next_action_type: "signup",
-            thirdPartyType: providerCode,
-            socialId: data.socialId,
-            SocialAccessToken: data.accessToken,
-            email: data.email,
-            deviceToken: data.deviceToken,
-            deviceType: data.deviceType,
-            SocialRefreshToken: data.refreshToken,
-            id_token: data.idToken,
-          }
-          sessionStorage.setItem(
-            "socialSignupInfo",
-            JSON.stringify(socialSignupInfo),
-          )
+        const providerCode =
+          typeof data.provider === "string"
+            ? getProviderCode(data.provider)
+            : data.provider
 
-          window.location.href = "/signup/terms"
-          return
+        const socialSignupInfo: SocialSignupInfo = {
+          next_action_type: "signup",
+          thirdPartyType: providerCode,
+          socialId: data.socialId,
+          SocialAccessToken: data.accessToken,
+          email: data.email,
+          deviceToken: data.deviceToken,
+          deviceType: data.deviceType,
+          SocialRefreshToken: data.refreshToken,
+          id_token: data.idToken,
         }
+        sessionStorage.setItem(
+          "socialSignupInfo",
+          JSON.stringify(socialSignupInfo),
+        )
+
         throw error
       }
     }

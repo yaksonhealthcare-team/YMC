@@ -2,19 +2,10 @@ import { UserMapper } from "../mappers/UserMapper.ts"
 import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
 import { UpdateUserProfileRequest, User, UserResponse } from "../types/User.ts"
-import { useAuthStore } from "../stores/auth.store"
 import axios from "axios"
 
 interface SignInResponseBody {
   accessToken: string
-}
-
-export interface SignInResponse extends HTTPResponse<SignInResponseBody[]> {
-  Header: [
-    {
-      // refreshToken 필드가 더 이상 존재하지 않음 (쿠키로 대체됨)
-    },
-  ]
 }
 
 export type DeviceType = "android" | "ios" | "web"
@@ -40,8 +31,6 @@ export const loginWithEmail = async ({
   })
 
   const accessToken = data.body[0].accessToken
-  // 인증 상태 설정
-  useAuthStore.getState().setAuthenticated(true)
 
   axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`
 
@@ -62,8 +51,6 @@ export const refreshAccessToken = async (): Promise<string | null> => {
     )
 
     if (response.data.resultCode !== "00") {
-      // 리프레시 토큰 만료 또는 유효하지 않음
-      useAuthStore.getState().setAuthenticated(false)
       return null
     }
 
@@ -77,7 +64,6 @@ export const refreshAccessToken = async (): Promise<string | null> => {
     return accessToken
   } catch (error) {
     console.error("토큰 갱신 중 오류 발생:", error)
-    useAuthStore.getState().setAuthenticated(false)
     return null
   }
 }
@@ -129,9 +115,6 @@ export const signupWithSocial = async ({
     { withCredentials: true },
   ) // 쿠키를 받기 위해 추가
 
-  // 인증 상태 설정
-  useAuthStore.getState().setAuthenticated(true)
-
   return response.data
 }
 
@@ -182,9 +165,6 @@ export const signup = async (signupData: SignupFormData) => {
     withCredentials: true,
   }) // 쿠키를 받기 위해 추가
 
-  // 인증 상태 설정
-  useAuthStore.getState().setAuthenticated(true)
-
   return data
 }
 
@@ -209,26 +189,17 @@ export class UserNotFoundError extends Error {
   }
 }
 
-export async function signinWithSocial(
-  request: SignInWithSocialRequest,
-): Promise<SignInWithSocialResponse> {
-  const { data } = await axiosClient.post<SignInResponse>(
+export function signinWithSocial(request: SignInWithSocialRequest) {
+  return axiosClient.post<HTTPResponse<SignInResponseBody[]>>(
     "/auth/signin/social",
     request,
     { withCredentials: true }, // 쿠키를 받기 위해 추가
   )
-
-  const accessToken = data.body[0].accessToken
-  // 인증 상태 설정
-  useAuthStore.getState().setAuthenticated(true)
-
-  axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`
-
-  return {
-    accessToken,
-  }
 }
 
+export const setAccessToken = (accessToken: string) => {
+  axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`
+}
 export const withdrawal = async () => {
   const response = await axiosClient.delete(`/auth/withdrawal`)
   return response.data
@@ -237,9 +208,6 @@ export const withdrawal = async () => {
 export const logout = async () => {
   // axiosClient의 기본 Authorization 헤더 제거
   delete axiosClient.defaults.headers.common.Authorization
-
-  // 클라이언트 측 인증 상태 업데이트
-  useAuthStore.getState().setAuthenticated(false)
 }
 
 export const findEmail = async ({
