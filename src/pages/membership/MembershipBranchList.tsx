@@ -24,7 +24,7 @@ const MembershipBranchList = ({
   const location = useLocation()
   const navigate = useNavigate()
   const { location: geolocationLocation, error: _ } = useGeolocation()
-  const { setSelectedBranch } = useReservationFormStore()
+  const { setFormData } = useReservationFormStore()
 
   const debouncedQuery = useDebounce(query, 300)
   const s_idx = location.state?.s_idx ?? location.state?.membershipId
@@ -82,7 +82,9 @@ const MembershipBranchList = ({
     if (onSelect) {
       onSelect(branchData)
     } else {
-      setSelectedBranch(branchData)
+      setFormData({
+        branch: branchData.b_idx,
+      })
       navigate(-1)
     }
   }

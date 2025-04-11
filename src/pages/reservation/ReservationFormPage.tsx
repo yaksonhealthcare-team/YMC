@@ -34,9 +34,9 @@ const ReservationFormPage = () => {
   const membershipIdFromUrl = searchParams.get("membershipId")
   const { handleError } = useErrorHandler()
   const [showBranchModal, setShowBranchModal] = useState(false)
+  const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
 
-  const { formData, setFormData, selectedBranch, setSelectedBranch, clearAll } =
-    useReservationFormStore()
+  const { formData, setFormData, clearAll } = useReservationFormStore()
 
   // 초기 데이터 설정
   useEffect(() => {
@@ -242,7 +242,7 @@ const ReservationFormPage = () => {
         addServices={formData.additionalServices.map((service) =>
           Number(service.s_idx),
         )}
-        b_idx={selectedBranch?.b_idx || ""}
+        b_idx={formData.branch || ""}
       />,
       { height: "large" },
     )
@@ -262,19 +262,16 @@ const ReservationFormPage = () => {
     }
   }, [formData, handleError])
 
-  const handleBranchSelect = useCallback(
-    (branch: Branch) => {
-      setSelectedBranch(branch)
-      setFormData({
-        ...formData,
-        branch: branch.b_idx,
-        timeSlot: null,
-        date: null,
-      })
-      setShowBranchModal(false)
-    },
-    [setSelectedBranch, setFormData],
-  )
+  const handleBranchSelect = useCallback((branch: Branch) => {
+    setSelectedBranch(branch)
+    setFormData({
+      ...formData,
+      branch: branch.b_idx,
+      timeSlot: null,
+      date: null,
+    })
+    setShowBranchModal(false)
+  }, [])
 
   const handleCloseBranchModal = useCallback(() => {
     setShowBranchModal(false)
@@ -301,7 +298,7 @@ const ReservationFormPage = () => {
   const handleConsultationReservation = async () => {
     try {
       if (!validateReservationData()) return
-      if (!selectedBranch) {
+      if (!formData.branch) {
         handleError(new Error("지점을 선택해주세요."))
         return
       }
@@ -309,7 +306,7 @@ const ReservationFormPage = () => {
       const response = await createReservation({
         r_gubun: "C",
         mp_idx: formData.item,
-        b_idx: selectedBranch.b_idx,
+        b_idx: formData.branch,
         r_date: formatDateForAPI(formData.date?.toDate() || null),
         r_stime: formData.timeSlot!.time,
         r_memo: formData.request,
@@ -335,7 +332,7 @@ const ReservationFormPage = () => {
   const handleMembershipReservation = async () => {
     try {
       if (!validateReservationData()) return
-      if (!selectedBranch) {
+      if (!formData.branch) {
         handleError(new Error("지점을 선택해주세요."))
         return
       }
@@ -344,7 +341,7 @@ const ReservationFormPage = () => {
       const reservationResponse = await createReservation({
         r_gubun: "R",
         mp_idx: formData.item,
-        b_idx: selectedBranch.b_idx,
+        b_idx: formData.branch,
         r_date: formatDateForAPI(formData.date?.toDate() || null),
         r_stime: formData.timeSlot!.time,
         add_services: formData.additionalServices.map((service) =>
