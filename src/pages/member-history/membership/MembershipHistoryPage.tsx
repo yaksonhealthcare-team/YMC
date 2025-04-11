@@ -12,7 +12,7 @@ import {
 import MainTabs from "../_fragments/MainTabs"
 import { Button } from "@components/Button"
 import clsx from "clsx"
-import AddMembershipIcon from "@assets/icons/AddMembershipIcon.svg?react"
+// import AddMembershipIcon from "@assets/icons/AddMembershipIcon.svg?react"
 import { getStatusFromString } from "../../../utils/membership"
 import { useMembershipStore } from "stores/membershipStore"
 
@@ -129,7 +129,7 @@ const FilterContent = ({
 }
 
 const MembershipHistoryPage = () => {
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { filter: membershipFilter, setFilter: setMembershipFilter } =
     useMembershipStore()
@@ -160,12 +160,12 @@ const MembershipHistoryPage = () => {
       />
 
       <MembershipContent filterId={membershipFilter.id} />
-      <button
+      {/* <button
         className="fixed bottom-[98px] right-5 w-14 h-14 bg-primary-300 text-white rounded-full shadow-lg hover:bg-primary-400  transition-colors duration-200 z-10"
         onClick={() => navigate("/membership")}
       >
         <AddMembershipIcon className="w-8 h-8 mx-auto text-white" />
-      </button>
+      </button> */}
     </div>
   )
 }
