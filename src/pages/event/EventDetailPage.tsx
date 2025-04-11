@@ -67,13 +67,17 @@ const EventContent = ({ event }: { event: EventDetail }) => {
 
   return (
     <div className="self-stretch flex flex-col gap-3">
-      {event.files?.length > 0 && event.files[0].fileurl && (
-        <div className="relative w-full h-[200px] md:h-[400px]">
-          <Image
-            src={event.files[0].fileurl}
-            alt={event.title}
-            className="w-full h-full object-cover rounded-lg"
-          />
+      {event.files?.length > 0 && (
+        <div className="flex flex-col gap-4">
+          {event.files.map((file, index) => (
+            <div key={file.fileCode} className="relative w-full">
+              <Image
+                src={file.fileurl}
+                alt={`${event.title} 이미지 ${index + 1}`}
+                className="w-full rounded-lg"
+              />
+            </div>
+          ))}
         </div>
       )}
       <div
