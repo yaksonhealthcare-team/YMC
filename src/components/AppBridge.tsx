@@ -1,4 +1,4 @@
-import { fetchUser, signinWithSocial } from "@apis/auth.api"
+import { DeviceType, fetchUser, signinWithSocial } from "@apis/auth.api"
 import { AxiosError } from "axios"
 import { useAuth } from "contexts/AuthContext"
 import { SocialSignupInfo } from "contexts/SignupContext"
@@ -88,8 +88,8 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
         SocialAccessToken: data.accessToken,
         socialId: data.socialId,
         thirdPartyType: providerCode,
-        deviceToken: data.deviceToken,
-        deviceType: data.deviceType,
+        deviceToken: localStorage.getItem("FCM_TOKEN"),
+        deviceType: localStorage.getItem("DEVICE_TYPE") as DeviceType,
         id_token: data.idToken,
         SocialRefreshToken: data.refreshToken,
       })
@@ -136,12 +136,6 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
         }
       }
 
-      window.ReactNativeWebView?.postMessage(
-        JSON.stringify({
-          type: "CONSOLE_LOG",
-          data: `Error: ${JSON.stringify(error)}`,
-        }),
-      )
       throw error
     }
   }
