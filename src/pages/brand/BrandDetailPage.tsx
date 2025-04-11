@@ -29,7 +29,7 @@ export const BrandDetailPage = () => {
           key={index}
           src={url}
           alt={`${brandName} 설명 이미지 ${index + 1}`}
-          className="w-full h-full border-8"
+          className="w-full h-full border-8 border-white"
         />
       ))}
 
