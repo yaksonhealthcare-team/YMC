@@ -1,4 +1,5 @@
-import { fetchUser, signinWithSocial, UserNotFoundError } from "@apis/auth.api"
+import { fetchUser, signinWithSocial } from "@apis/auth.api"
+import { AxiosError } from "axios"
 import { useAuth } from "contexts/AuthContext"
 import { SocialSignupInfo } from "contexts/SignupContext"
 import { axiosClient } from "queries/clients"
@@ -97,42 +98,44 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
       window.location.href = "/"
       return
     } catch (error) {
-      if (error instanceof UserNotFoundError) {
-        // provider가 문자열인 경우 적절한 코드로 변환
-        const providerCode =
-          typeof data.provider === "string"
-            ? getProviderCode(data.provider)
-            : data.provider
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 401) {
+          const providerCode =
+            typeof data.provider === "string"
+              ? getProviderCode(data.provider)
+              : data.provider
 
-        const socialSignupInfo: SocialSignupInfo = {
-          next_action_type: "signup",
-          thirdPartyType: providerCode,
-          socialId: data.socialId,
-          SocialAccessToken: data.accessToken,
-          email: data.email,
-          deviceToken: data.deviceToken,
-          deviceType: data.deviceType,
-          SocialRefreshToken: data.refreshToken,
-          id_token: data.idToken,
-        }
-        sessionStorage.setItem(
-          "socialSignupInfo",
-          JSON.stringify(socialSignupInfo),
-        )
-
-        // Apple 로그인인 경우 회원가입 페이지로 이동하기 전 로그
-        if (data.provider === "A" || data.provider === "apple") {
-          window.ReactNativeWebView?.postMessage(
-            JSON.stringify({
-              type: "CONSOLE_LOG",
-              data: "Apple 회원가입 진행 중...",
-            }),
+          const socialSignupInfo: SocialSignupInfo = {
+            next_action_type: "signup",
+            thirdPartyType: providerCode,
+            socialId: data.socialId,
+            SocialAccessToken: data.accessToken,
+            email: data.email,
+            deviceToken: data.deviceToken,
+            deviceType: data.deviceType,
+            SocialRefreshToken: data.refreshToken,
+            id_token: data.idToken,
+          }
+          sessionStorage.setItem(
+            "socialSignupInfo",
+            JSON.stringify(socialSignupInfo),
           )
-        }
 
-        window.location.href = "/signup/terms"
-        return
+          // Apple 로그인인 경우 회원가입 페이지로 이동하기 전 로그
+          if (data.provider === "A" || data.provider === "apple") {
+            window.ReactNativeWebView?.postMessage(
+              JSON.stringify({
+                type: "CONSOLE_LOG",
+                data: "Apple 회원가입 진행 중...",
+              }),
+            )
+          }
+
+          window.location.href = "/signup/terms"
+          return
+        }
       }
+
       window.ReactNativeWebView?.postMessage(
         JSON.stringify({
           type: "CONSOLE_LOG",

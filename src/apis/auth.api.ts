@@ -212,28 +212,20 @@ export class UserNotFoundError extends Error {
 export async function signinWithSocial(
   request: SignInWithSocialRequest,
 ): Promise<SignInWithSocialResponse> {
-  try {
-    const { data } = await axiosClient.post<SignInResponse>(
-      "/auth/signin/social",
-      request,
-      { withCredentials: true }, // 쿠키를 받기 위해 추가
-    )
+  const { data } = await axiosClient.post<SignInResponse>(
+    "/auth/signin/social",
+    request,
+    { withCredentials: true }, // 쿠키를 받기 위해 추가
+  )
 
-    const accessToken = data.body[0].accessToken
-    // 인증 상태 설정
-    useAuthStore.getState().setAuthenticated(true)
+  const accessToken = data.body[0].accessToken
+  // 인증 상태 설정
+  useAuthStore.getState().setAuthenticated(true)
 
-    axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`
+  axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`
 
-    return {
-      accessToken,
-    }
-  } catch (error: any) {
-    // 401 에러는 사용자를 찾을 수 없는 경우
-    if (error.response?.status === 401) {
-      throw new UserNotFoundError()
-    }
-    throw error
+  return {
+    accessToken,
   }
 }
 
