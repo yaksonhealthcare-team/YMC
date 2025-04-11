@@ -11,10 +11,6 @@ interface ApiResponse<T> {
   body: T
 }
 
-// 플랫폼 감지를 위한 변수
-const isReactNative =
-  typeof navigator !== "undefined" && navigator.product === "ReactNative"
-
 // 전역 에러 메시지 표시를 위한 함수
 let globalShowToast: ((message: string) => void) | null = null
 
@@ -22,33 +18,13 @@ export const setGlobalShowToast = (showToast: (message: string) => void) => {
   globalShowToast = showToast
 }
 
-// React Native 로깅을 위한 함수
-let reactNativeLogger:
-  | ((level: "info" | "error" | "warn", message: string, data?: any) => void)
-  | null = null
-
-export const setReactNativeLogger = (
-  logger: (
-    level: "info" | "error" | "warn",
-    message: string,
-    data?: any,
-  ) => void,
-) => {
-  reactNativeLogger = logger
-}
-
 const showErrorMessage = (message: string, errorData?: any) => {
   if (globalShowToast) {
     globalShowToast(message)
   }
 
-  if (isReactNative && reactNativeLogger) {
-    // React Native 환경에서 로깅
-    reactNativeLogger("error", message, errorData)
-  } else {
-    // 웹 환경에서 로깅
-    console.error(message, errorData)
-  }
+  // 웹 환경에서 로깅
+  console.error(message, errorData)
 }
 
 const queryClient = new QueryClient({
