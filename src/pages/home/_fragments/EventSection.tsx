@@ -38,7 +38,7 @@ export const EventSection = () => {
                     <img
                       src={event.files[0].fileurl}
                       alt={event.title}
-                      className="w-full h-full object-cover absolute inset-0"
+                      className="w-full h-full object-cover object-top absolute inset-0"
                     />
                   </div>
                 )}
