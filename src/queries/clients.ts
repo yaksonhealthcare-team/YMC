@@ -1,7 +1,6 @@
 import { QueryClient } from "@tanstack/react-query"
 import axios, { AxiosResponse, AxiosRequestConfig, AxiosError } from "axios"
 import { getErrorMessage, ERROR_CODES } from "../types/Error"
-import { useAuthStore } from "../stores/auth.store"
 import { refreshAccessToken } from "../apis/auth.api"
 
 interface ApiResponse<T> {
@@ -123,9 +122,6 @@ axiosClient.interceptors.response.use(
           // 토큰 갱신 실패
           processQueue(new Error("토큰 갱신 실패"), null)
 
-          // 인증 상태 업데이트
-          useAuthStore.getState().setAuthenticated(false)
-
           return Promise.reject({
             response: {
               data: data,
@@ -141,9 +137,6 @@ axiosClient.interceptors.response.use(
           code: ERROR_CODES.TOKEN_EXPIRED,
           url: response.config?.url,
         })
-
-        // 인증 상태 업데이트
-        useAuthStore.getState().setAuthenticated(false)
 
         return Promise.reject(error)
       } finally {
@@ -210,7 +203,7 @@ axiosClient.interceptors.response.use(
       })
     }
 
-    return error
+    return Promise.reject(error)
   },
 )
 
