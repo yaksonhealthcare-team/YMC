@@ -15,7 +15,7 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
       window.ReactNativeWebView?.postMessage(
         JSON.stringify({
           type: "CONSOLE_LOG",
-          data: `Received message: ${data}`,
+          data,
         }),
       )
 
