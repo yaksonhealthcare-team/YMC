@@ -27,13 +27,15 @@ const CareProgramTabItem = ({
       return <div className={"w-[68px] h-[68px] rounded-full bg-primary"} />
     }
     return program.sc_pic ? (
-      <Image
-        src={program.sc_pic}
-        alt={"배경"}
-        className={
-          "w-[68px] h-[68px] rounded-full object-cover opacity-45 bg-[#212121]"
-        }
-      />
+      <div
+        className={"w-[68px] h-[68px] rounded-full bg-[rgba(33,33,33,0.45)]"}
+      >
+        <Image
+          src={program.sc_pic}
+          alt={"배경"}
+          className={"w-[68px] h-[68px] rounded-full object-contain"}
+        />
+      </div>
     ) : (
       <div
         className={"w-[68px] h-[68px] rounded-full bg-[rgba(33,33,33,0.45)]"}
