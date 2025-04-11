@@ -40,11 +40,7 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
         }
       }
     }
-  }, [])
-
-  if (!window.ReactNativeWebView) {
-    return <>{children}</>
-  }
+  }, [window.ReactNativeWebView])
 
   const handleSocialLogin = async (data: any) => {
     try {
