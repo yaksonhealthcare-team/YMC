@@ -23,15 +23,18 @@ export const BrandDetailPage = () => {
   }, [brandDetail])
 
   return (
-    <div className="relative w-full h-full">
-      {brandDetail?.descriptionImageUrls?.map((url, index) => (
-        <Image
-          key={index}
-          src={url}
-          alt={`${brandName} 설명 이미지 ${index + 1}`}
-          className="w-full h-full border-8 border-white"
-        />
-      ))}
+    <div className="relative w-full h-full flex flex-col">
+      <div className="flex-1 overflow-y-auto">
+        {brandDetail?.descriptionImageUrls?.map((url, index) => (
+          <div key={index} className="w-full">
+            <Image
+              src={url}
+              alt={`${brandName} 설명 이미지 ${index + 1}`}
+              className="w-full object-cover border-8 border-white"
+            />
+          </div>
+        ))}
+      </div>
 
       <div className="fixed bottom-0 w-full px-[20px] pb-[30px] pt-[12px] bg-white">
         <Button
