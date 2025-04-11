@@ -51,37 +51,37 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
   }, [window.ReactNativeWebView])
 
   const handleSocialLogin = async (data: any) => {
+    // Apple 로그인인 경우 서버 콜백 호출 (provider가 'A' 또는 'apple'인 경우)
     try {
-      // Apple 로그인인 경우 서버 콜백 호출 (provider가 'A' 또는 'apple'인 경우)
       if (data.provider === "A" || data.provider === "apple") {
-        try {
-          // 콜백 시작 로그
-          window.ReactNativeWebView?.postMessage(
-            JSON.stringify({
-              type: "CONSOLE_LOG",
-              data: "Apple 로그인 콜백 호출 시작",
-            }),
-          )
+        // 콜백 시작 로그
+        window.ReactNativeWebView?.postMessage(
+          JSON.stringify({
+            type: "CONSOLE_LOG",
+            data: "Apple 로그인 콜백 호출 시작",
+          }),
+        )
 
-          // 서버의 Apple 콜백 API 호출 (환경 변수가 전체 URL이므로 마지막 경로만 추출)
-          const appleCallbackUrl = "auth/apple_callback"
-          await axiosClient.post(appleCallbackUrl, {
-            code: data.authorizationCode,
-          })
+        // 서버의 Apple 콜백 API 호출 (환경 변수가 전체 URL이므로 마지막 경로만 추출)
+        const appleCallbackUrl = "auth/apple_callback"
+        await axiosClient.post(appleCallbackUrl, {
+          code: data.authorizationCode,
+        })
 
-          return
-        } catch (callbackError: any) {
-          // 콜백 오류 상세 정보 로그 출력
-          window.ReactNativeWebView?.postMessage(
-            JSON.stringify({
-              type: "CONSOLE_LOG",
-              data: `Apple 콜백 처리 중 오류: ${callbackError.message || JSON.stringify(callbackError)}`,
-            }),
-          )
-          // 콜백 오류가 발생해도 계속 진행 (서버에서는 이미 처리했을 수 있음)
-        }
+        return
       }
+    } catch (callbackError: any) {
+      // 콜백 오류 상세 정보 로그 출력
+      window.ReactNativeWebView?.postMessage(
+        JSON.stringify({
+          type: "CONSOLE_LOG",
+          data: `Apple 콜백 처리 중 오류: ${callbackError.message || JSON.stringify(callbackError)}`,
+        }),
+      )
+      throw callbackError
+    }
 
+    try {
       // 소셜 로그인 처리 - provider가 문자열인 경우 적절한 코드로 변환
       const providerCode =
         typeof data.provider === "string"
@@ -125,22 +125,11 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
             JSON.stringify(socialSignupInfo),
           )
 
-          // Apple 로그인인 경우 회원가입 페이지로 이동하기 전 로그
-          if (data.provider === "A" || data.provider === "apple") {
-            window.ReactNativeWebView?.postMessage(
-              JSON.stringify({
-                type: "CONSOLE_LOG",
-                data: "Apple 회원가입 진행 중...",
-              }),
-            )
-          }
-
           window.location.href = "/signup/terms"
           return
         }
+        throw error
       }
-
-      throw error
     }
   }
 
