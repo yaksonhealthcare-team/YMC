@@ -12,7 +12,6 @@ import { SignupProvider } from "../contexts/SignupContext.tsx"
 import { OverlayProvider } from "../contexts/ModalContext.tsx"
 import LoadingIndicator from "@components/LoadingIndicator"
 import ErrorPage from "@components/ErrorPage"
-import AppBridge from "@components/AppBridge.tsx"
 
 export const createRoutes = () => {
   const mapRoutes = (routes: RouteConfig[]): RouteObject[] => {
@@ -51,8 +50,6 @@ export const createRoutes = () => {
 
 export const AppRouter = () => (
   <AuthProvider>
-    <AppBridge>
-      <RouterProvider router={createRoutes()} />
-    </AppBridge>
+    <RouterProvider router={createRoutes()} />
   </AuthProvider>
 )

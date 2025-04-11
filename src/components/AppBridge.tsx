@@ -8,9 +8,12 @@ import { useAuth } from "contexts/AuthContext"
 import { SocialSignupInfo } from "contexts/SignupContext"
 import { axiosClient } from "queries/clients"
 import React, { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 
 const AppBridge = ({ children }: { children?: React.ReactNode }) => {
   const { login } = useAuth()
+  const navigate = useNavigate()
+
   useEffect(() => {
     const handleMessage = async (event: MessageEvent) => {
       const data = JSON.parse(event.data)
@@ -106,7 +109,7 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
 
       const user = await fetchUser()
       login({ user })
-      window.location.href = "/"
+      navigate("/", { replace: true })
       return
     } catch (error: any) {
       window.ReactNativeWebView?.postMessage(
