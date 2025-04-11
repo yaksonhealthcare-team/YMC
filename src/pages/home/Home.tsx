@@ -120,7 +120,7 @@ const Home = () => {
                     clickable: true,
                   }}
                   slidesPerView={1}
-                  className="w-full h-[144px] rounded-2xl"
+                  className="w-full aspect-[8/5] rounded-2xl"
                   loop={true}
                 >
                   <style>
@@ -160,7 +160,7 @@ const Home = () => {
                           <img
                             src={banner.fileUrl}
                             alt={banner.title}
-                            className="w-full h-[144px] object-cover rounded-2xl"
+                            className="w-full h-full object-cover rounded-2xl"
                           />
                         </button>
                       </SwiperSlide>
