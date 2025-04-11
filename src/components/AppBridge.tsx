@@ -82,12 +82,6 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
     }
 
     try {
-      window.ReactNativeWebView?.postMessage(
-        JSON.stringify({
-          type: "CONSOLE_LOG",
-          data: `소셜 로그인 처리 중 오류: ${JSON.stringify(data)}`,
-        }),
-      )
       // 소셜 로그인 처리 - provider가 문자열인 경우 적절한 코드로 변환
       const providerCode =
         typeof data.provider === "string"
