@@ -88,11 +88,11 @@ export const useBranch = (
     enabled: options?.enabled ?? true,
   })
 
-export const useBranchBookmarksQuery = (coords?: Coordinate) => {
+export const useBranchBookmarksQuery = (key: string, coords?: Coordinate) => {
   return useQuery({
-    queryKey: ["branchBookmarks", coords],
+    queryKey: ["branchBookmarks", key, coords],
     queryFn: () => getBranchBookmarks(coords),
-    enabled: !!coords,
+    enabled: true,
     retry: false,
   })
 }

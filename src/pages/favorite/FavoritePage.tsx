@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { EmptyCard } from "../../components/EmptyCard.tsx"
 import LoadingIndicator from "../../components/LoadingIndicator.tsx"
@@ -16,7 +16,11 @@ const FavoritePage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const { location, loading: locationLoading } = useGeolocation()
-  const { data, isLoading: branchesLoading } = useBranchBookmarksQuery(location)
+  const [key, setKey] = useState<number>(0)
+  const { data, isLoading: branchesLoading } = useBranchBookmarksQuery(
+    key.toString(),
+    location,
+  )
   const { mutate: removeBookmark } = useBranchUnbookmarkMutation()
   const { showToast } = useOverlay()
 
@@ -40,6 +44,7 @@ const FavoritePage = () => {
     removeBookmark(branch.b_idx, {
       onSuccess: () => {
         showToast("즐겨찾기에서 삭제했어요.")
+        setKey(key + 1)
       },
     })
   }
