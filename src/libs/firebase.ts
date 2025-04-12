@@ -1,5 +1,4 @@
 import { initializeApp } from "@firebase/app"
-import { getAuth } from "@firebase/auth"
 import { getMessaging, getToken, onMessage } from "firebase/messaging"
 
 const firebaseConfig = {
@@ -14,7 +13,6 @@ const firebaseConfig = {
 
 // Firebase 초기화는 앱에서 한 번만 해야 함
 const app = initializeApp(firebaseConfig)
-export const auth = getAuth(app)
 
 // 알림 권한 요청
 export async function requestNotificationPermission(): Promise<boolean> {
