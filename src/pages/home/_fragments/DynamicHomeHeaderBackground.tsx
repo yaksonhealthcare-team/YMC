@@ -2,14 +2,7 @@ import { memo, ReactNode, useEffect, useRef, useState } from "react"
 
 const ContentNode = memo(({ content }: { content: ReactNode }) => {
   return (
-    <div
-      className="relative w-full bg-cover bg-center px-8"
-      style={{
-        backgroundImage: `url("/assets/home_card_mid.png")`,
-      }}
-    >
-      {content}
-    </div>
+    <div className="relative w-full bg-cover bg-center px-8">{content}</div>
   )
 })
 
@@ -43,11 +36,17 @@ const DynamicHomeHeaderBackground = memo(
           </div>
         </div>
 
-        {content && <ContentNode content={content} />}
+        <div className="relative w-full bg-cover bg-center">
+          <img
+            src="/assets/home_card_mid.png"
+            alt=""
+            className="absolute top-0 left-0 w-full h-full "
+          />
+          {content && <ContentNode content={content} />}
 
-        {contents &&
-          contents.map((item, i) => <ContentNode key={i} content={item} />)}
-
+          {contents &&
+            contents.map((item, i) => <ContentNode key={i} content={item} />)}
+        </div>
         <img src="/assets/home_card_bottom.png" alt="" className="w-full" />
       </div>
     )
