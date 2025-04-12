@@ -8,23 +8,6 @@ import EventIcon from "@assets/icons/EventIcon.svg?react"
 import NoticeIcon from "@assets/icons/NoticeIcon.svg?react"
 import NotificationIcon from "@assets/icons/NotificationIcon.svg?react"
 
-interface CustomWindow extends Window {
-  ReactNativeWebView?: {
-    postMessage: (message: string) => void
-    onMessage: (value: string) => void
-  }
-  webkit?: {
-    messageHandlers: {
-      openExternalLink: {
-        postMessage: (url: string) => void
-      }
-    }
-  }
-  Android?: {
-    openExternalLink: (url: string) => void
-  }
-}
-
 const menuItems = [
   {
     id: "favorite",
@@ -73,7 +56,7 @@ const menuItems = [
 
 const MyPageMenu = () => {
   const navigate = useNavigate()
-  const customWindow = window as CustomWindow
+  const customWindow = window
 
   const handleClick = (item: (typeof menuItems)[0]) => {
     if (item.external) {
