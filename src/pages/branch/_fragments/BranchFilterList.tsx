@@ -88,7 +88,7 @@ const BranchFilterListItem = ({
           >
             {branch.distanceInMeters && (
               <p className="font-r text-12px text-gray-400">
-                {branch.distanceInMeters}
+                {Math.ceil(Number(branch.distanceInMeters))}m
               </p>
             )}
           </div>
