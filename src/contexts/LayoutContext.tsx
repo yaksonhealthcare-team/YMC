@@ -1,7 +1,7 @@
-import { createContext, useContext, useState, useEffect } from "react"
+import { createContext, useContext, useState, useEffect, useRef } from "react"
 import PageContainer from "@components/PageContainer.tsx"
 import { Typography } from "@mui/material"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import Header from "@components/Header.tsx"
 
 type NavigationConfig = {
@@ -55,6 +55,15 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
     display: true,
     title: "THERAPIST",
   })
+  const location = useLocation()
+  const pageContainerRef = useRef<HTMLDivElement>(null)
+
+  // 경로 변경 시 스크롤을 맨 위로 이동
+  useEffect(() => {
+    if (pageContainerRef.current) {
+      pageContainerRef.current.scrollTo(0, 0)
+    }
+  }, [location.pathname])
 
   // 안전영역 색상 설정
   useEffect(() => {
@@ -143,7 +152,10 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
         setTitle,
       }}
     >
-      <PageContainer className={header.backgroundColor || "bg-system-bg"}>
+      <PageContainer
+        ref={pageContainerRef}
+        className={header.backgroundColor || "bg-system-bg"}
+      >
         {header.display && renderHeader()}
         {children}
         {navigation.display && (
