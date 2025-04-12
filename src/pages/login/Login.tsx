@@ -1,6 +1,6 @@
 import { Button } from "@components/Button"
 import Logo from "@components/Logo"
-import { Typography } from "@mui/material"
+import { CircularProgress, Typography } from "@mui/material"
 import { getKakaoLoginUrl } from "libs/kakao"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -12,8 +12,6 @@ import { useLayout } from "../../contexts/LayoutContext"
 import { getAppleLoginUrl } from "../../libs/apple"
 import { getGoogleLoginUrl } from "../../libs/google"
 import { getNaverLoginUrl } from "../../libs/naver"
-import { CircularProgress } from "@mui/material"
-import AppBridge from "@components/AppBridge"
 
 const Login = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -121,79 +119,75 @@ const Login = () => {
   }
 
   return (
-    <AppBridge>
-      <div className="flex flex-col min-h-[100vh] bg-[#F8F5F2]">
-        {/* 로고 */}
-        <div className="mt-[30%] mb-[10%] flex justify-center">
-          <Logo text size={191} />
-        </div>
+    <div className="flex flex-col min-h-[100vh] bg-[#F8F5F2]">
+      {/* 로고 */}
+      <div className="mt-[30%] mb-[10%] flex justify-center">
+        <Logo text size={191} />
+      </div>
 
-        {/* 로그인 버튼 그룹 */}
-        <div className="flex flex-col gap-3 px-5 mt-auto mb-auto">
-          {/* 카카오 로그인 */}
-          {renderSocialLoginButton(
-            "kakao",
-            <KakaoIcon className="w-6 h-6" />,
-            "카카오톡으로 로그인",
-            "bg-[#FEE500]",
+      {/* 로그인 버튼 그룹 */}
+      <div className="flex flex-col gap-3 px-5 mt-auto mb-auto">
+        {/* 카카오 로그인 */}
+        {renderSocialLoginButton(
+          "kakao",
+          <KakaoIcon className="w-6 h-6" />,
+          "카카오톡으로 로그인",
+          "bg-[#FEE500]",
+        )}
+
+        {/* 네이버 로그인 */}
+        {renderSocialLoginButton(
+          "naver",
+          <NaverIcon className="w-6 h-6 text-white" />,
+          "네이버로 로그인",
+          "bg-[#03C75A]",
+          "text-white",
+        )}
+
+        {/* 구글 로그인 (웹 또는 Android에서만 표시) */}
+        {(!osType || osType === "android") &&
+          renderSocialLoginButton(
+            "google",
+            <GoogleIcon className="w-6 h-6" />,
+            "Google로 로그인",
+            "bg-white",
+            "text-[#212121]",
+            "[#ECECEC]",
           )}
 
-          {/* 네이버 로그인 */}
-          {renderSocialLoginButton(
-            "naver",
-            <NaverIcon className="w-6 h-6 text-white" />,
-            "네이버로 로그인",
-            "bg-[#03C75A]",
+        {/* 애플 로그인 (웹 또는 iOS에서만 표시) */}
+        {(!osType || osType === "ios") &&
+          renderSocialLoginButton(
+            "apple",
+            <AppleIcon className="w-6 h-6 text-white" />,
+            "Apple로 로그인",
+            "bg-[#000000]",
             "text-white",
           )}
 
-          {/* 구글 로그인 (웹 또는 Android에서만 표시) */}
-          {(!osType || osType === "android") &&
-            renderSocialLoginButton(
-              "google",
-              <GoogleIcon className="w-6 h-6" />,
-              "Google로 로그인",
-              "bg-white",
-              "text-[#212121]",
-              "[#ECECEC]",
-            )}
-
-          {/* 애플 로그인 (웹 또는 iOS에서만 표시) */}
-          {(!osType || osType === "ios") &&
-            renderSocialLoginButton(
-              "apple",
-              <AppleIcon className="w-6 h-6 text-white" />,
-              "Apple로 로그인",
-              "bg-[#000000]",
-              "text-white",
-            )}
-
-          {/* 이메일 로그인 */}
-          <Button
-            fullCustom
-            sizeType="l"
-            className="bg-primary border-primary text-white font-b flex items-center px-5 h-[52px] rounded-[12px] relative"
-            onClick={() => navigate("/login/email")}
-          >
-            <div className="w-6 h-6 absolute left-5" />
-            <span className="flex-1 text-center text-16px">
-              이메일로 로그인
-            </span>
-          </Button>
-        </div>
-        <div className="mb-[7%] flex justify-center items-center gap-5">
-          <Typography className="text-gray-500 font-sb text-16px">
-            처음이신가요?
-          </Typography>
-          <button
-            onClick={() => navigate("/signup/terms")}
-            className="text-primary font-sb text-16px underline"
-          >
-            회원가입
-          </button>
-        </div>
+        {/* 이메일 로그인 */}
+        <Button
+          fullCustom
+          sizeType="l"
+          className="bg-primary border-primary text-white font-b flex items-center px-5 h-[52px] rounded-[12px] relative"
+          onClick={() => navigate("/login/email")}
+        >
+          <div className="w-6 h-6 absolute left-5" />
+          <span className="flex-1 text-center text-16px">이메일로 로그인</span>
+        </Button>
       </div>
-    </AppBridge>
+      <div className="mb-[7%] flex justify-center items-center gap-5">
+        <Typography className="text-gray-500 font-sb text-16px">
+          처음이신가요?
+        </Typography>
+        <button
+          onClick={() => navigate("/signup/terms")}
+          className="text-primary font-sb text-16px underline"
+        >
+          회원가입
+        </button>
+      </div>
+    </div>
   )
 }
 
