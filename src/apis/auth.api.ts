@@ -2,7 +2,6 @@ import { UserMapper } from "../mappers/UserMapper.ts"
 import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
 import { UpdateUserProfileRequest, User, UserResponse } from "../types/User.ts"
-import axios from "axios"
 
 interface SignInResponseBody {
   accessToken: string
@@ -43,7 +42,7 @@ export const refreshAccessToken = async (): Promise<string | null> => {
   try {
     // refreshToken이 쿠키에 있으므로 명시적으로 가져올 필요 없음
     // 자동으로 쿠키가 요청과 함께 전송됨
-    const response = await axios.get(
+    const response = await axiosClient.get(
       `${import.meta.env.VITE_API_BASE_URL}/auth/crypto/tokenreissue.php`,
       {
         withCredentials: true, // 쿠키를 요청과 함께 전송하기 위해 필요
