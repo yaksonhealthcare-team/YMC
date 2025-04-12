@@ -25,6 +25,8 @@ export const createRoutes = () => {
 
       if (window.ReactNativeWebView) {
         element = <AppBridge>{element}</AppBridge>
+      } else {
+        localStorage.removeItem("accessToken")
       }
 
       if (route.auth) {
