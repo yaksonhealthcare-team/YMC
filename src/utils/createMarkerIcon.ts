@@ -77,6 +77,12 @@ export const createMarkerIcon = (
       "bookmark": DietBookmarkPin,
       "active-bookmark": DietActiveBookmarkPin,
     },
+    "약손명가": {
+      "default": TherapistPin,
+      "active": TherapistActivePin,
+      "bookmark": TherapistBookmarkPin,
+      "active-bookmark": TherapistActiveBookmarkPin,
+    },
   } as const
 
   const brandKey = branch.brand as keyof typeof iconMap
