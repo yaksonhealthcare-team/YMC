@@ -11,6 +11,7 @@ import { useAuth } from "../../contexts/AuthContext"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useOverlay } from "../../contexts/ModalContext"
 import { requestForToken } from "../../libs/firebase"
+import { saveAccessToken } from "../../queries/clients"
 
 const OAuthCallback = () => {
   const { provider } = useParams()
@@ -73,6 +74,11 @@ const OAuthCallback = () => {
 
           const accessToken = signinResponse.data.body[0].accessToken
           setAccessToken(accessToken)
+
+          // ReactNativeWebView 환경에서 localStorage에 accessToken 저장
+          if (window.ReactNativeWebView) {
+            saveAccessToken(accessToken)
+          }
 
           const user = await fetchUser()
           login({ user })

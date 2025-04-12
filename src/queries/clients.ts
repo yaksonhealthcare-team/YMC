@@ -3,6 +3,34 @@ import axios, { AxiosResponse, AxiosRequestConfig, AxiosError } from "axios"
 import { getErrorMessage, ERROR_CODES } from "../types/Error"
 import { refreshAccessToken } from "../apis/auth.api"
 
+// localStorage 토큰 관리 유틸리티 함수
+const TOKEN_KEY = "access_token"
+
+export const saveAccessToken = (token: string) => {
+  try {
+    localStorage.setItem(TOKEN_KEY, token)
+  } catch (error) {
+    console.error("토큰 저장 중 오류 발생:", error)
+  }
+}
+
+export const getAccessToken = (): string | null => {
+  try {
+    return localStorage.getItem(TOKEN_KEY)
+  } catch (error) {
+    console.error("토큰 불러오기 중 오류 발생:", error)
+    return null
+  }
+}
+
+export const removeAccessToken = () => {
+  try {
+    localStorage.removeItem(TOKEN_KEY)
+  } catch (error) {
+    console.error("토큰 삭제 중 오류 발생:", error)
+  }
+}
+
 interface ApiResponse<T> {
   resultCode: string
   resultMessage: string
@@ -47,6 +75,11 @@ const axiosClient = axios.create({
 })
 
 axiosClient.interceptors.request.use(async (config) => {
+  // 요청 전에 localStorage에서 토큰을 가져와 헤더에 추가
+  const token = getAccessToken()
+  if (token && config.headers) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
   return config
 })
 
@@ -105,7 +138,29 @@ axiosClient.interceptors.response.use(
       isRefreshing = true
 
       try {
-        // 토큰 갱신 시도
+        // localStorage에서 토큰 확인
+        const storedToken = getAccessToken()
+        if (storedToken && response.config.headers) {
+          const currentAuthHeader = response.config.headers.Authorization
+          const currentToken =
+            typeof currentAuthHeader === "string"
+              ? currentAuthHeader.replace("Bearer ", "")
+              : ""
+
+          if (storedToken !== currentToken) {
+            // localStorage의 토큰이 현재 요청에 사용된 토큰과 다르면 이 토큰으로 재시도
+            const config = response.config
+            config.headers.Authorization = `Bearer ${storedToken}`
+
+            // 대기 중인 요청들 처리
+            processQueue(null, storedToken)
+
+            isRefreshing = false
+            return axiosClient(config)
+          }
+        }
+
+        // localStorage 토큰이 없거나 같은 토큰이면 토큰 갱신 시도
         const newToken = await refreshAccessToken()
 
         if (newToken) {

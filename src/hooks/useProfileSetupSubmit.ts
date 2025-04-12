@@ -11,6 +11,7 @@ import {
 import { useAuth } from "../contexts/AuthContext"
 import { useOverlay } from "../contexts/ModalContext"
 import { useSignup } from "../contexts/SignupContext"
+import { saveAccessToken } from "../queries/clients"
 
 type SocialProvider = "N" | "K" | "G" | "A"
 
@@ -86,6 +87,11 @@ export const useProfileSetupSubmit = () => {
 
       const accessToken = signinResponse.data.body[0].accessToken
       setAccessToken(accessToken)
+
+      // ReactNativeWebView 환경에서 localStorage에 accessToken 저장
+      if (window.ReactNativeWebView) {
+        saveAccessToken(accessToken)
+      }
 
       const user = await fetchUser()
       login({ user })

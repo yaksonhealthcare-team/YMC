@@ -6,7 +6,7 @@ import {
 } from "@apis/auth.api"
 import { useAuth } from "contexts/AuthContext"
 import { SocialSignupInfo } from "contexts/SignupContext"
-import { axiosClient } from "queries/clients"
+import { axiosClient, saveAccessToken } from "queries/clients"
 import React, { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -100,6 +100,11 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
 
       const accessToken = signinResponse.data.body[0].accessToken
       setAccessToken(accessToken)
+
+      // ReactNativeWebView 환경에서 localStorage에 accessToken 저장
+      if (window.ReactNativeWebView) {
+        saveAccessToken(accessToken)
+      }
 
       const user = await fetchUser()
       login({ user })
