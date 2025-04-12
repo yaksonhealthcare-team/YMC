@@ -1,3 +1,4 @@
+import SplashScreen from "@components/Splash.tsx"
 import { useAuth } from "../contexts/AuthContext.tsx"
 import { Navigate } from "react-router-dom"
 
@@ -6,7 +7,11 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { user } = useAuth()
+  const { user, isLoading } = useAuth()
+
+  if (isLoading) {
+    return <SplashScreen />
+  }
 
   if (!user) {
     return <Navigate to="/login" replace />

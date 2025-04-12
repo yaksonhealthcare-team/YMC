@@ -1,17 +1,23 @@
-import React, { createContext, useContext, useEffect, useState } from "react"
-import SplashScreen from "@components/Splash.tsx"
-import { User } from "../types/User.ts"
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from "react"
 import { fetchUser, logout as logoutApi } from "../apis/auth.api.ts"
 import { queryClient } from "../queries/clients.ts"
+import { User } from "../types/User.ts"
 
-type AuthContextType = {
+interface AuthContextType {
   user: User | null
   login: (userData: { user: User }) => void
   logout: () => void
   isLoading: boolean
-} | null
+}
 
-const AuthContext = createContext<AuthContextType>(null)
+const AuthContext = createContext<AuthContextType | null>(null)
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -20,14 +26,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (user) {
-      return
-    }
-
     const loadUser = async () => {
+      setIsLoading(true)
       try {
-        const user = await fetchUser()
-        setUser(user)
+        const fetchedUser = await fetchUser()
+        setUser(fetchedUser)
       } catch (error) {
         console.error("Failed to validate user session", error)
         setUser(null)
@@ -39,11 +42,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     loadUser()
   }, [])
 
-  const login = ({ user }: { user: User }) => {
-    setUser(user)
-  }
+  const login = useCallback(({ user: userData }: { user: User }) => {
+    setUser(userData)
+  }, [])
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await logoutApi()
     } catch (error) {
@@ -51,17 +54,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } finally {
       setUser(null)
       sessionStorage.removeItem("socialSignupInfo")
-
-      // 모든 쿼리 캐시 초기화
       queryClient.clear()
     }
-  }
+  }, [])
 
-  const value = { user, login, logout, isLoading } as AuthContextType
-
-  if (isLoading) {
-    return <SplashScreen />
-  }
+  const value = useMemo(
+    () => ({ user, login, logout, isLoading }),
+    [user, isLoading, login, logout],
+  )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
