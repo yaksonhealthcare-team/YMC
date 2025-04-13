@@ -273,7 +273,7 @@ const ReservationFormPage = () => {
       })
       setShowBranchModal(false)
     },
-    [setFormData],
+    [formData],
   )
 
   const handleCloseBranchModal = useCallback(() => {
