@@ -98,7 +98,9 @@ export const useAppBridge = () => {
 
       const user = await fetchUser()
       login({ user })
-      navigate("/", { replace: true })
+      if (location.pathname === "/login") {
+        navigate("/", { replace: true })
+      }
       return
     } catch (error: any) {
       window.ReactNativeWebView?.postMessage(
