@@ -37,10 +37,16 @@ export const useAppBridge = () => {
       return
     }
 
-    if (localStorage.getItem("osType") === "android") {
+    if (window.osType === "android") {
       document.addEventListener("message", (e: any) => handleMessage(e))
+      return () => {
+        document.removeEventListener("message", (e: any) => handleMessage(e))
+      }
     } else {
       window.addEventListener("message", (e: any) => handleMessage(e))
+      return () => {
+        window.removeEventListener("message", (e: any) => handleMessage(e))
+      }
     }
   }, [])
 
