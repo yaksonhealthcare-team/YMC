@@ -12,8 +12,6 @@ const FindAccountCallback = () => {
   const { parseNiceAuthData } = useNiceAuthCallback()
 
   useEffect(() => {
-    const jsonData = searchParams.get("jsonData")
-
     const handleVerification = async () => {
       // 공통 유틸리티로 나이스 인증 데이터 파싱
       const userData = parseNiceAuthData(jsonData, "/find-account")
@@ -57,10 +55,12 @@ const FindAccountCallback = () => {
       }
     }
 
+    const jsonData = searchParams.get("jsonData")
+
     if (jsonData) {
       handleVerification()
     }
-  }, [navigate, openModal, tab, searchParams, parseNiceAuthData])
+  }, [])
 
   return (
     <div className="flex items-center justify-center min-h-screen">
