@@ -128,6 +128,13 @@ axiosClient.interceptors.response.use(
 
     // 액세스 토큰 만료 처리
     if (data.resultCode === ERROR_CODES.TOKEN_EXPIRED) {
+      // Check if the user explicitly logged out
+      const isLoggedOut = localStorage.getItem("isLoggedOut") === "true"
+      if (isLoggedOut) {
+        processQueue(new Error("User is logged out"), null)
+        return Promise.reject({ response: { data: data, status: 401 } })
+      }
+
       if (isRefreshing) {
         // 이미 토큰 갱신 중이면 대기열에 추가
         return new Promise((resolve, reject) => {
@@ -187,11 +194,13 @@ axiosClient.interceptors.response.use(
       } catch (error) {
         processQueue(error, null)
 
-        // 토큰 만료 에러 메시지 표시
-        showErrorMessage(getErrorMessage(ERROR_CODES.TOKEN_EXPIRED), {
-          code: ERROR_CODES.TOKEN_EXPIRED,
-          url: response.config?.url,
-        })
+        // 토큰 만료 또는 갱신 실패 시 isLoggedOut 상태가 아니면 에러 메시지 표시
+        if (localStorage.getItem("isLoggedOut") !== "true") {
+          showErrorMessage(getErrorMessage(ERROR_CODES.TOKEN_EXPIRED), {
+            code: ERROR_CODES.TOKEN_EXPIRED,
+            url: response.config?.url,
+          })
+        }
 
         return Promise.reject(error)
       } finally {

@@ -21,6 +21,7 @@ const MyPageFooter = () => {
       message: "로그아웃 하시겠습니까?",
       onConfirm: () => {
         localStorage.clear()
+        localStorage.setItem("isLoggedOut", "true")
         window.ReactNativeWebView?.postMessage(
           JSON.stringify({
             type: "LOGOUT",
