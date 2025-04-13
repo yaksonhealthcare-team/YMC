@@ -262,16 +262,19 @@ const ReservationFormPage = () => {
     }
   }, [formData, handleError])
 
-  const handleBranchSelect = useCallback((branch: Branch) => {
-    setSelectedBranch(branch)
-    setFormData({
-      ...formData,
-      branch: branch.b_idx,
-      timeSlot: null,
-      date: null,
-    })
-    setShowBranchModal(false)
-  }, [])
+  const handleBranchSelect = useCallback(
+    (branch: Branch) => {
+      setSelectedBranch(branch)
+      setFormData({
+        ...formData,
+        branch: branch.b_idx,
+        timeSlot: null,
+        date: null,
+      })
+      setShowBranchModal(false)
+    },
+    [setFormData],
+  )
 
   const handleCloseBranchModal = useCallback(() => {
     setShowBranchModal(false)
