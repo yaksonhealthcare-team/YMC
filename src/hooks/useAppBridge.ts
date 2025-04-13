@@ -7,24 +7,16 @@ import {
 import { useAuth } from "contexts/AuthContext"
 import { SocialSignupInfo } from "contexts/SignupContext"
 import { axiosClient, saveAccessToken } from "queries/clients"
-import React, { useEffect } from "react"
+import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
-const AppBridge = ({ children }: { children?: React.ReactNode }) => {
+export const useAppBridge = () => {
   const { login } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
     const handleMessage = async (event: MessageEvent) => {
       const data = JSON.parse(event.data)
-
-      // TODO: 개발 환경일 때만 로그 찍도록
-      window.ReactNativeWebView?.postMessage(
-        JSON.stringify({
-          type: "CONSOLE_LOG",
-          data,
-        }),
-      )
 
       if (data.type) {
         switch (data.type) {
@@ -41,14 +33,12 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
       }
     }
 
-    if (window.ReactNativeWebView) {
-      window.addEventListener("message", handleMessage)
-
-      return () => {
-        window.removeEventListener("message", handleMessage)
-      }
+    if (localStorage.getItem("osType") === "android") {
+      document.addEventListener("message", (e: any) => handleMessage(e))
+    } else {
+      window.addEventListener("message", (e: any) => handleMessage(e))
     }
-  }, [window.ReactNativeWebView])
+  }, [])
 
   const handleSocialLogin = async (data: any) => {
     // Apple 로그인인 경우 서버 콜백 호출 (provider가 'A' 또는 'apple'인 경우)
@@ -170,7 +160,5 @@ const AppBridge = ({ children }: { children?: React.ReactNode }) => {
     localStorage.setItem("FCM_TOKEN", data.fcmToken)
   }
 
-  return <>{children}</>
+  return null
 }
-
-export default AppBridge

@@ -12,7 +12,6 @@ import { SignupProvider } from "../contexts/SignupContext.tsx"
 import { OverlayProvider } from "../contexts/ModalContext.tsx"
 import LoadingIndicator from "@components/LoadingIndicator"
 import ErrorPage from "@components/ErrorPage"
-import AppBridge from "@components/AppBridge.tsx"
 
 export const createRoutes = () => {
   const mapRoutes = (routes: RouteConfig[]): RouteObject[] => {
@@ -21,12 +20,6 @@ export const createRoutes = () => {
 
       if (route.path?.startsWith("/signup")) {
         element = <SignupProvider>{element}</SignupProvider>
-      }
-
-      if (window.ReactNativeWebView) {
-        element = <AppBridge>{element}</AppBridge>
-      } else {
-        localStorage.removeItem("accessToken")
       }
 
       if (route.auth) {
