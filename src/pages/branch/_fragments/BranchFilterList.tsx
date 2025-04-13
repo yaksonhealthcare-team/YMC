@@ -88,7 +88,9 @@ const BranchFilterListItem = ({
           >
             {branch.distanceInMeters && (
               <p className="font-r text-12px text-gray-400">
-                {Math.ceil(Number(branch.distanceInMeters))}m
+                {branch.distanceInMeters.includes("m")
+                  ? branch.distanceInMeters
+                  : `${Math.ceil(Number(branch.distanceInMeters))}m`}
               </p>
             )}
           </div>
@@ -182,7 +184,7 @@ const BranchFilterList = ({
   if (totalCount === 0) {
     return (
       <div className={clsx("flex flex-col h-full", className)}>
-        <div className="px-5 flex-none bg-white">
+        <div className="pt-[16px] px-5 flex-none bg-white">
           <p
             className="font-m text-14px text-gray-700"
             role="status"
@@ -206,18 +208,18 @@ const BranchFilterList = ({
 
   return (
     <div className={clsx("flex flex-col h-full", className)}>
-      <div className="px-5 flex-none bg-white">
-        <p
-          className="font-m text-14px text-gray-700"
-          role="status"
-          aria-live="polite"
-        >
-          {"총 "}
-          <span className="font-b">{totalCount}</span>
-          {"개의 지점을 찾았습니다."}
-        </p>
-      </div>
       <div className="flex-1 overflow-y-auto">
+        <div className="pt-[16px] px-5 flex-none bg-white">
+          <p
+            className="font-m text-14px text-gray-700"
+            role="status"
+            aria-live="polite"
+          >
+            {"총 "}
+            <span className="font-b">{totalCount}</span>
+            {"개의 지점을 찾았습니다."}
+          </p>
+        </div>
         <ul
           className="divide-y px-5 pb-[82px]"
           role="listbox"

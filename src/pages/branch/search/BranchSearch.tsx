@@ -24,7 +24,7 @@ const BranchSearch = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="px-5 pt-5 pb-6 shrink-0">
+      <div className="px-5 pt-5 shrink-0">
         <SearchField
           value={query}
           onChange={(e) => setQuery(e.target.value)}
