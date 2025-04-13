@@ -1,7 +1,6 @@
 import { useOverlay } from "contexts/ModalContext"
 import { useNavigate } from "react-router-dom"
 import clsx from "clsx"
-import { removeAccessToken } from "queries/clients"
 
 const BUTTON_STYLES = {
   base: clsx(
@@ -21,7 +20,7 @@ const MyPageFooter = () => {
       title: "로그아웃",
       message: "로그아웃 하시겠습니까?",
       onConfirm: () => {
-        removeAccessToken()
+        localStorage.clear()
         window.ReactNativeWebView?.postMessage(
           JSON.stringify({
             type: "LOGOUT",
