@@ -33,6 +33,10 @@ export const useAppBridge = () => {
       }
     }
 
+    if (!window.ReactNativeWebView) {
+      return
+    }
+
     if (localStorage.getItem("osType") === "android") {
       document.addEventListener("message", (e: any) => handleMessage(e))
     } else {
