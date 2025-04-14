@@ -62,7 +62,7 @@ const EmailLogin = () => {
       }
 
       if (window.ReactNativeWebView) {
-        loginWithEmail({
+        await loginWithEmail({
           username: formData.email,
           password: formData.password,
           deviceToken: localStorage.getItem("FCM_TOKEN") ?? "",
