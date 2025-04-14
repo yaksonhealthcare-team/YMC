@@ -32,16 +32,24 @@ const BranchMapSection = ({
   const { location: selectedLocation } = useBranchLocationSelect()
   const { location: currentLocation, loading: locationLoading } =
     useGeolocation()
-  const [center, setCenter] = useState<Coordinate | null>(null)
+  const [center, setCenter] = useState<Coordinate>()
   const { mutateAsync: addBookmark } = useBranchBookmarkMutation()
   const { mutateAsync: removeBookmark } = useBranchUnbookmarkMutation()
 
+  // 위치 이동 감지 및 처리
+  const handleMapMove = (newCenter: Coordinate) => {
+    onMoveMap(newCenter)
+  }
+
   useEffect(() => {
     // 초기 로딩 시 현재 위치 또는 선택된 위치를 기준으로 설정
-    const initialCoords = selectedLocation?.coords || currentLocation
-    if (initialCoords) {
-      setCenter(initialCoords)
-    }
+    const initialCoords = selectedLocation?.coords ||
+      currentLocation || {
+        latitude: 37.5665,
+        longitude: 126.978,
+      }
+    setCenter(initialCoords)
+    handleMapMove(initialCoords)
   }, [])
 
   useEffect(() => {
@@ -58,13 +66,8 @@ const BranchMapSection = ({
     )
   }
 
-  // 위치 이동 감지 및 처리
-  const handleMapMove = (newCenter: Coordinate) => {
-    onMoveMap(newCenter)
-  }
-
   return (
-    <div className={"relative flex flex-col flex-1 h-full overflow-hidden"}>
+    <div className={"relative w-full  h-full "}>
       <MapView
         center={center}
         branches={branches}

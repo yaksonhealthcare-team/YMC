@@ -309,7 +309,7 @@ const Branch = () => {
 
   return (
     <div
-      className={`flex flex-col ${screen === "list" ? "pt-[48px]" : "pt-[0px]"}`}
+      className={`flex flex-col w-full h-full ${screen === "list" ? "pt-[48px]" : "pt-[0px]"}`}
     >
       {renderScreen()}
       <div
