@@ -21,14 +21,21 @@ export const MembershipCardSection = ({
   const navigate = useNavigate()
 
   const renderContent = () => {
-    if (isLoading) return <LoadingIndicator className="py-8" />
+    if (isLoading)
+      return (
+        <div className="min-h-[150px] flex items-center justify-center">
+          <LoadingIndicator className="py-8" />
+        </div>
+      )
     if (memberships.length === 0) {
       return (
-        <EmptyCard
-          title={`사용 가능한 회원권이 없어요.\n회원권 구매 후 예약이 가능해요.`}
-          // button="회원권 구매하기"
-          // onClick={() => navigate("/membership")}
-        />
+        <div className="min-h-[150px] flex items-center justify-center">
+          <EmptyCard
+            title={`사용 가능한 회원권이 없어요.\n회원권 구매 후 예약이 가능해요.`}
+            // button="회원권 구매하기"
+            // onClick={() => navigate("/membership")}
+          />
+        </div>
       )
     }
     return (
