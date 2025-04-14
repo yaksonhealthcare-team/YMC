@@ -90,6 +90,8 @@ export const useAppBridge = () => {
         const appleCallbackUrl = "auth/apple_callback"
         await axiosClient.post(appleCallbackUrl, {
           code: data.authorizationCode,
+          id_token: data.idToken,
+          state: "state",
         })
         return
       }
@@ -98,7 +100,7 @@ export const useAppBridge = () => {
       window.ReactNativeWebView?.postMessage(
         JSON.stringify({
           type: "CONSOLE_LOG",
-          data: `Apple 콜백 처리 중 오류: ${callbackError.message || JSON.stringify(callbackError)}`,
+          data: `Apple 콜백 처리 중 오류: ${JSON.stringify(callbackError)}`,
         }),
       )
       throw callbackError
