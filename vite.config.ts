@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react-swc"
 import tsconfigPaths from "vite-tsconfig-paths"
 import svgr from "vite-plugin-svgr"
 import compression from "vite-plugin-compression"
+import vitePreload from "vite-plugin-preload"
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,6 +14,7 @@ export default defineConfig({
     react(),
     tsconfigPaths(),
     svgr(),
+    vitePreload(),
     compression({
       algorithm: "gzip", // 'gzip' | 'brotliCompress' | 'deflate' | 'deflateRaw'
       ext: ".gz", // 압축된 파일의 확장자
