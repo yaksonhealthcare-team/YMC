@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import { QuestionItem } from "./_fragments/QuestionItem"
 import {
   Question,
@@ -39,7 +39,6 @@ const getFieldName = (question: Question): QuestionFieldName => {
 
 const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
   const location = useLocation()
-  const navigate = useNavigate()
   const { returnPath = "/", returnText = "메인 홈으로" } = location.state || {}
 
   const {
@@ -55,6 +54,7 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
     setIsCurrentValid,
     setHasChanges,
     handleNext,
+    handlePrev,
   } = useQuestionnaire({
     type,
     returnPath,
@@ -70,14 +70,6 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
 
   if (isLoading || !questions) {
     return <LoadingIndicator className="min-h-screen" />
-  }
-
-  const handlePrev = () => {
-    if (location.state?.fromSignup) {
-      navigate("/")
-    } else {
-      navigate(returnPath)
-    }
   }
 
   return (
