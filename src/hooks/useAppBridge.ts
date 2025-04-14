@@ -49,6 +49,12 @@ export const useAppBridge = () => {
             break
         }
       }
+
+      window.ReactNativeWebView?.postMessage(
+        JSON.stringify({
+          type: "LOADING_END",
+        }),
+      )
     }
 
     if (!window.ReactNativeWebView) {
@@ -85,7 +91,6 @@ export const useAppBridge = () => {
         await axiosClient.post(appleCallbackUrl, {
           code: data.authorizationCode,
         })
-
         return
       }
     } catch (callbackError: any) {
