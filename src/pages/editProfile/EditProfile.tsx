@@ -32,7 +32,7 @@ const EditProfile = () => {
   const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const [gender, setGender] = useState<Gender>(user?.gender || "M")
+  const [gender, setGender] = useState<Gender>(user?.gender ?? "M")
   const [address, setAddress] = useState({
     ...user!.address,
     postalCode: user!.postalCode,
@@ -85,7 +85,7 @@ const EditProfile = () => {
 
     setIsSubmitting(true)
     try {
-      let finalProfileUrl = profileImageUrl || ""
+      let finalProfileUrl = profileImageUrl ?? ""
 
       // 프로필 이미지가 변경되었고 새 이미지 파일이 있는 경우 이미지 업로드
       if (isProfileImageChanged && profileImageFile) {
@@ -141,13 +141,6 @@ const EditProfile = () => {
   const handleImageChange = (file: File | null) => {
     setIsProfileImageChanged(true)
     setProfileImageFile(file)
-
-    if (file) {
-      const imageUrl = URL.createObjectURL(file)
-      setProfileImageUrl(imageUrl)
-    } else {
-      setProfileImageUrl(undefined)
-    }
   }
 
   const handleClickBackButton = () => {
@@ -235,6 +228,7 @@ const EditProfile = () => {
         <ProfileImageButton
           profileImageUrl={profileImageUrl}
           onImageChange={handleImageChange}
+          onPreviewImageChange={setProfileImageUrl}
         />
       </div>
       <div className={"mx-5 mt-5"}>

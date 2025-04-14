@@ -7,7 +7,8 @@ import { useOverlay } from "../../../contexts/ModalContext"
 
 interface ProfileImageButtonProps {
   profileImageUrl?: string
-  onImageChange?: (file: File | null) => void
+  onImageChange: (file: File | null) => void
+  onPreviewImageChange: (previewImage: string) => void
 }
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
@@ -15,6 +16,7 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 const ProfileImageButton = ({
   profileImageUrl,
   onImageChange,
+  onPreviewImageChange,
 }: ProfileImageButtonProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { showToast } = useOverlay()
@@ -34,8 +36,9 @@ const ProfileImageButton = ({
       }
 
       const reader = new FileReader()
-      reader.onloadend = () => {
-        onImageChange?.(file)
+      reader.onload = () => {
+        onImageChange(file)
+        onPreviewImageChange(reader.result as string)
       }
       reader.readAsDataURL(file)
     }
