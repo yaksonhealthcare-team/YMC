@@ -49,51 +49,13 @@ export default defineConfig({
           // 라우팅 관련 모듈 분리
           "react-router": ["react-router-dom"],
 
-          // MUI 코어 기능만 포함
-          "mui-core": [
+          // MUI 모든 모듈을 하나의 청크로 통합
+          "mui-all": [
+            "@mui/material",
             "@mui/material/styles",
             "@emotion/react",
             "@emotion/styled",
-          ],
-
-          // 자주 사용되는 MUI 컴포넌트들을 별도 청크로 분리
-          "mui-common": [
-            "@mui/material/Button",
-            "@mui/material/TextField",
-            "@mui/material/Box",
-            "@mui/material/Typography",
-            "@mui/material/Container",
-            "@mui/material/Grid",
-            "@mui/material/Card",
-            "@mui/material/Paper",
-            "@mui/material/IconButton",
-          ],
-
-          // 사용량이 적은 MUI 컴포넌트들은 다른 청크로 분리
-          "mui-complex": [
-            "@mui/material/Autocomplete",
-            "@mui/material/Slider",
-            "@mui/material/Tooltip",
-          ],
-
-          // 탭, 칩 등 특정 UI 컴포넌트 그룹화
-          "mui-navigation": [
-            "@mui/material/Tabs",
-            "@mui/material/Tab",
-            "@mui/material/Drawer",
-            "@mui/material/AppBar",
-            "@mui/material/Menu",
-            "@mui/material/MenuItem",
-          ],
-
-          // 폼 관련 컴포넌트 그룹화
-          "mui-forms": [
-            "@mui/material/InputBase",
-            "@mui/material/Select",
-            "@mui/material/Checkbox",
-            "@mui/material/Radio",
-            "@mui/material/FormControl",
-            "@mui/material/FormGroup",
+            "@mui/x-date-pickers",
           ],
 
           // date-fns 관련 모듈 최적화
@@ -133,6 +95,15 @@ export default defineConfig({
       compress: {
         drop_console: true,
         drop_debugger: true,
+      },
+      // 변수명 매핑 및 전역 변수 보존 설정
+      mangle: {
+        keep_fnames: true,
+        safari10: true,
+      },
+      format: {
+        comments: false,
+        ecma: 2020,
       },
     },
   },
