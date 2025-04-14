@@ -191,7 +191,6 @@ const ReviewFormPage = () => {
     )
   }
 
-  // TODO: Add loading indicator
   if (isLoading) {
     return <LoadingIndicator className="min-h-screen" />
   }

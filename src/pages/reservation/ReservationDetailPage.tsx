@@ -330,7 +330,6 @@ const ReservationDetailPage = () => {
         )
 
       default:
-        console.log("Status not handled:", reservation.statusCode)
         return null
     }
   }

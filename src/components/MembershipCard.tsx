@@ -113,7 +113,6 @@ export const MembershipCard = ({
             <CaretRightIcon className={STYLES.actions.historyIcon} />
           </button>
         )}
-        {/* TODO: 예약 필요 정보와 함께 이동 필요 */}
         {showReservationButton && (
           <Button
             variantType="primary"

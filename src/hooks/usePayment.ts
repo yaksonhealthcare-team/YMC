@@ -93,7 +93,6 @@ export const usePayment = () => {
       response.data.pg_info.P_AMT = calculateTotalAmount(items)
     }
 
-    console.log(response.data)
     return response.data
   }
 

@@ -17,7 +17,6 @@ export const useBanner = (
     ...options,
   })
 
-// TODO: API 구현 후 수정
 export const useBanners = (
   options?: Omit<UseQueryOptions<Banner[], Error>, "queryKey" | "queryFn">,
 ) => {

@@ -65,14 +65,6 @@ export interface CartSummary {
   total_count: number
 }
 
-/**
- * TODO: API 값 통일 필요
- * 현재:
- * - 회원권 상세(/api/memberships/detail): serviceType = "앱전용 회원권" | "지점 회원권"
- * - 장바구니 담기(/api/memberships/carts): b_type = "전지점" | "지정지점"
- *
- * 백엔드와 협의하여 둘 중 하나의 포맷으로 통일 필요
- */
 export interface CartItemPostRequest {
   s_idx: number
   ss_idx: number

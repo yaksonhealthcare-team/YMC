@@ -69,7 +69,6 @@ export default function PaymentCallbackPage() {
 
   useEffect(() => {
     console.group("💰 결제 콜백 데이터")
-    console.log("전체 URL:", window.location.href)
 
     // 이니시스 결제 응답 파라미터
     const searchParams = new URLSearchParams(location.search)
@@ -81,19 +80,10 @@ export default function PaymentCallbackPage() {
       P_NOTI: searchParams.get("P_NOTI"),
     }
 
-    console.log("이니시스 응답 파라미터:", inicisParams)
-
     // P_NOTI 파싱 (주문번호,포인트)
     const pNoti = inicisParams.P_NOTI || ""
     const [orderId = "", pointStr = "0"] = pNoti.split(",")
     const point = parseInt(pointStr) || 0
-
-    console.log("P_NOTI 파싱 결과:", {
-      원본데이터: pNoti,
-      주문번호: orderId,
-      포인트: point,
-      파싱성공여부: Boolean(orderId),
-    })
 
     // jsonData 파싱
     const jsonDataStr = searchParams.get("jsonData")
@@ -109,17 +99,8 @@ export default function PaymentCallbackPage() {
     }
 
     try {
-      console.log("Raw jsonData:", jsonDataStr)
       const decodedStr = decodeURIComponent(jsonDataStr)
-      console.log("Decoded jsonData:", decodedStr)
       const jsonData: PaymentResponse = JSON.parse(decodedStr)
-
-      console.log("결제 응답 데이터:", {
-        결과코드: jsonData.resultCode,
-        결과메시지: jsonData.resultMessage,
-        주문번호: jsonData.body?.orderid,
-        결제정보: jsonData.body?.pay_info,
-      })
 
       // 필수 데이터 검증
       if (
@@ -150,7 +131,7 @@ export default function PaymentCallbackPage() {
       }
 
       // 결제 성공 처리
-      console.log("✅ 결제 성공")
+
       setPaymentStatus(PaymentStatus.COMPLETED)
 
       // 결제 성공 시 포인트 정보 갱신
