@@ -43,7 +43,6 @@ const EditProfile = () => {
     user?.profileURL,
   )
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null)
-  const [isProfileImageChanged, setIsProfileImageChanged] = useState(false)
   const detailAddressFieldRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -88,7 +87,7 @@ const EditProfile = () => {
       let finalProfileUrl = profileImageUrl ?? ""
 
       // 프로필 이미지가 변경되었고 새 이미지 파일이 있는 경우 이미지 업로드
-      if (isProfileImageChanged && profileImageFile) {
+      if (profileImageFile) {
         try {
           const uploadedUrls = await uploadImages({
             fileToUpload: [profileImageFile],
@@ -139,7 +138,6 @@ const EditProfile = () => {
   }
 
   const handleImageChange = (file: File | null) => {
-    setIsProfileImageChanged(true)
     setProfileImageFile(file)
   }
 
@@ -207,7 +205,7 @@ const EditProfile = () => {
     if (!user) return false
 
     return (
-      isProfileImageChanged ||
+      user.profileURL !== profileImageUrl ||
       address.postalCode !== user.postalCode ||
       address.road !== user.address.road ||
       address.detail !== user.address.detail ||
