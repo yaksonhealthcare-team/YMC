@@ -1,5 +1,5 @@
 import "swiper/swiper-bundle.css"
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, lazy, Suspense } from "react"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useNavigate } from "react-router-dom"
 import { Container, Typography } from "@mui/material"
@@ -16,11 +16,33 @@ import { BannerRequestType } from "types/Banner"
 import NoticesSummarySlider from "@components/NoticesSummarySlider"
 import { useAuth } from "../../contexts/AuthContext"
 import { useUnreadNotificationsCount } from "../../queries/useNotificationQueries"
-import { MembershipCardSection } from "./../../pages/home/_fragments/MembershipCardSection"
-import { BrandSection } from "./../../pages/home/_fragments/BrandSection"
-import { EventSection } from "./../../pages/home/_fragments/EventSection"
-import { BusinessInfo } from "./../../pages/home/_fragments/BusinessInfo"
-import { ReserveCardSection } from "./../../pages/home/_fragments/ReserveCardSection"
+
+// Lazy load sections
+const LazyReserveCardSection = lazy(() =>
+  import("./../../pages/home/_fragments/ReserveCardSection").then((module) => ({
+    default: module.ReserveCardSection,
+  })),
+)
+const LazyMembershipCardSection = lazy(() =>
+  import("./../../pages/home/_fragments/MembershipCardSection").then(
+    (module) => ({ default: module.MembershipCardSection }),
+  ),
+)
+const LazyBrandSection = lazy(() =>
+  import("./../../pages/home/_fragments/BrandSection").then((module) => ({
+    default: module.BrandSection,
+  })),
+)
+const LazyEventSection = lazy(() =>
+  import("./../../pages/home/_fragments/EventSection").then((module) => ({
+    default: module.EventSection,
+  })),
+)
+const LazyBusinessInfo = lazy(() =>
+  import("./../../pages/home/_fragments/BusinessInfo").then((module) => ({
+    default: module.BusinessInfo,
+  })),
+)
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -200,15 +222,17 @@ const Home = () => {
           }
         />
 
-        <ReserveCardSection />
-        <MembershipCardSection
-          memberships={availableMemberships}
-          isLoading={membershipLoading}
-          totalCount={totalMembershipCount}
-        />
-        <BrandSection />
-        <EventSection />
-        <BusinessInfo />
+        <Suspense fallback={<div>Loading sections...</div>}>
+          <LazyReserveCardSection />
+          <LazyMembershipCardSection
+            memberships={availableMemberships}
+            isLoading={membershipLoading}
+            totalCount={totalMembershipCount}
+          />
+          <LazyBrandSection />
+          <LazyEventSection />
+          <LazyBusinessInfo />
+        </Suspense>
 
         <FloatingButton
           type="search"
