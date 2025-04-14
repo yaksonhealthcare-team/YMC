@@ -1,7 +1,11 @@
 import { QueryClient } from "@tanstack/react-query"
 import axios, { AxiosResponse, AxiosRequestConfig, AxiosError } from "axios"
 import { getErrorMessage, ERROR_CODES } from "../types/Error"
-import { refreshAccessToken } from "../apis/auth.api"
+import {
+  loginWithEmail,
+  refreshAccessToken,
+  signinWithSocial,
+} from "../apis/auth.api"
 
 // localStorage 토큰 관리 유틸리티 함수
 const TOKEN_KEY = "access_token"
@@ -14,9 +18,27 @@ export const saveAccessToken = (token: string) => {
   }
 }
 
-export const getAccessToken = (): string | null => {
+export const getAccessToken = async (): Promise<string | null> => {
   try {
-    return localStorage.getItem(TOKEN_KEY)
+    if (localStorage.getItem(TOKEN_KEY)) {
+      return localStorage.getItem(TOKEN_KEY)
+    }
+
+    if (localStorage.getItem("USER_INFO")) {
+      const userInfo = JSON.parse(localStorage.getItem("USER_INFO") ?? "{}")
+      if (userInfo.type === "SOCIAL_LOGIN") {
+        const result = await signinWithSocial(userInfo.data)
+        if (result.data.resultCode === "00") {
+          return result.data.body[0].accessToken
+        }
+      } else if (userInfo.type === "EMAIL_LOGIN") {
+        const result = await loginWithEmail(userInfo.data)
+        if (result.accessToken) {
+          return result.accessToken
+        }
+      }
+    }
+    return null
   } catch (error) {
     console.error("토큰 불러오기 중 오류 발생:", error)
     return null
@@ -146,7 +168,7 @@ axiosClient.interceptors.response.use(
 
       try {
         // localStorage에서 토큰 확인
-        const storedToken = getAccessToken()
+        const storedToken = await getAccessToken()
         if (storedToken && response.config.headers) {
           const currentAuthHeader = response.config.headers.Authorization
           const currentToken =
