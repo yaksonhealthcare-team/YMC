@@ -45,7 +45,8 @@ const ProfileImageButton = ({
   }
 
   const handleImageDelete = () => {
-    onImageChange?.(null)
+    onImageChange(null)
+    onPreviewImageChange("")
     if (fileInputRef.current) {
       fileInputRef.current.value = ""
     }
@@ -63,7 +64,6 @@ const ProfileImageButton = ({
               src={profileImageUrl}
               alt="프로필"
               className="w-full h-full rounded-full object-cover"
-              useDefaultProfile
             />
           </label>
           <button
