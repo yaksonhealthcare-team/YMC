@@ -47,16 +47,38 @@ const BranchDetail = () => {
   const handleShare = useCallback(async () => {
     try {
       if (!branch) return
+
       if (navigator.share) {
+        // 일반 웹 환경에서 Web Share API 사용
         await navigator.share({
           title: branch.name,
           text: `${branch.brand} ${branch.name}\n${branch.location.address}`,
           url: BRANCH_SHARE_URL[branch.b_idx as keyof typeof BRANCH_SHARE_URL],
         })
-      } else {
-        await navigator.clipboard.writeText(window.location.href)
-        alert("주소가 복사되었습니다.")
+        return
       }
+
+      if (window.ReactNativeWebView) {
+        // 네이티브 앱으로 공유 요청 메시지 전송
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            type: "SHARE_CONTENT",
+            payload: {
+              title: branch.name,
+              text: `${branch.brand} ${branch.name}\n${branch.location.address}`,
+              url:
+                BRANCH_SHARE_URL[
+                  branch.b_idx as keyof typeof BRANCH_SHARE_URL
+                ] || window.location.href,
+            },
+          }),
+        )
+
+        return
+      }
+      // 공유 API를 지원하지 않는 환경에서는 클립보드에 복사
+      await navigator.clipboard.writeText(window.location.href)
+      alert("주소가 복사되었습니다.")
     } catch (error) {
       console.error("공유하기 실패:", error)
     }
