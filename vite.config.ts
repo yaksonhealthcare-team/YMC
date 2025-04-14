@@ -107,11 +107,7 @@ export default defineConfig({
           "date-fns-locale": ["date-fns/locale/ko"],
 
           // 스와이퍼 코어 기능
-          "swiper-core": [
-            "swiper/react",
-            "swiper/modules/navigation",
-            "swiper/modules/pagination",
-          ],
+          "swiper-core": ["swiper/react", "swiper/modules"],
 
           // Firebase 관련 모듈
           "firebase": ["firebase/app", "firebase/auth", "firebase/messaging"],
