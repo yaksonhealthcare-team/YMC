@@ -9,13 +9,11 @@ interface DateAndTimeProps {
 
 const DateAndTime = ({ date, className }: DateAndTimeProps) => {
   return (
-    <div className={`flex items-center ${className}`}>
+    <div className={`flex items-center ${className || ""}`}>
       <CalendarIcon className="w-3.5 h-3.5 text-gray-300" />
       <span className="font-r text-12px text-gray-500 ml-1.5">
-        {formatDate(date)}
+        {formatDate(date)} | {formatTime(date)}
       </span>
-      <span className="text-12px text-gray-500 mx-1.5">|</span>
-      <span className="font-r text-12px text-gray-500">{formatTime(date)}</span>
     </div>
   )
 }

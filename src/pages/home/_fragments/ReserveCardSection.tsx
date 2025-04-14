@@ -5,23 +5,28 @@ import { ReserveCard } from "@components/ReserveCard"
 import { EmptyCard } from "@components/EmptyCard"
 import { useUpcomingReservations } from "queries/useReservationQueries"
 import LoadingIndicator from "@components/LoadingIndicator"
+import { useMemo } from "react"
 
 export function ReserveCardSection() {
   const navigate = useNavigate()
   const { data: upcomingReservations, isLoading } = useUpcomingReservations()
 
+  // 예약이 있는지 여부와 총 예약 수를 미리 계산
+  const { hasReservations, totalCount } = useMemo(() => {
+    const reservations = upcomingReservations?.reservations || []
+    return {
+      hasReservations: reservations.length > 0,
+      totalCount: upcomingReservations?.total_count || 0,
+    }
+  }, [upcomingReservations])
+
   if (isLoading) {
     return <LoadingIndicator className="flex-1" />
   }
 
-  if (
-    !upcomingReservations?.reservations ||
-    upcomingReservations.reservations.length === 0
-  ) {
+  if (!hasReservations) {
     return null
   }
-
-  const totalReservationCount = upcomingReservations.total_count
 
   const handleReservationClick = () => {
     navigate("/reservation/form", {
@@ -32,18 +37,19 @@ export function ReserveCardSection() {
     })
   }
 
+  const handleTitleClick = () => navigate("/member-history/reservation")
+
   return (
     <div className="mt-6 px-5">
       <Title
         type="arrow"
         title="예정된 예약"
-        count={`${totalReservationCount}건`}
-        onClick={() => navigate("/member-history/reservation")}
+        count={`${totalCount}건`}
+        onClick={handleTitleClick}
       />
-      {!upcomingReservations?.reservations ||
-      upcomingReservations.reservations.length === 0 ? (
+      {!hasReservations ? (
         <EmptyCard
-          title={`예정된 예약이 없어요.\n예약을 통해 관리를 받아보세요.`}
+          title="예정된 예약이 없어요.\n예약을 통해 관리를 받아보세요."
           button="예약하러 가기"
           onClick={handleReservationClick}
         />
@@ -54,7 +60,7 @@ export function ReserveCardSection() {
           style={{ overflow: "visible" }}
           className="mt-2"
         >
-          {upcomingReservations.reservations.map((reservation) => (
+          {upcomingReservations?.reservations?.map((reservation) => (
             <SwiperSlide key={reservation.id}>
               <ReserveCard reservation={reservation} />
             </SwiperSlide>
