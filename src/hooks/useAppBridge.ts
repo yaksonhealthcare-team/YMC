@@ -1,6 +1,7 @@
 import {
   DeviceType,
   fetchUser,
+  loginWithEmail,
   setAccessToken,
   signinWithSocial,
 } from "@apis/auth.api"
@@ -14,12 +15,16 @@ export const useAppBridge = () => {
   const { login } = useAuth()
   const navigate = useNavigate()
 
-  const handleLoginResponse = async (data: any) => {
-    const { accessToken } = data
-    setAccessToken(accessToken)
+  const handleEmailLogin = async (data: any) => {
+    await loginWithEmail({
+      username: data.username,
+      password: data.password,
+      deviceToken: localStorage.getItem("FCM_TOKEN"),
+      deviceType: localStorage.getItem("DEVICE_TYPE") as DeviceType,
+    })
     const user = await fetchUser()
     login({ user })
-    if (location.pathname === "/login") {
+    if (location.pathname.includes("/login")) {
       navigate("/", { replace: true })
     }
   }
@@ -39,10 +44,8 @@ export const useAppBridge = () => {
           case "DEVICE_TYPE":
             handleDeviceType(data.data)
             break
-          case "LOGIN_RESPONSE":
-            if (data.success) {
-              handleLoginResponse(data.data)
-            }
+          case "EMAIL_LOGIN":
+            handleEmailLogin(data.data)
             break
         }
       }

@@ -3,7 +3,7 @@ import CustomTextField from "@components/CustomTextField.tsx"
 import { CircularProgress } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { fetchUser, loginWithEmail } from "../../apis/auth.api.ts"
+import { DeviceType, fetchUser, loginWithEmail } from "../../apis/auth.api.ts"
 import EyeIcon from "../../assets/icons/EyeIcon.svg?react"
 import EyeSlashIcon from "../../assets/icons/EyeSlashIcon.svg?react"
 import { useAuth } from "../../contexts/AuthContext"
@@ -62,10 +62,16 @@ const EmailLogin = () => {
       }
 
       if (window.ReactNativeWebView) {
-        // ReactNative로 이메일 로그인 정보 전송
+        loginWithEmail({
+          username: formData.email,
+          password: formData.password,
+          deviceToken: localStorage.getItem("FCM_TOKEN") ?? "",
+          deviceType: localStorage.getItem("DEVICE_TYPE") as DeviceType,
+        })
+
         window.ReactNativeWebView.postMessage(
           JSON.stringify({
-            type: "EMAIL_LOGIN_REQUEST",
+            type: "LOGIN_REQUEST",
             data: {
               username: formData.email,
               password: formData.password,
@@ -79,13 +85,14 @@ const EmailLogin = () => {
           deviceToken: fcmToken ?? "",
           deviceType: "web",
         })
-        const user = await fetchUser()
-
-        login({
-          user: user,
-        })
-        navigate("/")
       }
+
+      const user = await fetchUser()
+
+      login({
+        user: user,
+      })
+      navigate("/")
     } catch (error) {
       showToast("로그인에 실패했습니다")
     } finally {

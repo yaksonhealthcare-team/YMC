@@ -34,6 +34,10 @@ export const loginWithEmail = async ({
 
   axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`
 
+  if (window.ReactNativeWebView) {
+    setAccessToken(accessToken)
+  }
+
   return {
     accessToken,
   }
