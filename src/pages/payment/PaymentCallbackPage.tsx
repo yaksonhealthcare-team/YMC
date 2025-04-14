@@ -72,18 +72,6 @@ export default function PaymentCallbackPage() {
 
     // 이니시스 결제 응답 파라미터
     const searchParams = new URLSearchParams(location.search)
-    const inicisParams = {
-      P_STATUS: searchParams.get("P_STATUS"),
-      P_RMESG1: searchParams.get("P_RMESG1"),
-      P_TID: searchParams.get("P_TID"),
-      P_REQ_URL: searchParams.get("P_REQ_URL"),
-      P_NOTI: searchParams.get("P_NOTI"),
-    }
-
-    // P_NOTI 파싱 (주문번호,포인트)
-    const pNoti = inicisParams.P_NOTI || ""
-    const [orderId = "", pointStr = "0"] = pNoti.split(",")
-    const point = parseInt(pointStr) || 0
 
     // jsonData 파싱
     const jsonDataStr = searchParams.get("jsonData")
