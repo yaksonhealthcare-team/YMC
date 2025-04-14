@@ -119,7 +119,7 @@ const PaymentPage = () => {
         pointAmount={points.usedPoints}
         finalAmount={Math.max(
           items.reduce((total, item) => total + item.price * item.amount, 0) -
-          points.usedPoints,
+            points.usedPoints,
           0,
         )}
       />
@@ -137,8 +137,7 @@ const PaymentPage = () => {
           disabled={!isAgreed}
           className="w-full"
         >
-          {formatPriceWithUnit(Math.max(totalAmount - points.usedPoints, 0))}{" "}
-          결제하기
+          {formatPriceWithUnit(totalAmount)} 결제하기
         </Button>
       </FixedButtonContainer>
     </div>

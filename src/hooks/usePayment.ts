@@ -27,13 +27,13 @@ export const usePayment = () => {
     form.name = "SendPayForm"
     form.method = "post"
     form.action = "https://mobile.inicis.com/smart/payment/"
-    form.acceptCharset = "euc-kr";
+    form.acceptCharset = "euc-kr"
 
     const paymentMethod = selectedPaymentMethod?.toUpperCase() || "CARD"
 
     // P_RESERVED 값 설정
-    let pReserved = "centerCd=Y"  // IDC 센터코드 수신 옵션
-    
+    let pReserved = "centerCd=Y" // IDC 센터코드 수신 옵션
+
     // 계좌이체 시 뱅크페이 앱 스키마
     if (paymentMethod === "BANK") {
       pReserved += "&appScheme=kftc-bankpay://"
@@ -85,8 +85,14 @@ export const usePayment = () => {
           brand_code: item.brand_code,
           amount: item.amount,
         })),
+        use_point: points.usedPoints,
       },
     )
+
+    if (response.data.pg_info.P_AMT > calculateTotalAmount(items)) {
+      response.data.pg_info.P_AMT = calculateTotalAmount(items)
+    }
+
     console.log(response.data)
     return response.data
   }
