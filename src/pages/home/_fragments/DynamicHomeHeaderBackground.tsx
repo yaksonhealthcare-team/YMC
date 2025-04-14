@@ -33,7 +33,6 @@ const DynamicHomeHeaderBackground = memo(
             className="w-full"
             width="100%"
             height="auto"
-            style={{ aspectRatio: "375/112" }}
           />
           <div className="absolute top-3 left-3 w-full h-24">
             <div className="flex justify-between w-full">
@@ -50,14 +49,13 @@ const DynamicHomeHeaderBackground = memo(
             className="absolute top-0 left-0 w-full h-full"
             width="100%"
             height="100%"
-            style={{ aspectRatio: "375/8" }}
           />
           {content && <ContentNode content={content} />}
 
           {contents &&
             contents.map((item, i) => <ContentNode key={i} content={item} />)}
         </div>
-        <div style={{ aspectRatio: "375/54" }}>
+        <div>
           <img
             src="/assets/home_card_bottom.png"
             alt=""
