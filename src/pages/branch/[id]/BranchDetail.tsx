@@ -20,6 +20,12 @@ const BranchActions = lazy(() => import("./_fragments/BranchActions"))
 const branchDetailTabs = ["programs", "information"] as const
 type BranchDetailTab = (typeof branchDetailTabs)[number]
 
+const BRANCH_SHARE_URL = {
+  "123": "https://abr.ge/xzzcc1",
+  "114": "https://abr.ge/noitue",
+  "118": "https://abr.ge/lh3bdz",
+}
+
 const BranchDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -45,7 +51,7 @@ const BranchDetail = () => {
         await navigator.share({
           title: branch.name,
           text: `${branch.brand} ${branch.name}\n${branch.location.address}`,
-          url: window.location.href,
+          url: BRANCH_SHARE_URL[branch.b_idx as keyof typeof BRANCH_SHARE_URL],
         })
       } else {
         await navigator.clipboard.writeText(window.location.href)
