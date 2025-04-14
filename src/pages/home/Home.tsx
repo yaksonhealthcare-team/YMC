@@ -161,6 +161,7 @@ const Home = () => {
                             src={banner.fileUrl}
                             alt={banner.title}
                             className="w-full h-full object-cover rounded-2xl"
+                            fetchPriority="high"
                           />
                         </button>
                       </SwiperSlide>
