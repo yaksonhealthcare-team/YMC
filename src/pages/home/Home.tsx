@@ -1,4 +1,6 @@
-import "swiper/swiper-bundle.css"
+import "swiper/css"
+import "swiper/css/pagination"
+import "../../styles/swiper-custom.css"
 import { useEffect, useMemo, lazy, Suspense } from "react"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useNavigate } from "react-router-dom"
@@ -145,25 +147,7 @@ const Home = () => {
                   className="w-full aspect-[8/5] rounded-2xl"
                   loop={true}
                 >
-                  <style>
-                    {`
-                      .swiper-pagination {
-                        bottom: 4px !important;
-                      }
-                      .swiper-pagination-bullet {
-                        width: 7px !important;
-                        height: 7px !important;
-                        background: transparent !important;
-                        border: 1px solid white !important;
-                        opacity: 1 !important;
-                      }
-                      .swiper-pagination-bullet-active {
-                        background: white !important;
-                        border-color: white !important;
-                      }
-                    `}
-                  </style>
-                  {mainBanner?.map((banner) => {
+                  {mainBanner?.map((banner, index) => {
                     const getBannerLink = (link: string) => {
                       if (link.startsWith("http")) return link
                       return `https://${link}`
@@ -183,7 +167,10 @@ const Home = () => {
                             src={banner.fileUrl}
                             alt={banner.title}
                             className="w-full h-full object-cover rounded-2xl"
-                            fetchPriority="high"
+                            fetchPriority={index === 0 ? "high" : "auto"}
+                            loading={index === 0 ? "eager" : "lazy"}
+                            width="100%"
+                            height="auto"
                           />
                         </button>
                       </SwiperSlide>
@@ -222,7 +209,7 @@ const Home = () => {
           }
         />
 
-        <Suspense fallback={<div>Loading sections...</div>}>
+        <Suspense fallback={<div className="p-4 text-center">로딩 중...</div>}>
           <LazyReserveCardSection />
           <LazyMembershipCardSection
             memberships={availableMemberships}

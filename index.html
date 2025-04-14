@@ -15,10 +15,10 @@
       name="keywords"
       content="테라피스트, 약손명가, 약손명가 리프팅, 약손명가 예약, 피부 관리, 얼굴 붓기 빼는법, 경락, 스파, 에스테틱"
     />
-    <link rel="preconnect" href="https://yaksonhc.com">
-    <link rel="preconnect" href="https://devapi.yaksonhc.com">
-    <link rel="preconnect" href="https://naver.com">
-    <link rel="preconnect" href="https://oapi.map.naver.com">
+    <!-- 중요한 API 도메인 미리 연결 -->
+    <link rel="preconnect" href="https://yaksonhc.com" crossorigin>
+    <link rel="preconnect" href="https://devapi.yaksonhc.com" crossorigin>
+    
     <!-- 폰트 미리 로드 -->
     <link
       rel="preload"
@@ -48,31 +48,16 @@
       type="font/woff2"
       crossorigin
     />
-    <!-- 주요 이미지 미리 로드 -->
+    
+    <!-- 중요 이미지만 미리 로드 -->
     <link
       rel="preload"
       href="/assets/home_card_top.png"
       as="image"
       type="image/png"
+      fetchpriority="high"
     />
-    <link
-      rel="preload"
-      href="/assets/home_card_mid.png"
-      as="image"
-      type="image/png"
-    />
-    <link
-      rel="preload"
-      href="/assets/home_card_bottom.png"
-      as="image"
-      type="image/png"
-    />
-    <link
-      rel="preload"
-      href="/assets/navIcon/home_active.png"
-      as="image"
-      type="image/png"
-    />
+    
     <title>테라피스트-에스테틱 예약</title>
   </head>
   <body>
@@ -106,11 +91,30 @@
         document.body.appendChild(script)
       }
 
-      // DOM이 로드된 후 스크립트 로드
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", loadNaverMapScript)
+      // 사용자 상호작용 후 지도 스크립트 로드
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) {
+            loadNaverMapScript();
+            observer.disconnect();
+          }
+        });
+        
+        // DOM이 로드된 후 옵저버 설정
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", () => {
+            observer.observe(document.body);
+          });
+        } else {
+          observer.observe(document.body);
+        }
       } else {
-        loadNaverMapScript()
+        // IntersectionObserver를 지원하지 않는 브라우저 대비
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", loadNaverMapScript);
+        } else {
+          loadNaverMapScript();
+        }
       }
     </script>
   </body>

@@ -16,7 +16,25 @@ export default defineConfig({
     tsconfigPaths(),
     svgr(),
     vitePreload(),
-    ViteImageOptimizer(/* pass your config here */),
+    ViteImageOptimizer({
+      png: {
+        quality: 70,
+        compressionLevel: 8,
+      },
+      jpeg: {
+        quality: 70,
+        progressive: true,
+      },
+      jpg: {
+        quality: 70,
+        progressive: true,
+      },
+      webp: {
+        lossless: false,
+        quality: 75,
+        alphaQuality: 85,
+      },
+    }),
     compression({
       algorithm: "gzip", // 'gzip' | 'brotliCompress' | 'deflate' | 'deflateRaw'
       ext: ".gz", // 압축된 파일의 확장자
