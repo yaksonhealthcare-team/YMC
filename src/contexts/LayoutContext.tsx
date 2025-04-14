@@ -252,11 +252,23 @@ const NavButton = ({
       style={{ color: active ? "#F37165" : "#BDBDBD" }}
       aria-label={`${title} 메뉴`}
     >
-      <img
-        src={active ? activeIcon : inactiveIcon}
-        width={32}
-        alt={`${title} 아이콘`}
-      />
+      <div
+        style={{
+          width: "32px",
+          height: "32px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <img
+          src={active ? activeIcon : inactiveIcon}
+          width={32}
+          height={32}
+          alt={`${title} 아이콘`}
+          style={{ objectFit: "contain" }}
+        />
+      </div>
       <Typography
         variant={"body2"}
         className={
