@@ -33,7 +33,6 @@ const DynamicHomeHeaderBackground = memo(
             className="w-full"
             width="100%"
             height="auto"
-            fetchPriority="high"
           />
           <div className="absolute top-3 left-3 w-full h-24">
             <div className="flex justify-between w-full">
@@ -50,7 +49,6 @@ const DynamicHomeHeaderBackground = memo(
             className="absolute top-0 left-0 w-full h-full"
             width="100%"
             height="100%"
-            fetchPriority="high"
           />
           {content && <ContentNode content={content} />}
 
@@ -64,7 +62,6 @@ const DynamicHomeHeaderBackground = memo(
             className="w-full"
             width="100%"
             height="100%"
-            fetchPriority="high"
           />
         </div>
       </div>
