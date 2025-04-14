@@ -4,6 +4,7 @@ import tsconfigPaths from "vite-tsconfig-paths"
 import svgr from "vite-plugin-svgr"
 import compression from "vite-plugin-compression"
 import vitePreload from "vite-plugin-preload"
+import { ViteImageOptimizer } from "vite-plugin-image-optimizer"
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -15,6 +16,7 @@ export default defineConfig({
     tsconfigPaths(),
     svgr(),
     vitePreload(),
+    ViteImageOptimizer(/* pass your config here */),
     compression({
       algorithm: "gzip", // 'gzip' | 'brotliCompress' | 'deflate' | 'deflateRaw'
       ext: ".gz", // 압축된 파일의 확장자
