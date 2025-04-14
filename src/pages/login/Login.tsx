@@ -50,7 +50,11 @@ const Login = () => {
   ) => {
     setLoadingProvider(provider)
     try {
-      if (provider !== "naver" && window.ReactNativeWebView) {
+      if (
+        provider !== "naver" &&
+        provider !== "apple" &&
+        window.ReactNativeWebView
+      ) {
         window.ReactNativeWebView.postMessage(
           JSON.stringify({
             type: "SOCIAL_LOGIN",
