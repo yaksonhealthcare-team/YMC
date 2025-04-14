@@ -149,8 +149,7 @@ const Home = () => {
                           <img
                             src={banner.fileUrl}
                             alt={banner.title}
-                            className="w-full h-full object-cover rounded-2xl"
-                            fetchPriority={index === 0 ? "high" : "auto"}
+                            className="object-cover rounded-2xl"
                             loading={index === 0 ? "eager" : "lazy"}
                             width="100%"
                             height="auto"
