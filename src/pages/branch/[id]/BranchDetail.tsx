@@ -53,7 +53,9 @@ const BranchDetail = () => {
         await navigator.share({
           title: branch.name,
           text: `${branch.brand} ${branch.name}\n${branch.location.address}`,
-          url: BRANCH_SHARE_URL[branch.b_idx as keyof typeof BRANCH_SHARE_URL],
+          url:
+            BRANCH_SHARE_URL[branch.b_idx as keyof typeof BRANCH_SHARE_URL] ||
+            "https://abr.ge/7xbv1b",
         })
         return
       }
@@ -69,7 +71,7 @@ const BranchDetail = () => {
               url:
                 BRANCH_SHARE_URL[
                   branch.b_idx as keyof typeof BRANCH_SHARE_URL
-                ] || window.location.href,
+                ] || "https://abr.ge/7xbv1b",
             },
           }),
         )
