@@ -4,7 +4,6 @@ import CrosshairIcon from "@assets/icons/CrosshairIcon.svg?react"
 import { Branch } from "../types/Branch.ts"
 import { useNaverMapBranchMarkers } from "../hooks/useNaverMapBranchMarkers.tsx"
 import { getCurrentLocation } from "../utils/getCurrentLocation.ts"
-import { useNaverMap } from "../hooks/useNaverMap.ts"
 
 interface MapViewProps {
   center: Coordinate
@@ -30,8 +29,6 @@ const MapView = ({
     null,
   )
   const [isMapInitialized, setIsMapInitialized] = useState(false)
-  const { isLoaded, error } = useNaverMap()
-
   const handleClickMarker = useCallback(
     (branch: Branch) => {
       if (!mapInstance.current) return
@@ -113,7 +110,7 @@ const MapView = ({
       }
     }
 
-    if (isLoaded && !mapInstance.current) {
+    if (!mapInstance.current) {
       if (!mapRef.current) {
         const checkMapRef = setInterval(() => {
           if (mapRef.current) {
@@ -134,7 +131,7 @@ const MapView = ({
     return () => {
       mounted = false
     }
-  }, [isLoaded, center, options])
+  }, [center, options])
 
   useEffect(() => {
     if (isMapInitialized && mapInstance.current && center) {
@@ -169,15 +166,7 @@ const MapView = ({
     })
   }
 
-  if (error) {
-    return (
-      <div className="flex items-center justify-center w-full h-full">
-        <div className="text-red-500">지도 로딩 중 오류가 발생했습니다.</div>
-      </div>
-    )
-  }
-
-  if (!isLoaded || !center) {
+  if (!center) {
     return (
       <div className="flex items-center justify-center w-full h-full">
         <div className="text-gray-500">지도를 불러오는 중...</div>
