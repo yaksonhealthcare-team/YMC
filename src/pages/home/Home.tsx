@@ -18,32 +18,15 @@ import { BannerRequestType } from "types/Banner"
 import NoticesSummarySlider from "@components/NoticesSummarySlider"
 import { useAuth } from "../../contexts/AuthContext"
 import { useUnreadNotificationsCount } from "../../queries/useNotificationQueries"
+import { ReserveCardSection } from "./_fragments/ReserveCardSection"
+import { MembershipCardSection } from "./_fragments/MembershipCardSection"
 
-// Lazy load sections
-const LazyReserveCardSection = lazy(() =>
-  import("./../../pages/home/_fragments/ReserveCardSection").then((module) => ({
-    default: module.ReserveCardSection,
-  })),
-)
-const LazyMembershipCardSection = lazy(() =>
-  import("./../../pages/home/_fragments/MembershipCardSection").then(
-    (module) => ({ default: module.MembershipCardSection }),
-  ),
-)
-const LazyBrandSection = lazy(() =>
-  import("./../../pages/home/_fragments/BrandSection").then((module) => ({
-    default: module.BrandSection,
-  })),
-)
-const LazyEventSection = lazy(() =>
-  import("./../../pages/home/_fragments/EventSection").then((module) => ({
-    default: module.EventSection,
-  })),
-)
-const LazyBusinessInfo = lazy(() =>
-  import("./../../pages/home/_fragments/BusinessInfo").then((module) => ({
-    default: module.BusinessInfo,
-  })),
+// 단일 코드 청크로 그룹화하여 불필요한 네트워크 요청 줄이기
+const SecondaryContentChunk = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "home-secondary" */ "./_fragments/SecondaryContentChunk"
+    ),
 )
 
 const Home = () => {
@@ -209,16 +192,21 @@ const Home = () => {
           }
         />
 
-        <Suspense fallback={<div className="p-4 text-center">로딩 중...</div>}>
-          <LazyReserveCardSection />
-          <LazyMembershipCardSection
-            memberships={availableMemberships}
-            isLoading={membershipLoading}
-            totalCount={totalMembershipCount}
-          />
-          <LazyBrandSection />
-          <LazyEventSection />
-          <LazyBusinessInfo />
+        {/* 주요 섹션은 즉시 로드 */}
+        <ReserveCardSection />
+        <MembershipCardSection
+          memberships={availableMemberships}
+          isLoading={membershipLoading}
+          totalCount={totalMembershipCount}
+        />
+
+        {/* 화면 아래 컴포넌트는 지연 로드 */}
+        <Suspense
+          fallback={
+            <div className="skeleton-loader h-[300px] w-full animate-pulse bg-gray-200 rounded-lg my-4"></div>
+          }
+        >
+          <SecondaryContentChunk />
         </Suspense>
 
         <FloatingButton
