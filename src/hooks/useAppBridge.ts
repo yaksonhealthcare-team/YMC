@@ -14,6 +14,16 @@ export const useAppBridge = () => {
   const { login } = useAuth()
   const navigate = useNavigate()
 
+  const handleLoginResponse = async (data: any) => {
+    const { accessToken } = data
+    setAccessToken(accessToken)
+    const user = await fetchUser()
+    login({ user })
+    if (location.pathname === "/login") {
+      navigate("/", { replace: true })
+    }
+  }
+
   useEffect(() => {
     const handleMessage = async (event: MessageEvent) => {
       const data = JSON.parse(event.data)
@@ -28,6 +38,11 @@ export const useAppBridge = () => {
             break
           case "DEVICE_TYPE":
             handleDeviceType(data.data)
+            break
+          case "LOGIN_RESPONSE":
+            if (data.success) {
+              handleLoginResponse(data.data)
+            }
             break
         }
       }

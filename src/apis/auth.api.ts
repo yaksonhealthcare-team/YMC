@@ -1,6 +1,6 @@
 import axios from "axios"
 import { UserMapper } from "../mappers/UserMapper.ts"
-import { axiosClient, saveAccessToken } from "../queries/clients.ts"
+import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
 import { UpdateUserProfileRequest, User, UserResponse } from "../types/User.ts"
 
@@ -33,10 +33,6 @@ export const loginWithEmail = async ({
   const accessToken = data.body[0].accessToken
 
   axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`
-
-  if (window.ReactNativeWebView) {
-    saveAccessToken(accessToken)
-  }
 
   return {
     accessToken,
