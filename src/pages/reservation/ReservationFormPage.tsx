@@ -133,6 +133,12 @@ const ReservationFormPage = () => {
           brand: "약손명가",
         }
         setSelectedBranch(branch)
+        setFormData({
+          ...formData,
+          branch: branch.b_idx,
+          timeSlot: null,
+          date: null,
+        })
       }
       return
     }
