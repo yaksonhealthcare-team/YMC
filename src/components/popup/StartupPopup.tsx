@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from "react"
+import { useEffect, useRef, useMemo } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { Dialog, DialogContent, DialogActions, Button } from "@mui/material"
 import {
@@ -89,7 +89,7 @@ export function StartupPopup() {
           margin: 0,
           padding: 0,
           overflow: "visible",
-          maxWidth: "80%",
+          maxWidth: "95%",
           backgroundColor: "transparent",
           boxShadow: "none",
         },

@@ -6,7 +6,6 @@ import {
   fetchPopups,
   fetchPopupDetail,
 } from "../apis/contents.api.ts"
-import { Tab } from "types/Event"
 
 // 홈 화면의 공지사항 슬라이더용 (첫 페이지만)
 export const useNoticesSummary = () =>

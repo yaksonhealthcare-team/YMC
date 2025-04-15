@@ -20,8 +20,6 @@ import { useAuth } from "../../contexts/AuthContext"
 import { useUnreadNotificationsCount } from "../../queries/useNotificationQueries"
 import { ReserveCardSection } from "./_fragments/ReserveCardSection"
 import { MembershipCardSection } from "./_fragments/MembershipCardSection"
-import { usePopupActions } from "../../stores/popupStore"
-import { StartupPopup } from "../../components/popup/StartupPopup"
 
 // 단일 코드 청크로 그룹화하여 불필요한 네트워크 요청 줄이기
 const SecondaryContentChunk = lazy(

@@ -14,7 +14,7 @@ import { useStartupPopups } from "../queries/useContentQueries.tsx"
 
 interface AuthContextType {
   user: User | null
-  login: (userData: { user: User }) => void
+  login: (userData: { user: User | null }) => void
   logout: () => void
   isLoading: boolean
 }
@@ -64,7 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [user, isLoading, isPopupLoading, popupData, openPopup])
 
-  const login = useCallback(({ user: userData }: { user: User }) => {
+  const login = useCallback(({ user: userData }: { user: User | null }) => {
     setUser(userData)
     localStorage.removeItem("isLoggedOut")
   }, [])
