@@ -30,6 +30,7 @@ function PopupDetailPage() {
       left: "back", // Use "back" string for back button
       onClickBack: () => navigate("/", { replace: true }), // Navigate home on back click
       right: undefined, // No right icon
+      backgroundColor: "bg-white", // Set background to white
     })
     // Hide bottom navigation
     setNavigation({ display: false })
@@ -42,7 +43,20 @@ function PopupDetailPage() {
   }, [setHeader, setNavigation, navigate])
 
   if (isLoading) {
-    return <LoadingIndicator /> // Show loading state
+    // Wrap LoadingIndicator in a Box with top padding
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "calc(100vh - 100px)",
+          pt: 10,
+        }}
+      >
+        <LoadingIndicator />
+      </Box>
+    )
   }
 
   if (isError || !popup) {
