@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useRef } from "react"
 import { Dialog, DialogContent, DialogActions, Button } from "@mui/material"
 import {
   usePopupStore,
@@ -8,6 +8,8 @@ import {
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react"
+// Import Swiper core and types
+import SwiperCore from "swiper"
 
 // Import Swiper styles
 import "swiper/css"
@@ -20,6 +22,7 @@ export function StartupPopup() {
   const isOpen = usePopupStore((state: PopupState) => state.isOpen)
   const popupDataArray = usePopupStore((state: PopupState) => state.popupData)
   const { closePopup, setDontShowAgain } = usePopupActions()
+  const swiperRef = useRef<SwiperCore | null>(null)
 
   const handleClose = () => {
     closePopup()
@@ -34,6 +37,17 @@ export function StartupPopup() {
       window.open(linkUrl, "_blank", "noopener,noreferrer")
     }
   }
+
+  useEffect(() => {
+    if (isOpen && swiperRef.current) {
+      const timer = setTimeout(() => {
+        swiperRef.current?.update()
+        console.log("Swiper updated after dialog open.")
+      }, 50)
+
+      return () => clearTimeout(timer)
+    }
+  }, [isOpen])
 
   const isSwiperActive = !!(popupDataArray && popupDataArray.length > 1)
 
@@ -72,6 +86,9 @@ export function StartupPopup() {
         }}
       >
         <Swiper
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper
+          }}
           spaceBetween={16}
           slidesPerView={1.2}
           centeredSlides={true}
