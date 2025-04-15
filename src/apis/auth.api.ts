@@ -72,9 +72,13 @@ export const refreshAccessToken = async (): Promise<string | null> => {
   }
 }
 
-export const fetchUser = async (): Promise<User> => {
+export const fetchUser = async (): Promise<User | null> => {
   const response =
     await axiosClient.get<HTTPResponse<UserResponse[]>>("/auth/me")
+
+  if (!response.data.body || response.data.body.length === 0) {
+    return null
+  }
 
   return UserMapper.toEntity(response.data.body[0])
 }

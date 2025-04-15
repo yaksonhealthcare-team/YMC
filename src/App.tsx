@@ -3,7 +3,6 @@ import { QueryClientProvider } from "@tanstack/react-query"
 import ErrorBoundary from "./components/ErrorBoundary"
 import { queryClient } from "./queries/clients.ts"
 import { AppRouter } from "./router/router.tsx"
-import { StartupPopup } from "./components/popup/StartupPopup"
 
 const theme = createTheme({
   // MUI 테마 설정
@@ -42,7 +41,6 @@ function App() {
       <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
           <AppRouter />
-          <StartupPopup />
         </QueryClientProvider>
       </ThemeProvider>
     </ErrorBoundary>

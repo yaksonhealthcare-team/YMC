@@ -151,6 +151,7 @@ const PaymentFailedPage = lazy(
   () => import("../pages/payment/PaymentFailedPage"),
 )
 const StorePage = lazy(() => import("../pages/store/Store"))
+const PopupDetailPage = lazy(() => import("../pages/popup/PopupDetailPage"))
 
 export const routeConfig: RouteConfig[] = [
   {
@@ -288,7 +289,12 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/store",
     element: <StorePage />,
-    auth: false,
+    auth: true,
+  },
+  {
+    path: "/popup/:code",
+    element: <PopupDetailPage />,
+    auth: true,
   },
   {
     path: "/member-history/reservation",

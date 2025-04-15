@@ -3,6 +3,7 @@ import PageContainer from "@components/PageContainer.tsx"
 import { Typography } from "@mui/material"
 import { useNavigate, useLocation } from "react-router-dom"
 import Header from "@components/Header.tsx"
+import { StartupPopup } from "../components/popup/StartupPopup"
 
 type NavigationConfig = {
   display?: boolean
@@ -152,6 +153,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
         setTitle,
       }}
     >
+      <StartupPopup />
       <PageContainer
         ref={pageContainerRef}
         className={header.backgroundColor || "bg-system-bg"}

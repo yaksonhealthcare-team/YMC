@@ -2,6 +2,7 @@ import { create } from "zustand"
 import { persist, createJSONStorage } from "zustand/middleware"
 
 interface PopupData {
+  code: string
   imageUrl: string
   linkUrl?: string // Optional: Link to navigate to when image is clicked
   // Add other necessary data from API later

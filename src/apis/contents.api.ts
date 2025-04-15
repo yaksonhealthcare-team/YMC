@@ -1,7 +1,7 @@
 import { axiosClient } from "../queries/clients.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
 import { Event, EventDetail } from "types/Event"
-import { Notice, NoticeDetail } from "../types/Content.ts"
+import { Notice, NoticeDetail, PopupDetail } from "../types/Content.ts"
 import { ContentMapper } from "mappers/ContentMapper"
 import { Tab } from "types/Event"
 
@@ -90,6 +90,7 @@ interface ApiPopupItem {
 
 // Define the structure expected by our application (Zustand store)
 export interface AppPopupData {
+  code: string
   imageUrl: string
   linkUrl?: string // Keep optional linkUrl for future use
 }
@@ -113,6 +114,7 @@ export const fetchPopups = async (): Promise<AppPopupData[]> => {
       // Only include the popup if we have an image URL
       if (imageUrl) {
         return {
+          code: item.code,
           imageUrl: imageUrl,
           linkUrl: undefined, // Set linkUrl to undefined for now
           // We could potentially derive a link like /event/${item.code} later
@@ -124,4 +126,27 @@ export const fetchPopups = async (): Promise<AppPopupData[]> => {
     .filter((item): item is AppPopupData => item !== null)
 
   return appPopups
+}
+
+// Function to fetch popup detail data
+export const fetchPopupDetail = async (code: string): Promise<PopupDetail> => {
+  // Use the provided endpoint structure
+  const { data } = await axiosClient.get<HTTPResponse<PopupDetail[]>>(
+    "/contents/detail",
+    {
+      params: {
+        gubun: "E01", // Assuming E01 is the correct gubun for popups
+        code,
+      },
+    },
+  )
+
+  // Assuming the detail API also returns an array with one item
+  if (!data.body || data.body.length === 0) {
+    throw new Error("Popup detail not found")
+  }
+
+  // We might need a mapper if the API structure differs significantly
+  // For now, assume the first item matches PopupDetail type
+  return data.body[0]
 }

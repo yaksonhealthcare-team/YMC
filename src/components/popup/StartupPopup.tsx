@@ -1,10 +1,13 @@
 import React, { useEffect, useRef } from "react"
+import { useNavigate } from "react-router-dom"
 import { Dialog, DialogContent, DialogActions, Button } from "@mui/material"
 import {
   usePopupStore,
   usePopupActions,
   PopupState,
 } from "../../stores/popupStore"
+// Import AppPopupData from the correct API file
+import { AppPopupData } from "../../apis/contents.api"
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react"
@@ -23,6 +26,7 @@ export function StartupPopup() {
   const popupDataArray = usePopupStore((state: PopupState) => state.popupData)
   const { closePopup, setDontShowAgain } = usePopupActions()
   const swiperRef = useRef<SwiperCore | null>(null)
+  const navigate = useNavigate()
 
   const handleClose = () => {
     closePopup()
@@ -32,9 +36,10 @@ export function StartupPopup() {
     setDontShowAgain(7)
   }
 
-  const handleImageClick = (linkUrl?: string) => {
-    if (linkUrl) {
-      window.open(linkUrl, "_blank", "noopener,noreferrer")
+  const handleImageClick = (code: string) => {
+    if (code) {
+      navigate(`/popup/${code}`)
+      closePopup()
     }
   }
 
@@ -98,7 +103,7 @@ export function StartupPopup() {
           className="w-full"
           style={{ overflow: "visible" }}
         >
-          {popupDataArray.map((popup, index) => (
+          {popupDataArray.map((popup: AppPopupData, index) => (
             <SwiperSlide
               key={index}
               className="aspect-square bg-[#eee] rounded-xl overflow-hidden flex items-center justify-center"
@@ -106,8 +111,8 @@ export function StartupPopup() {
               <img
                 src={popup.imageUrl || TEMP_IMAGE_URL}
                 alt={`Startup Promotion ${index + 1}`}
-                onClick={() => handleImageClick(popup.linkUrl)}
-                className={`block w-full h-full object-cover ${popup.linkUrl ? "cursor-pointer" : ""}`}
+                onClick={() => handleImageClick(popup.code)}
+                className={`block w-full h-full object-cover ${popup.code ? "cursor-pointer" : ""}`}
               />
             </SwiperSlide>
           ))}

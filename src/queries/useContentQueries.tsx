@@ -1,6 +1,11 @@
 import { useQuery } from "@tanstack/react-query"
 import { queryKeys } from "./query.keys.ts"
-import { fetchNotice, fetchNotices, fetchPopups } from "../apis/contents.api.ts"
+import {
+  fetchNotice,
+  fetchNotices,
+  fetchPopups,
+  fetchPopupDetail,
+} from "../apis/contents.api.ts"
 import { Tab } from "types/Event"
 
 // 홈 화면의 공지사항 슬라이더용 (첫 페이지만)
@@ -68,6 +73,19 @@ export const useStartupPopups = (options = {}) => {
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
+    ...options,
+  })
+}
+
+// Query hook for fetching a single popup detail
+export const usePopupDetail = (code: string, options = {}) => {
+  return useQuery({
+    queryKey: [...queryKeys.popups.startup, code],
+    queryFn: () => fetchPopupDetail(code),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    enabled: !!code,
     ...options,
   })
 }
