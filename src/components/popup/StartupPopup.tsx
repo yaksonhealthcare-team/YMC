@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useRef, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
 import { Dialog, DialogContent, DialogActions, Button } from "@mui/material"
 import {
@@ -56,8 +56,21 @@ export function StartupPopup() {
 
   const isSwiperActive = !!(popupDataArray && popupDataArray.length > 1)
 
+  // Create array for display, duplicate if exactly 2 items for better loop
+  const displayPopupData = useMemo(() => {
+    if (popupDataArray && popupDataArray.length === 2) {
+      // Duplicate the array to ensure loop works smoothly
+      return [...popupDataArray, ...popupDataArray]
+    }
+    return popupDataArray // Return original array otherwise
+  }, [popupDataArray])
+
   if (!isOpen || !popupDataArray || popupDataArray.length === 0) {
     return null
+  }
+
+  if (!displayPopupData || displayPopupData.length === 0) {
+    return null // Should not happen if original check passed, but good practice
   }
 
   return (
@@ -103,14 +116,14 @@ export function StartupPopup() {
           className="w-full"
           style={{ overflow: "visible" }}
         >
-          {popupDataArray.map((popup: AppPopupData, index) => (
+          {displayPopupData.map((popup: AppPopupData, index) => (
             <SwiperSlide
-              key={index}
+              key={`${popup.code}-${index}`}
               className="aspect-square bg-[#eee] rounded-xl overflow-hidden flex items-center justify-center"
             >
               <img
                 src={popup.imageUrl || TEMP_IMAGE_URL}
-                alt={`Startup Promotion ${index + 1}`}
+                alt={`Startup Promotion ${popup.code}`}
                 onClick={() => handleImageClick(popup.code)}
                 className={`block w-full h-full object-cover ${popup.code ? "cursor-pointer" : ""}`}
               />
