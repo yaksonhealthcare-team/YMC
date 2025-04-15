@@ -120,7 +120,8 @@ export function StartupPopup() {
           padding: "0",
           width: "100%",
           mt: "13.5px",
-          px: "16px",
+          pr: "16px",
+          pl: "32px",
         }}
       >
         <Button

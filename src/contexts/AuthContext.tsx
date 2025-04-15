@@ -10,6 +10,7 @@ import { fetchUser, logout as logoutApi } from "../apis/auth.api.ts"
 import { queryClient } from "../queries/clients.ts"
 import { User } from "../types/User.ts"
 import { usePopupActions } from "../stores/popupStore.ts"
+import { useStartupPopups } from "../queries/useContentQueries.tsx"
 
 interface AuthContextType {
   user: User | null
@@ -20,24 +21,16 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
-const samplePopupData = [
-  {
-    imageUrl: "https://via.placeholder.com/400x400.png?text=Popup+1",
-    linkUrl: "https://example.com/link1",
-  },
-  { imageUrl: "https://via.placeholder.com/400x400.png?text=Popup+2" },
-  {
-    imageUrl: "https://via.placeholder.com/400x400.png?text=Popup+3",
-    linkUrl: "https://example.com/link3",
-  },
-]
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const { openPopup } = usePopupActions()
+
+  const { data: popupData, isLoading: isPopupLoading } = useStartupPopups({
+    enabled: !!user,
+  })
 
   useEffect(() => {
     const loadUser = async () => {
@@ -57,11 +50,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [])
 
   useEffect(() => {
-    if (user) {
-      console.log("User authenticated, attempting to open popup.")
-      openPopup(samplePopupData)
+    if (
+      user &&
+      !isLoading &&
+      !isPopupLoading &&
+      popupData &&
+      popupData.length > 0
+    ) {
+      console.log(
+        "User authenticated and popup data loaded, attempting to open popup.",
+      )
+      openPopup(popupData)
     }
-  }, [user, openPopup])
+  }, [user, isLoading, isPopupLoading, popupData, openPopup])
 
   const login = useCallback(({ user: userData }: { user: User }) => {
     setUser(userData)

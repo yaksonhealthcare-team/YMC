@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { queryKeys } from "./query.keys.ts"
-import { fetchNotice, fetchNotices } from "../apis/contents.api.ts"
+import { fetchNotice, fetchNotices, fetchPopups } from "../apis/contents.api.ts"
+import { Tab } from "types/Event"
 
 // 홈 화면의 공지사항 슬라이더용 (첫 페이지만)
 export const useNoticesSummary = () =>
@@ -56,5 +57,17 @@ export const useContentsByCategory = (category: string) => {
     queryFn: () => Promise.reject(new Error("Not implemented")),
     enabled: false,
     retry: false,
+  })
+}
+
+// Query hook for fetching startup popups
+export const useStartupPopups = (options = {}) => {
+  return useQuery({
+    queryKey: queryKeys.popups.startup,
+    queryFn: fetchPopups,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    ...options,
   })
 }

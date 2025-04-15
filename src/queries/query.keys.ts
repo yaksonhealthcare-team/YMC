@@ -12,6 +12,7 @@ import { reservations } from "./keys/reservations.keys"
 import { banners } from "./keys/banners.keys"
 import { notifications } from "./keys/notifications.keys"
 import { carts } from "./keys/carts.keys"
+import { popups } from "./keys/popups.keys"
 
 export const queryKeys = {
   payments,
@@ -28,4 +29,5 @@ export const queryKeys = {
   banners,
   notifications,
   carts,
+  popups,
 } as const
