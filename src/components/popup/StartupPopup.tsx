@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useMemo } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { Dialog, DialogContent, DialogActions, Button } from "@mui/material"
 import {
   usePopupStore,
@@ -27,6 +27,7 @@ export function StartupPopup() {
   const { closePopup, setDontShowAgain } = usePopupActions()
   const swiperRef = useRef<SwiperCore | null>(null)
   const navigate = useNavigate()
+  const location = useLocation()
 
   const handleClose = () => {
     closePopup()
@@ -65,12 +66,18 @@ export function StartupPopup() {
     return popupDataArray // Return original array otherwise
   }, [popupDataArray])
 
-  if (!isOpen || !popupDataArray || popupDataArray.length === 0) {
-    return null
-  }
+  // Check if popup should be rendered:
+  // 1. Store says it should be open
+  // 2. We are on the home route ('/')
+  // 3. There is valid popup data to display
+  const shouldRenderPopup =
+    isOpen &&
+    location.pathname === "/" &&
+    displayPopupData &&
+    displayPopupData.length > 0
 
-  if (!displayPopupData || displayPopupData.length === 0) {
-    return null // Should not happen if original check passed, but good practice
+  if (!shouldRenderPopup) {
+    return null
   }
 
   return (
@@ -82,7 +89,7 @@ export function StartupPopup() {
           margin: 0,
           padding: 0,
           overflow: "visible",
-          maxWidth: "95%",
+          maxWidth: "80%",
           backgroundColor: "transparent",
           boxShadow: "none",
         },
