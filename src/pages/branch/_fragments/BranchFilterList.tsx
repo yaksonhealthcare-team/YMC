@@ -9,7 +9,7 @@ import {
 } from "../../../queries/useBranchQueries.tsx"
 import { useOverlay } from "../../../contexts/ModalContext.tsx"
 import { Image } from "@components/common/Image"
-import { useState, useCallback } from "react"
+import { useCallback } from "react"
 import LoadingIndicator from "@components/LoadingIndicator"
 import clsx from "clsx"
 
@@ -119,21 +119,10 @@ const BranchFilterList = ({
   const { mutate: unbookmark } = useBranchUnbookmarkMutation()
   const { openModal } = useOverlay()
 
-  const [favoriteBranches, setFavoriteBranches] = useState<Set<string>>(
-    new Set(),
-  )
-
   const handleToggleFavorite = useCallback(
     (branch: Branch) => {
-      if (favoriteBranches.has(branch.b_idx)) {
+      if (branch.isFavorite) {
         unbookmark(branch.b_idx, {
-          onSuccess: () => {
-            setFavoriteBranches((prev) => {
-              const next = new Set(prev)
-              next.delete(branch.b_idx)
-              return next
-            })
-          },
           onError: () => {
             openModal({
               title: "즐겨찾기 해제 실패",
@@ -144,13 +133,6 @@ const BranchFilterList = ({
         })
       } else {
         bookmark(branch.b_idx, {
-          onSuccess: () => {
-            setFavoriteBranches((prev) => {
-              const next = new Set(prev)
-              next.add(branch.b_idx)
-              return next
-            })
-          },
           onError: () => {
             openModal({
               title: "즐겨찾기 추가 실패",
@@ -161,12 +143,7 @@ const BranchFilterList = ({
         })
       }
     },
-    [bookmark, unbookmark, openModal, favoriteBranches],
-  )
-
-  const getIsFavorite = useCallback(
-    (branch: Branch) => favoriteBranches.has(branch.b_idx),
-    [favoriteBranches],
+    [bookmark, unbookmark, openModal],
   )
 
   if (isLoading) {
@@ -233,7 +210,7 @@ const BranchFilterList = ({
               className={index === 0 ? "pt-1" : ""}
               onClick={onSelectBranch}
               onClickFavorite={handleToggleFavorite}
-              isFavorite={getIsFavorite(branch)}
+              isFavorite={branch.isFavorite ?? false}
             />
           ))}
           <li ref={observerTarget} className="h-4" aria-hidden="true" />
