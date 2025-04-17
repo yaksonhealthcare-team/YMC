@@ -171,7 +171,7 @@ const MyPagePointMembership = () => {
           </div>
           <div className="flex items-center gap-1.5">
             <span className="font-sb text-16px text-gray-900">
-              {`${user?.point ?? 0}P`}
+              {`${(user?.point ?? 0).toLocaleString()}P`}
             </span>
             <CaretRightIcon className="w-3 h-3" aria-hidden="true" />
           </div>

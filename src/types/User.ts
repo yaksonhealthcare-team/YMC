@@ -1,7 +1,7 @@
 import { Gender } from "../utils/gender"
 
 export interface User {
-  id: string
+  id?: string
   name: string
   username: string
   email: string
@@ -21,14 +21,14 @@ export interface User {
     b_idx: string
     brandName: string
     address: string
-    brandCode: string
+    brandCode?: string
   }[]
   gender: "M" | "F"
   birthdate: string
 }
 
 export interface UserResponse {
-  id: string
+  id?: string
   name: string
   level?: string
   level_name?: string
@@ -47,7 +47,7 @@ export interface UserResponse {
     b_idx: string
     b_name: string
     addr: string
-    brand_code: string
+    brand_code?: string
   }[]
 }
 
