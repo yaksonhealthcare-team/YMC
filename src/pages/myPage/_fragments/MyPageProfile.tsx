@@ -1,9 +1,20 @@
 import Profile from "@assets/icons/Profile.svg?react"
 import { useAuth } from "../../../contexts/AuthContext"
 import { Image } from "@components/common/Image"
+import { useEffect } from "react"
+import { useLayout } from "contexts/LayoutContext"
 
 const MyPageProfile = () => {
   const { user } = useAuth()
+  const { setHeader, setNavigation } = useLayout()
+
+  useEffect(() => {
+    setHeader({
+      display: false,
+      backgroundColor: "bg-white",
+    })
+    setNavigation({ display: false })
+  }, [])
 
   return (
     <div className="flex items-center gap-3 py-4">
