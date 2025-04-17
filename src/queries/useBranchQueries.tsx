@@ -49,7 +49,11 @@ export const useBranches = (filters: BranchFilters) =>
             nowlon: filters.longitude,
             search: filters.search,
             brand_code: filters.brandCode,
-            mp_idx: filters.isConsultation ? "상담 예약" : filters.mp_idx,
+            mp_idx: filters.isConsultation
+              ? "상담 예약"
+              : filters.mp_idx === "-1"
+                ? undefined
+                : filters.mp_idx,
             s_idx: filters.s_idx,
             sc_code: filters.category,
           },
