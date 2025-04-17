@@ -68,8 +68,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [user, isLoading, isPopupLoading, popupData, openPopup])
 
   const login = useCallback(({ user: userData }: { user: User | null }) => {
-    setUser(userData)
-    localStorage.removeItem("isLoggedOut")
+    if (userData) {
+      setUser(userData)
+      localStorage.removeItem("isLoggedOut")
+      setIsLoading(false)
+      return
+    }
+    logout()
     setIsLoading(false)
   }, [])
 

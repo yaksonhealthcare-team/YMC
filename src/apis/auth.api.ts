@@ -82,6 +82,13 @@ export const fetchUser = async (): Promise<User | null> => {
     console.error("사용자 정보 조회 실패:", error)
     console.log("응답 데이터가 없는 경우, 액세스 토큰 갱신 시도")
 
+    if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({
+          type: "REFRESH_TOKEN",
+        }),
+      )
+    }
     // 응답 데이터가 없는 경우, 액세스 토큰 갱신 시도
     const newAccessToken = await refreshAccessToken()
 
@@ -231,6 +238,7 @@ export const withdrawal = async () => {
 }
 
 export const logout = async () => {
+  await axiosClient.get("/auth/logout")
   // axiosClient의 기본 Authorization 헤더 제거
   delete axiosClient.defaults.headers.common.Authorization
 }
