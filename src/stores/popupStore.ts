@@ -1,19 +1,22 @@
 import { create } from "zustand"
 import { persist, createJSONStorage } from "zustand/middleware"
+import { AppPopupData } from "@apis/contents.api" // Correct import path assumption
 
-interface PopupData {
-  code: string
-  imageUrl: string
-  linkUrl?: string // Optional: Link to navigate to when image is clicked
-  // Add other necessary data from API later
-}
+// interface PopupData {
+//   code: string
+//   imageUrl: string
+//   linkUrl?: string // Optional: Link to navigate to when image is clicked
+//   // Add other necessary data from API later
+// }
+// Using AppPopupData directly
 
 export interface PopupState {
   isOpen: boolean
-  popupData: PopupData[] | null
+  popupData: AppPopupData[] | null
   dontShowUntil: number | null // Timestamp until which the popup should not be shown
+  sessionShown: boolean // Tracks if popup was shown this session
   actions: {
-    openPopup: (data: PopupData[]) => void
+    openPopup: (data: AppPopupData[]) => void
     closePopup: () => void
     setDontShowAgain: (days: number) => void
     shouldShowPopup: () => boolean
@@ -28,11 +31,19 @@ export const usePopupStore = create<PopupState>()(
       isOpen: false,
       popupData: null,
       dontShowUntil: null,
+      sessionShown: false, // Default to false, reset each session
       actions: {
         openPopup: (data) => {
-          if (get().actions.shouldShowPopup() && data && data.length > 0) {
-            set({ isOpen: true, popupData: data })
+          // Check if it should be shown based on "don't show again" AND session status
+          if (
+            get().actions.shouldShowPopup() &&
+            !get().sessionShown &&
+            data &&
+            data.length > 0
+          ) {
+            set({ isOpen: true, popupData: data, sessionShown: true }) // Mark as shown this session
           } else {
+            // Ensure popup is closed if conditions aren't met
             set({ isOpen: false, popupData: null })
           }
         },
@@ -56,6 +67,7 @@ export const usePopupStore = create<PopupState>()(
       name: POPUP_STORAGE_KEY, // Unique name for localStorage key
       storage: createJSONStorage(() => localStorage), // Use localStorage
       partialize: (state) => ({ dontShowUntil: state.dontShowUntil }), // Only persist dontShowUntil
+      // `sessionShown` is intentionally omitted here
     },
   ),
 )
