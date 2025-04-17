@@ -16,12 +16,27 @@ export const useAppBridge = () => {
   const navigate = useNavigate()
 
   const handleEmailLogin = async (data: any) => {
-    await loginWithEmail({
+    const loginResponse = await loginWithEmail({
       username: data.username,
       password: data.password,
       deviceToken: localStorage.getItem("FCM_TOKEN"),
       deviceType: localStorage.getItem("DEVICE_TYPE") as DeviceType,
     })
+
+    const accessToken = loginResponse.accessToken
+
+    // ReactNativeWebView로 accessToken 전달
+    if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({
+          type: "LOGIN_SUCCESS",
+          data: {
+            accessToken: accessToken,
+          },
+        }),
+      )
+    }
+
     const user = await fetchUser()
     login({ user })
     if (location.pathname.includes("/login")) {
@@ -129,6 +144,16 @@ export const useAppBridge = () => {
       // ReactNativeWebView 환경에서 localStorage에 accessToken 저장
       if (window.ReactNativeWebView) {
         saveAccessToken(accessToken)
+
+        // ReactNativeWebView로 accessToken 전달
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            type: "LOGIN_SUCCESS",
+            data: {
+              accessToken: accessToken,
+            },
+          }),
+        )
       }
 
       const user = await fetchUser()

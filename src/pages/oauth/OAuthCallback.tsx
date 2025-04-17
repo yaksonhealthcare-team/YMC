@@ -78,6 +78,16 @@ const OAuthCallback = () => {
           // ReactNativeWebView 환경에서 localStorage에 accessToken 저장
           if (window.ReactNativeWebView) {
             saveAccessToken(accessToken)
+
+            // ReactNativeWebView로 accessToken 전달
+            window.ReactNativeWebView.postMessage(
+              JSON.stringify({
+                type: "LOGIN_SUCCESS",
+                data: {
+                  accessToken: accessToken,
+                },
+              }),
+            )
           }
 
           const user = await fetchUser()

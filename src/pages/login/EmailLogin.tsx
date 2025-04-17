@@ -61,20 +61,23 @@ const EmailLogin = () => {
         return
       }
 
+      let accessToken = ""
+
       if (window.ReactNativeWebView) {
-        await loginWithEmail({
+        const loginResponse = await loginWithEmail({
           username: formData.email,
           password: formData.password,
           deviceToken: localStorage.getItem("FCM_TOKEN") ?? "",
           deviceType: localStorage.getItem("DEVICE_TYPE") as DeviceType,
         })
 
+        accessToken = loginResponse.accessToken
+
         window.ReactNativeWebView.postMessage(
           JSON.stringify({
-            type: "LOGIN_REQUEST",
+            type: "LOGIN_SUCCESS",
             data: {
-              username: formData.email,
-              password: formData.password,
+              accessToken: accessToken,
             },
           }),
         )
