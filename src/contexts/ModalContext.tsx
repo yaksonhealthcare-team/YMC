@@ -1,4 +1,10 @@
-import React, { createContext, ReactNode, useContext, useState } from "react"
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useState,
+  useRef,
+} from "react"
 import { Dialog, DialogContent } from "@mui/material"
 import { Button } from "../components/Button"
 
@@ -206,6 +212,10 @@ export const useOverlay = (): OverlayContextValue => {
  */
 const OverlayContainer: React.FC = () => {
   const { overlayState, closeOverlay } = useOverlay()
+  const [touchStartY, setTouchStartY] = useState<number | null>(null)
+  const [touchCurrentY, setTouchCurrentY] = useState<number | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const DRAG_THRESHOLD = 100 // 드래그 닫기 임계값 (픽셀)
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
@@ -215,6 +225,42 @@ const OverlayContainer: React.FC = () => {
 
   const handleContentKeyDown = (e: React.KeyboardEvent) => {
     e.stopPropagation()
+  }
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      setTouchStartY(e.touches[0].clientY)
+      setTouchCurrentY(e.touches[0].clientY) // 현재 Y좌표 초기화
+      setIsDragging(true)
+    }
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || touchStartY === null || e.touches.length !== 1) return
+
+    const currentY = e.touches[0].clientY
+    setTouchCurrentY(currentY)
+
+    // 선택 사항: 아래로 드래그할 때 기본 스크롤 동작 방지 (필요 시)
+    // const dragDistance = currentY - touchStartY;
+    // if (dragDistance > 0) {
+    //   e.preventDefault();
+    // }
+  }
+
+  const handleTouchEnd = () => {
+    if (!isDragging || touchStartY === null || touchCurrentY === null) return
+
+    const dragDistance = touchCurrentY - touchStartY
+
+    if (dragDistance > DRAG_THRESHOLD) {
+      closeOverlay()
+    }
+
+    // 상태 초기화
+    setIsDragging(false)
+    setTouchStartY(null)
+    setTouchCurrentY(null)
   }
 
   if (!overlayState.isOpen) return null
@@ -284,7 +330,13 @@ const OverlayContainer: React.FC = () => {
           >
             <DialogContent className="p-0">
               <div className="flex flex-col items-center">
-                <div className="w-[52px] h-[4px] bg-[#ECECEC] rounded-full mt-3 mb-4" />
+                <div
+                  className="w-[52px] h-[4px] bg-[#ECECEC] rounded-full mt-3 mb-4 cursor-grab active:cursor-grabbing"
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                  aria-label="바텀시트 닫기 핸들"
+                />
                 {bottomSheetOptions.title && (
                   <h2 className="text-[18px] font-semibold mb-4 text-center">
                     {bottomSheetOptions.title}
