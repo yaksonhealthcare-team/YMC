@@ -88,6 +88,8 @@ export const fetchUser = async (): Promise<User | null> => {
           type: "REFRESH_TOKEN",
         }),
       )
+
+      return null
     }
     // 응답 데이터가 없는 경우, 액세스 토큰 갱신 시도
     const newAccessToken = await refreshAccessToken()

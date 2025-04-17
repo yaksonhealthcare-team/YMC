@@ -266,7 +266,10 @@ export const useAppBridge = () => {
           }),
         )
       }
+      return
     }
+
+    login({ user: null })
   }
 
   return null
