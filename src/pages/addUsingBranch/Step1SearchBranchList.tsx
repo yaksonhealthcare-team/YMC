@@ -7,12 +7,12 @@ import { Branch } from "../../types/Branch.ts"
 import CheckIcon from "@components/icons/CheckIcon.tsx"
 import { useBranches } from "../../queries/useBranchQueries.tsx"
 import useIntersection from "../../hooks/useIntersection.tsx"
-import BranchItem from "./BranchItem.tsx"
 import { useGeolocation } from "../../hooks/useGeolocation.tsx"
 import { useDebounce } from "../../hooks/useDebounce"
 import LoadingIndicator from "@components/LoadingIndicator"
 import Header from "@components/Header.tsx"
 import { useNavigate } from "react-router-dom"
+import BranchIcon from "@components/icons/BranchIcon.tsx"
 
 interface SearchBranchListProps {
   selectedBranches: Branch[]
@@ -176,10 +176,25 @@ const Step1SearchBranchList = ({
                   tabIndex={0}
                   aria-label={`${branch.name} 지점 선택`}
                 >
-                  <BranchItem branch={branch} />
-                  {selectedBranches.some((b) => b.b_idx === branch.b_idx) && (
-                    <CheckIcon className="w-[24px] h-[24px]" />
-                  )}
+                  <div className="flex gap-[6px]">
+                    <BranchIcon className="w-[16px] h-[16px] mt-[3px]" />
+                    <div className="text-[14px] w-full">
+                      <div className="flex justify-between items-center h-[24px] w-full">
+                        <p className="font-bold text-gray-700">{branch.name}</p>
+                        {selectedBranches.some(
+                          (b) => b.b_idx === branch.b_idx,
+                        ) && (
+                          <CheckIcon
+                            className="w-[24px] h-[24px] flex-shrink-0"
+                            htmlColor="#F37165"
+                          />
+                        )}
+                      </div>
+                      <p className="font-normal text-gray-500 mt-[8px]">
+                        {branch.address}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               ))
             )}
