@@ -246,7 +246,7 @@ const Branch = () => {
         </div>
       ),
       display: true,
-      backgroundColor: "bg-system-bg",
+      backgroundColor: "bg-white",
     })
     setNavigation({
       display: false,

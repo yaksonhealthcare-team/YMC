@@ -68,17 +68,15 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
 
   // 안전영역 색상 설정
   useEffect(() => {
-    if (
-      !("component" in header) &&
-      window.setNativeSafeAreaColors &&
-      header.backgroundColor
-    ) {
-      const topColor = extractColor(header.backgroundColor)
+    // `window.setNativeSafeAreaColors` 함수가 존재하는지 확인
+    if (window.setNativeSafeAreaColors) {
+      // header.backgroundColor가 있으면 해당 색상을 사용하고, 없으면 기본값 '#F8F5F2' 사용
+      const topColor = extractColor(header.backgroundColor || "bg-system-bg")
       const bottomColor = navigation.display ? "#FFFFFF" : topColor
 
       window.setNativeSafeAreaColors(topColor, bottomColor)
     }
-  }, [header, navigation.display])
+  }, [header, navigation.display]) // 의존성 배열은 그대로 유지
 
   // html과 body의 배경색 설정
   useEffect(() => {

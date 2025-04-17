@@ -13,7 +13,7 @@ const PageContainer = forwardRef<HTMLDivElement, PageContainerProps>(
       >
         <div
           ref={ref}
-          className="max-w-[500px] mx-auto h-full max-h-full overflow-y-auto overflow-x-hidden flex flex-col scrollbar-hide bg-white"
+          className="max-w-[500px] mx-auto h-full max-h-full overflow-y-auto overflow-x-hidden flex flex-col scrollbar-hide"
         >
           {children}
         </div>
