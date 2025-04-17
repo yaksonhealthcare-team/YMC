@@ -118,6 +118,10 @@ export const useCompleteVisit = () => {
       queryClient.invalidateQueries({
         queryKey: createUserContextQueryKey(["reservationDetail", r_idx]),
       })
+      // 홈 화면의 예정된 예약 리스트 캐시 업데이트
+      queryClient.invalidateQueries({
+        queryKey: createUserContextQueryKey(["upcomingReservations"]),
+      })
     },
     retry: false,
   })
