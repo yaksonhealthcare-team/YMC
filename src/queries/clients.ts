@@ -48,7 +48,7 @@ export const setGlobalShowToast = (showToast: (message: string) => void) => {
   globalShowToast = showToast
 }
 
-const showErrorMessage = (message: string, errorData?: any) => {
+const showErrorMessage = (message: string, errorData?: unknown) => {
   if (globalShowToast) {
     globalShowToast(message)
   }
@@ -81,6 +81,31 @@ axiosClient.interceptors.request.use(async (config) => {
   // 요청 전에 기본 설정만 적용
   return config
 })
+
+// 요청 재시도를 위한 변수
+let isRefreshing = false
+let failedQueue: {
+  resolve: (
+    value: AxiosResponse<unknown> | Promise<AxiosResponse<unknown>>,
+  ) => void
+  reject: (reason?: unknown) => void
+  config: AxiosRequestConfig
+}[] = []
+
+// 대기 중인 요청 처리
+const processQueue = (error: unknown, token: string | null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error)
+    } else if (token) {
+      prom.config.headers = prom.config.headers || {}
+      prom.config.headers.Authorization = `Bearer ${token}`
+      prom.resolve(axiosClient(prom.config))
+    }
+  })
+
+  failedQueue = []
+}
 
 axiosClient.interceptors.response.use(
   async (response) => {

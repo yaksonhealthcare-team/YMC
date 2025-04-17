@@ -52,8 +52,6 @@ const LocationPickerMap = () => {
       fetchAddressFromCoords(initialCoords) // 좌표로 실제 주소 가져오기 (항상 호출)
       fetchBranchesNearby(initialCoords) // 좌표로 주변 지점 가져오기 (항상 호출)
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routeLocation.state, location]) // 의존성 배열은 그대로 두거나, 필요시 lint 경고에 따라 fetch 함수 추가
 
   // 주변 지점 가져오기
