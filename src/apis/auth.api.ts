@@ -73,14 +73,31 @@ export const refreshAccessToken = async (): Promise<string | null> => {
 }
 
 export const fetchUser = async (): Promise<User | null> => {
-  const response =
-    await axiosClient.get<HTTPResponse<UserResponse[]>>("/auth/me")
+  try {
+    const response =
+      await axiosClient.get<HTTPResponse<UserResponse[]>>("/auth/me")
 
-  if (!response.data.body || response.data.body.length === 0) {
+    return UserMapper.toEntity(response.data.body[0])
+  } catch (error) {
+    console.error("사용자 정보 조회 실패:", error)
+    console.log("응답 데이터가 없는 경우, 액세스 토큰 갱신 시도")
+
+    // 응답 데이터가 없는 경우, 액세스 토큰 갱신 시도
+    const newAccessToken = await refreshAccessToken()
+
+    // 토큰 갱신에 성공한 경우 사용자 정보 다시 요청
+    if (newAccessToken) {
+      const retryResponse =
+        await axiosClient.get<HTTPResponse<UserResponse[]>>("/auth/me")
+
+      if (retryResponse.data.body && retryResponse.data.body.length > 0) {
+        return UserMapper.toEntity(retryResponse.data.body[0])
+      }
+    }
+
+    // 토큰 갱신 후에도 데이터가 없으면 null 반환
     return null
   }
-
-  return UserMapper.toEntity(response.data.body[0])
 }
 
 export const resetPassword = async (
