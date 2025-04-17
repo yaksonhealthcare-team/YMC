@@ -10,6 +10,7 @@ import { SocialSignupInfo } from "contexts/SignupContext"
 import { axiosClient, saveAccessToken } from "queries/clients"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { useTokenStore } from "../store/tokenStore"
 
 export const useAppBridge = () => {
   const { login } = useAuth()
@@ -228,10 +229,13 @@ export const useAppBridge = () => {
   // 네이티브에서 받은 액세스 토큰을 처리하는 함수
   const handleSetAccessToken = async (data: any) => {
     if (data.accessToken) {
-      // localStorage에 액세스 토큰 저장
-      saveAccessToken(data.accessToken)
+      // Zustand 스토어 상태 가져오기
+      const tokenStore = useTokenStore.getState()
 
-      // axios 헤더에 액세스 토큰 설정
+      // 액세스 토큰 설정 (스토어를 통해)
+      tokenStore.setAccessToken(data.accessToken)
+
+      // 액세스 토큰 설정 (API 클라이언트용)
       setAccessToken(data.accessToken)
 
       try {
