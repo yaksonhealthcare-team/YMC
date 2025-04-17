@@ -11,6 +11,8 @@ import BranchItem from "./BranchItem.tsx"
 import { useGeolocation } from "../../hooks/useGeolocation.tsx"
 import { useDebounce } from "../../hooks/useDebounce"
 import LoadingIndicator from "@components/LoadingIndicator"
+import Header from "@components/Header.tsx"
+import { useNavigate } from "react-router-dom"
 
 interface SearchBranchListProps {
   selectedBranches: Branch[]
@@ -31,6 +33,8 @@ const Step1SearchBranchList = ({
       }
     },
   })
+
+  const navigate = useNavigate()
 
   const {
     data: branchPages,
@@ -84,6 +88,11 @@ const Step1SearchBranchList = ({
 
   return (
     <div className="flex flex-col justify-between h-full">
+      <Header
+        type="back_title"
+        title="이용 지점 선택"
+        onClickBack={() => navigate(-1)}
+      />
       <div className="px-[20px] mt-[20px]">
         <p className="text-gray-700 font-bold text-20px">
           기존에 이용하셨던
