@@ -1,6 +1,7 @@
 import SplashScreen from "@components/Splash.tsx"
+import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext.tsx"
-import { Navigate, useLocation } from "react-router-dom"
 import { useAppBridge } from "../hooks/useAppBridge"
 
 interface ProtectedRouteProps {
@@ -9,15 +10,22 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { user, isLoading } = useAuth()
-  const location = useLocation()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (isLoading) {
+      return
+    }
+
+    if (!user) {
+      navigate("/login")
+    }
+  }, [isLoading, user, navigate])
+
   useAppBridge()
 
   if (isLoading) {
     return <SplashScreen />
-  }
-
-  if (!user) {
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />
   }
 
   return children
