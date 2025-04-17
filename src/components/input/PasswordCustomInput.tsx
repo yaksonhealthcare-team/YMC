@@ -59,12 +59,12 @@ const PasswordCustomInput = ({
               validatePassword(password) ? "text-success" : "text-error"
             }`}
           >
-            영문, 숫자, 특수문자 중 2종류 이상을 조합하여 10자리 이상
+            10-20자, 영문 대/소문자, 숫자, 특수문자 포함
           </span>
         )}
         {!passwordError && !password && (
           <span className="text-12px text-gray-400 ml-2">
-            영문, 숫자, 특수문자 중 2종류 이상을 조합하여 10자리 이상
+            10-20자, 영문 대/소문자, 숫자, 특수문자 포함
           </span>
         )}
       </div>

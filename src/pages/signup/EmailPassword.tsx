@@ -9,6 +9,7 @@ import validateEmail from "../../utils/emailValidator.ts"
 import { CircularProgress } from "@mui/material"
 import { checkEmail } from "../../apis/auth.api.ts"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
+import validatePassword from "../../utils/passwordValidator.ts"
 
 export const EmailPassword = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -56,25 +57,6 @@ export const EmailPassword = () => {
     }
   }, [])
 
-  const validatePassword = (password: string) => {
-    if (password.length < 10 || password.length > 20) {
-      return "비밀번호는 10-20자 이내여야 합니다"
-    }
-    if (!/[A-Z]/.test(password)) {
-      return "비밀번호는 영문 대문자를 포함해야 합니다"
-    }
-    if (!/[a-z]/.test(password)) {
-      return "비밀번호는 영문 소문자를 포함해야 합니다"
-    }
-    if (!/[0-9]/.test(password)) {
-      return "비밀번호는 숫자를 포함해야 합니다"
-    }
-    if (!/[@$!%*?&#]/.test(password)) {
-      return "비밀번호는 특수문자(@$!%*?&#)를 포함해야 합니다"
-    }
-    return ""
-  }
-
   const validateEmailField = (email: string) => {
     if (!email) {
       setErrors((prev) => ({ ...prev, email: "이메일을 입력해주세요" }))
@@ -111,9 +93,9 @@ export const EmailPassword = () => {
       if (!form.password) {
         newErrors.password = "비밀번호를 입력해주세요"
       } else {
-        const passwordError = validatePassword(form.password)
-        if (passwordError) {
-          newErrors.password = passwordError
+        if (!validatePassword(form.password)) {
+          newErrors.password =
+            "비밀번호는 10~20자 영문 대/소문자, 숫자, 특수문자(@$!%*?&#)를 포함해야 합니다."
         }
       }
 
