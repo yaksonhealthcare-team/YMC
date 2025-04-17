@@ -149,7 +149,7 @@ const Step1SearchBranchList = ({
         ) : (
           <>
             {branches.length === 0 ? (
-              <div className="flex justify-center items-center h-full py-8 text-gray-500">
+              <div className="flex justify-center items-center py-8 text-gray-500">
                 검색 결과가 없습니다.
               </div>
             ) : (
