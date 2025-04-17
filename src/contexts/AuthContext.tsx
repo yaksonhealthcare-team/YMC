@@ -6,7 +6,11 @@ import React, {
   useMemo,
   useCallback,
 } from "react"
-import { fetchUser, logout as logoutApi } from "../apis/auth.api.ts"
+import {
+  fetchUser,
+  logout as logoutApi,
+  refreshAccessToken,
+} from "../apis/auth.api.ts"
 import { queryClient } from "../queries/clients.ts"
 import { User } from "../types/User.ts"
 import { usePopupActions } from "../stores/popupStore.ts"
@@ -36,10 +40,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const loadUser = async () => {
       setIsLoading(true)
       try {
-        const fetchedUser = await fetchUser()
-        setUser(fetchedUser)
+        // 먼저 fetchUser를 시도합니다
+        try {
+          const fetchedUser = await fetchUser()
+          if (fetchedUser) {
+            setUser(fetchedUser)
+            return
+          }
+        } catch (error) {
+          console.log("현재 액세스 토큰이 만료되었거나 없음")
+        }
+
+        // fetchUser가 실패하면 리프레시 토큰을 사용해 액세스 토큰 갱신 시도
+        const newAccessToken = await refreshAccessToken()
+        if (newAccessToken) {
+          try {
+            const fetchedUser = await fetchUser()
+            setUser(fetchedUser)
+          } catch (refreshError) {
+            console.error(
+              "새 액세스 토큰으로 사용자 정보 가져오기 실패",
+              refreshError,
+            )
+            setUser(null)
+          }
+        } else {
+          console.log("리프레시 토큰이 만료되었거나 없음")
+          setUser(null)
+        }
       } catch (error) {
-        console.error("Failed to validate user session", error)
+        console.error("사용자 세션 검증 실패", error)
         setUser(null)
       } finally {
         setIsLoading(false)

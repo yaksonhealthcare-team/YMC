@@ -3,11 +3,12 @@ import Logo from "@components/Logo"
 import { CircularProgress, Typography } from "@mui/material"
 import { getKakaoLoginUrl } from "libs/kakao"
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import AppleIcon from "../../assets/icons/AppleIcon.svg?react"
 import GoogleIcon from "../../assets/icons/GoogleIcon.svg?react"
 import KakaoIcon from "../../assets/icons/KakaoIcon.svg?react"
 import NaverIcon from "../../assets/icons/NaverIcon.svg?react"
+import { useAuth } from "../../contexts/AuthContext"
 import { useLayout } from "../../contexts/LayoutContext"
 import { getAppleLoginUrl } from "../../libs/apple"
 import { getGoogleLoginUrl } from "../../libs/google"
@@ -15,7 +16,10 @@ import { getNaverLoginUrl } from "../../libs/naver"
 
 const Login = () => {
   const { setHeader, setNavigation } = useLayout()
+  const { user } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from ?? "/"
   const [osType, _setOsType] = useState<"ios" | "android" | "web" | undefined>(
     () => {
       const savedOsType = localStorage.getItem("osType")
@@ -44,6 +48,13 @@ const Login = () => {
       localStorage.setItem("osType", osType)
     }
   }, [osType])
+
+  // 사용자가 이미 로그인된 상태에서 로그인 페이지에 접근하면 리다이렉트
+  useEffect(() => {
+    if (user) {
+      navigate(from, { replace: true })
+    }
+  }, [user, navigate, from])
 
   const handleSocialLogin = async (
     provider: "kakao" | "naver" | "google" | "apple",
