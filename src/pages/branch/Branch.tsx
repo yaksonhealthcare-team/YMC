@@ -20,6 +20,7 @@ import { useBranchLocationSelect } from "../../hooks/useBranchLocationSelect.ts"
 import { useQueryClient } from "@tanstack/react-query"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { Coordinate } from "types/Coordinate.ts"
+import clsx from "clsx"
 
 const Branch = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -309,11 +310,19 @@ const Branch = () => {
 
   return (
     <div
-      className={`flex flex-col w-full h-full ${screen === "list" ? "pt-[48px]" : "pt-[0px]"}`}
+      className={clsx(
+        "flex flex-col w-full h-full",
+        screen === "list" ? "pt-[48px]" : "pt-[0px]",
+      )}
     >
       {renderScreen()}
       <div
-        className={`fixed bottom-10 left-1/2 -translate-x-1/2 ${selectedBranch ? "transition-transform -translate-y-32 duration-300" : "transition-transform translate-y-0 duration-300"}`}
+        className={clsx(
+          "fixed left-1/2 -translate-x-1/2 z-10 transition-all duration-300",
+          screen === "map" && selectedBranch
+            ? "bottom-[calc(8rem+2rem)]"
+            : "bottom-10",
+        )}
       >
         <SearchFloatingButton
           type={screen === "list" ? "search" : "list"}
@@ -321,8 +330,6 @@ const Branch = () => {
           onClick={() => {
             if (screen === "list") {
               setScreen("map")
-              // 목록 화면에서 지도 화면으로 전환 시 선택된 지점은 초기화하되,
-              // 필터는 그대로 유지
               setSelectedBranch(null)
             } else {
               setSelectedBranch(null)
