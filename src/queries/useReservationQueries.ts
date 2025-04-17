@@ -32,6 +32,7 @@ export interface ReservationDetail extends Reservation {
   branchName: string
   membershipName: string
   remainingCount: string
+  totalCount: string
   request?: string
   remainingDays?: string
   membershipId?: string
@@ -86,6 +87,7 @@ export const useReservationDetail = (reservationId: string) => {
         branchName: data.b_name,
         membershipName: data.s_name,
         remainingCount: data.remain_amount,
+        totalCount: data.buy_amount,
         request: data.r_memo,
         remainingDays: "0",
         additionalServices:

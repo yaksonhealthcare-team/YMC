@@ -5,6 +5,7 @@ interface MembershipUsageProps {
   membershipName?: string
   branchName?: string
   remainingCount?: string
+  totalCount?: string
   membershipId?: string
 }
 
@@ -12,6 +13,7 @@ const MembershipUsage = ({
   membershipName,
   branchName,
   remainingCount,
+  totalCount,
   membershipId,
 }: MembershipUsageProps) => {
   const navigate = useNavigate()
@@ -23,11 +25,15 @@ const MembershipUsage = ({
   const formatRemainingCount = (count?: string) => {
     if (!count) return "정보 없음"
 
-    // API에서 받은 값이 "5"와 같은 형태인 경우, "5회 / 10회"와 같은 형태로 변환
-    // 현재는 총 횟수 정보가 없어 임시로 표시
+    // API에서 받은 값이 "5"와 같은 형태인 경우, "5회 / N회"와 같은 형태로 변환
     const remaining = parseInt(count, 10)
-    // API가 실제로 총 횟수를 제공하면 아래 로직을 수정해야 함
-    return `${remaining}회 / 10회` // 임시로 총 횟수를 10회로 가정
+    const total = totalCount ? parseInt(totalCount, 10) : 0
+
+    // NaN 체크 추가
+    const displayRemaining = !isNaN(remaining) ? `${remaining}회` : "-"
+    const displayTotal = total > 0 ? `${total}회` : "-"
+
+    return `${displayRemaining} / ${displayTotal}`
   }
 
   return (

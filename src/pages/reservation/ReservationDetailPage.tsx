@@ -363,6 +363,7 @@ const ReservationDetailPage = () => {
           membershipName={reservation.membershipName}
           branchName={reservation.branchName}
           remainingCount={reservation.remainingCount}
+          totalCount={reservation.totalCount}
           membershipId={reservation.mp_idx}
         />
       )}
