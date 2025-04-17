@@ -87,7 +87,7 @@ const MyPagePointMembership = () => {
                   className={"p-3 pl-5 text-16px text-left w-[100px]"}
                   role="gridcell"
                 >
-                  A등급
+                  Prestige
                 </td>
                 <td className={"p-3 text-16px text-left"} role="gridcell">
                   1,000만원 이상
@@ -98,10 +98,10 @@ const MyPagePointMembership = () => {
                   className={"p-3 pl-5 text-16px text-left w-[100px]"}
                   role="gridcell"
                 >
-                  B등급
+                  Black
                 </td>
                 <td className={"p-3 text-16px text-left"} role="gridcell">
-                  330만원 이상
+                  300만원 이상
                 </td>
               </tr>
               <tr className={"border-b border-gray-100"} role="row">
@@ -109,7 +109,7 @@ const MyPagePointMembership = () => {
                   className={"p-3 pl-5 text-16px text-left w-[100px]"}
                   role="gridcell"
                 >
-                  C등급
+                  Standard
                 </td>
                 <td className={"p-3 text-16px text-left"} role="gridcell">
                   150만원 이상
@@ -120,21 +120,10 @@ const MyPagePointMembership = () => {
                   className={"p-3 pl-5 text-16px text-left w-[100px]"}
                   role="gridcell"
                 >
-                  D등급
+                  Basic
                 </td>
                 <td className={"p-3 text-16px text-left"} role="gridcell">
-                  30만원 이상
-                </td>
-              </tr>
-              <tr className={"border-b border-gray-100"} role="row">
-                <td
-                  className={"p-3 pl-5 text-16px text-left w-[100px]"}
-                  role="gridcell"
-                >
-                  E등급
-                </td>
-                <td className={"p-3 text-16px text-left"} role="gridcell">
-                  기본 등급
+                  0원 이상 150만원 미만
                 </td>
               </tr>
             </tbody>
@@ -197,7 +186,7 @@ const MyPagePointMembership = () => {
             "rounded-lg p-1",
           )}
           onClick={handleOpenUserLevel}
-          aria-label={`회원등급 ${user?.level ?? "일반"} 안내`}
+          aria-label={`회원등급 ${user?.levelName ?? "Basic"} 안내`}
         >
           <div className="flex items-center gap-2">
             <CrownIcon className="w-4 h-4" aria-hidden="true" />
@@ -205,7 +194,7 @@ const MyPagePointMembership = () => {
           </div>
           <div className="flex items-center gap-1.5">
             <span className="font-sb text-16px text-gray-900">
-              {user?.level ?? "일반"}
+              {user?.levelName ?? "Basic"}
             </span>
             <InformationIcon
               className="w-4 h-4 text-gray-400"

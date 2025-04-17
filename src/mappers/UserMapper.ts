@@ -16,7 +16,7 @@ export class UserMapper {
         detail: response.addr2,
       },
       marketingAgreed: response.marketing_yn === "Y",
-      point: response.points,
+      point: parseInt(response.points.replace(/,/g, ""), 10) || 0,
       profileURL: response.profileURL || undefined,
       thirdPartyType: response.thirdPartyType,
       gender: response.sex as "M" | "F",
