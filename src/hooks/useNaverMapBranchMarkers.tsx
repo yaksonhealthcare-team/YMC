@@ -1,7 +1,7 @@
 import { Branch } from "../types/Branch.ts"
 import { Coordinate } from "../types/Coordinate.ts"
 import { useEffect, useRef } from "react"
-import { createMarkerIcon } from "../utils/createMarkerIcon"
+import { createMarkerIcon, MarkerState } from "../utils/createMarkerIcon"
 
 interface UseNaverMapBranchMarkersProps {
   map: naver.maps.Map | null
@@ -68,16 +68,26 @@ export const useNaverMapBranchMarkers = ({
 
       branches.forEach((branch) => {
         try {
+          // Determine marker state based on selection and favorite status
+          const isActive = Number(branch.b_idx) === selectedBranchId
+          const isBookmarked = branch.isFavorite ?? false
+
+          let markerState: MarkerState = "default"
+          if (isActive && isBookmarked) {
+            markerState = "active-bookmark"
+          } else if (isActive) {
+            markerState = "active"
+          } else if (isBookmarked) {
+            markerState = "bookmark"
+          }
+
           const marker = new window.naver.maps.Marker({
             position: new window.naver.maps.LatLng(
               branch.latitude,
               branch.longitude,
             ),
             map,
-            icon: createMarkerIcon(
-              branch,
-              Number(branch.b_idx) === selectedBranchId ? "active" : "default",
-            ),
+            icon: createMarkerIcon(branch, markerState),
           })
 
           if (options.onClickMarker) {
