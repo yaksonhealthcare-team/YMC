@@ -4,6 +4,7 @@ export interface Event {
   title: string
   sdate: string
   edate: string
+  status: "ING" | "END" | string
   contents?: string
   files: {
     fileCode: string

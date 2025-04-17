@@ -100,9 +100,16 @@ const EventPage = () => {
                     <span className="font-b text-16px text-gray-900 line-clamp-2">
                       {event.title}
                     </span>
-                    <span className="mt-2 font-r text-12px text-gray-500">
-                      {event.sdate} ~ {event.edate}
-                    </span>
+                    <div className="flex items-center gap-2 mt-2">
+                      {event.status === "END" && (
+                        <span className="px-2 h-5 rounded text-12px font-m bg-[#ECECEC] text-[#9E9E9E] inline-flex items-center justify-center leading-5">
+                          종료
+                        </span>
+                      )}
+                      <span className="font-r text-12px text-gray-500">
+                        {event.sdate} ~ {event.edate}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>

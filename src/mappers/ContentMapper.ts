@@ -17,6 +17,7 @@ export class ContentMapper {
       contents: dto.contents || "",
       sdate: dto.sdate,
       edate: dto.edate,
+      status: dto.status,
       files: dto.files || [],
       gubun: dto.gubun,
     }))
@@ -34,6 +35,7 @@ export class ContentMapper {
       contents: dto.contents || "",
       sdate: dto.sdate,
       edate: dto.edate,
+      status: dto.status,
       files: dto.files || [],
       gubun: dto.gubun,
     }
