@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import CheckCircle from "@assets/icons/CheckCircle.svg?react"
 import { useAuth } from "../../contexts/AuthContext.tsx"
 import { fetchCRMUser } from "../../apis/user.api"
+import { CircularProgress } from "@mui/material"
 
 export const SignupComplete = () => {
   const navigate = useNavigate()
@@ -77,8 +78,15 @@ export const SignupComplete = () => {
             sizeType="l"
             onClick={handleExistingUser}
             disabled={isLoading}
+            className="relative w-full"
           >
-            네, 이용해봤어요
+            <span className="inline-flex items-center justify-center min-h-[24px]">
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "네, 이용해봤어요"
+              )}
+            </span>
           </Button>
         </div>
       </div>
