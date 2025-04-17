@@ -62,6 +62,9 @@ export const useAppBridge = () => {
           case "EMAIL_LOGIN":
             handleEmailLogin(data.data)
             break
+          case "SET_ACCESS_TOKEN":
+            handleSetAccessToken(data.data)
+            break
         }
       }
 
@@ -220,6 +223,46 @@ export const useAppBridge = () => {
 
   const handleFcmToken = async (data: any) => {
     localStorage.setItem("FCM_TOKEN", data.fcmToken)
+  }
+
+  // 네이티브에서 받은 액세스 토큰을 처리하는 함수
+  const handleSetAccessToken = async (data: any) => {
+    if (data.accessToken) {
+      // localStorage에 액세스 토큰 저장
+      saveAccessToken(data.accessToken)
+
+      // axios 헤더에 액세스 토큰 설정
+      setAccessToken(data.accessToken)
+
+      try {
+        // 토큰으로 사용자 정보 가져오기
+        const user = await fetchUser()
+        login({ user })
+
+        // 로그인 페이지에 있다면 홈으로 리다이렉트
+        if (location.pathname.includes("/login")) {
+          navigate("/", { replace: true })
+        }
+
+        // 토큰 설정 성공 응답
+        window.ReactNativeWebView?.postMessage(
+          JSON.stringify({
+            type: "SET_ACCESS_TOKEN_SUCCESS",
+          }),
+        )
+      } catch (error) {
+        // 오류 발생 시 로그
+        window.ReactNativeWebView?.postMessage(
+          JSON.stringify({
+            type: "SET_ACCESS_TOKEN_ERROR",
+            data: {
+              message: "토큰으로 사용자 정보를 가져오는데 실패했습니다",
+              error: JSON.stringify(error),
+            },
+          }),
+        )
+      }
+    }
   }
 
   return null
