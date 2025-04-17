@@ -1,8 +1,7 @@
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import { Divider } from "@mui/material"
 import { ReservationDetail } from "queries/useReservationQueries"
-import { format, isValid, differenceInCalendarDays } from "date-fns"
-import { ko } from "date-fns/locale"
+import dayjs from "dayjs"
 import { useMemo } from "react"
 
 interface ReservationSummaryProps {
@@ -21,17 +20,18 @@ const ReservationSummary = ({ reservation }: ReservationSummaryProps) => {
     formattedDate,
     formattedTime,
   } = useMemo(() => {
-    const date = new Date(reservation.date)
+    const date = dayjs(reservation.date)
     const hasStatus = !!reservation.status
     const hasProgramName = !!reservation.programName
     const hasDuration = !!reservation.duration
     const hasRequest = !!reservation.request
-    const today = new Date()
+    const today = dayjs().startOf("day") // 오늘 날짜의 시작 (00:00:00)
 
     // 방문 예정일 경우 D-day 계산
     const isUpcoming = reservation.statusCode === "001" // 예약완료 상태
-    const daysDiff = isUpcoming ? differenceInCalendarDays(date, today) : 0
-    // 오늘이면 D-day, 내일이면 D-1, 어제면 D+1로 표시
+    const daysDiff = isUpcoming ? date.startOf("day").diff(today, "day") : 0
+
+    // D-day 텍스트 계산
     const dDayText =
       daysDiff === 0
         ? "D-day"
@@ -40,12 +40,12 @@ const ReservationSummary = ({ reservation }: ReservationSummaryProps) => {
           : `D+${Math.abs(daysDiff)}`
 
     // 날짜와 시간 포맷팅
-    const formattedDate = isValid(date)
-      ? format(date, "yyyy년 MM월 dd일 (E)", { locale: ko })
+    const formattedDate = date.isValid()
+      ? date.format("YYYY년 MM월 DD일 (ddd)")
       : "날짜 정보 없음"
 
-    const formattedTime = isValid(date)
-      ? format(date, "a hh:mm", { locale: ko })
+    const formattedTime = date.isValid()
+      ? date.format("a hh:mm")
       : "시간 정보 없음"
 
     return {

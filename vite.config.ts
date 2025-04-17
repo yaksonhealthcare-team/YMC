@@ -64,49 +64,30 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          // 핵심 리액트 라이브러리
-          "react-core": ["react", "react-dom"],
-
-          // 라우팅 관련 모듈 분리
-          "react-router": ["react-router-dom"],
-
-          // MUI 모든 모듈을 하나의 청크로 통합
-          "mui-all": [
-            "@mui/material",
-            "@mui/material/styles",
-            "@emotion/react",
-            "@emotion/styled",
-            "@mui/x-date-pickers",
-          ],
-
-          // date-fns 관련 모듈 최적화
-          "date-fns-core": [
-            "date-fns/parseISO",
-            "date-fns/format",
-            "date-fns/formatDistance",
-          ],
-
-          // date-fns 로케일은 실제 사용하는 것만 포함
-          "date-fns-locale": ["date-fns/locale/ko"],
-
-          // 스와이퍼 코어 기능
-          "swiper-core": ["swiper/react", "swiper/modules"],
-
-          // Firebase 관련 모듈
-          "firebase": ["firebase/app", "firebase/auth", "firebase/messaging"],
-
-          // API 호출 관련 모듈
-          "api-client": ["axios", "@tanstack/react-query"],
-
-          // 공통 컴포넌트 그룹화
-          "common-components": [
-            "@components/LoadingIndicator",
-            "@components/ErrorPage",
-          ],
-
-          // 지도 관련 컴포넌트 (필요시에만 로드)
-          "map-components": ["@components/MapView"],
+        manualChunks: (id) => {
+          if (id.includes("node_modules/@mui")) {
+            return "mui"
+          }
+          if (id.includes("node_modules/firebase")) {
+            return "firebase"
+          }
+          if (id.includes("node_modules/react-router")) {
+            return "react-router"
+          }
+          if (id.includes("node_modules/dayjs")) {
+            return "dayjs"
+          }
+          // date-fns 관련 청크 제거
+          // if (id.includes("node_modules/date-fns")) {
+          //   if (id.includes("locale")) {
+          //     return "date-fns-locale"
+          //   }
+          //   return "date-fns-core"
+          // }
+          // 나머지 node_modules는 vendor 청크로 분리
+          if (id.includes("node_modules")) {
+            return "vendor"
+          }
         },
       },
     },

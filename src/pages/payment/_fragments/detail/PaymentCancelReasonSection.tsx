@@ -1,4 +1,4 @@
-import { format } from "date-fns"
+import dayjs from "dayjs"
 
 const PaymentCancelReasonSection = ({
   canceledAt,
@@ -14,7 +14,7 @@ const PaymentCancelReasonSection = ({
       <div className={"flex justify-between mt-3 items-center"}>
         <p className={"text-14px font-m text-gray-500"}>{"결제 취소일"}</p>
         <p className={"text-14px font-sb"}>
-          {format(canceledAt, "yyyy.MM.dd")}
+          {dayjs(canceledAt).format("YYYY.MM.DD")}
         </p>
       </div>
     </div>

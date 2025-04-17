@@ -1,4 +1,4 @@
-import { format } from "date-fns"
+import dayjs from "dayjs"
 import { PaymentHistoryDetail } from "../../../../types/Payment.ts"
 import PaymentItemList from "../PaymentItemList.tsx"
 import { useNavigate } from "react-router-dom"
@@ -16,14 +16,15 @@ const PaymentItemSection = ({
   className,
 }: PaymentItemSectionProps) => {
   const navigate = useNavigate()
+  const formattedDate = dayjs(payment.paidAt).format("YYYY.MM.DD")
   return (
     <section
       className={clsx("flex flex-col gap-4", className)}
-      aria-label={`${format(payment.paidAt, "yyyy.MM.dd")} 결제 내역`}
+      aria-label={`${formattedDate} 결제 내역`}
     >
       <header className="flex gap-2 items-center">
         <time dateTime={payment.paidAt.toISOString()} className="font-sb">
-          {format(payment.paidAt, "yyyy.MM.dd")}
+          {formattedDate}
         </time>
         <span
           className={clsx(
