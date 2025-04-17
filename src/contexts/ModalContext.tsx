@@ -1,6 +1,7 @@
 import React, { createContext, ReactNode, useContext, useState } from "react"
 import { Dialog, DialogContent } from "@mui/material"
 import { Button } from "../components/Button"
+import { useModalBackButtonHandler } from "../hooks/useModalBackButtonHandler"
 
 /**
  * 오버레이 타입을 정의하는 열거형
@@ -210,6 +211,12 @@ const OverlayContainer: React.FC = () => {
   const [touchCurrentY, setTouchCurrentY] = useState<number | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const DRAG_THRESHOLD = 100 // 드래그 닫기 임계값 (픽셀)
+
+  // 뒤로가기 핸들러 훅 사용
+  useModalBackButtonHandler({
+    isOpen: overlayState.isOpen,
+    onClose: closeOverlay,
+  })
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
