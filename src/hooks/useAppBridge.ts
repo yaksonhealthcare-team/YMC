@@ -17,7 +17,7 @@ export const useAppBridge = () => {
   const navigate = useNavigate()
 
   const handleEmailLogin = async (data: Record<string, unknown>) => {
-    await loginWithEmail({
+    const loginResponse = await loginWithEmail({
       username: data.username as string,
       password: data.password as string,
       deviceToken: localStorage.getItem("FCM_TOKEN"),
@@ -64,7 +64,7 @@ export const useAppBridge = () => {
             handleEmailLogin(data.data)
             break
           case "SET_ACCESS_TOKEN":
-            handleSetAccessToken(data.data)
+            setAccessToken(data.data)
             break
         }
       }
