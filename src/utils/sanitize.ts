@@ -1,9 +1,10 @@
 /**
  * HTML 문자열에서 XSS 공격에 사용될 수 있는 위험한 태그와 속성을 제거합니다.
- * @param html HTML 문자열
- * @returns 안전하게 처리된 HTML 문자열
+ * DOMParser를 사용하여 안전하게 파싱하고, 화이트리스트 방식으로 허용된 프로토콜만 남깁니다.
+ * @param html - 처리할 원본 HTML 문자열.
+ * @returns 안전하게 처리된 HTML 문자열. 입력이 유효하지 않으면 빈 문자열 반환.
  */
-export function sanitizeHtml(html: string): string {
+export function sanitizeHtml(html: string | null | undefined): string {
   if (!html) return ""
 
   // DOMParser를 사용하여 HTML 파싱
@@ -119,16 +120,23 @@ export function sanitizeHtml(html: string): string {
 
 /**
  * 파일 업로드 시 파일 타입과 크기를 검증합니다.
- * @param file 검증할 파일
- * @param allowedTypes 허용된 MIME 타입 배열
- * @param maxSize 최대 파일 크기 (바이트)
- * @returns 검증 결과 객체
+ * @param file - 검증할 파일 객체 (File API).
+ * @param allowedTypes - 허용된 MIME 타입 문자열 배열 (기본값: ["image/jpeg", "image/jpg", "image/png"]).
+ * @param maxSize - 허용된 최대 파일 크기 (바이트 단위, 기본값: 5MB).
+ * @returns 검증 결과 객체 ({ valid: boolean, message?: string }). 유효하면 message는 없음.
  */
 export function validateFile(
-  file: File,
+  file: File | null | undefined,
   allowedTypes: string[] = ["image/jpeg", "image/jpg", "image/png"],
   maxSize: number = 5 * 1024 * 1024, // 기본 5MB
 ): { valid: boolean; message?: string } {
+  if (!file) {
+    return {
+      valid: false,
+      message: "파일이 유효하지 않습니다.",
+    }
+  }
+
   // 파일 타입 검증
   if (!allowedTypes.includes(file.type)) {
     return {
@@ -149,11 +157,12 @@ export function validateFile(
 }
 
 /**
- * 텍스트 입력에서 HTML 태그를 이스케이프 처리합니다.
- * @param text 이스케이프 처리할 텍스트
- * @returns 이스케이프 처리된 텍스트
+ * 텍스트 입력에서 HTML 특수 문자를 이스케이프 처리하여 XSS 공격을 방지합니다.
+ * (&, <, >, ", ') 문자를 HTML 엔티티로 변환합니다.
+ * @param text - 이스케이프 처리할 원본 텍스트.
+ * @returns 이스케이프 처리된 텍스트. 입력이 유효하지 않으면 빈 문자열 반환.
  */
-export function escapeHtml(text: string): string {
+export function escapeHtml(text: string | null | undefined): string {
   if (!text) return ""
 
   return text
