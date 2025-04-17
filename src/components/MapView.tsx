@@ -14,13 +14,16 @@ interface MapViewProps {
     onMoveMap?: (coordinate: Coordinate) => void
     onSelectBranch?: (branch: Branch) => void
     currentLocationButtonPosition?: string
+    useStaticPinIcon?: boolean
   }
+  useStaticPinIcon?: boolean
 }
 
 const MapView = ({
   center,
   branches = [],
   options = { showCurrentLocationButton: true },
+  useStaticPinIcon,
 }: MapViewProps) => {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstance = useRef<naver.maps.Map | null>(null)
@@ -62,7 +65,10 @@ const MapView = ({
     selectedBranchId: selectedBranch?.b_idx
       ? Number(selectedBranch.b_idx)
       : null,
-    options: markerOptions,
+    options: {
+      ...markerOptions,
+      useStaticPinIcon: useStaticPinIcon,
+    },
   })
 
   useEffect(() => {

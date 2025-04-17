@@ -10,6 +10,7 @@ interface UseNaverMapBranchMarkersProps {
   options?: {
     showCurrentLocationMarker?: boolean
     onClickMarker?: (branch: Branch) => void
+    useStaticPinIcon?: boolean
   }
 }
 
@@ -87,7 +88,9 @@ export const useNaverMapBranchMarkers = ({
               branch.longitude,
             ),
             map,
-            icon: createMarkerIcon(branch, markerState),
+            icon: options.useStaticPinIcon
+              ? createMarkerIcon(null, "location-selector")
+              : createMarkerIcon(branch, markerState),
           })
 
           if (options.onClickMarker) {

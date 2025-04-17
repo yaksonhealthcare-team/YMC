@@ -69,6 +69,7 @@ const Location = ({ reservation }: LocationProps) => {
           <MapView
             center={branchLocation}
             branches={[branch]}
+            useStaticPinIcon={true}
             options={{
               showCurrentLocationButton: false,
               showCurrentLocation: false,
