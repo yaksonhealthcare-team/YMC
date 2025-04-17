@@ -2,28 +2,27 @@ import { Notice, NoticeDetail } from "../types/Content.ts"
 import { Event, EventDetail } from "types/Event"
 
 export class ContentMapper {
-  static toEvents(dtos: Record<string, unknown>[]): Event[] {
+  static toEvents(dtos: Event[]): Event[] {
     return dtos.map((dto) => ({
-      code: dto.code as string,
-      title: dto.title as string,
-      contents: (dto.contents as string) || "",
-      sdate: dto.sdate as string,
-      edate: dto.edate as string,
-      files: (dto.files as []) || [],
-      status: (dto.status as string) || "",
-      gubun: dto.gubun as string,
+      code: dto.code,
+      title: dto.title,
+      contents: dto.contents || "",
+      sdate: dto.sdate,
+      edate: dto.edate,
+      files: dto.files || [],
+      gubun: dto.gubun,
     }))
   }
 
-  static toEventDetail(dto: Record<string, unknown>): EventDetail {
+  static toEventDetail(dto: EventDetail): EventDetail {
     return {
-      code: dto.code as string,
-      title: dto.title as string,
-      contents: (dto.contents as string) || "",
-      sdate: dto.sdate as string,
-      edate: dto.edate as string,
-      files: (dto.files as []) || [],
-      gubun: dto.gubun as string,
+      code: dto.code,
+      title: dto.title,
+      contents: dto.contents || "",
+      sdate: dto.sdate,
+      edate: dto.edate,
+      files: dto.files || [],
+      gubun: dto.gubun,
     }
   }
 
@@ -36,14 +35,14 @@ export class ContentMapper {
     }))
   }
 
-  static toNoticeDetail(dto: Record<string, unknown>): NoticeDetail {
+  static toNoticeDetail(dto: NoticeDetail): NoticeDetail {
     return {
-      code: dto.code as string,
-      gubun: dto.gubun as string,
-      title: dto.title as string,
-      regDate: dto.regDate as string,
-      contents: dto.contents as string,
-      files: (dto.files as []) || [],
+      code: dto.code,
+      gubun: dto.gubun,
+      title: dto.title,
+      regDate: dto.regDate,
+      contents: dto.contents,
+      files: dto.files || [],
     }
   }
 }
