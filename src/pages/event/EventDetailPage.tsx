@@ -61,7 +61,7 @@ const EventHeader = ({ event }: { event: EventDetail }) => {
 }
 
 const EventContent = ({ event }: { event: EventDetail }) => {
-  if (!event.contents) {
+  if (!event.contents && (!event.files || event.files.length === 0)) {
     return null
   }
 
@@ -80,10 +80,12 @@ const EventContent = ({ event }: { event: EventDetail }) => {
           ))}
         </div>
       )}
-      <div
-        className="text-16px font-normal text-gray-900 leading-[26.88px]"
-        dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.contents) }}
-      />
+      {event.contents && (
+        <div
+          className="text-16px font-normal text-gray-900 leading-[26.88px] mb-8"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.contents) }}
+        />
+      )}
     </div>
   )
 }
