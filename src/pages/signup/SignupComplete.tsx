@@ -14,7 +14,7 @@ export const SignupComplete = () => {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    setHeader({ display: false })
+    setHeader({ display: false, backgroundColor: "bg-white" })
     setNavigation({ display: false })
   }, [])
 

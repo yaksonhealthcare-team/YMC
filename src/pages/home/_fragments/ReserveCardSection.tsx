@@ -58,7 +58,7 @@ const ReserveCardSection = () => {
       />
       {!hasReservations ? (
         <EmptyCard
-          title="예정된 예약이 없어요.\n예약을 통해 관리를 받아보세요."
+          title={`예정된 예약이 없어요.\n예약을 통해 관리를 받아보세요.`}
           button="예약하러 가기"
           onClick={handleReservationClick}
         />
