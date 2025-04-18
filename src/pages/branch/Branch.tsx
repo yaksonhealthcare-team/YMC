@@ -1,5 +1,5 @@
 import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useOverlay } from "../../contexts/ModalContext.tsx"
 import BranchFilterBottomSheet, {
   FilterItem,
@@ -22,14 +22,22 @@ import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { Coordinate } from "types/Coordinate.ts"
 import clsx from "clsx"
 
+// 기본 주소 상수 정의
+const DEFAULT_ADDRESS = "서울특별시 중구 세종대로 110"
+
 const Branch = () => {
   const { setHeader, setNavigation } = useLayout()
-  const { openBottomSheet, closeOverlay } = useOverlay()
-  const { location: currentLocation, loading: locationLoading } =
-    useGeolocation()
+  const { openBottomSheet, closeOverlay, showToast } = useOverlay()
+  const {
+    location: currentLocation,
+    loading: locationLoading,
+    error: locationError,
+  } = useGeolocation()
   const { location: selectedLocation } = useBranchLocationSelect()
   const [screen, setScreen] = useState<"list" | "map">("list")
   const [selectedBranch, setSelectedBranch] = useState<BranchType | null>(null)
+  const [isInitialLoad, setIsInitialLoad] = useState(true)
+  const prevSelectedLocationRef = useRef(selectedLocation)
   const [selectedFilter, setSelectedFilter] = useState<{
     latitude?: number
     longitude?: number
@@ -39,15 +47,108 @@ const Branch = () => {
   }>({
     brand: null,
     category: null,
-    latitude: (selectedLocation?.coords || currentLocation)?.latitude,
-    longitude: (selectedLocation?.coords || currentLocation)?.longitude,
-    enabled: true,
+    latitude: undefined,
+    longitude: undefined,
+    enabled: false,
   })
 
   const queryClient = useQueryClient()
   const { data: brands } = useBrands()
-  // const { data: categories, isLoading: isCategoriesLoading } =
-  //   useBranchCategories(selectedFilter.brand?.code)
+  const routeLocation = useLocation()
+
+  // 위치 정보가 로드되면 필터 업데이트
+  useEffect(() => {
+    if (!locationLoading) {
+      // 우선순위 변경: 1) 선택된 위치, 2) 현재 위치, 3) 에러 및 디폴트 위치
+      if (selectedLocation?.coords) {
+        // 사용자가 선택한 위치가 있는 경우 (최우선)
+        setSelectedFilter((prev) => ({
+          ...prev,
+          latitude: selectedLocation.coords.latitude,
+          longitude: selectedLocation.coords.longitude,
+          enabled: true,
+        }))
+      } else if (currentLocation && !locationError) {
+        // 현재 위치를 사용할 수 있는 경우 (두 번째 우선순위)
+        setSelectedFilter((prev) => ({
+          ...prev,
+          latitude: currentLocation.latitude,
+          longitude: currentLocation.longitude,
+          enabled: true,
+        }))
+      } else if (locationError) {
+        // 위치 정보를 불러올 수 없을 때 (마지막 우선순위)
+        showToast("위치 정보를 불러올 수 없습니다")
+
+        // 기본 좌표로 설정 (서울시청)
+        setSelectedFilter((prev) => ({
+          ...prev,
+          latitude: 37.5665,
+          longitude: 126.978,
+          enabled: true,
+        }))
+      }
+
+      // 초기 로딩이 완료되면 isInitialLoad 상태 업데이트
+      if (isInitialLoad) {
+        // 약간의 지연을 주어 위치 정보가 표시된 후 변경되도록 함
+        setTimeout(() => {
+          setIsInitialLoad(false)
+        }, 1000)
+      }
+    }
+  }, [locationLoading, locationError, currentLocation, selectedLocation])
+
+  // selectedLocation이 변경되었을 때 API 새로 호출
+  useEffect(() => {
+    // 최초 렌더링 시 제외
+    if (
+      prevSelectedLocationRef.current !== selectedLocation &&
+      selectedFilter.enabled
+    ) {
+      console.log("위치 변경 감지: API 재호출", selectedLocation)
+
+      // 선택된 위치가 있으면 필터 업데이트
+      if (selectedLocation?.coords) {
+        setSelectedFilter((prev) => ({
+          ...prev,
+          latitude: selectedLocation.coords.latitude,
+          longitude: selectedLocation.coords.longitude,
+          enabled: true,
+        }))
+      }
+
+      // API 새로 호출
+      refetch()
+    }
+
+    // 참조 업데이트
+    prevSelectedLocationRef.current = selectedLocation
+  }, [selectedLocation])
+
+  // 위치 설정 페이지에서 돌아왔을 때 감지
+  useEffect(() => {
+    // 이전 페이지가 위치 설정 페이지일 경우
+    if (
+      routeLocation.state?.from === "/branch/location" ||
+      routeLocation.state?.from === "/branch/location/picker"
+    ) {
+      console.log("위치 설정 페이지에서 돌아옴: API 재호출", selectedLocation)
+
+      // 선택된 위치가 있으면 필터 업데이트
+      if (selectedLocation?.coords) {
+        setSelectedFilter((prev) => ({
+          ...prev,
+          latitude: selectedLocation.coords.latitude,
+          longitude: selectedLocation.coords.longitude,
+          enabled: true,
+        }))
+      }
+
+      // API 새로 호출
+      refetch()
+    }
+  }, [routeLocation.state])
 
   const {
     data: branchPaginationData,
@@ -64,9 +165,26 @@ const Branch = () => {
     enabled: selectedFilter.enabled,
   })
 
-  const address =
-    branchPaginationData?.pages[0]?.body?.current_addr ||
-    "서울 강남구 테헤란로78길 14-10"
+  // 현재 표시할 주소 결정
+  const displayAddress = () => {
+    // 페이지 초기 진입 시 '현재 위치'로 표시
+    if (isInitialLoad) {
+      return "현재 위치"
+    }
+
+    // 사용자가 선택한 위치가 있는 경우 (최우선)
+    if (selectedLocation?.address) {
+      return selectedLocation.address
+    }
+
+    // API에서 받아온 주소가 있는 경우 (두 번째 우선순위)
+    if (branchPaginationData?.pages[0]?.body?.current_addr) {
+      return branchPaginationData.pages[0].body.current_addr
+    }
+
+    // 위치 정보 에러가 있는 경우 기본 주소 반환 (마지막 우선순위)
+    return DEFAULT_ADDRESS
+  }
 
   // 브랜드 코드와 브랜드 타입 매핑
   const getBrandType = (brandCode: string) => {
@@ -146,7 +264,6 @@ const Branch = () => {
       ...prev,
       brand: null,
       category: null,
-      enabled: false,
     }))
     refetch()
     // 필터 초기화 시 선택된 지점 초기화
@@ -154,7 +271,9 @@ const Branch = () => {
   }
 
   const handleNavigateToLocationSettings = () => {
-    navigate("/branch/location")
+    navigate("/branch/location", {
+      state: { from: location.pathname },
+    })
   }
 
   const handleNavigateToBranchSearch = () => {
@@ -209,7 +328,7 @@ const Branch = () => {
               onClick={handleNavigateToLocationSettings}
             >
               <p className={"font-sb text-14px overflow-ellipsis line-clamp-1"}>
-                {selectedLocation?.address ?? address}
+                {displayAddress()}
               </p>
               <CaretDownIcon className={"w-4 h-4"} />
             </button>
@@ -254,11 +373,13 @@ const Branch = () => {
   }, [
     selectedFilter,
     brands,
-    address,
-    // categories,
-    // isCategoriesLoading,
+    locationLoading,
+    selectedLocation,
+    locationError,
+    branchPaginationData?.pages[0]?.body?.current_addr,
     branchPaginationData?.pages[0]?.total_count,
     screen,
+    isInitialLoad,
   ])
 
   const handleMapMove = (newCenter: Coordinate) => {
@@ -283,7 +404,7 @@ const Branch = () => {
             }}
             onSelectBranch={handleBranchSelect}
             isLoading={branchesLoading}
-            totalCount={branchPaginationData?.pages[0].total_count}
+            totalCount={branchPaginationData?.pages[0]?.total_count}
           />
         )
       case "map":
@@ -299,10 +420,13 @@ const Branch = () => {
     }
   }
 
-  // 위치 정보를 로딩 중인 경우 로딩 표시
-  if (locationLoading) {
+  // 위치 정보를 로딩 중이거나 API 로딩 중인 경우 로딩 표시
+  if (
+    locationLoading ||
+    (selectedFilter.enabled && branchesLoading && !branchPaginationData)
+  ) {
     return (
-      <div className="flex items-center justify-center min-h-[200px]">
+      <div className="flex items-center justify-center min-h-screen">
         <LoadingIndicator />
       </div>
     )
