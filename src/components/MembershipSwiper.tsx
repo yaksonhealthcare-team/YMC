@@ -4,7 +4,7 @@ import { Pagination } from "swiper/modules"
 import "swiper/css"
 import "swiper/css/pagination"
 import { MembershipRadioCard } from "../pages/reservation/_fragments/MembershipRadioCard"
-import { useMemo, useState } from "react"
+import { useMemo, useState, useEffect, useRef } from "react"
 import { MyMembership } from "types/Membership"
 import { ListResponse } from "apis/membership.api"
 
@@ -22,50 +22,45 @@ export const MembershipSwiper = ({
   initialMembershipId,
 }: MembershipSwiperProps) => {
   const [activeIndex, setActiveIndex] = useState(0)
+  const isInitialRender = useRef(true)
+  const [sortedMemberships, setSortedMemberships] = useState<MyMembership[]>([])
 
-  // 정렬된 멤버십 목록 - initialMembershipId에 따라 재정렬
-  const sortedMemberships = useMemo(() => {
-    // 정렬할 필요가 없는 경우
-    if (!initialMembershipId || membershipsData.body.length <= 1) {
-      return membershipsData.body
+  // 처음 로드될 때만 정렬된 회원권 목록 설정
+  useEffect(() => {
+    if (isInitialRender.current) {
+      // 첫 렌더링 시 정렬 적용
+      let sorted = [...membershipsData.body]
+
+      // initialMembershipId가 있을 경우에만 정렬 수행
+      if (initialMembershipId && membershipsData.body.length > 1) {
+        const selectedIndex = membershipsData.body.findIndex(
+          (membership) => membership.mp_idx === initialMembershipId,
+        )
+
+        if (selectedIndex !== -1) {
+          // 선택된 회원권을 맨 앞으로 이동
+          const selectedMembership = sorted.splice(selectedIndex, 1)[0]
+          sorted = [selectedMembership, ...sorted]
+        }
+      }
+
+      setSortedMemberships(sorted)
+      isInitialRender.current = false
+    } else if (membershipsData.body.length !== sortedMemberships.length) {
+      // 회원권 개수가 변경된 경우에만 목록 업데이트 (정렬은 유지)
+      setSortedMemberships(membershipsData.body)
     }
+  }, [membershipsData.body, initialMembershipId, sortedMemberships.length])
 
-    // 선택된 회원권 찾기
-    const selectedIndex = membershipsData.body.findIndex(
-      (membership) => membership.mp_idx === initialMembershipId,
-    )
-
-    // 해당 회원권이 목록에 없으면 원래 목록 반환
-    if (selectedIndex === -1) {
-      return membershipsData.body
-    }
-
-    // 선택된 회원권을 맨 앞으로 이동
-    const result = [...membershipsData.body]
-    const selectedMembership = result.splice(selectedIndex, 1)[0]
-
-    return [selectedMembership, ...result]
-  }, [membershipsData.body, initialMembershipId])
-
-  // 초기 인덱스 - 항상 0번 인덱스 사용 (정렬된 목록의 첫 번째 항목)
+  // 초기 인덱스 - 선택된 회원권의 위치 찾기
   const initialIndex = useMemo(() => {
-    // 정렬된 목록에서는 선택된 회원권이 항상 0번 인덱스
-    if (initialMembershipId && sortedMemberships.length > 0) {
-      if (sortedMemberships[0].mp_idx === initialMembershipId) {
-        return 0
-      }
+    if (!selectedItem || sortedMemberships.length === 0) return 0
 
-      // 혹시 정렬이 제대로 안된 경우를 위한 예비 로직
-      const index = sortedMemberships.findIndex(
-        (membership) => membership.mp_idx === initialMembershipId,
-      )
-
-      if (index !== -1) {
-        return index
-      }
-    }
-    return 0
-  }, [initialMembershipId, sortedMemberships])
+    const index = sortedMemberships.findIndex(
+      (membership) => membership.mp_idx === selectedItem,
+    )
+    return index !== -1 ? index : 0
+  }, [selectedItem, sortedMemberships])
 
   return (
     <Box className="w-full">
