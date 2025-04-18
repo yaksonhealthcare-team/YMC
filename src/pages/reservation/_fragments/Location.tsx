@@ -83,8 +83,8 @@ const Location = ({ reservation }: LocationProps) => {
       </div>
       <div className="flex gap-[12px] flex-col mt-[16px]">
         <InfoGroup icon={<PinIcon />}>
-          <div className={"flex w-full justify-between"}>
-            <p className={!hasAddress ? "text-gray-500" : ""}>
+          <div className={"flex w-full flex-row items-start gap-2"}>
+            <p className={`flex-1 ${!hasAddress ? "text-gray-500" : ""}`}>
               {hasAddress ? branch.address : "주소 정보가 없습니다"}
             </p>
             <button
@@ -97,8 +97,8 @@ const Location = ({ reservation }: LocationProps) => {
           </div>
         </InfoGroup>
         <InfoGroup icon={<PhoneIcon />}>
-          <div className={"flex w-full justify-between"}>
-            <p className={!hasPhone ? "text-gray-500" : ""}>
+          <div className={"flex w-full flex-row items-start gap-2"}>
+            <p className={`flex-1 ${!hasPhone ? "text-gray-500" : ""}`}>
               {hasPhone ? reservation.phone : "전화번호가 없습니다"}
             </p>
             <button
