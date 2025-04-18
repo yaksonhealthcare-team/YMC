@@ -6,8 +6,6 @@ import { Button } from "@components/Button"
 import { useOverlay } from "../../../contexts/ModalContext"
 import { formatDate } from "../../../utils/date"
 import { formatPoint } from "../../../utils/format"
-import { AxiosError } from "axios"
-import { HTTPResponse } from "../../../types/HTTPResponse"
 
 const PointCard = ({ point }: { point: number }) => (
   <div className={"bg-red-50 rounded-xl p-4"}>
