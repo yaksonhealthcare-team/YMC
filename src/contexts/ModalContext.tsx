@@ -150,10 +150,11 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
   }
 
   const showToast = (message: string) => {
+    console.log("토스트 메시지 호출됨:", message)
     setToastMessage(message)
     setTimeout(() => {
       setToastMessage("")
-    }, 2000)
+    }, 3000) // 3초로 연장
   }
 
   const openModal = (props: ModalProps) => {
@@ -178,7 +179,7 @@ export const OverlayProvider: React.FC<OverlayProviderProps> = ({
     >
       {children}
       {toastMessage && (
-        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg z-[9999] min-w-[300px] max-w-[90%] text-center">
+        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-lg z-[99999] min-w-[320px] max-w-[90%] text-center font-bold shadow-lg">
           {toastMessage}
         </div>
       )}
