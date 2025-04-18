@@ -34,10 +34,10 @@ export function setupPullToRefresh() {
   }
 
   // 스크롤 이벤트 등록
-  window.addEventListener("scroll", handleScroll, { passive: true })
+  document.addEventListener("scroll", handleScroll, { passive: true })
 
   // 클린업 함수 반환
   return () => {
-    window.removeEventListener("scroll", handleScroll)
+    document.removeEventListener("scroll", handleScroll)
   }
 }

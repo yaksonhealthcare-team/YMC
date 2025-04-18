@@ -130,7 +130,7 @@ const Home = () => {
                   className="w-full aspect-[8/5] rounded-2xl"
                   loop={true}
                 >
-                  {mainBanner?.map((banner, index) => {
+                  {mainBanner?.map((banner) => {
                     const getBannerLink = (link: string) => {
                       if (link.startsWith("http")) return link
                       return `https://${link}`
