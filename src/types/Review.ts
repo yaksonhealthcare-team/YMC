@@ -1,6 +1,8 @@
 export interface ReviewResponse {
   r_idx: string
   r_date: string
+  reg_date: string
+  r_service_date?: string
   b_name: string
   ps_name: string
   visit: string
@@ -23,6 +25,7 @@ export interface ReviewResponse {
 export interface Review {
   id: string
   date: string
+  serviceDate?: string
   brandName: string
   programName: string
   visit: number

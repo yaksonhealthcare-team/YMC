@@ -4,7 +4,8 @@ export class ReviewMapper {
   static toReviewEntity(review: ReviewResponse): Review {
     return {
       id: review.r_idx,
-      date: review.r_date,
+      date: review.reg_date,
+      serviceDate: review.r_date,
       brandName: review.b_name,
       programName: review.ps_name,
       visit: parseInt(review.visit),

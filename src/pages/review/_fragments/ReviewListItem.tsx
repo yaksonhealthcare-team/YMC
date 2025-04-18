@@ -1,8 +1,9 @@
 import { Review } from "../../../types/Review.ts"
-import { formatDate } from "../../../utils/date.ts"
+import { formatDate, formatDateWithDay } from "../../../utils/date.ts"
 import { getGradeLabel } from "../../../utils/grade.ts"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
+import EditIcon from "@assets/icons/EditIcon.svg?react"
 import { Image } from "@components/common/Image"
 
 interface ReviewListItemProps {
@@ -16,9 +17,9 @@ export const ReviewListItem = ({ review }: ReviewListItemProps) => {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-1.5">
-              <CalendarIcon className="w-3.5 h-3.5 text-primary" />
+              <EditIcon className="w-3.5 h-3.5 text-primary" />
               <span className="text-gray-500 text-sm font-medium">
-                {formatDate(review.date)}
+                {formatDate(review.date, "YYYY.MM.DD HH:mm")}
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -26,9 +27,17 @@ export const ReviewListItem = ({ review }: ReviewListItemProps) => {
                 {review.visit}회차
               </span>
               <span className="text-gray-900 text-base font-bold">
-                {review.programName} {review.totalCount}회
+                {review.programName} {review.totalCount}
               </span>
             </div>
+            {review.serviceDate && (
+              <div className="flex items-center gap-1.5">
+                <CalendarIcon className="w-3.5 h-3.5 text-gray-500" />
+                <span className="text-gray-500 text-sm font-medium">
+                  {formatDateWithDay(review.serviceDate)}
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-1.5">

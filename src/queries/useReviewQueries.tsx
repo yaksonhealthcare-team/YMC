@@ -23,6 +23,9 @@ export const useReviews = () => {
       return nextPage <= totalPages ? nextPage : undefined
     },
     retry: false,
+    enabled: true,
+    refetchOnMount: true,
+    staleTime: 0,
   })
 }
 

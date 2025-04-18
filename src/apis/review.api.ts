@@ -9,36 +9,61 @@ import { HTTPResponse } from "../types/HTTPResponse.ts"
 import { ReviewMapper } from "../mappers/ReviewMapper.ts"
 
 export const fetchReviews = async (page: number): Promise<Review[]> => {
-  const { data } = await axiosClient.get<HTTPResponse<ReviewResponse[]>>(
-    "/reviews/history/history",
-    {
-      params: {
-        page: page,
-        size: 10,
+  console.log("[fetchReviews] 리뷰 목록 조회 시작 - 페이지:", page)
+  try {
+    const { data } = await axiosClient.get<HTTPResponse<ReviewResponse[]>>(
+      "/reviews/history/history",
+      {
+        params: {
+          page: page,
+          size: 10,
+        },
       },
-    },
-  )
+    )
+    console.log("[fetchReviews] 리뷰 목록 조회 응답:", data)
 
-  return ReviewMapper.toReviewEntities(data.body)
+    if (!data.body || !Array.isArray(data.body)) {
+      console.error("[fetchReviews] 리뷰 데이터가 유효하지 않음:", data)
+      return []
+    }
+
+    const reviews = ReviewMapper.toReviewEntities(data.body)
+    console.log("[fetchReviews] 변환된 리뷰 목록:", reviews)
+    return reviews
+  } catch (error) {
+    console.error("[fetchReviews] 리뷰 목록 조회 오류:", error)
+    throw error
+  }
 }
 
 export const fetchReviewDetail = async (
   reviewId: string,
 ): Promise<ReviewDetail> => {
-  const { data } = await axiosClient.get<HTTPResponse<ReviewResponse[]>>(
-    "/reviews/history/detail",
-    {
-      params: {
-        r_idx: reviewId,
+  console.log("[fetchReviewDetail] 리뷰 상세 조회 시작 - ID:", reviewId)
+  try {
+    const { data } = await axiosClient.get<HTTPResponse<ReviewResponse[]>>(
+      "/reviews/history/detail",
+      {
+        params: {
+          r_idx: reviewId,
+        },
       },
-    },
-  )
+    )
 
-  if (!data.body.length) {
-    throw new Error("리뷰를 찾을 수 없습니다.")
+    console.log("[fetchReviewDetail] 리뷰 상세 조회 응답:", data)
+
+    if (!data.body || !data.body.length) {
+      console.error("[fetchReviewDetail] 리뷰 데이터가 없음:", data)
+      throw new Error("리뷰를 찾을 수 없습니다.")
+    }
+
+    const reviewDetail = ReviewMapper.toReviewDetailEntity(data.body[0])
+    console.log("[fetchReviewDetail] 변환된 리뷰 상세:", reviewDetail)
+    return reviewDetail
+  } catch (error) {
+    console.error("[fetchReviewDetail] 리뷰 상세 조회 오류:", error)
+    throw error
   }
-
-  return ReviewMapper.toReviewDetailEntity(data.body[0])
 }
 
 export interface CreateReviewRequest {
