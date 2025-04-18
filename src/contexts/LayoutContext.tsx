@@ -4,7 +4,6 @@ import { Typography } from "@mui/material"
 import { useNavigate, useLocation } from "react-router-dom"
 import Header from "@components/Header.tsx"
 import { StartupPopup } from "../components/popup/StartupPopup"
-import { setupPullToRefresh } from "utils/pullToRefresh"
 
 type NavigationConfig = {
   display?: boolean
@@ -64,7 +63,6 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
   useEffect(() => {
     if (pageContainerRef.current) {
       pageContainerRef.current.scrollTo(0, 0)
-      setupPullToRefresh()
     }
   }, [location.pathname])
 
