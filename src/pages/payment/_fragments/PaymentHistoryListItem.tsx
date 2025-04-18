@@ -33,7 +33,7 @@ const ReceivePointBottomSheet = ({
         >{`+${formatPoint(point)}`}</p>
       </div>
       <p className={"mt-4"}>{"포인트가 적립되었습니다."}</p>
-      <div className={"border-t border-gray-50 pt-3 px-5 mt-10 w-full"}>
+      <div className={"border-t border-gray-50 pt-3 pb-5 px-5 mt-10 w-full"}>
         <Button className={"w-full"} variantType={"primary"} onClick={onClose}>
           확인
         </Button>
@@ -46,8 +46,9 @@ const PaymentHistoryListItem = ({ payment }: { payment: PaymentHistory }) => {
   const { openBottomSheet, closeOverlay } = useOverlay()
   const { mutateAsync: earnPoints } = usePointsEarn()
 
-  const handleReceivePoint = async () => {
-    await earnPoints(payment.id)
+  const handleReceivePoint = async (e: React.MouseEvent) => {
+    e.stopPropagation() // 이벤트 전파 중단
+    await earnPoints(payment.index)
     openBottomSheet(
       <ReceivePointBottomSheet point={payment.point} onClose={closeOverlay} />,
     )
