@@ -11,7 +11,7 @@ export const EventSection = () => {
   const navigate = useNavigate()
 
   const formatDateForAPI = (date: Date) => {
-    return formatDate(date, "yyyy-MM-dd")
+    return formatDate(date, "YYYY-MM-DD")
   }
 
   return (
