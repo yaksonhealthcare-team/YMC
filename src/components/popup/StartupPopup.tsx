@@ -89,7 +89,8 @@ export function StartupPopup() {
           margin: 0,
           padding: 0,
           overflow: "visible",
-          maxWidth: "95%",
+          maxWidth: "360px",
+          width: "80%",
           backgroundColor: "transparent",
           boxShadow: "none",
         },
@@ -115,7 +116,7 @@ export function StartupPopup() {
             swiperRef.current = swiper
           }}
           spaceBetween={16}
-          slidesPerView={1.2}
+          slidesPerView={1}
           centeredSlides={true}
           loop={isSwiperActive}
           allowSlideNext={isSwiperActive}
@@ -127,6 +128,7 @@ export function StartupPopup() {
             <SwiperSlide
               key={`${popup.code}-${index}`}
               className="aspect-square bg-[#eee] rounded-xl overflow-hidden flex items-center justify-center"
+              style={{ maxHeight: "360px" }}
             >
               <img
                 src={popup.imageUrl || TEMP_IMAGE_URL}
