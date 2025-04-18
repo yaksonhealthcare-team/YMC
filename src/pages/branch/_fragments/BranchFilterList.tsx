@@ -58,9 +58,21 @@ const BranchFilterListItem = ({
           alt={`${branch.name} 지점 사진`}
           loading="lazy"
         />
-        <div className="w-full flex flex-col">
-          <div className="flex justify-between mt-0.5">
-            <p className="font-b text-16px">{branch.name}</p>
+        <div className="w-full flex flex-col justify-between py-1">
+          <div className="flex justify-between">
+            <div>
+              <p className="font-b text-16px">{branch.name}</p>
+              {branch.distanceInMeters && (
+                <p className="font-r text-12px text-gray-400 mt-0.5">
+                  {branch.distanceInMeters.includes("m")
+                    ? branch.distanceInMeters
+                    : `${Math.ceil(Number(branch.distanceInMeters))}m`}
+                </p>
+              )}
+              <address className="font-r text-14px text-start not-italic ">
+                {branch.address}
+              </address>
+            </div>
             <button
               type="button"
               onClick={(e) => {
@@ -68,7 +80,7 @@ const BranchFilterListItem = ({
                 onClickFavorite(branch)
               }}
               className={clsx(
-                " rounded-lg p-1",
+                "rounded-lg px-1 h-fit",
                 "transition-transform hover:scale-110",
               )}
               aria-label={`${branch.name} 지점 ${isFavorite ? "즐겨찾기 해제" : "즐겨찾기 추가"}`}
@@ -81,22 +93,6 @@ const BranchFilterListItem = ({
               )}
             </button>
           </div>
-          <div
-            className="flex items-center gap-[2.5px]"
-            role="group"
-            aria-label="지점 정보"
-          >
-            {branch.distanceInMeters && (
-              <p className="font-r text-12px text-gray-400">
-                {branch.distanceInMeters.includes("m")
-                  ? branch.distanceInMeters
-                  : `${Math.ceil(Number(branch.distanceInMeters))}m`}
-              </p>
-            )}
-          </div>
-          <address className="font-r text-14px text-start not-italic">
-            {branch.address}
-          </address>
         </div>
       </div>
     </div>
