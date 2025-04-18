@@ -150,7 +150,6 @@ const Home = () => {
                             src={banner.fileUrl}
                             alt={banner.title}
                             className="object-cover rounded-2xl"
-                            loading={index === 0 ? "eager" : "lazy"}
                             width="100%"
                             height="auto"
                           />

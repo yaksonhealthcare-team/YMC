@@ -57,7 +57,6 @@ const BranchFilterListItem = ({
           className="border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"
           src={BranchPlaceholderImage}
           alt={`${branch.name} 지점 사진`}
-          loading="lazy"
         />
         <div className="w-full flex flex-col justify-between py-1">
           <div className="flex justify-between">
