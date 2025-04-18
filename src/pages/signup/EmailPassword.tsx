@@ -164,6 +164,7 @@ export const EmailPassword = () => {
         <CustomTextField
           label="이메일"
           value={form.email}
+          disabled={isSocialSignup}
           onChange={handleEmailChange}
           placeholder="이메일 계정 입력"
           state={errors.email ? "error" : "default"}
