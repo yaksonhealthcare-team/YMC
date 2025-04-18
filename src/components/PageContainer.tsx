@@ -1,4 +1,4 @@
-import { ReactNode, forwardRef, useEffect } from "react"
+import { ReactNode, forwardRef } from "react"
 import { useScrollDetection } from "../hooks/useScrollDetection"
 
 interface PageContainerProps {
