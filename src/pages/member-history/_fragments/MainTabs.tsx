@@ -26,6 +26,7 @@ const MainTabs = () => {
       tabs={mainTabs}
       onChange={(value) => handleOnChangeTab(value as MemberHistoryTab)}
       activeTab={activeTab}
+      className="py-2"
     />
   )
 }

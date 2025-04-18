@@ -54,7 +54,7 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
 
   return (
     <div
-      className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto scrollbar-hide"
+      className="flex-1 px-5 space-y-3 pb-32 pt-4 overflow-y-auto scrollbar-hide"
       key={`membership-content-${filterId}`}
     >
       {!memberships?.pages[0].body?.length ? (
@@ -105,7 +105,7 @@ const FilterContent = ({
   onFilterChange: (filter: MyMembershipFilterItem) => void
 }) => {
   return (
-    <div className="px-5 py-4 flex justify-center gap-2">
+    <div className="px-5 py-3 flex justify-center gap-2">
       {myMembershipFilters.map((filter) => {
         const isSelected = filter.id === membershipFilter.id
         return (
