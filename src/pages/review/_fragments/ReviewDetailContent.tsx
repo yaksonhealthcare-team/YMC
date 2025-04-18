@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
 import { ReviewDetail } from "../../../types/Review.ts"
-import { formatDate, formatDateWithDay } from "../../../utils/date.ts"
+import { formatDateWithDay } from "../../../utils/date.ts"
 import { Image } from "@components/common/Image"
 
 const RATING_TYPE_LABEL: Record<"H" | "M" | "L", string> = {
