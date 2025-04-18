@@ -181,7 +181,7 @@ const LocationSettings = () => {
   }
 
   return (
-    <div className={"flex flex-col h-full overflow-y-scroll"}>
+    <div className={"flex flex-col h-full overflow-y-scroll bg-white"}>
       <LocationSettingsSearchBar
         text={address}
         setText={setAddress}

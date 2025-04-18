@@ -250,7 +250,6 @@ const BranchDetail = () => {
           branch={branch}
           onBookmark={handleBookmark}
           onReservation={handleReservation}
-          hasMembership={hasMembershipForBranch}
         />
       </Suspense>
     </div>
