@@ -77,10 +77,13 @@ export const fetchUser = async (): Promise<User | null> => {
     const response =
       await axiosClient.get<HTTPResponse<UserResponse[]>>("/auth/me")
 
-    return UserMapper.toEntity(response.data.body[0])
+    if (response.data.body && response.data.body.length > 0) {
+      return UserMapper.toEntity(response.data.body[0])
+    }
+
+    throw new Error("사용자 정보 조회 실패")
   } catch (error) {
-    console.error("사용자 정보 조회 실패:", error)
-    console.log("응답 데이터가 없는 경우, 액세스 토큰 갱신 시도")
+    console.log("사용자 정보 조회 실패, 엑세스 토큰 갱신 시도", error)
 
     if (window.ReactNativeWebView) {
       window.ReactNativeWebView.postMessage(
