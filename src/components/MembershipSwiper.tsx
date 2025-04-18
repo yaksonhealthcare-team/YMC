@@ -4,7 +4,7 @@ import { Pagination } from "swiper/modules"
 import "swiper/css"
 import "swiper/css/pagination"
 import { MembershipRadioCard } from "../pages/reservation/_fragments/MembershipRadioCard"
-import { useMemo, useEffect } from "react"
+import { useMemo, useEffect, useState } from "react"
 import { MyMembership } from "types/Membership"
 import { ListResponse } from "apis/membership.api"
 
@@ -21,6 +21,8 @@ export const MembershipSwiper = ({
   onChangeItem,
   initialMembershipId,
 }: MembershipSwiperProps) => {
+  const [activeIndex, setActiveIndex] = useState(0)
+
   // initialMembershipId 변경 시 로그 출력
   useEffect(() => {
     if (initialMembershipId) {
@@ -86,7 +88,7 @@ export const MembershipSwiper = ({
   }, [initialMembershipId, sortedMemberships])
 
   return (
-    <Box className="w-full pb-[20px]">
+    <Box className="w-full ">
       <RadioGroup
         value={selectedItem}
         onChange={(e) => onChangeItem(e.target.value)}
@@ -97,27 +99,9 @@ export const MembershipSwiper = ({
           slidesPerView={1}
           style={{ overflow: "visible" }}
           className="w-full"
-          pagination={{
-            clickable: true,
-          }}
           initialSlide={initialIndex}
+          onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
         >
-          <style>
-            {`
-              .swiper-pagination {
-                bottom: -28px !important;
-              }
-              .swiper-pagination-bullet {
-                width: 6px;
-                height: 6px;
-                background: #DDDDDD;
-                opacity: 1;
-              }
-              .swiper-pagination-bullet-active {
-                background: #F37165;
-              }
-            `}
-          </style>
           {sortedMemberships.map((membership) => (
             <SwiperSlide key={membership.mp_idx}>
               <div>
@@ -131,6 +115,20 @@ export const MembershipSwiper = ({
           ))}
         </Swiper>
       </RadioGroup>
+
+      {/* 커스텀 페이지네이션 인디케이터 */}
+      {sortedMemberships.length > 1 && (
+        <div className="flex justify-center mt-4">
+          {sortedMemberships.map((_, index) => (
+            <div
+              key={index}
+              className={`w-[6px] h-[6px] mx-[4px] rounded-full ${
+                index === activeIndex ? "bg-[#F37165]" : "bg-[#DDDDDD]"
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </Box>
   )
 }
