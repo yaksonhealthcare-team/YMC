@@ -135,7 +135,7 @@ export const ReviewDetailContent = ({ review }: Props) => {
               {review.images.map((image, index) => (
                 <div
                   key={index}
-                  className="relative w-[200px] h-[200px] shrink-0 rounded-lg"
+                  className="relative w-[100px] h-[100px] shrink-0 rounded-lg"
                 >
                   <Image
                     src={image}
