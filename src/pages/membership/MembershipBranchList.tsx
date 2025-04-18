@@ -43,9 +43,16 @@ const MembershipBranchList = ({
     longitude: geolocationLocation?.longitude,
     search: debouncedQuery,
     brandCode: undefined,
-    mp_idx: memberShipId || location.state?.selectedItem,
+    mp_idx:
+      memberShipId === "상담 예약" ||
+      location.state?.selectedItem === "상담 예약"
+        ? undefined
+        : memberShipId || location.state?.selectedItem,
     s_idx: s_idx,
-    isConsultation: location.state?.isConsultation,
+    isConsultation:
+      location.state?.isConsultation ||
+      memberShipId === "상담 예약" ||
+      location.state?.selectedItem === "상담 예약",
     enabled: !!geolocationLocation,
   })
 
