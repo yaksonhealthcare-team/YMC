@@ -78,14 +78,14 @@ export const formatDateForAPI = (date: Date | null | undefined): string => {
 }
 
 /**
- * 날짜를 "YYYY년 MM월 DD일 (dddd)" 형식으로 포맷팅합니다. (예: "2024년 1월 1일 (월요일)")
+ * 날짜를 "YYYY년 MM월 DD일 (ddd)" 형식으로 포맷팅합니다. (예: "2024년 1월 1일 (월)")
  * @param date - 포맷팅할 날짜 (Date 객체, ISO 문자열, 또는 null).
  * @returns 요일이 포함된 포맷팅된 날짜 문자열. 입력이 유효하지 않으면 빈 문자열 반환.
  */
 export const formatDateWithDay = (
   date: Date | string | null | undefined,
 ): string => {
-  return formatDate(date, "YYYY년 MM월 DD일 (dddd)")
+  return formatDate(date, "YYYY년 MM월 DD일 (ddd)")
 }
 
 /**

@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
 import { ReviewDetail } from "../../../types/Review.ts"
-import { formatDate } from "../../../utils/date.ts"
+import { formatDate, formatDateWithDay } from "../../../utils/date.ts"
 import { Image } from "@components/common/Image"
 
 const RATING_TYPE_LABEL: Record<"H" | "M" | "L", string> = {
@@ -43,7 +43,7 @@ export const ReviewDetailContent = ({ review }: Props) => {
             <div className="flex items-center gap-1.5">
               <CalendarIcon className="w-3.5 h-3.5 text-primary" />
               <span className="text-gray-500 text-sm font-medium">
-                {formatDate(review.date)}
+                {formatDateWithDay(review.date)}
               </span>
             </div>
             <div className="flex items-center gap-2">
