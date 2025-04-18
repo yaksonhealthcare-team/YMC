@@ -24,7 +24,8 @@ const NoticeDetailPage: React.FC = () => {
     if (scrollContainer) {
       // 타이밍 이슈 방지를 위해 약간 지연시켜 실행
       setTimeout(() => {
-        ;(scrollContainer as HTMLElement).scrollTop = 0
+        const el = scrollContainer as HTMLElement
+        el.scrollTop = 0
       }, 0)
     }
   }, [])
