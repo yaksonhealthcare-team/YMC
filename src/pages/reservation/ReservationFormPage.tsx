@@ -1,6 +1,6 @@
 import { useLayout } from "contexts/LayoutContext"
-import { useEffect, useState, useCallback, useMemo } from "react"
-import { useNavigate, useLocation, useSearchParams } from "react-router-dom"
+import { useEffect, useState, useCallback, useMemo, useRef } from "react"
+import { useNavigate, useLocation } from "react-router-dom"
 import { RadioCard } from "@components/RadioCard"
 import { RadioGroup } from "@mui/material"
 import { Button } from "@components/Button"
@@ -18,45 +18,207 @@ import { createAdditionalManagementOrder } from "apis/order.api"
 import { useUserMemberships } from "queries/useMembershipQueries"
 import { getConsultationCount } from "../../apis/reservation.api"
 import { useQuery } from "@tanstack/react-query"
-import { useReservationFormStore } from "../../stores/reservationFormStore"
+import {
+  useReservationFormStore,
+  ReservationFormData,
+} from "../../stores/reservationFormStore"
 import { MembershipBranchSelectModal } from "../membership/_fragments/MembershipBranchSelectModal"
 import { Branch } from "../../types/Branch"
+import { useBranch } from "../../hooks/useBranch"
+import { Membership } from "types/Membership"
 
 const BRAND_CODE = "001" // 약손명가
+
+interface LocationState {
+  rebookingMembershipId?: string
+  isConsultation?: boolean
+  branchId?: string
+  brandCode?: string
+  selectedBranch?: Branch
+  selectedItem?: string
+}
+
+function calculateInitialState(
+  location: ReturnType<typeof useLocation>,
+  memberships: Membership[],
+  openModal: ReturnType<typeof useOverlay>["openModal"],
+  closeOverlay: ReturnType<typeof useOverlay>["closeOverlay"],
+  handleBack: () => void,
+): {
+  initialFormData: Partial<ReservationFormData>
+  initialSwiperId: string | undefined
+  initialSelectedBranch: Branch | null
+} {
+  const locationState = location.state as LocationState | null
+  const params = new URLSearchParams(location.search)
+  const membershipIdFromUrl = params.get("membershipId")
+  const branchIdFromUrl = params.get("branchId")
+
+  let initialFormData: Partial<ReservationFormData> = {}
+  let initialSwiperId: string | undefined = undefined
+  let initialSelectedBranch: Branch | null = null
+
+  const isValidMembershipId = (id: string | null): id is string =>
+    !!id && memberships.some((m) => m.mp_idx === id)
+
+  const isValidMembershipUrl = (id: string | null): id is string =>
+    !!id && memberships.some((m) => m.mp_idx === id)
+
+  // [0] 최우선: 다시 예약하기 (rebookingMembershipId & branchId)
+  if (locationState) {
+    const {
+      rebookingMembershipId,
+      isConsultation,
+      branchId: branchIdFromState,
+      selectedBranch: branchFromState,
+      selectedItem,
+      brandCode,
+    } = locationState
+
+    // 0순위: 다시 예약하기 (THER-272)
+    if (
+      rebookingMembershipId &&
+      branchIdFromState &&
+      isValidMembershipId(rebookingMembershipId)
+    ) {
+      console.log("Setting state from rebooking info:", rebookingMembershipId)
+      initialFormData = {
+        item: rebookingMembershipId,
+        branch: branchIdFromState,
+        membershipId: rebookingMembershipId,
+      }
+      initialSwiperId = rebookingMembershipId
+      initialSelectedBranch = branchFromState || null
+      return { initialFormData, initialSwiperId, initialSelectedBranch }
+    }
+    // [1] 1순위: 지점 상세 (isConsultation & branchId)
+    else if (isConsultation !== undefined && branchIdFromState) {
+      console.log(
+        "Setting state from branch detail info",
+        isConsultation ? "상담 예약" : "회원권 미선택",
+      )
+      initialFormData = {
+        item: isConsultation ? "상담 예약" : undefined,
+        branch: branchIdFromState,
+        membershipId: undefined,
+      }
+      initialSwiperId = undefined
+      initialSelectedBranch = branchFromState || null
+      return { initialFormData, initialSwiperId, initialSelectedBranch }
+    }
+    // [1.5] 1.5순위: 브랜드 상세 -> 현재는 아무것도 안함 (기본 상태로 진행)
+    else if (brandCode) {
+      console.log("Brand code received, no specific action:", brandCode)
+      // initialFormData = { brandCode } // 필요시 여기에 브랜드 코드 관련 로직 추가
+    }
+    // 그 외 상황 (예: 선택된 아이템이 있는 경우)
+    else if (selectedItem && isValidMembershipId(selectedItem)) {
+      console.log("Setting state from selectedItem (legacy?)")
+      initialFormData = {
+        item: selectedItem,
+        membershipId: selectedItem,
+      }
+      initialSwiperId = selectedItem
+    } else if (rebookingMembershipId || branchIdFromState || selectedItem) {
+      console.warn("Invalid ID provided in location state:", locationState)
+    }
+  }
+
+  // [2] 2순위: URL 파라미터 (membershipId)
+  if (Object.keys(initialFormData).length === 0 && memberships.length >= 0) {
+    if (isValidMembershipUrl(membershipIdFromUrl)) {
+      console.log("Setting state from URL membershipId:", membershipIdFromUrl)
+      const foundMembership = memberships.find(
+        (m) => m.mp_idx === membershipIdFromUrl,
+      )
+
+      if (foundMembership && Number(foundMembership.remain_amount) <= 0) {
+        console.warn("Membership has no remaining amount:", membershipIdFromUrl)
+        openModal({
+          title: "알림",
+          message: "해당 회원권의 잔여 횟수가 없습니다.",
+          onConfirm: () => {
+            closeOverlay()
+            handleBack()
+          },
+        })
+        return {
+          initialFormData: {},
+          initialSwiperId: undefined,
+          initialSelectedBranch: null,
+        }
+      }
+
+      initialFormData = {
+        item: membershipIdFromUrl,
+        branch: undefined,
+        membershipId: membershipIdFromUrl,
+      }
+      initialSwiperId = membershipIdFromUrl
+
+      // 단일 지점 자동 선택 로직
+      if (foundMembership?.branchs && foundMembership.branchs.length === 1) {
+        const singleBranchInfo = foundMembership.branchs[0]
+        initialFormData.branch = singleBranchInfo.b_idx
+        console.log("Auto-selected single branch:", initialFormData.branch)
+      }
+      return { initialFormData, initialSwiperId, initialSelectedBranch }
+    }
+    // [3] 3순위: URL 파라미터 (branchId만 있는 경우)
+    else if (branchIdFromUrl && !membershipIdFromUrl) {
+      console.log("Setting state from URL branchId:", branchIdFromUrl)
+      initialFormData = {
+        item: undefined,
+        branch: branchIdFromUrl,
+        membershipId: undefined,
+      }
+      initialSwiperId = undefined
+      return { initialFormData, initialSwiperId, initialSelectedBranch }
+    } else if (membershipIdFromUrl || branchIdFromUrl) {
+      console.warn(
+        "Invalid ID provided in URL parameters:",
+        membershipIdFromUrl,
+        branchIdFromUrl,
+      )
+    }
+  }
+
+  // [4] 4순위: 기본값 - 위 모든 정보가 없으면 빈 상태로 시작
+  console.log("No specific initial state found, using defaults.")
+  return { initialFormData, initialSwiperId, initialSelectedBranch }
+}
 
 const ReservationFormPage = () => {
   const { openBottomSheet, closeOverlay, openModal } = useOverlay()
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const location = useLocation()
-  const [searchParams] = useSearchParams()
-  const branchIdFromUrl = searchParams.get("branchId")
-  const membershipIdFromUrl = searchParams.get("membershipId")
   const { handleError } = useErrorHandler()
   const [showBranchModal, setShowBranchModal] = useState(false)
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
+  const isInitialized = useRef(false)
 
-  const { formData, setFormData, clearAll } = useReservationFormStore()
+  const {
+    formData,
+    setFormData: setFormDataInStore,
+    clearAll,
+    setInitialMembershipId,
+    initialMembershipId,
+  } = useReservationFormStore()
 
-  // 초기 데이터 설정
-  useEffect(() => {
-    // URL에서 membershipId가 있는 경우 설정
-    if (membershipIdFromUrl) {
-      setFormData({
-        membershipId: membershipIdFromUrl,
-      })
-    }
-  }, [])
-
-  const { data: consultationCount } = useQuery({
-    queryKey: ["consultation-count"],
-    queryFn: getConsultationCount,
-  })
-  const { mutateAsync: createReservation } = useCreateReservationMutation()
   const {
     data: userMembershipPaginationData,
     isLoading: isMembershipsLoading,
+    error: membershipsError,
+    isError: isMembershipsError,
   } = useUserMemberships("T")
+
+  const {
+    data: initialBranchData,
+    isLoading: isInitialBranchLoading,
+    error: initialBranchError,
+    isError: isInitialBranchError,
+  } = useBranch(formData.branch)
 
   const memberships = useMemo(() => {
     if (
@@ -64,167 +226,283 @@ const ReservationFormPage = () => {
       userMembershipPaginationData.pages.length === 0
     )
       return []
-
-    return userMembershipPaginationData.pages[0].body
+    return userMembershipPaginationData.pages.flatMap((page) => page.body || [])
   }, [userMembershipPaginationData])
 
   const handleBack = useCallback(() => {
     navigate(-1)
-  }, [])
+  }, [navigate])
+
+  const { data: consultationCount } = useQuery({
+    queryKey: ["consultation-count"],
+    queryFn: getConsultationCount,
+  })
+  const { mutateAsync: createReservation } = useCreateReservationMutation()
+
+  const selectedMembershipInfo = useMemo(() => {
+    return memberships.find((m) => m.mp_idx === formData.membershipId)
+  }, [memberships, formData.membershipId])
+
+  const isBranchSelectionDisabled = useMemo(
+    () =>
+      formData.item !== "상담 예약" &&
+      !!selectedMembershipInfo &&
+      selectedMembershipInfo.branchs?.length === 1,
+    [formData.item, selectedMembershipInfo],
+  )
 
   useEffect(() => {
-    if (showBranchModal) {
-      return
-    }
+    if (showBranchModal) return
 
     setHeader({
       display: true,
       title: "예약하기",
       left: "back",
-      onClickBack: () => {
-        handleBack()
-      },
+      onClickBack: handleBack,
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
-  }, [showBranchModal])
 
-  useEffect(() => {
-    if (location.state?.selectedBranch) {
-      setSelectedBranch(location.state.selectedBranch)
+    return () => {
+      console.log("Unmounting ReservationFormPage, clearing state...")
+      clearAll()
     }
+  }, [showBranchModal, setHeader, setNavigation, handleBack, clearAll])
 
-    if (location.state?.selectedItem) {
-      setFormData({
-        item: location.state.selectedItem,
-      })
-    }
-  }, [location.state])
-
-  // URL의 membershipId를 사용하여 회원권 자동 선택
+  // 초기 데이터 로딩 Effect - 최초 한 번만 실행되도록 수정
   useEffect(() => {
-    if (memberships.length === 0) return
-
-    if (formData.item === "상담 예약") {
+    // 이미 초기화가 완료되었거나 로딩 중인 경우 중복 실행 방지
+    if (isInitialized.current || isMembershipsLoading) {
       return
     }
 
-    if (formData.item) {
-      const selectedMembership = memberships.find(
-        (membership) => membership.mp_idx === formData.item,
-      )
+    if (isMembershipsError && membershipsError) {
+      console.error("Failed to load memberships:", membershipsError)
+      handleError(membershipsError, "회원권 정보를 불러오는데 실패했습니다.")
+      isInitialized.current = true // 에러 발생 시에도 초기화 완료로 표시
+      return
+    }
 
-      // 단일 지점만 있는 경우 자동 선택
-      if (
-        selectedMembership?.branchs &&
-        selectedMembership.branchs.length === 1
-      ) {
-        const singleBranch = selectedMembership.branchs[0]
-        const branch = {
-          b_idx: singleBranch.b_idx,
-          name: singleBranch.b_name,
-          address: "",
-          latitude: 0,
-          longitude: 0,
-          canBookToday: true,
-          distanceInMeters: null,
-          isFavorite: false,
-          brandCode: BRAND_CODE,
-          brand: "약손명가",
+    // 멤버십 데이터가 로드된 경우에만 초기화 진행
+    if (!isMembershipsLoading && memberships.length >= 0) {
+      console.log("Initializing form data based on location params...")
+      const { initialFormData, initialSwiperId, initialSelectedBranch } =
+        calculateInitialState(
+          location,
+          memberships,
+          openModal,
+          closeOverlay,
+          handleBack,
+        )
+
+      // 한 번만 설정하도록 조건 추가
+      if (!isInitialized.current) {
+        console.log("Setting initial form data and state", initialFormData)
+
+        // branch와 isConsultation 확인 로깅
+        if (location.state) {
+          const { branchId, isConsultation, rebookingMembershipId } =
+            location.state as LocationState
+          console.log("State from navigation:", {
+            branchId,
+            isConsultation,
+            rebookingMembershipId: rebookingMembershipId ? "있음" : "없음",
+          })
         }
-        setSelectedBranch(branch)
-        setFormData({
-          ...formData,
-          branch: branch.b_idx,
-          timeSlot: null,
+
+        setFormDataInStore({
+          ...initialFormData,
           date: null,
+          timeSlot: null,
+          request: "",
+          additionalServices: [],
         })
+
+        if (initialSwiperId) {
+          setInitialMembershipId(initialSwiperId)
+        }
+
+        if (initialSelectedBranch) {
+          console.log("Setting selectedBranch from location.state")
+          setSelectedBranch(initialSelectedBranch)
+        } else if (!initialFormData.branch && selectedBranch) {
+          setSelectedBranch(null)
+        } else if (initialFormData.branch && !initialSelectedBranch) {
+          // 지점 ID는 있지만 selectedBranch 객체가 없는 경우 지점 데이터 로드는
+          // 두 번째 useEffect에서 처리됨
+          console.log(
+            "Branch ID set, waiting for branch data to load:",
+            initialFormData.branch,
+          )
+        }
+
+        isInitialized.current = true // 초기화 완료 표시
+      }
+    }
+  }, [
+    isMembershipsLoading,
+    isMembershipsError,
+    membershipsError,
+    memberships.length,
+    location,
+    openModal,
+    closeOverlay,
+    handleBack,
+    setFormDataInStore,
+    setInitialMembershipId,
+    handleError,
+  ])
+
+  // 컴포넌트 언마운트 시 isInitialized 리셋
+  useEffect(() => {
+    return () => {
+      isInitialized.current = false
+    }
+  }, [])
+
+  // formData.branch 변경 시 selectedBranch 업데이트 Effect - 최적화
+  useEffect(() => {
+    const branchId = formData.branch
+
+    // 이미 분기ID와 선택된 지점 객체가 일치하면 아무 작업도 하지 않음
+    if (selectedBranch?.b_idx === branchId) {
+      return
+    }
+
+    // branch ID가 없으면 selectedBranch 초기화
+    if (!branchId) {
+      if (selectedBranch) {
+        setSelectedBranch(null)
       }
       return
     }
 
-    if (membershipIdFromUrl) {
-      const foundMembership = memberships.find(
-        (m) => m.mp_idx === membershipIdFromUrl,
+    // 데이터 로딩 시작 전에 로그만 출력
+    if (isInitialBranchLoading) {
+      console.log("Initial branch data loading for:", branchId)
+      return
+    }
+
+    // 에러 처리
+    if (isInitialBranchError && initialBranchError) {
+      console.error("Failed to load branch data:", initialBranchError)
+      const message =
+        initialBranchError instanceof Error &&
+        initialBranchError.message.includes("위치 정보")
+          ? "지점 상세 정보를 보려면 위치 정보 권한이 필요합니다."
+          : `지점 정보(${branchId})를 불러오는데 실패했습니다.`
+
+      handleError(
+        initialBranchError instanceof Error
+          ? initialBranchError
+          : new Error(String(initialBranchError) ?? "Unknown error"),
+        message,
       )
 
-      if (foundMembership) {
-        if (Number(foundMembership.remain_amount) <= 0) {
-          openModal({
-            title: "알림",
-            message: "해당 회원권의 잔여 횟수가 없습니다.",
-            onConfirm: () => {
-              closeOverlay()
-              handleBack()
-            },
-          })
-          return
-        }
+      if (selectedBranch) {
+        setSelectedBranch(null)
+      }
+      return
+    }
 
-        setFormData({
-          item: membershipIdFromUrl,
-          membershipId: membershipIdFromUrl,
-        })
+    // 데이터가 로드되었고 현재 branch ID와 일치하는 경우
+    if (initialBranchData && initialBranchData.b_idx === branchId) {
+      console.log("Creating branch object for:", branchId)
+
+      // 이미 적절한 브랜치가 설정되어 있으면 업데이트 하지 않음
+      if (selectedBranch?.b_idx === branchId) {
+        console.log("Branch is already selected:", branchId)
         return
       }
 
-      openModal({
-        title: "알림",
-        message: "해당 회원권 정보를 찾을 수 없습니다.",
-        onConfirm: () => {
-          closeOverlay()
-        },
-      })
-      return
+      // Branch 객체 생성
+      const branchObject: Branch = {
+        b_idx: initialBranchData.b_idx,
+        name: initialBranchData.name,
+        address: initialBranchData.location.address,
+        latitude: initialBranchData.location.latitude,
+        longitude: initialBranchData.location.longitude,
+        canBookToday: true,
+        distanceInMeters: initialBranchData.location.distance ?? null,
+        isFavorite: initialBranchData.isBookmarked ?? false,
+        brandCode: initialBranchData.brandCode,
+        brand: initialBranchData.brand,
+      }
+
+      console.log("Setting selectedBranch to:", branchObject.name)
+      setSelectedBranch(branchObject)
     }
+  }, [
+    formData.branch,
+    initialBranchData,
+    isInitialBranchLoading,
+    isInitialBranchError,
+    initialBranchError,
+    handleError,
+  ])
 
-    if (branchIdFromUrl) {
-      // 지점 ID가 포함된 회원권 찾기
-      const membershipWithBranch = memberships.find((membership) =>
-        membership.branchs?.some((branch) => branch.b_idx === branchIdFromUrl),
-      )
+  const handleOnChangeItem = useCallback(
+    (value: string) => {
+      console.log("handleOnChangeItem called with value:", value)
+      // 이미 선택된 항목이면 중복 업데이트하지 않음
+      if (formData.item === value) {
+        return
+      }
 
-      if (membershipWithBranch) {
-        // 해당 회원권 선택
-        setFormData({
-          item: membershipWithBranch.mp_idx,
-          membershipId: membershipWithBranch.mp_idx,
+      // 상담 예약이 아닌 회원권을 선택한 경우
+      if (value !== "상담 예약") {
+        // 선택한 회원권 정보 찾기
+        const selectedMembership = memberships.find((m) => m.mp_idx === value)
+
+        // 단일 지점 자동 선택 로직
+        let branchId = undefined
+        if (
+          selectedMembership?.branchs &&
+          selectedMembership.branchs.length === 1
+        ) {
+          branchId = selectedMembership.branchs[0].b_idx
+          console.log("Auto-selected single branch for membership:", branchId)
+        }
+
+        setFormDataInStore({
+          item: value,
+          date: null,
+          timeSlot: null,
+          additionalServices: [],
+          membershipId: value,
+          // 단일 지점이 있으면 자동 선택, 없으면 undefined
+          branch: branchId,
         })
       } else {
-        openModal({
-          title: "알림",
-          message: "해당 지점의 회원권 정보를 찾을 수 없습니다.",
-          onConfirm: () => {
-            closeOverlay()
-          },
+        // 상담 예약 선택 시
+        setFormDataInStore({
+          item: value,
+          date: null,
+          timeSlot: null,
+          additionalServices: [],
+          membershipId: undefined,
         })
       }
-    }
-  }, [memberships, formData.item])
 
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      clearAll() // 컴포넌트 언마운트 시 상태 초기화
-    }
-  }, [clearAll])
+      // 멤버십 ID 변경
+      if (initialMembershipId !== (value !== "상담 예약" ? value : undefined)) {
+        setInitialMembershipId(value !== "상담 예약" ? value : undefined)
+      }
+    },
+    [
+      setFormDataInStore,
+      setInitialMembershipId,
+      formData.item,
+      initialMembershipId,
+      memberships, // 회원권 목록 의존성 추가
+    ],
+  )
 
-  // Handlers
-  const handleOnChangeItem = (value: string) => {
-    setFormData({
-      item: value,
-      date: null,
-      timeSlot: null,
-      additionalServices: [],
-    })
-  }
-
-  const handleOpenCalendar = () => {
+  const handleOpenCalendar = useCallback(() => {
     if (!formData.item) {
       handleError(new Error("회원권을 먼저 선택해주세요."))
       return
     }
-
     if (!formData.branch) {
       handleError(new Error("지점을 먼저 선택해주세요."))
       return
@@ -236,58 +514,46 @@ const ReservationFormPage = () => {
         date={formData.date}
         time={formData.timeSlot}
         onSelect={(date, timeSlot) => {
-          setFormData({
-            ...formData,
-            date,
-            timeSlot,
-          })
+          setFormDataInStore({ date, timeSlot })
         }}
         membershipIndex={
-          formData.item === "상담 예약" ? 0 : Number(formData.item)
+          formData.item === "상담 예약" ? 0 : toNumber(formData.membershipId)
         }
         addServices={formData.additionalServices.map((service) =>
-          Number(service.s_idx),
+          toNumber(service.s_idx),
         )}
-        b_idx={formData.branch || ""}
+        b_idx={formData.branch}
       />,
       { height: "large" },
     )
-  }
+  }, [formData, handleError, openBottomSheet, closeOverlay, setFormDataInStore])
 
   const handleNavigateBranchSelect = useCallback(() => {
     if (!formData.item) {
       handleError(new Error("회원권을 먼저 선택해주세요."))
       return
     }
-
-    try {
-      setShowBranchModal(true)
-    } catch (error) {
-      console.error("Modal open error:", error)
-      handleError(new Error("지점 선택 모달을 열 수 없습니다."))
-    }
-  }, [formData, handleError])
+    setShowBranchModal(true)
+  }, [formData.item, handleError])
 
   const handleBranchSelect = useCallback(
     (branch: Branch) => {
       setSelectedBranch(branch)
-      setFormData({
-        ...formData,
+      setFormDataInStore({
         branch: branch.b_idx,
         timeSlot: null,
         date: null,
       })
       setShowBranchModal(false)
     },
-    [formData],
+    [setFormDataInStore],
   )
 
   const handleCloseBranchModal = useCallback(() => {
     setShowBranchModal(false)
   }, [])
 
-  // Validation
-  const validateReservationData = () => {
+  const validateReservationData = useCallback(() => {
     if (!formData.item) {
       handleError(new Error("회원권을 먼저 선택해주세요."))
       return false
@@ -301,21 +567,17 @@ const ReservationFormPage = () => {
       return false
     }
     return true
-  }
+  }, [formData, handleError])
 
-  // Reservation Handlers
-  const handleConsultationReservation = async () => {
+  const handleConsultationReservation = useCallback(async () => {
     try {
       if (!validateReservationData()) return
-      if (!formData.branch) {
-        handleError(new Error("지점을 선택해주세요."))
-        return
-      }
+      const branchId = formData.branch!
 
       const response = await createReservation({
         r_gubun: "C",
-        mp_idx: formData.item,
-        b_idx: formData.branch,
+        mp_idx: formData.item!,
+        b_idx: branchId,
         r_date: formatDateForAPI(formData.date?.toDate() || null),
         r_stime: formData.timeSlot!.time,
         r_memo: formData.request,
@@ -331,26 +593,38 @@ const ReservationFormPage = () => {
         message: "상담 예약이 완료되었습니다.",
         onConfirm: () => {
           navigate("/member-history/reservation")
+          closeOverlay()
         },
       })
     } catch (error) {
       handleError(error, "상담 예약에 실패했습니다. 다시 시도해주세요.")
     }
-  }
+  }, [
+    validateReservationData,
+    formData,
+    createReservation,
+    handleError,
+    formatDateForAPI,
+    openModal,
+    navigate,
+    closeOverlay,
+  ])
 
-  const handleMembershipReservation = async () => {
+  const handleMembershipReservation = useCallback(async () => {
     try {
       if (!validateReservationData()) return
-      if (!formData.branch) {
-        handleError(new Error("지점을 선택해주세요."))
+      const branchId = formData.branch!
+      const membershipId = formData.membershipId
+
+      if (!membershipId) {
+        handleError(new Error("회원권 정보가 올바르지 않습니다."))
         return
       }
 
-      // 1. 예약 생성
       const reservationResponse = await createReservation({
         r_gubun: "R",
-        mp_idx: formData.item,
-        b_idx: formData.branch,
+        mp_idx: membershipId,
+        b_idx: branchId,
         r_date: formatDateForAPI(formData.date?.toDate() || null),
         r_stime: formData.timeSlot!.time,
         add_services: formData.additionalServices.map((service) =>
@@ -364,7 +638,6 @@ const ReservationFormPage = () => {
         return
       }
 
-      // 2. 추가 관리 주문서 발행
       if (formData.additionalServices.length > 0) {
         const orderResponse = await createAdditionalManagementOrder({
           add_services: formData.additionalServices.map((service) => ({
@@ -372,15 +645,17 @@ const ReservationFormPage = () => {
             ss_idx: service.options[0].ss_idx,
             amount: 1,
           })),
-          b_idx: formData.branch!,
+          b_idx: branchId,
         })
 
         if (orderResponse.resultCode !== "00") {
-          handleError(new Error(orderResponse.resultMessage))
+          handleError(
+            new Error(orderResponse.resultMessage),
+            "추가 관리 주문 생성에 실패했습니다. 예약 정보를 확인해주세요.",
+          )
           return
         }
 
-        // 3. 결제 페이지로 이동
         navigate("/payment", {
           state: {
             type: "additional",
@@ -390,38 +665,42 @@ const ReservationFormPage = () => {
           replace: true,
         })
       } else {
-        // 추가 관리가 없는 경우 예약 완료 처리
         openModal({
           title: "예약 완료",
           message: "예약이 완료되었습니다.",
           onConfirm: () => {
             navigate("/member-history/reservation")
+            closeOverlay()
           },
         })
       }
     } catch (error) {
       handleError(error, "예약에 실패했습니다. 다시 시도해주세요.")
     }
-  }
-
-  // Render Sections
+  }, [
+    validateReservationData,
+    formData,
+    createReservation,
+    handleError,
+    formatDateForAPI,
+    toNumber,
+    createAdditionalManagementOrder,
+    navigate,
+    openModal,
+    closeOverlay,
+  ])
 
   if (isMembershipsLoading) {
     return <LoadingIndicator className="min-h-screen" />
   }
 
-  // Main Render
   return (
     <div className="flex-1 space-y-3 pb-32 overflow-y-auto overflow-x-hidden">
       {showBranchModal && (
         <MembershipBranchSelectModal
           onBranchSelect={handleBranchSelect}
           onClose={handleCloseBranchModal}
-          brandCode={
-            userMembershipPaginationData?.pages[0]?.body?.find(
-              (membership) => membership.mp_idx === formData.item,
-            )?.branchs?.[0]?.brandCode || BRAND_CODE
-          }
+          brandCode={selectedMembershipInfo?.brandCode || BRAND_CODE}
           memberShipId={formData.membershipId}
         />
       )}
@@ -432,7 +711,7 @@ const ReservationFormPage = () => {
         </h2>
         <RadioGroup
           className="flex flex-col space-y-4"
-          value={formData.item}
+          value={formData.item ?? ""}
           onChange={(e) => handleOnChangeItem(e.target.value)}
         >
           <div>
@@ -477,15 +756,20 @@ const ReservationFormPage = () => {
                         : "text-tag-green"
                     }`}
                   >
-                    {!consultationCount?.currentCount
-                      ? "FREE"
-                      : `${(consultationCount?.maxCount ?? 0) - (consultationCount?.currentCount ?? 0)}/${consultationCount?.maxCount ?? 0}`}
+                    {!consultationCount
+                      ? "..."
+                      : consultationCount.currentCount >=
+                          consultationCount.maxCount
+                        ? "소진"
+                        : consultationCount.currentCount === 0
+                          ? "FREE"
+                          : `${consultationCount.maxCount - consultationCount.currentCount}/${consultationCount.maxCount}`}
                   </div>
                 </div>
               </div>
             </RadioCard>
           </div>
-          {!isMembershipsLoading && memberships.length > 0 ? (
+          {memberships.length > 0 && (
             <MembershipSwiper
               membershipsData={{
                 ...(userMembershipPaginationData?.pages[0] || {
@@ -500,25 +784,16 @@ const ReservationFormPage = () => {
               }}
               selectedItem={formData.item}
               onChangeItem={handleOnChangeItem}
-              initialMembershipId={formData.membershipId}
+              initialMembershipId={initialMembershipId}
             />
-          ) : null}
-          {/* <Button
-              variantType="secondary"
-              sizeType="l"
-              onClick={() => navigate("/membership")}
-              className="justify-between items-center w-full !text-primary-300 font-sb !py-[20px] !rounded-xl"
-            >
-              회원권 구매하기
-              <CaretRightIcon className="w-5 h-6" />
-            </Button> */}
+          )}
         </RadioGroup>
         <div className="flex flex-col mt-[16px]">
           <p className="text-gray-500 text-14px">
-            * 상담 예약은 월간 {consultationCount?.maxCount ?? 0}회까지 이용
+            * 상담 예약은 월간 {consultationCount?.maxCount ?? "?"}회까지 이용
             가능합니다.
           </p>
-          {!userMembershipPaginationData?.pages[0]?.body?.length && (
+          {memberships.length === 0 && !isMembershipsLoading && (
             <p className="text-gray-500 text-14px">
               * 관리 프로그램은 회원권 구매 후 예약이 가능합니다.
             </p>
@@ -530,18 +805,9 @@ const ReservationFormPage = () => {
         data={formData}
         selectedBranch={selectedBranch}
         onOpenCalendar={handleOpenCalendar}
-        onChangeRequest={(value) =>
-          setFormData({ ...formData, request: value })
-        }
+        onChangeRequest={(value) => setFormDataInStore({ request: value })}
         onNavigateBranchSelect={handleNavigateBranchSelect}
-        disableBranchSelection={
-          formData.item !== "상담 예약" &&
-          !!userMembershipPaginationData?.pages[0]?.body?.find(
-            (membership) =>
-              membership.mp_idx === formData.item &&
-              membership.branchs?.length === 1,
-          )
-        }
+        disableBranchSelection={isBranchSelectionDisabled}
       />
 
       <FixedButtonContainer className="bg-white">
@@ -553,10 +819,9 @@ const ReservationFormPage = () => {
 
             if (formData.item === "상담 예약") {
               await handleConsultationReservation()
-              return
+            } else {
+              await handleMembershipReservation()
             }
-
-            await handleMembershipReservation()
           }}
           className="w-full"
         >

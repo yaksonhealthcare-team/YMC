@@ -14,7 +14,6 @@ import FixedButtonContainer from "@components/FixedButtonContainer"
 import { ReservationType } from "types/Reservation"
 import { Skeleton } from "@mui/material"
 import { useOverlay } from "contexts/ModalContext"
-import { useReservationFormStore } from "stores/reservationFormStore"
 
 const LoadingSkeleton = () => (
   <div className="flex-1 px-[20px] pt-[16px] pb-[150px] bg-system-bg">
@@ -72,7 +71,6 @@ const ReservationDetailPage = () => {
   } = useReservationDetail(id ?? "")
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const { setFormData } = useReservationFormStore()
 
   useEffect(() => {
     setHeader({
@@ -176,17 +174,23 @@ const ReservationDetailPage = () => {
   const handleNavigateToReservationForm = () => {
     if (!reservation) return
 
-    setFormData({
-      item:
-        reservation.type === ReservationType.MANAGEMENT
-          ? reservation.membershipId
-          : "상담 예약",
-      branch: reservation.branchId,
-      request: reservation.request ?? "",
-      membershipId: reservation.membershipId,
-    })
-
-    navigate(`/reservation/form?membershipId=${reservation.membershipId}`)
+    if (reservation.type === ReservationType.MANAGEMENT) {
+      // 관리 예약 재예약: rebookingMembershipId와 branchId 전달
+      navigate(`/reservation/form`, {
+        state: {
+          rebookingMembershipId: reservation.membershipId,
+          branchId: reservation.branchId,
+        },
+      })
+    } else {
+      // 상담 예약 재예약: isConsultation 플래그와 branchId 전달
+      navigate(`/reservation/form`, {
+        state: {
+          isConsultation: true,
+          branchId: reservation.branchId,
+        },
+      })
+    }
   }
 
   const renderActionButtons = () => {

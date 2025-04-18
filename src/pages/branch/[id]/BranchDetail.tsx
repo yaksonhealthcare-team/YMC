@@ -1,6 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { useLayout } from "../../../contexts/LayoutContext.tsx"
-import { useEffect, useState, useCallback, lazy, Suspense } from "react"
+import {
+  useEffect,
+  useState,
+  useCallback,
+  lazy,
+  Suspense,
+  useMemo,
+} from "react"
 import {
   useBranch,
   useBranchBookmarkMutation,
@@ -9,6 +16,8 @@ import {
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { useOverlay } from "../../../contexts/ModalContext.tsx"
 import { useGeolocation } from "../../../hooks/useGeolocation.tsx"
+import { useUserMemberships } from "../../../queries/useMembershipQueries"
+import { Branch } from "../../../types/Branch"
 
 // const MembershipAvailableBanner = lazy(
 //   () => import("./_fragments/MembershipAvailableBanner.tsx"),
@@ -43,6 +52,21 @@ const BranchDetail = () => {
   )
   const { mutate: addBookmark } = useBranchBookmarkMutation()
   const { mutate: removeBookmark } = useBranchUnbookmarkMutation()
+  const { data: userMembershipsData, isLoading: isMembershipsLoading } =
+    useUserMemberships("T")
+
+  const hasMembershipForBranch = useMemo(() => {
+    if (!branch || !userMembershipsData?.pages?.length || isMembershipsLoading)
+      return false
+    const userMemberships = userMembershipsData.pages.flatMap(
+      (page) => page.body,
+    )
+    return userMemberships.some(
+      (membership) =>
+        membership.branchs?.some((b) => b.b_idx === branch.b_idx) &&
+        Number(membership.remain_amount) > 0,
+    )
+  }, [branch, userMembershipsData, isMembershipsLoading])
 
   const handleShare = useCallback(async () => {
     try {
@@ -121,11 +145,47 @@ const BranchDetail = () => {
   const handleReservation = useCallback(() => {
     if (!branch) return
 
-    // 예약 페이지로 이동하기 전에 세션 스토리지에 현재 지점 ID 저장
-    sessionStorage.setItem("fromReservation", branch.b_idx)
+    // BranchDetail 타입을 Branch 타입으로 변환
+    const branchForState: Branch = {
+      b_idx: branch.b_idx,
+      name: branch.name,
+      address: branch.location.address,
+      latitude: branch.location.latitude,
+      longitude: branch.location.longitude,
+      canBookToday: true, // 임시 값, ReservationFormPage와 일치 필요
+      distanceInMeters: branch.location.distance ?? null,
+      isFavorite: branch.isBookmarked ?? false, // ReservationFormPage와 일치 필요
+      brandCode: branch.brandCode,
+      brand: branch.brand,
+    }
 
-    navigate(`/reservation/form?branchId=${branch.b_idx}`)
-  }, [branch, navigate])
+    if (hasMembershipForBranch) {
+      // 회원권 있음: isConsultation: false + branchId + selectedBranch 전달
+      console.log(
+        "Navigating with existing membership for branch:",
+        branch.b_idx,
+      )
+      navigate("/reservation/form", {
+        state: {
+          isConsultation: false,
+          branchId: branch.b_idx,
+          selectedBranch: branchForState,
+        },
+      })
+    } else {
+      // 회원권 없음: isConsultation: true + branchId + selectedBranch 전달
+      console.log("Navigating for consultation for branch:", branch.b_idx)
+      navigate("/reservation/form", {
+        state: {
+          isConsultation: true,
+          branchId: branch.b_idx,
+          selectedBranch: branchForState,
+        },
+      })
+    }
+    // 기존 URL 파라미터 방식 제거
+    // navigate(`/reservation/form?branchId=${branch.b_idx}`)
+  }, [branch, navigate, hasMembershipForBranch])
 
   const handleBookmark = useCallback(() => {
     if (!branch) return
@@ -156,7 +216,7 @@ const BranchDetail = () => {
     setNavigation({ display: false })
   }, [])
 
-  if (!branch || isLoading) {
+  if (!branch || isLoading || isMembershipsLoading) {
     return <LoadingIndicator className="min-h-screen" />
   }
 

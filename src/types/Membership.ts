@@ -79,6 +79,7 @@ export interface MyMembership {
   reservations?: MembershipUsageHistory[]
   id?: string
   branchs?: BranchInfo[]
+  brandCode?: string
 }
 
 export interface MyMembershipFilterItem {

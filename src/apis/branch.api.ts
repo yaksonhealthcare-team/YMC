@@ -26,15 +26,22 @@ export const fetchBranches = async (
 
 export const fetchBranch = async (
   id: string,
-  coords: Coordinate,
+  coords?: Coordinate,
 ): Promise<BranchDetail> => {
+  const params: { b_idx: string; nowlat?: number; nowlon?: number } = {
+    b_idx: id,
+  }
+  if (coords) {
+    params.nowlat = coords.latitude
+    params.nowlon = coords.longitude
+  }
+
   const { data } = await axiosClient.get("/branches/detail", {
-    params: {
-      b_idx: id,
-      nowlat: coords.latitude,
-      nowlon: coords.longitude,
-    },
+    params: params,
   })
+  if (!data.body || data.body.length === 0) {
+    throw new Error(`Branch data not found for ID: ${id}`)
+  }
   return BranchMapper.toDetailEntity(data.body[0])
 }
 

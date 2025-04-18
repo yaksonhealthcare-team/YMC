@@ -18,9 +18,11 @@ export interface ReservationFormData {
 interface ReservationFormState {
   formData: ReservationFormData
   selectedBranch: Branch | null
+  initialMembershipId: string | undefined
   setFormData: (data: Partial<ReservationFormData>) => void
   resetFormData: () => void
   setSelectedBranch: (branch: Branch) => void
+  setInitialMembershipId: (id: string | undefined) => void
   clearAll: () => void
 }
 
@@ -39,6 +41,7 @@ export const useReservationFormStore = create<ReservationFormState>()(
     (set) => ({
       formData: initialState,
       selectedBranch: null,
+      initialMembershipId: undefined,
       setFormData: (data) =>
         set((state) => ({
           formData: { ...state.formData, ...data },
@@ -49,7 +52,13 @@ export const useReservationFormStore = create<ReservationFormState>()(
           selectedBranch: branch,
           formData: { ...state.formData, branch: branch.b_idx },
         })),
-      clearAll: () => set({ formData: initialState, selectedBranch: null }),
+      setInitialMembershipId: (id) => set({ initialMembershipId: id }),
+      clearAll: () =>
+        set({
+          formData: initialState,
+          selectedBranch: null,
+          initialMembershipId: undefined,
+        }),
     }),
     { name: "reservation-form-store" },
   ),
