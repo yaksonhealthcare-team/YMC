@@ -43,10 +43,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           return
         }
 
-        if (import.meta.env.DEV) {
-          return
-        }
-
         if (!window.ReactNativeWebView) {
           logout()
         }
