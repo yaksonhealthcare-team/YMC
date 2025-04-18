@@ -128,25 +128,39 @@ const MembershipDetailPage = () => {
           </div>
           {membership.options && membership.options.length > 0 && (
             <div className="flex items-baseline gap-2">
-              {membership.options[0].original_price && (
-                <span className="text-primary font-b text-18px">
-                  {calculateDiscountRate(
-                    parsePrice(membership.options[0].ss_price),
-                    parsePrice(membership.options[0].original_price),
-                  )}
-                  %
-                </span>
-              )}
-              <div className="flex items-baseline gap-1">
-                <span className="text-gray-900 font-b text-18px">
-                  {formatPrice(membership.options[0].ss_price)}원
-                </span>
-                <span className="text-gray-900 font-r text-12px">부터~</span>
-              </div>
-              {membership.options[0].original_price && (
-                <span className="text-gray-400 font-r text-14px line-through">
-                  {formatPrice(membership.options[0].original_price)}원
-                </span>
+              {membership.options[0].original_price &&
+                parsePrice(membership.options[0].original_price) >
+                  parsePrice(membership.options[0].ss_price) && (
+                  <>
+                    <span className="text-primary font-b text-18px">
+                      {calculateDiscountRate(
+                        parsePrice(membership.options[0].original_price),
+                        parsePrice(membership.options[0].ss_price),
+                      )}
+                      %
+                    </span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-gray-900 font-b text-18px">
+                        {formatPrice(membership.options[0].ss_price)}원
+                      </span>
+                      <span className="text-gray-900 font-r text-12px">
+                        부터~
+                      </span>
+                    </div>
+                    <span className="text-gray-400 font-r text-14px line-through">
+                      {formatPrice(membership.options[0].original_price)}원
+                    </span>
+                  </>
+                )}
+              {(!membership.options[0].original_price ||
+                parsePrice(membership.options[0].original_price) <=
+                  parsePrice(membership.options[0].ss_price)) && (
+                <div className="flex items-baseline gap-1">
+                  <span className="text-gray-900 font-b text-18px">
+                    {formatPrice(membership.options[0].ss_price)}원
+                  </span>
+                  <span className="text-gray-900 font-r text-12px">부터~</span>
+                </div>
               )}
             </div>
           )}

@@ -13,7 +13,23 @@ export const MembershipCard = ({
   onClick,
 }: MembershipCardProps) => {
   const firstOption = membership.options?.[0]
-  const hasDiscount = firstOption?.original_price && firstOption?.ss_price
+  const hasDiscount =
+    firstOption?.original_price &&
+    firstOption?.ss_price &&
+    parsePrice(firstOption.original_price) > parsePrice(firstOption.ss_price)
+
+  // 할인율 계산
+  const discountRate = hasDiscount
+    ? Math.floor(
+        ((parsePrice(firstOption!.original_price) -
+          parsePrice(firstOption!.ss_price)) /
+          parsePrice(firstOption!.original_price)) *
+          100,
+      )
+    : 0
+
+  // 실제 할인이 있는지 확인 (0%가 아닌지)
+  const hasActualDiscount = hasDiscount && discountRate > 0
 
   return (
     <div
@@ -52,7 +68,7 @@ export const MembershipCard = ({
 
       {firstOption && (
         <div className="mt-4 flex flex-col">
-          {hasDiscount && (
+          {hasActualDiscount && (
             <div className="flex justify-end">
               <span className="text-gray-400 font-r text-14px line-through">
                 {formatPrice(firstOption.original_price)}원
@@ -60,17 +76,11 @@ export const MembershipCard = ({
             </div>
           )}
           <div
-            className={`flex ${hasDiscount ? "justify-between" : "justify-end"} items-center mt-1`}
+            className={`flex ${hasActualDiscount ? "justify-between" : "justify-end"} items-center mt-1`}
           >
-            {hasDiscount && (
+            {hasActualDiscount && (
               <span className="text-primary font-b text-18px">
-                {Math.floor(
-                  ((parsePrice(firstOption.original_price) -
-                    parsePrice(firstOption.ss_price)) /
-                    parsePrice(firstOption.original_price)) *
-                    100,
-                )}
-                %
+                {discountRate}%
               </span>
             )}
             <div className="flex items-baseline gap-1">
