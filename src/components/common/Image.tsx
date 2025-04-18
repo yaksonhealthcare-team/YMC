@@ -12,6 +12,7 @@ export const Image = ({
   fallbackSrc,
   useDefaultProfile = false,
   className = "",
+  onLoad,
   ...props
 }: ImageProps) => {
   const [error, setError] = useState(false)
@@ -20,13 +21,25 @@ export const Image = ({
     setError(true)
   }
 
+  const handleLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    if (onLoad) {
+      onLoad(e)
+    }
+  }
+
   if (error) {
     if (useDefaultProfile) {
       return <Profile className={`text-gray-300 ${className}`} />
     }
     if (fallbackSrc) {
       return (
-        <img {...props} src={fallbackSrc} alt={alt} className={className} />
+        <img
+          {...props}
+          src={fallbackSrc}
+          alt={alt}
+          className={className}
+          onLoad={handleLoad}
+        />
       )
     }
     return <div className={`bg-gray-100 ${className}`} />
@@ -38,6 +51,7 @@ export const Image = ({
       src={src}
       alt={alt}
       onError={handleError}
+      onLoad={handleLoad}
       className={className}
     />
   )
