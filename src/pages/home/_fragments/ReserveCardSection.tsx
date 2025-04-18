@@ -7,7 +7,7 @@ import { useUpcomingReservations } from "queries/useReservationQueries"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useMemo } from "react"
 
-export function ReserveCardSection() {
+const ReserveCardSection = () => {
   const navigate = useNavigate()
   const { data: upcomingReservations, isLoading } = useUpcomingReservations()
 
@@ -22,10 +22,6 @@ export function ReserveCardSection() {
 
   if (isLoading) {
     return <LoadingIndicator className="flex-1" />
-  }
-
-  if (!hasReservations) {
-    return null
   }
 
   const handleReservationClick = () => {
@@ -44,7 +40,7 @@ export function ReserveCardSection() {
       <Title
         type="arrow"
         title="예정된 예약"
-        count={`${totalCount}건`}
+        count={`${totalCount || 0}건`}
         onClick={handleTitleClick}
       />
       {!hasReservations ? (
@@ -70,3 +66,5 @@ export function ReserveCardSection() {
     </div>
   )
 }
+
+export default ReserveCardSection
