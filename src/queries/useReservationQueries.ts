@@ -115,12 +115,28 @@ export const useCompleteVisit = () => {
   return useMutation({
     mutationFn: (r_idx: string) => completeVisit(r_idx),
     onSuccess: (_, r_idx) => {
+      // 상세 정보 쿼리 무효화
       queryClient.invalidateQueries({
         queryKey: createUserContextQueryKey(["reservationDetail", r_idx]),
       })
+
       // 홈 화면의 예정된 예약 리스트 캐시 업데이트
       queryClient.invalidateQueries({
         queryKey: createUserContextQueryKey(["upcomingReservations"]),
+      })
+
+      // 모든 예약 상태 쿼리 무효화
+      queryClient.invalidateQueries({
+        queryKey: createUserContextQueryKey(["reservations"]),
+      })
+      queryClient.invalidateQueries({
+        queryKey: createUserContextQueryKey(["reservations", "000"]), // 전체
+      })
+      queryClient.invalidateQueries({
+        queryKey: createUserContextQueryKey(["reservations", "001"]), // 예약완료
+      })
+      queryClient.invalidateQueries({
+        queryKey: createUserContextQueryKey(["reservations", "002"]), // 방문완료
       })
     },
     retry: false,
