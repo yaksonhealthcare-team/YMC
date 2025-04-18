@@ -34,9 +34,11 @@ export const fetchPointHistories = async ({
 }
 
 export const earnPoints = async (paymentId: string) => {
-  await axiosClient.post("/points/earn", {
+  const { data } = await axiosClient.post("/points/earn", {
     p_idx: paymentId,
   })
+
+  return data
 }
 
 export const fetchPoints = async () => {

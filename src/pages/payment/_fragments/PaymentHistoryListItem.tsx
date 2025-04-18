@@ -6,6 +6,8 @@ import { Button } from "@components/Button"
 import { useOverlay } from "../../../contexts/ModalContext"
 import { formatDate } from "../../../utils/date"
 import { formatPoint } from "../../../utils/format"
+import { AxiosError } from "axios"
+import { HTTPResponse } from "../../../types/HTTPResponse"
 
 const PointCard = ({ point }: { point: number }) => (
   <div className={"bg-red-50 rounded-xl p-4"}>
@@ -18,21 +20,40 @@ const PointCard = ({ point }: { point: number }) => (
 const ReceivePointBottomSheet = ({
   point,
   onClose,
+  isSuccess = true,
+  errorMessage = "",
 }: {
   point: number
   onClose: () => void
+  isSuccess?: boolean
+  errorMessage?: string
 }) => {
   return (
     <div className={"flex flex-col items-center"}>
-      <div className={"flex items-center gap-2 mt-5"}>
-        <span className={"bg-primary rounded-full font-b text-white w-6 h-6"}>
-          P
-        </span>
-        <p
-          className={"text-20px font-b text-primary"}
-        >{`+${formatPoint(point)}`}</p>
-      </div>
-      <p className={"mt-4"}>{"포인트가 적립되었습니다."}</p>
+      {isSuccess ? (
+        <>
+          <div className={"flex items-center gap-2 mt-5"}>
+            <span
+              className={"bg-primary rounded-full font-b text-white w-6 h-6"}
+            >
+              P
+            </span>
+            <p
+              className={"text-20px font-b text-primary"}
+            >{`+${formatPoint(point)}`}</p>
+          </div>
+          <p className={"mt-4"}>{"포인트가 적립되었습니다."}</p>
+        </>
+      ) : (
+        <>
+          <p className={"text-18px font-sb text-red-500 mt-5"}>
+            {"포인트 적립 실패"}
+          </p>
+          <p className={"mt-4 text-center"}>
+            {errorMessage || "포인트 적립에 실패했습니다."}
+          </p>
+        </>
+      )}
       <div className={"border-t border-gray-50 pt-3 pb-5 px-5 mt-10 w-full"}>
         <Button className={"w-full"} variantType={"primary"} onClick={onClose}>
           확인
@@ -48,10 +69,43 @@ const PaymentHistoryListItem = ({ payment }: { payment: PaymentHistory }) => {
 
   const handleReceivePoint = async (e: React.MouseEvent) => {
     e.stopPropagation() // 이벤트 전파 중단
-    await earnPoints(payment.index)
-    openBottomSheet(
-      <ReceivePointBottomSheet point={payment.point} onClose={closeOverlay} />,
-    )
+    try {
+      const response = await earnPoints(payment.index)
+
+      if (response?.resultCode === "00") {
+        // 성공 케이스
+        openBottomSheet(
+          <ReceivePointBottomSheet
+            point={payment.point}
+            onClose={closeOverlay}
+            isSuccess={true}
+          />,
+        )
+      } else {
+        // API 응답은 왔으나 resultCode가 00이 아닌 경우
+        const errorMessage =
+          response?.resultMessage || "포인트 적립에 실패했습니다."
+        openBottomSheet(
+          <ReceivePointBottomSheet
+            point={payment.point}
+            onClose={closeOverlay}
+            isSuccess={false}
+            errorMessage={errorMessage}
+          />,
+        )
+      }
+    } catch (error) {
+      // 네트워크 오류 등 예외 발생
+      const errorMessage = "포인트 적립 중 오류가 발생했습니다."
+      openBottomSheet(
+        <ReceivePointBottomSheet
+          point={payment.point}
+          onClose={closeOverlay}
+          isSuccess={false}
+          errorMessage={errorMessage}
+        />,
+      )
+    }
   }
 
   return (
