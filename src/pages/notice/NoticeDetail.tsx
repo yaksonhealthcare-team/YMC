@@ -24,7 +24,7 @@ const NoticeDetailPage: React.FC = () => {
     if (scrollContainer) {
       // 타이밍 이슈 방지를 위해 약간 지연시켜 실행
       setTimeout(() => {
-        (scrollContainer as HTMLElement).scrollTop = 0
+        ;(scrollContainer as HTMLElement).scrollTop = 0
       }, 0)
     }
   }, [])
@@ -36,11 +36,16 @@ const NoticeDetailPage: React.FC = () => {
       ".max-w-\\[500px\\].mx-auto.bg-white.h-full.max-h-full.overflow-y-scroll",
     )
     if (scrollContainer) {
-      (scrollContainer as HTMLElement).scrollTop = 0
+      ;(scrollContainer as HTMLElement).scrollTop = 0
     }
 
     // 이후 페이지 이동
-    navigate("/notice", { state: { from: fromPath } })
+    // 홈 화면에서 왔을 경우 홈 화면으로 이동
+    if (fromPath === "/") {
+      navigate("/")
+    } else {
+      navigate("/notice", { state: { from: fromPath } })
+    }
   }
 
   useEffect(() => {
