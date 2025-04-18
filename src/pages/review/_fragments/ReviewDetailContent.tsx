@@ -26,7 +26,7 @@ export const ReviewDetailContent = ({ review }: Props) => {
       left: "back",
       backgroundColor: "bg-white",
     })
-    setNavigation({ display: false })
+    setNavigation({ display: true })
   }, [])
 
   const ratings = [

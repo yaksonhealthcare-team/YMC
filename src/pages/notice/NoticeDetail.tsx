@@ -56,7 +56,7 @@ const NoticeDetailPage: React.FC = () => {
       backgroundColor: "bg-white",
       onClickBack: handleBack,
     })
-    setNavigation({ display: false })
+    setNavigation({ display: true })
   }, [setHeader, setNavigation, navigate, fromPath])
 
   if (isLoading) {
@@ -72,7 +72,7 @@ const NoticeDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="bg-white p-5">
+    <div className="bg-white p-5 pb-[72px]">
       <div className="flex flex-col gap-6">
         <NoticeHeader notice={notice} />
         <div className="w-full h-[1px] bg-[#ECECEC] rounded-[1px]"></div>
