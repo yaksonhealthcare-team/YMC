@@ -49,7 +49,7 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
   const [openImageModal, setOpenImageModal] = useState(false)
   const { showToast } = useOverlay()
 
-  const { weekday, saturday, holiday } = branch.operatingHours
+  const { weekday, saturday, holiday, sunday } = branch.operatingHours
 
   const renderOperatingHours = ({
     label,
@@ -81,7 +81,9 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
               <div className={"flex flex-col gap-1"}>
                 {renderOperatingHours({ ...weekday, label: "평일" })}
                 {renderOperatingHours({ ...saturday, label: "토요일" })}
-                {renderOperatingHours({ ...holiday, label: "일요일" })}
+                {sunday && renderOperatingHours({ ...sunday, label: "일요일" })}
+                {holiday &&
+                  renderOperatingHours({ ...holiday, label: "공휴일" })}
               </div>
             </IconSection>
             <IconSection icon={<PinIcon />}>

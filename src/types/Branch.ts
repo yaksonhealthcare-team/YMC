@@ -39,6 +39,10 @@ export interface BranchDetail {
       start: string
       end: string
     }
+    sunday?: {
+      start: string
+      end: string
+    }
     holiday: {
       start: string
       end: string
