@@ -36,7 +36,7 @@ export const MembershipCard = ({
       className="p-5 rounded-xl cursor-pointer bg-white shadow-[0_2px_8px_0px_rgba(46,43,41,0.15)]"
       onClick={onClick}
     >
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-[4px]">
         <div className="flex justify-between items-center">
           <Tag
             type="rect"
