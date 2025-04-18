@@ -48,7 +48,7 @@ export interface NoticeDetail {
 // Interface for Popup Detail data from API (/contents/detail)
 export interface PopupDetail {
   code: string
-  gubun: string // Should be 'E01' for popups according to the endpoint
+  gubun: string // Should be 'P01' for popups according to the endpoint
   title: string
   content?: string // Assuming there might be HTML content for detail
   sdate: string

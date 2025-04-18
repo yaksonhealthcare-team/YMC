@@ -135,7 +135,7 @@ export const fetchPopupDetail = async (code: string): Promise<PopupDetail> => {
     "/contents/detail",
     {
       params: {
-        gubun: "E01", // Assuming E01 is the correct gubun for popups
+        gubun: "P01", // P01은 팝업을 위한 올바른 gubun 값입니다
         code,
       },
     },
