@@ -212,12 +212,6 @@ const ReservationDetailPage = () => {
   const handleNavigateToReservationForm = () => {
     if (!reservation) return
 
-    console.log("다시 예약하기 클릭:", {
-      type: reservation.type,
-      membershipId: reservation.membershipId,
-      branchId: reservation.branchId,
-    })
-
     if (reservation.type === ReservationType.MANAGEMENT) {
       // 관리 예약 재예약: rebookingMembershipId와 branchId 전달
       navigate(`/reservation/form`, {

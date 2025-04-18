@@ -23,20 +23,10 @@ export const MembershipSwiper = ({
 }: MembershipSwiperProps) => {
   const [activeIndex, setActiveIndex] = useState(0)
 
-  // initialMembershipId 변경 시 로그 출력
-  useEffect(() => {
-    if (initialMembershipId) {
-      console.log(
-        `MembershipSwiper: initialMembershipId is set to ${initialMembershipId}`,
-      )
-    }
-  }, [initialMembershipId])
-
   // 정렬된 멤버십 목록 - initialMembershipId에 따라 재정렬
   const sortedMemberships = useMemo(() => {
     // 정렬할 필요가 없는 경우
     if (!initialMembershipId || membershipsData.body.length <= 1) {
-      console.log("MembershipSwiper: No sorting needed")
       return membershipsData.body
     }
 
@@ -47,9 +37,6 @@ export const MembershipSwiper = ({
 
     // 해당 회원권이 목록에 없으면 원래 목록 반환
     if (selectedIndex === -1) {
-      console.log(
-        `MembershipSwiper: Membership with ID ${initialMembershipId} not found in list`,
-      )
       return membershipsData.body
     }
 
@@ -57,9 +44,6 @@ export const MembershipSwiper = ({
     const result = [...membershipsData.body]
     const selectedMembership = result.splice(selectedIndex, 1)[0]
 
-    console.log(
-      `MembershipSwiper: Moved membership ${initialMembershipId} to front of list`,
-    )
     return [selectedMembership, ...result]
   }, [membershipsData.body, initialMembershipId])
 
@@ -68,7 +52,6 @@ export const MembershipSwiper = ({
     // 정렬된 목록에서는 선택된 회원권이 항상 0번 인덱스
     if (initialMembershipId && sortedMemberships.length > 0) {
       if (sortedMemberships[0].mp_idx === initialMembershipId) {
-        console.log("MembershipSwiper: Selected membership is at index 0")
         return 0
       }
 
@@ -78,9 +61,6 @@ export const MembershipSwiper = ({
       )
 
       if (index !== -1) {
-        console.log(
-          `MembershipSwiper: Selected membership found at index ${index}`,
-        )
         return index
       }
     }

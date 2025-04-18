@@ -77,20 +77,10 @@ function calculateInitialState(
       brandCode,
     } = locationState
 
-    console.log("재예약 정보:", {
-      rebookingMembershipId,
-      isConsultation,
-      branchIdFromState,
-      hasValidMembership: rebookingMembershipId
-        ? isValidMembershipId(rebookingMembershipId)
-        : false,
-    })
-
     // 재예약 회원권 ID가 있는 경우
     if (rebookingMembershipId) {
       // 유효한 회원권인지 체크
       if (isValidMembershipId(rebookingMembershipId) && branchIdFromState) {
-        console.log("Setting state from rebooking info:", rebookingMembershipId)
         initialFormData = {
           item: rebookingMembershipId,
           branch: branchIdFromState,
@@ -107,11 +97,6 @@ function calculateInitialState(
       }
       // 회원권이 유효하지 않은 경우 (토스트 메시지 표시)
       else {
-        console.log(
-          "재예약: 유효하지 않은 회원권 ID, 상담 예약으로 전환:",
-          rebookingMembershipId,
-        )
-
         // 유효하지 않은 회원권 ID인 경우 토스트 메시지 표시 플래그 설정
         shouldShowNoMembershipToast = true
 
@@ -124,8 +109,6 @@ function calculateInitialState(
         initialSwiperId = undefined
         initialSelectedBranch = branchFromState || null
 
-        console.log("토스트 플래그 설정됨:", shouldShowNoMembershipToast)
-
         return {
           initialFormData,
           initialSwiperId,
@@ -136,14 +119,8 @@ function calculateInitialState(
     }
     // [1] 1순위: 지점 상세 (isConsultation & branchId)
     else if (isConsultation !== undefined && branchIdFromState) {
-      console.log(
-        "Setting state from branch detail info",
-        isConsultation ? "상담 예약" : "회원권 미선택",
-      )
-
       // 상담 예약일 경우 토스트 메시지 표시 플래그 설정
       if (isConsultation === true) {
-        console.log("상담 예약으로 전환, 토스트 메시지 표시 필요")
         shouldShowNoMembershipToast = true
       }
 
@@ -163,12 +140,10 @@ function calculateInitialState(
     }
     // [1.5] 1.5순위: 브랜드 상세 -> 현재는 아무것도 안함 (기본 상태로 진행)
     else if (brandCode) {
-      console.log("Brand code received, no specific action:", brandCode)
       // initialFormData = { brandCode } // 필요시 여기에 브랜드 코드 관련 로직 추가
     }
     // 그 외 상황 (예: 선택된 아이템이 있는 경우)
     else if (selectedItem && isValidMembershipId(selectedItem)) {
-      console.log("Setting state from selectedItem (legacy?)")
       initialFormData = {
         item: selectedItem,
         membershipId: selectedItem,
@@ -182,13 +157,11 @@ function calculateInitialState(
   // [2] 2순위: URL 파라미터 (membershipId)
   if (Object.keys(initialFormData).length === 0 && memberships.length >= 0) {
     if (isValidMembershipUrl(membershipIdFromUrl)) {
-      console.log("Setting state from URL membershipId:", membershipIdFromUrl)
       const foundMembership = memberships.find(
         (m) => m.mp_idx === membershipIdFromUrl,
       )
 
       if (foundMembership && Number(foundMembership.remain_amount) <= 0) {
-        console.warn("Membership has no remaining amount:", membershipIdFromUrl)
         openModal({
           title: "알림",
           message: "해당 회원권의 잔여 횟수가 없습니다.",
@@ -216,7 +189,6 @@ function calculateInitialState(
       if (foundMembership?.branchs && foundMembership.branchs.length === 1) {
         const singleBranchInfo = foundMembership.branchs[0]
         initialFormData.branch = singleBranchInfo.b_idx
-        console.log("Auto-selected single branch:", initialFormData.branch)
       }
       return {
         initialFormData,
@@ -227,7 +199,6 @@ function calculateInitialState(
     }
     // [3] 3순위: URL 파라미터 (branchId만 있는 경우)
     else if (branchIdFromUrl && !membershipIdFromUrl) {
-      console.log("Setting state from URL branchId:", branchIdFromUrl)
       initialFormData = {
         item: undefined,
         branch: branchIdFromUrl,
@@ -250,7 +221,6 @@ function calculateInitialState(
   }
 
   // [4] 4순위: 기본값 - 위 모든 정보가 없으면 빈 상태로 시작
-  console.log("No specific initial state found, using defaults.")
   return {
     initialFormData,
     initialSwiperId,
@@ -335,7 +305,6 @@ const ReservationFormPage = () => {
     setNavigation({ display: false })
 
     return () => {
-      console.log("Unmounting ReservationFormPage, clearing state...")
       clearAll()
     }
   }, [showBranchModal, setHeader, setNavigation, handleBack, clearAll])
@@ -348,7 +317,6 @@ const ReservationFormPage = () => {
     }
 
     if (isMembershipsError && membershipsError) {
-      console.error("Failed to load memberships:", membershipsError)
       handleError(membershipsError, "회원권 정보를 불러오는데 실패했습니다.")
       isInitialized.current = true // 에러 발생 시에도 초기화 완료로 표시
       return
@@ -356,7 +324,6 @@ const ReservationFormPage = () => {
 
     // 멤버십 데이터가 로드된 경우에만 초기화 진행
     if (!isMembershipsLoading && memberships.length >= 0) {
-      console.log("Initializing form data based on location params...")
       const {
         initialFormData,
         initialSwiperId,
@@ -370,26 +337,8 @@ const ReservationFormPage = () => {
         handleBack,
       )
 
-      console.log("초기화 결과:", {
-        initialFormData,
-        shouldShowNoMembershipToast,
-      })
-
       // 한 번만 설정하도록 조건 추가
       if (!isInitialized.current) {
-        console.log("Setting initial form data and state", initialFormData)
-
-        // branch와 isConsultation 확인 로깅
-        if (location.state) {
-          const { branchId, isConsultation, rebookingMembershipId } =
-            location.state as LocationState
-          console.log("State from navigation:", {
-            branchId,
-            isConsultation,
-            rebookingMembershipId: rebookingMembershipId ? "있음" : "없음",
-          })
-        }
-
         setFormDataInStore({
           ...initialFormData,
           date: null,
@@ -403,22 +352,13 @@ const ReservationFormPage = () => {
         }
 
         if (initialSelectedBranch) {
-          console.log("Setting selectedBranch from location.state")
           setSelectedBranch(initialSelectedBranch)
         } else if (!initialFormData.branch && selectedBranch) {
           setSelectedBranch(null)
-        } else if (initialFormData.branch && !initialSelectedBranch) {
-          // 지점 ID는 있지만 selectedBranch 객체가 없는 경우 지점 데이터 로드는
-          // 두 번째 useEffect에서 처리됨
-          console.log(
-            "Branch ID set, waiting for branch data to load:",
-            initialFormData.branch,
-          )
         }
 
         // 토스트 메시지 표시
         if (shouldShowNoMembershipToast) {
-          console.log("토스트 메시지 표시: 가능한 회원권이 없습니다")
           showToast("가능한 회원권이 없습니다")
         }
 
@@ -466,13 +406,11 @@ const ReservationFormPage = () => {
 
     // 데이터 로딩 시작 전에 로그만 출력
     if (isInitialBranchLoading) {
-      console.log("Initial branch data loading for:", branchId)
       return
     }
 
     // 에러 처리
     if (isInitialBranchError && initialBranchError) {
-      console.error("Failed to load branch data:", initialBranchError)
       const message =
         initialBranchError instanceof Error &&
         initialBranchError.message.includes("위치 정보")
@@ -494,11 +432,8 @@ const ReservationFormPage = () => {
 
     // 데이터가 로드되었고 현재 branch ID와 일치하는 경우
     if (initialBranchData && initialBranchData.b_idx === branchId) {
-      console.log("Creating branch object for:", branchId)
-
       // 이미 적절한 브랜치가 설정되어 있으면 업데이트 하지 않음
       if (selectedBranch?.b_idx === branchId) {
-        console.log("Branch is already selected:", branchId)
         return
       }
 
@@ -516,7 +451,6 @@ const ReservationFormPage = () => {
         brand: initialBranchData.brand,
       }
 
-      console.log("Setting selectedBranch to:", branchObject.name)
       setSelectedBranch(branchObject)
     }
   }, [
@@ -530,7 +464,6 @@ const ReservationFormPage = () => {
 
   const handleOnChangeItem = useCallback(
     (value: string) => {
-      console.log("handleOnChangeItem called with value:", value)
       // 이미 선택된 항목이면 중복 업데이트하지 않음
       if (formData.item === value) {
         return
@@ -548,7 +481,6 @@ const ReservationFormPage = () => {
           selectedMembership.branchs.length === 1
         ) {
           branchId = selectedMembership.branchs[0].b_idx
-          console.log("Auto-selected single branch for membership:", branchId)
         }
 
         setFormDataInStore({
