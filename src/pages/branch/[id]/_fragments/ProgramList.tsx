@@ -28,12 +28,20 @@ const CareProgramTabItem = ({
     }
     return program.sc_pic ? (
       <div
-        className={"w-[68px] h-[68px] rounded-full bg-[rgba(33,33,33,0.45)]"}
+        className={"w-[68px] h-[68px] rounded-full overflow-hidden relative"}
       >
         <Image
           src={program.sc_pic}
           alt={"배경"}
-          className={"w-[68px] h-[68px] rounded-full object-contain"}
+          className={"w-full h-full object-cover"}
+        />
+        <div
+          className="absolute inset-0 bg-[rgba(33,33,33,0.42)]"
+          style={{
+            borderRadius: "99px",
+            background:
+              "linear-gradient(0deg, rgba(33, 33, 33, 0.42) 0%, rgba(33, 33, 33, 0.42) 100%)",
+          }}
         />
       </div>
     ) : (
