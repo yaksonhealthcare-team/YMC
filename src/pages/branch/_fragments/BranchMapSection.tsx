@@ -18,6 +18,7 @@ interface BranchMapSectionProps {
   branches: Branch[]
   onSelectBranch: (branch: Branch | null) => void
   onMoveMap: (newCenter: Coordinate) => void
+  isLoading?: boolean
 }
 
 const BranchMapSection = ({
@@ -26,6 +27,7 @@ const BranchMapSection = ({
   onSelectBranch,
   branches,
   onMoveMap,
+  isLoading,
 }: BranchMapSectionProps) => {
   const navigate = useNavigate()
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
@@ -58,10 +60,11 @@ const BranchMapSection = ({
     onSelectBranch(null)
   }, [brandCode, category])
 
-  if (locationLoading || !center) {
+  // 로딩 중일 때 표시
+  if (isLoading || locationLoading || !center) {
     return (
-      <div className="flex items-center justify-center min-h-[200px]">
-        <LoadingIndicator />
+      <div className="flex items-center justify-center min-h-[calc(100vh-300px)]">
+        <LoadingIndicator size={48} />
       </div>
     )
   }

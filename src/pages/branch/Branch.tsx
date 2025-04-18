@@ -157,6 +157,7 @@ const Branch = () => {
     fetchNextPage,
     isFetchingNextPage,
     refetch,
+    isFetching,
   } = useBranches({
     latitude: selectedFilter.latitude,
     longitude: selectedFilter.longitude,
@@ -164,6 +165,10 @@ const Branch = () => {
     category: selectedFilter.category?.code,
     enabled: selectedFilter.enabled,
   })
+
+  // 로딩 상태 계산 - 위치 로딩 중이거나 API 호출 중이거나 초기 로드 중인 경우
+  const isLoading =
+    locationLoading || (selectedFilter.enabled && branchesLoading) || isFetching
 
   // 현재 표시할 주소 결정
   const displayAddress = () => {
@@ -391,43 +396,11 @@ const Branch = () => {
     refetch()
   }
 
-  const renderScreen = () => {
-    switch (screen) {
-      case "list":
-        return (
-          <BranchFilterList
-            branches={branches}
-            onIntersect={() => {
-              if (hasNextPage && !isFetchingNextPage) {
-                fetchNextPage()
-              }
-            }}
-            onSelectBranch={handleBranchSelect}
-            isLoading={branchesLoading}
-            totalCount={branchPaginationData?.pages[0]?.total_count}
-          />
-        )
-      case "map":
-        return (
-          <BranchMapSection
-            brandCode={selectedFilter.brand?.code}
-            category={selectedFilter.category?.code}
-            onSelectBranch={setSelectedBranch}
-            branches={branches}
-            onMoveMap={handleMapMove}
-          />
-        )
-    }
-  }
-
   // 위치 정보를 로딩 중이거나 API 로딩 중인 경우 로딩 표시
-  if (
-    locationLoading ||
-    (selectedFilter.enabled && branchesLoading && !branchPaginationData)
-  ) {
+  if (locationLoading && !selectedFilter.enabled) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <LoadingIndicator />
+        <LoadingIndicator size={48} />
       </div>
     )
   }
@@ -439,7 +412,29 @@ const Branch = () => {
         screen === "list" ? "pt-[48px]" : "pt-[0px]",
       )}
     >
-      {renderScreen()}
+      {screen === "list" ? (
+        <BranchFilterList
+          branches={branches}
+          onIntersect={() => {
+            if (hasNextPage && !isFetchingNextPage) {
+              fetchNextPage()
+            }
+          }}
+          onSelectBranch={handleBranchSelect}
+          isLoading={isLoading}
+          isFetchingNextPage={isFetchingNextPage}
+          totalCount={branchPaginationData?.pages[0]?.total_count}
+        />
+      ) : (
+        <BranchMapSection
+          brandCode={selectedFilter.brand?.code}
+          category={selectedFilter.category?.code}
+          onSelectBranch={setSelectedBranch}
+          branches={branches}
+          onMoveMap={handleMapMove}
+          isLoading={isLoading}
+        />
+      )}
       <div
         className={clsx(
           "fixed left-1/2 -translate-x-1/2 z-10 transition-all duration-300",

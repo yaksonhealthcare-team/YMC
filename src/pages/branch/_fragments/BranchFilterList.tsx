@@ -18,6 +18,7 @@ interface BranchFilterListProps {
   onIntersect: () => void
   onSelectBranch: (branch: Branch) => void
   isLoading?: boolean
+  isFetchingNextPage?: boolean
   className?: string
   totalCount?: number
 }
@@ -104,6 +105,7 @@ const BranchFilterList = ({
   onIntersect,
   onSelectBranch,
   isLoading,
+  isFetchingNextPage,
   className,
   totalCount = 0,
 }: BranchFilterListProps) => {
@@ -145,11 +147,11 @@ const BranchFilterList = ({
   if (isLoading) {
     return (
       <div
-        className="flex justify-center items-center h-full"
+        className="flex items-center justify-center h-full pt-20"
         role="status"
         aria-label="로딩 중"
       >
-        <LoadingIndicator size={24} />
+        <LoadingIndicator size={48} />
       </div>
     )
   }
@@ -209,7 +211,13 @@ const BranchFilterList = ({
               isFavorite={branch.isFavorite ?? false}
             />
           ))}
-          <li ref={observerTarget} className="h-4" aria-hidden="true" />
+          <li ref={observerTarget} className="h-4" aria-hidden="true">
+            {isFetchingNextPage && (
+              <div className="flex justify-center py-4">
+                <LoadingIndicator className="w-6 h-6" />
+              </div>
+            )}
+          </li>
         </ul>
       </div>
     </div>
