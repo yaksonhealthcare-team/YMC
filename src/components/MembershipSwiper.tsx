@@ -4,7 +4,7 @@ import { Pagination } from "swiper/modules"
 import "swiper/css"
 import "swiper/css/pagination"
 import { MembershipRadioCard } from "../pages/reservation/_fragments/MembershipRadioCard"
-import { useMemo, useEffect, useState } from "react"
+import { useMemo, useState } from "react"
 import { MyMembership } from "types/Membership"
 import { ListResponse } from "apis/membership.api"
 
