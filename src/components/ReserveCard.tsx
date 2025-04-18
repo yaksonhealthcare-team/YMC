@@ -156,7 +156,7 @@ export const ReserveCard = ({
         className,
       )}
       onClick={() => navigate(`/reservation/${reservation.id}`)}
-      aria-label={`${reservation.store} ${reservation.programName} ${reservation.visit}회차 예약`}
+      aria-label={`${reservation.store} ${reservation.programName} ${reservation.statusCode !== "003" ? `${reservation.visit}회차` : ""} 예약`}
       role="button"
     >
       <div className="flex flex-col w-full">
@@ -167,9 +167,11 @@ export const ReserveCard = ({
           <span className="font-r text-14px text-gray-700">
             {reservation.programName}
           </span>
-          <span className="ml-1.5 font-sb text-14px text-primary">
-            {reservation.visit}회차
-          </span>
+          {reservation.statusCode !== "003" && (
+            <span className="ml-1.5 font-sb text-14px text-primary">
+              {reservation.visit}회차
+            </span>
+          )}
         </div>
         <DateAndTime date={reservation.date} className="mt-3" />
       </div>
