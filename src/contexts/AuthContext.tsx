@@ -42,7 +42,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           setIsLoading(false)
           return
         }
-        logout()
+
+        if (!window.ReactNativeWebView) {
+          logout()
+        }
       } catch (error) {
         console.error("사용자 세션 검증 실패", error)
         setUser(null)
