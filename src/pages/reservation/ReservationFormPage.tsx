@@ -304,10 +304,16 @@ const ReservationFormPage = () => {
     })
     setNavigation({ display: false })
 
+    // 컴포넌트가 언마운트될 때만 clearAll이 호출되도록 수정
+    // 모달이 열리고 닫힐 때는 폼 데이터를 유지
+  }, [showBranchModal, setHeader, setNavigation, handleBack])
+
+  // 컴포넌트 언마운트 시에만 clearAll 실행
+  useEffect(() => {
     return () => {
       clearAll()
     }
-  }, [showBranchModal, setHeader, setNavigation, handleBack, clearAll])
+  }, [clearAll])
 
   // 초기 데이터 로딩 Effect - 최초 한 번만 실행되도록 수정
   useEffect(() => {
