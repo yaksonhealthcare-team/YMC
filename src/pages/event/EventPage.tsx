@@ -28,7 +28,7 @@ const EventPage = () => {
 
   return (
     <div className="absolute inset-0 flex flex-col bg-gray-50">
-      <div className="sticky top-0 z-10 bg-white">
+      <div className="fixed top-0 left-0 right-0 z-10 bg-white">
         <Header
           type="back_title"
           title="이벤트"
@@ -77,7 +77,7 @@ const EventPage = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto bg-white relative">
+      <div className="flex-1 overflow-auto bg-white pt-[104px] pb-[72px]">
         {isLoading ? (
           <LoadingIndicator className="absolute inset-0" />
         ) : events && events.length > 0 ? (
