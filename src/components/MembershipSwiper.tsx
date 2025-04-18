@@ -88,7 +88,7 @@ export const MembershipSwiper = ({
   }, [initialMembershipId, sortedMemberships])
 
   return (
-    <Box className="w-full ">
+    <Box className="w-full">
       <RadioGroup
         value={selectedItem}
         onChange={(e) => onChangeItem(e.target.value)}
@@ -123,7 +123,9 @@ export const MembershipSwiper = ({
             <div
               key={index}
               className={`w-[6px] h-[6px] mx-[4px] rounded-full ${
-                index === activeIndex ? "bg-[#F37165]" : "bg-[#DDDDDD]"
+                index === activeIndex
+                  ? "bg-[#F37165]"
+                  : "border border-[#DDDDDD] bg-transparent"
               }`}
             />
           ))}
