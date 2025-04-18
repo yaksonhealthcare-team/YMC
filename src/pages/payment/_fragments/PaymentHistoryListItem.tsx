@@ -127,7 +127,8 @@ const PaymentHistoryListItem = ({ payment }: { payment: PaymentHistory }) => {
       <PaymentHistoryItemCard payment={payment} />
       {payment.pointStatus === "yet" &&
         !payment.status.includes("취소") &&
-        payment.type.includes("현장") && (
+        payment.type.includes("현장") &&
+        payment.point > 0 && (
           <Button
             variantType={"gray"}
             className={"h-10"}
