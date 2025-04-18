@@ -6,10 +6,13 @@ import { EmptyCard } from "@components/EmptyCard"
 import { useUpcomingReservations } from "queries/useReservationQueries"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useMemo } from "react"
+import { useReservationStore } from "stores/reservationStore"
+import { reservationFilters } from "types/Reservation"
 
 const ReserveCardSection = () => {
   const navigate = useNavigate()
   const { data: upcomingReservations, isLoading } = useUpcomingReservations()
+  const { setFilter } = useReservationStore()
 
   // 예약이 있는지 여부와 총 예약 수를 미리 계산
   const { hasReservations, totalCount } = useMemo(() => {
@@ -33,7 +36,17 @@ const ReserveCardSection = () => {
     })
   }
 
-  const handleTitleClick = () => navigate("/member-history/reservation")
+  const handleTitleClick = () => {
+    // 방문예정 필터(001)를 선택하도록 설정
+    const visitExpectedFilter = reservationFilters.find(
+      (filter) => filter.id === "001",
+    )
+    if (visitExpectedFilter) {
+      setFilter(visitExpectedFilter)
+    }
+
+    navigate("/member-history/reservation")
+  }
 
   return (
     <div className="mt-6 px-5">
