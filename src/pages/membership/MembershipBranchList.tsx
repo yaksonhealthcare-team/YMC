@@ -110,7 +110,7 @@ const MembershipBranchList = ({
               </div>
               <div className="flex items-center gap-[2.5px]">
                 {branch.distance && (
-                  <p className="font-r text-12px text-gray-400">
+                  <p className="font-r text-14px text-gray-400">
                     {branch.distance}
                   </p>
                 )}

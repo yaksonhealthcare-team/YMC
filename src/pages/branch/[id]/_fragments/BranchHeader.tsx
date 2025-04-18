@@ -17,7 +17,7 @@ interface BranchHeaderProps {
 const IconLabel = ({ icon, label }: { icon: ReactNode; label: string }) => (
   <div className="flex flex-row items-center gap-1">
     {icon}
-    <span className="text-gray-500 text-12px">{label}</span>
+    <span className="text-gray-500 text-14px">{label}</span>
   </div>
 )
 

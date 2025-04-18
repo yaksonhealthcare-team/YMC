@@ -59,7 +59,7 @@ export const BrandCard = ({
       </div>
       <span
         className={clsx(
-          "font-m text-12px transition-colors duration-200",
+          "font-m text-14px transition-colors duration-200",
           selected ? "text-primary font-semibold" : "text-gray-600",
         )}
       >
