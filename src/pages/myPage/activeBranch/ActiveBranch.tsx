@@ -50,7 +50,11 @@ const ActiveBranch = () => {
   }, [])
 
   if (isLoading) {
-    return <LoadingIndicator className="min-h-screen" />
+    return (
+      <div className="flex items-center justify-center h-screen bg-white">
+        <LoadingIndicator />
+      </div>
+    )
   }
 
   if (!user?.brands?.length) {
