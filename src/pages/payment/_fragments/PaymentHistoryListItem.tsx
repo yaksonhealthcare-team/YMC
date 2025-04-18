@@ -113,7 +113,7 @@ const PaymentHistoryListItem = ({ payment }: { payment: PaymentHistory }) => {
       <div className={"flex justify-between items-center"}>
         <div className={"flex gap-2 items-center"}>
           <p className={"font-sb"}>
-            {formatDate(payment.paidAt, "yyyy.MM.dd")}
+            {formatDate(payment.paidAt, "YYYY.MM.DD")}
           </p>
           <span
             className={

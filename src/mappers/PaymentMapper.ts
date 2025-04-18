@@ -7,10 +7,16 @@ import {
 
 export class PaymentMapper {
   static toHistoryEntity(dto: PaymentHistoryResponse): PaymentHistory {
+    const payDate = new Date(dto.pay_date)
+    const currentYear = new Date().getFullYear()
+    if (payDate.getFullYear() > currentYear) {
+      payDate.setFullYear(currentYear)
+    }
+
     return {
       id: dto.orderid,
       index: dto.p_idx,
-      paidAt: new Date(dto.pay_date),
+      paidAt: payDate,
       type: dto.pay_gubun,
       status: dto.pay_status,
       pointStatus: dto.point_status === "적립" ? "done" : "yet",
@@ -39,10 +45,16 @@ export class PaymentMapper {
   static toHistoryDetailEntity(
     dto: PaymentHistoryDetailResponse,
   ): PaymentHistoryDetail {
+    const payDate = new Date(dto.pay_date)
+    const currentYear = new Date().getFullYear()
+    if (payDate.getFullYear() > currentYear) {
+      payDate.setFullYear(currentYear)
+    }
+
     return {
       id: dto.orderid,
       index: dto.p_idx,
-      paidAt: new Date(dto.pay_date),
+      paidAt: payDate,
       type: dto.pay_gubun,
       status: dto.pay_status,
       pointStatus: dto.point_status === "적립" ? "done" : "yet",
