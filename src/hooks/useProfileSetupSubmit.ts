@@ -53,6 +53,7 @@ export const useProfileSetupSubmit = () => {
           marketing_yn: socialInfo.SocialRefreshToken ? "Y" : "N",
           brand_code: signupData.brandCodes || [],
           profileUrl: signupData.profileUrl,
+          profileURL: signupData.profileUrl,
         },
       })
 
@@ -130,6 +131,7 @@ export const useProfileSetupSubmit = () => {
           nationalinfo: "0",
           brand_code: signupData.brandCodes || [],
           profileUrl: signupData.profileUrl,
+          profileURL: signupData.profileUrl,
         },
         authData: {
           di: signupData.di,

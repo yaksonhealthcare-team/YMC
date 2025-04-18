@@ -166,6 +166,7 @@ interface SignupFormData {
     post: string
     nationalinfo: string
     brand_code?: string[]
+    profileUrl?: string
   }
   authData: {
     di: string
@@ -187,6 +188,10 @@ const createSignupRequest = ({
     di: authData.di,
     token_version_id: authData.token_version_id,
     ...(optional.recom && { recom: optional.recom }),
+    ...(userInfo.profileUrl && {
+      profileUrl: userInfo.profileUrl,
+      profileURL: userInfo.profileUrl,
+    }),
   }
 
   return requestData
