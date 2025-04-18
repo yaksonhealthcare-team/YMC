@@ -124,25 +124,35 @@ export const ReserveCard = ({
         return null
 
       case "upcoming":
-        if (
-          reservation.statusCode === "002" ||
-          reservation.statusCode === "008"
-        ) {
-          if (isReservationDatePassed) {
-            return (
-              <Button
-                variantType="primary"
-                sizeType="xs"
-                onClick={handleCompleteVisit}
-                className={isModalOpen ? "opacity-50 cursor-not-allowed" : ""}
-                disabled={isModalOpen}
-              >
-                방문 완료
-              </Button>
-            )
-          }
+        // 예약 시작 시간이 지났고, 상태가 예약완료(001)인 경우에만 방문 완료 버튼 표시
+        if (isReservationDatePassed && reservation.statusCode === "001") {
+          return (
+            <Button
+              variantType="primary"
+              sizeType="xs"
+              onClick={handleCompleteVisit}
+              className={isModalOpen ? "opacity-50 cursor-not-allowed" : ""}
+              disabled={isModalOpen}
+            >
+              방문 완료
+            </Button>
+          )
         }
         return null
+
+      case "progressing":
+        // 관리중 상태에서도 방문 완료 버튼 표시
+        return (
+          <Button
+            variantType="primary"
+            sizeType="xs"
+            onClick={handleCompleteVisit}
+            className={isModalOpen ? "opacity-50 cursor-not-allowed" : ""}
+            disabled={isModalOpen}
+          >
+            방문 완료
+          </Button>
+        )
 
       default:
         return null
