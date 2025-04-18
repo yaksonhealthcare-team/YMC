@@ -83,7 +83,7 @@ const Home = () => {
 
   return (
     <div>
-      <Container className="relative w-full bg-system-bg pt-4 overflow-x-hidden scrollbar-hide px-0">
+      <Container className="relative w-full bg-system-bg mt-4 overflow-x-hidden scrollbar-hide px-0">
         <DynamicHomeHeaderBackground
           header={
             <div className={"space-y-2"}>
