@@ -154,15 +154,14 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
       <StartupPopup />
       <PageContainer
         ref={pageContainerRef}
-        className={header.backgroundColor || "bg-system-bg"}
+        className={header.backgroundColor ?? "bg-system-bg"}
       >
         {header.display && renderHeader()}
         {children}
         {navigation.display && (
-          <div>
-            <div className={"h-[82px]"} />
+          <div className="min-h-[82px]">
             <div
-              className="flex fixed bottom-0 left-0 right-0 mx-auto h-[82px] z-10 bg-white justify-between max-w-[500px]"
+              className="flex fixed bottom-0 left-0 right-0 mx-auto z-10 bg-white justify-between max-w-[500px]"
               style={{
                 boxShadow: "0px -2px 16px 0px #2E2B2914",
                 position: "fixed",
@@ -247,7 +246,9 @@ const NavButton = ({
 
   return (
     <button
-      className={"py-3 flex-1 flex flex-col gap-1 items-center cursor-pointer"}
+      className={
+        "min-h-[82px] pt-3 pb-3 flex-1 flex flex-col gap-1 items-center cursor-pointer"
+      }
       onClick={handleClick}
       style={{ color: active ? "#F37165" : "#BDBDBD" }}
       aria-label={`${title} 메뉴`}

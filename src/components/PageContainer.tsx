@@ -9,8 +9,7 @@ const PageContainer = forwardRef<HTMLDivElement, PageContainerProps>(
   ({ children, className }, ref) => {
     return (
       <div
-        id="page-container"
-        className={`h-screen max-h-full overflow-x-hidden ${className || "bg-system-bg"}`}
+        className={`h-screen max-h-full overflow-x-hidden ${className ?? "bg-system-bg"}`}
       >
         <div
           ref={ref}
