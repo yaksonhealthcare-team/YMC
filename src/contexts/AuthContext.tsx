@@ -86,6 +86,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       console.error("로그아웃 중 오류 발생:", error)
     } finally {
       setUser(null)
+      setIsLoading(false)
       sessionStorage.removeItem("socialSignupInfo")
       queryClient.clear()
     }
