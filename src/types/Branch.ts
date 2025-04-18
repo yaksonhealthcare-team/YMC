@@ -170,8 +170,8 @@ export interface BranchDetailResponse {
       b_sat_etime: string
     }
     sunday: {
-      b_mon_stime: string
-      b_mon_etime: string
+      b_sun_stime: string
+      b_sun_etime: string
     }
     holiday: {
       b_hol_stime: string

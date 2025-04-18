@@ -106,8 +106,8 @@ export class BranchMapper {
           end: dto.biz_time.saturday.b_sat_etime,
         },
         sunday: {
-          start: dto.biz_time.sunday.b_mon_stime,
-          end: dto.biz_time.sunday.b_mon_etime,
+          start: dto.biz_time.sunday.b_sun_stime,
+          end: dto.biz_time.sunday.b_sun_etime,
         },
         holiday: {
           start: dto.biz_time.holiday.b_hol_stime,
