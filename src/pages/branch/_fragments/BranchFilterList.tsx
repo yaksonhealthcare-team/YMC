@@ -115,12 +115,15 @@ const BranchFilterList = ({
 
   const { mutate: bookmark } = useBranchBookmarkMutation()
   const { mutate: unbookmark } = useBranchUnbookmarkMutation()
-  const { openModal } = useOverlay()
+  const { openModal, showToast } = useOverlay()
 
   const handleToggleFavorite = useCallback(
     (branch: Branch) => {
       if (branch.isFavorite) {
         unbookmark(branch.b_idx, {
+          onSuccess: () => {
+            showToast("즐겨찾기에서 삭제했어요.")
+          },
           onError: () => {
             openModal({
               title: "즐겨찾기 해제 실패",
@@ -131,6 +134,9 @@ const BranchFilterList = ({
         })
       } else {
         bookmark(branch.b_idx, {
+          onSuccess: () => {
+            showToast("즐겨찾기에 추가했어요.")
+          },
           onError: () => {
             openModal({
               title: "즐겨찾기 추가 실패",
@@ -141,7 +147,7 @@ const BranchFilterList = ({
         })
       }
     },
-    [bookmark, unbookmark, openModal],
+    [bookmark, unbookmark, openModal, showToast],
   )
 
   if (isLoading) {
