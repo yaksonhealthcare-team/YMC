@@ -7,7 +7,7 @@ const Store = () => {
   const { setHeader, setNavigation } = useLayout()
 
   useEffect(() => {
-    setHeader({ display: false })
+    setHeader({ display: false, backgroundColor: "bg-white" })
     setNavigation({ display: true })
   }, [])
 
@@ -38,7 +38,7 @@ const Store = () => {
   }, [])
 
   return (
-    <div style={{ width: "100%", height: "100vh" }}>
+    <div className="bg-white" style={{ width: "100%", height: "100vh" }}>
       <iframe
         ref={iframeRef}
         src="https://devmall.yaksonhc.com/"
