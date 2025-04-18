@@ -11,15 +11,18 @@ export function useScrollDetection(elementRef?: RefObject<HTMLElement>) {
         ? elementRef.current?.scrollTop
         : document.documentElement.scrollTop || document.body.scrollTop
 
-      if (scrollTop === 0) {
-        if (window.ReactNativeWebView) {
-          window.ReactNativeWebView.postMessage(
-            JSON.stringify({
-              type: "PULL_TO_REFRESH",
-            }),
-          )
-        }
+      if (!window.ReactNativeWebView) {
+        return
       }
+
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({
+          type: "SCROLL",
+          data: {
+            scroll: scrollTop,
+          },
+        }),
+      )
     }
 
     // 스크롤 이벤트를 감지할 요소
