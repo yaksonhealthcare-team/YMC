@@ -1,5 +1,5 @@
 import { QueryClient } from "@tanstack/react-query"
-import axios, { AxiosError } from "axios"
+import axios from "axios"
 import { getErrorMessage } from "../types/Error"
 
 // localStorage 토큰 관리 유틸리티 함수
@@ -82,31 +82,6 @@ axiosClient.interceptors.request.use(async (config) => {
   return config
 })
 
-// 요청 재시도를 위한 변수
-// let isRefreshing = false
-// let failedQueue: {
-//   resolve: (
-//     value: AxiosResponse<unknown> | Promise<AxiosResponse<unknown>>,
-//   ) => void
-//   reject: (reason?: unknown) => void
-//   config: AxiosRequestConfig
-// }[] = []
-
-// // 대기 중인 요청 처리
-// const processQueue = (error: unknown, token: string | null) => {
-//   failedQueue.forEach((prom) => {
-//     if (error) {
-//       prom.reject(error)
-//     } else if (token) {
-//       prom.config.headers = prom.config.headers || {}
-//       prom.config.headers.Authorization = `Bearer ${token}`
-//       prom.resolve(axiosClient(prom.config))
-//     }
-//   })
-
-//   failedQueue = []
-// }
-
 axiosClient.interceptors.response.use(
   async (response) => {
     let parsedData
@@ -126,29 +101,6 @@ axiosClient.interceptors.response.use(
     }
 
     const data = parsedData as ApiResponse<unknown>
-
-    // 이메일 중복확인 API는 resultCode "23"을 정상 응답으로 처리
-    if (
-      data.resultCode !== "00" &&
-      !(
-        response.config?.url?.includes("/auth/signup/check-id") &&
-        data.resultCode === "23"
-      )
-    ) {
-      const error = new AxiosError()
-      error.response = {
-        ...response,
-        data: {
-          resultCode: data.resultCode,
-          resultMessage: data.resultMessage,
-        },
-      }
-      showErrorMessage(data.resultMessage, {
-        resultCode: data.resultCode,
-        url: response.config?.url,
-      })
-      throw error
-    }
 
     return {
       ...response,

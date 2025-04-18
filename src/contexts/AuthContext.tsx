@@ -42,6 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           setIsLoading(false)
           return
         }
+        logout()
       } catch (error) {
         console.error("사용자 세션 검증 실패", error)
         setUser(null)
@@ -85,6 +86,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       console.error("로그아웃 중 오류 발생:", error)
     } finally {
       setUser(null)
+      setIsLoading(false)
       sessionStorage.removeItem("socialSignupInfo")
       queryClient.clear()
     }
