@@ -14,6 +14,8 @@ import FixedButtonContainer from "@components/FixedButtonContainer"
 import { ReservationType } from "types/Reservation"
 import { Skeleton } from "@mui/material"
 import { useOverlay } from "contexts/ModalContext"
+import { useQueryClient } from "@tanstack/react-query"
+import { createUserContextQueryKey } from "../../queries/queryKeyFactory"
 
 const LoadingSkeleton = () => (
   <div className="flex-1 px-[20px] pt-[16px] pb-[150px] bg-system-bg">
@@ -63,14 +65,50 @@ const ReservationDetailPage = () => {
   const { mutate } = useCompleteVisit()
   const { openModal, openBottomSheet, closeOverlay, overlayState } =
     useOverlay()
+  const queryClient = useQueryClient()
   const {
     data: reservation,
     isLoading,
     isError,
     error,
+    refetch,
   } = useReservationDetail(id ?? "")
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  // 페이지 진입 시 데이터 리프레시
+  useEffect(() => {
+    if (id) {
+      refetch()
+    }
+  }, [id, refetch])
+
+  // 페이지가 focus를 받을 때 데이터 리프레시
+  useEffect(() => {
+    const handleFocus = () => {
+      if (id) {
+        refetch()
+      }
+    }
+
+    window.addEventListener("focus", handleFocus)
+    return () => {
+      window.removeEventListener("focus", handleFocus)
+    }
+  }, [id, refetch])
+
+  // 주기적으로 데이터 리프레시 (30초마다)
+  useEffect(() => {
+    if (!id) return
+
+    const interval = setInterval(() => {
+      queryClient.invalidateQueries({
+        queryKey: createUserContextQueryKey(["reservationDetail", id]),
+      })
+    }, 30000)
+
+    return () => clearInterval(interval)
+  }, [id, queryClient])
 
   useEffect(() => {
     setHeader({

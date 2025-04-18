@@ -3,6 +3,7 @@ import {
   useMutation,
   useQueryClient,
   useInfiniteQuery,
+  QueryClient,
 } from "@tanstack/react-query"
 import {
   completeVisit,
@@ -48,6 +49,9 @@ export const useUpcomingReservations = () => {
       total_count: data.total_count,
     }),
     retry: false,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    staleTime: 1000 * 60, // 1분
   })
 }
 
@@ -61,6 +65,9 @@ export const useReservations = (status: ReservationStatusCode = "000") => {
       return pages.length + 1
     },
     retry: false,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    staleTime: 1000 * 60, // 1분
   })
 }
 
@@ -106,6 +113,36 @@ export const useReservationDetail = (reservationId: string) => {
       return detail
     },
     retry: false,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    staleTime: 1000 * 30, // 30초
+  })
+}
+
+const invalidateAllReservationQueries = (queryClient: QueryClient) => {
+  // 모든 예약 관련 상태 쿼리 무효화
+  queryClient.invalidateQueries({
+    queryKey: createUserContextQueryKey(["upcomingReservations"]),
+  })
+
+  // 전체 예약 리스트 무효화
+  queryClient.invalidateQueries({
+    queryKey: createUserContextQueryKey(["reservations"]),
+    exact: false, // 모든 하위 키를 무효화
+  })
+
+  // 개별 상태별 예약 리스트 무효화
+  const statusCodes: ReservationStatusCode[] = [
+    "000",
+    "001",
+    "002",
+    "003",
+    "008",
+  ]
+  statusCodes.forEach((code) => {
+    queryClient.invalidateQueries({
+      queryKey: createUserContextQueryKey(["reservations", code]),
+    })
   })
 }
 
@@ -120,24 +157,8 @@ export const useCompleteVisit = () => {
         queryKey: createUserContextQueryKey(["reservationDetail", r_idx]),
       })
 
-      // 홈 화면의 예정된 예약 리스트 캐시 업데이트
-      queryClient.invalidateQueries({
-        queryKey: createUserContextQueryKey(["upcomingReservations"]),
-      })
-
-      // 모든 예약 상태 쿼리 무효화
-      queryClient.invalidateQueries({
-        queryKey: createUserContextQueryKey(["reservations"]),
-      })
-      queryClient.invalidateQueries({
-        queryKey: createUserContextQueryKey(["reservations", "000"]), // 전체
-      })
-      queryClient.invalidateQueries({
-        queryKey: createUserContextQueryKey(["reservations", "001"]), // 예약완료
-      })
-      queryClient.invalidateQueries({
-        queryKey: createUserContextQueryKey(["reservations", "002"]), // 방문완료
-      })
+      // 모든 예약 관련 쿼리 무효화
+      invalidateAllReservationQueries(queryClient)
     },
     retry: false,
   })
@@ -156,16 +177,16 @@ export const useCancelReservation = () => {
       cancelReservation(reservationId, cancelMemo),
     retry: false,
     onSuccess: (_, variables) => {
-      // 예약 목록과 상세 정보 쿼리 무효화
-      queryClient.invalidateQueries({
-        queryKey: createUserContextQueryKey(["reservations"]),
-      })
+      // 예약 상세 정보 무효화
       queryClient.invalidateQueries({
         queryKey: createUserContextQueryKey([
           "reservationDetail",
           variables.reservationId,
         ]),
       })
+
+      // 모든 예약 관련 쿼리 무효화
+      invalidateAllReservationQueries(queryClient)
     },
   })
 }
@@ -177,26 +198,8 @@ export const useCreateReservationMutation = () => {
     mutationFn: (params: CreateReservationRequest) => createReservation(params),
     retry: false,
     onSuccess: () => {
-      // 예약 목록 쿼리 무효화
-      queryClient.invalidateQueries({
-        queryKey: createUserContextQueryKey(["reservations"]),
-      })
-      queryClient.invalidateQueries({
-        queryKey: createUserContextQueryKey(["upcomingReservations"]),
-      })
-      // 모든 예약 상태에 대한 쿼리 무효화
-      queryClient.invalidateQueries({
-        queryKey: createUserContextQueryKey(["reservations", "000"]), // 전체
-      })
-      queryClient.invalidateQueries({
-        queryKey: createUserContextQueryKey(["reservations", "001"]), // 예약완료
-      })
-      queryClient.invalidateQueries({
-        queryKey: createUserContextQueryKey(["reservations", "002"]), // 방문완료
-      })
-      queryClient.invalidateQueries({
-        queryKey: createUserContextQueryKey(["reservations", "003"]), // 예약취소
-      })
+      // 모든 예약 관련 쿼리 무효화
+      invalidateAllReservationQueries(queryClient)
     },
   })
 }

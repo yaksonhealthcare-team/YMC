@@ -16,19 +16,56 @@ import LoadingIndicator from "@components/LoadingIndicator"
 import { useReservationStore } from "stores/reservationStore"
 import { FixedSizeList as List } from "react-window"
 import { useState } from "react"
+import { useQueryClient } from "@tanstack/react-query"
+import { createUserContextQueryKey } from "../../../queries/queryKeyFactory"
 
 const ReservationContent = ({
   filterId,
 }: {
   filterId: ReservationStatusCode
 }) => {
-  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    useReservations(filterId)
+  const queryClient = useQueryClient()
+  const {
+    data,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useReservations(filterId)
   const reservations = data?.pages.flatMap((page) => page.reservations) || []
   const bottomRef = useRef<HTMLDivElement>(null)
   const [windowHeight, setWindowHeight] = useState(
     () => window.innerHeight - 200,
   ) // 헤더와 필터 영역 높이 고려
+
+  // 탭 전환하거나 페이지에 포커스가 올 때 데이터 리프레시
+  useEffect(() => {
+    refetch()
+  }, [filterId, refetch])
+
+  // 페이지가 마운트되거나 포커스될 때 데이터 리프레시
+  useEffect(() => {
+    const handleFocus = () => {
+      refetch()
+    }
+
+    window.addEventListener("focus", handleFocus)
+    return () => {
+      window.removeEventListener("focus", handleFocus)
+    }
+  }, [refetch])
+
+  // 주기적으로 데이터 리프레시 (옵션)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      queryClient.invalidateQueries({
+        queryKey: createUserContextQueryKey(["reservations", filterId]),
+      })
+    }, 30000) // 30초마다 refresh
+
+    return () => clearInterval(interval)
+  }, [filterId, queryClient])
 
   useEffect(() => {
     const handleResize = () => {
