@@ -131,8 +131,11 @@ const FilterContent = ({
 const MembershipHistoryPage = () => {
   // const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
-  const { filter: membershipFilter, setFilter: setMembershipFilter } =
-    useMembershipStore()
+  const {
+    filter: membershipFilter,
+    setFilter: setMembershipFilter,
+    resetFilter,
+  } = useMembershipStore()
 
   const handleFilterChange = useCallback(
     (filter: MyMembershipFilterItem) => {
@@ -147,6 +150,12 @@ const MembershipHistoryPage = () => {
     })
     setNavigation({ display: true })
   }, [])
+
+  useEffect(() => {
+    return () => {
+      resetFilter()
+    }
+  }, [resetFilter])
 
   return (
     <div className="flex flex-col bg-system-bg min-h-[calc(100vh-82px)]">

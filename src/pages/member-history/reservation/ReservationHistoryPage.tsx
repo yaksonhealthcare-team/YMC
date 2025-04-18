@@ -158,8 +158,11 @@ const FilterContent = ({
 const ReservationHistoryPage = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
-  const { filter: reservationFilter, setFilter: setReservationFilter } =
-    useReservationStore()
+  const {
+    filter: reservationFilter,
+    setFilter: setReservationFilter,
+    resetFilter,
+  } = useReservationStore()
 
   const handleFilterChange = useCallback(
     (filter: FilterItem) => {
@@ -184,6 +187,12 @@ const ReservationHistoryPage = () => {
     })
     setNavigation({ display: true })
   }, [])
+
+  useEffect(() => {
+    return () => {
+      resetFilter()
+    }
+  }, [resetFilter])
 
   return (
     <div className="flex flex-col bg-system-bg min-h-[calc(100vh-82px)]">
