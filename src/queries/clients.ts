@@ -1,6 +1,7 @@
+import { refreshAccessToken } from "@apis/auth.api"
 import { QueryClient } from "@tanstack/react-query"
 import axios from "axios"
-import { getErrorMessage } from "../types/Error"
+import { ERROR_CODES, getErrorMessage } from "../types/Error"
 
 // localStorage 토큰 관리 유틸리티 함수
 const TOKEN_KEY = "access_token"
@@ -101,6 +102,20 @@ axiosClient.interceptors.response.use(
     }
 
     const data = parsedData as ApiResponse<unknown>
+
+    if (data.resultCode === ERROR_CODES.TOKEN_EXPIRED) {
+      const newAccessToken = await refreshAccessToken()
+
+      // 토큰 갱신에 성공한 경우 사용자 정보 다시 요청
+      if (newAccessToken) {
+        response.config.headers.Authorization = `Bearer ${newAccessToken}`
+
+        return axios(response.config)
+      }
+
+      // 토큰 갱신 후에도 데이터가 없으면 null 반환
+      throw new Error("토큰 갱신 후에도 데이터가 없습니다")
+    }
 
     return {
       ...response,

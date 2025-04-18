@@ -91,23 +91,8 @@ export const fetchUser = async (): Promise<User | null> => {
           type: "REFRESH_TOKEN",
         }),
       )
-
-      return null
-    }
-    // 응답 데이터가 없는 경우, 액세스 토큰 갱신 시도
-    const newAccessToken = await refreshAccessToken()
-
-    // 토큰 갱신에 성공한 경우 사용자 정보 다시 요청
-    if (newAccessToken) {
-      const retryResponse =
-        await axiosClient.get<HTTPResponse<UserResponse[]>>("/auth/me")
-
-      if (retryResponse.data.body && retryResponse.data.body.length > 0) {
-        return UserMapper.toEntity(retryResponse.data.body[0])
-      }
     }
 
-    // 토큰 갱신 후에도 데이터가 없으면 null 반환
     return null
   }
 }
