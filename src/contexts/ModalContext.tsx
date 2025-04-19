@@ -1,5 +1,12 @@
-import React, { createContext, ReactNode, useContext, useState } from "react"
-import { Dialog, DialogContent } from "@mui/material"
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useState,
+  useRef,
+} from "react"
+import { Dialog, DialogContent, Slide } from "@mui/material"
+import { TransitionProps } from "@mui/material/transitions"
 import { Button } from "../components/Button"
 import { useModalBackButtonHandler } from "../hooks/useModalBackButtonHandler"
 
@@ -202,6 +209,16 @@ export const useOverlay = (): OverlayContextValue => {
   return context
 }
 
+// 슬라이드 트랜지션 컴포넌트
+const BottomSheetTransition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement
+  },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />
+})
+
 /**
  * 오버레이 컨테이너 컴포넌트
  * 현재 오버레이 상태에 따라 적절한 오버레이 컴포넌트를 렌더링합니다.
@@ -211,7 +228,8 @@ const OverlayContainer: React.FC = () => {
   const [touchStartY, setTouchStartY] = useState<number | null>(null)
   const [touchCurrentY, setTouchCurrentY] = useState<number | null>(null)
   const [isDragging, setIsDragging] = useState(false)
-  const DRAG_THRESHOLD = 100 // 드래그 닫기 임계값 (픽셀)
+  const sheetRef = useRef<HTMLDivElement>(null)
+  const DRAG_THRESHOLD = 50 // 드래그 닫기 임계값을 50픽셀로 낮춤
 
   // 뒤로가기 핸들러 훅 사용
   useModalBackButtonHandler({
@@ -232,7 +250,7 @@ const OverlayContainer: React.FC = () => {
   const handleTouchStart = (e: React.TouchEvent) => {
     if (e.touches.length === 1) {
       setTouchStartY(e.touches[0].clientY)
-      setTouchCurrentY(e.touches[0].clientY) // 현재 Y좌표 초기화
+      setTouchCurrentY(e.touches[0].clientY)
       setIsDragging(true)
     }
   }
@@ -243,11 +261,12 @@ const OverlayContainer: React.FC = () => {
     const currentY = e.touches[0].clientY
     setTouchCurrentY(currentY)
 
-    // 선택 사항: 아래로 드래그할 때 기본 스크롤 동작 방지 (필요 시)
-    // const dragDistance = currentY - touchStartY;
-    // if (dragDistance > 0) {
-    //   e.preventDefault();
-    // }
+    // 바텀시트 드래그 시 실시간으로 위치 업데이트
+    if (sheetRef.current && touchStartY < currentY) {
+      const dragDistance = currentY - touchStartY
+      sheetRef.current.style.transform = `translateY(${dragDistance}px)`
+      sheetRef.current.style.transition = "none"
+    }
   }
 
   const handleTouchEnd = () => {
@@ -257,6 +276,10 @@ const OverlayContainer: React.FC = () => {
 
     if (dragDistance > DRAG_THRESHOLD) {
       closeOverlay()
+    } else if (sheetRef.current) {
+      // 드래그가 임계값보다 적으면 원래 위치로 복원
+      sheetRef.current.style.transform = "translateY(0)"
+      sheetRef.current.style.transition = "transform 0.3s ease"
     }
 
     // 상태 초기화
@@ -315,6 +338,8 @@ const OverlayContainer: React.FC = () => {
             fullWidth
             maxWidth="sm"
             className="z-[9000]"
+            TransitionComponent={BottomSheetTransition}
+            transitionDuration={{ enter: 300, exit: 200 }}
             PaperProps={{
               style: {
                 position: "fixed",
@@ -327,7 +352,9 @@ const OverlayContainer: React.FC = () => {
                 overflowY: "auto",
                 width: "100%",
                 borderRadius: "24px 24px 0 0",
+                boxShadow: "0px -4px 20px rgba(0, 0, 0, 0.1)",
               },
+              ref: sheetRef,
             }}
           >
             <DialogContent className="p-0">
@@ -337,6 +364,7 @@ const OverlayContainer: React.FC = () => {
                   onTouchStart={handleTouchStart}
                   onTouchMove={handleTouchMove}
                   onTouchEnd={handleTouchEnd}
+                  onClick={closeOverlay}
                   aria-label="바텀시트 닫기 핸들"
                 />
                 {bottomSheetOptions.title && (
@@ -350,7 +378,7 @@ const OverlayContainer: React.FC = () => {
                 {bottomSheetOptions.buttons?.map((button, index) => (
                   <Button
                     key={index}
-                    variantType="primary"
+                    variantType={button.variant || "primary"}
                     onClick={button.onClick}
                     fullWidth
                     className={`mt-2 ${
