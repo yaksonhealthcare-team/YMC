@@ -3,6 +3,7 @@ import { Button } from "@components/Button.tsx"
 import { useEffect, useState } from "react"
 import { checkByNice } from "utils/niceCheck.ts"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
+import { Box } from "@mui/material"
 
 window.name = "Parent_window"
 
@@ -49,23 +50,23 @@ const FindAccount = () => {
     <>
       <div className="h-[48px] px-5 border-b border-gray-100 flex items-center">
         <div className="relative flex items-center gap-[8px] text-14px font-[600] w-full h-full">
-          <div
+          <Box
             onClick={() => handleTabClick("find-email")}
             className={`flex-1 text-center cursor-pointer w-[] ${
               tab === "find-email" ? "text-[#212121]" : "text-[#9E9E9E]"
             }`}
           >
             이메일 찾기
-          </div>
+          </Box>
 
-          <div
+          <Box
             onClick={() => handleTabClick("reset-password")}
             className={`flex-1 text-center cursor-pointer ${
               tab === "reset-password" ? "text-[#212121]" : "text-[#9E9E9E]"
             }`}
           >
             비밀번호 찾기
-          </div>
+          </Box>
 
           <div
             className={`absolute bottom-0 h-[2px] bg-black transition-transform duration-300 ease-in-out ${
