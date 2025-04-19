@@ -32,3 +32,18 @@ export const changePhoneNumberWithDecryptData = async (
 
   return data
 }
+
+export interface FindPasswordResponse {
+  thirdPartyType?: string // 이메일 또는 소셜로그인 유형
+  email?: string // 로그인 유형이 이메일인 경우에만 존재
+}
+
+export const findPasswordWithDecryptData = async (
+  request: DecryptRequest,
+): Promise<FindPasswordResponse> => {
+  const { data } = await axiosClient.post<HTTPResponse<FindPasswordResponse[]>>(
+    "/auth/account/find-password",
+    { ...request },
+  )
+  return data.body[0]
+}
