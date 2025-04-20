@@ -39,7 +39,7 @@ export const ProfileSetup = () => {
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null)
 
   useEffect(() => {
-    if (!signupData) {
+    if (!signupData.di) {
       openModal({
         title: "알림",
         message:

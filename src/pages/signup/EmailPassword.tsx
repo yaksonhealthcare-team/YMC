@@ -54,7 +54,7 @@ export const EmailPassword = () => {
       }
     }
 
-    if (!signupData) {
+    if (!signupData.di) {
       openModal({
         title: "알림",
         message:
