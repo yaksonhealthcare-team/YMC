@@ -115,6 +115,16 @@ export const EmailPassword = () => {
     }
 
     setIsLoading(true)
+
+    if (isSocialSignup) {
+      setSignupData((prev) => ({
+        ...prev,
+        email: form.email,
+      }))
+      navigate("/signup/profile")
+      return
+    }
+
     try {
       // 이메일 중복 확인
       const exists = await checkEmail(form.email)
