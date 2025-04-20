@@ -15,7 +15,7 @@ export const EmailPassword = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const { signupData, setSignupData } = useSignup()
-  const { showToast } = useOverlay()
+  const { showToast, openModal } = useOverlay()
   const isSocialSignup = !!sessionStorage.getItem("socialSignupInfo")
   const [isLoading, setIsLoading] = useState(false)
 
@@ -52,6 +52,17 @@ export const EmailPassword = () => {
           email: socialInfo.email,
         }))
       }
+    }
+
+    if (!signupData) {
+      openModal({
+        title: "알림",
+        message:
+          "회원가입 정보가 초기화되었습니다. 처음부터 다시 시작해주세요.",
+        onConfirm: () => {
+          navigate("/login", { replace: true })
+        },
+      })
     }
   }, [])
 
