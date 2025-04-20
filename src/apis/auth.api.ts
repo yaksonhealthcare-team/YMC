@@ -233,9 +233,8 @@ export const withdrawal = async () => {
 }
 
 export const logout = async () => {
-  await axiosClient.get("/auth/logout")
-  // axiosClient의 기본 Authorization 헤더 제거
   delete axiosClient.defaults.headers.common.Authorization
+  await axiosClient.get("/auth/logout")
 }
 
 export const findEmail = async ({
