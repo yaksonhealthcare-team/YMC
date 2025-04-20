@@ -41,9 +41,7 @@ export const EmailPassword = () => {
       },
     })
     setNavigation({ display: false })
-  }, [])
 
-  useEffect(() => {
     if (isSocialSignup) {
       const socialInfo = JSON.parse(
         sessionStorage.getItem("socialSignupInfo") || "{}",
