@@ -14,13 +14,16 @@ import { GenderSelect } from "@components/GenderSelect"
 import { Image } from "@components/common/Image"
 import { uploadImages } from "../../apis/image.api.ts"
 import { CircularProgress } from "@mui/material"
+import { useNavigate } from "react-router-dom"
+import { useOverlay } from "contexts/ModalContext.tsx"
 
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout()
   const { signupData, setSignupData } = useSignup()
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false)
   const isSocialSignup = !!sessionStorage.getItem("socialSignupInfo")
-
+  const { openModal } = useOverlay()
+  const navigate = useNavigate()
   const {
     // handleImageUpload,
     // handleImageDelete,
@@ -34,6 +37,19 @@ export const ProfileSetup = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null)
+
+  useEffect(() => {
+    if (!signupData) {
+      openModal({
+        title: "알림",
+        message:
+          "회원가입 정보가 초기화되었습니다. 처음부터 다시 시작해주세요.",
+        onConfirm: () => {
+          navigate("/login", { replace: true })
+        },
+      })
+    }
+  }, [signupData])
 
   useEffect(() => {
     setHeader({
