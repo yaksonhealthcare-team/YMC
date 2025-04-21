@@ -383,8 +383,7 @@ const Branch = () => {
     locationLoading,
     selectedLocation,
     locationError,
-    branchPaginationData?.pages[0]?.body?.current_addr,
-    branchPaginationData?.pages[0]?.total_count,
+    branchPaginationData,
     screen,
     isInitialLoad,
   ])
@@ -424,6 +423,7 @@ const Branch = () => {
           }}
           onSelectBranch={handleBranchSelect}
           isFetchingNextPage={isFetchingNextPage}
+          branchesLoading={branchesLoading}
           totalCount={branchPaginationData?.pages[0]?.total_count}
         />
       ) : (

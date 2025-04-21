@@ -20,6 +20,7 @@ interface BranchFilterListProps {
   isFetchingNextPage?: boolean
   className?: string
   totalCount?: number
+  branchesLoading?: boolean
 }
 
 interface BranchFilterListItemProps {
@@ -103,6 +104,7 @@ const BranchFilterList = ({
   isFetchingNextPage,
   className,
   totalCount = 0,
+  branchesLoading,
 }: BranchFilterListProps) => {
   const { observerTarget } = useIntersection<HTMLLIElement>({
     onIntersect,
@@ -144,6 +146,39 @@ const BranchFilterList = ({
     },
     [bookmark, unbookmark, openModal, showToast],
   )
+
+  if (branchesLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <LoadingIndicator size={48} />
+      </div>
+    )
+  }
+
+  if (totalCount === 0) {
+    return (
+      <div className={clsx("flex flex-col h-full", className)}>
+        <div className="pt-[16px] px-5 flex-none bg-white">
+          <p
+            className="font-m text-14px text-gray-700"
+            role="status"
+            aria-live="polite"
+          >
+            {"총 "}
+            <span className="font-b">0</span>
+            {"개의 지점을 찾았습니다."}
+          </p>
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          <div className="flex justify-center items-center h-full">
+            <p className="font-m text-14px text-gray-400" role="status">
+              {"검색 결과가 없습니다."}
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className={clsx("flex flex-col h-full", className)}>
