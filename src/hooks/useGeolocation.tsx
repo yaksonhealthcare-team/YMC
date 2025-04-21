@@ -15,16 +15,15 @@ export const useGeolocation = (options: GeolocationOptions = {}) => {
 
   useEffect(() => {
     if (isReactNative()) {
+      setLoading(false)
       const handleLocationReceived = (event: CustomEvent) => {
         const { latitude, longitude } = event.detail
         setLocation(latitude, longitude)
-        setLoading(false)
       }
 
       const handleLocationError = (event: CustomEvent) => {
         setError(event.detail.message)
         setLocation(DEFAULT_COORDINATE.latitude, DEFAULT_COORDINATE.longitude)
-        setLoading(false)
       }
 
       window.addEventListener(
