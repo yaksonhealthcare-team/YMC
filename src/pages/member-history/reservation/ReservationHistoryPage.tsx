@@ -93,7 +93,7 @@ const ReservationContent = ({
 
   return (
     <div
-      className="flex-1 pb-32 pt-4 overflow-auto"
+      className="flex-1 pb-32 overflow-auto"
       key={`reservation-content-${filterId}`}
     >
       <div className="px-5">
@@ -123,7 +123,7 @@ const FilterContent = ({
   onFilterChange: (filter: FilterItem) => void
 }) => {
   return (
-    <div className="px-5 py-3 flex justify-center gap-2">
+    <div className="px-5 py-[16px] flex justify-center gap-2">
       {reservationFilters.map((filter) => {
         const isSelected = filter.id === reservationFilter.id
         return (
