@@ -47,6 +47,12 @@ export const useAppBridge = () => {
 
   useEffect(() => {
     const handleMessage = async (event: MessageEvent) => {
+      window.ReactNativeWebView?.postMessage(
+        JSON.stringify({
+          type: "CONSOLE_LOG",
+          data: "handleMessage 호출",
+        }),
+      )
       const data = JSON.parse(event.data)
 
       if (data.type) {
@@ -80,22 +86,17 @@ export const useAppBridge = () => {
       return
     }
 
+    const androidMessageHandler = (event: Event) => {
+      // MessageEvent의 속성(data)에 접근하기 위해 타입 단언 사용
+      handleMessage(event as MessageEvent)
+    }
+
     if (window.osType === "android") {
       // document의 message 이벤트 리스너는 일반 Event 타입을 받음
-      const androidMessageHandler = (event: Event) => {
-        // MessageEvent의 속성(data)에 접근하기 위해 타입 단언 사용
-        handleMessage(event as MessageEvent)
-      }
       document.addEventListener("message", androidMessageHandler)
-      return () => {
-        document.removeEventListener("message", androidMessageHandler)
-      }
     } else {
       // window의 message 이벤트 리스너는 MessageEvent 타입을 사용
       window.addEventListener("message", handleMessage)
-      return () => {
-        window.removeEventListener("message", handleMessage)
-      }
     }
   }, [])
 
