@@ -94,7 +94,6 @@ const BranchSearchResultList = ({
           }
         }}
         onSelectBranch={onSelect}
-        isLoading={branchesLoading}
         totalCount={branchPaginationData?.pages[0].total_count}
       />
       {isFetchingNextPage && (

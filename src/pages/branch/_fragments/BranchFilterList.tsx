@@ -17,7 +17,6 @@ interface BranchFilterListProps {
   branches: Branch[]
   onIntersect: () => void
   onSelectBranch: (branch: Branch) => void
-  isLoading?: boolean
   isFetchingNextPage?: boolean
   className?: string
   totalCount?: number
@@ -40,7 +39,7 @@ const BranchFilterListItem = ({
 }: BranchFilterListItemProps) => (
   <div
     onClick={() => onClick(branch)}
-    className={clsx("cursor-pointer w-full flex", " rounded-lg", className)}
+    className={clsx("cursor-pointer w-full flex", className)}
     role="button"
     tabIndex={0}
     onKeyDown={(e) => {
@@ -101,7 +100,6 @@ const BranchFilterList = ({
   branches,
   onIntersect,
   onSelectBranch,
-  isLoading,
   isFetchingNextPage,
   className,
   totalCount = 0,
@@ -146,43 +144,6 @@ const BranchFilterList = ({
     },
     [bookmark, unbookmark, openModal, showToast],
   )
-
-  if (isLoading) {
-    return (
-      <div
-        className="flex items-center justify-center h-full pt-20"
-        role="status"
-        aria-label="로딩 중"
-      >
-        <LoadingIndicator size={48} />
-      </div>
-    )
-  }
-
-  if (totalCount === 0) {
-    return (
-      <div className={clsx("flex flex-col h-full", className)}>
-        <div className="pt-[16px] px-5 flex-none bg-white">
-          <p
-            className="font-m text-14px text-gray-700"
-            role="status"
-            aria-live="polite"
-          >
-            {"총 "}
-            <span className="font-b">0</span>
-            {"개의 지점을 찾았습니다."}
-          </p>
-        </div>
-        <div className="flex-1 overflow-y-auto">
-          <div className="flex justify-center items-center h-full">
-            <p className="font-m text-14px text-gray-400" role="status">
-              {"검색 결과가 없습니다."}
-            </p>
-          </div>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className={clsx("flex flex-col h-full", className)}>
