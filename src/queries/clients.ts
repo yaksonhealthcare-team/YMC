@@ -85,23 +85,7 @@ axiosClient.interceptors.request.use(async (config) => {
 
 axiosClient.interceptors.response.use(
   async (response) => {
-    let parsedData
-
-    try {
-      parsedData =
-        typeof response.data === "string"
-          ? JSON.parse(response.data.replace(/^\uFEFF/, ""))
-          : response.data
-    } catch (error) {
-      showErrorMessage("응답 데이터 처리 중 오류가 발생했습니다", {
-        responseData: response.data,
-        url: response.config?.url,
-        error,
-      })
-      throw new Error("Response data is not a valid JSON string")
-    }
-
-    const data = parsedData as ApiResponse<unknown>
+    const data = response.data as ApiResponse<unknown>
 
     if (data.resultCode === ERROR_CODES.TOKEN_EXPIRED) {
       const newAccessToken = await refreshAccessToken()
