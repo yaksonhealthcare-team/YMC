@@ -32,8 +32,7 @@ const BranchMapSection = ({
   const navigate = useNavigate()
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null)
   const { location: selectedLocation } = useBranchLocationSelect()
-  const { location: currentLocation, loading: locationLoading } =
-    useGeolocation()
+  const { location: currentLocation } = useGeolocation()
   const [center, setCenter] = useState<Coordinate>()
   const { mutateAsync: addBookmark } = useBranchBookmarkMutation()
   const { mutateAsync: removeBookmark } = useBranchUnbookmarkMutation()
@@ -61,7 +60,7 @@ const BranchMapSection = ({
   }, [brandCode, category])
 
   // 로딩 중일 때 표시
-  if (isLoading || locationLoading || !center) {
+  if (!center) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-300px)]">
         <LoadingIndicator size={48} />
@@ -71,6 +70,11 @@ const BranchMapSection = ({
 
   return (
     <div className={"relative w-full  h-full "}>
+      {isLoading && (
+        <div className="absolute lex items-center justify-center min-h-[calc(100vh-300px)]">
+          <LoadingIndicator size={48} />
+        </div>
+      )}
       <MapView
         center={center}
         branches={branches}
