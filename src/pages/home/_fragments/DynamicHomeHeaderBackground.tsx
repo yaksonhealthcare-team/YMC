@@ -42,7 +42,7 @@ const DynamicHomeHeaderBackground = memo(
           </div>
         </div>
 
-        <div className="relative w-full bg-cover bg-center">
+        <div className="relative w-full">
           <img
             src="/assets/home_card_mid.png"
             alt=""
