@@ -22,6 +22,7 @@ export class PaymentMapper {
       pointStatus: dto.point_status === "적립" ? "done" : "yet",
       point: dto.point,
       category: dto.is_add_service === "Y" ? "additional" : "membership",
+      isPointAvailable: dto.is_point_available === "Y",
       items: dto.paysub.map((sub) => ({
         index: sub.ps_idx,
         name: sub.ps_name,
@@ -59,6 +60,7 @@ export class PaymentMapper {
       status: dto.pay_status,
       pointStatus: dto.point_status === "적립" ? "done" : "yet",
       point: Number(dto.point),
+      isPointAvailable: dto.is_point_available === "Y",
       payMethod: dto.pay_method,
       totalPrice: Number(dto.total_price),
       usedPoint: Number(dto.use_point),

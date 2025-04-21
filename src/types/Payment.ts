@@ -6,6 +6,7 @@ export interface PaymentHistory {
   status: string
   pointStatus: "yet" | "done"
   point: number
+  isPointAvailable: boolean
   category: "additional" | "membership"
   items: PaymentHistoryItem[]
 }
@@ -64,6 +65,7 @@ export interface PaymentHistoryResponse {
   pay_status: string
   point_status: string
   point: number
+  is_point_available: string
   paysub: {
     ps_idx: string
     ps_pay_status: string
@@ -97,6 +99,7 @@ export interface PaymentHistoryDetailResponse {
   total_price: string
   use_point: string
   actual_price: string
+  is_point_available: string
   paysub: [
     {
       p_idx: string
