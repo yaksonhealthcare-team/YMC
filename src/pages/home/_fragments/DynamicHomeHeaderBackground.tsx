@@ -22,8 +22,7 @@ const DynamicHomeHeaderBackground = memo(
       <div
         className="relative flex flex-col px-5"
         style={{
-          width: "calc(100% + 20px)",
-          marginLeft: "-10px",
+          width: "100%",
         }}
       >
         <div className="relative w-full">
@@ -42,7 +41,7 @@ const DynamicHomeHeaderBackground = memo(
           </div>
         </div>
 
-        <div className="relative w-full">
+        <div className="relative w-full pt-1">
           <img
             src="/assets/home_card_mid.png"
             alt=""
@@ -61,7 +60,7 @@ const DynamicHomeHeaderBackground = memo(
             alt=""
             className="w-full"
             width="100%"
-            height="100%"
+            height="20px"
           />
         </div>
       </div>
