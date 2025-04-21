@@ -98,7 +98,7 @@ const ReservationContent = ({
     >
       <div className="px-5">
         {reservations.map((reservation) => (
-          <div className="py-[6px]" key={reservation.id}>
+          <div className="pb-[12px]" key={reservation.id}>
             <ReserveCard reservation={reservation} />
           </div>
         ))}

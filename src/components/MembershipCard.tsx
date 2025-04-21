@@ -9,7 +9,7 @@ import { formatDateRange } from "../utils/date"
 
 const STYLES = {
   container:
-    "flex justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px] mt-2",
+    "flex justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px] mb-[12px]",
   content: "flex flex-col gap-1.5",
   tags: "flex gap-1.5",
   title: "font-sb text-16px text-gray-700",

@@ -54,7 +54,7 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
 
   return (
     <div
-      className="flex-1 px-5 space-y-3 pb-32 overflow-y-auto scrollbar-hide"
+      className="flex-1 px-5 pb-32 overflow-y-auto scrollbar-hide"
       key={`membership-content-${filterId}`}
     >
       {!memberships?.pages[0].body?.length ? (
@@ -62,7 +62,7 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
           회원권 내역이 없습니다.
         </div>
       ) : (
-        <div className="space-y-3">
+        <div>
           {memberships.pages.map((page) =>
             page.body.map((membership) => (
               <div
