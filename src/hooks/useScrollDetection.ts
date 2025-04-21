@@ -15,6 +15,18 @@ export function useScrollDetection(elementRef?: RefObject<HTMLElement>) {
         return
       }
 
+      if (window.location.pathname.includes("store")) {
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            type: "SCROLL",
+            data: {
+              scroll: 1,
+            },
+          }),
+        )
+        return
+      }
+
       window.ReactNativeWebView.postMessage(
         JSON.stringify({
           type: "SCROLL",
