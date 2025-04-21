@@ -14,8 +14,6 @@ import {
 } from "types/Reservation"
 import LoadingIndicator from "@components/LoadingIndicator"
 import { useReservationStore } from "stores/reservationStore"
-import { FixedSizeList as List } from "react-window"
-import { useState } from "react"
 import { useQueryClient } from "@tanstack/react-query"
 import { createUserContextQueryKey } from "../../../queries/queryKeyFactory"
 
@@ -35,9 +33,6 @@ const ReservationContent = ({
   } = useReservations(filterId)
   const reservations = data?.pages.flatMap((page) => page.reservations) || []
   const bottomRef = useRef<HTMLDivElement>(null)
-  const [windowHeight, setWindowHeight] = useState(
-    () => window.innerHeight - 200,
-  ) // 헤더와 필터 영역 높이 고려
 
   // 탭 전환하거나 페이지에 포커스가 올 때 데이터 리프레시
   useEffect(() => {
@@ -68,15 +63,6 @@ const ReservationContent = ({
   }, [filterId, queryClient])
 
   useEffect(() => {
-    const handleResize = () => {
-      setWindowHeight(window.innerHeight - 200)
-    }
-
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
-
-  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
@@ -105,58 +91,26 @@ const ReservationContent = ({
     )
   }
 
-  // react-window의 Row 컴포넌트
-  const Row = ({
-    index,
-    style,
-  }: {
-    index: number
-    style: React.CSSProperties
-  }) => {
-    if (index === reservations.length) {
-      return (
-        <div style={style} ref={bottomRef} className="h-4">
+  return (
+    <div
+      className="flex-1 pb-32 pt-4 overflow-auto"
+      key={`reservation-content-${filterId}`}
+    >
+      <div className="px-5">
+        {reservations.map((reservation) => (
+          <div className="py-[6px]" key={reservation.id}>
+            <ReserveCard reservation={reservation} />
+          </div>
+        ))}
+
+        <div ref={bottomRef} className="h-4 py-2">
           {isFetchingNextPage && (
             <div className="flex justify-center py-4">
               <LoadingIndicator className="w-6 h-6" />
             </div>
           )}
         </div>
-      )
-    }
-
-    return (
-      <div
-        style={{
-          ...style,
-          paddingTop: 6,
-          paddingBottom: 6,
-          paddingLeft: 20,
-          paddingRight: 20,
-        }}
-      >
-        <ReserveCard
-          key={reservations[index].id}
-          reservation={reservations[index]}
-        />
       </div>
-    )
-  }
-
-  return (
-    <div
-      className="flex-1 pb-32 pt-4 overflow-hidden"
-      key={`reservation-content-${filterId}`}
-    >
-      <List
-        height={windowHeight}
-        width="100%"
-        itemCount={reservations.length + 1} // 하단 로더용 추가 아이템
-        itemSize={130} // ReserveCard의 평균 높이
-        overscanCount={2}
-      >
-        {Row}
-      </List>
     </div>
   )
 }
