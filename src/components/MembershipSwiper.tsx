@@ -24,6 +24,7 @@ export const MembershipSwiper = ({
   const [activeIndex, setActiveIndex] = useState(0)
   const isInitialRender = useRef(true)
   const [sortedMemberships, setSortedMemberships] = useState<MyMembership[]>([])
+  const swiperRef = useRef<any>(null)
 
   // 처음 로드될 때만 정렬된 회원권 목록 설정
   useEffect(() => {
@@ -54,13 +55,37 @@ export const MembershipSwiper = ({
 
   // 초기 인덱스 - 선택된 회원권의 위치 찾기
   const initialIndex = useMemo(() => {
-    if (!selectedItem || sortedMemberships.length === 0) return 0
+    if (sortedMemberships.length === 0) return 0
 
-    const index = sortedMemberships.findIndex(
-      (membership) => membership.mp_idx === selectedItem,
-    )
-    return index !== -1 ? index : 0
-  }, [selectedItem, sortedMemberships])
+    // initialMembershipId 우선 확인 (URL에서 전달된 회원권 ID)
+    if (initialMembershipId) {
+      const index = sortedMemberships.findIndex(
+        (membership) => membership.mp_idx === initialMembershipId,
+      )
+      if (index !== -1) return index
+    }
+
+    // 이미 선택된 아이템이 있는 경우
+    if (selectedItem) {
+      const index = sortedMemberships.findIndex(
+        (membership) => membership.mp_idx === selectedItem,
+      )
+      if (index !== -1) return index
+    }
+
+    return 0
+  }, [selectedItem, initialMembershipId, sortedMemberships])
+
+  // initialMembershipId나 selectedItem이 변경될 때 슬라이드 위치 업데이트
+  useEffect(() => {
+    if (swiperRef.current && swiperRef.current.swiper) {
+      const targetIndex = initialIndex
+      if (swiperRef.current.swiper.activeIndex !== targetIndex) {
+        swiperRef.current.swiper.slideTo(targetIndex, 0)
+        setActiveIndex(targetIndex)
+      }
+    }
+  }, [initialIndex, initialMembershipId, selectedItem])
 
   return (
     <Box className="w-full">
@@ -76,6 +101,7 @@ export const MembershipSwiper = ({
           className="w-full"
           initialSlide={initialIndex}
           onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+          ref={swiperRef}
         >
           {sortedMemberships.map((membership) => (
             <SwiperSlide key={membership.mp_idx}>
