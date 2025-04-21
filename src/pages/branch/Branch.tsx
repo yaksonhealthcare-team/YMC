@@ -58,44 +58,46 @@ const Branch = () => {
 
   // 위치 정보가 로드되면 필터 업데이트
   useEffect(() => {
-    if (!locationLoading) {
-      // 우선순위 변경: 1) 선택된 위치, 2) 현재 위치, 3) 에러 및 디폴트 위치
-      if (selectedLocation?.coords) {
-        // 사용자가 선택한 위치가 있는 경우 (최우선)
-        setSelectedFilter((prev) => ({
-          ...prev,
-          latitude: selectedLocation.coords.latitude,
-          longitude: selectedLocation.coords.longitude,
-          enabled: true,
-        }))
-      } else if (currentLocation && !locationError) {
-        // 현재 위치를 사용할 수 있는 경우 (두 번째 우선순위)
-        setSelectedFilter((prev) => ({
-          ...prev,
-          latitude: currentLocation.latitude,
-          longitude: currentLocation.longitude,
-          enabled: true,
-        }))
-      } else if (locationError) {
-        // 위치 정보를 불러올 수 없을 때 (마지막 우선순위)
-        showToast("위치 정보를 불러올 수 없습니다")
+    if (locationLoading) {
+      return
+    }
 
-        // 기본 좌표로 설정 (서울시청)
-        setSelectedFilter((prev) => ({
-          ...prev,
-          latitude: 37.5665,
-          longitude: 126.978,
-          enabled: true,
-        }))
-      }
+    // 우선순위 변경: 1) 선택된 위치, 2) 현재 위치, 3) 에러 및 디폴트 위치
+    if (selectedLocation?.coords) {
+      // 사용자가 선택한 위치가 있는 경우 (최우선)
+      setSelectedFilter((prev) => ({
+        ...prev,
+        latitude: selectedLocation.coords.latitude,
+        longitude: selectedLocation.coords.longitude,
+        enabled: true,
+      }))
+    } else if (currentLocation && !locationError) {
+      // 현재 위치를 사용할 수 있는 경우 (두 번째 우선순위)
+      setSelectedFilter((prev) => ({
+        ...prev,
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude,
+        enabled: true,
+      }))
+    } else if (locationError) {
+      // 위치 정보를 불러올 수 없을 때 (마지막 우선순위)
+      showToast("위치 정보를 불러올 수 없습니다")
 
-      // 초기 로딩이 완료되면 isInitialLoad 상태 업데이트
-      if (isInitialLoad) {
-        // 약간의 지연을 주어 위치 정보가 표시된 후 변경되도록 함
-        setTimeout(() => {
-          setIsInitialLoad(false)
-        }, 1000)
-      }
+      // 기본 좌표로 설정 (서울시청)
+      setSelectedFilter((prev) => ({
+        ...prev,
+        latitude: 37.5665,
+        longitude: 126.978,
+        enabled: true,
+      }))
+    }
+
+    // 초기 로딩이 완료되면 isInitialLoad 상태 업데이트
+    if (isInitialLoad) {
+      // 약간의 지연을 주어 위치 정보가 표시된 후 변경되도록 함
+      setTimeout(() => {
+        setIsInitialLoad(false)
+      }, 1000)
     }
   }, [locationLoading, locationError, currentLocation, selectedLocation])
 
