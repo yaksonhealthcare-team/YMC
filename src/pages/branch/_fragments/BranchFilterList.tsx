@@ -38,65 +38,63 @@ const BranchFilterListItem = ({
   onClickFavorite,
   isFavorite,
 }: BranchFilterListItemProps) => (
-  <li role="option" aria-selected="false">
-    <div
-      onClick={() => onClick(branch)}
-      className={clsx("cursor-pointer w-full flex", " rounded-lg", className)}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault()
-          onClick(branch)
-        }
-      }}
-      aria-label={`${branch.name} 지점 선택 ${branch.distanceInMeters ? `${branch.distanceInMeters} 거리` : ""} ${branch.address}`}
-    >
-      <div className="w-full py-4 gap-4 flex items-stretch">
-        <Image
-          className="border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"
-          src={BranchPlaceholderImage}
-          alt={`${branch.name} 지점 사진`}
-        />
-        <div className="w-full flex flex-col justify-between py-1">
-          <div className="flex justify-between">
-            <div>
-              <p className="font-b text-16px">{branch.name}</p>
-              {branch.distanceInMeters && (
-                <p className="font-r text-14px text-gray-400 mt-0.5">
-                  {branch.distanceInMeters.includes("m")
-                    ? branch.distanceInMeters
-                    : `${Math.ceil(Number(branch.distanceInMeters))}m`}
-                </p>
-              )}
-              <address className="font-r text-14px text-start not-italic ">
-                {branch.address}
-              </address>
-            </div>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation()
-                onClickFavorite(branch)
-              }}
-              className={clsx(
-                "rounded-lg px-1 h-fit",
-                "transition-transform hover:scale-110",
-              )}
-              aria-label={`${branch.name} 지점 ${isFavorite ? "즐겨찾기 해제" : "즐겨찾기 추가"}`}
-              aria-pressed={isFavorite}
-            >
-              {isFavorite ? (
-                <HeartEnabledIcon aria-hidden="true" />
-              ) : (
-                <HeartDisabledIcon aria-hidden="true" />
-              )}
-            </button>
+  <div
+    onClick={() => onClick(branch)}
+    className={clsx("cursor-pointer w-full flex", " rounded-lg", className)}
+    role="button"
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault()
+        onClick(branch)
+      }
+    }}
+    aria-label={`${branch.name} 지점 선택 ${branch.distanceInMeters ? `${branch.distanceInMeters} 거리` : ""} ${branch.address}`}
+  >
+    <div className="w-full pt-[20px] pb-[44px] gap-4 flex items-stretch">
+      <Image
+        className="border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"
+        src={BranchPlaceholderImage}
+        alt={`${branch.name} 지점 사진`}
+      />
+      <div className="w-full flex flex-col justify-between py-1">
+        <div className="flex justify-between">
+          <div>
+            <p className="font-b text-16px">{branch.name}</p>
+            {branch.distanceInMeters && (
+              <p className="font-r text-14px text-gray-400 mt-0.5">
+                {branch.distanceInMeters.includes("m")
+                  ? branch.distanceInMeters
+                  : `${Math.ceil(Number(branch.distanceInMeters))}m`}
+              </p>
+            )}
+            <address className="font-r text-14px text-start not-italic ">
+              {branch.address}
+            </address>
           </div>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              onClickFavorite(branch)
+            }}
+            className={clsx(
+              "rounded-lg px-1 h-fit",
+              "transition-transform hover:scale-110",
+            )}
+            aria-label={`${branch.name} 지점 ${isFavorite ? "즐겨찾기 해제" : "즐겨찾기 추가"}`}
+            aria-pressed={isFavorite}
+          >
+            {isFavorite ? (
+              <HeartEnabledIcon aria-hidden="true" />
+            ) : (
+              <HeartDisabledIcon aria-hidden="true" />
+            )}
+          </button>
         </div>
       </div>
     </div>
-  </li>
+  </div>
 )
 
 const BranchFilterList = ({

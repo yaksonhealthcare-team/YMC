@@ -89,7 +89,7 @@ const BranchMapSection = ({
         }}
       />
       <div
-        className={`w-full absolute px-5 pb-6 -bottom-32 rounded-t-3xl ${selectedBranch ? "transition-transform -translate-y-32 duration-300" : "transition-transform translate-y-6 duration-300"} bg-white z-[300]`}
+        className={`w-full absolute px-5 -bottom-32 rounded-t-3xl ${selectedBranch ? "transition-transform -translate-y-32 duration-300" : "transition-transform translate-y-6 duration-300"} bg-white z-[300]`}
       >
         {selectedBranch && (
           <BranchFilterListItem
