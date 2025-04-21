@@ -71,7 +71,7 @@ const LocationPickerMap = () => {
   // 위치 이동 감지 및 처리
   const handleMapMove = (newCenter: Coordinate) => {
     setCenter(newCenter)
-    fetchAddressFromCoords(newCenter)
+    fetchBranchesNearby(newCenter)
   }
 
   // 지점 선택 처리
