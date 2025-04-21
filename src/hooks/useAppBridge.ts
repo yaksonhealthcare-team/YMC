@@ -11,6 +11,7 @@ import { axiosClient, saveAccessToken } from "queries/clients"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
+import { SocialLoginRequest } from "types/appBridge"
 
 export const useAppBridge = () => {
   const { login, logout } = useAuth()
@@ -100,10 +101,10 @@ export const useAppBridge = () => {
     }
   }, [])
 
-  const handleSocialLogin = async (data: Record<string, unknown>) => {
+  const handleSocialLogin = async (data: SocialLoginRequest) => {
     // Apple 로그인인 경우 서버 콜백 호출 (provider가 'A' 또는 'apple'인 경우)
     try {
-      if (data.provider === "A" || data.provider === "apple") {
+      if (data.provider === "A") {
         // 콜백 시작 로그
         window.ReactNativeWebView?.postMessage(
           JSON.stringify({
@@ -115,8 +116,8 @@ export const useAppBridge = () => {
         // 서버의 Apple 콜백 API 호출 (환경 변수가 전체 URL이므로 마지막 경로만 추출)
         const appleCallbackUrl = "auth/apple_callback"
         await axiosClient.post(appleCallbackUrl, {
-          code: data.authorizationCode as string,
-          id_token: data.idToken as string,
+          code: data.authorizationCode,
+          id_token: data.idToken,
           state: "state",
         })
         return
@@ -139,14 +140,16 @@ export const useAppBridge = () => {
           ? getProviderCode(data.provider)
           : (data.provider as "K" | "N" | "G" | "A")
 
+      const idToken: string | undefined = data.idToken
+
       const signinResponse = await signinWithSocial({
-        SocialAccessToken: data.accessToken as string,
-        socialId: data.socialId as string,
+        SocialAccessToken: data.accessToken,
+        socialId: data.socialId,
         thirdPartyType: providerCode,
-        deviceToken: localStorage.getItem("FCM_TOKEN"),
-        deviceType: localStorage.getItem("DEVICE_TYPE") as DeviceType,
-        id_token: data.idToken as string | undefined,
-        SocialRefreshToken: data.refreshToken as string | undefined,
+        deviceToken: data.fcmToken ?? localStorage.getItem("FCM_TOKEN"),
+        deviceType: data.deviceType,
+        id_token: idToken,
+        SocialRefreshToken: data.refreshToken,
       })
 
       const accessToken = signinResponse.data.body[0].accessToken
@@ -197,13 +200,13 @@ export const useAppBridge = () => {
         const socialSignupInfo: SocialSignupInfo = {
           next_action_type: "signup",
           thirdPartyType: providerCode,
-          socialId: data.socialId as string,
-          SocialAccessToken: data.accessToken as string,
-          email: (data.email as string | undefined) ?? "",
-          deviceToken: (data.deviceToken as string | undefined) ?? "",
-          deviceType: (data.deviceType as DeviceType | undefined) ?? "ETC",
-          SocialRefreshToken: (data.refreshToken as string | undefined) ?? "",
-          id_token: (data.idToken as string | undefined) ?? "",
+          socialId: data.socialId,
+          SocialAccessToken: data.accessToken,
+          email: data.email,
+          deviceToken: data.fcmToken,
+          deviceType: data.deviceType as DeviceType,
+          SocialRefreshToken: data.refreshToken,
+          id_token: data.idToken,
         }
         sessionStorage.setItem(
           "socialSignupInfo",

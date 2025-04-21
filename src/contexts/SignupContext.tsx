@@ -10,14 +10,14 @@ import { UserSignup } from "../types/User.ts"
 
 export interface SocialSignupInfo {
   socialId: string
-  email: string
+  email?: string
   next_action_type: "signup"
   thirdPartyType: string
   SocialAccessToken: string
-  deviceToken: string
-  deviceType: string
-  SocialRefreshToken: string
-  id_token: string
+  deviceToken?: string
+  deviceType?: string
+  SocialRefreshToken?: string
+  id_token?: string
 }
 
 interface SignupContextType {
