@@ -33,42 +33,23 @@ export type MarkerState =
 
 // 브랜드별 마커 아이콘 URL 맵
 const BRAND_ICON_MAP = {
-  dalia: {
+  "001": {
+    default: TherapistPin,
+    active: TherapistActivePin,
+    bookmark: TherapistBookmarkPin,
+    "active-bookmark": TherapistActiveBookmarkPin,
+  },
+  "002": {
+    default: DietPin,
+    active: DietActivePin,
+    bookmark: DietBookmarkPin,
+    "active-bookmark": DietActiveBookmarkPin,
+  },
+  "003": {
     default: DaliaPin,
     active: DaliaActivePin,
     bookmark: DaliaBookmarkPin,
     "active-bookmark": DaliaActiveBookmarkPin,
-  },
-  diet: {
-    default: DietPin,
-    active: DietActivePin,
-    bookmark: DietBookmarkPin,
-    "active-bookmark": DietActiveBookmarkPin,
-  },
-  therapist: {
-    default: TherapistPin,
-    active: TherapistActivePin,
-    bookmark: TherapistBookmarkPin,
-    "active-bookmark": TherapistActiveBookmarkPin,
-  },
-  // 추가 브랜드 매핑 (기존 로직 유지)
-  yakson: {
-    default: TherapistPin,
-    active: TherapistActivePin,
-    bookmark: TherapistBookmarkPin,
-    "active-bookmark": TherapistActiveBookmarkPin,
-  },
-  yerihan: {
-    default: DietPin,
-    active: DietActivePin,
-    bookmark: DietBookmarkPin,
-    "active-bookmark": DietActiveBookmarkPin,
-  },
-  약손명가: {
-    default: TherapistPin,
-    active: TherapistActivePin,
-    bookmark: TherapistBookmarkPin,
-    "active-bookmark": TherapistActiveBookmarkPin,
   },
 } as const
 
@@ -112,7 +93,7 @@ export const createMarkerIcon = (
     throw new Error("Branch object is required for non-special marker states")
   }
 
-  const brandKey = branch.brand as BrandKey
+  const brandKey = branch.brandCode as BrandKey
   const brandIcons = BRAND_ICON_MAP[brandKey]
 
   if (!brandIcons) {
@@ -120,7 +101,7 @@ export const createMarkerIcon = (
       `createMarkerIcon: No icons defined for brand: ${brandKey}, using default therapist icon.`,
     )
     // 기본 아이콘으로 therapist 사용 또는 에러 처리
-    const defaultIcon = BRAND_ICON_MAP["therapist"]["default"]
+    const defaultIcon = BRAND_ICON_MAP["001"]["default"]
     return {
       url: defaultIcon,
       size: new naver.maps.Size(40, 40),
