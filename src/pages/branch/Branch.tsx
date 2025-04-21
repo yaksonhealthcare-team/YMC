@@ -421,7 +421,6 @@ const Branch = () => {
             }
           }}
           onSelectBranch={handleBranchSelect}
-          isLoading={isLoading}
           isFetchingNextPage={isFetchingNextPage}
           totalCount={branchPaginationData?.pages[0]?.total_count}
         />
