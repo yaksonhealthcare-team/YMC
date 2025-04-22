@@ -67,7 +67,7 @@ const OAuthCallback = () => {
             thirdPartyType: getProviderCode(provider),
             socialId: socialData.socialId,
             deviceToken: fcmToken,
-            deviceType: "web",
+            deviceType: window.osType ?? "web",
             id_token: socialData.id_token,
             SocialRefreshToken: socialData.SocialRefreshToken,
           })
