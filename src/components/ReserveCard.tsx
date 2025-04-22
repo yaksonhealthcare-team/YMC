@@ -131,7 +131,9 @@ export const ReserveCard = ({
               variantType="primary"
               sizeType="xs"
               onClick={handleCompleteVisit}
-              className={isModalOpen ? "opacity-50 cursor-not-allowed" : ""}
+              className={
+                isModalOpen ? "opacity-50 cursor-not-allowed" : " min-w-[70px]"
+              }
               disabled={isModalOpen}
             >
               방문 완료
@@ -147,7 +149,9 @@ export const ReserveCard = ({
             variantType="primary"
             sizeType="xs"
             onClick={handleCompleteVisit}
-            className={isModalOpen ? "opacity-50 cursor-not-allowed" : ""}
+            className={
+              isModalOpen ? "opacity-50 cursor-not-allowed" : "min-w-[70px]"
+            }
             disabled={isModalOpen}
           >
             방문 완료
@@ -162,35 +166,43 @@ export const ReserveCard = ({
   return (
     <button
       className={clsx(
-        `flex justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px] w-full text-left cursor-pointer`,
+        `flex flex-col gap-[12px] bg-white p-5 border border-gray-100 shadow-card rounded-[20px] w-full text-left cursor-pointer relative`,
         className,
       )}
       onClick={() => navigate(`/reservation/${reservation.id}`)}
       aria-label={`${reservation.store} ${reservation.programName} ${reservation.statusCode !== "003" ? `${reservation.visit}회차` : ""} 예약`}
       role="button"
     >
-      <div className="flex flex-col w-full">
-        <span className="font-b text-16px text-gray-700">
-          {reservation.store}
-        </span>
-        <div className="mt-1 flex items-center">
-          <span className="font-r text-14px text-gray-700">
+      <div className="inline-flex flex-col justify-center items-start gap-1">
+        <div className="self-stretch inline-flex justify-between items-center">
+          <div className="flex justify-start items-baseline gap-1.5">
+            <div className="justify-start text-neutral-800 text-base font-bold font-['Pretendard'] leading-normal">
+              {reservation.store}
+            </div>
+          </div>
+
+          <ReserveTag
+            status={classifyReservationStatus(reservation.statusCode)}
+            remainingDays={reservation.remainingDays!}
+          />
+        </div>
+        <div className="self-stretch inline-flex justify-start items-baseline gap-1.5">
+          <div className="justify-start text-neutral-800 text-sm font-normal font-['Pretendard'] leading-tight">
             {reservation.programName}
-          </span>
+          </div>
           {reservation.statusCode !== "003" && (
-            <span className="ml-1.5 font-sb text-14px text-primary">
+            <div className="justify-start text-red-400 text-sm font-semibold font-['Pretendard'] leading-tight">
               {reservation.visit}회차
-            </span>
+            </div>
           )}
         </div>
-        <DateAndTime date={reservation.date} className="mt-3" />
       </div>
-      <div className="flex flex-col justify-between items-end min-w-[90px] h-full gap-6">
-        <ReserveTag
-          status={classifyReservationStatus(reservation.statusCode)}
-          remainingDays={reservation.remainingDays!}
-        />
-        {getButton()}
+
+      <div className="relative flex items-end text-gray-500 text-sm">
+        <div className={clsx(getButton() && "mr-[72px]")}>
+          <DateAndTime date={reservation.date} />
+        </div>
+        <div className="absolute right-0">{getButton()}</div>
       </div>
     </button>
   )
