@@ -35,7 +35,7 @@ const DynamicHomeHeaderBackground = memo(
           />
           <div className="relative w-full h-24">
             <div className="flex justify-between w-full">
-              <div className={"pt-5 mt-5 mx-8 w-full max-w-[84%]"}>
+              <div className={"pt-5 mt-5 ml-8 w-full max-w-[84%]"}>
                 {header}
               </div>
               <DynamicSquareContainer>{buttonArea}</DynamicSquareContainer>
