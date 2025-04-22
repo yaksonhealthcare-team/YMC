@@ -54,7 +54,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
   })
   const [header, setHeader] = useState<HeaderConfig>({
     display: true,
-    title: "THERAPIST",
+    title: "",
   })
   const location = useLocation()
   const pageContainerRef = useRef<HTMLDivElement>(null)
