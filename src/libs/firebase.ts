@@ -34,7 +34,7 @@ export async function requestNotificationPermission(): Promise<boolean> {
 export async function requestForToken() {
   try {
     if (window.ReactNativeWebView) {
-      return null
+      return localStorage.getItem("FCM_TOKEN")
     }
 
     // ServiceWorker API 지원 확인
