@@ -98,18 +98,16 @@ axiosClient.interceptors.response.use(
 
       const newAccessToken = await refreshAccessToken()
 
+      isRefreshing = false
       // 토큰 갱신에 성공한 경우 사용자 정보 다시 요청
       if (newAccessToken) {
         response.config.headers.Authorization = `Bearer ${newAccessToken}`
 
-        isRefreshing = false
         return axios(response.config)
       }
 
-      isRefreshing = false
-
       // 토큰 갱신 후에도 데이터가 없으면 null 반환
-      throw new Error("토큰 갱신 후에도 데이터가 없습니다")
+      return Promise.reject(new Error("토큰 갱신 후에도 데이터가 없습니다"))
     }
 
     return response

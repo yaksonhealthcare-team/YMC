@@ -63,9 +63,10 @@ export const refreshAccessToken = async (): Promise<string | null> => {
     // 새 액세스 토큰 저장
     if (accessToken) {
       axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`
+      return accessToken
     }
 
-    return accessToken
+    return null
   } catch (error) {
     console.error("토큰 갱신 중 오류 발생:", error)
     return null
@@ -91,9 +92,11 @@ export const fetchUser = async (): Promise<User | null> => {
           type: "REFRESH_TOKEN",
         }),
       )
+
+      return null
     }
 
-    return null
+    throw new Error("사용자 정보 조회 실패")
   }
 }
 
