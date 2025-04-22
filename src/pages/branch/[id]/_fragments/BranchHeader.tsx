@@ -1,6 +1,5 @@
 import { memo, ReactNode } from "react"
 import DynamicHomeHeaderBackground from "../../../home/_fragments/DynamicHomeHeaderBackground"
-import CaretLeftIcon from "@assets/icons/CaretLeftIcon.svg?react"
 import PinIcon from "@assets/icons/PinIcon.svg?react"
 import StoreIcon from "@assets/icons/StoreIcon.svg?react"
 import ShareIcon from "@assets/icons/ShareIcon.svg?react"
@@ -59,15 +58,12 @@ const BranchHeaderContent = memo(({ branch }: { branch: BranchDetailType }) => {
   )
 })
 
-const BranchHeader = memo(({ branch, onShare, onBack }: BranchHeaderProps) => {
+const BranchHeader = memo(({ branch, onShare }: BranchHeaderProps) => {
   return (
     <DynamicHomeHeaderBackground
       header={
         <>
           <div className={"flex flex-row items-center gap-2"}>
-            <button onClick={onBack}>
-              <CaretLeftIcon className="w-5 h-5" />
-            </button>
             <p className={"font-b text-20px"}>{branch.name}</p>
           </div>
           <BranchHeaderContent branch={branch} />

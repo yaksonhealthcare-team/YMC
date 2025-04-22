@@ -29,13 +29,15 @@ const DynamicHomeHeaderBackground = memo(
           <img
             src="/assets/home_card_top.png"
             alt=""
-            className="w-full"
+            className="absolute top-0 left-0 w-full h-full"
             width="100%"
-            height="auto"
+            height="100%"
           />
-          <div className="absolute top-3 left-3 w-full h-24">
+          <div className="relative w-full h-24">
             <div className="flex justify-between w-full">
-              <div className={"px-5 pt-5 w-full max-w-[84%]"}>{header}</div>
+              <div className={"pt-5 mt-5 mx-8 w-full max-w-[84%]"}>
+                {header}
+              </div>
               <DynamicSquareContainer>{buttonArea}</DynamicSquareContainer>
             </div>
           </div>
@@ -97,7 +99,7 @@ const DynamicSquareContainer = ({
   return (
     <div
       ref={containerRef}
-      className={`relative mr-5 pl-3 pb-3 w-[14%] ${className}`}
+      className={`relative mr-3 mt-3 pl-3 pb-3 w-[14%] ${className}`}
       style={{ height: `${size}px` }}
     >
       <div className="absolute inset-0">{children}</div>
