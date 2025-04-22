@@ -83,28 +83,36 @@ axiosClient.interceptors.request.use(async (config) => {
   return config
 })
 
+let isRefreshing = false
+
 axiosClient.interceptors.response.use(
   async (response) => {
     const data = response.data as ApiResponse<unknown>
 
     if (data.resultCode === ERROR_CODES.TOKEN_EXPIRED) {
+      if (isRefreshing) {
+        return response
+      }
+
+      isRefreshing = true
+
       const newAccessToken = await refreshAccessToken()
 
       // 토큰 갱신에 성공한 경우 사용자 정보 다시 요청
       if (newAccessToken) {
         response.config.headers.Authorization = `Bearer ${newAccessToken}`
 
+        isRefreshing = false
         return axios(response.config)
       }
+
+      isRefreshing = false
 
       // 토큰 갱신 후에도 데이터가 없으면 null 반환
       throw new Error("토큰 갱신 후에도 데이터가 없습니다")
     }
 
-    return {
-      ...response,
-      data: data,
-    }
+    return response
   },
   async (error) => {
     const errorCode = error.response?.data?.resultCode || ""
