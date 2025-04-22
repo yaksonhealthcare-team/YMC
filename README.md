@@ -256,5 +256,37 @@ npm run tsc
 
 ## 배포
 
+### Vercel 배포
+
 - Vercel을 통한 자동 배포
 - 메인 브랜치 병합 시 자동 배포 진행
+
+### Apache 서버 배포 가이드
+
+Apache 서버에 배포하는 방법은 매우 간단합니다.
+
+1. **빌드 생성하기**
+
+   ```bash
+   npm run build
+   ```
+
+2. **배포하기**
+
+   - `dist` 폴더 내의 모든 파일을 서버의 `public_html` 폴더에 업로드하면 됩니다.
+   - FTP 프로그램이나 SSH를 통해 파일을 업로드할 수 있습니다.
+
+3. **SPA 라우팅 설정 (필요시)**
+   - `public_html` 폴더에 아래 내용의 `.htaccess` 파일을 생성하세요.
+   ```
+   <IfModule mod_rewrite.c>
+     RewriteEngine On
+     RewriteBase /
+     RewriteRule ^index\.html$ - [L]
+     RewriteCond %{REQUEST_FILENAME} !-f
+     RewriteCond %{REQUEST_FILENAME} !-d
+     RewriteRule . /index.html [L]
+   </IfModule>
+   ```
+
+이게 전부입니다! 간단하게 빌드 후 파일을 업로드하기만 하면 됩니다.
