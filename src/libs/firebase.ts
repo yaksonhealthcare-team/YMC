@@ -1,5 +1,6 @@
 import { initializeApp } from "@firebase/app"
 import { getMessaging, getToken, onMessage } from "firebase/messaging"
+import { LOCAL_STORAGE_KEYS } from "../constants/storage"
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -34,7 +35,7 @@ export async function requestNotificationPermission(): Promise<boolean> {
 export async function requestForToken() {
   try {
     if (window.ReactNativeWebView) {
-      return localStorage.getItem("FCM_TOKEN")
+      return localStorage.getItem(LOCAL_STORAGE_KEYS.FCM_TOKEN)
     }
 
     // ServiceWorker API 지원 확인

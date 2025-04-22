@@ -12,6 +12,7 @@ import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { SocialLoginRequest } from "types/appBridge"
+import { LOCAL_STORAGE_KEYS } from "@constants/storage"
 
 export const useAppBridge = () => {
   const { login, logout } = useAuth()
@@ -21,7 +22,7 @@ export const useAppBridge = () => {
     const loginResponse = await loginWithEmail({
       username: data.username as string,
       password: data.password as string,
-      deviceToken: localStorage.getItem("FCM_TOKEN"),
+      deviceToken: localStorage.getItem(LOCAL_STORAGE_KEYS.FCM_TOKEN),
       deviceType: localStorage.getItem("DEVICE_TYPE") as DeviceType,
     })
 
@@ -146,7 +147,8 @@ export const useAppBridge = () => {
         SocialAccessToken: data.accessToken,
         socialId: data.socialId,
         thirdPartyType: providerCode,
-        deviceToken: data.fcmToken ?? localStorage.getItem("FCM_TOKEN"),
+        deviceToken:
+          data.fcmToken ?? localStorage.getItem(LOCAL_STORAGE_KEYS.FCM_TOKEN),
         deviceType: data.deviceType,
         id_token: idToken,
         SocialRefreshToken: data.refreshToken,
@@ -243,7 +245,7 @@ export const useAppBridge = () => {
   }
 
   const handleFcmToken = async (data: Record<string, unknown>) => {
-    localStorage.setItem("FCM_TOKEN", data.fcmToken as string)
+    localStorage.setItem(LOCAL_STORAGE_KEYS.FCM_TOKEN, data.fcmToken as string)
   }
 
   // 네이티브에서 받은 액세스 토큰을 처리하는 함수

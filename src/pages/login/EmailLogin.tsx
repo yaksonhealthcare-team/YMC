@@ -10,6 +10,7 @@ import { useAuth } from "../../contexts/AuthContext"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useOverlay } from "../../contexts/ModalContext"
 import { requestForToken } from "../../libs/firebase.ts"
+import { LOCAL_STORAGE_KEYS } from "@constants/storage.ts"
 
 interface LoginForm {
   email: string
@@ -67,7 +68,7 @@ const EmailLogin = () => {
         const loginResponse = await loginWithEmail({
           username: formData.email,
           password: formData.password,
-          deviceToken: localStorage.getItem("FCM_TOKEN") ?? "",
+          deviceToken: localStorage.getItem(LOCAL_STORAGE_KEYS.FCM_TOKEN) ?? "",
           deviceType: localStorage.getItem("DEVICE_TYPE") as DeviceType,
         })
 
