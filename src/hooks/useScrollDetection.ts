@@ -1,5 +1,7 @@
 import { useEffect, RefObject } from "react"
 
+const PATH_NAME_LIST = ["store", "branch", "profile"]
+
 /**
  * 스크롤 이벤트를 감지하고 스크롤 위치가 0일 때 로그를 찍는 hook
  * @param elementRef - 스크롤을 감지할 요소의 ref
@@ -15,7 +17,7 @@ export function useScrollDetection(elementRef?: RefObject<HTMLElement>) {
         return
       }
 
-      if (window.location.pathname.includes("store")) {
+      if (PATH_NAME_LIST.includes(window.location.pathname)) {
         window.ReactNativeWebView.postMessage(
           JSON.stringify({
             type: "SCROLL",
