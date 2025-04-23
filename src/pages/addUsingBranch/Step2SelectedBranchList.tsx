@@ -13,7 +13,7 @@ const Step2SelectedBranchList = ({
   const navigate = useNavigate()
 
   return (
-    <div className="flex flex-col justify-between h-full">
+    <div className="flex flex-col justify-between h-full bg-white">
       <Header
         type="back_title"
         title="이용 지점 확인"
