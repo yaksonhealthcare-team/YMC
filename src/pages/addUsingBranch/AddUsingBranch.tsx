@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Button } from "@components/Button.tsx"
 import Step1SearchBranchList from "./Step1SearchBranchList.tsx"
@@ -6,11 +6,18 @@ import Step2SelectedBranchList from "./Step2SelectedBranchList.tsx"
 import Step3Finish from "./Step3Finish.tsx"
 import { Branch } from "../../types/Branch.ts"
 import { postVisitedStore } from "../../apis/user.api"
+import { useLayout } from "contexts/LayoutContext.tsx"
 
 const AddUsingBranch = () => {
   const navigate = useNavigate()
   const [pageStep, setPageStep] = useState(1)
   const [selectedBranches, setSelectedBranches] = useState<Branch[]>([])
+  const { setHeader, setNavigation } = useLayout()
+
+  useEffect(() => {
+    setHeader({ display: false })
+    setNavigation({ display: false })
+  }, [])
 
   const handleSaveVisitedStores = async () => {
     try {
