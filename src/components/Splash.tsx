@@ -1,8 +1,15 @@
-import React from "react"
 import Logo from "@components/Logo.tsx"
 import PageContainer from "@components/PageContainer.tsx"
+import React, { useEffect } from "react"
+import { useLayout } from "../contexts/LayoutContext.tsx"
 
 const SplashScreen: React.FC = () => {
+  const { setNavigation } = useLayout()
+
+  useEffect(() => {
+    setNavigation({ display: false })
+  }, [])
+
   return (
     <PageContainer>
       <div
