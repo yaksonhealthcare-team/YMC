@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useLayout } from "contexts/LayoutContext"
 import { useOverlay } from "contexts/ModalContext"
 import { Button } from "@components/Button"
@@ -14,6 +14,7 @@ export const QuestionnaireHeader = ({
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { openBottomSheet, closeOverlay } = useOverlay()
+  const { returnPath = "/" } = useLocation().state || {}
 
   const handleBack = useCallback(() => {
     if (hasChanges) {
@@ -28,8 +29,8 @@ export const QuestionnaireHeader = ({
               variantType="primary"
               sizeType="l"
               onClick={() => {
+                navigate(returnPath)
                 closeOverlay()
-                navigate(-1)
               }}
             >
               나가기
