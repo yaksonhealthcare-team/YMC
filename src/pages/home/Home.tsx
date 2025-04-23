@@ -20,6 +20,7 @@ import { useAuth } from "../../contexts/AuthContext"
 import { useUnreadNotificationsCount } from "../../queries/useNotificationQueries"
 import ReserveCardSection from "./_fragments/ReserveCardSection"
 import { MembershipCardSection } from "./_fragments/MembershipCardSection"
+import { usePreventGoBack } from "../../hooks/usePreventGoBack"
 
 // 단일 코드 청크로 그룹화하여 불필요한 네트워크 요청 줄이기
 const SecondaryContentChunk = lazy(
@@ -47,6 +48,9 @@ const Home = () => {
   const { user } = useAuth()
   const navigate = useNavigate()
   const { data: unreadCount = 0 } = useUnreadNotificationsCount()
+
+  // 뒤로가기 방지 훅 적용
+  usePreventGoBack()
 
   const getDisplayCount = (count: number) => {
     if (count > 99) return "99+"
