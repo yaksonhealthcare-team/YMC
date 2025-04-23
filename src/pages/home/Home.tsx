@@ -105,10 +105,19 @@ const Home = () => {
               className="flex justify-between items-center bg-primary-300 rounded-2xl p-4"
             >
               <div className="flex gap-2 flex-col text-white">
-                <Typography>
-                  <span className={"text-18px font-b"}>{user?.name}님</span>{" "}
-                  반갑습니다.
-                </Typography>
+                <div className="max-[370px]:hidden flex">
+                  <Typography>
+                    <span className={"text-18px font-b"}>{user?.name}님</span>{" "}
+                    반갑습니다.
+                  </Typography>
+                </div>
+                <div className="max-[370px]:flex hidden">
+                  <Typography>
+                    <span className={"text-18px font-b"}>{user?.name}님</span>{" "}
+                    <br />
+                    반갑습니다.
+                  </Typography>
+                </div>
                 <Typography className="font-m text-14px">
                   <span className="mr-2">{user?.levelName}</span>{" "}
                   <span className="font-b mr-[2px]">{user?.point || 0}</span>
