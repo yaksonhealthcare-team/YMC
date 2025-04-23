@@ -14,7 +14,7 @@ const QuestionnaireHistoryNotExist = ({
 
   const handleLater = () => {
     if (fromSignup) {
-      navigate("/")
+      navigate("/", { replace: true })
     } else {
       navigate(-1)
     }

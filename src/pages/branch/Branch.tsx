@@ -230,7 +230,7 @@ const Branch = () => {
     if (location.state?.from === "/") {
       navigate(-1)
     } else {
-      navigate("/")
+      navigate("/", { replace: true })
     }
   }
 

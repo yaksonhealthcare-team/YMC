@@ -39,7 +39,7 @@ const AddUsingBranch = () => {
   }
 
   const handleSkip = () => {
-    navigate("/")
+    navigate("/", { replace: true })
   }
 
   return (

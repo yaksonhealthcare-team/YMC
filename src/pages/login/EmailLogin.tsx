@@ -96,7 +96,7 @@ const EmailLogin = () => {
       login({
         user: user,
       })
-      navigate("/")
+      navigate("/", { replace: true })
     } catch (error) {
       showToast("로그인에 실패했습니다")
     } finally {

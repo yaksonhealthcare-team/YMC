@@ -27,7 +27,7 @@ const PaymentCompletePage = () => {
     setHeader({
       display: true,
       title: "결제완료",
-      right: <XIcon onClick={() => navigate("/")} />,
+      right: <XIcon onClick={() => navigate("/", { replace: true })} />,
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
@@ -40,11 +40,11 @@ const PaymentCompletePage = () => {
   const isAdditional = state.type === "additional"
   const isVirtual = state.paymentMethod === "VBANK"
 
-  const itemsArray = Array.isArray(state.items) 
-    ? state.items 
-    : state.items 
-    ? [state.items]
-    : []
+  const itemsArray = Array.isArray(state.items)
+    ? state.items
+    : state.items
+      ? [state.items]
+      : []
 
   const handleNavigate = () => {
     try {
@@ -114,7 +114,7 @@ const PaymentCompletePage = () => {
           <Button
             variantType="line"
             sizeType="m"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/", { replace: true })}
             fullWidth
           >
             홈으로 돌아가기

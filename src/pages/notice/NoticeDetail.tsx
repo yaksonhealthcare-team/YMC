@@ -43,7 +43,7 @@ const NoticeDetailPage: React.FC = () => {
     // 이후 페이지 이동
     // 홈 화면에서 왔을 경우 홈 화면으로 이동
     if (fromPath === "/") {
-      navigate("/")
+      navigate("/", { replace: true })
     } else {
       navigate("/notice", { state: { from: fromPath } })
     }

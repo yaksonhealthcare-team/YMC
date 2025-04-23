@@ -14,7 +14,8 @@ const WithdrawalPage = () => {
   const { openModal } = useOverlay()
   const [isAgreed, setIsAgreed] = useState(false)
   const { mutateAsync: withdrawal } = useWithdrawal()
-  const { withdrawalMessage, isLoading: isGuideMessageLoading } = useWithdrawalGuideMessage()
+  const { withdrawalMessage, isLoading: isGuideMessageLoading } =
+    useWithdrawalGuideMessage()
 
   useEffect(() => {
     setHeader({
@@ -43,7 +44,7 @@ const WithdrawalPage = () => {
         message: "회원탈퇴가 완료되었습니다.",
         onConfirm: () => {
           logout()
-          navigate("/")
+          navigate("/", { replace: true })
         },
       })
     } catch (error) {
@@ -61,8 +62,9 @@ const WithdrawalPage = () => {
         <h3 className="text-gray-700 text-16px font-sb">회원탈퇴 안내</h3>
         <div className="p-4 bg-gray-50 rounded-lg">
           <p className="text-gray-600 text-14px font-r whitespace-pre-line">
-            {!isGuideMessageLoading && withdrawalMessage ? withdrawalMessage : 
-            `• 탈퇴 시 모든 회원 정보가 삭제되며 복구할 수 없습니다.`}
+            {!isGuideMessageLoading && withdrawalMessage
+              ? withdrawalMessage
+              : `• 탈퇴 시 모든 회원 정보가 삭제되며 복구할 수 없습니다.`}
           </p>
         </div>
       </div>

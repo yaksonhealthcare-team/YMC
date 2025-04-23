@@ -12,7 +12,10 @@ const ErrorPage = () => {
         {error?.message || "알 수 없는 오류가 발생했습니다."}
       </p>
       <div className="flex gap-2">
-        <Button variantType="line" onClick={() => navigate("/")}>
+        <Button
+          variantType="line"
+          onClick={() => navigate("/", { replace: true })}
+        >
           홈으로 이동
         </Button>
         <Button onClick={() => window.location.reload()}>

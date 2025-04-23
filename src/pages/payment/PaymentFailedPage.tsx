@@ -31,7 +31,7 @@ const PaymentFailedPage = () => {
   }
 
   const handleGoHome = () => {
-    navigate("/")
+    navigate("/", { replace: true })
   }
 
   return (
