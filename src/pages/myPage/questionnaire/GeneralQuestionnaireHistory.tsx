@@ -1,12 +1,14 @@
 import { useUserGeneralQuestionnaireResult } from "../../../queries/useQuestionnaireQueries.tsx"
 import { useLayout } from "../../../contexts/LayoutContext.tsx"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@components/Button.tsx"
 import QuestionnaireHistoryNotExist from "./_fragments/QuestionnaireHistoryNotExist.tsx"
 import { useNavigate } from "react-router-dom"
 import QuestionnaireFormList from "./_fragments/QuestionnaireFormList.tsx"
+import { QuestionnaireResult } from "types/Questionnaire.ts"
 
 const GeneralQuestionnaireHistory = () => {
+  const [questions, setQuestions] = useState<QuestionnaireResult[]>([])
   const { data: questionnaire } = useUserGeneralQuestionnaireResult()
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
@@ -19,13 +21,15 @@ const GeneralQuestionnaireHistory = () => {
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
+  }, [])
+
+  useEffect(() => {
+    if (questionnaire) {
+      setQuestions(questionnaire)
+    }
   }, [questionnaire])
 
-  if (!questionnaire) {
-    return null
-  }
-
-  if (questionnaire.length === 0) {
+  if (questions.length === 0) {
     return (
       <QuestionnaireHistoryNotExist
         onStartQuestionnaire={() =>
@@ -45,7 +49,7 @@ const GeneralQuestionnaireHistory = () => {
       className={"flex flex-col justify-stretch w-full h-full overflow-hidden"}
     >
       <div className={"flex-grow overflow-y-scroll p-5"}>
-        <QuestionnaireFormList questions={questionnaire || []} />
+        <QuestionnaireFormList questions={questions} />
       </div>
       <div className={"px-5 pb-6 py-3 border-t border-gray-100"}>
         <Button
