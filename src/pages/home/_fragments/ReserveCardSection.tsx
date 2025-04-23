@@ -24,7 +24,7 @@ const ReserveCardSection = () => {
   }, [upcomingReservations])
 
   if (isLoading) {
-    return <LoadingIndicator className="flex-1" />
+    return <LoadingIndicator className="min-h-[114px] flex-1" />
   }
 
   const handleReservationClick = () => {
