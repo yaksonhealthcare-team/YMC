@@ -176,7 +176,7 @@ const Step1SearchBranchList = ({
                   tabIndex={0}
                   aria-label={`${branch.name} 지점 선택`}
                 >
-                  <div className="flex gap-[6px]">
+                  <div className="flex gap-[6px] w-full">
                     <BranchIcon className="w-[16px] h-[16px] mt-[3px]" />
                     <div className="text-[14px] w-full">
                       <div className="flex justify-between items-center h-[24px] w-full">
