@@ -617,6 +617,13 @@ const ReservationFormPage = () => {
       openModal({
         title: "예약 완료",
         message: "상담 예약이 완료되었습니다.",
+        style: "alert",
+        onCancel: (_, reason) => {
+          if (reason === "backdropClick" || reason === "escapeKeyDown") {
+            return
+          }
+          closeOverlay()
+        },
         onConfirm: () => {
           navigate("/member-history/reservation")
           closeOverlay()
@@ -694,6 +701,13 @@ const ReservationFormPage = () => {
         openModal({
           title: "예약 완료",
           message: "예약이 완료되었습니다.",
+          style: "alert",
+          onCancel: (_, reason) => {
+            if (reason === "backdropClick" || reason === "escapeKeyDown") {
+              return
+            }
+            closeOverlay()
+          },
           onConfirm: () => {
             navigate("/member-history/reservation")
             closeOverlay()

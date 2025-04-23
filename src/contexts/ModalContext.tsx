@@ -25,8 +25,9 @@ enum OverlayTypes {
 interface ModalProps {
   title: string
   message: string
+  style?: "confirm" | "alert"
   onConfirm: () => void
-  onCancel?: () => void
+  onCancel?: (event: object, reason?: "backdropClick" | "escapeKeyDown") => void
 }
 
 interface BottomSheetButton {
@@ -396,10 +397,11 @@ const OverlayContainer: React.FC = () => {
 
       case OverlayTypes.MODAL: {
         const modalState = overlayState as ModalState
+        const contentType = modalState.content.style ?? "confirm"
         return (
           <Dialog
             open={true}
-            onClose={closeOverlay}
+            onClose={modalState.content.onCancel}
             aria-labelledby="modal-title"
             aria-describedby="modal-description"
             PaperProps={{
@@ -419,10 +421,10 @@ const OverlayContainer: React.FC = () => {
                 {modalState.content.message}
               </p>
               <div className="flex gap-2">
-                {modalState.content.onCancel && (
+                {modalState.content.onCancel && contentType === "confirm" && (
                   <Button
-                    onClick={() => {
-                      modalState.content.onCancel?.()
+                    onClick={(event) => {
+                      modalState.content.onCancel?.(event)
                       closeOverlay()
                     }}
                     variantType="line"
