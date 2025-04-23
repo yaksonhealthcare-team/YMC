@@ -150,7 +150,7 @@ const Step1SearchBranchList = ({
 
       <div className="bg-[#F7F8FB] h-[8px] mt-[24px]"></div>
 
-      <div className="flex-auto h-[0px] min-h-[200px] px-[20px] overflow-y-auto">
+      <div className="flex-auto h-[0px] min-h-[200px] px-[20px] overflow-y-auto no-scrollbar">
         {isLoading ? (
           <div className="flex justify-center py-8">
             <LoadingIndicator />
