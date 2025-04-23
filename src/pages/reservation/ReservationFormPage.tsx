@@ -26,7 +26,7 @@ import { MembershipBranchSelectModal } from "../membership/_fragments/Membership
 import { Branch } from "../../types/Branch"
 import { useBranch } from "../../hooks/useBranch"
 import { Membership } from "types/Membership"
-
+import { CircularProgress } from "@mui/material"
 const BRAND_CODE = "001" // 약손명가
 
 interface LocationState {
@@ -278,7 +278,8 @@ const ReservationFormPage = () => {
     queryKey: ["consultation-count"],
     queryFn: getConsultationCount,
   })
-  const { mutateAsync: createReservation } = useCreateReservationMutation()
+  const { mutateAsync: createReservation, isPending: isCreatingReservation } =
+    useCreateReservationMutation()
 
   const selectedMembershipInfo = useMemo(() => {
     return memberships.find((m) => m.mp_idx === formData.membershipId)
@@ -840,6 +841,7 @@ const ReservationFormPage = () => {
           variantType="primary"
           sizeType="l"
           onClick={async () => {
+            if (isCreatingReservation) return
             if (!validateReservationData()) return
 
             if (formData.item === "상담 예약") {
@@ -850,7 +852,7 @@ const ReservationFormPage = () => {
           }}
           className="w-full"
         >
-          예약하기
+          {isCreatingReservation ? <CircularProgress size={20} /> : "예약하기"}
         </Button>
       </FixedButtonContainer>
     </div>
