@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     }
 
     if (!user) {
-      navigate("/login")
+      navigate("/login", { replace: true })
     }
   }, [isLoading, user, navigate])
 
