@@ -284,6 +284,7 @@ export const ProfileSetup = () => {
                 setSignupData({ ...signupData, postCode: e.target.value })
               }
               placeholder="우편번호"
+              disabled
             />
             <Button
               variantType="primary"
@@ -296,6 +297,7 @@ export const ProfileSetup = () => {
           </div>
           <CustomTextField
             value={signupData.address1}
+            disabled
             onChange={(e) =>
               setSignupData({ ...signupData, address1: e.target.value })
             }
