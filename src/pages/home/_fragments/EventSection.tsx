@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import { Title } from "@components/Title"
 import { Swiper, SwiperSlide } from "swiper/react"
-import { EmptyCard } from "@components/EmptyCard"
 import { useEvents } from "queries/useEventQueries"
 import { Event } from "types/Event"
 import { formatDate } from "utils/date"
@@ -15,9 +14,10 @@ export const EventSection = () => {
   }
 
   return (
-    <div className="mt-6 px-5">
-      <Title title="이벤트 프로모션" />
-      {events && events.length > 0 ? (
+    events &&
+    events.length > 0 && (
+      <div className="mt-6 px-5">
+        <Title title="이벤트 프로모션" />
         <Swiper
           spaceBetween={10}
           slidesPerView={events.length === 1 ? 1 : 1.1}
@@ -55,11 +55,7 @@ export const EventSection = () => {
             </SwiperSlide>
           ))}
         </Swiper>
-      ) : (
-        <EmptyCard
-          title={`진행중인 이벤트가 없어요.\n새로운 이벤트로 곧 찾아뵐게요.`}
-        />
-      )}
-    </div>
+      </div>
+    )
   )
 }
