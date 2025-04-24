@@ -11,7 +11,6 @@ export default defineConfig(({ mode }) => {
   return {
     server: {
       host: true,
-      open: true,
     },
     plugins: [
       react(),
@@ -93,7 +92,6 @@ export default defineConfig(({ mode }) => {
           },
         },
       },
-      outDir: mode === "production" ? "dist/dist_prod" : "dist/dist_dev",
       chunkSizeWarningLimit: 1000,
       sourcemap: true,
       minify: "terser",
