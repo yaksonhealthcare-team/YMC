@@ -4,6 +4,7 @@
 
 html {
   @apply bg-stone-100;
+  overscroll-behavior-y: contain;
 }
 
 /* 스켈레톤 로더 애니메이션 */
@@ -19,4 +20,23 @@ html {
 
 .skeleton-loader {
   animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Pull To Refresh 스타일 */
+.refresh-container {
+  @apply w-fit -mt-10 m-auto z-50;
+}
+
+.refresh-icon {
+  @apply p-2 rounded-full;
+}
+
+.refresh-container.loading .refresh-icon {
+  @apply animate-spin;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
