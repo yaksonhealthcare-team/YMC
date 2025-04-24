@@ -15,9 +15,21 @@ const AddUsingBranch = () => {
   const { setHeader, setNavigation } = useLayout()
 
   useEffect(() => {
-    setHeader({ display: false })
+    setHeader({
+      title: "이용지점 선택",
+      left: "back",
+      backgroundColor: "bg-white",
+      display: pageStep !== 3,
+      onClickBack: () => {
+        if (pageStep === 1) {
+          navigate("/", { replace: true })
+        } else {
+          setPageStep((prev) => prev - 1)
+        }
+      },
+    })
     setNavigation({ display: false })
-  }, [])
+  }, [pageStep])
 
   const handleSaveVisitedStores = async () => {
     try {

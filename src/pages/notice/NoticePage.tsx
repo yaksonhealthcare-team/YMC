@@ -40,14 +40,16 @@ const NoticePage: React.FC = () => {
   // 페이지 마운트 시 상위 스크롤 컨테이너 초기화
   useEffect(() => {
     // 스크롤 컨테이너 찾기
-    const scrollContainer = document.querySelector('.max-w-\\[500px\\].mx-auto.bg-white.h-full.max-h-full.overflow-y-scroll');
+    const scrollContainer = document.querySelector(
+      ".max-w-\\[500px\\].mx-auto.bg-white.h-full.max-h-full.overflow-y-scroll",
+    )
     if (scrollContainer) {
       // 타이밍 이슈 방지를 위해 약간 지연시켜 실행
       setTimeout(() => {
-        (scrollContainer as HTMLElement).scrollTop = 0;
-      }, 0);
+        ;(scrollContainer as HTMLElement).scrollTop = 0
+      }, 0)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
     setHeader({

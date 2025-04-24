@@ -13,6 +13,7 @@ import { useLayout } from "../../contexts/LayoutContext"
 import { getAppleLoginUrl } from "../../libs/apple"
 import { getGoogleLoginUrl } from "../../libs/google"
 import { getNaverLoginUrl } from "../../libs/naver"
+import { requestNotificationPermission } from "libs/firebase"
 
 const Login = () => {
   const { setHeader, setNavigation } = useLayout()
@@ -41,6 +42,7 @@ const Login = () => {
       backgroundColor: "bg-system-bg",
     })
     setNavigation({ display: false })
+    requestNotificationPermission()
   }, [])
 
   useEffect(() => {

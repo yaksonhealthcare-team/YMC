@@ -54,7 +54,7 @@ const BranchFilterListItem = ({
     <div className="w-full pt-[20px] pb-[44px] gap-4 flex items-stretch">
       <Image
         className="border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"
-        src={BranchPlaceholderImage}
+        src={branch.thumbnailUrl ?? BranchPlaceholderImage}
         alt={`${branch.name} 지점 사진`}
       />
       <div className="w-full flex flex-col justify-between py-1">

@@ -5,9 +5,11 @@ import { Button } from "@components/Button.tsx"
 import QuestionnaireHistoryNotExist from "./_fragments/QuestionnaireHistoryNotExist.tsx"
 import { useNavigate } from "react-router-dom"
 import QuestionnaireFormList from "./_fragments/QuestionnaireFormList.tsx"
+import LoadingIndicator from "@components/LoadingIndicator.tsx"
 
 const ReservationQuestionnaireHistory = () => {
-  const { data: questionnaire } = useUserReservationQuestionnaireResult()
+  const { data: questionnaire, isLoading } =
+    useUserReservationQuestionnaireResult()
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
 
@@ -20,6 +22,10 @@ const ReservationQuestionnaireHistory = () => {
     })
     setNavigation({ display: false })
   }, [questionnaire])
+
+  if (isLoading) {
+    return <LoadingIndicator />
+  }
 
   if ((questionnaire?.length || 0) === 0) {
     return (

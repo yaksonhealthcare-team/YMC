@@ -1,7 +1,5 @@
 import { Branch } from "../../types/Branch.ts"
 import BranchItem from "./BranchItem.tsx"
-import Header from "@components/Header.tsx"
-import { useNavigate } from "react-router-dom"
 
 interface SelectedBranchListProps {
   selectedBranches: Branch[]
@@ -10,15 +8,8 @@ interface SelectedBranchListProps {
 const Step2SelectedBranchList = ({
   selectedBranches,
 }: SelectedBranchListProps) => {
-  const navigate = useNavigate()
-
   return (
     <div className="flex flex-col justify-between h-full bg-white">
-      <Header
-        type="back_title"
-        title="이용 지점 확인"
-        onClickBack={() => navigate(-1)}
-      />
       <div className="px-[20px] mt-[20px]">
         <p className="text-gray-700 font-bold text-20px">
           총{" "}

@@ -1,5 +1,4 @@
 import { ReactNode, forwardRef } from "react"
-import { useScrollDetection } from "../hooks/useScrollDetection"
 
 interface PageContainerProps {
   children: ReactNode
@@ -9,7 +8,6 @@ interface PageContainerProps {
 const PageContainer = forwardRef<HTMLDivElement, PageContainerProps>(
   ({ children, className }, ref) => {
     // ref를 전달하여 스크롤 감지 hook 적용
-    useScrollDetection(ref as React.RefObject<HTMLDivElement>)
 
     return (
       <div

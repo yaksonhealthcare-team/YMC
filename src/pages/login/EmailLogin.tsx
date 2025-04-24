@@ -72,6 +72,10 @@ const EmailLogin = () => {
           deviceType: localStorage.getItem("DEVICE_TYPE") as DeviceType,
         })
 
+        if (!loginResponse.accessToken) {
+          throw new Error("로그인에 실패했습니다")
+        }
+
         accessToken = loginResponse.accessToken
 
         window.ReactNativeWebView.postMessage(
@@ -83,12 +87,16 @@ const EmailLogin = () => {
           }),
         )
       } else {
-        await loginWithEmail({
+        const response = await loginWithEmail({
           username: formData.email,
           password: formData.password,
           deviceToken: fcmToken ?? "",
           deviceType: "web",
         })
+
+        if (!response.accessToken) {
+          throw new Error("로그인에 실패했습니다")
+        }
       }
 
       const user = await fetchUser()

@@ -18,6 +18,10 @@ const app = initializeApp(firebaseConfig)
 // 알림 권한 요청
 export async function requestNotificationPermission(): Promise<boolean> {
   try {
+    if (window.ReactNativeWebView) {
+      return false
+    }
+
     if (!("Notification" in window)) {
       console.log("이 브라우저는 알림을 지원하지 않습니다.")
       return false
@@ -42,12 +46,6 @@ export async function requestForToken() {
     const hasServiceWorker = "serviceWorker" in navigator
 
     if (hasServiceWorker) {
-      // 알림 권한 요청
-      const permissionGranted = await requestNotificationPermission()
-      if (!permissionGranted) {
-        return null
-      }
-
       const currentToken = await getToken(getMessaging(app), {
         vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
       })

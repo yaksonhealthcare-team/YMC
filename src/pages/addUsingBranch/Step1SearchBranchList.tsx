@@ -1,18 +1,16 @@
+import CloseGrayFillIcon from "@assets/icons/CloseGrayFillIcon.svg?react"
 import CustomTextField from "@components/CustomTextField.tsx"
+import LoadingIndicator from "@components/LoadingIndicator"
+import BranchIcon from "@components/icons/BranchIcon.tsx"
+import CheckIcon from "@components/icons/CheckIcon.tsx"
 import SearchIcon from "@components/icons/SearchIcon.tsx"
 import { IconButton } from "@mui/material"
 import React, { useState } from "react"
-import CloseGrayFillIcon from "@assets/icons/CloseGrayFillIcon.svg?react"
-import { Branch } from "../../types/Branch.ts"
-import CheckIcon from "@components/icons/CheckIcon.tsx"
-import { useBranches } from "../../queries/useBranchQueries.tsx"
-import useIntersection from "../../hooks/useIntersection.tsx"
-import { useGeolocation } from "../../hooks/useGeolocation.tsx"
 import { useDebounce } from "../../hooks/useDebounce"
-import LoadingIndicator from "@components/LoadingIndicator"
-import Header from "@components/Header.tsx"
-import { useNavigate } from "react-router-dom"
-import BranchIcon from "@components/icons/BranchIcon.tsx"
+import { useGeolocation } from "../../hooks/useGeolocation.tsx"
+import useIntersection from "../../hooks/useIntersection.tsx"
+import { useBranches } from "../../queries/useBranchQueries.tsx"
+import { Branch } from "../../types/Branch.ts"
 
 interface SearchBranchListProps {
   selectedBranches: Branch[]
@@ -33,8 +31,6 @@ const Step1SearchBranchList = ({
       }
     },
   })
-
-  const navigate = useNavigate()
 
   const {
     data: branchPages,
@@ -88,11 +84,6 @@ const Step1SearchBranchList = ({
 
   return (
     <div className="flex flex-col justify-between h-full bg-white">
-      <Header
-        type="back_title"
-        title="이용 지점 선택"
-        onClickBack={() => navigate(-1)}
-      />
       <div className="px-[20px] mt-[20px]">
         <p className="text-gray-700 font-bold text-20px">
           기존에 이용하셨던

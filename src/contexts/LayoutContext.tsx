@@ -159,27 +159,26 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
         {header.display && renderHeader()}
         {children}
         {navigation.display && (
-          <div className="min-h-[82px]">
-            <div
-              className="flex fixed bottom-0 left-0 right-0 mx-auto z-10 bg-white justify-between max-w-[500px]"
-              style={{
-                boxShadow: "0px -2px 16px 0px #2E2B2914",
-                position: "fixed",
-                bottom: 0,
-                left: 0,
-                right: 0,
-                margin: "0 auto",
-                width: "100%",
-                maxWidth: "500px",
-              }}
-            >
-              <NavButton
-                activeIcon={"/assets/navIcon/home_active.png"}
-                inactiveIcon={"/assets/navIcon/home_inactive.png"}
-                title={"홈"}
-                link={"/"}
-              />
-              {/* 
+          <div
+            className="flex fixed bottom-0 left-0 right-0 mx-auto z-10 bg-white justify-between max-w-[500px] min-h-[82px]"
+            style={{
+              boxShadow: "0px -2px 16px 0px #2E2B2914",
+              position: "fixed",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              margin: "0 auto",
+              width: "100%",
+              maxWidth: "500px",
+            }}
+          >
+            <NavButton
+              activeIcon={"/assets/navIcon/home_active.png"}
+              inactiveIcon={"/assets/navIcon/home_inactive.png"}
+              title={"홈"}
+              link={"/"}
+            />
+            {/* 
               <NavButton
                 activeIcon={"/assets/navIcon/membership_active.png"}
                 inactiveIcon={"/assets/navIcon/membership_inactive.png"}
@@ -188,26 +187,25 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
                 isActive={(path) => path.startsWith("/membership")}
               />
               */}
-              <NavButton
-                activeIcon={"/assets/navIcon/store_active.png"}
-                inactiveIcon={"/assets/navIcon/store_inactive.png"}
-                title={"스토어"}
-                link={"/store"}
-              />
-              <NavButton
-                activeIcon={"/assets/navIcon/reservation_active.png"}
-                inactiveIcon={"/assets/navIcon/reservation_inactive.png"}
-                title={"예약/회원권"}
-                link={"/member-history/reservation"}
-                isActive={(path) => path.startsWith("/member-history")}
-              />
-              <NavButton
-                activeIcon={"/assets/navIcon/mypage_active.png"}
-                inactiveIcon={"/assets/navIcon/mypage_inactive.png"}
-                title={"마이페이지"}
-                link={"/mypage"}
-              />
-            </div>
+            <NavButton
+              activeIcon={"/assets/navIcon/store_active.png"}
+              inactiveIcon={"/assets/navIcon/store_inactive.png"}
+              title={"스토어"}
+              link={"/store"}
+            />
+            <NavButton
+              activeIcon={"/assets/navIcon/reservation_active.png"}
+              inactiveIcon={"/assets/navIcon/reservation_inactive.png"}
+              title={"예약/회원권"}
+              link={"/member-history/reservation"}
+              isActive={(path) => path.startsWith("/member-history")}
+            />
+            <NavButton
+              activeIcon={"/assets/navIcon/mypage_active.png"}
+              inactiveIcon={"/assets/navIcon/mypage_inactive.png"}
+              title={"마이페이지"}
+              link={"/mypage"}
+            />
           </div>
         )}
       </PageContainer>
