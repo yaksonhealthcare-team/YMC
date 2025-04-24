@@ -1,8 +1,9 @@
-import SplashScreen from "@components/Splash.tsx"
+import LoadingIndicator from "@components/LoadingIndicator"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext.tsx"
 import { useAppBridge } from "../hooks/useAppBridge"
+import { useLayout } from "contexts/LayoutContext.tsx"
 
 interface ProtectedRouteProps {
   children: React.ReactNode
@@ -11,9 +12,11 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { user, isLoading } = useAuth()
   const navigate = useNavigate()
+  const { setNavigation } = useLayout()
 
   useEffect(() => {
     if (isLoading) {
+      setNavigation({ display: false })
       return
     }
 
@@ -25,7 +28,11 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   useAppBridge()
 
   if (isLoading) {
-    return <SplashScreen />
+    return (
+      <div className="flex h-screen w-screen items-center justify-center">
+        <LoadingIndicator />
+      </div>
+    )
   }
 
   return children
