@@ -42,7 +42,7 @@ const DynamicHomeHeaderBackground = memo(
           </svg>
           <div className="absolute top-3 left-3 w-full h-24">
             <div className="flex justify-between w-full">
-              <div className={"px-2 pt-5 w-full max-w-[84%]"}>{header}</div>
+              <div className={"px-2 py-2 w-full max-w-[84%]"}>{header}</div>
               <DynamicSquareContainer>{buttonArea}</DynamicSquareContainer>
             </div>
           </div>
@@ -104,7 +104,7 @@ const DynamicSquareContainer = ({
   return (
     <div
       ref={containerRef}
-      className={`relative w-[14%] ${className}`}
+      className={`relative mb-2 mt-[-10px] mr-2 w-[14%] ${className}`}
       style={{ height: `${size}px` }}
     >
       <div className="absolute inset-0">{children}</div>
