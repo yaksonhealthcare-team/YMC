@@ -34,8 +34,6 @@ const Step1SearchBranchList = ({
     },
   })
 
-  const navigate = useNavigate()
-
   const {
     data: branchPages,
     hasNextPage,
@@ -88,11 +86,6 @@ const Step1SearchBranchList = ({
 
   return (
     <div className="flex flex-col justify-between h-full bg-white">
-      <Header
-        type="back_title"
-        title="이용 지점 선택"
-        onClickBack={() => navigate(-1)}
-      />
       <div className="px-[20px] mt-[20px]">
         <p className="text-gray-700 font-bold text-20px">
           기존에 이용하셨던
