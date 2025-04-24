@@ -79,7 +79,7 @@ const PaymentHistoryPage = () => {
   }
 
   return (
-    <div className={"h-full flex flex-col overflow-hidden"}>
+    <div className={"h-full flex flex-col overflow-hidden pb-[82px]"}>
       {payments && payments.pages.length > 0 && payments.pages[0].length > 0 ? (
         <ul
           ref={scrollContainerRef}

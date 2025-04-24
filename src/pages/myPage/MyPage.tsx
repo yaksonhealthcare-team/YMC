@@ -29,7 +29,7 @@ const MyPage = () => {
   }
 
   return (
-    <div className="h-fit bg-[#F8F5F2] pb-8">
+    <div className="h-fit bg-[#F8F5F2] pb-[calc(82px+40px)]">
       <div className="px-5">
         <MyPageNotice />
         <MyPageProfile />

@@ -1,10 +1,16 @@
+import clsx from "clsx"
 import { useNavigate } from "react-router-dom"
 
 export const BusinessInfo = () => {
   const navigate = useNavigate()
 
   return (
-    <div className="mt-12 px-6 pt-8 pb-10 flex flex-col gap-4 bg-white relative">
+    <div
+      className={clsx(
+        "mt-12 px-6 pt-8 pb-[calc(82px+40px)] flex flex-col gap-4 bg-white relative",
+        "max-w-[500px] mx-auto",
+      )}
+    >
       <span className="font-b text-16px text-gray-600">
         (주) 약손명가 헬스케어
       </span>

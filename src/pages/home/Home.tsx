@@ -86,8 +86,8 @@ const Home = () => {
   if (!user) return <SplashScreen />
 
   return (
-    <div>
-      <Container className="relative w-full bg-system-bg mt-4 overflow-x-hidden scrollbar-hide px-0">
+    <div className="w-full bg-system-bg overflow-x-hidden scrollbar-hide">
+      <Container className="relative  mt-4 px-0">
         <DynamicHomeHeaderBackground
           header={
             <div className={"space-y-2"}>

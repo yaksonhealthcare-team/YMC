@@ -24,7 +24,7 @@ const SettingsPage = () => {
 
   if (isLoading) {
     return (
-      <div className={"flex flex-col px-5 divide-y divide-gray-100"}>
+      <div className={"flex flex-col px-5 divide-y divide-gray-100 pb-[82px]"}>
         {[...Array(4)].map((_, i) => (
           <div key={i} className="flex justify-between py-6">
             <div className="w-24 h-4 bg-gray-200 animate-pulse rounded" />
@@ -45,7 +45,7 @@ const SettingsPage = () => {
   }
 
   return (
-    <div className={"flex flex-col px-5 divide-y divide-gray-100"}>
+    <div className={"flex flex-col px-5 divide-y divide-gray-100 pb-[82px]"}>
       <div className={"flex justify-between py-6"}>
         <p>{"예약 알림"}</p>
         <Switch.IOS
