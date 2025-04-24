@@ -1,32 +1,32 @@
-import { useLayout } from "contexts/LayoutContext"
-import { useEffect, useState, useCallback, useMemo, useRef } from "react"
-import { useNavigate, useLocation } from "react-router-dom"
-import { RadioCard } from "@components/RadioCard"
-import { RadioGroup } from "@mui/material"
 import { Button } from "@components/Button"
-import { useOverlay } from "contexts/ModalContext"
-import DateAndTimeBottomSheet from "./_fragments/DateAndTimeBottomSheet"
 import FixedButtonContainer from "@components/FixedButtonContainer"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
-import { useCreateReservationMutation } from "../../queries/useReservationQueries"
 import { MembershipSwiper } from "@components/MembershipSwiper"
-import { ReservationFormSection } from "./_fragments/ReservationFormSection"
+import { RadioCard } from "@components/RadioCard"
+import { CircularProgress, RadioGroup } from "@mui/material"
+import { useQuery } from "@tanstack/react-query"
+import { createAdditionalManagementOrder } from "apis/order.api"
+import { useLayout } from "contexts/LayoutContext"
+import { useOverlay } from "contexts/ModalContext"
 import { useErrorHandler } from "hooks/useErrorHandler"
+import { useUserMemberships } from "queries/useMembershipQueries"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+import { Membership, MyMembership } from "types/Membership"
 import { formatDateForAPI } from "utils/date"
 import { toNumber } from "utils/number"
-import { createAdditionalManagementOrder } from "apis/order.api"
-import { useUserMemberships } from "queries/useMembershipQueries"
 import { getConsultationCount } from "../../apis/reservation.api"
-import { useQuery } from "@tanstack/react-query"
-import {
-  useReservationFormStore,
-  ReservationFormData,
-} from "../../stores/reservationFormStore"
-import { MembershipBranchSelectModal } from "../membership/_fragments/MembershipBranchSelectModal"
-import { Branch } from "../../types/Branch"
 import { useBranch } from "../../hooks/useBranch"
-import { Membership } from "types/Membership"
-import { CircularProgress } from "@mui/material"
+import { useCreateReservationMutation } from "../../queries/useReservationQueries"
+import {
+  ReservationFormData,
+  useReservationFormStore,
+} from "../../stores/reservationFormStore"
+import { Branch } from "../../types/Branch"
+import { MembershipBranchSelectModal } from "../membership/_fragments/MembershipBranchSelectModal"
+import DateAndTimeBottomSheet from "./_fragments/DateAndTimeBottomSheet"
+import { ReservationFormSection } from "./_fragments/ReservationFormSection"
+
 const BRAND_CODE = "001" // 약손명가
 
 interface LocationState {
@@ -229,6 +229,37 @@ function calculateInitialState(
   }
 }
 
+const mockMemberships: MyMembership[] = [
+  {
+    mp_idx: "1",
+    s_type: "지점 회원권",
+    branchs: [
+      {
+        b_idx: "101",
+        b_name: "강남점",
+        brandCode: "101",
+      },
+    ],
+    service_name: "슬림 바디 관리(전신)",
+    remain_amount: "20",
+    buy_amount: "20",
+    pay_date: "2025-04-23 00:00:00",
+    expiration_date: "2027-04-23 00:00:00",
+    status: "active",
+  },
+  {
+    mp_idx: "2",
+    s_type: "전체 회원권",
+    branchs: [],
+    service_name: "얼굴 관리 프리미엄",
+    remain_amount: "8",
+    buy_amount: "10",
+    pay_date: "2025-01-15 00:00:00",
+    expiration_date: "2026-01-15 00:00:00",
+    status: "active",
+  },
+]
+
 const ReservationFormPage = () => {
   const { openBottomSheet, closeOverlay, openModal, showToast } = useOverlay()
   const { setHeader, setNavigation } = useLayout()
@@ -261,14 +292,7 @@ const ReservationFormPage = () => {
     isError: isInitialBranchError,
   } = useBranch(formData.branch)
 
-  const memberships = useMemo(() => {
-    if (
-      !userMembershipPaginationData ||
-      userMembershipPaginationData.pages.length === 0
-    )
-      return []
-    return userMembershipPaginationData.pages.flatMap((page) => page.body || [])
-  }, [userMembershipPaginationData])
+  const memberships = mockMemberships
 
   const handleBack = useCallback(() => {
     navigate(-1)

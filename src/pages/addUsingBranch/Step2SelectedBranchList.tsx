@@ -1,7 +1,5 @@
 import { Branch } from "../../types/Branch.ts"
 import BranchItem from "./BranchItem.tsx"
-import Header from "@components/Header.tsx"
-import { useNavigate } from "react-router-dom"
 
 interface SelectedBranchListProps {
   selectedBranches: Branch[]
