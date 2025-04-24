@@ -22,7 +22,6 @@ import ReserveCardSection from "./_fragments/ReserveCardSection"
 import { MembershipCardSection } from "./_fragments/MembershipCardSection"
 import { usePreventGoBack } from "../../hooks/usePreventGoBack"
 import { PullToRefresh } from "@components/PullToRefresh"
-import { queryClient } from "queries/clients"
 
 // 단일 코드 청크로 그룹화하여 불필요한 네트워크 요청 줄이기
 const SecondaryContentChunk = lazy(
@@ -92,7 +91,7 @@ const Home = () => {
       <Container className="relative pt-4 px-0">
         <PullToRefresh
           onRefresh={async () => {
-            await new Promise((resolve) => setTimeout(resolve, 1000))
+            await new Promise((resolve) => setTimeout(resolve, 500))
             window.location.reload()
           }}
         >
