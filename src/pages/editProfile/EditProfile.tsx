@@ -121,7 +121,7 @@ const EditProfile = () => {
         if (updatedUser) {
           login({ user: updatedUser })
           showToast("프로필이 성공적으로 수정되었습니다.")
-          navigate(-1)
+          navigate("/mypage", { replace: true })
         } else {
           showToast("프로필 수정에 실패했습니다.")
         }
@@ -150,7 +150,7 @@ const EditProfile = () => {
           confirmOptions={{
             text: "나가기",
             onClick: () => {
-              navigate("/mypage")
+              navigate("/mypage", { replace: true })
               closeOverlay()
             },
           }}
