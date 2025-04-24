@@ -5,14 +5,15 @@ import {
   setAccessToken,
   signinWithSocial,
 } from "@apis/auth.api"
+import { LOCAL_STORAGE_KEYS } from "@constants/storage"
+import axios from "axios"
 import { useAuth } from "contexts/AuthContext"
 import { SocialSignupInfo } from "contexts/SignupContext"
+import { requestForToken } from "libs/firebase"
 import { axiosClient, saveAccessToken } from "queries/clients"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import axios from "axios"
 import { SocialLoginRequest } from "types/appBridge"
-import { LOCAL_STORAGE_KEYS } from "@constants/storage"
 
 export const useAppBridge = () => {
   const { login, logout } = useAuth()
@@ -22,11 +23,15 @@ export const useAppBridge = () => {
     const loginResponse = await loginWithEmail({
       username: data.username as string,
       password: data.password as string,
-      deviceToken: localStorage.getItem(LOCAL_STORAGE_KEYS.FCM_TOKEN),
+      deviceToken: await requestForToken(),
       deviceType: localStorage.getItem("DEVICE_TYPE") as DeviceType,
     })
 
     const accessToken = loginResponse.accessToken
+
+    if (!accessToken) {
+      throw new Error("로그인에 실패했습니다.")
+    }
 
     // ReactNativeWebView로 accessToken 전달
     if (window.ReactNativeWebView) {

@@ -1,4 +1,5 @@
 import { AxiosError } from "axios"
+import { requestForToken } from "libs/firebase"
 import { useNavigate } from "react-router-dom"
 import {
   fetchUser,
@@ -57,15 +58,9 @@ export const useProfileSetupSubmit = () => {
         },
       })
 
-      if (!response?.body?.length) {
+      if (!response?.body?.length || !response.body[0]?.accessToken) {
         throw new Error(
-          response?.resultMessage || "회원가입 응답에 유효한 body가 없습니다",
-        )
-      }
-
-      if (!response.body[0]?.accessToken) {
-        throw new Error(
-          response?.resultMessage || "회원가입 응답에 accessToken이 없습니다",
+          response?.resultMessage ?? "회원가입 응답이 올바르지 않습니다",
         )
       }
 
@@ -75,18 +70,16 @@ export const useProfileSetupSubmit = () => {
         socialId: socialInfo.socialId,
         id_token: socialInfo.id_token,
         SocialRefreshToken: socialInfo.SocialRefreshToken,
-        deviceToken: socialInfo.deviceToken,
-        deviceType: socialInfo.deviceType,
+        deviceToken: socialInfo.deviceToken ?? (await requestForToken()),
+        deviceType: socialInfo.deviceType ?? window.osType ?? "web",
       })
 
-      if (!signinResponse.data.body[0]?.accessToken) {
-        throw new Error(
-          signinResponse?.data.resultMessage ||
-            "로그인 응답에 accessToken이 없습니다",
-        )
+      const accessToken = signinResponse.data.body[0].accessToken
+
+      if (!accessToken) {
+        throw new Error("로그인에 실패했습니다.")
       }
 
-      const accessToken = signinResponse.data.body[0].accessToken
       setAccessToken(accessToken)
 
       // ReactNativeWebView 환경에서 localStorage에 accessToken 저장
@@ -147,9 +140,15 @@ export const useProfileSetupSubmit = () => {
       const loginResponse = await loginWithEmail({
         username: signupData.email,
         password: signupData.password,
+        deviceToken: await requestForToken(),
+        deviceType: window.osType ?? "web",
       })
 
       const accessToken = loginResponse.accessToken
+
+      if (!accessToken) {
+        throw new Error("로그인에 실패했습니다.")
+      }
 
       // ReactNativeWebView 환경에서 accessToken 전달
       if (window.ReactNativeWebView) {
