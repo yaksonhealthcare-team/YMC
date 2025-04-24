@@ -51,6 +51,7 @@ export class BranchMapper {
         isFavorite: item.b_bookmark === "Y",
         brand: this.toBrand(item.b_name),
         brandCode: item.brand_code,
+        thumbnailUrl: item.branch_pic,
       })),
       address: dto.body.current_addr,
     }

@@ -93,9 +93,20 @@ export const MembershipCard = ({
 
         <span className={STYLES.title}>{title}</span>
 
-        <div className={STYLES.info.wrapper}>
+        <div
+          className={clsx(
+            STYLES.info.wrapper,
+            "whitespace-nowrap block max-[370px]:hidden",
+          )}
+        >
           <span className={STYLES.info.text}>{count}</span>
           <span className={STYLES.info.divider}>|</span>
+          <span className={STYLES.info.text}>
+            {formatDateRange(startDate, endDate)}
+          </span>
+        </div>
+        <div className="whitespace-nowrap hidden max-[370px]:flex flex-col items-start">
+          <span className={STYLES.info.text}>{count}</span>
           <span className={STYLES.info.text}>
             {formatDateRange(startDate, endDate)}
           </span>

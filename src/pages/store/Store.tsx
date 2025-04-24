@@ -38,7 +38,10 @@ const Store = () => {
   }, [])
 
   return (
-    <div className="bg-white" style={{ width: "100%", height: "100vh" }}>
+    <div
+      className="bg-white"
+      style={{ width: "100%", height: "calc(100vh - 82px)" }}
+    >
       <iframe
         ref={iframeRef}
         src="https://devmall.yaksonhc.com/"

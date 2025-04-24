@@ -16,6 +16,7 @@ import LoadingIndicator from "@components/LoadingIndicator"
 import { useReservationStore } from "stores/reservationStore"
 import { useQueryClient } from "@tanstack/react-query"
 import { createUserContextQueryKey } from "../../../queries/queryKeyFactory"
+import { PullToRefresh } from "@components/PullToRefresh"
 
 const ReservationContent = ({
   filterId,
@@ -187,23 +188,30 @@ const ReservationHistoryPage = () => {
 
   return (
     <div className="flex flex-col bg-system-bg min-h-[calc(100vh-82px)]">
-      <div className="px-5">
-        <MainTabs />
-      </div>
-
-      <FilterContent
-        reservationFilter={reservationFilter}
-        onFilterChange={handleFilterChange}
-      />
-
-      <ReservationContent filterId={reservationFilter.id} />
-
-      <button
-        className="fixed bottom-[98px] right-5 w-14 h-14 bg-primary-300 text-white rounded-full shadow-lg hover:bg-primary-400  transition-colors duration-200 z-10"
-        onClick={handleReservationClick}
+      <PullToRefresh
+        onRefresh={async () => {
+          await new Promise((resolve) => setTimeout(resolve, 500))
+          window.location.reload()
+        }}
       >
-        <ReservationIcon className="w-8 h-8 mx-auto text-white" />
-      </button>
+        <div className="px-5">
+          <MainTabs />
+        </div>
+
+        <FilterContent
+          reservationFilter={reservationFilter}
+          onFilterChange={handleFilterChange}
+        />
+
+        <ReservationContent filterId={reservationFilter.id} />
+
+        <button
+          className="fixed bottom-[98px] right-5 w-14 h-14 bg-primary-300 text-white rounded-full shadow-lg hover:bg-primary-400  transition-colors duration-200 z-10"
+          onClick={handleReservationClick}
+        >
+          <ReservationIcon className="w-8 h-8 mx-auto text-white" />
+        </button>
+      </PullToRefresh>
     </div>
   )
 }

@@ -10,6 +10,7 @@ export interface Branch {
   brandCode: string
   brand: string
   b_type?: "전지점" | "지정지점"
+  thumbnailUrl?: string
 }
 
 export interface BranchesWithCurrentAddress {
@@ -115,6 +116,7 @@ export interface BranchSearchResult {
   distance: string
   b_bookmark: string
   brand_code: string
+  branch_pic: string
 }
 
 export interface BranchBookmarkResponse {

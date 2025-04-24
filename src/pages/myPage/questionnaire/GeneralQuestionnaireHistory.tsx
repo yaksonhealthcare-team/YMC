@@ -6,10 +6,10 @@ import QuestionnaireHistoryNotExist from "./_fragments/QuestionnaireHistoryNotEx
 import { useNavigate } from "react-router-dom"
 import QuestionnaireFormList from "./_fragments/QuestionnaireFormList.tsx"
 import { QuestionnaireResult } from "types/Questionnaire.ts"
-
+import LoadingIndicator from "@components/LoadingIndicator.tsx"
 const GeneralQuestionnaireHistory = () => {
   const [questions, setQuestions] = useState<QuestionnaireResult[]>([])
-  const { data: questionnaire } = useUserGeneralQuestionnaireResult()
+  const { data: questionnaire, isLoading } = useUserGeneralQuestionnaireResult()
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
 
@@ -28,6 +28,10 @@ const GeneralQuestionnaireHistory = () => {
       setQuestions(questionnaire)
     }
   }, [questionnaire])
+
+  if (isLoading) {
+    return <LoadingIndicator />
+  }
 
   if (questions.length === 0) {
     return (

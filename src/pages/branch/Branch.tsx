@@ -423,8 +423,8 @@ const Branch = () => {
           }}
           onSelectBranch={handleBranchSelect}
           isFetchingNextPage={isFetchingNextPage}
-          branchesLoading={branchesLoading}
-          totalCount={branchPaginationData?.pages[0]?.total_count}
+          branchesLoading={branchesLoading || locationLoading}
+          totalCount={branchPaginationData?.pages[0].total_count}
         />
       ) : (
         <BranchMapSection

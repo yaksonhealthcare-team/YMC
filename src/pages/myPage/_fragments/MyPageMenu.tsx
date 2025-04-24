@@ -30,8 +30,7 @@ const menuItems = [
   {
     id: "inquiry",
     title: "1:1 문의",
-    path: "https://o33vp.channel.io",
-    external: true,
+    path: "/inquiry",
     icon: InquiryIcon,
   },
   {
@@ -56,32 +55,12 @@ const menuItems = [
 
 const MyPageMenu = () => {
   const navigate = useNavigate()
-  const customWindow = window
 
   const handleClick = (item: (typeof menuItems)[0]) => {
-    if (item.external) {
-      if (customWindow.ReactNativeWebView) {
-        customWindow.ReactNativeWebView.postMessage(
-          JSON.stringify({
-            type: "OPEN_EXTERNAL_LINK",
-            payload: { url: item.path },
-          }),
-        )
-      } else if (customWindow.webkit?.messageHandlers.openExternalLink) {
-        customWindow.webkit.messageHandlers.openExternalLink.postMessage(
-          item.path,
-        )
-      } else if (customWindow.Android?.openExternalLink) {
-        customWindow.Android.openExternalLink(item.path)
-      } else {
-        window.open(item.path, "_blank")
-      }
+    if (item.id === "notice") {
+      navigate(item.path, { state: { from: "/mypage" } })
     } else {
-      if (item.id === "notice") {
-        navigate(item.path, { state: { from: "/mypage" } })
-      } else {
-        navigate(item.path)
-      }
+      navigate(item.path)
     }
   }
 
@@ -96,7 +75,7 @@ const MyPageMenu = () => {
           key={item.id}
           onClick={() => handleClick(item)}
           className="flex items-center justify-between h-12 w-full rounded-lg p-1 "
-          aria-label={`${item.title}${item.external ? " (외부 링크)" : ""}`}
+          aria-label={`${item.title}`}
         >
           <div className="flex items-center gap-3">
             <item.icon className="w-4 h-4 text-gray-900" aria-hidden="true" />

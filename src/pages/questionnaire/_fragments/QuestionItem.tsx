@@ -326,6 +326,16 @@ export const QuestionItem = ({
   const renderQuestion = () => {
     switch (question.contents_type) {
       case "1":
+        if (question.answer_type === "T") {
+          return (
+            <CustomTextField
+              value={value as string}
+              onChange={(e) => handleTextChange(e.target.value)}
+              placeholder="주관식 답변을 입력해주세요."
+            />
+          )
+        }
+
         return (
           <div className="flex flex-wrap gap-2">
             {question.options.map((option) =>

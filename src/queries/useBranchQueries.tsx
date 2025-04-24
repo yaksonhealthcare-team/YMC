@@ -73,7 +73,8 @@ export const useBranches = (filters: BranchFilters) =>
       }
       return undefined
     },
-    retry: false,
+    retry: true,
+    retryDelay: 1000,
     enabled: filters.enabled ?? true,
   })
 
