@@ -11,7 +11,6 @@ import { useAuth } from "../../contexts/AuthContext"
 import { useLayout } from "../../contexts/LayoutContext"
 import { useOverlay } from "../../contexts/ModalContext"
 import { saveAccessToken } from "../../queries/clients"
-import { LOCAL_STORAGE_KEYS } from "@constants/storage"
 import { requestForToken } from "libs/firebase"
 
 const OAuthCallback = () => {
