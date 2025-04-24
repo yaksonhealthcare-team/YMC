@@ -32,6 +32,10 @@ import { QuestionnaireNavigation } from "./_fragments/QuestionnaireNavigation"
  */
 
 const getFieldName = (question: Question): QuestionFieldName => {
+  if (question.answer_type === "T") {
+    return `${question.cssq_idx}_text` as QuestionFieldName
+  }
+
   return `${question.cssq_idx}_${
     question.options.length > 0 ? "option" : "text"
   }` as QuestionFieldName

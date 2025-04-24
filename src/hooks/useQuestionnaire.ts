@@ -13,6 +13,12 @@ import {
 import { useOverlay } from "contexts/ModalContext"
 
 const getFieldName = (question: Question): QuestionFieldName => {
+  // answer_type이 'T'인 경우 항상 text 필드명 사용
+  if (question.answer_type === "T") {
+    return `${question.cssq_idx}_text` as QuestionFieldName
+  }
+
+  // 그 외 경우 기존 로직대로 옵션 유무에 따라 결정
   return `${question.cssq_idx}_${
     question.options.length > 0 ? "option" : "text"
   }` as QuestionFieldName
