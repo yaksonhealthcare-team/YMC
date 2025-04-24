@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "vite --mode development",
     "dev:prod": "vite --mode production",
-    "build": "tsc -b && vite build --mode development",
-    "build:prod": "tsc -b && vite build --mode production",
+    "build:dev": "tsc -b && vite build --mode development",
+    "build": "tsc -b && vite build --mode production",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "format": "prettier --write .",
@@ -68,5 +68,6 @@
     "vite-plugin-preload": "^0.4.2",
     "vite-plugin-svgr": "^4.2.0",
     "vite-tsconfig-paths": "^5.0.1"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
