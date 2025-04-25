@@ -19,39 +19,6 @@ export const useAppBridge = () => {
   const { login, logout } = useAuth()
   const navigate = useNavigate()
 
-  const handleEmailLogin = async (data: Record<string, unknown>) => {
-    const loginResponse = await loginWithEmail({
-      username: data.username as string,
-      password: data.password as string,
-      deviceToken: await requestForToken(),
-      deviceType: localStorage.getItem("DEVICE_TYPE") as DeviceType,
-    })
-
-    const accessToken = loginResponse.accessToken
-
-    if (!accessToken) {
-      throw new Error("로그인에 실패했습니다.")
-    }
-
-    // ReactNativeWebView로 accessToken 전달
-    if (window.ReactNativeWebView) {
-      window.ReactNativeWebView.postMessage(
-        JSON.stringify({
-          type: "LOGIN_SUCCESS",
-          data: {
-            accessToken: accessToken,
-          },
-        }),
-      )
-    }
-
-    const user = await fetchUser()
-    login({ user })
-    if (location.pathname.includes("/login")) {
-      navigate("/", { replace: true })
-    }
-  }
-
   useEffect(() => {
     const handleMessage = async (event: MessageEvent) => {
       window.ReactNativeWebView?.postMessage(
@@ -72,9 +39,6 @@ export const useAppBridge = () => {
             break
           case "DEVICE_TYPE":
             handleDeviceType(data.data)
-            break
-          case "EMAIL_LOGIN":
-            handleEmailLogin(data.data)
             break
           case "SET_ACCESS_TOKEN":
             handleSetAccessToken(data.data)
@@ -164,6 +128,11 @@ export const useAppBridge = () => {
       }
 
       const accessToken = signinResponse.data.body[0].accessToken
+
+      if (!accessToken) {
+        throw new AxiosError("로그인에 실패했습니다.", "401")
+      }
+
       setAccessToken(accessToken)
 
       // ReactNativeWebView 환경에서 localStorage에 accessToken 저장
@@ -183,9 +152,6 @@ export const useAppBridge = () => {
 
       const user = await fetchUser()
       login({ user })
-      if (location.pathname === "/login") {
-        navigate("/", { replace: true })
-      }
       return
     } catch (error: unknown) {
       // Axios 에러인지 확인하여 response 상태 코드 접근
