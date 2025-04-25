@@ -3,10 +3,16 @@ import { Typography } from "@mui/material"
 import { useEffect } from "react"
 import { useAuth } from "../../contexts/AuthContext.tsx"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
+import { useNavigate } from "react-router-dom"
 
 const Logout = () => {
   const { logout } = useAuth()
   const { setHeader, setNavigation } = useLayout()
+  const navigate = useNavigate()
+  const handleLogout = async () => {
+    await logout()
+    navigate("/login")
+  }
 
   useEffect(() => {
     setHeader({
@@ -14,14 +20,9 @@ const Logout = () => {
       backgroundColor: "bg-system-bg",
     })
     setNavigation({ display: false })
-  }, [])
-
-  const handleLogout = () => {
-    logout()
-  }
-  useEffect(() => {
     handleLogout()
   }, [])
+
   return (
     <div
       className={

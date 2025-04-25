@@ -4,18 +4,17 @@ import React, {
   useEffect,
   useState,
   useMemo,
-  useCallback,
 } from "react"
 import { fetchUser, logout as logoutApi } from "../apis/auth.api.ts"
 import { queryClient } from "../queries/clients.ts"
-import { User } from "../types/User.ts"
-import { usePopupActions } from "../stores/popupStore.ts"
 import { useStartupPopups } from "../queries/useContentQueries.tsx"
+import { usePopupActions } from "../stores/popupStore.ts"
+import { User } from "../types/User.ts"
 
 interface AuthContextType {
   user: User | null
-  login: (userData: { user: User | null }) => void
-  logout: () => void
+  login: (userData: { user: User | null }) => Promise<void>
+  logout: () => Promise<void>
   isLoading: boolean
 }
 
@@ -67,18 +66,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [user, isLoading, isPopupLoading, popupData, openPopup])
 
-  const login = useCallback(({ user: userData }: { user: User | null }) => {
+  const login = async ({ user: userData }: { user: User | null }) => {
     if (userData) {
       setUser(userData)
       localStorage.removeItem("isLoggedOut")
       setIsLoading(false)
       return
     }
-    logout()
+    await logout()
     setIsLoading(false)
-  }, [])
+  }
 
-  const logout = useCallback(async () => {
+  const logout = async () => {
     try {
       await logoutApi()
     } catch (error) {
@@ -89,14 +88,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       sessionStorage.removeItem("socialSignupInfo")
       queryClient.clear()
     }
-  }, [])
+  }
 
-  const value = useMemo(
+  const authValue = useMemo(
     () => ({ user, login, logout, isLoading }),
-    [user, isLoading, login, logout],
+    [user, login, logout, isLoading],
   )
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>
+  )
 }
 
 export const useAuth = () => {
