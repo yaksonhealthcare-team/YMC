@@ -55,10 +55,10 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
 
   return (
     <div
-      className="flex-1 px-5 pb-32 overflow-y-auto scrollbar-hide"
+      className="flex-1 px-5 pb-[100px] overflow-y-auto scrollbar-hide"
       key={`membership-content-${filterId}`}
     >
-      {!memberships?.pages[0].body?.length ? (
+      {!memberships?.pages[0]?.body?.length ? (
         <div className="flex justify-center items-center p-4">
           회원권 내역이 없습니다.
         </div>
@@ -159,29 +159,31 @@ const MembershipHistoryPage = () => {
   }, [resetFilter])
 
   return (
-    <div className="flex flex-col bg-system-bg min-h-[calc(100vh-82px)]">
+    <div className="flex flex-col bg-system-bg min-h-[calc(100vh-82px)] h-screen">
       <PullToRefresh
         onRefresh={async () => {
           await new Promise((resolve) => setTimeout(resolve, 500))
           window.location.reload()
         }}
       >
-        <div className="px-5">
-          <MainTabs />
+        <div className="flex flex-col h-full">
+          <div className="px-5">
+            <MainTabs />
+          </div>
+
+          <FilterContent
+            membershipFilter={membershipFilter}
+            onFilterChange={handleFilterChange}
+          />
+
+          <MembershipContent filterId={membershipFilter.id} />
+          {/* <button
+          className="fixed bottom-[98px] right-5 w-14 h-14 bg-primary-300 text-white rounded-full shadow-lg hover:bg-primary-400  transition-colors duration-200 z-10"
+          onClick={() => navigate("/membership")}
+        >
+          <AddMembershipIcon className="w-8 h-8 mx-auto text-white" />
+        </button> */}
         </div>
-
-        <FilterContent
-          membershipFilter={membershipFilter}
-          onFilterChange={handleFilterChange}
-        />
-
-        <MembershipContent filterId={membershipFilter.id} />
-        {/* <button
-        className="fixed bottom-[98px] right-5 w-14 h-14 bg-primary-300 text-white rounded-full shadow-lg hover:bg-primary-400  transition-colors duration-200 z-10"
-        onClick={() => navigate("/membership")}
-      >
-        <AddMembershipIcon className="w-8 h-8 mx-auto text-white" />
-      </button> */}
       </PullToRefresh>
     </div>
   )
