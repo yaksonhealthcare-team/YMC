@@ -137,13 +137,18 @@ const BranchInformation = ({ branch }: { branch: BranchDetail }) => {
               />
             </div>
             <IconSection icon={<PinIcon />}>
-              <div className={"flex w-full justify-between gap-3"}>
-                <p>{branch.location.address}</p>
+              <div className={"flex w-full flex-row items-start gap-3"}>
+                <p className={"flex-1"}>
+                  {branch.location
+                    ? branch.location.address
+                    : "주소 정보가 없습니다"}
+                </p>
                 <button
-                  className={"text-tag-blue flex-shrink-0"}
+                  className={`flex-shrink-0 ${branch.location ? "text-tag-blue" : "text-gray-300 cursor-not-allowed"}`}
                   onClick={handleCopyAddress}
+                  disabled={!branch.location}
                 >
-                  {"복사"}
+                  복사
                 </button>
               </div>
             </IconSection>
