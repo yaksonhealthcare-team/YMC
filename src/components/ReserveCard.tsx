@@ -115,7 +115,9 @@ export const ReserveCard = ({
               sizeType="xs"
               onClick={handleSatisfactionClick}
               className={
-                isModalOpen ? "opacity-50 cursor-not-allowed" : "min-w-[73px]"
+                isModalOpen
+                  ? "opacity-50 cursor-not-allowed text-[14px]"
+                  : "min-w-[73px] text-[14px]"
               }
               disabled={isModalOpen}
             >
@@ -134,7 +136,9 @@ export const ReserveCard = ({
               sizeType="xs"
               onClick={handleCompleteVisit}
               className={
-                isModalOpen ? "opacity-50 cursor-not-allowed" : "min-w-[73px]"
+                isModalOpen
+                  ? "opacity-50 cursor-not-allowed text-[14px]"
+                  : "min-w-[73px] text-[14px]"
               }
               disabled={isModalOpen}
             >
@@ -152,7 +156,9 @@ export const ReserveCard = ({
             sizeType="xs"
             onClick={handleCompleteVisit}
             className={
-              isModalOpen ? "opacity-50 cursor-not-allowed" : "min-w-[73px]"
+              isModalOpen
+                ? "opacity-50 cursor-not-allowed text-[14px]"
+                : "min-w-[73px] text-[14px]"
             }
             disabled={isModalOpen}
           >
