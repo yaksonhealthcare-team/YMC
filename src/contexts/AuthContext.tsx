@@ -73,7 +73,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsLoading(false)
       return
     }
-    await logout()
     setIsLoading(false)
   }
 
