@@ -22,6 +22,7 @@ const filters = [
   { label: NotificationFilter.MEMBERSHIP, type: "default" },
   { label: NotificationFilter.POINT, type: "default" },
   { label: NotificationFilter.NOTIFICATION, type: "default" },
+  { label: NotificationFilter.EVENT, type: "default" },
 ]
 
 export const Notification = () => {
@@ -93,7 +94,7 @@ export const Notification = () => {
     <Container
       className={"relative w-full bg-system-bg py-4 h-full overflow-y-scroll"}
     >
-      <div className="py-4 px-5 flex gap-2 justify-center">
+      <div className="py-4 px-5 flex gap-2 overflow-x-auto no-scrollbar whitespace-nowrap">
         {filters.map((filter) => (
           <Filter
             key={filter.label}

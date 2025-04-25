@@ -4,12 +4,12 @@ import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
 import ReloadIcon from "@components/icons/ReloadIcon"
 
 const FILTER_STYLES = {
-  default: "border border-gray-200 font-r text-14px text-gray-500",
-  active: "border border-primary font-sb text-14px text-primary",
+  default: "border border-gray-200 font-r text-14px text-gray-500 bg-white",
+  active: "border border-primary font-sb text-14px text-primary bg-white",
   defaultNoShrink:
-    "border border-gray-200 font-r text-14px text-gray-500 flex-shrink-0",
+    "border border-gray-200 font-r text-14px text-gray-500 flex-shrink-0 bg-white",
   activeNoShrink:
-    "border border-primary font-sb text-14px text-primary flex-shrink-0",
+    "border border-primary font-sb text-14px text-primary flex-shrink-0 bg-white",
 } as const
 
 const BUTTON_BASE_STYLES = "rounded-full px-3 py-1 min-w-0 h-8"

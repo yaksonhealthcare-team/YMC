@@ -34,6 +34,7 @@ export enum NotificationFilter {
   MEMBERSHIP = "회원권",
   POINT = "포인트",
   NOTIFICATION = "공지",
+  EVENT = "이벤트",
 }
 
 export enum NotificationSearchType {
@@ -42,6 +43,7 @@ export enum NotificationSearchType {
   MEMBERSHIP = "membership",
   POINT = "point",
   NOTIFICATION = "notice",
+  EVENT = "event",
 }
 
 export const getSearchType = (
@@ -53,6 +55,7 @@ export const getSearchType = (
     [NotificationFilter.MEMBERSHIP]: NotificationSearchType.MEMBERSHIP,
     [NotificationFilter.POINT]: NotificationSearchType.POINT,
     [NotificationFilter.NOTIFICATION]: NotificationSearchType.NOTIFICATION,
+    [NotificationFilter.EVENT]: NotificationSearchType.EVENT,
   }
 
   return mapping[filter]
