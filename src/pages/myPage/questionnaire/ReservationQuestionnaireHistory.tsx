@@ -21,7 +21,7 @@ const ReservationQuestionnaireHistory = () => {
       backgroundColor: "bg-white",
     })
     setNavigation({ display: false })
-  }, [questionnaire])
+  }, [questionnaire, setHeader, setNavigation])
 
   if (isLoading) {
     return (
@@ -46,9 +46,11 @@ const ReservationQuestionnaireHistory = () => {
 
   return (
     <div
-      className={"flex flex-col justify-stretch w-full h-full overflow-hidden"}
+      className={
+        "flex flex-col justify-stretch w-full h-screen overflow-hidden fixed inset-0 bg-white"
+      }
     >
-      <div className={"flex-grow overflow-y-scroll p-5"}>
+      <div className={"flex-grow overflow-y-auto p-5 overscroll-none"}>
         <QuestionnaireFormList questions={questionnaire || []} />
       </div>
       <div className={"px-5 pb-6 py-3 border-t border-gray-100"}>
@@ -64,7 +66,7 @@ const ReservationQuestionnaireHistory = () => {
             })
           }
         >
-          {"수정하기"}
+          {"재작성하기"}
         </Button>
       </div>
     </div>
