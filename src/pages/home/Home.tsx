@@ -21,7 +21,7 @@ import { useUnreadNotificationsCount } from "../../queries/useNotificationQuerie
 import ReserveCardSection from "./_fragments/ReserveCardSection"
 import { MembershipCardSection } from "./_fragments/MembershipCardSection"
 import { usePreventGoBack } from "../../hooks/usePreventGoBack"
-import { PullToRefresh } from "@components/PullToRefresh"
+import { CustomPullToRefresh } from "@components/CustomPullToRefresh"
 
 // 단일 코드 청크로 그룹화하여 불필요한 네트워크 요청 줄이기
 const SecondaryContentChunk = lazy(
@@ -84,17 +84,17 @@ const Home = () => {
     })
   }
 
+  const handleRefresh = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 800))
+    window.location.reload()
+  }
+
   if (!user) return <SplashScreen />
 
   return (
-    <div className="w-full bg-system-bg overflow-x-hidden scrollbar-hide">
-      <Container className="relative pt-4 px-0">
-        <PullToRefresh
-          onRefresh={async () => {
-            await new Promise((resolve) => setTimeout(resolve, 500))
-            window.location.reload()
-          }}
-        >
+    <div className="w-full bg-system-bg h-full">
+      <CustomPullToRefresh onRefresh={handleRefresh}>
+        <Container className="relative pt-4 px-0 max-w-screen overflow-hidden">
           <DynamicHomeHeaderBackground
             header={
               <div className={"space-y-2"}>
@@ -184,7 +184,7 @@ const Home = () => {
             buttonArea={
               <div className="relative">
                 <button
-                  className="w-11 h-11 bg-primary-300 text-white rounded-full shadow-lg flex justify-center items-center relative  hover:bg-primary-400 transition-colors duration-200"
+                  className="w-11 h-11 bg-primary-300 text-white rounded-full shadow-lg flex justify-center items-center relative hover:bg-primary-400 transition-colors duration-200"
                   onClick={() => navigate("/notification")}
                   aria-label={`알림${unreadCount > 0 ? `, ${unreadCount}개의 새로운 알림이 있습니다` : ""}`}
                   aria-live="polite"
@@ -226,16 +226,15 @@ const Home = () => {
           >
             <SecondaryContentChunk />
           </Suspense>
-
-          <FloatingButton
-            type="search"
-            onClick={() => {
-              navigate("/branch")
-            }}
-            aria-label="지점 검색하기"
-          />
-        </PullToRefresh>
-      </Container>
+        </Container>
+      </CustomPullToRefresh>
+      <FloatingButton
+        type="search"
+        onClick={() => {
+          navigate("/branch")
+        }}
+        aria-label="지점 검색하기"
+      />
     </div>
   )
 }

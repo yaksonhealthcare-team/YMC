@@ -1,0 +1,57 @@
+/* 기존 global.css 내용은 유지하고 아래 코드 추가 */
+
+/* 브라우저 오버스크롤 방지 */
+html,
+body {
+  overscroll-behavior: none; /* 오버스크롤 행동 방지 */
+  overflow-x: hidden; /* 가로 스크롤 방지 */
+  height: 100%;
+  width: 100%;
+  position: relative; /* fixed에서 relative로 변경 */
+  touch-action: pan-y; /* Y축 스크롤만 허용 */
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+  overflow-y: auto; /* 루트 요소에서 스크롤 허용 */
+  overflow-x: hidden; /* 가로 스크롤 명시적으로 방지 */
+  -webkit-overflow-scrolling: touch; /* iOS에서 부드러운 스크롤 */
+  box-sizing: border-box; /* 박스 사이즈 계산 방식 변경 */
+}
+
+/* 커스텀 풀-투-리프레시 영역 설정 */
+.refresh-indicator {
+  pointer-events: none; /* 인디케이터 요소가 터치 이벤트를 가로채지 않도록 함 */
+  z-index: 100;
+}
+
+/* 모든 요소에 box-sizing 적용 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 전체 앱 스크롤바 숨김 */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* 오버스크롤 방지 - 사파리/iOS 추가 지원 */
+* {
+  -webkit-user-select: none; /* 기본 사용자 선택 방지 */
+  -webkit-tap-highlight-color: transparent; /* 탭 하이라이트 제거 */
+}
+
+/* 입력 요소에서는 사용자 선택 허용 */
+input,
+textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}

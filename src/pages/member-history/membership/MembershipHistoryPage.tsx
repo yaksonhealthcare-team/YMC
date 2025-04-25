@@ -15,7 +15,7 @@ import clsx from "clsx"
 // import AddMembershipIcon from "@assets/icons/AddMembershipIcon.svg?react"
 import { getStatusFromString } from "../../../utils/membership"
 import { useMembershipStore } from "stores/membershipStore"
-import { PullToRefresh } from "@components/PullToRefresh"
+import { CustomPullToRefresh } from "@components/CustomPullToRefresh"
 
 const MembershipContent = ({ filterId }: { filterId: string }) => {
   const { setHeader, setNavigation } = useLayout()
@@ -145,6 +145,11 @@ const MembershipHistoryPage = () => {
     [setMembershipFilter],
   )
 
+  const handleRefresh = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 800))
+    window.location.reload()
+  }
+
   useEffect(() => {
     setHeader({
       display: false,
@@ -160,12 +165,7 @@ const MembershipHistoryPage = () => {
 
   return (
     <div className="flex flex-col bg-system-bg min-h-[calc(100vh-82px)] h-screen">
-      <PullToRefresh
-        onRefresh={async () => {
-          await new Promise((resolve) => setTimeout(resolve, 500))
-          window.location.reload()
-        }}
-      >
+      <CustomPullToRefresh onRefresh={handleRefresh}>
         <div className="flex flex-col h-full">
           <div className="px-5">
             <MainTabs />
@@ -184,7 +184,7 @@ const MembershipHistoryPage = () => {
           <AddMembershipIcon className="w-8 h-8 mx-auto text-white" />
         </button> */}
         </div>
-      </PullToRefresh>
+      </CustomPullToRefresh>
     </div>
   )
 }
