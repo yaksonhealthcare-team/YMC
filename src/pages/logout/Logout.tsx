@@ -12,7 +12,9 @@ const Logout = () => {
   const handleLogout = async () => {
     await logout()
     navigate("/login", { replace: true })
-    window.location.reload()
+    if (!window.ReactNativeWebView) {
+      window.location.reload()
+    }
   }
 
   useEffect(() => {

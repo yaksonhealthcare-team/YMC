@@ -236,8 +236,8 @@ export const withdrawal = async () => {
 }
 
 export const logout = async () => {
-  delete axiosClient.defaults.headers.common.Authorization
   if (window.ReactNativeWebView) {
+    delete axiosClient.defaults.headers.common.Authorization
     window.ReactNativeWebView.postMessage(
       JSON.stringify({
         type: "LOGOUT",
@@ -246,6 +246,7 @@ export const logout = async () => {
     return
   }
   await axiosClient.get("/auth/logout")
+  delete axiosClient.defaults.headers.common.Authorization
 }
 
 export const findEmail = async ({
