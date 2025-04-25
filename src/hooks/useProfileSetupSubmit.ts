@@ -77,7 +77,9 @@ export const useProfileSetupSubmit = () => {
       const accessToken = signinResponse.data.body[0].accessToken
 
       if (!accessToken) {
-        throw new Error("로그인에 실패했습니다.")
+        throw new Error(
+          "회원가입에 실패했습니다. 계속 문제가 발생할 경우 고객센터에 문의해 주세요.",
+        )
       }
 
       setAccessToken(accessToken)
@@ -100,9 +102,8 @@ export const useProfileSetupSubmit = () => {
       const user = await fetchUser()
       login({ user })
       cleanup()
-      navigate("/signup/complete")
+      navigate("/signup/complete", { replace: true })
     } catch (error: unknown) {
-      handleError(error)
       throw error
     }
   }
@@ -165,9 +166,8 @@ export const useProfileSetupSubmit = () => {
       const user = await fetchUser()
       login({ user })
       cleanup()
-      navigate("/signup/complete")
+      navigate("/signup/complete", { replace: true })
     } catch (error: unknown) {
-      handleError(error)
       throw error
     }
   }
@@ -175,11 +175,19 @@ export const useProfileSetupSubmit = () => {
   const handleError = (error: unknown) => {
     if (error instanceof AxiosError) {
       const errorMessage = error.response?.data?.resultMessage
-      showToast(errorMessage || "회원가입에 실패했습니다")
+      showToast(
+        errorMessage ||
+          "회원가입에 실패했습니다. 계속 문제가 발생할 경우 고객센터에 문의해 주세요.",
+      )
     } else if (error instanceof Error) {
-      showToast(error.message || "회원가입에 실패했습니다")
+      showToast(
+        error.message ||
+          "회원가입에 실패했습니다. 계속 문제가 발생할 경우 고객센터에 문의해 주세요.",
+      )
     } else {
-      showToast("회원가입에 실패했습니다")
+      showToast(
+        "회원가입에 실패했습니다. 계속 문제가 발생할 경우 고객센터에 문의해 주세요.",
+      )
     }
   }
 
