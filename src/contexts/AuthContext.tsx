@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useState,
 } from "react"
-import { fetchUser, logout as fetchLogout } from "../apis/auth.api.ts"
+import { logout as fetchLogout } from "../apis/auth.api.ts"
 import { axiosClient, queryClient } from "../queries/clients.ts"
 import { useStartupPopups } from "../queries/useContentQueries.tsx"
 import { usePopupActions } from "../stores/popupStore.ts"
