@@ -1,16 +1,14 @@
-import { useEffect, useState } from "react"
-import { useLayout } from "contexts/LayoutContext"
-import { useNavigate } from "react-router-dom"
-import { useAuth } from "contexts/AuthContext"
-import { useOverlay } from "contexts/ModalContext"
 import { Button } from "@components/Button"
+import { useLayout } from "contexts/LayoutContext"
+import { useOverlay } from "contexts/ModalContext"
 import { useWithdrawal } from "queries/useAuthQueries"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { useWithdrawalGuideMessage } from "../../hooks/useGuideMessages"
 
 const WithdrawalPage = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
-  const { logout } = useAuth()
   const { openModal } = useOverlay()
   const [isAgreed, setIsAgreed] = useState(false)
   const { mutateAsync: withdrawal } = useWithdrawal()
@@ -43,8 +41,7 @@ const WithdrawalPage = () => {
         title: "안내",
         message: "회원탈퇴가 완료되었습니다.",
         onConfirm: () => {
-          logout()
-          navigate("/", { replace: true })
+          navigate("/logout", { replace: true })
         },
       })
     } catch (error) {

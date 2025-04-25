@@ -8,7 +8,6 @@ import { Button } from "@components/Button.tsx"
 
 const ResetPasswordComplete = () => {
   const { user } = useAuth()
-  const { logout } = useAuth()
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
 
@@ -18,8 +17,10 @@ const ResetPasswordComplete = () => {
   }, [])
 
   const navigateToLogin = () => {
-    user && logout()
-    navigate("/login")
+    if (user) {
+      navigate("/logout", { replace: true })
+    }
+    navigate("/login", { replace: true })
   }
 
   return (

@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react"
 import { logout as fetchLogout } from "../apis/auth.api.ts"
-import { axiosClient, queryClient } from "../queries/clients.ts"
+import { axiosClient } from "../queries/clients.ts"
 import { useStartupPopups } from "../queries/useContentQueries.tsx"
 import { usePopupActions } from "../stores/popupStore.ts"
 import { User } from "../types/User.ts"
@@ -50,7 +50,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const login = async ({ user: userData }: { user: User | null }) => {
     if (userData) {
       setUser(userData)
-      localStorage.removeItem("isLoggedOut")
       setIsLoading(false)
       return
     }
@@ -64,6 +63,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       console.error("로그아웃 중 오류 발생:", error)
     } finally {
       delete axiosClient.defaults.headers.common.Authorization
+      localStorage.clear()
+      sessionStorage.clear()
       if (window.ReactNativeWebView) {
         window.ReactNativeWebView.postMessage(
           JSON.stringify({
@@ -71,12 +72,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           }),
         )
       }
-      localStorage.clear()
-      sessionStorage.clear()
-      setUser(null)
-      setIsLoading(false)
-      queryClient.clear()
-      localStorage.setItem("isLoggedOut", "true")
     }
   }
 

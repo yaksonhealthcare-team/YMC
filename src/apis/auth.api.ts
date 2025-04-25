@@ -219,7 +219,7 @@ export function signinWithSocial(request: SignInWithSocialRequest) {
   return axiosClient.post<HTTPResponse<SignInResponseBody[]>>(
     "/auth/signin/social",
     request,
-    { withCredentials: true }, // 쿠키를 받기 위해 추가
+    { withCredentials: true, timeout: 10000 }, // 쿠키를 받기 위해 추가
   )
 }
 
