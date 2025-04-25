@@ -388,9 +388,12 @@ export const QuestionItem = ({
       case "3":
         return (
           <CustomTextField
-            type="number"
+            type="tel"
             value={value as string}
-            onChange={(e) => handleTextChange(e.target.value)}
+            onChange={(e) => {
+              const numericValue = e.target.value.replace(/[^0-9]/g, "")
+              handleTextChange(numericValue)
+            }}
             placeholder="숫자를 입력해주세요."
           />
         )
