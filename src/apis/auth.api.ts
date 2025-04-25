@@ -83,18 +83,16 @@ export const fetchUser = async (): Promise<User | null> => {
     throw new Error("사용자 정보 조회 실패")
   } catch (error) {
     console.log("사용자 정보 조회 실패, 엑세스 토큰 갱신 시도", error)
-
     if (window.ReactNativeWebView) {
       window.ReactNativeWebView.postMessage(
         JSON.stringify({
           type: "REFRESH_TOKEN",
         }),
       )
-
-      return null
+      throw new Error("웹뷰 메시지 전송")
     }
 
-    throw new Error("사용자 정보 조회 실패")
+    return null
   }
 }
 

@@ -234,7 +234,11 @@ export const useAppBridge = () => {
       try {
         // 토큰으로 사용자 정보 가져오기
         const user = await fetchUser()
-        login({ user })
+        if (user) {
+          login({ user })
+        } else {
+          navigate("/login", { replace: true })
+        }
 
         // 토큰 설정 성공 응답
         window.ReactNativeWebView?.postMessage(
@@ -254,6 +258,8 @@ export const useAppBridge = () => {
           }),
         )
       }
+    } else {
+      navigate("/login", { replace: true })
     }
     setIsLoading(false)
   }
