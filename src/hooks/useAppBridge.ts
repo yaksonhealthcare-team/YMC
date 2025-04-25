@@ -5,10 +5,10 @@ import {
   signinWithSocial,
 } from "@apis/auth.api"
 import { LOCAL_STORAGE_KEYS } from "@constants/storage"
-import axios, { AxiosError } from "axios"
+import axios from "axios"
 import { useAuth } from "contexts/AuthContext"
 import { SocialSignupInfo } from "contexts/SignupContext"
-import { axiosClient, saveAccessToken } from "queries/clients"
+import { axiosClient } from "queries/clients"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { SocialLoginRequest } from "types/appBridge"
@@ -122,31 +122,26 @@ export const useAppBridge = () => {
       })
 
       if (signinResponse.data.body.length === 0) {
-        throw new AxiosError("로그인에 실패했습니다.", "401")
+        throw new Error("네트워크 에러")
       }
 
       const accessToken = signinResponse.data.body[0].accessToken
 
       if (!accessToken) {
-        throw new AxiosError("로그인에 실패했습니다.", "401")
+        throw new Error("네트워크 에러")
       }
 
       setAccessToken(accessToken)
 
-      // ReactNativeWebView 환경에서 localStorage에 accessToken 저장
-      if (window.ReactNativeWebView) {
-        saveAccessToken(accessToken)
-
-        // ReactNativeWebView로 accessToken 전달
-        window.ReactNativeWebView.postMessage(
-          JSON.stringify({
-            type: "LOGIN_SUCCESS",
-            data: {
-              accessToken: accessToken,
-            },
-          }),
-        )
-      }
+      // ReactNativeWebView로 accessToken 전달
+      window.ReactNativeWebView?.postMessage(
+        JSON.stringify({
+          type: "LOGIN_SUCCESS",
+          data: {
+            accessToken: accessToken,
+          },
+        }),
+      )
 
       const user = await fetchUser()
       login({ user })
@@ -187,12 +182,7 @@ export const useAppBridge = () => {
           "socialSignupInfo",
           JSON.stringify(socialSignupInfo),
         )
-
-        throw error
       }
-      // 401 외 다른 에러 처리 (필요시 추가)
-      alert("소셜 로그인 처리 중 오류가 발생했습니다.")
-      throw error
     }
   }
 
@@ -225,9 +215,6 @@ export const useAppBridge = () => {
   // 네이티브에서 받은 액세스 토큰을 처리하는 함수
   const handleSetAccessToken = async (data: any) => {
     if (data.accessToken) {
-      // localStorage에 액세스 토큰 저장
-      saveAccessToken(data.accessToken)
-
       // axios 헤더에 액세스 토큰 설정
       setAccessToken(data.accessToken)
 
