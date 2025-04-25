@@ -27,7 +27,7 @@ const MyPageFooter = () => {
             type: "LOGOUT",
           }),
         )
-        navigate("/logout")
+        navigate("/logout", { replace: true })
       },
       onCancel: () => {},
     })

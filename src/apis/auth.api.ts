@@ -236,17 +236,20 @@ export const withdrawal = async () => {
 }
 
 export const logout = async () => {
-  if (window.ReactNativeWebView) {
+  try {
+    await axiosClient.get("/auth/logout")
+  } catch (error) {
+    console.error("로그아웃 실패", error)
+  } finally {
     delete axiosClient.defaults.headers.common.Authorization
-    window.ReactNativeWebView.postMessage(
-      JSON.stringify({
-        type: "LOGOUT",
-      }),
-    )
-    return
+    if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({
+          type: "LOGOUT",
+        }),
+      )
+    }
   }
-  await axiosClient.get("/auth/logout")
-  delete axiosClient.defaults.headers.common.Authorization
 }
 
 export const findEmail = async ({
