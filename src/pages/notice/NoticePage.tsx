@@ -11,7 +11,7 @@ const NoticePage: React.FC = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const location = useLocation()
-  const fromPath = location.state?.from || "/mypage"
+  const fromPath = location.state?.from ?? "/mypage"
 
   const {
     data: pages,
@@ -37,20 +37,6 @@ const NoticePage: React.FC = () => {
 
   const notices = (pages?.pages || []).flatMap((page) => page.notices)
 
-  // 페이지 마운트 시 상위 스크롤 컨테이너 초기화
-  useEffect(() => {
-    // 스크롤 컨테이너 찾기
-    const scrollContainer = document.querySelector(
-      ".max-w-\\[500px\\].mx-auto.bg-white.h-full.max-h-full.overflow-y-scroll",
-    )
-    if (scrollContainer) {
-      // 타이밍 이슈 방지를 위해 약간 지연시켜 실행
-      setTimeout(() => {
-        ;(scrollContainer as HTMLElement).scrollTop = 0
-      }, 0)
-    }
-  }, [])
-
   useEffect(() => {
     setHeader({
       display: true,
@@ -60,7 +46,7 @@ const NoticePage: React.FC = () => {
       onClickBack: () => navigate(fromPath),
     })
     setNavigation({ display: true })
-  }, [setHeader, setNavigation, navigate, fromPath])
+  }, [navigate, fromPath])
 
   if (isLoading) {
     return <LoadingIndicator className="min-h-screen" />
