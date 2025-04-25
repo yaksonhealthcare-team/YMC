@@ -45,7 +45,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       )
       setTimeout(() => {
         openPopup(popupData)
-      }, 1000)
+      }, 500)
     }
   }, [user, isLoading, isPopupLoading, popupData, openPopup])
 

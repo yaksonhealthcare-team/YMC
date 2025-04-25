@@ -145,6 +145,7 @@ export const useAppBridge = () => {
 
       const user = await fetchUser()
       login({ user })
+      navigate("/", { replace: true })
       return
     } catch (error: unknown) {
       // Axios 에러인지 확인하여 response 상태 코드 접근
