@@ -2,11 +2,11 @@ import React, {
   createContext,
   useContext,
   useEffect,
-  useState,
   useMemo,
+  useState,
 } from "react"
-import { fetchUser, logout as logoutApi } from "../apis/auth.api.ts"
-import { queryClient } from "../queries/clients.ts"
+import { fetchUser, logout as fetchLogout } from "../apis/auth.api.ts"
+import { axiosClient, queryClient } from "../queries/clients.ts"
 import { useStartupPopups } from "../queries/useContentQueries.tsx"
 import { usePopupActions } from "../stores/popupStore.ts"
 import { User } from "../types/User.ts"
@@ -79,14 +79,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = async () => {
     try {
-      await logoutApi()
+      await fetchLogout()
     } catch (error) {
       console.error("로그아웃 중 오류 발생:", error)
     } finally {
+      delete axiosClient.defaults.headers.common.Authorization
+      if (window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            type: "LOGOUT",
+          }),
+        )
+      }
+      localStorage.clear()
+      sessionStorage.clear()
       setUser(null)
       setIsLoading(false)
-      sessionStorage.removeItem("socialSignupInfo")
       queryClient.clear()
+      localStorage.setItem("isLoggedOut", "true")
     }
   }
 

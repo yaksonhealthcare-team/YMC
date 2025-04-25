@@ -240,15 +240,6 @@ export const logout = async () => {
     await axiosClient.get("/auth/logout")
   } catch (error) {
     console.error("로그아웃 실패", error)
-  } finally {
-    delete axiosClient.defaults.headers.common.Authorization
-    if (window.ReactNativeWebView) {
-      window.ReactNativeWebView.postMessage(
-        JSON.stringify({
-          type: "LOGOUT",
-        }),
-      )
-    }
   }
 }
 
