@@ -12,9 +12,9 @@ const Logout = () => {
   const handleLogout = async () => {
     await logout()
     await new Promise((resolve) => setTimeout(resolve, 500))
+    navigate("/login", { replace: true })
 
     if (!window.ReactNativeWebView) {
-      navigate("/login", { replace: true })
       window.location.reload()
     }
   }
