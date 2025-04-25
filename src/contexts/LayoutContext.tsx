@@ -4,6 +4,7 @@ import { Typography } from "@mui/material"
 import { useNavigate, useLocation } from "react-router-dom"
 import Header from "@components/Header.tsx"
 import { StartupPopup } from "../components/popup/StartupPopup"
+import { useAppBridge } from "hooks/useAppBridge"
 
 type NavigationConfig = {
   display?: boolean
@@ -58,6 +59,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
   })
   const location = useLocation()
   const pageContainerRef = useRef<HTMLDivElement>(null)
+  useAppBridge()
 
   // 경로 변경 시 스크롤을 맨 위로 이동
   useEffect(() => {

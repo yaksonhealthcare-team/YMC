@@ -4,7 +4,6 @@ import { useLayout } from "contexts/LayoutContext.tsx"
 import { useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext.tsx"
-import { useAppBridge } from "../hooks/useAppBridge"
 interface ProtectedRouteProps {
   children: React.ReactNode
 }
@@ -37,8 +36,6 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
       setNavigation({ display: false })
     }
   }, [isLoading, navigate])
-
-  useAppBridge()
 
   if (isLoading) {
     return (
