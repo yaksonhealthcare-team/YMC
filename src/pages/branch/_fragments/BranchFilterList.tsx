@@ -51,7 +51,7 @@ const BranchFilterListItem = ({
     }}
     aria-label={`${branch.name} 지점 선택 ${branch.distanceInMeters ? `${branch.distanceInMeters} 거리` : ""} ${branch.address}`}
   >
-    <div className="w-full pt-[20px] pb-[44px] gap-4 flex items-stretch">
+    <div className="w-full py-[20px] gap-4 flex items-stretch">
       <Image
         className="border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"
         src={branch.thumbnailUrl ?? BranchPlaceholderImage}
