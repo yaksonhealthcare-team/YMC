@@ -20,7 +20,7 @@ export const useMembershipList = (brandCode: string, scCode?: string) => {
       if (!lastPage.body || lastPage.body.length === 0) return undefined
       return lastPage.current_page + 1
     },
-    retry: false,
+    retry: true,
   })
 }
 
@@ -31,7 +31,7 @@ export const useMembershipDetail = (sIdx: string) => {
     enabled: !!sIdx,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    retry: false,
+    retry: true,
   })
 }
 
@@ -41,7 +41,7 @@ export const useMembershipCategories = (brandCode: string) => {
     queryFn: () => fetchMembershipCategories(brandCode),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    retry: false,
+    retry: true,
   })
 }
 
@@ -57,7 +57,7 @@ export const useUserMemberships = (searchType?: string) => {
     },
     staleTime: 30 * 1000, // 30초
     gcTime: 1 * 60 * 1000, // 1분
-    retry: false,
+    retry: true,
   })
 }
 
@@ -73,7 +73,7 @@ export const useAdditionalManagement = (membershipIdx?: string) => {
     enabled: !!membershipIdx,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    retry: false,
+    retry: true,
   })
 }
 
@@ -82,7 +82,7 @@ export const useMembership = (id: number) => {
     queryKey: ["memberships", id],
     queryFn: () => Promise.reject(new Error("Not implemented")),
     enabled: false,
-    retry: false,
+    retry: true,
   })
 }
 
@@ -91,7 +91,7 @@ export const useMembershipByUser = () => {
     queryKey: ["memberships", "user"],
     queryFn: () => Promise.reject(new Error("Not implemented")),
     enabled: false,
-    retry: false,
+    retry: true,
   })
 }
 
@@ -100,6 +100,6 @@ export const useAvailableMemberships = () => {
     queryKey: ["memberships", "available"],
     queryFn: () => Promise.reject(new Error("Not implemented")),
     enabled: false,
-    retry: false,
+    retry: true,
   })
 }
