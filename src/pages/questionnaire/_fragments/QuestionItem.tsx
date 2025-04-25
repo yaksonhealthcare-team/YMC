@@ -79,14 +79,29 @@ export const QuestionItem = ({
           return values.some((v) => v.csso_idx === option.csso_idx)
         })(),
     )
+
     if (hasSelectedSubjectiveOption) {
       if (!currentValue || typeof currentValue === "string") return false
+
       const values = currentValue as OptionValue[]
-      const selectedOption = values[0]
-      if (!selectedOption?.text || selectedOption.text.trim().length === 0) {
-        return false
-      }
-      if (selectedOption.text.length > 100) {
+      const directInputOption = values.find((val) => {
+        const matchingOption = question.options.find(
+          (opt) => opt.csso_idx === val.csso_idx && opt.option_type === "2",
+        )
+        return !!matchingOption
+      })
+
+      if (directInputOption) {
+        if (
+          !directInputOption.text ||
+          directInputOption.text.trim().length === 0
+        ) {
+          return false
+        }
+        if (directInputOption.text.length > 100) {
+          return false
+        }
+      } else {
         return false
       }
     }
@@ -189,7 +204,6 @@ export const QuestionItem = ({
         newValues = currentValues.filter((v) => v.csso_idx !== optionIdx)
       }
     } else {
-      // 단일 선택의 경우, 기존 선택된 옵션의 text 값을 유지
       const existingOption = currentValues.find((v) => v.csso_idx === optionIdx)
       newValues = [
         {
@@ -324,9 +338,13 @@ export const QuestionItem = ({
   }
 
   const renderQuestion = () => {
+    // 모든 케이스에서 공통으로 사용할 변수 선언
+    const isTextOnly = question.answer_type === "T"
+    const hasOptionImages = hasOptionImage(question.options)
+
     switch (question.contents_type) {
       case "1":
-        if (question.answer_type === "T") {
+        if (isTextOnly) {
           return (
             <CustomTextField
               value={value as string}
@@ -336,12 +354,13 @@ export const QuestionItem = ({
           )
         }
 
+        // 모든 옵션을 기본 방식으로 표시
         return (
           <div className="flex flex-wrap gap-2">
             {question.options.map((option) =>
               renderOptionItem(
                 option,
-                hasOptionImage(question.options),
+                hasOptionImages,
                 isOptionSelected(option.csso_idx),
                 handleOptionChange,
                 handleTextChange,
@@ -357,7 +376,7 @@ export const QuestionItem = ({
             {question.options.map((option) =>
               renderOptionItem(
                 option,
-                hasOptionImage(question.options),
+                hasOptionImages,
                 isOptionSelected(option.csso_idx),
                 handleOptionChange,
                 handleTextChange,

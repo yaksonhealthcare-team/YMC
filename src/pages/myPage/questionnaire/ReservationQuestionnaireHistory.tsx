@@ -24,7 +24,9 @@ const ReservationQuestionnaireHistory = () => {
   }, [questionnaire])
 
   if (isLoading) {
-    return <LoadingIndicator />
+    return (
+      <LoadingIndicator className="min-h-screen flex items-center justify-center" />
+    )
   }
 
   if ((questionnaire?.length || 0) === 0) {
