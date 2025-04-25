@@ -155,6 +155,7 @@ const Branch = () => {
   const {
     data: branchPaginationData,
     isLoading: branchesLoading,
+    isPending: branchesPending,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
@@ -397,8 +398,7 @@ const Branch = () => {
     refetch()
   }
 
-  // 위치 정보를 로딩 중이거나 API 로딩 중인 경우 로딩 표시
-  if (locationLoading && !selectedFilter.enabled) {
+  if (locationLoading || branchesLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <LoadingIndicator size={48} />
@@ -423,7 +423,7 @@ const Branch = () => {
           }}
           onSelectBranch={handleBranchSelect}
           isFetchingNextPage={isFetchingNextPage}
-          branchesLoading={branchesLoading || locationLoading}
+          branchesLoading={branchesPending}
           totalCount={branchPaginationData?.pages[0].total_count}
         />
       ) : (
