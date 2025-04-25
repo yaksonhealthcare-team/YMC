@@ -174,16 +174,16 @@ export const ReserveCard = ({
   return (
     <button
       className={clsx(
-        `flex flex-col gap-[12px] bg-white p-5 border border-gray-100 shadow-card rounded-[20px] w-full text-left cursor-pointer relative`,
+        `flex flex-col w-full gap-[12px] bg-white p-5 border border-gray-100 shadow-card rounded-[20px] text-left cursor-pointer relative`,
         className,
       )}
       onClick={() => navigate(`/reservation/${reservation.id}`)}
       aria-label={`${reservation.store} ${reservation.programName} ${reservation.statusCode !== "003" ? `${reservation.visit}회차` : ""} 예약`}
       role="button"
     >
-      <div className="inline-flex flex-col justify-center items-start gap-1">
-        <div className="self-stretch inline-flex justify-between items-center">
-          <div className="flex justify-start items-baseline gap-1.5">
+      <div className="inline-flex w-full flex-col justify-center items-start gap-1">
+        <div className="self-stretch w-full inline-flex justify-between items-center">
+          <div className="flex w-full justify-between items-baseline gap-1.5">
             <div className="justify-start text-neutral-800 text-base font-bold font-['Pretendard'] leading-normal">
               {reservation.store}
             </div>
