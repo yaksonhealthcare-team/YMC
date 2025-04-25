@@ -11,7 +11,8 @@ const Logout = () => {
   const navigate = useNavigate()
   const handleLogout = async () => {
     await logout()
-    navigate("/login")
+    navigate("/login", { replace: true })
+    window.location.reload()
   }
 
   useEffect(() => {
