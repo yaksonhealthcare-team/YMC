@@ -73,7 +73,7 @@ const EditProfile = () => {
       onClickBack: handleClickBackButton,
     })
     setNavigation({ display: false })
-  }, [address, marketingAgreed, gender, profileImageUrl])
+  }, [address, marketingAgreed, gender, profileImageUrl, profileImageFile])
 
   if (!user) {
     return <></>
