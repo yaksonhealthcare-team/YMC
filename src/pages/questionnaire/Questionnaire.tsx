@@ -72,23 +72,44 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
     setHasChanges(hasValues)
   }, [formValues, setHasChanges])
 
+  //브라우저 스크롤 되지 않도록 설정
+  useEffect(() => {
+    // 모든 스크롤 이벤트 및 body 스타일 제어
+    document.body.style.overflow = "hidden"
+    document.body.style.height = "100%"
+    document.documentElement.style.overflow = "hidden"
+    document.documentElement.style.height = "100%"
+
+    return () => {
+      // 컴포넌트 언마운트 시 원래대로 복원
+      document.body.style.overflow = ""
+      document.body.style.height = ""
+      document.documentElement.style.overflow = ""
+      document.documentElement.style.height = ""
+    }
+  }, [])
+
   if (isLoading || !questions) {
-    return <LoadingIndicator className="min-h-screen" />
+    return (
+      <LoadingIndicator className="min-h-screen flex items-center justify-center" />
+    )
   }
 
   return (
-    <div className="pb-32">
+    <div className="flex flex-col fixed inset-0 bg-white pt-[56px]">
       <QuestionnaireHeader hasChanges={hasChanges} />
-      <div className="p-5">
-        <QuestionItem
-          question={questions[currentIndex]}
-          value={formValues[getFieldName(questions[currentIndex])]}
-          onChange={(value) =>
-            handleFieldChange(getFieldName(questions[currentIndex]), value)
-          }
-          fieldName={getFieldName(questions[currentIndex])}
-          onValidationChange={setIsCurrentValid}
-        />
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-5 pb-[150px]">
+          <QuestionItem
+            question={questions[currentIndex]}
+            value={formValues[getFieldName(questions[currentIndex])]}
+            onChange={(value) =>
+              handleFieldChange(getFieldName(questions[currentIndex]), value)
+            }
+            fieldName={getFieldName(questions[currentIndex])}
+            onValidationChange={setIsCurrentValid}
+          />
+        </div>
       </div>
       <QuestionnaireNavigation
         currentQuestionNumber={currentQuestionNumber}

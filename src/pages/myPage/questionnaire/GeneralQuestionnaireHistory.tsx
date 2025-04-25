@@ -30,7 +30,9 @@ const GeneralQuestionnaireHistory = () => {
   }, [questionnaire])
 
   if (isLoading) {
-    return <LoadingIndicator />
+    return (
+      <LoadingIndicator className="min-h-screen flex items-center justify-center" />
+    )
   }
 
   if (questions.length === 0) {

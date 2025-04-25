@@ -16,7 +16,7 @@ export const QuestionnaireNavigation = ({
   onNext,
 }: QuestionnaireNavigationProps) => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-5">
+    <div className="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-gray-100 p-5">
       <div className="flex justify-between items-center mb-4">
         <span className="text-gray-500 text-sm">
           {currentQuestionNumber} / {totalQuestions}
