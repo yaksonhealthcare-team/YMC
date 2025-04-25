@@ -15,7 +15,6 @@ import clsx from "clsx"
 // import AddMembershipIcon from "@assets/icons/AddMembershipIcon.svg?react"
 import { getStatusFromString } from "../../../utils/membership"
 import { useMembershipStore } from "stores/membershipStore"
-import { CustomPullToRefresh } from "@components/CustomPullToRefresh"
 
 const MembershipContent = ({ filterId }: { filterId: string }) => {
   const { setHeader, setNavigation } = useLayout()
@@ -145,11 +144,6 @@ const MembershipHistoryPage = () => {
     [setMembershipFilter],
   )
 
-  const handleRefresh = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 800))
-    window.location.reload()
-  }
-
   useEffect(() => {
     setHeader({
       display: false,
@@ -165,26 +159,24 @@ const MembershipHistoryPage = () => {
 
   return (
     <div className="flex flex-col bg-system-bg min-h-[calc(100vh-82px)] h-screen">
-      <CustomPullToRefresh onRefresh={handleRefresh}>
-        <div className="flex flex-col h-full">
-          <div className="px-5">
-            <MainTabs />
-          </div>
+      <div className="flex flex-col h-full">
+        <div className="px-5">
+          <MainTabs />
+        </div>
 
-          <FilterContent
-            membershipFilter={membershipFilter}
-            onFilterChange={handleFilterChange}
-          />
+        <FilterContent
+          membershipFilter={membershipFilter}
+          onFilterChange={handleFilterChange}
+        />
 
-          <MembershipContent filterId={membershipFilter.id} />
-          {/* <button
+        <MembershipContent filterId={membershipFilter.id} />
+        {/* <button
           className="fixed bottom-[98px] right-5 w-14 h-14 bg-primary-300 text-white rounded-full shadow-lg hover:bg-primary-400  transition-colors duration-200 z-10"
           onClick={() => navigate("/membership")}
         >
           <AddMembershipIcon className="w-8 h-8 mx-auto text-white" />
         </button> */}
-        </div>
-      </CustomPullToRefresh>
+      </div>
     </div>
   )
 }

@@ -4,19 +4,6 @@
 
 html {
   @apply bg-stone-100;
-  overscroll-behavior-y: contain;
-  /* iOS에서 오버스크롤 방지 추가 */
-  height: 100%;
-  position: fixed;
-  width: 100%;
-}
-
-body {
-  /* iOS 웹뷰 오버스크롤시 바운스 효과 제어 */
-  overscroll-behavior-y: none;
-  -webkit-overflow-scrolling: touch;
-  height: 100%;
-  width: 100%;
 }
 
 /* 스켈레톤 로더 애니메이션 */

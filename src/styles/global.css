@@ -9,28 +9,6 @@ body {
   width: 100%;
   position: relative; /* fixed에서 relative로 변경 */
   touch-action: pan-y; /* Y축 스크롤만 허용 */
-  -webkit-overflow-scrolling: touch; /* iOS 관성 스크롤 활성화 */
-}
-
-/* 웹뷰 오버스크롤 방지를 위한 추가 설정 */
-@supports (-webkit-touch-callout: none) {
-  /* iOS 기기 전용 CSS */
-  html,
-  body {
-    position: fixed;
-    width: 100%;
-    height: 100vh;
-    height: -webkit-fill-available;
-    overflow: hidden;
-  }
-
-  #root {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
 }
 
 #root {
