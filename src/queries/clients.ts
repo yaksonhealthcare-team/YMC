@@ -14,19 +14,6 @@ export const saveAccessToken = (token: string) => {
   }
 }
 
-export const getAccessToken = async (): Promise<string | null> => {
-  try {
-    if (localStorage.getItem(TOKEN_KEY)) {
-      return localStorage.getItem(TOKEN_KEY)
-    }
-
-    return null
-  } catch (error) {
-    console.error("토큰 불러오기 중 오류 발생:", error)
-    return null
-  }
-}
-
 export const removeAccessToken = () => {
   try {
     localStorage.removeItem(TOKEN_KEY)
