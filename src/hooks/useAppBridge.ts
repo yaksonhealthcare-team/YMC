@@ -6,7 +6,7 @@ import {
   signinWithSocial,
 } from "@apis/auth.api"
 import { LOCAL_STORAGE_KEYS } from "@constants/storage"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import { useAuth } from "contexts/AuthContext"
 import { SocialSignupInfo } from "contexts/SignupContext"
 import { requestForToken } from "libs/firebase"
@@ -159,6 +159,10 @@ export const useAppBridge = () => {
         SocialRefreshToken: data.refreshToken,
       })
 
+      if (signinResponse.data.body.length === 0) {
+        throw new AxiosError("로그인에 실패했습니다.", "401")
+      }
+
       const accessToken = signinResponse.data.body[0].accessToken
       setAccessToken(accessToken)
 
@@ -223,6 +227,7 @@ export const useAppBridge = () => {
         throw error
       }
       // 401 외 다른 에러 처리 (필요시 추가)
+      alert("소셜 로그인 처리 중 오류가 발생했습니다.")
       throw error
     }
   }
