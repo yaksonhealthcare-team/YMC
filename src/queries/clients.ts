@@ -67,6 +67,11 @@ const queryClient = new QueryClient({
     },
     mutations: {
       retry: 3,
+      onSuccess: (data: any) => {
+        if (data?.resultCode === ERROR_CODES.TOKEN_EXPIRED) {
+          window.location.reload()
+        }
+      },
     },
   },
 })
@@ -106,7 +111,6 @@ axiosClient.interceptors.response.use(
         return axios(response.config)
       }
 
-      // 토큰 갱신 후에도 데이터가 없으면 null 반환
       return Promise.reject(new Error("토큰 갱신 후에도 데이터가 없습니다"))
     }
 
