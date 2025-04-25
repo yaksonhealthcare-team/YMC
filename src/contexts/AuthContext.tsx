@@ -88,6 +88,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsLoading(false)
       sessionStorage.removeItem("socialSignupInfo")
       queryClient.clear()
+      window.location.reload()
     }
   }, [])
 
