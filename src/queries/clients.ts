@@ -94,6 +94,7 @@ axiosClient.interceptors.response.use(
       // 토큰 갱신에 성공한 경우 사용자 정보 다시 요청
       if (newAccessToken) {
         response.config.headers.Authorization = `Bearer ${newAccessToken}`
+        axiosClient.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`
 
         return axios(response.config)
       }

@@ -33,26 +33,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   })
 
   useEffect(() => {
-    const loadUser = async () => {
-      setIsLoading(true)
-      try {
-        const fetchedUser = await fetchUser()
-        if (fetchedUser) {
-          setUser(fetchedUser)
-          setIsLoading(false)
-          return
-        }
-      } catch (error) {
-        console.error("사용자 세션 검증 실패", error)
-        setUser(null)
-        setIsLoading(false)
-      }
-    }
-
-    loadUser()
-  }, [])
-
-  useEffect(() => {
     if (
       user &&
       !isLoading &&

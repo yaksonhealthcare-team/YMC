@@ -60,9 +60,7 @@ export const refreshAccessToken = async (): Promise<string | null> => {
 
     const { accessToken } = response.data.body
 
-    // 새 액세스 토큰 저장
     if (accessToken) {
-      axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`
       return accessToken
     }
 
