@@ -9,17 +9,17 @@ import { formatDateRange } from "../utils/date"
 
 const STYLES = {
   container:
-    "flex justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px] mb-[12px]",
-  content: "flex flex-col gap-1.5",
-  tags: "flex gap-1.5",
-  title: "font-sb text-16px text-gray-700",
+    "flex w-full justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px] mb-[12px]",
+  content: "flex w-full flex-col gap-1.5",
+  tags: "flex gap-1.5 flex-wrap",
+  title: "font-sb text-16px text-gray-700 break-words",
   info: {
-    wrapper: "flex items-center",
+    wrapper: "flex items-center w-full",
     text: "font-r text-12px text-gray-600",
     divider: "text-12px text-gray-200 mx-1.5",
   },
   actions: {
-    wrapper: "flex flex-col justify-between items-end",
+    wrapper: "flex flex-col justify-between items-end w-full",
     history: "inline-flex items-baseline gap-[2px] cursor-pointer",
     historyText: "font-r text-12px text-gray-500 leading-[1]",
     historyIcon: "w-[12px] h-[12px] relative top-[1px]",
@@ -116,7 +116,7 @@ export const MembershipCard = ({
       <div className={STYLES.actions.wrapper}>
         {showHistoryButton && (
           <button
-            className={clsx(STYLES.actions.history, " rounded")}
+            className={clsx(STYLES.actions.history, "rounded")}
             onClick={handleHistoryClick}
             aria-label="이용 기록"
           >
@@ -129,7 +129,7 @@ export const MembershipCard = ({
             variantType="primary"
             sizeType="xs"
             onClick={handleReservationClick}
-            className="text-[14px]"
+            className="text-[14px] min-w-[73px]"
           >
             예약하기
           </Button>

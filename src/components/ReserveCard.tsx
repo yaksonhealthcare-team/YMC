@@ -114,7 +114,9 @@ export const ReserveCard = ({
               variantType="primary"
               sizeType="xs"
               onClick={handleSatisfactionClick}
-              className={isModalOpen ? "opacity-50 cursor-not-allowed" : ""}
+              className={
+                isModalOpen ? "opacity-50 cursor-not-allowed" : "min-w-[73px]"
+              }
               disabled={isModalOpen}
             >
               만족도 작성
@@ -132,7 +134,7 @@ export const ReserveCard = ({
               sizeType="xs"
               onClick={handleCompleteVisit}
               className={
-                isModalOpen ? "opacity-50 cursor-not-allowed" : " min-w-[70px]"
+                isModalOpen ? "opacity-50 cursor-not-allowed" : "min-w-[73px]"
               }
               disabled={isModalOpen}
             >
@@ -150,7 +152,7 @@ export const ReserveCard = ({
             sizeType="xs"
             onClick={handleCompleteVisit}
             className={
-              isModalOpen ? "opacity-50 cursor-not-allowed" : "min-w-[70px]"
+              isModalOpen ? "opacity-50 cursor-not-allowed" : "min-w-[73px]"
             }
             disabled={isModalOpen}
           >
@@ -198,7 +200,7 @@ export const ReserveCard = ({
         </div>
       </div>
 
-      <div className="relative flex items-end text-gray-500 text-sm">
+      <div className="relative flex items-end text-gray-500 text-sm w-full">
         <div className={clsx(getButton() && "mr-[72px]")}>
           <DateAndTime date={reservation.date} />
         </div>
