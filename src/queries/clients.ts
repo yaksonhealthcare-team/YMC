@@ -54,11 +54,6 @@ const queryClient = new QueryClient({
     },
     mutations: {
       retry: 3,
-      onSuccess: (data: any) => {
-        if (data?.resultCode === ERROR_CODES.TOKEN_EXPIRED) {
-          window.location.reload()
-        }
-      },
     },
   },
 })
