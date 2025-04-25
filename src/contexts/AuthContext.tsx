@@ -16,6 +16,7 @@ interface AuthContextType {
   login: (userData: { user: User | null }) => Promise<void>
   logout: () => Promise<void>
   isLoading: boolean
+  setIsLoading: (isLoading: boolean) => void
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -90,8 +91,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   const authValue = useMemo(
-    () => ({ user, login, logout, isLoading }),
-    [user, login, logout, isLoading],
+    () => ({ user, login, logout, isLoading, setIsLoading }),
+    [user, login, logout, isLoading, setIsLoading],
   )
 
   return (

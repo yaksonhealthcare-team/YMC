@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom"
 import { SocialLoginRequest } from "types/appBridge"
 
 export const useAppBridge = () => {
-  const { login, logout } = useAuth()
+  const { login, setIsLoading } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -165,7 +165,7 @@ export const useAppBridge = () => {
         }),
       )
       if (status === 401) {
-        window.location.href = "/signup/terms"
+        navigate("/signup/terms")
 
         const providerCode =
           typeof data.provider === "string"
@@ -236,11 +236,6 @@ export const useAppBridge = () => {
         const user = await fetchUser()
         login({ user })
 
-        // 로그인 페이지에 있다면 홈으로 리다이렉트
-        if (location.pathname.includes("/login")) {
-          navigate("/", { replace: true })
-        }
-
         // 토큰 설정 성공 응답
         window.ReactNativeWebView?.postMessage(
           JSON.stringify({
@@ -248,7 +243,6 @@ export const useAppBridge = () => {
           }),
         )
       } catch (error) {
-        logout()
         // 오류 발생 시 로그
         window.ReactNativeWebView?.postMessage(
           JSON.stringify({
@@ -260,10 +254,8 @@ export const useAppBridge = () => {
           }),
         )
       }
-      return
     }
-
-    logout()
+    setIsLoading(false)
   }
 
   return null
