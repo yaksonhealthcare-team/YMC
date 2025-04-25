@@ -123,9 +123,15 @@ const RightSection = ({
 export const Header = (props: HeaderProps) => (
   <div
     className={clsx(
-      "flex justify-between items-center h-[48px]",
+      "flex justify-between items-center h-[48px] sticky top-0 z-10",
       HEADER_STYLES[props.type],
     )}
+    style={{
+      WebkitBackfaceVisibility: "hidden",
+      backfaceVisibility: "hidden",
+      WebkitTransform: "translateZ(0)",
+      transform: "translateZ(0)",
+    }}
   >
     <div className="shrink-0 min-w-20">
       <LeftSection {...props} />
