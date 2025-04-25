@@ -65,13 +65,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       delete axiosClient.defaults.headers.common.Authorization
       localStorage.clear()
       sessionStorage.clear()
-      if (window.ReactNativeWebView) {
-        window.ReactNativeWebView.postMessage(
-          JSON.stringify({
-            type: "LOGOUT",
-          }),
-        )
-      }
     }
   }
 
