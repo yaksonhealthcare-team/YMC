@@ -11,7 +11,7 @@ const NoticePage: React.FC = () => {
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
   const location = useLocation()
-  const fromPath = location.state?.from ?? "/mypage"
+  const fromPath = location.state?.from
 
   const {
     data: pages,
@@ -43,7 +43,8 @@ const NoticePage: React.FC = () => {
       title: "공지사항",
       left: "back",
       backgroundColor: "bg-white",
-      onClickBack: () => navigate(fromPath),
+      onClickBack: () =>
+        fromPath ? navigate(fromPath, { replace: true }) : navigate(-1),
     })
     setNavigation({ display: true })
   }, [navigate, fromPath])
