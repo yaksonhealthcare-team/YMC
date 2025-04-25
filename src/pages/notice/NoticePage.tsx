@@ -71,7 +71,7 @@ const NoticePage: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6 pb-[100px]">
+    <div className="flex flex-col gap-6 pb-[100px] h-full overflow-y-scroll">
       {notices && notices.length > 0 ? (
         <div className="flex flex-col px-5">
           {notices.map((notice: Notice) => (
