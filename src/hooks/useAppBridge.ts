@@ -1,7 +1,6 @@
 import {
   DeviceType,
   fetchUser,
-  loginWithEmail,
   setAccessToken,
   signinWithSocial,
 } from "@apis/auth.api"
@@ -9,7 +8,6 @@ import { LOCAL_STORAGE_KEYS } from "@constants/storage"
 import axios, { AxiosError } from "axios"
 import { useAuth } from "contexts/AuthContext"
 import { SocialSignupInfo } from "contexts/SignupContext"
-import { requestForToken } from "libs/firebase"
 import { axiosClient, saveAccessToken } from "queries/clients"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
@@ -24,7 +22,7 @@ export const useAppBridge = () => {
       window.ReactNativeWebView?.postMessage(
         JSON.stringify({
           type: "CONSOLE_LOG",
-          data: "handleMessage 호출",
+          data: event.data,
         }),
       )
       const data = JSON.parse(event.data)
