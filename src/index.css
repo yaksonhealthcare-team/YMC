@@ -24,19 +24,35 @@ html {
 
 /* Pull To Refresh 스타일 */
 .refresh-container {
-  @apply w-fit -mt-10 m-auto z-50;
+  @apply w-fit mx-auto z-50 flex flex-col items-center justify-center;
+  transition: all 0.3s ease;
 }
 
 .refresh-icon {
-  @apply p-2 rounded-full;
+  @apply p-2 rounded-full transition-colors duration-300;
 }
 
 .refresh-container.loading .refresh-icon {
-  @apply animate-spin;
+  @apply animate-spin text-primary-500;
 }
 
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* 시각적 피드백을 위한 효과 */
+@keyframes bounce-small {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.refresh-container .animate-pulse {
+  animation: bounce-small 1s ease-in-out infinite;
 }
