@@ -398,7 +398,7 @@ const Branch = () => {
     refetch()
   }
 
-  if (locationLoading || branchesLoading) {
+  if (locationLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <LoadingIndicator size={48} />
@@ -423,7 +423,7 @@ const Branch = () => {
           }}
           onSelectBranch={handleBranchSelect}
           isFetchingNextPage={isFetchingNextPage}
-          branchesLoading={branchesPending}
+          branchesLoading={branchesPending || branchesLoading}
           totalCount={branchPaginationData?.pages[0].total_count}
         />
       ) : (
