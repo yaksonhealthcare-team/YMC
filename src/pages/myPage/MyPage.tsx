@@ -10,7 +10,6 @@ import MyPageMenu from "./_fragments/MyPageMenu"
 import MyPageNotice from "./_fragments/MyPageNotice"
 import MyPagePointMembership from "./_fragments/MyPagePointMembership"
 import MyPageProfile from "./_fragments/MyPageProfile"
-import { CustomPullToRefresh } from "@components/CustomPullToRefresh"
 
 const MyPage = () => {
   const navigate = useNavigate()
@@ -25,39 +24,32 @@ const MyPage = () => {
     setNavigation({ display: true })
   }, [])
 
-  const handleRefresh = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 800))
-    window.location.reload()
-  }
-
   if (isLoading) {
     return <LoadingIndicator className="min-h-screen" />
   }
 
   return (
     <div className="h-full bg-[#F8F5F2]">
-      <CustomPullToRefresh onRefresh={handleRefresh}>
-        <div className="px-5 pb-[calc(82px+20px)]">
-          <MyPageNotice />
-          <MyPageProfile />
-          <div className="space-y-8">
-            <div className="space-y-5">
-              <MyPageBranchInfo />
-              <MyPagePointMembership />
-              <Button
-                variantType="primary"
-                sizeType="m"
-                onClick={() => navigate("/profile")}
-                className="w-full"
-              >
-                프로필 수정
-              </Button>
-            </div>
-            <MyPageMenu />
-            <MyPageFooter />
+      <div className="px-5 pb-[calc(82px+20px)]">
+        <MyPageNotice />
+        <MyPageProfile />
+        <div className="space-y-8">
+          <div className="space-y-5">
+            <MyPageBranchInfo />
+            <MyPagePointMembership />
+            <Button
+              variantType="primary"
+              sizeType="m"
+              onClick={() => navigate("/profile")}
+              className="w-full"
+            >
+              프로필 수정
+            </Button>
           </div>
+          <MyPageMenu />
+          <MyPageFooter />
         </div>
-      </CustomPullToRefresh>
+      </div>
     </div>
   )
 }

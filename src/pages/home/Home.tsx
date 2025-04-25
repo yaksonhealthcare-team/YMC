@@ -21,7 +21,6 @@ import { useUnreadNotificationsCount } from "../../queries/useNotificationQuerie
 import ReserveCardSection from "./_fragments/ReserveCardSection"
 import { MembershipCardSection } from "./_fragments/MembershipCardSection"
 import { usePreventGoBack } from "../../hooks/usePreventGoBack"
-import { CustomPullToRefresh } from "@components/CustomPullToRefresh"
 
 // 단일 코드 청크로 그룹화하여 불필요한 네트워크 요청 줄이기
 const SecondaryContentChunk = lazy(
@@ -84,16 +83,10 @@ const Home = () => {
     })
   }
 
-  const handleRefresh = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 800))
-    window.location.reload()
-  }
-
   if (!user) return <SplashScreen />
 
   return (
     <div className="w-full bg-system-bg h-full">
-      <CustomPullToRefresh onRefresh={handleRefresh}>
         <Container className="relative pt-4 px-0 max-w-screen overflow-hidden">
           <DynamicHomeHeaderBackground
             header={
@@ -227,7 +220,6 @@ const Home = () => {
             <SecondaryContentChunk />
           </Suspense>
         </Container>
-      </CustomPullToRefresh>
       <FloatingButton
         type="search"
         onClick={() => {
