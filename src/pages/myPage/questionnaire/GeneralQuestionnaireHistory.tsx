@@ -1,14 +1,13 @@
-import { useUserGeneralQuestionnaireResult } from "../../../queries/useQuestionnaireQueries.tsx"
-import { useLayout } from "../../../contexts/LayoutContext.tsx"
-import { useEffect, useState } from "react"
 import { Button } from "@components/Button.tsx"
-import QuestionnaireHistoryNotExist from "./_fragments/QuestionnaireHistoryNotExist.tsx"
-import { useNavigate } from "react-router-dom"
-import QuestionnaireFormList from "./_fragments/QuestionnaireFormList.tsx"
-import { QuestionnaireResult } from "types/Questionnaire.ts"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
+import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import { useLayout } from "../../../contexts/LayoutContext.tsx"
+import { useUserGeneralQuestionnaireResult } from "../../../queries/useQuestionnaireQueries.tsx"
+import QuestionnaireFormList from "./_fragments/QuestionnaireFormList.tsx"
+import QuestionnaireHistoryNotExist from "./_fragments/QuestionnaireHistoryNotExist.tsx"
+
 const GeneralQuestionnaireHistory = () => {
-  const [questions, setQuestions] = useState<QuestionnaireResult[]>([])
   const { data: questionnaire, isLoading } = useUserGeneralQuestionnaireResult()
   const { setHeader, setNavigation } = useLayout()
   const navigate = useNavigate()
@@ -23,19 +22,28 @@ const GeneralQuestionnaireHistory = () => {
     setNavigation({ display: false })
   }, [questionnaire, setHeader, setNavigation])
 
-  useEffect(() => {
-    if (questionnaire) {
-      setQuestions(questionnaire)
-    }
-  }, [questionnaire])
-
   if (isLoading) {
     return (
       <LoadingIndicator className="min-h-screen flex items-center justify-center" />
     )
   }
 
-  if (questions.length === 0) {
+  if (!questionnaire) {
+    return (
+      <QuestionnaireHistoryNotExist
+        onStartQuestionnaire={() =>
+          navigate("/questionnaire/common", {
+            state: {
+              returnPath: "/mypage",
+              returnText: "마이페이지로",
+            },
+          })
+        }
+      />
+    )
+  }
+
+  if (questionnaire.length === 0) {
     return (
       <QuestionnaireHistoryNotExist
         onStartQuestionnaire={() =>
@@ -56,8 +64,10 @@ const GeneralQuestionnaireHistory = () => {
         "flex flex-col justify-stretch w-full h-screen overflow-hidden fixed inset-0 bg-white"
       }
     >
-      <div className={"flex-grow overflow-y-auto p-5 overscroll-none"}>
-        <QuestionnaireFormList questions={questions} />
+      <div
+        className={"flex-grow overflow-y-auto p-5 overscroll-none mt-[48px]"}
+      >
+        <QuestionnaireFormList questions={questionnaire} />
       </div>
       <div className={"px-5 pb-6 py-3 border-t border-gray-100"}>
         <Button

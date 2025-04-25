@@ -29,6 +29,21 @@ const ReservationQuestionnaireHistory = () => {
     )
   }
 
+  if (!questionnaire) {
+    return (
+      <QuestionnaireHistoryNotExist
+        onStartQuestionnaire={() =>
+          navigate("/questionnaire/reservation", {
+            state: {
+              returnPath: "/mypage",
+              returnText: "마이페이지로",
+            },
+          })
+        }
+      />
+    )
+  }
+
   if ((questionnaire?.length || 0) === 0) {
     return (
       <QuestionnaireHistoryNotExist
@@ -50,8 +65,10 @@ const ReservationQuestionnaireHistory = () => {
         "flex flex-col justify-stretch w-full h-screen overflow-hidden fixed inset-0 bg-white"
       }
     >
-      <div className={"flex-grow overflow-y-auto p-5 overscroll-none"}>
-        <QuestionnaireFormList questions={questionnaire || []} />
+      <div
+        className={"flex-grow overflow-y-auto p-5 overscroll-none mt-[48px]"}
+      >
+        <QuestionnaireFormList questions={questionnaire} />
       </div>
       <div className={"px-5 pb-6 py-3 border-t border-gray-100"}>
         <Button
