@@ -1,14 +1,11 @@
 import Logo from "@components/Logo.tsx"
 import { Typography } from "@mui/material"
 import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext.tsx"
 import { useLayout } from "../../contexts/LayoutContext.tsx"
 
 const Logout = () => {
   const { logout } = useAuth()
-  const navigate = useNavigate()
-
   const { setHeader, setNavigation } = useLayout()
 
   useEffect(() => {
@@ -21,10 +18,6 @@ const Logout = () => {
 
   const handleLogout = () => {
     logout()
-
-    setTimeout(() => {
-      navigate("/login", { replace: true })
-    }, 1000)
   }
   useEffect(() => {
     handleLogout()
