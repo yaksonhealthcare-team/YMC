@@ -12,7 +12,7 @@ import { useErrorHandler } from "hooks/useErrorHandler"
 import { useUserMemberships } from "queries/useMembershipQueries"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { Membership, MyMembership } from "types/Membership"
+import { Membership } from "types/Membership"
 import { formatDateForAPI } from "utils/date"
 import { toNumber } from "utils/number"
 import { getConsultationCount } from "../../apis/reservation.api"
@@ -229,37 +229,6 @@ function calculateInitialState(
   }
 }
 
-const mockMemberships: MyMembership[] = [
-  {
-    mp_idx: "1",
-    s_type: "지점 회원권",
-    branchs: [
-      {
-        b_idx: "101",
-        b_name: "강남점",
-        brandCode: "101",
-      },
-    ],
-    service_name: "슬림 바디 관리(전신)",
-    remain_amount: "20",
-    buy_amount: "20",
-    pay_date: "2025-04-23 00:00:00",
-    expiration_date: "2027-04-23 00:00:00",
-    status: "active",
-  },
-  {
-    mp_idx: "2",
-    s_type: "전체 회원권",
-    branchs: [],
-    service_name: "얼굴 관리 프리미엄",
-    remain_amount: "8",
-    buy_amount: "10",
-    pay_date: "2025-01-15 00:00:00",
-    expiration_date: "2026-01-15 00:00:00",
-    status: "active",
-  },
-]
-
 const ReservationFormPage = () => {
   const { openBottomSheet, closeOverlay, openModal, showToast } = useOverlay()
   const { setHeader, setNavigation } = useLayout()
@@ -292,7 +261,14 @@ const ReservationFormPage = () => {
     isError: isInitialBranchError,
   } = useBranch(formData.branch)
 
-  const memberships = mockMemberships
+  const memberships = useMemo(() => {
+    if (
+      !userMembershipPaginationData ||
+      userMembershipPaginationData.pages.length === 0
+    )
+      return []
+    return userMembershipPaginationData.pages.flatMap((page) => page.body || [])
+  }, [userMembershipPaginationData])
 
   const handleBack = useCallback(() => {
     navigate(-1)
