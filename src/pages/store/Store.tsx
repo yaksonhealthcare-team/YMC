@@ -20,7 +20,7 @@ const Store = () => {
             type: "AUTH_TOKEN",
             accessToken: axiosClient.defaults.headers.common.Authorization,
           },
-          "https://devmall.yaksonhc.com/",
+          "https://mall.yaksonhc.com/",
         )
       }
     }
@@ -44,7 +44,7 @@ const Store = () => {
     >
       <iframe
         ref={iframeRef}
-        src="https://devmall.yaksonhc.com/"
+        src="https://mall.yaksonhc.com/"
         style={{
           width: "100%",
           height: "100%",
