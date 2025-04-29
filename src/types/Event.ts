@@ -10,6 +10,10 @@ export interface Event {
     fileCode: string
     fileurl: string
   }[]
+  thumbnail: {
+    fileCode: string
+    fileurl: string
+  }
 }
 
 export interface EventDetail extends Event {
