@@ -6,7 +6,6 @@ import { useGeolocation } from "../../hooks/useGeolocation"
 import { useIntersection } from "../../hooks/useIntersection"
 import { useDebounce } from "../../hooks/useDebounce"
 import LoadingIndicator from "@components/LoadingIndicator"
-import BranchPlaceholderImage from "@assets/images/BranchPlaceholderImage.png"
 import { Image } from "@components/common/Image"
 import SearchIcon from "@components/icons/SearchIcon"
 
@@ -108,7 +107,7 @@ const MembershipBranchList = ({
           >
             <Image
               className="border border-gray-100 rounded-xl h-[88px] aspect-square object-cover"
-              src={BranchPlaceholderImage}
+              src={branch.branch_pic}
               alt="지점 사진"
             />
             <div className="w-full flex flex-col">
