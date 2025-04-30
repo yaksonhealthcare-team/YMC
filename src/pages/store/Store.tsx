@@ -1,10 +1,12 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useLayout } from "contexts/LayoutContext"
 import { axiosClient } from "queries/clients"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 const Store = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const { setHeader, setNavigation } = useLayout()
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     setHeader({ display: false, backgroundColor: "bg-white" })
@@ -22,6 +24,7 @@ const Store = () => {
           },
           "https://mall.yaksonhc.com/",
         )
+        setIsLoading(false)
       }
     }
 
@@ -42,6 +45,11 @@ const Store = () => {
       className="bg-white"
       style={{ width: "100%", height: "calc(100vh - 82px)" }}
     >
+      {isLoading && (
+        <div className="flex justify-center items-center h-full w-full absolute top-0 left-0 z-10 bg-white opacity-50">
+          <LoadingIndicator />
+        </div>
+      )}
       <iframe
         ref={iframeRef}
         src="https://mall.yaksonhc.com/"
