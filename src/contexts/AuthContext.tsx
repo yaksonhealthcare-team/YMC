@@ -67,6 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       delete axiosClient.defaults.headers.common.Authorization
       localStorage.clear()
       sessionStorage.clear()
+      setUser(null)
     }
   }
 
