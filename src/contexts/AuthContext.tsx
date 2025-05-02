@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useState,
 } from "react"
-import { logout as fetchLogout } from "../apis/auth.api.ts"
+import { logout as fetchLogout, fetchUser } from "../apis/auth.api.ts"
 import { axiosClient } from "../queries/clients.ts"
 import { useStartupPopups } from "../queries/useContentQueries.tsx"
 import { usePopupActions } from "../stores/popupStore.ts"
@@ -48,6 +48,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       }, 500)
     }
   }, [user, isLoading, isPopupLoading, popupData, openPopup])
+
+  useEffect(() => {
+    const initializeAuth = async () => {
+      try {
+        const userData = await fetchUser()
+        if (userData) setUser(userData)
+      } catch (error) {
+        console.error("AuthProvider fetchUser error", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    initializeAuth()
+  }, [])
 
   const login = async ({ user: userData }: { user: User | null }) => {
     if (userData) {

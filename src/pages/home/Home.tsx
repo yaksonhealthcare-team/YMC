@@ -20,6 +20,7 @@ import "../../styles/swiper-custom.css"
 import DynamicHomeHeaderBackground from "./_fragments/DynamicHomeHeaderBackground"
 import { MembershipCardSection } from "./_fragments/MembershipCardSection"
 import ReserveCardSection from "./_fragments/ReserveCardSection"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 // 단일 코드 청크로 그룹화하여 불필요한 네트워크 요청 줄이기
 const SecondaryContentChunk = lazy(
@@ -44,7 +45,7 @@ const Home = () => {
   )
   const { data: memberships, isLoading: membershipLoading } =
     useUserMemberships("T")
-  const { user } = useAuth()
+  const { user, isLoading } = useAuth()
   const navigate = useNavigate()
   const { data: unreadCount = 0 } = useUnreadNotificationsCount()
 
@@ -88,6 +89,14 @@ const Home = () => {
         fromHome: true,
       },
     })
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <LoadingIndicator />
+      </div>
+    )
   }
 
   return (
