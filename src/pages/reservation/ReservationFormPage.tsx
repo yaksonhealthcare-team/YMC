@@ -270,7 +270,7 @@ const ReservationFormPage = () => {
   }, [navigate])
 
   const { data: consultationCount } = useQuery({
-    queryKey: ["consultation-count"],
+    queryKey: ["consultation-count", location.key],
     queryFn: getConsultationCount,
   })
   const { mutateAsync: createReservation, isPending: isCreatingReservation } =
