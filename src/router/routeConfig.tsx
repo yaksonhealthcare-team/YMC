@@ -513,7 +513,7 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/branch",
     element: <Branch />,
-    auth: false,
+    auth: true,
   },
   {
     path: "/branch/location",
