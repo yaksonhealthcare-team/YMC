@@ -94,7 +94,7 @@ const ReviewPage = () => {
             type="button"
             key={review.id}
             onClick={() => navigate(`/review/${review.id}`)}
-            className="w-full text-left hover:bg-gray-50 transition-colors"
+            className="w-full text-left"
           >
             <ReviewListItem review={review} />
           </button>
