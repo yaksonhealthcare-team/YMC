@@ -137,6 +137,7 @@ export interface BranchBookmarkResult {
   distance: string
   times: string
   is_reserve: string
+  branch_pic: string
 }
 
 export interface BranchDetailResponse {

@@ -1,26 +1,26 @@
+import NotiIcon from "@assets/icons/NotiIcon.svg?react"
+import { FloatingButton } from "@components/FloatingButton"
+import Logo from "@components/Logo"
+import NoticesSummarySlider from "@components/NoticesSummarySlider"
+import { Container, Typography } from "@mui/material"
+import { useBanner } from "queries/useBannerQueries"
+import { useUserMemberships } from "queries/useMembershipQueries"
+import { lazy, Suspense, useEffect, useMemo } from "react"
+import { useNavigate } from "react-router-dom"
 import "swiper/css"
 import "swiper/css/pagination"
-import "../../styles/swiper-custom.css"
-import { useEffect, useMemo, lazy, Suspense } from "react"
-import { useLayout } from "../../contexts/LayoutContext"
-import { useNavigate } from "react-router-dom"
-import { Container, Typography } from "@mui/material"
-import DynamicHomeHeaderBackground from "./_fragments/DynamicHomeHeaderBackground"
-import Logo from "@components/Logo"
-import NotiIcon from "@assets/icons/NotiIcon.svg?react"
-import { Swiper, SwiperSlide } from "swiper/react"
-import { FloatingButton } from "@components/FloatingButton"
-import { useUserMemberships } from "queries/useMembershipQueries"
-import SplashScreen from "@components/Splash"
 import { Pagination } from "swiper/modules"
-import { useBanner } from "queries/useBannerQueries"
+import { Swiper, SwiperSlide } from "swiper/react"
 import { BannerRequestType } from "types/Banner"
-import NoticesSummarySlider from "@components/NoticesSummarySlider"
 import { useAuth } from "../../contexts/AuthContext"
-import { useUnreadNotificationsCount } from "../../queries/useNotificationQueries"
-import ReserveCardSection from "./_fragments/ReserveCardSection"
-import { MembershipCardSection } from "./_fragments/MembershipCardSection"
+import { useLayout } from "../../contexts/LayoutContext"
 import { usePreventGoBack } from "../../hooks/usePreventGoBack"
+import { useUnreadNotificationsCount } from "../../queries/useNotificationQueries"
+import "../../styles/swiper-custom.css"
+import DynamicHomeHeaderBackground from "./_fragments/DynamicHomeHeaderBackground"
+import { MembershipCardSection } from "./_fragments/MembershipCardSection"
+import ReserveCardSection from "./_fragments/ReserveCardSection"
+import LoadingIndicator from "@components/LoadingIndicator"
 
 // 단일 코드 청크로 그룹화하여 불필요한 네트워크 요청 줄이기
 const SecondaryContentChunk = lazy(
@@ -45,7 +45,7 @@ const Home = () => {
   )
   const { data: memberships, isLoading: membershipLoading } =
     useUserMemberships("T")
-  const { user } = useAuth()
+  const { user, isLoading } = useAuth()
   const navigate = useNavigate()
   const { data: unreadCount = 0 } = useUnreadNotificationsCount()
 
@@ -75,6 +75,14 @@ const Home = () => {
   }, [])
 
   const handleReservationClick = () => {
+    if (!user) {
+      navigate("/login", {
+        replace: true,
+      })
+
+      return
+    }
+
     navigate("/reservation/form", {
       state: {
         originalPath: "/",
@@ -83,7 +91,13 @@ const Home = () => {
     })
   }
 
-  if (!user) return <SplashScreen />
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <LoadingIndicator />
+      </div>
+    )
+  }
 
   return (
     <div className="w-full bg-system-bg h-full">
@@ -107,7 +121,9 @@ const Home = () => {
               <div className="flex gap-2 flex-col text-white">
                 <div className="max-[370px]:hidden flex">
                   <Typography>
-                    <span className={"text-18px font-b"}>{user?.name}님</span>{" "}
+                    <span className={"text-18px font-b"}>
+                      {user ? `${user?.name}님 ` : ""}
+                    </span>
                     반갑습니다.
                   </Typography>
                 </div>
@@ -119,11 +135,15 @@ const Home = () => {
                   </Typography>
                 </div>
                 <Typography className="font-m text-14px">
-                  <span className="mr-2">{user?.levelName}</span>{" "}
-                  <span className="font-b mr-[2px]">
-                    {(user?.point || 0).toLocaleString()}
-                  </span>
-                  <span>P</span>
+                  {user ? (
+                    <>
+                      <span className="mr-2">{user?.levelName}</span>{" "}
+                      <span className="font-b mr-[2px]">{user?.point}</span>
+                      <span>P</span>
+                    </>
+                  ) : (
+                    <span>로그인 후 이용 가능합니다.</span>
+                  )}
                 </Typography>
               </div>
               <button

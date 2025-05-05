@@ -72,6 +72,7 @@ export class BranchMapper {
         isFavorite: true,
         brand: this.toBrand(item.b_name),
         brandCode: "",
+        thumbnailUrl: item.branch_pic,
       })),
       address: "",
     }

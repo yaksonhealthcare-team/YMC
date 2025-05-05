@@ -221,6 +221,7 @@ const Branch = () => {
         isFavorite: branch.b_bookmark === "Y",
         brandCode: branch.brand_code,
         brand: getBrandType(branch.brand_code),
+        thumbnailUrl: branch.branch_pic,
       })),
     ) || []
 

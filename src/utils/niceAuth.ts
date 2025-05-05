@@ -25,6 +25,7 @@ export interface NiceAuthResponse {
       N: string // 네이버 존재 여부
       A: string // 애플 존재 여부
     }
+    is_id_exist: string
   }
 }
 

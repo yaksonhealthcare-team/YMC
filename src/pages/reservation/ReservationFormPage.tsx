@@ -119,11 +119,6 @@ function calculateInitialState(
     }
     // [1] 1순위: 지점 상세 (isConsultation & branchId)
     else if (isConsultation !== undefined && branchIdFromState) {
-      // 상담 예약일 경우 토스트 메시지 표시 플래그 설정
-      if (isConsultation === true) {
-        shouldShowNoMembershipToast = true
-      }
-
       initialFormData = {
         item: isConsultation ? "상담 예약" : undefined,
         branch: branchIdFromState,
@@ -275,7 +270,7 @@ const ReservationFormPage = () => {
   }, [navigate])
 
   const { data: consultationCount } = useQuery({
-    queryKey: ["consultation-count"],
+    queryKey: ["consultation-count", location.key],
     queryFn: getConsultationCount,
   })
   const { mutateAsync: createReservation, isPending: isCreatingReservation } =

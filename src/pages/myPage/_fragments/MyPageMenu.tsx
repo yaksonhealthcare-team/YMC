@@ -30,7 +30,7 @@ const menuItems = [
   {
     id: "inquiry",
     title: "1:1 문의",
-    path: "/inquiry",
+    path: "https://o33vp.channel.io",
     icon: InquiryIcon,
   },
   {
@@ -59,6 +59,8 @@ const MyPageMenu = () => {
   const handleClick = (item: (typeof menuItems)[0]) => {
     if (item.id === "notice") {
       navigate(item.path, { state: { from: "/mypage" } })
+    } else if (item.id === "inquiry") {
+      window.open(item.path, "_blank")
     } else {
       navigate(item.path)
     }

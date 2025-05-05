@@ -36,7 +36,7 @@ export const EventSection = () => {
                 {event.files.length > 0 && (
                   <div className="w-full aspect-[16/9] relative rounded-t-[20px] overflow-hidden">
                     <img
-                      src={event.files[0].fileurl}
+                      src={event.thumbnail.fileurl}
                       alt={event.title}
                       className="w-full h-full object-cover object-top absolute inset-0"
                     />

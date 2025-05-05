@@ -32,10 +32,22 @@ const SignupCallback = () => {
               .provider as string)
           : null
 
+        // 이미 가입 여부 확인
+        if (!currentProvider && userData.is_id_exist === "Y") {
+          openModal({
+            title: "알림",
+            message: "이미 가입된 회원입니다.",
+            onConfirm: () => {
+              navigate("/login", { replace: true })
+            },
+          })
+          return
+        }
+
         if (currentProvider && isSocialExist[currentProvider] === "Y") {
           openModal({
             title: "알림",
-            message: "이미 가입된 고객입니다",
+            message: "이미 가입된 회원입니다.",
             onConfirm: () => {
               navigate("/login", { replace: true })
             },

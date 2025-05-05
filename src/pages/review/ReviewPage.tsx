@@ -3,15 +3,13 @@ import { useEffect } from "react"
 import { useReviews } from "../../queries/useReviewQueries.tsx"
 import { ReviewListItem } from "./_fragments/ReviewListItem.tsx"
 import { useIntersection } from "../../hooks/useIntersection.tsx"
-import { useNavigate, useLocation } from "react-router-dom"
+import { Link } from "react-router-dom"
 import LoadingIndicator from "@components/LoadingIndicator.tsx"
 import { Button } from "@components/Button"
 import { EmptyCard } from "@components/EmptyCard"
 
 const ReviewPage = () => {
   const { setHeader, setNavigation } = useLayout()
-  const navigate = useNavigate()
-  const location = useLocation()
   const {
     data,
     isLoading,
@@ -31,11 +29,6 @@ const ReviewPage = () => {
     enabled: hasNextPage && !isFetchingNextPage,
   })
 
-  const handleBack = () => {
-    const returnPath = location.state?.returnPath || "/mypage"
-    navigate(returnPath, { replace: true })
-  }
-
   useEffect(() => {
     setHeader({
       display: true,
@@ -45,16 +38,6 @@ const ReviewPage = () => {
     })
     setNavigation({ display: true })
   }, [])
-
-  useEffect(() => {
-    const handlePopState = () => {
-      handleBack()
-    }
-    window.addEventListener("popstate", handlePopState)
-    return () => {
-      window.removeEventListener("popstate", handlePopState)
-    }
-  }, [location.state])
 
   if (isLoading) {
     return <LoadingIndicator className="min-h-screen" />
@@ -87,25 +70,24 @@ const ReviewPage = () => {
   }
 
   return (
-    <div className="flex flex-col bg-white">
+    <div className="flex flex-col bg-white h-full overflow-y-scroll">
       {data.pages.map((page) =>
         page.map((review) => (
-          <button
-            type="button"
+          <Link
             key={review.id}
-            onClick={() => navigate(`/review/${review.id}`)}
-            className="w-full text-left"
+            to={`/review/${review.id}`}
+            className="w-full text-left hover:bg-gray-50 transition-colors"
           >
             <ReviewListItem review={review} />
-          </button>
+          </Link>
         )),
       )}
+      <div ref={observerTarget} />
       {isFetchingNextPage && (
         <div className="py-4">
           <LoadingIndicator />
         </div>
       )}
-      <div ref={observerTarget} />
     </div>
   )
 }

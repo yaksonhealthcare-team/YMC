@@ -70,7 +70,7 @@ export const ReviewListItem = ({ review }: ReviewListItemProps) => {
             )}
 
             {review.imageUrls && review.imageUrls.length > 0 && (
-              <div className="flex gap-2 overflow-x-auto no-scrollbar touch-pan-x">
+              <div className="w-full flex gap-2 overflow-x-auto no-scrollbar">
                 {review.imageUrls.map((image, index) => (
                   <div
                     key={index}

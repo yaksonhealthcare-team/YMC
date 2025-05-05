@@ -163,7 +163,7 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/",
     element: <Home />,
-    auth: true,
+    auth: false,
   },
   //알림
   {
@@ -175,6 +175,7 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/brand/:brandCode/:brandName",
     element: <BrandDetailPage />,
+    auth: false,
   },
   //로그인, 로그아웃
   {
@@ -269,7 +270,7 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/membership",
     element: <Membership />,
-    auth: true,
+    auth: false,
   },
   {
     path: "/membership/branch-select",
@@ -289,7 +290,7 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/store",
     element: <StorePage />,
-    auth: true,
+    auth: false,
   },
   {
     path: "/popup/:code",
@@ -510,14 +511,9 @@ export const routeConfig: RouteConfig[] = [
   },
   //지점 찾기, 지점 상세보기
   {
-    path: "/branch/:id",
-    element: <BranchDetail />,
-    auth: false,
-  },
-  {
     path: "/branch",
     element: <Branch />,
-    auth: false,
+    auth: true,
   },
   {
     path: "/branch/location",
@@ -537,6 +533,11 @@ export const routeConfig: RouteConfig[] = [
   {
     path: "/branch/search",
     element: <BranchSearch />,
+    auth: false,
+  },
+  {
+    path: "/branch/:id",
+    element: <BranchDetail />,
     auth: false,
   },
   // OAuth 콜백

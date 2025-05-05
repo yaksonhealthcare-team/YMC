@@ -235,16 +235,7 @@ export const useAppBridge = () => {
           }),
         )
       } catch (error) {
-        // 오류 발생 시 로그
-        window.ReactNativeWebView?.postMessage(
-          JSON.stringify({
-            type: "SET_ACCESS_TOKEN_ERROR",
-            data: {
-              message: "토큰으로 사용자 정보를 가져오는데 실패했습니다",
-              error: JSON.stringify(error),
-            },
-          }),
-        )
+        navigate("/login", { replace: true })
       }
     } else {
       navigate("/login", { replace: true })

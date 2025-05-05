@@ -91,7 +91,7 @@ const EventPage = () => {
                 <div className="flex gap-4">
                   {event.files.length > 0 && (
                     <Image
-                      src={event.files[0].fileurl}
+                      src={event.thumbnail.fileurl}
                       alt={event.title}
                       className="w-[88px] h-[88px] rounded-lg border border-gray-100 object-cover flex-shrink-0"
                     />

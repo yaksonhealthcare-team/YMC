@@ -4,6 +4,10 @@ import { Event, EventDetail } from "types/Event"
 /**
  * API 응답 데이터를 애플리케이션 내부 모델로 변환하는 매퍼 클래스입니다.
  */
+
+const defaultErrorImageUrl =
+  "https://image.yaksonhc.com/api/brands/brands/error_img_20250429133638_fc7576ff.png"
+
 export class ContentMapper {
   /**
    * API에서 받은 이벤트 목록 데이터를 Event 객체 배열로 변환합니다.
@@ -18,7 +22,19 @@ export class ContentMapper {
       sdate: dto.sdate,
       edate: dto.edate,
       status: dto.status,
-      files: dto.files || [],
+      files: dto.files || [
+        {
+          fileCode: "",
+          fileurl: defaultErrorImageUrl,
+        },
+      ],
+      thumbnail:
+        dto.thumbnail.fileurl === ""
+          ? {
+              fileCode: "",
+              fileurl: defaultErrorImageUrl,
+            }
+          : dto.thumbnail,
       gubun: dto.gubun,
     }))
   }
@@ -36,7 +52,19 @@ export class ContentMapper {
       sdate: dto.sdate,
       edate: dto.edate,
       status: dto.status,
-      files: dto.files || [],
+      files: dto.files || [
+        {
+          fileCode: "",
+          fileurl: defaultErrorImageUrl,
+        },
+      ],
+      thumbnail:
+        dto.thumbnail.fileurl === ""
+          ? {
+              fileCode: "",
+              fileurl: defaultErrorImageUrl,
+            }
+          : dto.thumbnail,
       gubun: dto.gubun,
     }
   }

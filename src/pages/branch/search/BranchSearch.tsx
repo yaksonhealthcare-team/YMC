@@ -23,7 +23,7 @@ const BranchSearch = () => {
   }, [])
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen overflow-hidden">
       <div className="px-5 pt-5 shrink-0">
         <SearchField
           value={query}
@@ -31,7 +31,7 @@ const BranchSearch = () => {
           placeholder={"지역 또는 지점명을 입력해주세요."}
         />
       </div>
-      <div className="grow overflow-hidden">
+      <div className="grow overflow-y-auto">
         {query.length === 0 ? (
           <ActiveBranchList />
         ) : (
