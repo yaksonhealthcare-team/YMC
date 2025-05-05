@@ -93,7 +93,7 @@ const ReservationContent = ({
 
   return (
     <div
-      className="flex-1 pb-[100px] overflow-y-auto scrollbar-hide"
+      className="flex-1 overflow-y-auto pb-[100px] scrollbar-hide"
       key={`reservation-content-${filterId}`}
     >
       <div className="px-5">
@@ -186,7 +186,7 @@ const ReservationHistoryPage = () => {
   }, [resetFilter])
 
   return (
-    <div className="flex flex-col bg-system-bg min-h-[calc(100vh-82px)] h-screen">
+    <div className="flex flex-col bg-system-bg min-h-screen overflow-hidden">
       <div className="flex flex-col h-full">
         <div className="px-5">
           <MainTabs />
