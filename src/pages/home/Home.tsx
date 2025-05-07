@@ -39,8 +39,7 @@ const Home = () => {
       area02: "Y",
     },
     {
-      staleTime: 5 * 60 * 1000,
-      gcTime: 10 * 60 * 1000,
+      retry: 3,
     },
   )
   const { data: memberships, isLoading: membershipLoading } =
@@ -59,12 +58,16 @@ const Home = () => {
 
   const availableMemberships = useMemo(() => {
     if (!memberships?.pages[0]?.body) return []
+    if (!user) return []
     return memberships.pages[0].body
-  }, [memberships])
+  }, [user, memberships])
 
   const totalMembershipCount = useMemo(() => {
-    return memberships?.pages[0]?.total_count ?? 0
-  }, [memberships])
+    if (!memberships?.pages[0]) return 0
+    if (!user) return 0
+
+    return memberships.pages[0].total_count ?? 0
+  }, [user, memberships])
 
   useEffect(() => {
     setHeader({
