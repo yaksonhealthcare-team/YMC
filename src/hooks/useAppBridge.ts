@@ -237,9 +237,8 @@ export const useAppBridge = () => {
       } catch (error) {
         navigate("/login", { replace: true })
       }
-    } else {
-      navigate("/login", { replace: true })
     }
+
     setIsLoading(false)
   }
 
