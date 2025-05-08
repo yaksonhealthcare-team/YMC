@@ -21,6 +21,7 @@ export interface ListResponse<T> {
 
 export const fetchMembershipList = async (
   brandCode: string,
+  bIdx?: number,
   scCode?: string,
   page: number = 1,
   pageSize: number = 10,
@@ -30,6 +31,7 @@ export const fetchMembershipList = async (
     {
       params: {
         brand_code: brandCode,
+        b_idx: bIdx,
         sc_code: scCode,
         page,
         page_size: pageSize,

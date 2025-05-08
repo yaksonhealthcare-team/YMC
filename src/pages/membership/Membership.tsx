@@ -38,7 +38,7 @@ const MembershipPage = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useMembershipList(brandCode, selectedCategory)
+  } = useMembershipList(brandCode, undefined, selectedCategory)
 
   const { observerTarget } = useIntersection({
     onIntersect: () => {

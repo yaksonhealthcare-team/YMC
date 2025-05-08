@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import {
   useMembershipCategories,
   useMembershipList,
@@ -72,12 +72,14 @@ const CareProgramTabItem = ({
 
 const ProgramList = ({ brandCode }: ProgramListProps) => {
   const navigate = useNavigate()
+  const { id } = useParams()
   const { data: categoriesData } = useMembershipCategories(brandCode)
   const [selectedProgram, setSelectedProgram] =
     useState<MembershipCategory | null>(null)
 
   const { data: memberships, isLoading } = useMembershipList(
     brandCode,
+    id,
     selectedProgram?.sc_code,
   )
 

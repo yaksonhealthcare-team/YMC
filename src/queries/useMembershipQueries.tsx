@@ -11,12 +11,21 @@ import { MyMembership, MembershipItem } from "../types/Membership"
 import { createUserContextQueryKey } from "./queryKeyFactory"
 import { User } from "../types/User"
 
-export const useMembershipList = (brandCode: string, scCode?: string) => {
+export const useMembershipList = (
+  brandCode: string,
+  bIdx?: string,
+  scCode?: string,
+) => {
   return useInfiniteQuery<ListResponse<MembershipItem>>({
-    queryKey: ["memberships", brandCode, scCode],
+    queryKey: ["memberships", brandCode, scCode, bIdx],
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
-      fetchMembershipList(brandCode, scCode, Number(pageParam)),
+      fetchMembershipList(
+        brandCode,
+        bIdx ? Number(bIdx) : undefined,
+        scCode,
+        Number(pageParam),
+      ),
     getNextPageParam: (lastPage) => {
       if (!lastPage.body || lastPage.body.length === 0) return undefined
       return lastPage.current_page + 1
