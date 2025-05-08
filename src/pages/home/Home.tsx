@@ -32,6 +32,8 @@ const SecondaryContentChunk = lazy(
 
 const Home = () => {
   const { setHeader, setNavigation } = useLayout()
+  const navigate = useNavigate()
+  const { user, isLoading } = useAuth()
   const { data: mainBanner } = useBanner(
     {
       gubun: BannerRequestType.SLIDE,
@@ -40,13 +42,12 @@ const Home = () => {
     },
     {
       retry: 3,
+      enabled: !!user,
     },
   )
   const { data: memberships, isLoading: membershipLoading } =
-    useUserMemberships("T")
-  const { user, isLoading } = useAuth()
-  const navigate = useNavigate()
-  const { data: unreadCount = 0 } = useUnreadNotificationsCount()
+    useUserMemberships(user, "T")
+  const { data: unreadCount = 0 } = useUnreadNotificationsCount(user)
 
   // 뒤로가기 방지 훅 적용
   usePreventGoBack()

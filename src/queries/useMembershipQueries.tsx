@@ -9,6 +9,7 @@ import {
 } from "../apis/membership.api"
 import { MyMembership, MembershipItem } from "../types/Membership"
 import { createUserContextQueryKey } from "./queryKeyFactory"
+import { User } from "../types/User"
 
 export const useMembershipList = (brandCode: string, scCode?: string) => {
   return useInfiniteQuery<ListResponse<MembershipItem>>({
@@ -45,9 +46,9 @@ export const useMembershipCategories = (brandCode: string) => {
   })
 }
 
-export const useUserMemberships = (searchType?: string) => {
+export const useUserMemberships = (user: User | null, searchType?: string) => {
   return useInfiniteQuery<ListResponse<MyMembership>>({
-    queryKey: createUserContextQueryKey(["memberships", "user", searchType]),
+    queryKey: createUserContextQueryKey(["memberships", searchType]),
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
       fetchUserMemberships(searchType, Number(pageParam)),
@@ -55,9 +56,8 @@ export const useUserMemberships = (searchType?: string) => {
       if (!lastPage.body || lastPage.body.length === 0) return undefined
       return lastPage.current_page + 1
     },
-    staleTime: 30 * 1000, // 30초
-    gcTime: 1 * 60 * 1000, // 1분
     retry: true,
+    enabled: !!user,
   })
 }
 

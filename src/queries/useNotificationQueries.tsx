@@ -13,6 +13,7 @@ import {
   updateNotificationSettings,
   fetchUnreadNotificationsCount,
 } from "../apis/notifications.api.ts"
+import { User } from "types/User.ts"
 
 export const useNotifications = (filters: NotificationFilters) => {
   return useInfiniteQuery({
@@ -51,7 +52,7 @@ export const useUpdateNotificationSettings = () => {
   })
 }
 
-export const useUnreadNotificationsCount = () => {
+export const useUnreadNotificationsCount = (user: User | null) => {
   return useQuery({
     queryKey: ["unreadNotificationsCount"],
     queryFn: async () => {
@@ -67,6 +68,7 @@ export const useUnreadNotificationsCount = () => {
     refetchOnWindowFocus: true,
     staleTime: 1000 * 30, // 30초
     retry: false,
+    enabled: !!user,
   })
 }
 
