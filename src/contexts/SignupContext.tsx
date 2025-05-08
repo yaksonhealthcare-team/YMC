@@ -45,6 +45,13 @@ const initialState: UserSignup = {
   referralCode: "",
   recom: "",
   marketingYn: false,
+  is_id_exist: "",
+  is_social_exist: {
+    G: "",
+    K: "",
+    N: "",
+    A: "",
+  }
 }
 
 const SignupContext = createContext<SignupContextType | undefined>(undefined)

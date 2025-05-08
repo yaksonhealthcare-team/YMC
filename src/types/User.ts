@@ -70,6 +70,13 @@ export interface UserSignup {
   referralCode: string
   recom: string
   marketingYn: boolean
+  is_id_exist: string
+  is_social_exist: {
+    K: string
+    N: string
+    G: string
+    A: string
+  }
 }
 
 export interface UpdateUserProfileRequest {

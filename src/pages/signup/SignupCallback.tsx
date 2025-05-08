@@ -8,7 +8,7 @@ import { CircularProgress } from "@mui/material"
 import { useProfileSetupSubmit } from "../../hooks/useProfileSetupSubmit"
 
 const SignupCallback = () => {
-  const { setSignupData } = useSignup()
+  const { signupData, setSignupData } = useSignup()
   const [searchParams] = useSearchParams()
   const { openModal } = useOverlay()
   const navigate = useNavigate()
@@ -50,50 +50,6 @@ const SignupCallback = () => {
             tokenVersionId: userData.token_version_id,
           }))
         }
-
-        // 소셜 계정 존재 여부 확인
-        const isSocialExist: { [key: string]: string } =
-          userData.is_social_exist
-        const socialSignupInfo = JSON.parse(
-          sessionStorage.getItem("socialSignupInfo") ?? "{}",
-        )
-
-        if (socialSignupInfo.provider) {
-          if (isSocialExist[socialSignupInfo.provider] === "Y") {
-            openModal({
-              title: "알림",
-              message: "이미 가입된 회원입니다.",
-              onConfirm: () => {
-                navigate("/login", { replace: true })
-              },
-            })
-            return
-          }
-
-          if (
-            userData.is_id_exist === "Y" ||
-            isSocialExist["K"] === "Y" ||
-            isSocialExist["N"] === "Y" ||
-            isSocialExist["G"] === "Y" ||
-            isSocialExist["A"] === "Y"
-          ) {
-            handleSubmit()
-            return
-          }
-        }
-
-        if (userData.is_id_exist === "Y") {
-          openModal({
-            title: "알림",
-            message: "이미 가입된 회원입니다.",
-            onConfirm: () => {
-              navigate("/login", { replace: true })
-            },
-          })
-          return
-        }
-
-        navigate("/signup/email")
       } catch (error) {
         console.error("회원가입 처리 오류:", error)
         openModal({
@@ -116,6 +72,52 @@ const SignupCallback = () => {
       handleVerification(jsonData)
     }
   }, []) // 빈 의존성 배열로 한 번만 실행
+
+  useEffect(() => {
+    if (!signupData) return
+    // 소셜 계정 존재 여부 확인
+    const isSocialExist: { [key: string]: string } = signupData.is_social_exist
+    const socialSignupInfo = JSON.parse(
+      sessionStorage.getItem("socialSignupInfo") ?? "{}",
+    )
+
+    if (socialSignupInfo.provider) {
+      if (isSocialExist[socialSignupInfo.provider] === "Y") {
+        openModal({
+          title: "알림",
+          message: "이미 가입된 회원입니다.",
+          onConfirm: () => {
+            navigate("/login", { replace: true })
+          },
+        })
+        return
+      }
+
+      if (
+        signupData.is_id_exist === "Y" ||
+        isSocialExist["K"] === "Y" ||
+        isSocialExist["N"] === "Y" ||
+        isSocialExist["G"] === "Y" ||
+        isSocialExist["A"] === "Y"
+      ) {
+        handleSubmit()
+        return
+      }
+    }
+
+    if (signupData.is_id_exist === "Y") {
+      openModal({
+        title: "알림",
+        message: "이미 가입된 회원입니다.",
+        onConfirm: () => {
+          navigate("/login", { replace: true })
+        },
+      })
+      return
+    }
+
+    navigate("/signup/email")
+  }, [signupData])
 
   return (
     <div className="flex items-center justify-center min-h-screen">
