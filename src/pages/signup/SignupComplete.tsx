@@ -11,7 +11,8 @@ export const SignupComplete = () => {
   const navigate = useNavigate()
   const { setHeader, setNavigation } = useLayout()
   const { user } = useAuth()
-  const [isLoading, setIsLoading] = useState(false)
+  const [isExistingUserLoading, setIsExistingUserLoading] = useState(false)
+  const [isNewUserLoading, setIsNewUserLoading] = useState(false)
 
   useEffect(() => {
     setHeader({ display: false, backgroundColor: "bg-white" })
@@ -20,7 +21,7 @@ export const SignupComplete = () => {
 
   const handleExistingUser = async () => {
     try {
-      setIsLoading(true)
+      setIsExistingUserLoading(true)
       if (!user?.name || !user?.phone) {
         throw new Error("사용자 정보가 없습니다")
       }
@@ -30,13 +31,13 @@ export const SignupComplete = () => {
       console.error("CRM 사용자 조회 실패:", error)
       navigate("/signup/branch")
     } finally {
-      setIsLoading(false)
+      setIsExistingUserLoading(false)
     }
   }
 
   const handleNewUser = async () => {
     try {
-      setIsLoading(true)
+      setIsNewUserLoading(true)
       if (!user?.name || !user?.phone) {
         throw new Error("사용자 정보가 없습니다")
       }
@@ -44,7 +45,7 @@ export const SignupComplete = () => {
     } catch (error) {
       console.error("CRM 사용자 조회 실패:", error)
     } finally {
-      setIsLoading(false)
+      setIsNewUserLoading(false)
     }
     navigate("/mypage/questionnaire/common", {
       state: { fromSignup: true },
@@ -80,19 +81,25 @@ export const SignupComplete = () => {
         <div className="flex flex-col gap-2">
           <button
             onClick={handleNewUser}
-            className="h-12 px-4 py-3 text-primary text-16px font-semibold"
+            className="h-12 px-4 py-3 text-primary text-16px font-semibold disabled:text-gray-400"
+            disabled={isNewUserLoading || isExistingUserLoading}
           >
-            처음 이용해요
+            {/* 처음 이용해요 */}
+            {isNewUserLoading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              "처음 이용해요"
+            )}
           </button>
           <Button
             variantType="primary"
             sizeType="l"
             onClick={handleExistingUser}
-            disabled={isLoading}
+            disabled={isExistingUserLoading || isNewUserLoading}
             className="relative w-full"
           >
             <span className="inline-flex items-center justify-center min-h-[24px]">
-              {isLoading ? (
+              {isExistingUserLoading ? (
                 <CircularProgress size={24} color="inherit" />
               ) : (
                 "네, 이용해봤어요"
