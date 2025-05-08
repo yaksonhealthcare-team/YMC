@@ -46,7 +46,7 @@ export const useMembershipCategories = (brandCode: string) => {
   })
 }
 
-export const useUserMemberships = (user: User | null, searchType?: string) => {
+export const useUserMemberships = (searchType?: string, user?: User | null) => {
   return useInfiniteQuery<ListResponse<MyMembership>>({
     queryKey: createUserContextQueryKey(["memberships", searchType]),
     initialPageParam: 1,

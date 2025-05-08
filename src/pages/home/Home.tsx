@@ -46,7 +46,7 @@ const Home = () => {
     },
   )
   const { data: memberships, isLoading: membershipLoading } =
-    useUserMemberships(user, "T")
+    useUserMemberships("T", user)
   const { data: unreadCount = 0 } = useUnreadNotificationsCount(user)
 
   // 뒤로가기 방지 훅 적용
