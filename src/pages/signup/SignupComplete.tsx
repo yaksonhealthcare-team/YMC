@@ -34,7 +34,18 @@ export const SignupComplete = () => {
     }
   }
 
-  const handleNewUser = () => {
+  const handleNewUser = async () => {
+    try {
+      setIsLoading(true)
+      if (!user?.name || !user?.phone) {
+        throw new Error("사용자 정보가 없습니다")
+      }
+      await fetchCRMUser(user.name, user.phone)
+    } catch (error) {
+      console.error("CRM 사용자 조회 실패:", error)
+    } finally {
+      setIsLoading(false)
+    }
     navigate("/mypage/questionnaire/common", {
       state: { fromSignup: true },
     })
