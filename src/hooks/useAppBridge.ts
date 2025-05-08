@@ -11,6 +11,7 @@ import { SocialSignupInfo } from "contexts/SignupContext"
 import { axiosClient } from "queries/clients"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import routeConfig from "router/routeConfig"
 import { SocialLoginRequest } from "types/appBridge"
 
 export const useAppBridge = () => {
@@ -214,7 +215,7 @@ export const useAppBridge = () => {
   }
 
   // 네이티브에서 받은 액세스 토큰을 처리하는 함수
-  const handleSetAccessToken = async (data: any) => {
+  const handleSetAccessToken = async (data: Record<string, string>) => {
     if (data.accessToken) {
       // axios 헤더에 액세스 토큰 설정
       setAccessToken(data.accessToken)
@@ -224,18 +225,24 @@ export const useAppBridge = () => {
         const user = await fetchUser()
         if (user) {
           login({ user })
-        } else {
-          navigate("/login", { replace: true })
+          return
         }
 
-        // 토큰 설정 성공 응답
-        window.ReactNativeWebView?.postMessage(
-          JSON.stringify({
-            type: "SET_ACCESS_TOKEN_SUCCESS",
-          }),
-        )
+        navigate("/login", { replace: true })
+        return
       } catch (error) {
         navigate("/login", { replace: true })
+        return
+      }
+    }
+
+    if (!data.accessToken) {
+      const authRoutes = routeConfig
+        .filter((route) => route.auth === true)
+        .map((route) => route.path)
+      if (authRoutes.includes(location.pathname)) {
+        navigate("/login", { replace: true })
+        return
       }
     }
 
