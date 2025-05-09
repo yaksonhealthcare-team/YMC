@@ -37,7 +37,7 @@ export const ReviewDetailContent = ({ review }: Props) => {
   ]
 
   return (
-    <div className="flex flex-col bg-white">
+    <div className="flex flex-col bg-white pb-8">
       <div className="px-5 pt-4">
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-2">
@@ -52,7 +52,7 @@ export const ReviewDetailContent = ({ review }: Props) => {
                 {review.visit}회차
               </span>
               <span className="text-gray-700 text-lg font-bold">
-                {review.programName} {review.totalCount}회
+                {review.programName} {review.totalCount}
               </span>
             </div>
             {review.serviceDate && (
