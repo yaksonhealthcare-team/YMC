@@ -32,7 +32,13 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
     hasNextPage,
     isFetchingNextPage,
     isLoading,
+    refetch,
   } = useUserMemberships(filterId === "-" ? "" : filterId)
+
+  // 탭 전환하거나 페이지에 포커스가 올 때 데이터 리프레시
+  useEffect(() => {
+    refetch()
+  }, [filterId, refetch])
 
   const { observerTarget } = useIntersection({
     onIntersect: () => {
