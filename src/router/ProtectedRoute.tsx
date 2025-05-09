@@ -1,4 +1,4 @@
-import LoadingIndicator from "@components/LoadingIndicator"
+import SplashScreen from "@components/Splash.tsx"
 import { fetchUser } from "apis/auth.api.ts"
 import { useLayout } from "contexts/LayoutContext.tsx"
 import { useEffect } from "react"
@@ -38,11 +38,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }, [isLoading, navigate])
 
   if (isLoading) {
-    return (
-      <div className="flex h-screen w-screen items-center justify-center">
-        <LoadingIndicator />
-      </div>
-    )
+    return <SplashScreen />
   }
 
   return children
