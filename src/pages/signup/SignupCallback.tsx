@@ -1,6 +1,6 @@
 import { useOverlay } from "contexts/ModalContext"
 import { useSignup } from "contexts/SignupContext"
-import { useEffect, useCallback, useRef } from "react"
+import { useEffect, useCallback, useRef, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { Gender } from "utils/gender"
 import { useNiceAuthCallback } from "utils/niceAuth"
@@ -8,6 +8,7 @@ import { CircularProgress } from "@mui/material"
 import { useProfileSetupSubmit } from "../../hooks/useProfileSetupSubmit"
 
 const SignupCallback = () => {
+  const [hasSignUpData, setHasSignUpData] = useState(false)
   const { signupData, setSignupData } = useSignup()
   const [searchParams] = useSearchParams()
   const { openModal } = useOverlay()
@@ -64,6 +65,7 @@ const SignupCallback = () => {
           },
         })
       } finally {
+        setHasSignUpData(true)
         isProcessing.current = false
       }
     },
@@ -78,7 +80,7 @@ const SignupCallback = () => {
   }, []) // 빈 의존성 배열로 한 번만 실행
 
   useEffect(() => {
-    if (!signupData) return
+    if (!hasSignUpData || !signupData) return
     // 소셜 계정 존재 여부 확인
     const isSocialExist: { [key: string]: string } = signupData.isSocialExist
     const socialSignupInfo = JSON.parse(
@@ -121,7 +123,7 @@ const SignupCallback = () => {
     }
 
     navigate("/signup/email")
-  }, [signupData])
+  }, [hasSignUpData, signupData])
 
   return (
     <div className="flex items-center justify-center min-h-screen">
