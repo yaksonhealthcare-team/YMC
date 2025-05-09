@@ -100,7 +100,6 @@ const SignupCallback = () => {
       }
 
       if (
-        signupData.isIdExist === "Y" ||
         isSocialExist["K"] === "Y" ||
         isSocialExist["N"] === "Y" ||
         isSocialExist["G"] === "Y" ||
@@ -109,17 +108,6 @@ const SignupCallback = () => {
         handleSubmit()
         return
       }
-    }
-
-    if (signupData.isIdExist === "Y") {
-      openModal({
-        title: "알림",
-        message: "이미 가입된 회원입니다.",
-        onConfirm: () => {
-          navigate("/login", { replace: true })
-        },
-      })
-      return
     }
 
     navigate("/signup/email")

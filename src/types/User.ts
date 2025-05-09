@@ -72,6 +72,7 @@ export interface UserSignup {
   marketingYn: boolean
   isIdExist: string
   isSocialExist: {
+    E: string
     K: string
     N: string
     G: string

@@ -47,6 +47,7 @@ const initialState: UserSignup = {
   marketingYn: false,
   isIdExist: "",
   isSocialExist: {
+    E: "",
     G: "",
     K: "",
     N: "",
