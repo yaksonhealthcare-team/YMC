@@ -13,6 +13,7 @@ import { useAuth } from "../contexts/AuthContext"
 import { useOverlay } from "../contexts/ModalContext"
 import { useSignup } from "../contexts/SignupContext"
 import { saveAccessToken } from "../queries/clients"
+import { UserSignup } from "types/User"
 
 type SocialProvider = "N" | "K" | "G" | "A"
 
@@ -33,9 +34,12 @@ export const useProfileSetupSubmit = () => {
   const navigate = useNavigate()
   const { login } = useAuth()
   const { showToast } = useOverlay()
-  const { signupData, cleanup } = useSignup()
+  const { signupData: storedSignupData, cleanup } = useSignup()
 
-  const handleSocialSignup = async (socialInfo: SocialSignupInfo) => {
+  const handleSocialSignup = async (
+    socialInfo: SocialSignupInfo,
+    signupData: UserSignup,
+  ) => {
     const response = await signupWithSocial({
       thirdPartyType: socialInfo.thirdPartyType,
       userInfo: {
@@ -104,7 +108,7 @@ export const useProfileSetupSubmit = () => {
     navigate("/signup/complete", { replace: true })
   }
 
-  const handleEmailSignup = async () => {
+  const handleEmailSignup = async (signupData: UserSignup) => {
     const signupFormData = {
       userInfo: {
         name: signupData.name,
@@ -183,15 +187,27 @@ export const useProfileSetupSubmit = () => {
     }
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (signupData?: UserSignup) => {
     try {
       const socialInfo = sessionStorage.getItem("socialSignupInfo")
       if (socialInfo) {
         const socialSignupInfo: SocialSignupInfo = JSON.parse(socialInfo)
-        await handleSocialSignup(socialSignupInfo)
-      } else {
-        await handleEmailSignup()
+        if (signupData) {
+          await handleSocialSignup(socialSignupInfo, signupData)
+          return
+        }
+
+        await handleSocialSignup(socialSignupInfo, storedSignupData)
+        return
       }
+
+      if (signupData) {
+        await handleEmailSignup(signupData)
+        return
+      }
+
+      await handleEmailSignup(storedSignupData)
+      return
     } catch (error: unknown) {
       handleError(error)
     }

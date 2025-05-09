@@ -1,6 +1,6 @@
 import { useOverlay } from "contexts/ModalContext"
 import { useSignup } from "contexts/SignupContext"
-import { useEffect, useCallback, useRef, useState } from "react"
+import { useEffect, useCallback, useRef } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { Gender } from "utils/gender"
 import { useNiceAuthCallback } from "utils/niceAuth"
@@ -8,7 +8,6 @@ import { CircularProgress } from "@mui/material"
 import { useProfileSetupSubmit } from "../../hooks/useProfileSetupSubmit"
 
 const SignupCallback = () => {
-  const [hasSignUpData, setHasSignUpData] = useState(false)
   const { signupData, setSignupData } = useSignup()
   const [searchParams] = useSearchParams()
   const { openModal } = useOverlay()
@@ -28,10 +27,12 @@ const SignupCallback = () => {
         if (!userData) return
 
         const storedSignupData = sessionStorage.getItem("signupData")
+        let initialSignupData
+
         if (storedSignupData) {
           const parsedData = JSON.parse(storedSignupData)
-          setSignupData((prev) => ({
-            ...prev,
+          initialSignupData = {
+            ...signupData,
             ...parsedData,
             name: userData.name,
             mobileNumber: userData.hp,
@@ -41,10 +42,10 @@ const SignupCallback = () => {
             tokenVersionId: userData.token_version_id,
             isSocialExist: userData.is_social_exist,
             isIdExist: userData.is_id_exist,
-          }))
+          }
         } else {
-          setSignupData((prev) => ({
-            ...prev,
+          initialSignupData = {
+            ...signupData,
             name: userData.name,
             mobileNumber: userData.hp,
             birthDate: userData.birthdate,
@@ -53,8 +54,55 @@ const SignupCallback = () => {
             tokenVersionId: userData.token_version_id,
             isSocialExist: userData.is_social_exist,
             isIdExist: userData.is_id_exist,
-          }))
+          }
         }
+
+        const isSocialExist: { [key: string]: string } =
+          initialSignupData.isSocialExist
+        const socialSignupInfo = JSON.parse(
+          sessionStorage.getItem("socialSignupInfo") ?? "{}",
+        )
+
+        if (socialSignupInfo.provider) {
+          if (isSocialExist[socialSignupInfo.provider] === "Y") {
+            openModal({
+              title: "알림",
+              message: "이미 가입된 회원입니다.",
+              onConfirm: () => {
+                navigate("/login", { replace: true })
+              },
+            })
+            return
+          }
+
+          if (initialSignupData.isIdExist === "Y") {
+            handleSubmit(initialSignupData)
+            return
+          }
+
+          setSignupData(initialSignupData)
+          navigate("/signup/email", { replace: true })
+          return
+        }
+
+        if (isSocialExist["E"] === "Y") {
+          openModal({
+            title: "알림",
+            message: "이미 가입된 회원입니다.",
+            onConfirm: () => {
+              navigate("/login", { replace: true })
+            },
+          })
+          return
+        }
+
+        if (initialSignupData.isIdExist === "Y") {
+          handleSubmit(initialSignupData)
+          return
+        }
+
+        setSignupData(initialSignupData)
+        navigate("/signup/email", { replace: true })
       } catch (error) {
         console.error("회원가입 처리 오류:", error)
         openModal({
@@ -65,7 +113,6 @@ const SignupCallback = () => {
           },
         })
       } finally {
-        setHasSignUpData(true)
         isProcessing.current = false
       }
     },
@@ -78,40 +125,6 @@ const SignupCallback = () => {
       handleVerification(jsonData)
     }
   }, []) // 빈 의존성 배열로 한 번만 실행
-
-  useEffect(() => {
-    if (!hasSignUpData || !signupData) return
-    // 소셜 계정 존재 여부 확인
-    const isSocialExist: { [key: string]: string } = signupData.isSocialExist
-    const socialSignupInfo = JSON.parse(
-      sessionStorage.getItem("socialSignupInfo") ?? "{}",
-    )
-
-    if (socialSignupInfo.provider) {
-      if (isSocialExist[socialSignupInfo.provider] === "Y") {
-        openModal({
-          title: "알림",
-          message: "이미 가입된 회원입니다.",
-          onConfirm: () => {
-            navigate("/login", { replace: true })
-          },
-        })
-        return
-      }
-
-      if (
-        isSocialExist["K"] === "Y" ||
-        isSocialExist["N"] === "Y" ||
-        isSocialExist["G"] === "Y" ||
-        isSocialExist["A"] === "Y"
-      ) {
-        handleSubmit()
-        return
-      }
-    }
-
-    navigate("/signup/email")
-  }, [hasSignUpData, signupData])
 
   return (
     <div className="flex items-center justify-center min-h-screen">
