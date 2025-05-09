@@ -70,8 +70,8 @@ export interface UserSignup {
   referralCode: string
   recom: string
   marketingYn: boolean
-  is_id_exist: string
-  is_social_exist: {
+  isIdExist: string
+  isSocialExist: {
     K: string
     N: string
     G: string

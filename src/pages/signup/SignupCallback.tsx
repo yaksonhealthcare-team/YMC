@@ -38,6 +38,8 @@ const SignupCallback = () => {
             gender: userData.sex as Gender,
             di: userData.di,
             tokenVersionId: userData.token_version_id,
+            isSocialExist: userData.is_social_exist,
+            isIdExist: userData.is_id_exist,
           }))
         } else {
           setSignupData((prev) => ({
@@ -48,6 +50,8 @@ const SignupCallback = () => {
             gender: userData.sex as Gender,
             di: userData.di,
             tokenVersionId: userData.token_version_id,
+            isSocialExist: userData.is_social_exist,
+            isIdExist: userData.is_id_exist,
           }))
         }
       } catch (error) {
@@ -76,7 +80,7 @@ const SignupCallback = () => {
   useEffect(() => {
     if (!signupData) return
     // 소셜 계정 존재 여부 확인
-    const isSocialExist: { [key: string]: string } = signupData.is_social_exist
+    const isSocialExist: { [key: string]: string } = signupData.isSocialExist
     const socialSignupInfo = JSON.parse(
       sessionStorage.getItem("socialSignupInfo") ?? "{}",
     )
@@ -94,7 +98,7 @@ const SignupCallback = () => {
       }
 
       if (
-        signupData.is_id_exist === "Y" ||
+        signupData.isIdExist === "Y" ||
         isSocialExist["K"] === "Y" ||
         isSocialExist["N"] === "Y" ||
         isSocialExist["G"] === "Y" ||
@@ -105,7 +109,7 @@ const SignupCallback = () => {
       }
     }
 
-    if (signupData.is_id_exist === "Y") {
+    if (signupData.isIdExist === "Y") {
       openModal({
         title: "알림",
         message: "이미 가입된 회원입니다.",
