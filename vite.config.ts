@@ -19,6 +19,9 @@ export default defineConfig(({ mode }) => {
       svgr(),
       vitePreload(),
       ViteImageOptimizer({
+        test: /\.(jpe?g|png|gif|tiff|webp|svg)$/i,
+        includePublic: true,
+        logStats: true,
         png: {
           quality: 70,
           compressionLevel: 8,
