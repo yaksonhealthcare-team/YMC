@@ -16,7 +16,7 @@ export interface AddressBookmark {
   isBaseAddress: boolean
 }
 
-interface ApiResponse<T> {
+export interface ApiResponse<T> {
   resultCode: string
   resultMessage: string
   resultCount: number

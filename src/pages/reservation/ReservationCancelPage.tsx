@@ -69,7 +69,7 @@ const ReservationCancelPage = () => {
         request: reservationDetail.request,
       })
     }
-  }, [reservationDetail])
+  }, [reservationDetail?.id])
 
   const handleConfirmCancel = async () => {
     try {
@@ -84,7 +84,7 @@ const ReservationCancelPage = () => {
             cancelMemo: sanitizedReason,
           },
           {
-            onSuccess: () => {
+            onSuccess: (response) => {
               // 바텀시트 닫기
               const closeOverlay = document.querySelector(
                 '[aria-label="close"]',
@@ -92,11 +92,16 @@ const ReservationCancelPage = () => {
               if (closeOverlay instanceof HTMLElement) {
                 closeOverlay.click()
               }
-              showToast("예약이 취소되었습니다")
-              // 예약 상세 페이지로 이동하기 전에 약간의 지연을 줌
-              setTimeout(() => {
-                navigate(`/reservation/${id}`, { replace: true })
+
+              if (response.resultCode === "00") {
+                showToast("예약이 취소되었습니다")
+                // 예약 상세 페이지로 이동하기 전에 약간의 지연을 줌
+                setTimeout(() => {
+                  navigate(`/reservation/${id}`, { replace: true })
               }, 100)
+              } else {
+                showToast(response.resultMessage || "예약 취소에 실패했습니다")
+              }
             },
             onError: (error) => {
               console.error("예약 취소 실패:", error)

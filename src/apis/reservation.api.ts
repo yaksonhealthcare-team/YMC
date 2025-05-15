@@ -6,7 +6,7 @@ import {
   ReservationResponse,
 } from "types/Reservation.ts"
 import { HTTPResponse } from "../types/HTTPResponse.ts"
-
+import { ApiResponse } from "./address.api.ts"
 export const fetchReservations = async (
   status: ReservationStatusCode,
   page: number,
@@ -70,13 +70,14 @@ export const completeVisit = async (r_idx: string): Promise<void> => {
 export const cancelReservation = async (
   reservationId: string,
   cancelMemo: string,
-): Promise<void> => {
-  await axiosClient.delete(`/reservation/reservations`, {
+): Promise<ApiResponse<null>> => {
+  const { data } = await axiosClient.delete(`/reservation/reservations`, {
     params: {
       r_idx: reservationId,
       cancel_memo: cancelMemo,
     },
   })
+  return data
 }
 
 export interface CreateReservationRequest {
