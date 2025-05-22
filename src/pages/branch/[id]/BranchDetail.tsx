@@ -28,13 +28,13 @@ const BranchActions = lazy(() => import("./_fragments/BranchActions"))
 
 const branchDetailTabs = ["programs", "information"] as const
 type BranchDetailTab = (typeof branchDetailTabs)[number]
-
+/*
 const BRANCH_SHARE_URL = {
   "123": "https://abr.ge/xzzcc1",
   "114": "https://abr.ge/noitue",
   "118": "https://abr.ge/lh3bdz",
 }
-
+*/
 const BranchDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -76,10 +76,13 @@ const BranchDetail = () => {
         // 일반 웹 환경에서 Web Share API 사용
         await navigator.share({
           title: branch.name,
-          text: `${branch.brand} ${branch.name}\n${branch.location.address}`,
+          text: `${branch.location.address}`,
+          url: "https://therapists.onelink.me/SYFd/gf6a3fau",
+          /*
           url:
             BRANCH_SHARE_URL[branch.b_idx as keyof typeof BRANCH_SHARE_URL] ||
             "https://abr.ge/7xbv1b",
+          */
         })
         return
       }
@@ -91,11 +94,14 @@ const BranchDetail = () => {
             type: "SHARE_CONTENT",
             payload: {
               title: branch.name,
-              text: `${branch.brand} ${branch.name}\n${branch.location.address}`,
+              text: `${branch.location.address}`,
+              url: "https://therapists.onelink.me/SYFd/gf6a3fau",
+              /*
               url:
                 BRANCH_SHARE_URL[
                   branch.b_idx as keyof typeof BRANCH_SHARE_URL
                 ] || "https://abr.ge/7xbv1b",
+              */
             },
           }),
         )
