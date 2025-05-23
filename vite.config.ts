@@ -5,9 +5,12 @@ import svgr from "vite-plugin-svgr"
 import compression from "vite-plugin-compression"
 import vitePreload from "vite-plugin-preload"
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer"
+import { getFormattedTimestamp } from "./src/utils/date"
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
+  const buildTimestamp = getFormattedTimestamp()
+
   return {
     server: {
       host: true,
@@ -67,6 +70,8 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
+      outDir: mode === "production" ? "dist/dist_prod" : "dist/dist_dev",
+      assetsDir: `assets/${buildTimestamp}`,
       rollupOptions: {
         output: {
           manualChunks: (id) => {
@@ -96,7 +101,6 @@ export default defineConfig(({ mode }) => {
           },
         },
       },
-      outDir: mode === "production" ? "dist/dist_prod" : "dist/dist_dev",
       chunkSizeWarningLimit: 1000,
       sourcemap: true,
       minify: "terser",
