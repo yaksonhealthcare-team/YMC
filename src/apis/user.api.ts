@@ -3,6 +3,7 @@ import { BranchSearchResult } from "../types/Branch"
 import { axiosClient } from "../queries/clients"
 import { HTTPResponse } from "../types/HTTPResponse"
 import { CRMUserResponse } from "../types/User"
+import { ApiResponse } from "@apis/address.api"
 
 export const fetchVisitedStores = async () => {
   const { data } =
@@ -12,20 +13,14 @@ export const fetchVisitedStores = async () => {
   return data
 }
 
-export const fetchCRMUser = async (
-  name: string,
-  hp: string,
-): Promise<CRMUserResponse> => {
-  const { data } = await axiosClient.get<HTTPResponse<CRMUserResponse>>(
-    "/me/crm",
-    {
-      params: {
-        name,
-        hp,
-      },
+export const fetchCRMUser = async (name: string, hp: string) => {
+  const res = await axiosClient.get<ApiResponse<CRMUserResponse>>("/me/crm", {
+    params: {
+      name,
+      hp,
     },
-  )
-  return data.body
+  })
+  return res.data
 }
 
 export const postVisitedStore = async (b_idx: string) => {

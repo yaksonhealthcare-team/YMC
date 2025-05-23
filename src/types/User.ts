@@ -25,6 +25,7 @@ export interface User {
   }[]
   gender: "M" | "F"
   birthdate: string
+  memberConnectYn: "Y" | "N"
 }
 
 export interface UserResponse {
@@ -49,6 +50,7 @@ export interface UserResponse {
     addr: string
     brand_code?: string
   }[]
+  member_connect_yn: "Y" | "N"
 }
 
 export interface UserSignup {

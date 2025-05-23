@@ -27,6 +27,7 @@ export class UserMapper {
         address: brand.addr,
         brandCode: brand.brand_code,
       })),
+      memberConnectYn: response.member_connect_yn,
     }
   }
 
