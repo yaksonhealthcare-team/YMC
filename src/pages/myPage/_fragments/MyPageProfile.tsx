@@ -10,9 +10,11 @@ const MyPageProfile = () => {
   const { user } = useAuth()
   const { setHeader, setNavigation } = useLayout()
   const { showToast } = useOverlay()
-  const [isCRMConnected, setIsCRMConnected] = useState<boolean>(
-    user?.memberConnectYn === "Y",
-  )
+  const [isCRMConnected, setIsCRMConnected] = useState<boolean>(false)
+
+  useEffect(() => {
+    setIsCRMConnected(user?.memberConnectYn === "Y")
+  }, [user?.memberConnectYn])
 
   useEffect(() => {
     setHeader({
