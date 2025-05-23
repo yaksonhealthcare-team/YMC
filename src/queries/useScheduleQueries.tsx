@@ -33,8 +33,6 @@ export const useScheduleDateQueries = (filter: ScheduleFilters) =>
     queryKey: queryKeys.schedules.date(filter),
     queryFn: () => fetchScheduleDates(filter),
     enabled: Boolean(filter.searchDate),
-    staleTime: 1000 * 60 * 5, // 5분 동안 캐시 유지
-    gcTime: 1000 * 60 * 30, // 30분 동안 캐시 보관
     retry: false, // 에러 발생시 재시도 하지 않음
   })
 
