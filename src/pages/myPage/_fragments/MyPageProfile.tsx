@@ -1,7 +1,7 @@
 import Profile from "@assets/icons/Profile.svg?react"
 import { useAuth } from "../../../contexts/AuthContext"
 import { Image } from "@components/common/Image"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useLayout } from "contexts/LayoutContext"
 import { fetchCRMUser } from "@apis/user.api"
 import { useOverlay } from "contexts/ModalContext"
@@ -10,6 +10,9 @@ const MyPageProfile = () => {
   const { user } = useAuth()
   const { setHeader, setNavigation } = useLayout()
   const { showToast } = useOverlay()
+  const [isCRMConnected, setIsCRMConnected] = useState<boolean>(
+    user?.memberConnectYn === "Y",
+  )
 
   useEffect(() => {
     setHeader({
@@ -19,8 +22,6 @@ const MyPageProfile = () => {
     setNavigation({ display: false })
   }, [])
 
-  const isCRMConnected = user?.memberConnectYn === "Y"
-
   const handleCRMConnect = async () => {
     try {
       if (!user?.name || !user?.phone) {
@@ -29,8 +30,10 @@ const MyPageProfile = () => {
       const res = await fetchCRMUser(user.name, user.phone)
       if (res.resultCode === "00") {
         showToast("회원 정보가 연동되었습니다")
+        setIsCRMConnected(true)
       } else {
         showToast("회원 정보 연동에 실패했습니다. 다시 시도해주세요")
+        setIsCRMConnected(false)
       }
     } catch (error) {
       console.error("CRM 사용자 조회 실패:", error)
