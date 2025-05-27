@@ -10,12 +10,14 @@ import { CircularProgress } from "@mui/material"
 
 interface ReservationThumbnailProps {
   title: string
+  visit: string
   date: Date
   onClick: () => void
 }
 
 const ReservationThumbnail = ({
   title,
+  visit,
   date,
   onClick,
 }: ReservationThumbnailProps) => {
@@ -27,7 +29,10 @@ const ReservationThumbnail = ({
       onClick={onClick}
     >
       <div className="flex justify-between items-center">
-        <span className="font-b text-gray-700">{title}</span>
+        <p className="font-sb">
+          <span className="text-gray-700">{title}</span>
+          <span className="text-gray-500 ml-1">{visit}회차</span>
+        </p>
         <CaretRightIcon className="w-[16px] h-[16px]" />
       </div>
       <DateAndTime date={date} />
@@ -148,6 +153,7 @@ const MembershipUsageHistory = () => {
               title={history.ps_name}
               date={new Date(history.r_date)}
               onClick={() => navigate(`/reservation/${history.r_idx}`)}
+              visit={history.visit}
             />
           ))}
         </div>

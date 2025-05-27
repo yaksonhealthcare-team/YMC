@@ -124,6 +124,7 @@ export interface MembershipUsageHistory {
   r_idx: string
   r_date: string
   ps_name: string
+  visit: string
 }
 
 export interface MembershipDetailWithHistory
