@@ -34,7 +34,10 @@ const MyPageProfile = () => {
         showToast("회원 정보가 연동되었습니다")
         setIsCRMConnected(true)
       } else {
-        showToast("회원 정보 연동에 실패했습니다. 다시 시도해주세요")
+        showToast(
+          res.resultMessage ??
+            "회원 정보 연동에 실패했습니다. 다시 시도해주세요",
+        )
         setIsCRMConnected(false)
       }
     } catch (error) {
