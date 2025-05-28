@@ -318,6 +318,7 @@ const ReservationDetailPage = () => {
 
       case "001": // 예약완료
         if (isReservationDatePassed) {
+          return null // 방문 완료 버튼 임시 숨김
           return (
             <Button
               variantType="primary"
@@ -344,6 +345,7 @@ const ReservationDetailPage = () => {
 
       case "008": // 관리중
         if (isReservationDatePassed) {
+          return null // 방문 완료 버튼 임시 숨김
           return (
             <Button
               variantType="primary"
@@ -387,6 +389,8 @@ const ReservationDetailPage = () => {
   if (!reservation)
     return <div className="p-5">예약 정보를 찾을 수 없습니다.</div>
 
+  const actionButtons = renderActionButtons()
+
   return (
     <div className="flex-1 px-[20px] pt-[16px] pb-[150px] bg-system-bg">
       <ReservationSummary reservation={reservation} />
@@ -409,9 +413,9 @@ const ReservationDetailPage = () => {
           membershipId={reservation.mp_idx}
         />
       )}
-      {!isBottomSheetOpen && (
+      {!isBottomSheetOpen && actionButtons && (
         <FixedButtonContainer className="z-[200]">
-          {renderActionButtons()}
+          {actionButtons}
         </FixedButtonContainer>
       )}
     </div>

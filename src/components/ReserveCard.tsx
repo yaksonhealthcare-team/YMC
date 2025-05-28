@@ -130,6 +130,7 @@ export const ReserveCard = ({
       case "upcoming":
         // 예약 시작 시간이 지났고, 상태가 예약완료(001)인 경우에만 방문 완료 버튼 표시
         if (isReservationDatePassed && reservation.statusCode === "001") {
+          return null // 방문 완료 버튼 임시 숨김
           return (
             <Button
               variantType="primary"
@@ -150,6 +151,7 @@ export const ReserveCard = ({
 
       case "progressing":
         // 관리중 상태에서도 방문 완료 버튼 표시
+        return null // 방문 완료 버튼 임시 숨김
         return (
           <Button
             variantType="primary"
