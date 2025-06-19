@@ -1,99 +1,99 @@
-import { type ChangeEvent, forwardRef, type ReactNode } from "react"
-import { InputAdornment, TextField } from "@mui/material"
-import { Button } from "@components/Button"
-import { COLORS } from "@constants/ColorConstants"
+import { Button } from '@/components/Button';
+import { COLORS } from '@/constants/ColorConstants';
+import { InputAdornment, TextField } from '@mui/material';
+import { type ChangeEvent, forwardRef, type ReactNode } from 'react';
 
 const STATE_COLORS = {
   default: COLORS.BORDER,
   error: COLORS.ERROR,
-  success: COLORS.SUCCESS,
-} as const
+  success: COLORS.SUCCESS
+} as const;
 
 const TEXT_FIELD_STYLES = {
   root: {
-    width: "auto",
-    flex: 1,
+    width: 'auto',
+    flex: 1
   },
   input: {
-    "& .MuiOutlinedInput-root": {
-      borderRadius: "12px",
-      height: "52px",
-      "& input": {
-        padding: "0 16px",
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '12px',
+      height: '52px',
+      '& input': {
+        padding: '0 16px',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center'
       },
-      "& fieldset": {
-        borderColor: (state: keyof typeof STATE_COLORS) => STATE_COLORS[state],
+      '& fieldset': {
+        borderColor: (state: keyof typeof STATE_COLORS) => STATE_COLORS[state]
       },
-      "&:hover fieldset": {
-        borderColor: (state: keyof typeof STATE_COLORS) => STATE_COLORS[state],
+      '&:hover fieldset': {
+        borderColor: (state: keyof typeof STATE_COLORS) => STATE_COLORS[state]
       },
-      "&.Mui-focused fieldset": {
+      '&.Mui-focused fieldset': {
         borderWidth: 1,
         borderColor: (state: keyof typeof STATE_COLORS) =>
-          state === "default" ? COLORS.FOCUSED_BORDER : STATE_COLORS[state],
+          state === 'default' ? COLORS.FOCUSED_BORDER : STATE_COLORS[state]
       },
-      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-        borderWidth: 1,
+      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+        borderWidth: 1
       },
-      "&.Mui-disabled fieldset": {
-        borderColor: "white",
-        backgroundColor: COLORS.DISABLED_BG,
+      '&.Mui-disabled fieldset': {
+        borderColor: 'white',
+        backgroundColor: COLORS.DISABLED_BG
       },
-      "& input::placeholder": {
+      '& input::placeholder': {
         color: COLORS.PLACEHOLDER,
-        opacity: 1,
+        opacity: 1
       },
-      "& input.Mui-disabled": {
+      '& input.Mui-disabled': {
         zIndex: 1,
-        WebkitTextFillColor: COLORS.DISABLED_TEXT,
-      },
+        WebkitTextFillColor: COLORS.DISABLED_TEXT
+      }
     },
-    "& .MuiInputLabel-root": {
-      fontSize: "12px",
-      color: COLORS.LABEL,
-    },
-  },
-} as const
+    '& .MuiInputLabel-root': {
+      fontSize: '12px',
+      color: COLORS.LABEL
+    }
+  }
+} as const;
 
 interface CustomTextFieldProps {
-  name?: string
-  type?: string
-  value?: string
-  placeholder?: string
-  disabled?: boolean
-  label?: string
-  helperText?: string
-  state?: keyof typeof STATE_COLORS
-  iconLeft?: ReactNode
-  iconRight?: ReactNode
-  button?: ReactNode
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
-  maxLength?: number
-  className?: string
+  name?: string;
+  type?: string;
+  value?: string;
+  placeholder?: string;
+  disabled?: boolean;
+  label?: string;
+  helperText?: string;
+  state?: keyof typeof STATE_COLORS;
+  iconLeft?: ReactNode;
+  iconRight?: ReactNode;
+  button?: ReactNode;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  maxLength?: number;
+  className?: string;
 }
 
 const CustomTextField = forwardRef<HTMLInputElement, CustomTextFieldProps>(
   (
     {
       name,
-      type = "text",
+      type = 'text',
       value,
       placeholder,
       disabled,
       label,
       helperText,
-      state = "default",
+      state = 'default',
       iconLeft,
       iconRight,
       button,
       onChange,
       maxLength,
-      className,
+      className
     },
-    ref,
+    ref
   ) => (
     <div>
       {label && <p className="font-m text-14px text-gray-700 mb-2">{label}</p>}
@@ -110,32 +110,25 @@ const CustomTextField = forwardRef<HTMLInputElement, CustomTextFieldProps>(
           fullWidth
           inputProps={{ maxLength, className }}
           InputProps={{
-            startAdornment: iconLeft && (
-              <InputAdornment position="start">{iconLeft}</InputAdornment>
-            ),
-            endAdornment: iconRight && (
-              <InputAdornment position="end">{iconRight}</InputAdornment>
-            ),
+            startAdornment: iconLeft && <InputAdornment position="start">{iconLeft}</InputAdornment>,
+            endAdornment: iconRight && <InputAdornment position="end">{iconRight}</InputAdornment>
           }}
           sx={{
             ...TEXT_FIELD_STYLES.root,
             ...TEXT_FIELD_STYLES.input,
-            "& .MuiOutlinedInput-root": {
-              ...TEXT_FIELD_STYLES.input["& .MuiOutlinedInput-root"],
-              borderColor: state === "default" ? COLORS.BORDER : undefined,
-              "& fieldset": {
-                borderColor: STATE_COLORS[state],
+            '& .MuiOutlinedInput-root': {
+              ...TEXT_FIELD_STYLES.input['& .MuiOutlinedInput-root'],
+              borderColor: state === 'default' ? COLORS.BORDER : undefined,
+              '& fieldset': {
+                borderColor: STATE_COLORS[state]
               },
-              "&:hover fieldset": {
-                borderColor: STATE_COLORS[state],
+              '&:hover fieldset': {
+                borderColor: STATE_COLORS[state]
               },
-              "&.Mui-focused fieldset": {
-                borderColor:
-                  state === "default"
-                    ? COLORS.FOCUSED_BORDER
-                    : STATE_COLORS[state],
-              },
-            },
+              '&.Mui-focused fieldset': {
+                borderColor: state === 'default' ? COLORS.FOCUSED_BORDER : STATE_COLORS[state]
+              }
+            }
           }}
         />
         {button && <Button disabled={disabled} className="ml-1" />}
@@ -143,20 +136,16 @@ const CustomTextField = forwardRef<HTMLInputElement, CustomTextFieldProps>(
       {helperText && (
         <p
           className={`font-m text-12px mt-1 ml-2 ${
-            state === "error"
-              ? "text-error"
-              : state === "success"
-                ? "text-success"
-                : "text-gray-400"
+            state === 'error' ? 'text-error' : state === 'success' ? 'text-success' : 'text-gray-400'
           }`}
         >
           {helperText}
         </p>
       )}
     </div>
-  ),
-)
+  )
+);
 
-CustomTextField.displayName = "CustomTextField"
+CustomTextField.displayName = 'CustomTextField';
 
-export default CustomTextField
+export default CustomTextField;
