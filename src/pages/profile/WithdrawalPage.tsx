@@ -1,57 +1,56 @@
-import { Button } from "@components/Button"
-import { useLayout } from "contexts/LayoutContext"
-import { useOverlay } from "contexts/ModalContext"
-import { useWithdrawal } from "queries/useAuthQueries"
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { useWithdrawalGuideMessage } from "../../hooks/useGuideMessages"
+import { Button } from '@/components/Button';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useOverlay } from '@/contexts/ModalContext';
+import { useWithdrawal } from '@/queries/useAuthQueries';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useWithdrawalGuideMessage } from '../../hooks/useGuideMessages';
 
 const WithdrawalPage = () => {
-  const { setHeader, setNavigation } = useLayout()
-  const navigate = useNavigate()
-  const { openModal } = useOverlay()
-  const [isAgreed, setIsAgreed] = useState(false)
-  const { mutateAsync: withdrawal } = useWithdrawal()
-  const { withdrawalMessage, isLoading: isGuideMessageLoading } =
-    useWithdrawalGuideMessage()
+  const { setHeader, setNavigation } = useLayout();
+  const navigate = useNavigate();
+  const { openModal } = useOverlay();
+  const [isAgreed, setIsAgreed] = useState(false);
+  const { mutateAsync: withdrawal } = useWithdrawal();
+  const { withdrawalMessage, isLoading: isGuideMessageLoading } = useWithdrawalGuideMessage();
 
   useEffect(() => {
     setHeader({
       display: true,
-      title: "회원탈퇴",
-      left: "back",
-      backgroundColor: "bg-white",
-    })
-    setNavigation({ display: false })
-  }, [])
+      title: '회원탈퇴',
+      left: 'back',
+      backgroundColor: 'bg-white'
+    });
+    setNavigation({ display: false });
+  }, []);
 
   const handleWithdrawal = async () => {
     if (!isAgreed) {
       openModal({
-        title: "안내",
-        message: "회원탈퇴 안내에 동의해주세요.",
-        onConfirm: () => {},
-      })
-      return
+        title: '안내',
+        message: '회원탈퇴 안내에 동의해주세요.',
+        onConfirm: () => {}
+      });
+      return;
     }
 
     try {
-      await withdrawal()
+      await withdrawal();
       openModal({
-        title: "안내",
-        message: "회원탈퇴가 완료되었습니다.",
+        title: '안내',
+        message: '회원탈퇴가 완료되었습니다.',
         onConfirm: () => {
-          navigate("/logout", { replace: true })
-        },
-      })
-    } catch (error) {
+          navigate('/logout', { replace: true });
+        }
+      });
+    } catch {
       openModal({
-        title: "오류",
-        message: "회원탈퇴에 실패했습니다. 다시 시도해주세요.",
-        onConfirm: () => {},
-      })
+        title: '오류',
+        message: '회원탈퇴에 실패했습니다. 다시 시도해주세요.',
+        onConfirm: () => {}
+      });
     }
-  }
+  };
 
   return (
     <div className="p-5 flex flex-col gap-6">
@@ -74,34 +73,27 @@ const WithdrawalPage = () => {
             onChange={(e) => setIsAgreed(e.target.checked)}
             className="mt-1"
             style={{
-              appearance: "none",
-              width: "20px",
-              minWidth: "20px",
-              height: "20px",
-              borderRadius: "4px",
-              backgroundColor: isAgreed ? "#F37165" : "white",
-              border: isAgreed ? "1px solid #F37165" : "1px solid #DDDDDD",
+              appearance: 'none',
+              width: '20px',
+              minWidth: '20px',
+              height: '20px',
+              borderRadius: '4px',
+              backgroundColor: isAgreed ? '#F37165' : 'white',
+              border: isAgreed ? '1px solid #F37165' : '1px solid #DDDDDD',
               backgroundImage: isAgreed
                 ? `url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e")`
-                : "none",
+                : 'none'
             }}
           />
-          <span className="text-gray-700 text-14px font-r">
-            회원탈퇴 안내를 모두 확인하였으며, 이에 동의합니다.
-          </span>
+          <span className="text-gray-700 text-14px font-r">회원탈퇴 안내를 모두 확인하였으며, 이에 동의합니다.</span>
         </label>
 
-        <Button
-          variantType="primary"
-          sizeType="l"
-          onClick={handleWithdrawal}
-          disabled={!isAgreed}
-        >
+        <Button variantType="primary" sizeType="l" onClick={handleWithdrawal} disabled={!isAgreed}>
           회원탈퇴
         </Button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default WithdrawalPage
+export default WithdrawalPage;
