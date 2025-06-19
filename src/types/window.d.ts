@@ -1,19 +1,19 @@
 interface Window {
   ReactNativeWebView?: {
-    postMessage: (message: string) => void
-    onMessage: (value: string) => void
-  }
+    postMessage: (message: string) => void;
+    onMessage: (value: string) => void;
+  };
   webkit?: {
     messageHandlers: {
       openExternalLink: {
-        postMessage: (url: string) => void
-      }
-    }
-  }
+        postMessage: (url: string) => void;
+      };
+    };
+  };
   Android?: {
-    openExternalLink: (url: string) => void
-  }
-  setNativeSafeAreaColors?: (top: string, bottom: string) => void
-  fcmToken?: string
-  osType?: "android" | "ios" | "web"
+    openExternalLink: (url: string) => void;
+  };
+  setNativeSafeAreaColors?: (top: string, bottom: string) => void;
+  fcmToken?: string;
+  osType?: 'android' | 'ios' | 'web';
 }

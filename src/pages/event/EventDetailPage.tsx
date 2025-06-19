@@ -1,38 +1,34 @@
-import { useParams } from "react-router-dom"
-import { useEventDetail } from "queries/useEventQueries"
-import { EmptyCard } from "@components/EmptyCard"
-import { useLayout } from "contexts/LayoutContext"
-import { useEffect } from "react"
-import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
-import LoadingIndicator from "@components/LoadingIndicator"
-import { EventDetail } from "types/Event"
-import { sanitizeHtml } from "utils/sanitize"
-import { Image } from "@components/common/Image"
+import { useParams } from 'react-router-dom';
+import { useEventDetail } from 'queries/useEventQueries';
+import { EmptyCard } from '@components/EmptyCard';
+import { useLayout } from 'contexts/LayoutContext';
+import { useEffect } from 'react';
+import CalendarIcon from '@assets/icons/CalendarIcon.svg?react';
+import LoadingIndicator from '@components/LoadingIndicator';
+import { EventDetail } from 'types/Event';
+import { sanitizeHtml } from 'utils/sanitize';
+import { Image } from '@components/common/Image';
 
 const EventDetailPage = () => {
-  const { id } = useParams<{ id: string }>()
-  const { data: event, isLoading, isError } = useEventDetail(id!)
-  const { setHeader, setNavigation } = useLayout()
+  const { id } = useParams<{ id: string }>();
+  const { data: event, isLoading, isError } = useEventDetail(id!);
+  const { setHeader, setNavigation } = useLayout();
 
   useEffect(() => {
     setHeader({
       display: true,
-      left: "back",
-      backgroundColor: "bg-white",
-    })
-    setNavigation({ display: false })
-  }, [setHeader, setNavigation])
+      left: 'back',
+      backgroundColor: 'bg-white'
+    });
+    setNavigation({ display: false });
+  }, [setHeader, setNavigation]);
 
   if (isLoading) {
-    return <LoadingIndicator className="min-h-screen" />
+    return <LoadingIndicator className="min-h-screen" />;
   }
 
   if (isError || !event) {
-    return (
-      <EmptyCard
-        title={`이벤트 정보를 불러올 수 없어요.\n잠시 후 다시 시도해주세요.`}
-      />
-    )
+    return <EmptyCard title={`이벤트 정보를 불러올 수 없어요.\n잠시 후 다시 시도해주세요.`} />;
   }
 
   return (
@@ -43,26 +39,26 @@ const EventDetailPage = () => {
         <EventContent event={event} />
       </div>
     </div>
-  )
-}
+  );
+};
 
 const EventHeader = ({ event }: { event: EventDetail }) => {
   return (
     <div className="flex flex-col gap-2">
       <div className="text-18px font-bold text-gray-900">{event.title}</div>
       <div className="flex items-center gap-2">
-        <CalendarIcon className={"w-[14px] h-[14px]"} />
+        <CalendarIcon className={'w-[14px] h-[14px]'} />
         <div className="text-14px font-medium text-gray-500">
           {event.sdate} ~ {event.edate}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const EventContent = ({ event }: { event: EventDetail }) => {
   if (!event.contents && (!event.files || event.files.length === 0)) {
-    return null
+    return null;
   }
 
   return (
@@ -71,11 +67,7 @@ const EventContent = ({ event }: { event: EventDetail }) => {
         <div className="flex flex-col gap-4">
           {event.files.map((file, index) => (
             <div key={file.fileCode} className="relative w-full">
-              <Image
-                src={file.fileurl}
-                alt={`${event.title} 이미지 ${index + 1}`}
-                className="w-full rounded-lg"
-              />
+              <Image src={file.fileurl} alt={`${event.title} 이미지 ${index + 1}`} className="w-full rounded-lg" />
             </div>
           ))}
         </div>
@@ -87,7 +79,7 @@ const EventContent = ({ event }: { event: EventDetail }) => {
         />
       )}
     </div>
-  )
-}
+  );
+};
 
-export default EventDetailPage
+export default EventDetailPage;

@@ -53,13 +53,10 @@ export const ReviewDetailSkeleton = () => {
           {Array(8)
             .fill(null)
             .map((_, index) => (
-              <div
-                key={index}
-                className="shrink-0 w-20 h-20 bg-gray-100 rounded-lg animate-pulse"
-              />
+              <div key={index} className="shrink-0 w-20 h-20 bg-gray-100 rounded-lg animate-pulse" />
             ))}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

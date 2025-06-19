@@ -1,53 +1,49 @@
-import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { useLayout } from "contexts/LayoutContext"
-import { Button } from "@components/Button"
-import FixedButtonContainer from "@components/FixedButtonContainer"
-import CartCard from "@components/CartCard.tsx"
-import {
-  useCartItems,
-  useDeleteCartItemsMutation,
-  useUpdateCartItemMutation,
-} from "queries/useCartQueries"
-import LoadingIndicator from "@components/LoadingIndicator"
-import { usePaymentStore } from "../../hooks/usePaymentStore.ts"
-import { formatPriceWithUnit } from "utils/format"
-import { getConsultationCount } from "../../apis/reservation.api"
-import { useQuery } from "@tanstack/react-query"
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useLayout } from 'contexts/LayoutContext';
+import { Button } from '@components/Button';
+import FixedButtonContainer from '@components/FixedButtonContainer';
+import CartCard from '@components/CartCard.tsx';
+import { useCartItems, useDeleteCartItemsMutation, useUpdateCartItemMutation } from 'queries/useCartQueries';
+import LoadingIndicator from '@components/LoadingIndicator';
+import { usePaymentStore } from '../../hooks/usePaymentStore.ts';
+import { formatPriceWithUnit } from 'utils/format';
+import { getConsultationCount } from '../../apis/reservation.api';
+import { useQuery } from '@tanstack/react-query';
 
 interface CartOption {
-  originalPrice: number
-  price: number
-  items: Array<{ count: number; cartId: string }>
-  ss_idx: string
-  sessions: number
+  originalPrice: number;
+  price: number;
+  items: Array<{ count: number; cartId: string }>;
+  ss_idx: string;
+  sessions: number;
 }
 
 interface CartItem {
-  id: string
-  options: CartOption[]
-  branchId: string
-  brandCode: string
-  title: string
-  brand: string
-  branchType: string
-  duration: number
-  branchName?: string
+  id: string;
+  options: CartOption[];
+  branchId: string;
+  brandCode: string;
+  title: string;
+  brand: string;
+  branchType: string;
+  duration: number;
+  branchName?: string;
 }
 
 const CartPage = () => {
-  const navigate = useNavigate()
-  const { setHeader, setNavigation } = useLayout()
-  const { data: cartWithSummary, isLoading } = useCartItems()
-  const { mutate: removeCartItems } = useDeleteCartItemsMutation()
-  const { mutate: updateCartItem } = useUpdateCartItemMutation()
-  const { setItems: setPaymentItems, setBranch } = usePaymentStore()
+  const navigate = useNavigate();
+  const { setHeader, setNavigation } = useLayout();
+  const { data: cartWithSummary, isLoading } = useCartItems();
+  const { mutate: removeCartItems } = useDeleteCartItemsMutation();
+  const { mutate: updateCartItem } = useUpdateCartItemMutation();
+  const { setItems: setPaymentItems, setBranch } = usePaymentStore();
   const { data: consultationCount } = useQuery({
-    queryKey: ["consultation-count"],
-    queryFn: getConsultationCount,
-  })
+    queryKey: ['consultation-count'],
+    queryFn: getConsultationCount
+  });
 
-  const items = (cartWithSummary?.items || []) as CartItem[]
+  const items = (cartWithSummary?.items || []) as CartItem[];
 
   // 상품 총 금액 계산 (할인 전)
   const calculateTotalOriginalPrice = () => {
@@ -55,11 +51,11 @@ const CartPage = () => {
       return (
         total +
         item.options.reduce((optionTotal: number, option: CartOption) => {
-          return optionTotal + option.originalPrice * option.items[0].count
+          return optionTotal + option.originalPrice * option.items[0].count;
         }, 0)
-      )
-    }, 0)
-  }
+      );
+    }, 0);
+  };
 
   // 할인 금액 계산
   const calculateDiscountAmount = () => {
@@ -67,14 +63,11 @@ const CartPage = () => {
       return (
         total +
         item.options.reduce((optionTotal: number, option: CartOption) => {
-          return (
-            optionTotal +
-            (option.originalPrice - option.price) * option.items[0].count
-          )
+          return optionTotal + (option.originalPrice - option.price) * option.items[0].count;
         }, 0)
-      )
-    }, 0)
-  }
+      );
+    }, 0);
+  };
 
   // 최종 결제 금액 계산
   const calculateFinalPrice = () => {
@@ -82,53 +75,51 @@ const CartPage = () => {
       return (
         total +
         item.options.reduce((optionTotal: number, option: CartOption) => {
-          return optionTotal + option.price * option.items[0].count
+          return optionTotal + option.price * option.items[0].count;
         }, 0)
-      )
-    }, 0)
-  }
+      );
+    }, 0);
+  };
 
-  const totalOriginalPrice = calculateTotalOriginalPrice()
-  const discountAmount = calculateDiscountAmount()
-  const finalPrice = calculateFinalPrice()
+  const totalOriginalPrice = calculateTotalOriginalPrice();
+  const discountAmount = calculateDiscountAmount();
+  const finalPrice = calculateFinalPrice();
 
-  const summary = cartWithSummary?.summary
+  const summary = cartWithSummary?.summary;
 
   useEffect(() => {
     setHeader({
       display: true,
-      title: "장바구니",
-      left: "back",
-      backgroundColor: "bg-white",
-    })
-    setNavigation({ display: false })
-  }, [])
+      title: '장바구니',
+      left: 'back',
+      backgroundColor: 'bg-white'
+    });
+    setNavigation({ display: false });
+  }, []);
 
   if (isLoading) {
-    return <LoadingIndicator className="min-h-screen" />
+    return <LoadingIndicator className="min-h-screen" />;
   }
 
   const handleUpdateItem = (itemId: string, amount: number) => {
     // 수량은 항상 1 이상이어야 함
-    const validAmount = Math.max(1, amount)
-    updateCartItem({ cartId: itemId, amount: validAmount })
-  }
+    const validAmount = Math.max(1, amount);
+    updateCartItem({ cartId: itemId, amount: validAmount });
+  };
 
   const handleRemoveItems = (itemIds: string[]) => {
-    removeCartItems(itemIds)
-  }
+    removeCartItems(itemIds);
+  };
 
-  const getTotalItemCount = () =>
-    items.reduce((prev: number, acc: CartItem) => prev + acc.options.length, 0)
+  const getTotalItemCount = () => items.reduce((prev: number, acc: CartItem) => prev + acc.options.length, 0);
 
   const handlePayment = () => {
-    if (!items.length) return
+    if (!items.length) return;
 
     // 장바구니 아이템을 PaymentStore 형식으로 변환
     const paymentItems = items.flatMap((item: CartItem) =>
       item.options.map((option: CartOption) => {
-        const b_type: "지정지점" | "전지점" =
-          item.branchType === "지점 회원권" ? "지정지점" : "전지점"
+        const b_type: '지정지점' | '전지점' = item.branchType === '지점 회원권' ? '지정지점' : '전지점';
         return {
           s_idx: parseInt(item.id),
           ss_idx: parseInt(option.ss_idx),
@@ -143,33 +134,32 @@ const CartPage = () => {
           price: option.price,
           originalPrice: option.originalPrice,
           sessions: option.sessions,
-          type: "membership" as const,
-        }
-      }),
-    )
+          type: 'membership' as const
+        };
+      })
+    );
 
     // 첫 번째 아이템의 지점 정보로 selectedBranch 설정
-    const firstItem = items[0]
-    const b_type =
-      firstItem.branchType === "지점 회원권" ? "지정지점" : "전지점"
+    const firstItem = items[0];
+    const b_type = firstItem.branchType === '지점 회원권' ? '지정지점' : '전지점';
     const selectedBranch = {
       b_idx: firstItem.branchId,
       brandCode: firstItem.brandCode,
       name: firstItem.brand,
-      address: "", // 장바구니 API에서는 지점 주소를 제공하지 않음
+      address: '', // 장바구니 API에서는 지점 주소를 제공하지 않음
       latitude: 0, // 장바구니 API에서는 위도를 제공하지 않음
       longitude: 0, // 장바구니 API에서는 경도를 제공하지 않음
       canBookToday: false,
       distanceInMeters: null,
       isFavorite: false,
-      brand: "therapist" as const,
-      b_type: b_type as "지정지점" | "전지점",
-    }
+      brand: 'therapist' as const,
+      b_type: b_type as '지정지점' | '전지점'
+    };
 
-    setPaymentItems(paymentItems)
-    setBranch(selectedBranch)
-    navigate("/payment")
-  }
+    setPaymentItems(paymentItems);
+    setBranch(selectedBranch);
+    navigate('/payment');
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -177,9 +167,7 @@ const CartPage = () => {
         <div className="p-5">
           <div className="flex items-center gap-1 mb-4">
             <span className="text-gray-700 text-16px font-sb">담은 회원권</span>
-            <span className="text-primary text-16px font-sb">
-              {getTotalItemCount()}개
-            </span>
+            <span className="text-primary text-16px font-sb">{getTotalItemCount()}개</span>
           </div>
 
           {items.map((item) => (
@@ -192,14 +180,10 @@ const CartPage = () => {
               options={item.options}
               branchName={item.branchName}
               onCountChange={(cartId, newCount) => {
-                handleUpdateItem(cartId, newCount)
+                handleUpdateItem(cartId, newCount);
               }}
               onDelete={() =>
-                handleRemoveItems(
-                  item.options.flatMap((option) =>
-                    option.items.flatMap((item) => item.cartId),
-                  ),
-                )
+                handleRemoveItems(item.options.flatMap((option) => option.items.flatMap((item) => item.cartId)))
               }
               onDeleteOption={(cartIds) => handleRemoveItems(cartIds)}
               className="mb-4"
@@ -210,15 +194,12 @@ const CartPage = () => {
             <div className="flex gap-1">
               <span className="text-gray-500">*</span>
               <p className="text-gray-500 text-14px font-r">
-                상담 예약은 월간 {consultationCount?.maxCount ?? 0}회까지 이용
-                가능합니다.
+                상담 예약은 월간 {consultationCount?.maxCount ?? 0}회까지 이용 가능합니다.
               </p>
             </div>
             <div className="flex gap-1">
               <span className="text-gray-500">*</span>
-              <p className="text-gray-500 text-14px font-r">
-                관리 프로그램은 회원권 구매 후 예약이 가능합니다.
-              </p>
+              <p className="text-gray-500 text-14px font-r">관리 프로그램은 회원권 구매 후 예약이 가능합니다.</p>
             </div>
           </div>
         </div>
@@ -230,47 +211,37 @@ const CartPage = () => {
           <div className="space-y-3">
             <div className="flex justify-between">
               <span className="text-gray-500 text-14px font-m">상품 금액</span>
-              <span className="text-gray-700 text-14px font-sb">
-                {formatPriceWithUnit(totalOriginalPrice)}
-              </span>
+              <span className="text-gray-700 text-14px font-sb">{formatPriceWithUnit(totalOriginalPrice)}</span>
             </div>
             {discountAmount > 0 && (
               <div className="flex justify-between">
-                <span className="text-gray-500 text-14px font-m">
-                  상품할인금액
-                </span>
-                <span className="text-success text-14px font-sb">
-                  -{formatPriceWithUnit(discountAmount)}
-                </span>
+                <span className="text-gray-500 text-14px font-m">상품할인금액</span>
+                <span className="text-success text-14px font-sb">-{formatPriceWithUnit(discountAmount)}</span>
               </div>
             )}
             <div className="w-full h-[1px] bg-gray-100 my-4" />
             <div className="flex justify-between items-center">
-              <span className="text-gray-700 text-16px font-m">
-                결제예정금액
-              </span>
-              <span className="text-gray-700 text-20px font-b">
-                {formatPriceWithUnit(finalPrice)}
-              </span>
+              <span className="text-gray-700 text-16px font-m">결제예정금액</span>
+              <span className="text-gray-700 text-20px font-b">{formatPriceWithUnit(finalPrice)}</span>
             </div>
           </div>
         </div>
         <div className="w-full h-[96px]" />
       </div>
 
-      <FixedButtonContainer className={"bg-white"}>
+      <FixedButtonContainer className={'bg-white'}>
         <Button
           variantType="primary"
           sizeType="l"
           onClick={handlePayment}
-          className={"w-full"}
+          className={'w-full'}
           disabled={getTotalItemCount() === 0}
         >
           {(summary?.total_price || 0).toLocaleString()}원 결제하기
         </Button>
       </FixedButtonContainer>
     </div>
-  )
-}
+  );
+};
 
-export default CartPage
+export default CartPage;

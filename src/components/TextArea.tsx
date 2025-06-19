@@ -1,20 +1,20 @@
-import { TextField } from "@mui/material"
-import clsx from "clsx"
+import { TextField } from '@mui/material';
+import clsx from 'clsx';
 
 const COUNTER_TEXT_STYLES = {
-  normal: "text-gray-400",
-  error: "text-error",
-} as const
+  normal: 'text-gray-400',
+  error: 'text-error'
+} as const;
 
 interface TextAreaProps extends React.HTMLAttributes<HTMLTextAreaElement> {
-  placeholder?: string
-  label?: string
-  helperText?: string
-  maxLength?: number
-  value: string
-  disabled?: boolean
-  error?: boolean
-  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void
+  placeholder?: string;
+  label?: string;
+  helperText?: string;
+  maxLength?: number;
+  value: string;
+  disabled?: boolean;
+  error?: boolean;
+  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 export const TextArea = ({
@@ -22,15 +22,13 @@ export const TextArea = ({
   label,
   helperText,
   maxLength,
-  value = "",
+  value = '',
   disabled,
   error,
-  onChange,
+  onChange
 }: TextAreaProps) => {
-  const isError = Boolean(error || (maxLength && value.length > maxLength))
-  const textStyle = isError
-    ? COUNTER_TEXT_STYLES.error
-    : COUNTER_TEXT_STYLES.normal
+  const isError = Boolean(error || (maxLength && value.length > maxLength));
+  const textStyle = isError ? COUNTER_TEXT_STYLES.error : COUNTER_TEXT_STYLES.normal;
 
   return (
     <div>
@@ -48,30 +46,21 @@ export const TextArea = ({
         className="!bg-white"
         InputProps={{
           className: `!text-14px !font-r !text-gray-700 !rounded-xl !border-gray-200 ${
-            isError ? "!border-error" : "!border-gray-200"
-          }`,
+            isError ? '!border-error' : '!border-gray-200'
+          }`
         }}
       />
 
-      <div
-        className={clsx(
-          "flex items-center mt-1 mx-2",
-          helperText ? "justify-between" : "justify-end",
-        )}
-      >
-        {helperText && (
-          <span className={clsx("font-m text-12px", textStyle)}>
-            {helperText}
-          </span>
-        )}
+      <div className={clsx('flex items-center mt-1 mx-2', helperText ? 'justify-between' : 'justify-end')}>
+        {helperText && <span className={clsx('font-m text-12px', textStyle)}>{helperText}</span>}
         {maxLength && (
-          <span className={clsx("font-m text-12px", textStyle)}>
+          <span className={clsx('font-m text-12px', textStyle)}>
             {value.length} / {maxLength}
           </span>
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-TextArea.displayName = "TextArea"
+TextArea.displayName = 'TextArea';

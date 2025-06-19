@@ -5,117 +5,99 @@
  * @returns 안전하게 처리된 HTML 문자열. 입력이 유효하지 않으면 빈 문자열 반환.
  */
 export function sanitizeHtml(html: string | null | undefined): string {
-  if (!html) return ""
+  if (!html) return '';
 
   // DOMParser를 사용하여 HTML 파싱
-  const parser = new DOMParser()
-  const doc = parser.parseFromString(html, "text/html")
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
 
   // 위험한 태그 목록
-  const dangerousTags = [
-    "script",
-    "iframe",
-    "object",
-    "embed",
-    "form",
-    "input",
-    "button",
-    "style",
-  ]
+  const dangerousTags = ['script', 'iframe', 'object', 'embed', 'form', 'input', 'button', 'style'];
 
   // 위험한 속성 목록
   const dangerousAttrs = [
-    "onerror",
-    "onload",
-    "onclick",
-    "onmouseover",
-    "onmouseout",
-    "onkeydown",
-    "onkeypress",
-    "onkeyup",
-  ]
+    'onerror',
+    'onload',
+    'onclick',
+    'onmouseover',
+    'onmouseout',
+    'onkeydown',
+    'onkeypress',
+    'onkeyup'
+  ];
 
   // 위험한 태그 제거
   dangerousTags.forEach((tag) => {
-    const elements = doc.getElementsByTagName(tag)
+    const elements = doc.getElementsByTagName(tag);
     for (let i = elements.length - 1; i >= 0; i--) {
-      elements[i].parentNode?.removeChild(elements[i])
+      elements[i].parentNode?.removeChild(elements[i]);
     }
-  })
+  });
 
   // 모든 요소를 순회하며 위험한 속성 제거
-  const allElements = doc.getElementsByTagName("*")
+  const allElements = doc.getElementsByTagName('*');
   for (let i = 0; i < allElements.length; i++) {
-    const element = allElements[i]
+    const element = allElements[i];
     dangerousAttrs.forEach((attr) => {
       if (element.hasAttribute(attr)) {
-        element.removeAttribute(attr)
+        element.removeAttribute(attr);
       }
-    })
+    });
 
     // href 속성 검사 - 화이트리스트 방식으로 안전한 프로토콜만 허용
     // javascript: URL은 eval()과 유사하게 코드를 실행할 수 있어 매우 위험함
-    if (element.hasAttribute("href")) {
-      const href = element.getAttribute("href")
+    if (element.hasAttribute('href')) {
+      const href = element.getAttribute('href');
       if (href) {
         // 허용된 프로토콜 목록 (화이트리스트 방식)
-        const allowedProtocols = [
-          "http:",
-          "https:",
-          "mailto:",
-          "tel:",
-          "#",
-          "/",
-        ]
-        const normalizedHref = href.toLowerCase().trim()
+        const allowedProtocols = ['http:', 'https:', 'mailto:', 'tel:', '#', '/'];
+        const normalizedHref = href.toLowerCase().trim();
 
         // 상대 경로나 허용된 프로토콜로 시작하는지 확인
         const isAllowed = allowedProtocols.some(
           (protocol) =>
             normalizedHref.startsWith(protocol) ||
             // 상대 경로 (프로토콜이 없는 경우)
-            !normalizedHref.includes(":"),
-        )
+            !normalizedHref.includes(':')
+        );
 
         if (!isAllowed) {
           // 허용되지 않은 프로토콜은 제거
-          element.removeAttribute("href")
+          element.removeAttribute('href');
         }
       }
     }
 
     // src 속성 검사 - 화이트리스트 방식으로 안전한 프로토콜만 허용
-    if (element.hasAttribute("src")) {
-      const src = element.getAttribute("src")
+    if (element.hasAttribute('src')) {
+      const src = element.getAttribute('src');
       if (src) {
         // 허용된 프로토콜 목록 (화이트리스트 방식)
-        const allowedProtocols = ["http:", "https:", "/"]
+        const allowedProtocols = ['http:', 'https:', '/'];
         // 허용된 data URI MIME 타입 (이미지만 허용)
-        const allowedDataTypes = ["data:image/"]
+        const allowedDataTypes = ['data:image/'];
 
-        const normalizedSrc = src.toLowerCase().trim()
+        const normalizedSrc = src.toLowerCase().trim();
 
         // 상대 경로, 허용된 프로토콜, 또는 허용된 data URI로 시작하는지 확인
         const isAllowed =
           // 허용된 프로토콜로 시작하는 경우
-          allowedProtocols.some((protocol) =>
-            normalizedSrc.startsWith(protocol),
-          ) ||
+          allowedProtocols.some((protocol) => normalizedSrc.startsWith(protocol)) ||
           // 상대 경로 (프로토콜이 없는 경우)
-          !normalizedSrc.includes(":") ||
+          !normalizedSrc.includes(':') ||
           // 허용된 data URI 타입으로 시작하는 경우
-          allowedDataTypes.some((type) => normalizedSrc.startsWith(type))
+          allowedDataTypes.some((type) => normalizedSrc.startsWith(type));
 
         if (!isAllowed) {
           // 허용되지 않은 프로토콜은 제거
-          element.removeAttribute("src")
+          element.removeAttribute('src');
         }
       }
     }
   }
 
   // 안전한 HTML 반환
-  return doc.body.innerHTML
+  return doc.body.innerHTML;
 }
 
 /**
@@ -127,33 +109,33 @@ export function sanitizeHtml(html: string | null | undefined): string {
  */
 export function validateFile(
   file: File | null | undefined,
-  allowedTypes: string[] = ["image/jpeg", "image/jpg", "image/png"],
-  maxSize: number = 5 * 1024 * 1024, // 기본 5MB
+  allowedTypes: string[] = ['image/jpeg', 'image/jpg', 'image/png'],
+  maxSize: number = 5 * 1024 * 1024 // 기본 5MB
 ): { valid: boolean; message?: string } {
   if (!file) {
     return {
       valid: false,
-      message: "파일이 유효하지 않습니다.",
-    }
+      message: '파일이 유효하지 않습니다.'
+    };
   }
 
   // 파일 타입 검증
   if (!allowedTypes.includes(file.type)) {
     return {
       valid: false,
-      message: `허용된 파일 형식이 아닙니다. (${allowedTypes.join(", ")})`,
-    }
+      message: `허용된 파일 형식이 아닙니다. (${allowedTypes.join(', ')})`
+    };
   }
 
   // 파일 크기 검증
   if (file.size > maxSize) {
     return {
       valid: false,
-      message: `파일 크기가 너무 큽니다. (최대 ${Math.floor(maxSize / 1024 / 1024)}MB)`,
-    }
+      message: `파일 크기가 너무 큽니다. (최대 ${Math.floor(maxSize / 1024 / 1024)}MB)`
+    };
   }
 
-  return { valid: true }
+  return { valid: true };
 }
 
 /**
@@ -163,12 +145,12 @@ export function validateFile(
  * @returns 이스케이프 처리된 텍스트. 입력이 유효하지 않으면 빈 문자열 반환.
  */
 export function escapeHtml(text: string | null | undefined): string {
-  if (!text) return ""
+  if (!text) return '';
 
   return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;")
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }

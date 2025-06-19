@@ -1,22 +1,19 @@
-import DaumPostcode from "react-daum-postcode"
-import { Address } from "react-daum-postcode/lib/loadPostcode"
+import DaumPostcode from 'react-daum-postcode';
+import { Address } from 'react-daum-postcode/lib/loadPostcode';
 
 interface PostcodeModalProps {
-  setIsPostcodeOpen: (isOpen: boolean) => void
-  handleCompletePostcode: (address: Address) => void
+  setIsPostcodeOpen: (isOpen: boolean) => void;
+  handleCompletePostcode: (address: Address) => void;
 }
 
-const PostcodeModal = ({
-  setIsPostcodeOpen,
-  handleCompletePostcode,
-}: PostcodeModalProps) => {
+const PostcodeModal = ({ setIsPostcodeOpen, handleCompletePostcode }: PostcodeModalProps) => {
   // 주소 선택 완료 시 호출되는 함수
   const onComplete = (address: Address) => {
     // 주소 데이터 처리
-    handleCompletePostcode(address)
+    handleCompletePostcode(address);
     // 모달 닫기
-    setIsPostcodeOpen(false)
-  }
+    setIsPostcodeOpen(false);
+  };
 
   return (
     <div
@@ -32,10 +29,10 @@ const PostcodeModal = ({
         role="document"
         tabIndex={-1}
       >
-        <DaumPostcode onComplete={onComplete} style={{ height: "100%" }} />
+        <DaumPostcode onComplete={onComplete} style={{ height: '100%' }} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default PostcodeModal
+export default PostcodeModal;

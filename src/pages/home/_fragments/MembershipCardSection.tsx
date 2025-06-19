@@ -1,24 +1,20 @@
-import { useNavigate } from "react-router-dom"
-import { Title } from "@components/Title"
-import { Swiper, SwiperSlide } from "swiper/react"
-import { MembershipCard } from "@components/MembershipCard"
-import { EmptyCard } from "@components/EmptyCard"
-import LoadingIndicator from "@components/LoadingIndicator"
-import { MyMembership } from "types/Membership"
-import { getStatusFromString } from "utils/membership"
+import { useNavigate } from 'react-router-dom';
+import { Title } from '@components/Title';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { MembershipCard } from '@components/MembershipCard';
+import { EmptyCard } from '@components/EmptyCard';
+import LoadingIndicator from '@components/LoadingIndicator';
+import { MyMembership } from 'types/Membership';
+import { getStatusFromString } from 'utils/membership';
 
 interface MembershipCardSectionProps {
-  memberships: MyMembership[]
-  isLoading: boolean
-  totalCount: number
+  memberships: MyMembership[];
+  isLoading: boolean;
+  totalCount: number;
 }
 
-export const MembershipCardSection = ({
-  memberships,
-  isLoading,
-  totalCount,
-}: MembershipCardSectionProps) => {
-  const navigate = useNavigate()
+export const MembershipCardSection = ({ memberships, isLoading, totalCount }: MembershipCardSectionProps) => {
+  const navigate = useNavigate();
 
   const renderContent = () => {
     if (isLoading)
@@ -26,7 +22,7 @@ export const MembershipCardSection = ({
         <div className="min-h-[114px] flex items-center justify-center">
           <LoadingIndicator className="py-8" />
         </div>
-      )
+      );
     if (memberships.length === 0) {
       return (
         <div className="flex items-center justify-center">
@@ -36,17 +32,12 @@ export const MembershipCardSection = ({
             // onClick={() => navigate("/membership")}
           />
         </div>
-      )
+      );
     }
     return (
-      <Swiper
-        spaceBetween={10}
-        slidesPerView={1}
-        style={{ overflow: "visible" }}
-        className="mt-2"
-      >
+      <Swiper spaceBetween={10} slidesPerView={1} style={{ overflow: 'visible' }} className="mt-2">
         {memberships.map((membership) => {
-          const cardTitle = membership.service_name || "회원권 이름"
+          const cardTitle = membership.service_name || '회원권 이름';
           return (
             <SwiperSlide key={membership.mp_idx} className="mr-2">
               <MembershipCard
@@ -57,15 +48,15 @@ export const MembershipCardSection = ({
                 endDate={membership.expiration_date}
                 status={getStatusFromString(membership.status)}
                 showReserveButton={true}
-                serviceType={membership.s_type.replace("회원권", "").trim()}
+                serviceType={membership.s_type.replace('회원권', '').trim()}
                 branchs={membership.branchs}
               />
             </SwiperSlide>
-          )
+          );
         })}
       </Swiper>
-    )
-  }
+    );
+  };
 
   return (
     <div className="mt-6 px-5">
@@ -77,5 +68,5 @@ export const MembershipCardSection = ({
       />
       {renderContent()}
     </div>
-  )
-}
+  );
+};

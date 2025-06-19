@@ -1,66 +1,59 @@
-import { useNavigate, useLocation } from "react-router-dom"
-import ResetPassword from "@components/resetPassword/ResetPassword.tsx"
-import { resetPassword } from "../../apis/auth.api.ts"
-import { useEffect, useState } from "react"
-import { useLayout } from "../../contexts/LayoutContext.tsx"
-import {
-  FindPasswordResponse,
-  findPasswordWithDecryptData,
-} from "@apis/decrypt-result.api.ts"
-import { Button } from "@components/Button.tsx"
-import LoadingIndicator from "@components/LoadingIndicator.tsx"
+import { useNavigate, useLocation } from 'react-router-dom';
+import ResetPassword from '@components/resetPassword/ResetPassword.tsx';
+import { resetPassword } from '../../apis/auth.api.ts';
+import { useEffect, useState } from 'react';
+import { useLayout } from '../../contexts/LayoutContext.tsx';
+import { FindPasswordResponse, findPasswordWithDecryptData } from '@apis/decrypt-result.api.ts';
+import { Button } from '@components/Button.tsx';
+import LoadingIndicator from '@components/LoadingIndicator.tsx';
 
 const FindAccountResetPassword = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const verifiedData = location.state?.verifiedData
-  const { setHeader, setNavigation } = useLayout()
-  const [isLoading, setIsLoading] = useState(false)
-  const [loginInfo, setLoginInfo] = useState<FindPasswordResponse>()
+  const navigate = useNavigate();
+  const location = useLocation();
+  const verifiedData = location.state?.verifiedData;
+  const { setHeader, setNavigation } = useLayout();
+  const [isLoading, setIsLoading] = useState(false);
+  const [loginInfo, setLoginInfo] = useState<FindPasswordResponse>();
 
   useEffect(() => {
     const getLoginInfo = async () => {
       const loginInfo = await findPasswordWithDecryptData({
         token_version_id: verifiedData.token_version_id,
-        di: verifiedData.di,
-      })
+        di: verifiedData.di
+      });
 
-      setLoginInfo(loginInfo)
-      setIsLoading(false)
-    }
+      setLoginInfo(loginInfo);
+      setIsLoading(false);
+    };
 
     setHeader({
-      backgroundColor: "bg-white",
-    })
-    setNavigation({ display: false })
+      backgroundColor: 'bg-white'
+    });
+    setNavigation({ display: false });
     // 본인인증 데이터가 없으면 계정찾기 페이지로 이동
     if (!verifiedData) {
-      navigateToLogin()
-      return
+      navigateToLogin();
+      return;
     }
 
-    getLoginInfo()
-  }, [])
+    getLoginInfo();
+  }, []);
 
   const handleChangePassword = async (password: string) => {
     try {
-      await resetPassword(
-        password,
-        verifiedData.token_version_id,
-        verifiedData.di,
-      )
-      navigate("complete")
+      await resetPassword(password, verifiedData.token_version_id, verifiedData.di);
+      navigate('complete');
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   const navigateToLogin = () => {
-    navigate("/login", { replace: true })
-  }
+    navigate('/login', { replace: true });
+  };
 
   if (isLoading) {
-    return <LoadingIndicator />
+    return <LoadingIndicator />;
   }
 
   if (!loginInfo) {
@@ -79,7 +72,7 @@ const FindAccountResetPassword = () => {
           로그인 페이지로 이동
         </Button>
       </div>
-    )
+    );
   }
 
   if (!loginInfo.thirdPartyType) {
@@ -98,10 +91,10 @@ const FindAccountResetPassword = () => {
           로그인 페이지로 이동
         </Button>
       </div>
-    )
+    );
   }
 
-  if (loginInfo.thirdPartyType !== "E") {
+  if (loginInfo.thirdPartyType !== 'E') {
     return (
       <div className="px-[20px] mt-[28px]">
         <p className="flex flex-col justify-center items-center font-[600] text-20px text-[#212121]">
@@ -116,10 +109,10 @@ const FindAccountResetPassword = () => {
           로그인 페이지로 이동
         </Button>
       </div>
-    )
+    );
   }
 
-  if (loginInfo.thirdPartyType === "E" && !loginInfo.email) {
+  if (loginInfo.thirdPartyType === 'E' && !loginInfo.email) {
     return (
       <div className="px-[20px] mt-[28px]">
         <p className="flex flex-col justify-center items-center font-[600] text-20px text-[#212121]">
@@ -134,10 +127,10 @@ const FindAccountResetPassword = () => {
           로그인 페이지로 이동
         </Button>
       </div>
-    )
+    );
   }
 
-  return <ResetPassword requestPasswordChange={handleChangePassword} />
-}
+  return <ResetPassword requestPasswordChange={handleChangePassword} />;
+};
 
-export default FindAccountResetPassword
+export default FindAccountResetPassword;

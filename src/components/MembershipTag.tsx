@@ -1,25 +1,25 @@
-import { MembershipStatus, membershipStatusToKorean } from "../types/Membership"
-import { Tag, TagType } from "./Tag"
+import { MembershipStatus, membershipStatusToKorean } from '../types/Membership';
+import { Tag, TagType } from './Tag';
 
 interface MembershipTagProps {
-  status: MembershipStatus
+  status: MembershipStatus;
 }
 
 const MembershipTag = ({ status }: MembershipTagProps) => {
   const getTagType = (): TagType => {
     switch (status) {
       case MembershipStatus.ACTIVE:
-        return "unused"
+        return 'unused';
       case MembershipStatus.INACTIVE:
-        return "used"
+        return 'used';
       case MembershipStatus.EXPIRED:
-        return "used"
+        return 'used';
       default:
-        return "unused"
+        return 'unused';
     }
-  }
+  };
 
-  return <Tag type={getTagType()} title={membershipStatusToKorean[status]} />
-}
+  return <Tag type={getTagType()} title={membershipStatusToKorean[status]} />;
+};
 
-export default MembershipTag
+export default MembershipTag;

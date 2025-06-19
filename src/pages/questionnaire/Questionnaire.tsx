@@ -1,15 +1,11 @@
-import { useEffect } from "react"
-import { useLocation } from "react-router-dom"
-import { QuestionItem } from "./_fragments/QuestionItem"
-import {
-  Question,
-  QuestionFieldName,
-  QuestionnaireType,
-} from "types/Questionnaire"
-import LoadingIndicator from "@components/LoadingIndicator"
-import { useQuestionnaire } from "hooks/useQuestionnaire"
-import { QuestionnaireHeader } from "./_fragments/QuestionnaireHeader"
-import { QuestionnaireNavigation } from "./_fragments/QuestionnaireNavigation"
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { QuestionItem } from './_fragments/QuestionItem';
+import { Question, QuestionFieldName, QuestionnaireType } from 'types/Questionnaire';
+import LoadingIndicator from '@components/LoadingIndicator';
+import { useQuestionnaire } from 'hooks/useQuestionnaire';
+import { QuestionnaireHeader } from './_fragments/QuestionnaireHeader';
+import { QuestionnaireNavigation } from './_fragments/QuestionnaireNavigation';
 
 /**
  * 문진 페이지
@@ -32,18 +28,16 @@ import { QuestionnaireNavigation } from "./_fragments/QuestionnaireNavigation"
  */
 
 const getFieldName = (question: Question): QuestionFieldName => {
-  if (question.answer_type === "T") {
-    return `${question.cssq_idx}_text` as QuestionFieldName
+  if (question.answer_type === 'T') {
+    return `${question.cssq_idx}_text` as QuestionFieldName;
   }
 
-  return `${question.cssq_idx}_${
-    question.options.length > 0 ? "option" : "text"
-  }` as QuestionFieldName
-}
+  return `${question.cssq_idx}_${question.options.length > 0 ? 'option' : 'text'}` as QuestionFieldName;
+};
 
 const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
-  const location = useLocation()
-  const { returnPath = "/", returnText = "메인 홈으로" } = location.state || {}
+  const location = useLocation();
+  const { returnPath = '/', returnText = '메인 홈으로' } = location.state || {};
 
   const {
     questions,
@@ -58,41 +52,39 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
     setIsCurrentValid,
     setHasChanges,
     handleNext,
-    handlePrev,
+    handlePrev
   } = useQuestionnaire({
     type,
     returnPath,
-    returnText,
-  })
+    returnText
+  });
 
   useEffect(() => {
     const hasValues = Object.values(formValues).some((value) =>
-      Array.isArray(value) ? value.length > 0 : Boolean(value),
-    )
-    setHasChanges(hasValues)
-  }, [formValues, setHasChanges])
+      Array.isArray(value) ? value.length > 0 : Boolean(value)
+    );
+    setHasChanges(hasValues);
+  }, [formValues, setHasChanges]);
 
   //브라우저 스크롤 되지 않도록 설정
   useEffect(() => {
     // 모든 스크롤 이벤트 및 body 스타일 제어
-    document.body.style.overflow = "hidden"
-    document.body.style.height = "100%"
-    document.documentElement.style.overflow = "hidden"
-    document.documentElement.style.height = "100%"
+    document.body.style.overflow = 'hidden';
+    document.body.style.height = '100%';
+    document.documentElement.style.overflow = 'hidden';
+    document.documentElement.style.height = '100%';
 
     return () => {
       // 컴포넌트 언마운트 시 원래대로 복원
-      document.body.style.overflow = ""
-      document.body.style.height = ""
-      document.documentElement.style.overflow = ""
-      document.documentElement.style.height = ""
-    }
-  }, [])
+      document.body.style.overflow = '';
+      document.body.style.height = '';
+      document.documentElement.style.overflow = '';
+      document.documentElement.style.height = '';
+    };
+  }, []);
 
   if (isLoading || !questions) {
-    return (
-      <LoadingIndicator className="min-h-screen flex items-center justify-center" />
-    )
+    return <LoadingIndicator className="min-h-screen flex items-center justify-center" />;
   }
 
   return (
@@ -103,9 +95,7 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
           <QuestionItem
             question={questions[currentIndex]}
             value={formValues[getFieldName(questions[currentIndex])]}
-            onChange={(value) =>
-              handleFieldChange(getFieldName(questions[currentIndex]), value)
-            }
+            onChange={(value) => handleFieldChange(getFieldName(questions[currentIndex]), value)}
             fieldName={getFieldName(questions[currentIndex])}
             onValidationChange={setIsCurrentValid}
           />
@@ -119,7 +109,7 @@ const Questionnaire = ({ type }: { type: QuestionnaireType }) => {
         onNext={handleNext}
       />
     </div>
-  )
-}
+  );
+};
 
-export default Questionnaire
+export default Questionnaire;

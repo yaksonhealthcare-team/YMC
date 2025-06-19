@@ -1,34 +1,28 @@
 interface LogoProps {
-  symbol?: boolean
-  text?: boolean
-  size?: number
+  symbol?: boolean;
+  text?: boolean;
+  size?: number;
 }
 
 const Logo = ({ symbol = false, text = false, size = 174 }: LogoProps) => {
   if (symbol && text) {
-    return <LogoWithSymbol size={size} />
+    return <LogoWithSymbol size={size} />;
   } else if (!symbol && text) {
-    return <LogoOnlyText size={size} />
+    return <LogoOnlyText size={size} />;
   } else if (symbol && !text) {
-    return <LogoOnlySymbol size={size} />
+    return <LogoOnlySymbol size={size} />;
   } else {
-    return null
+    return null;
   }
-}
+};
 
 const LogoWithSymbol = ({ size = 42 }: LogoProps) => {
-  const aspectRatio = 174 / 42
-  const width = size
-  const height = size / aspectRatio
+  const aspectRatio = 174 / 42;
+  const width = size;
+  const height = size / aspectRatio;
 
   return (
-    <svg
-      width={width}
-      height={height}
-      viewBox="0 0 174 42"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width={width} height={height} viewBox="0 0 174 42" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M80.074 27.4877H87.2176V24.6443H80.074V21.0045H87.3769V18.1611H77.1416V33.9661H87.4003V31.1461H80.074V27.4877Z"
         fill="#231815"
@@ -45,14 +39,8 @@ const LogoWithSymbol = ({ size = 42 }: LogoProps) => {
         d="M111.45 18.1465L106.025 33.9515H109.169L110.649 29.5013H116.303L117.788 33.9655H120.931L115.507 18.1605L111.445 18.1465H111.45ZM111.539 26.8219L113.473 20.9993L115.408 26.8219H111.534H111.539Z"
         fill="#231815"
       />
-      <path
-        d="M142.268 18.1465H139.359V33.9515H142.268V18.1465Z"
-        fill="#231815"
-      />
-      <path
-        d="M55.4016 18.166H42.96V21.0047H47.7146V34.0319H50.6236V21.0047H55.4016V18.166Z"
-        fill="#231815"
-      />
+      <path d="M142.268 18.1465H139.359V33.9515H142.268V18.1465Z" fill="#231815" />
+      <path d="M55.4016 18.166H42.96V21.0047H47.7146V34.0319H50.6236V21.0047H55.4016V18.166Z" fill="#231815" />
       <path
         d="M100.68 28.4997C102.826 27.6284 103.823 25.5298 103.823 23.553C103.823 20.8736 101.959 18.166 98.3896 18.166H92.3047V33.971H95.2371V28.9213H97.5324L100.797 33.971H104.217L100.68 28.5044V28.4997ZM98.3896 26.12H95.2324V21.0094H98.3896C100.151 21.0094 100.938 22.2976 100.938 23.5764C100.938 24.8553 100.142 26.12 98.3896 26.12Z"
         fill="#231815"
@@ -61,10 +49,7 @@ const LogoWithSymbol = ({ size = 42 }: LogoProps) => {
         d="M129.826 18.166H123.741V33.971H126.674V28.9213H129.831C133.564 28.9213 135.265 26.1388 135.265 23.553C135.265 20.9673 133.4 18.166 129.831 18.166H129.826ZM129.826 26.12H126.669V21.0094H129.826C131.587 21.0094 132.374 22.2976 132.374 23.5764C132.374 24.8553 131.578 26.12 129.826 26.12Z"
         fill="#231815"
       />
-      <path
-        d="M174 18.166H161.554V21.0047H166.308V34.0319H169.217V21.0047H174V18.166Z"
-        fill="#231815"
-      />
+      <path d="M174 18.166H161.554V21.0047H166.308V34.0319H169.217V21.0047H174V18.166Z" fill="#231815" />
       <path
         d="M13.7814 19.3932C21.3926 19.3932 27.5627 17.384 27.5627 14.9056C27.5627 12.4271 21.3926 10.418 13.7814 10.418C6.17012 10.418 0 12.4271 0 14.9056C0 17.384 6.17012 19.3932 13.7814 19.3932Z"
         fill="#231815"
@@ -82,21 +67,15 @@ const LogoWithSymbol = ({ size = 42 }: LogoProps) => {
         fill="#231815"
       />
     </svg>
-  )
-}
+  );
+};
 
 const LogoOnlyText = ({ size = 42 }: LogoProps) => {
-  const aspectRatio = 131 / 16
-  const width = size
-  const height = size / aspectRatio
+  const aspectRatio = 131 / 16;
+  const width = size;
+  const height = size / aspectRatio;
   return (
-    <svg
-      width={width}
-      height={height}
-      viewBox="0 0 131 16"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width={width} height={height} viewBox="0 0 131 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M36.9264 9.42388H44.0338V6.59487H36.9264V2.97355H44.1923V0.144531H34.0088V15.8696H44.2156V13.0639H36.9264V9.42388Z"
         fill="#231815"
@@ -113,14 +92,8 @@ const LogoOnlyText = ({ size = 42 }: LogoProps) => {
         d="M68.1431 0.130859L62.7461 15.8559H65.8734L67.3462 11.4283H72.9716L74.449 15.8699H77.5763L72.1792 0.144841L68.1385 0.130859H68.1431ZM68.2317 8.76237L70.1565 2.96919L72.0814 8.76237H68.227H68.2317Z"
         fill="#231815"
       />
-      <path
-        d="M98.8059 0.130859H95.9116V15.8559H98.8059V0.130859Z"
-        fill="#231815"
-      />
-      <path
-        d="M12.3787 0.149414H0V2.97377H4.73056V15.935H7.62482V2.97377H12.3787V0.149414Z"
-        fill="#231815"
-      />
+      <path d="M98.8059 0.130859H95.9116V15.8559H98.8059V0.130859Z" fill="#231815" />
+      <path d="M12.3787 0.149414H0V2.97377H4.73056V15.935H7.62482V2.97377H12.3787V0.149414Z" fill="#231815" />
       <path
         d="M57.4285 10.4308C59.563 9.56392 60.5557 7.47595 60.5557 5.50916C60.5557 2.84327 58.7008 0.149414 55.1494 0.149414H49.0952V15.8744H52.0128V10.8503H54.2965L57.545 15.8744H60.9472L57.4285 10.4355V10.4308ZM55.1494 8.06319H52.0081V2.97843H55.1494C56.9018 2.97843 57.6848 4.2601 57.6848 5.53246C57.6848 6.80481 56.8925 8.06319 55.1494 8.06319Z"
         fill="#231815"
@@ -129,27 +102,18 @@ const LogoOnlyText = ({ size = 42 }: LogoProps) => {
         d="M86.4272 0.149414H80.373V15.8744H83.2906V10.8503H86.4319C90.1464 10.8503 91.8382 8.08184 91.8382 5.50916C91.8382 2.93648 89.9833 0.149414 86.4319 0.149414H86.4272ZM86.4272 8.06319H83.286V2.97843H86.4272C88.1796 2.97843 88.9626 4.2601 88.9626 5.53246C88.9626 6.80481 88.1703 8.06319 86.4272 8.06319Z"
         fill="#231815"
       />
-      <path
-        d="M130.377 0.149414H117.994V2.97377H122.724V15.935H125.618V2.97377H130.377V0.149414Z"
-        fill="#231815"
-      />
+      <path d="M130.377 0.149414H117.994V2.97377H122.724V15.935H125.618V2.97377H130.377V0.149414Z" fill="#231815" />
     </svg>
-  )
-}
+  );
+};
 
 const LogoOnlySymbol = ({ size = 42 }: LogoProps) => {
-  const aspectRatio = 28 / 42
-  const width = size
-  const height = size / aspectRatio
+  const aspectRatio = 28 / 42;
+  const width = size;
+  const height = size / aspectRatio;
 
   return (
-    <svg
-      width={width}
-      height={height}
-      viewBox="0 0 28 42"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width={width} height={height} viewBox="0 0 28 42" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M13.7814 19.3932C21.3926 19.3932 27.5627 17.384 27.5627 14.9056C27.5627 12.4271 21.3926 10.418 13.7814 10.418C6.17012 10.418 0 12.4271 0 14.9056C0 17.384 6.17012 19.3932 13.7814 19.3932Z"
         fill="#231815"
@@ -167,7 +131,7 @@ const LogoOnlySymbol = ({ size = 42 }: LogoProps) => {
         fill="#231815"
       />
     </svg>
-  )
-}
+  );
+};
 
-export default Logo
+export default Logo;

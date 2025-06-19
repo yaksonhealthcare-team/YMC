@@ -1,21 +1,13 @@
-import React from "react"
+import React from 'react';
 
 interface BranchIconProps {
-  className?: string
-  color?: string
+  className?: string;
+  color?: string;
 }
 
-const BranchIcon: React.FC<BranchIconProps> = ({
-  className,
-  color = "#212121",
-}) => {
+const BranchIcon: React.FC<BranchIconProps> = ({ className, color = '#212121' }) => {
   return (
-    <svg
-      viewBox="0 0 16 17"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-    >
+    <svg viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
       <path
         d="M2.00586 7.98047V10.9738C2.00586 13.9671 3.20586 15.1671 6.19919 15.1671H9.79253C12.7859 15.1671 13.9859 13.9671 13.9859 10.9738V7.98047"
         stroke={color}
@@ -47,7 +39,7 @@ const BranchIcon: React.FC<BranchIconProps> = ({
         strokeLinejoin="round"
       />
     </svg>
-  )
-}
+  );
+};
 
-export default BranchIcon
+export default BranchIcon;

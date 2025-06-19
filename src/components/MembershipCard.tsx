@@ -1,43 +1,42 @@
-import clsx from "clsx"
-import { useNavigate } from "react-router-dom"
-import { Button } from "@components/Button"
-import { Tag } from "@components/Tag"
-import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
-import MembershipTag from "./MembershipTag"
-import { MembershipStatus, BranchInfo } from "types/Membership"
-import { formatDateRange } from "../utils/date"
+import clsx from 'clsx';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@components/Button';
+import { Tag } from '@components/Tag';
+import CaretRightIcon from '@assets/icons/CaretRightIcon.svg?react';
+import MembershipTag from './MembershipTag';
+import { MembershipStatus, BranchInfo } from 'types/Membership';
+import { formatDateRange } from '../utils/date';
 
 const STYLES = {
-  container:
-    "flex w-full justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px] mb-[12px]",
-  content: "flex w-full flex-col gap-1.5",
-  tags: "flex gap-1.5 flex-wrap",
-  title: "font-sb text-16px text-gray-700 break-words",
+  container: 'flex w-full justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px] mb-[12px]',
+  content: 'flex w-full flex-col gap-1.5',
+  tags: 'flex gap-1.5 flex-wrap',
+  title: 'font-sb text-16px text-gray-700 break-words',
   info: {
-    wrapper: "flex items-center w-full",
-    text: "font-r text-12px text-gray-600",
-    divider: "text-12px text-gray-200 mx-1.5",
+    wrapper: 'flex items-center w-full',
+    text: 'font-r text-12px text-gray-600',
+    divider: 'text-12px text-gray-200 mx-1.5'
   },
   actions: {
-    wrapper: "flex flex-col justify-between items-end w-full",
-    history: "inline-flex items-baseline gap-[2px] cursor-pointer",
-    historyText: "font-r text-12px text-gray-500 leading-[1]",
-    historyIcon: "w-[12px] h-[12px] relative top-[1px]",
-  },
-} as const
+    wrapper: 'flex flex-col justify-between items-end w-full',
+    history: 'inline-flex items-baseline gap-[2px] cursor-pointer',
+    historyText: 'font-r text-12px text-gray-500 leading-[1]',
+    historyIcon: 'w-[12px] h-[12px] relative top-[1px]'
+  }
+} as const;
 
 interface MembershipProps {
-  id: number
-  title: string
-  count: string
-  startDate: string
-  endDate: string
-  status: MembershipStatus
-  serviceType?: string
-  showReserveButton?: boolean
-  showHistoryButton?: boolean
-  className?: string
-  branchs?: BranchInfo[]
+  id: number;
+  title: string;
+  count: string;
+  startDate: string;
+  endDate: string;
+  status: MembershipStatus;
+  serviceType?: string;
+  showReserveButton?: boolean;
+  showHistoryButton?: boolean;
+  className?: string;
+  branchs?: BranchInfo[];
 }
 
 export const MembershipCard = ({
@@ -51,72 +50,55 @@ export const MembershipCard = ({
   showReserveButton = false,
   showHistoryButton = true,
   className,
-  branchs,
+  branchs
 }: MembershipProps) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const showReservationButton =
-    showReserveButton && status === MembershipStatus.ACTIVE
+  const showReservationButton = showReserveButton && status === MembershipStatus.ACTIVE;
 
   const handleHistoryClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    navigate(`/membership/usage/${id}`)
-  }
+    e.stopPropagation();
+    navigate(`/membership/usage/${id}`);
+  };
 
   const handleReservationClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
+    e.stopPropagation();
     // 현재 경로 가져오기
-    const currentPath = window.location.pathname
+    const currentPath = window.location.pathname;
 
     navigate(`/reservation/form?membershipId=${id}`, {
       state: {
         originalPath: currentPath,
-        fromMembershipCard: true,
-      },
-    })
-  }
+        fromMembershipCard: true
+      }
+    });
+  };
 
   return (
     <div className={clsx(STYLES.container, className)}>
       <div className={STYLES.content}>
         <div className={STYLES.tags}>
           <MembershipTag status={status} />
-          {serviceType && (
-            <Tag
-              type="rect"
-              title={
-                branchs && branchs.length > 0 ? branchs[0].b_name : serviceType
-              }
-            />
-          )}
+          {serviceType && <Tag type="rect" title={branchs && branchs.length > 0 ? branchs[0].b_name : serviceType} />}
         </div>
 
         <span className={STYLES.title}>{title}</span>
 
-        <div
-          className={clsx(
-            STYLES.info.wrapper,
-            "whitespace-nowrap block max-[370px]:hidden",
-          )}
-        >
+        <div className={clsx(STYLES.info.wrapper, 'whitespace-nowrap block max-[370px]:hidden')}>
           <span className={STYLES.info.text}>{count}</span>
           <span className={STYLES.info.divider}>|</span>
-          <span className={STYLES.info.text}>
-            {formatDateRange(startDate, endDate)}
-          </span>
+          <span className={STYLES.info.text}>{formatDateRange(startDate, endDate)}</span>
         </div>
         <div className="whitespace-nowrap hidden max-[370px]:flex flex-col items-start">
           <span className={STYLES.info.text}>{count}</span>
-          <span className={STYLES.info.text}>
-            {formatDateRange(startDate, endDate)}
-          </span>
+          <span className={STYLES.info.text}>{formatDateRange(startDate, endDate)}</span>
         </div>
       </div>
 
       <div className={STYLES.actions.wrapper}>
         {showHistoryButton && (
           <button
-            className={clsx(STYLES.actions.history, "rounded")}
+            className={clsx(STYLES.actions.history, 'rounded')}
             onClick={handleHistoryClick}
             aria-label="이용 기록"
           >
@@ -136,7 +118,7 @@ export const MembershipCard = ({
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-MembershipCard.displayName = "MembershipCard"
+MembershipCard.displayName = 'MembershipCard';

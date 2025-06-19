@@ -1,50 +1,41 @@
-import { Button } from "@mui/material"
-import clsx from "clsx"
-import CaretDownIcon from "@assets/icons/CaretDownIcon.svg?react"
-import ReloadIcon from "@components/icons/ReloadIcon"
+import { Button } from '@mui/material';
+import clsx from 'clsx';
+import CaretDownIcon from '@assets/icons/CaretDownIcon.svg?react';
+import ReloadIcon from '@components/icons/ReloadIcon';
 
 const FILTER_STYLES = {
-  default: "border border-gray-200 font-r text-14px text-gray-500 bg-white",
-  active: "border border-primary font-sb text-14px text-primary bg-white",
-  defaultNoShrink:
-    "border border-gray-200 font-r text-14px text-gray-500 flex-shrink-0 bg-white",
-  activeNoShrink:
-    "border border-primary font-sb text-14px text-primary flex-shrink-0 bg-white",
-} as const
+  default: 'border border-gray-200 font-r text-14px text-gray-500 bg-white',
+  active: 'border border-primary font-sb text-14px text-primary bg-white',
+  defaultNoShrink: 'border border-gray-200 font-r text-14px text-gray-500 flex-shrink-0 bg-white',
+  activeNoShrink: 'border border-primary font-sb text-14px text-primary flex-shrink-0 bg-white'
+} as const;
 
-const BUTTON_BASE_STYLES = "rounded-full px-3 py-1 min-w-0 h-8"
+const BUTTON_BASE_STYLES = 'rounded-full px-3 py-1 min-w-0 h-8';
 
 interface FilterProps {
-  label?: string
-  type?: "default" | "arrow" | "reload"
-  state?: keyof typeof FILTER_STYLES
-  onClick?: () => void
+  label?: string;
+  type?: 'default' | 'arrow' | 'reload';
+  state?: keyof typeof FILTER_STYLES;
+  onClick?: () => void;
 }
 
-export const Filter = ({
-  label,
-  type = "default",
-  state = "default",
-  onClick,
-}: FilterProps) => (
+export const Filter = ({ label, type = 'default', state = 'default', onClick }: FilterProps) => (
   <Button
     variant="outlined"
-    className={clsx(FILTER_STYLES[state], BUTTON_BASE_STYLES, "")}
+    className={clsx(FILTER_STYLES[state], BUTTON_BASE_STYLES, '')}
     onClick={onClick}
-    endIcon={
-      type === "arrow" ? <CaretDownIcon aria-hidden="true" /> : undefined
-    }
+    endIcon={type === 'arrow' ? <CaretDownIcon aria-hidden="true" /> : undefined}
     aria-label={
-      type === "reload"
-        ? "새로고침"
-        : type === "arrow"
-          ? `${label} ${state === "active" ? "선택됨" : "선택"}`
-          : `${label} ${state === "active" ? "활성화됨" : ""}`
+      type === 'reload'
+        ? '새로고침'
+        : type === 'arrow'
+          ? `${label} ${state === 'active' ? '선택됨' : '선택'}`
+          : `${label} ${state === 'active' ? '활성화됨' : ''}`
     }
-    aria-pressed={state === "active"}
+    aria-pressed={state === 'active'}
   >
-    {type === "reload" ? <ReloadIcon aria-hidden="true" /> : label}
+    {type === 'reload' ? <ReloadIcon aria-hidden="true" /> : label}
   </Button>
-)
+);
 
-Filter.displayName = "Filter"
+Filter.displayName = 'Filter';

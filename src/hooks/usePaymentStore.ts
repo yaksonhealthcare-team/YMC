@@ -1,24 +1,24 @@
-import { create } from "zustand"
-import { Branch } from "../types/Branch"
-import { PaymentStatus, PaymentItem } from "../types/Payment"
+import { create } from 'zustand';
+import { Branch } from '../types/Branch';
+import { PaymentStatus, PaymentItem } from '../types/Payment';
 
 interface Points {
-  availablePoints: number
-  usedPoints: number
+  availablePoints: number;
+  usedPoints: number;
 }
 
 interface PaymentStore {
-  items: PaymentItem[]
-  selectedBranch: Branch | null
-  paymentStatus: PaymentStatus
-  points: Points
-  selectedPaymentMethod: "card" | "bank" | "vbank"
-  setItems: (items: PaymentItem[]) => void
-  setBranch: (branch: Branch) => void
-  clear: () => void
-  setPaymentStatus: (status: PaymentStatus) => void
-  setPoints: (points: number) => void
-  setPaymentMethod: (method: "card" | "bank" | "vbank") => void
+  items: PaymentItem[];
+  selectedBranch: Branch | null;
+  paymentStatus: PaymentStatus;
+  points: Points;
+  selectedPaymentMethod: 'card' | 'bank' | 'vbank';
+  setItems: (items: PaymentItem[]) => void;
+  setBranch: (branch: Branch) => void;
+  clear: () => void;
+  setPaymentStatus: (status: PaymentStatus) => void;
+  setPoints: (points: number) => void;
+  setPaymentMethod: (method: 'card' | 'bank' | 'vbank') => void;
 }
 
 export const usePaymentStore = create<PaymentStore>((set) => ({
@@ -27,9 +27,9 @@ export const usePaymentStore = create<PaymentStore>((set) => ({
   paymentStatus: PaymentStatus.PENDING,
   points: {
     availablePoints: 0,
-    usedPoints: 0,
+    usedPoints: 0
   },
-  selectedPaymentMethod: "card",
+  selectedPaymentMethod: 'card',
   setItems: (items) => set({ items }),
   setBranch: (branch) => set({ selectedBranch: branch }),
   clear: () => set({ items: [], selectedBranch: null }),
@@ -38,8 +38,8 @@ export const usePaymentStore = create<PaymentStore>((set) => ({
     set((state) => ({
       points: {
         ...state.points,
-        usedPoints: points,
-      },
+        usedPoints: points
+      }
     })),
-  setPaymentMethod: (method) => set({ selectedPaymentMethod: method }),
-}))
+  setPaymentMethod: (method) => set({ selectedPaymentMethod: method })
+}));

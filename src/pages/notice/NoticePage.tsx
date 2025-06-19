@@ -1,60 +1,58 @@
-import React, { useEffect } from "react"
-import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useNavigate, useLocation } from "react-router-dom"
-import { Notice } from "types/Content"
-import { EmptyCard } from "@components/EmptyCard"
-import { useInfiniteQuery } from "@tanstack/react-query"
-import { fetchNotices } from "apis/contents.api"
-import LoadingIndicator from "@components/LoadingIndicator.tsx"
+import React, { useEffect } from 'react';
+import { useLayout } from '../../contexts/LayoutContext.tsx';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Notice } from 'types/Content';
+import { EmptyCard } from '@components/EmptyCard';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { fetchNotices } from 'apis/contents.api';
+import LoadingIndicator from '@components/LoadingIndicator.tsx';
 
 const NoticePage: React.FC = () => {
-  const { setHeader, setNavigation } = useLayout()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const fromPath = location.state?.from
+  const { setHeader, setNavigation } = useLayout();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const fromPath = location.state?.from;
 
   const {
     data: pages,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-    isLoading,
+    isLoading
   } = useInfiniteQuery<{
-    notices: Notice[]
-    pageInfo: { totalPages: number; currentPage: number }
+    notices: Notice[];
+    pageInfo: { totalPages: number; currentPage: number };
   }>({
-    queryKey: ["notices"],
+    queryKey: ['notices'],
     queryFn: async ({ pageParam }) => fetchNotices(pageParam as number),
     getNextPageParam: (lastPage) => {
-      if (lastPage.notices.length === 0) return undefined
-      if (lastPage.pageInfo.currentPage >= lastPage.pageInfo.totalPages)
-        return undefined
-      return lastPage.pageInfo.currentPage + 1
+      if (lastPage.notices.length === 0) return undefined;
+      if (lastPage.pageInfo.currentPage >= lastPage.pageInfo.totalPages) return undefined;
+      return lastPage.pageInfo.currentPage + 1;
     },
     initialPageParam: 1,
-    retry: false,
-  })
+    retry: false
+  });
 
-  const notices = (pages?.pages || []).flatMap((page) => page.notices)
+  const notices = (pages?.pages || []).flatMap((page) => page.notices);
 
   useEffect(() => {
     setHeader({
       display: true,
-      title: "공지사항",
-      left: "back",
-      backgroundColor: "bg-white",
-      onClickBack: () =>
-        fromPath ? navigate(fromPath, { replace: true }) : navigate(-1),
-    })
-    setNavigation({ display: true })
-  }, [navigate, fromPath])
+      title: '공지사항',
+      left: 'back',
+      backgroundColor: 'bg-white',
+      onClickBack: () => (fromPath ? navigate(fromPath, { replace: true }) : navigate(-1))
+    });
+    setNavigation({ display: true });
+  }, [navigate, fromPath]);
 
   if (isLoading) {
-    return <LoadingIndicator className="min-h-screen" />
+    return <LoadingIndicator className="min-h-screen" />;
   }
 
   if (isFetchingNextPage) {
-    return <LoadingIndicator className="min-h-[100px]" />
+    return <LoadingIndicator className="min-h-[100px]" />;
   }
 
   return (
@@ -67,17 +65,13 @@ const NoticePage: React.FC = () => {
               className="flex flex-col gap-4 bg-white py-4 border-b border-gray-100"
               onClick={() =>
                 navigate(`/notice/${notice.code}`, {
-                  state: { from: fromPath },
+                  state: { from: fromPath }
                 })
               }
             >
               <div className="flex flex-col gap-1.5">
-                <span className="font-b text-16px text-gray-700">
-                  {notice.title}
-                </span>
-                <span className="font-r text-12px text-gray-600">
-                  {notice.regDate}
-                </span>
+                <span className="font-b text-16px text-gray-700">{notice.title}</span>
+                <span className="font-r text-12px text-gray-600">{notice.regDate}</span>
               </div>
             </div>
           ))}
@@ -87,17 +81,15 @@ const NoticePage: React.FC = () => {
               disabled={isFetchingNextPage}
               className="w-full py-2 text-gray-600 text-14px font-m"
             >
-              {isFetchingNextPage ? "로딩중..." : "더보기"}
+              {isFetchingNextPage ? '로딩중...' : '더보기'}
             </button>
           )}
         </div>
       ) : (
-        <EmptyCard
-          title={`등록된 공지사항이 없어요.\n새로운 공지사항이 등록되면 알려드릴게요.`}
-        />
+        <EmptyCard title={`등록된 공지사항이 없어요.\n새로운 공지사항이 등록되면 알려드릴게요.`} />
       )}
     </div>
-  )
-}
+  );
+};
 
-export default NoticePage
+export default NoticePage;

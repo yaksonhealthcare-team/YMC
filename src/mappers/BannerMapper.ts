@@ -1,7 +1,7 @@
-import { Banner, BannerResponse } from "../types/Banner.ts"
+import { Banner, BannerResponse } from '../types/Banner.ts';
 
 export class BannerMapper {
-  static toEntity(dto: BannerResponse["body"][0]): Banner {
+  static toEntity(dto: BannerResponse['body'][0]): Banner {
     return {
       code: dto.code,
       title: dto.title,
@@ -10,15 +10,15 @@ export class BannerMapper {
       fileCode: dto.fileCode,
       fileUrl: dto.fileurl,
       startDate: dto.sdate,
-      endDate: dto.edate,
-    }
+      endDate: dto.edate
+    };
   }
 
   static toEntities(response: BannerResponse): Banner[] {
-    const isVisible = response.use === "Y"
+    const isVisible = response.use === 'Y';
     return response.body.map((dto) => ({
       ...this.toEntity(dto),
-      isVisible,
-    }))
+      isVisible
+    }));
   }
 }
