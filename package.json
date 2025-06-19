@@ -1,16 +1,17 @@
 {
   "name": "therapi-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
   "scripts": {
     "dev": "vite --mode development",
     "dev:prod": "vite --mode production",
-    "build:dev": "npm run clean:dev && tsc -b && vite build --mode development",
-    "build": "npm run clean:prod && tsc -b && vite build --mode production",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "build:dev": "yarn clean:dev && tsc -b && vite build --mode development",
+    "build": "yarn clean:prod && tsc -b && vite build --mode production",
+    "lint": "eslint . \"**/*.{ts,tsx}\" --report-unused-disable-directives",
     "preview": "vite preview",
-    "format": "prettier --write .",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "prepare": "node .husky/install.mjs",
     "clean:prod": "rm -rf dist/dist_prod",
     "clean:dev": "rm -rf dist/dist_dev"
@@ -24,7 +25,6 @@
     "@mui/material": "^6.1.1",
     "@mui/x-date-pickers": "^7.22.2",
     "@tanstack/react-query": "^5.59.20",
-    "@vitejs/plugin-react": "^4.3.4",
     "axios": "^1.7.7",
     "dayjs": "^1.11.13",
     "firebase": "^11.3.1",
@@ -40,27 +40,24 @@
     "zustand": "^5.0.2"
   },
   "devDependencies": {
-    "@types/navermaps": "^3.7.8",
+    "@vitejs/plugin-react": "^4.3.4",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/react-slick": "^0.23.13",
     "@types/react-window": "^1.8.8",
-    "@typescript-eslint/eslint-plugin": "^7.13.1",
-    "@typescript-eslint/parser": "^7.17.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.19",
     "clsx": "^2.1.1",
     "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jsx-a11y": "^6.9.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-refresh": "^0.4.7",
+    "@eslint/js": "^9.24.0",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "typescript-eslint": "^8.15.0",
+    "globals": "^16.0.0",
     "husky": "^9.1.7",
     "postcss": "^8.4.47",
     "prettier": "^3.3.3",
-    "sharp": "^0.34.1",
-    "svgo": "^3.3.2",
     "tailwindcss": "^3.4.12",
     "terser": "^5.39.0",
     "typescript": "^5.7.3",
@@ -69,7 +66,16 @@
     "vite-plugin-image-optimizer": "^1.1.8",
     "vite-plugin-preload": "^0.4.2",
     "vite-plugin-svgr": "^4.2.0",
-    "vite-tsconfig-paths": "^5.0.1"
+    "vite-tsconfig-paths": "^5.0.1",
+    "lint-staged": "^15.5.1"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  }
 }
