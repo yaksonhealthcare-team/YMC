@@ -1,36 +1,17 @@
-# Background
-<!-- Include user/customer story -->
-<!-- Attach relevant conversations or links needed for understanding -->
+## ❗️ 연관 이슈
 
-# Problem Definition
-<!-- Issues to be resolved -->
-<!-- What needs to be solved -->
+> 작업을 진행한 이슈 번호를 달아주세요  
+> ex) #이슈번호
 
-# Achievement
-<!-- What I have accomplished -->
-<!-- Actions taken to address the problem -->
+## 🛠️ 작업 내용
 
-# Blockers
-<!-- Obstacles encountered throughout the process -->
-<!-- What hindered completion of the task -->
+> PR에서 작업한 내용을 간략하게 설명해주세요(이미지 첨부 가능)
 
-# Next Steps
-<!-- Actions that should follow -->
-<!-- Future considerations -->
+## 💬 리뷰 요구사항
 
-# Reviewer Checklist
-<!-- Please check the following points during review -->
-- [ ] Are the background and problem definition properly established?
-- [ ] Is the solution appropriately implemented?
-- [ ] Are there alternative solutions for the blockers?
-- [ ] Are all issues and relevant links properly connected?
-- [ ] Are the next steps appropriately defined?
+<!-- 리뷰어에게 요청하고 싶은 내용을 작성해주세요 -->
+<!-- ex) 이 상황에 적합한 변수명 추천해주세요 -->
 
-# Reviewers
+## 🔊 공유할 내용
 
----
-
-Question: ✋
-Request for change: 🔥
-Additional comments: 💡
-Praise, Realization: 👍
+<!-- 팀원에게 공유할 내용이 있다면 작성해주세요 -->
