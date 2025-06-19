@@ -1,362 +1,362 @@
 export interface PaymentHistory {
-  id: string
-  index: string
-  paidAt: Date
-  type: string
-  status: string
-  pointStatus: "yet" | "done"
-  point: number
-  isPointAvailable: boolean
-  category: "additional" | "membership"
-  items: PaymentHistoryItem[]
+  id: string;
+  index: string;
+  paidAt: Date;
+  type: string;
+  status: string;
+  pointStatus: 'yet' | 'done';
+  point: number;
+  isPointAvailable: boolean;
+  category: 'additional' | 'membership';
+  items: PaymentHistoryItem[];
 }
 
 export interface PaymentItem {
-  id?: string
-  s_idx: number
-  ss_idx: number
-  b_idx: number
-  brand_code: string
-  amount: number
-  b_type: "지정지점" | "전지점"
-  title: string
-  brand: string
-  branchType: string
-  duration: number
-  price: number
-  originalPrice?: number
-  sessions: number
-  name?: string
-  type: "membership" | "additional"
+  id?: string;
+  s_idx: number;
+  ss_idx: number;
+  b_idx: number;
+  brand_code: string;
+  amount: number;
+  b_type: '지정지점' | '전지점';
+  title: string;
+  brand: string;
+  branchType: string;
+  duration: number;
+  price: number;
+  originalPrice?: number;
+  sessions: number;
+  name?: string;
+  type: 'membership' | 'additional';
   // 추가관리 전용 필드
-  mp_idx?: number
-  r_date?: string
-  r_memo?: string
-  branchName?: string
+  mp_idx?: number;
+  r_date?: string;
+  r_memo?: string;
+  branchName?: string;
 }
 
 export interface PaymentHistoryItem {
-  index: string
-  status: string
-  name: string
-  branchName: string
-  brand: string
-  amount: number
-  price: number
-  reservationId?: string
+  index: string;
+  status: string;
+  name: string;
+  branchName: string;
+  brand: string;
+  amount: number;
+  price: number;
+  reservationId?: string;
 }
 
 export interface PaymentHistoryCancel {
-  canceledAt: Date
-  payMethod: string
-  canceledPrice: number
-  usedPoint: number
-  refundPoint: number
-  totalPrice: number
-  reason: string
+  canceledAt: Date;
+  payMethod: string;
+  canceledPrice: number;
+  usedPoint: number;
+  refundPoint: number;
+  totalPrice: number;
+  reason: string;
 }
 
 export interface PaymentHistoryResponse {
-  orderid: string
-  is_add_service: string
-  p_idx: string
-  pay_date: string
-  pay_gubun: string
-  pay_status: string
-  point_status: string
-  point: number
-  is_point_available: string
+  orderid: string;
+  is_add_service: string;
+  p_idx: string;
+  pay_date: string;
+  pay_gubun: string;
+  pay_status: string;
+  point_status: string;
+  point: number;
+  is_point_available: string;
   paysub: {
-    ps_idx: string
-    ps_pay_status: string
-    ps_name: string
-    ps_total_amount: string
-    ps_total_price: string
-    brand_name: string
-    b_name: string
-  }[]
+    ps_idx: string;
+    ps_pay_status: string;
+    ps_name: string;
+    ps_total_amount: string;
+    ps_total_price: string;
+    brand_name: string;
+    b_name: string;
+  }[];
 }
 
 export interface PaymentHistoryDetail extends PaymentHistory {
-  payMethod: string
-  totalPrice: number
-  usedPoint: number
-  actualPrice: number
-  items: (PaymentHistoryItem & { cancel: PaymentHistoryCancel })[]
-  isOfflinePayment: boolean
+  payMethod: string;
+  totalPrice: number;
+  usedPoint: number;
+  actualPrice: number;
+  items: (PaymentHistoryItem & { cancel: PaymentHistoryCancel })[];
+  isOfflinePayment: boolean;
 }
 
 export interface PaymentHistoryDetailResponse {
-  orderid: string
-  is_add_service: string
-  p_idx: string
-  pay_date: string
-  pay_gubun: string
-  pay_status: string
-  point_status: string
-  point: string
-  pay_method: string
-  total_price: string
-  use_point: string
-  actual_price: string
-  is_point_available: string
+  orderid: string;
+  is_add_service: string;
+  p_idx: string;
+  pay_date: string;
+  pay_gubun: string;
+  pay_status: string;
+  point_status: string;
+  point: string;
+  pay_method: string;
+  total_price: string;
+  use_point: string;
+  actual_price: string;
+  is_point_available: string;
   paysub: [
     {
-      p_idx: string
-      ps_pay_status: string
-      ps_name: string
-      ps_total_amount: string
-      ps_total_price: string
-      brand_name: string
-      b_name: string
-      r_idx?: string
+      p_idx: string;
+      ps_pay_status: string;
+      ps_name: string;
+      ps_total_amount: string;
+      ps_total_price: string;
+      brand_name: string;
+      b_name: string;
+      r_idx?: string;
       payCancel: {
-        ps_cancel_pay_date: string
-        ps_cancel_pg_paymethod: string
-        ps_cancel_price: string
-        ps_cancel_use_point: string
-        ps_cancel_refund_point: string
-        ps_cancel_total_price: string
-        ps_cancel_message: string
-      }
-    },
-  ]
+        ps_cancel_pay_date: string;
+        ps_cancel_pg_paymethod: string;
+        ps_cancel_price: string;
+        ps_cancel_use_point: string;
+        ps_cancel_refund_point: string;
+        ps_cancel_total_price: string;
+        ps_cancel_message: string;
+      };
+    }
+  ];
 }
 
 export interface PaymentCompleteState {
-  orderId: string
-  type: "membership" | "additional"
-  items: PaymentResponseItem[]
-  paymentMethod: "CARD" | "BANK" | "VBANK"
+  orderId: string;
+  type: 'membership' | 'additional';
+  items: PaymentResponseItem[];
+  paymentMethod: 'CARD' | 'BANK' | 'VBANK';
   cardPaymentInfo?: {
-    cardName: string
-    installment: string
-  }
+    cardName: string;
+    installment: string;
+  };
   vbankInfo?: {
-    bankName: string
-    bankCode: string
-    account: string
-    accountName: string
-    limitDate: string
-  }
+    bankName: string;
+    bankCode: string;
+    account: string;
+    accountName: string;
+    limitDate: string;
+  };
   amount_info: {
-    total_amount: string
-    discount_amount: number
-    point_amount: string
-    payment_amount: string
-  }
+    total_amount: string;
+    discount_amount: number;
+    point_amount: string;
+    payment_amount: string;
+  };
   point_info: {
-    used_point: string
-    remaining_point: string
-  }
-  message?: string
+    used_point: string;
+    remaining_point: string;
+  };
+  message?: string;
 }
 
 export enum PaymentStatus {
-  PENDING = "PENDING",
-  COMPLETED = "COMPLETED",
-  FAILED = "FAILED",
-  CANCELLED = "CANCELLED",
+  PENDING = 'PENDING',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED',
+  CANCELLED = 'CANCELLED'
 }
 
 export interface PaymentResult {
-  orderId: string
-  paymentKey?: string
-  amount: string
-  status: PaymentStatus
-  error?: string
+  orderId: string;
+  paymentKey?: string;
+  amount: string;
+  status: PaymentStatus;
+  error?: string;
 }
 
 export interface VirtualAccountInfo {
-  amt: string
-  bankcode: string
-  bankname: string
-  account: string
-  account_name: string
-  limitdate: string
+  amt: string;
+  bankcode: string;
+  bankname: string;
+  account: string;
+  account_name: string;
+  limitdate: string;
 }
 
 export interface PaymentCancelRequest {
-  orderid: string
-  p_idx: string[]
-  cancel_memo?: string
-  refundAcctNum?: string // 가상계좌 환불시 필수
-  refundBankCode?: string // 가상계좌 환불시 필수
-  refundAcctName?: string // 가상계좌 환불시 필수
+  orderid: string;
+  p_idx: string[];
+  cancel_memo?: string;
+  refundAcctNum?: string; // 가상계좌 환불시 필수
+  refundBankCode?: string; // 가상계좌 환불시 필수
+  refundAcctName?: string; // 가상계좌 환불시 필수
 }
 
 export interface PaymentCardInfo {
-  type: "CARD"
-  paydate: string
-  amt: string
-  appno: string
-  cardcd: string
-  cardname: string
-  card_noinf: string
-  quota: string
+  type: 'CARD';
+  paydate: string;
+  amt: string;
+  appno: string;
+  cardcd: string;
+  cardname: string;
+  card_noinf: string;
+  quota: string;
 }
 
 export interface PaymentBankInfo {
-  type: "BANK"
-  paydate: string
-  amt: string
-  bankcode: string
-  bankname: string
+  type: 'BANK';
+  paydate: string;
+  amt: string;
+  bankcode: string;
+  bankname: string;
 }
 
 export interface PaymentVbankInfo {
-  type: "VBANK"
-  amt: string
-  bankcode: string
-  bankname: string
-  account: string
-  account_name: string
-  limitdate: string
+  type: 'VBANK';
+  amt: string;
+  bankcode: string;
+  bankname: string;
+  account: string;
+  account_name: string;
+  limitdate: string;
 }
 
-export type PaymentInfo = PaymentCardInfo | PaymentBankInfo | PaymentVbankInfo
+export type PaymentInfo = PaymentCardInfo | PaymentBankInfo | PaymentVbankInfo;
 
 export interface PaymentResponseItem {
-  p_idx: string
-  title: string
-  sessions: string
-  amount: string
+  p_idx: string;
+  title: string;
+  sessions: string;
+  amount: string;
   brand: {
-    name: string
-    code: string
-  }
+    name: string;
+    code: string;
+  };
   branch: {
-    name: string
-    code: string
-  }
+    name: string;
+    code: string;
+  };
 }
 
 export interface PaymentAmountInfo {
-  total_amount: string
-  discount_amount: number
-  point_amount: string
-  payment_amount: string
+  total_amount: string;
+  discount_amount: number;
+  point_amount: string;
+  payment_amount: string;
 }
 
 export interface PaymentPointInfo {
-  used_point: string
-  remaining_point: string
+  used_point: string;
+  remaining_point: string;
 }
 
 export interface CashReceiptInfo {
-  type: string
-  identityNum: string
-  amount: string
-  serviceCharge: string
-  taxFreeAmount: string
-  totalAmount: string
+  type: string;
+  identityNum: string;
+  amount: string;
+  serviceCharge: string;
+  taxFreeAmount: string;
+  totalAmount: string;
 }
 
 export interface PaymentResponse {
-  resultCode: string
-  resultMessage: string
+  resultCode: string;
+  resultMessage: string;
   body: {
-    orderid: string
-    p_idx: string[]
-    pay_info: PaymentInfo
-    cahereceipt_info: CashReceiptInfo | null
-    mp_info: number[] | null
-    items: PaymentResponseItem[]
-    amount_info: PaymentAmountInfo
-    point_info: PaymentPointInfo
-  }
+    orderid: string;
+    p_idx: string[];
+    pay_info: PaymentInfo;
+    cahereceipt_info: CashReceiptInfo | null;
+    mp_info: number[] | null;
+    items: PaymentResponseItem[];
+    amount_info: PaymentAmountInfo;
+    point_info: PaymentPointInfo;
+  };
 }
 
 export interface PaymentRequestItem {
-  p_idx: string
-  title: string
-  sessions: string
-  amount: string
-  brand_code: string
-  branch_code: string
+  p_idx: string;
+  title: string;
+  sessions: string;
+  amount: string;
+  brand_code: string;
+  branch_code: string;
 }
 
 export interface PaymentRequest {
-  orderid?: string
-  items: PaymentRequestItem[]
-  payment_method: "CARD" | "BANK" | "VBANK"
-  point_amount?: string
-  total_amount: string
-  payment_amount: string
+  orderid?: string;
+  items: PaymentRequestItem[];
+  payment_method: 'CARD' | 'BANK' | 'VBANK';
+  point_amount?: string;
+  total_amount: string;
+  payment_amount: string;
   vbank_info?: {
-    bank_code: string
-    account_name: string
-  }
+    bank_code: string;
+    account_name: string;
+  };
 }
 
 export interface OrderResponse {
-  resultCode: string
-  resultMessage: string
+  resultCode: string;
+  resultMessage: string;
   orderer: {
-    csm_idx: string
-    name: string
-    hp: string
-    email: string
-  }
+    csm_idx: string;
+    name: string;
+    hp: string;
+    email: string;
+  };
   orderSheet: {
-    orderid: string
+    orderid: string;
     items: Array<{
       membership: {
-        s_idx: string
-        s_name: string
-        s_time: string
-      }
+        s_idx: string;
+        s_name: string;
+        s_time: string;
+      };
       branch: {
-        b_idx: string
-        b_name: string
-      }
+        b_idx: string;
+        b_name: string;
+      };
       option: {
-        ss_idx: string
-        ss_count: string
-      }
-      origin_price: string
-      price: string
-      amount: number
-    }>
-  }
+        ss_idx: string;
+        ss_count: string;
+      };
+      origin_price: string;
+      price: string;
+      amount: number;
+    }>;
+  };
   orderSummary: {
-    total_origin_price: number
-    total_price: number
-    total_count: number
-  }
+    total_origin_price: number;
+    total_price: number;
+    total_count: number;
+  };
   pg_info: {
-    P_MID: string
-    P_OID: string
-    P_AMT: number
-    P_GOODS: string
-    P_UNAME: string
-    P_NEXT_URL: string
-    P_NOTI_URL: string
-    P_HPP_METHOD: string
-    P_RESERVED: string
-    P_TIMESTAMP: string
-    P_VBANK_DT?: string
-    P_VBANK_TM?: string
-  }
+    P_MID: string;
+    P_OID: string;
+    P_AMT: number;
+    P_GOODS: string;
+    P_UNAME: string;
+    P_NEXT_URL: string;
+    P_NOTI_URL: string;
+    P_HPP_METHOD: string;
+    P_RESERVED: string;
+    P_TIMESTAMP: string;
+    P_VBANK_DT?: string;
+    P_VBANK_TM?: string;
+  };
 }
 
 export interface BasePaymentParams {
-  P_INI_PAYMENT: string
-  P_MID: string
-  P_OID: string
-  P_AMT: string
-  P_GOODS: string
-  P_UNAME: string
-  P_NEXT_URL: string
-  P_NOTI_URL: string
-  P_NOTI: string
-  P_CHARSET: string
-  P_HPP_METHOD: string
-  P_TIMESTAMP: string
-  P_RESERVED?: string
-  P_CARD_OPTION?: string
-  P_VBANK_DT?: string
-  P_VBANK_TM?: string
-  P_MOBILE?: string
-  P_APP_BASE?: string
+  P_INI_PAYMENT: string;
+  P_MID: string;
+  P_OID: string;
+  P_AMT: string;
+  P_GOODS: string;
+  P_UNAME: string;
+  P_NEXT_URL: string;
+  P_NOTI_URL: string;
+  P_NOTI: string;
+  P_CHARSET: string;
+  P_HPP_METHOD: string;
+  P_TIMESTAMP: string;
+  P_RESERVED?: string;
+  P_CARD_OPTION?: string;
+  P_VBANK_DT?: string;
+  P_VBANK_TM?: string;
+  P_MOBILE?: string;
+  P_APP_BASE?: string;
 }

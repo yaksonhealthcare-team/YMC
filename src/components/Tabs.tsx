@@ -1,79 +1,64 @@
-import { Tab, Tabs } from "@mui/material"
-import { useCallback } from "react"
-import clsx from "clsx"
+import { Tab, Tabs } from '@mui/material';
+import { useCallback } from 'react';
+import clsx from 'clsx';
 
 interface TabItem {
-  label: string
-  value: string
-  disabled?: boolean
+  label: string;
+  value: string;
+  disabled?: boolean;
 }
 
 interface CustomTabsProps {
-  type?: "1depth" | "2depth" | "3depth" | "scroll" | "fit"
-  tabs: TabItem[]
-  onChange?: (value: string) => void
-  activeTab?: string
-  className?: string
+  type?: '1depth' | '2depth' | '3depth' | 'scroll' | 'fit';
+  tabs: TabItem[];
+  onChange?: (value: string) => void;
+  activeTab?: string;
+  className?: string;
 }
 
-export const CustomTabs = ({
-  type = "fit",
-  tabs,
-  onChange,
-  activeTab: propActiveTab,
-  className,
-}: CustomTabsProps) => {
-  const validActiveTab = tabs.some((tab) => tab.value === propActiveTab)
-  const activeTab = validActiveTab ? propActiveTab : tabs[0]?.value || ""
+export const CustomTabs = ({ type = 'fit', tabs, onChange, activeTab: propActiveTab, className }: CustomTabsProps) => {
+  const validActiveTab = tabs.some((tab) => tab.value === propActiveTab);
+  const activeTab = validActiveTab ? propActiveTab : tabs[0]?.value || '';
 
   const handleChange = useCallback(
     (_: React.SyntheticEvent, newValue: string) => {
-      onChange?.(newValue)
+      onChange?.(newValue);
     },
-    [onChange],
-  )
+    [onChange]
+  );
 
   const getTypeStyles = (type: string, isActive: boolean) => {
     switch (type) {
-      case "1depth":
+      case '1depth':
+        return clsx('font-sb text-16px px-[12px] py-[14px] min-w-0', isActive ? 'text-primay' : 'text-gray-700');
+      case '2depth':
+        return clsx('font-sb text-14px', isActive ? 'text-gray-700' : 'text-gray-400 border-gray-200');
+      case '3depth':
+        return clsx('font-sb text-14px', isActive ? 'text-gray-700' : 'text-gray-400 border-gray-200');
+      case 'scroll':
         return clsx(
-          "font-sb text-16px px-[12px] py-[14px] min-w-0",
-          isActive ? "text-primay" : "text-gray-700",
-        )
-      case "2depth":
-        return clsx(
-          "font-sb text-14px",
-          isActive ? "text-gray-700" : "text-gray-400 border-gray-200",
-        )
-      case "3depth":
-        return clsx(
-          "font-sb text-14px",
-          isActive ? "text-gray-700" : "text-gray-400 border-gray-200",
-        )
-      case "scroll":
-        return clsx(
-          "font-sb text-14px",
-          isActive ? "text-gray-700" : "text-gray-400 border-gray-200",
-          "whitespace-nowrap",
-        )
-      case "fit":
+          'font-sb text-14px',
+          isActive ? 'text-gray-700' : 'text-gray-400 border-gray-200',
+          'whitespace-nowrap'
+        );
+      case 'fit':
         return clsx(
           `font-sb text-14px w-1/${tabs.length}`,
-          isActive ? "text-gray-700" : "text-gray-400 border-gray-200",
-        )
+          isActive ? 'text-gray-700' : 'text-gray-400 border-gray-200'
+        );
       default:
-        return ""
+        return '';
     }
-  }
+  };
 
   const getIndicatorStyles = (type: string) => {
     switch (type) {
-      case "1depth":
-        return {}
+      case '1depth':
+        return {};
       default:
-        return { borderBottom: "2px solid black" }
+        return { borderBottom: '2px solid black' };
     }
-  }
+  };
 
   return (
     <div role="tablist" aria-label="탭 메뉴" className={clsx(className)}>
@@ -81,15 +66,15 @@ export const CustomTabs = ({
         centered
         value={activeTab}
         onChange={handleChange}
-        variant={type === "scroll" ? "scrollable" : "standard"}
-        scrollButtons={type === "scroll" ? "auto" : undefined}
+        variant={type === 'scroll' ? 'scrollable' : 'standard'}
+        scrollButtons={type === 'scroll' ? 'auto' : undefined}
         TabIndicatorProps={{
-          sx: getIndicatorStyles(type),
+          sx: getIndicatorStyles(type)
         }}
         className={clsx(
-          "flex",
-          type === "1depth" ? undefined : "border-b border-gray-200",
-          type === "scroll" ? "space-x-2" : "space-x-4",
+          'flex',
+          type === '1depth' ? undefined : 'border-b border-gray-200',
+          type === 'scroll' ? 'space-x-2' : 'space-x-4'
         )}
       >
         {tabs.map((tab) => (
@@ -106,7 +91,7 @@ export const CustomTabs = ({
         ))}
       </Tabs>
     </div>
-  )
-}
+  );
+};
 
-CustomTabs.displayName = "CustomTabs"
+CustomTabs.displayName = 'CustomTabs';

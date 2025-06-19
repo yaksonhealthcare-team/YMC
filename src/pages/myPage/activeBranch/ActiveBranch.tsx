@@ -1,15 +1,15 @@
-import { useLayout } from "../../../contexts/LayoutContext"
-import { useEffect } from "react"
-import InformationIcon from "@assets/icons/InformationIcon.svg?react"
-import { useOverlay } from "../../../contexts/ModalContext"
-import { Button } from "@components/Button"
-import BranchCard from "@components/BranchCard"
-import { useAuth } from "../../../contexts/AuthContext"
-import LoadingIndicator from "@components/LoadingIndicator"
-import { EmptyCard } from "@components/EmptyCard"
+import { useLayout } from '../../../contexts/LayoutContext';
+import { useEffect } from 'react';
+import InformationIcon from '@assets/icons/InformationIcon.svg?react';
+import { useOverlay } from '../../../contexts/ModalContext';
+import { Button } from '@components/Button';
+import BranchCard from '@components/BranchCard';
+import { useAuth } from '../../../contexts/AuthContext';
+import LoadingIndicator from '@components/LoadingIndicator';
+import { EmptyCard } from '@components/EmptyCard';
 
 interface InformationBottomSheetProps {
-  onClose: () => void
+  onClose: () => void;
 }
 
 const InformationBottomSheet = ({ onClose }: InformationBottomSheetProps) => (
@@ -27,34 +27,34 @@ const InformationBottomSheet = ({ onClose }: InformationBottomSheetProps) => (
       </Button>
     </div>
   </div>
-)
+);
 
 const ActiveBranch = () => {
-  const { setHeader, setNavigation } = useLayout()
-  const { openBottomSheet, closeOverlay } = useOverlay()
-  const { user, isLoading } = useAuth()
+  const { setHeader, setNavigation } = useLayout();
+  const { openBottomSheet, closeOverlay } = useOverlay();
+  const { user, isLoading } = useAuth();
 
   const handleClickInformation = () => {
-    openBottomSheet(<InformationBottomSheet onClose={closeOverlay} />)
-  }
+    openBottomSheet(<InformationBottomSheet onClose={closeOverlay} />);
+  };
 
   useEffect(() => {
     setHeader({
       display: true,
-      title: "이용 중인 지점",
-      left: "back",
+      title: '이용 중인 지점',
+      left: 'back',
       right: <InformationIcon onClick={handleClickInformation} />,
-      backgroundColor: "bg-white",
-    })
-    setNavigation({ display: false })
-  }, [])
+      backgroundColor: 'bg-white'
+    });
+    setNavigation({ display: false });
+  }, []);
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen bg-white">
         <LoadingIndicator />
       </div>
-    )
+    );
   }
 
   if (!user?.brands?.length) {
@@ -62,23 +62,20 @@ const ActiveBranch = () => {
       <div className="h-screen bg-white p-5">
         <EmptyCard title="이용 중인 지점이 없습니다." />
       </div>
-    )
+    );
   }
 
   return (
     <div className="w-full h-full p-5">
       <ul className="space-y-3">
         {user.brands.map((branch) => (
-          <li
-            key={branch.b_idx}
-            className="p-5 rounded-2xl border border-gray-100"
-          >
+          <li key={branch.b_idx} className="p-5 rounded-2xl border border-gray-100">
             <BranchCard name={branch.brandName} address={branch.address} />
           </li>
         ))}
       </ul>
     </div>
-  )
-}
+  );
+};
 
-export default ActiveBranch
+export default ActiveBranch;

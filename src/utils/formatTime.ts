@@ -14,22 +14,22 @@
  */
 const formatTime = (date: Date | string): string => {
   try {
-    const dateObj = typeof date === "string" ? new Date(date) : date
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
     if (isNaN(dateObj.getTime())) {
-      console.warn("Invalid date provided to formatTime:", date)
-      return ""
+      console.warn('Invalid date provided to formatTime:', date);
+      return '';
     }
 
-    const hours = dateObj.getHours()
-    const minutes = dateObj.getMinutes()
-    const ampm = hours < 12 ? "오전" : "오후"
-    const hour12 = hours % 12 || 12
+    const hours = dateObj.getHours();
+    const minutes = dateObj.getMinutes();
+    const ampm = hours < 12 ? '오전' : '오후';
+    const hour12 = hours % 12 || 12;
 
-    return `${ampm} ${hour12}:${minutes.toString().padStart(2, "0")}`
+    return `${ampm} ${hour12}:${minutes.toString().padStart(2, '0')}`;
   } catch (error) {
-    console.error("Time formatting error:", error)
-    return ""
+    console.error('Time formatting error:', error);
+    return '';
   }
-}
+};
 
-export default formatTime
+export default formatTime;

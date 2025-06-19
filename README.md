@@ -108,22 +108,22 @@ src/
 // src/router/router.tsx의 간소화된 예시
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <HomePage />,
+    path: '/',
+    element: <HomePage />
   },
   {
-    path: "/login",
-    element: <LoginPage />,
+    path: '/login',
+    element: <LoginPage />
   },
   {
-    path: "/my-page",
+    path: '/my-page',
     element: (
       <ProtectedRoute>
         <MyPage />
       </ProtectedRoute>
-    ),
-  },
-])
+    )
+  }
+]);
 ```
 
 ### 2. 상태 관리
@@ -133,19 +133,19 @@ const router = createBrowserRouter([
 
 ```tsx
 // src/stores/popupStore.ts 예시
-import { create } from "zustand"
+import { create } from 'zustand';
 
 interface PopupState {
-  isOpen: boolean
-  open: () => void
-  close: () => void
+  isOpen: boolean;
+  open: () => void;
+  close: () => void;
 }
 
 export const usePopupStore = create<PopupState>((set) => ({
   isOpen: false,
   open: () => set({ isOpen: true }),
-  close: () => set({ isOpen: false }),
-}))
+  close: () => set({ isOpen: false })
+}));
 ```
 
 ### 3. API 통신
@@ -155,15 +155,15 @@ export const usePopupStore = create<PopupState>((set) => ({
 
 ```tsx
 // src/queries/hooks/useUserQuery.ts 예시
-import { useQuery } from "@tanstack/react-query"
-import { getUserProfile } from "@apis/user.api"
+import { useQuery } from '@tanstack/react-query';
+import { getUserProfile } from '@apis/user.api';
 
 export const useUserProfile = (userId: string) => {
   return useQuery({
-    queryKey: ["user", userId],
-    queryFn: () => getUserProfile(userId),
-  })
-}
+    queryKey: ['user', userId],
+    queryFn: () => getUserProfile(userId)
+  });
+};
 ```
 
 ### 4. 스타일링
@@ -176,16 +176,16 @@ export const useUserProfile = (userId: string) => {
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#F37165",
+      main: '#F37165'
     },
     secondary: {
-      main: "#FEF2F1",
-    },
+      main: '#FEF2F1'
+    }
   },
   typography: {
-    fontFamily: "Pretendard, sans-serif",
-  },
-})
+    fontFamily: 'Pretendard, sans-serif'
+  }
+});
 ```
 
 ## 개발 가이드
@@ -216,15 +216,15 @@ React Native 앱에서 이 웹 앱을 웹뷰로 사용할 때 API 통신 로깅�
 ```javascript
 // React Native 코드 예시
 <WebView
-  source={{ uri: "https://테라피-웹-URL.com" }}
+  source={{ uri: 'https://테라피-웹-URL.com' }}
   onMessage={(event) => {
     try {
-      const data = JSON.parse(event.nativeEvent.data)
-      if (data.type && data.type.startsWith("API_")) {
-        console.log(`[${data.type}] ${data.data}`)
+      const data = JSON.parse(event.nativeEvent.data);
+      if (data.type && data.type.startsWith('API_')) {
+        console.log(`[${data.type}] ${data.data}`);
       }
     } catch (error) {
-      console.error("WebView 메시지 처리 중 오류:", error)
+      console.error('WebView 메시지 처리 중 오류:', error);
     }
   }}
 />

@@ -14,22 +14,22 @@
  */
 const formatDate = (date: Date | string): string => {
   try {
-    const dateObj = typeof date === "string" ? new Date(date) : date
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
     if (isNaN(dateObj.getTime())) {
-      return ""
+      return '';
     }
 
-    const DAYS = ["일", "월", "화", "수", "목", "금", "토"]
-    const year = dateObj.getFullYear()
-    const month = dateObj.getMonth() + 1 // getMonth()는 0부터 시작
-    const day = dateObj.getDate()
-    const dayOfWeek = DAYS[dateObj.getDay()]
+    const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+    const year = dateObj.getFullYear();
+    const month = dateObj.getMonth() + 1; // getMonth()는 0부터 시작
+    const day = dateObj.getDate();
+    const dayOfWeek = DAYS[dateObj.getDay()];
 
-    return `${year}년 ${month}월 ${day}일 (${dayOfWeek})`
+    return `${year}년 ${month}월 ${day}일 (${dayOfWeek})`;
   } catch (error) {
-    console.error("Date formatting error:", error)
-    return ""
+    console.error('Date formatting error:', error);
+    return '';
   }
-}
+};
 
-export default formatDate
+export default formatDate;

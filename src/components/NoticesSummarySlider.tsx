@@ -1,26 +1,21 @@
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Autoplay } from "swiper/modules"
-import { useNoticesSummary } from "../queries/useContentQueries"
-import { useNavigate } from "react-router-dom"
-import "swiper/css"
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
+import { useNoticesSummary } from '../queries/useContentQueries';
+import { useNavigate } from 'react-router-dom';
+import 'swiper/css';
 
 interface NoticesSummarySliderProps {
-  className?: string
-  left?: React.ReactNode
-  right?: React.ReactNode
-  fromPath?: string
+  className?: string;
+  left?: React.ReactNode;
+  right?: React.ReactNode;
+  fromPath?: string;
 }
 
-const NoticesSummarySlider = ({
-  className,
-  left,
-  right,
-  fromPath = "/",
-}: NoticesSummarySliderProps) => {
-  const navigate = useNavigate()
-  const { data: noticesData } = useNoticesSummary()
+const NoticesSummarySlider = ({ className, left, right, fromPath = '/' }: NoticesSummarySliderProps) => {
+  const navigate = useNavigate();
+  const { data: noticesData } = useNoticesSummary();
 
-  if (!noticesData?.notices?.length) return null
+  if (!noticesData?.notices?.length) return null;
 
   return (
     <div className={className}>
@@ -29,7 +24,7 @@ const NoticesSummarySlider = ({
         modules={[Autoplay]}
         autoplay={{
           delay: 3000,
-          disableOnInteraction: false,
+          disableOnInteraction: false
         }}
         loop
         direction="vertical"
@@ -40,20 +35,16 @@ const NoticesSummarySlider = ({
           <SwiperSlide
             key={notice.code}
             className="flex text-sm items-center cursor-pointer"
-            onClick={() =>
-              navigate(`/notice/${notice.code}`, { state: { from: fromPath } })
-            }
+            onClick={() => navigate(`/notice/${notice.code}`, { state: { from: fromPath } })}
           >
             {left}
-            <span className="overflow-hidden text-ellipsis whitespace-nowrap">
-              {notice.title}
-            </span>
+            <span className="overflow-hidden text-ellipsis whitespace-nowrap">{notice.title}</span>
             {right}
           </SwiperSlide>
         ))}
       </Swiper>
     </div>
-  )
-}
+  );
+};
 
-export default NoticesSummarySlider
+export default NoticesSummarySlider;

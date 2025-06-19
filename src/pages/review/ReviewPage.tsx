@@ -1,64 +1,49 @@
-import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useEffect } from "react"
-import { useReviews } from "../../queries/useReviewQueries.tsx"
-import { ReviewListItem } from "./_fragments/ReviewListItem.tsx"
-import { useIntersection } from "../../hooks/useIntersection.tsx"
-import { Link } from "react-router-dom"
-import LoadingIndicator from "@components/LoadingIndicator.tsx"
-import { Button } from "@components/Button"
-import { EmptyCard } from "@components/EmptyCard"
+import { useLayout } from '../../contexts/LayoutContext.tsx';
+import { useEffect } from 'react';
+import { useReviews } from '../../queries/useReviewQueries.tsx';
+import { ReviewListItem } from './_fragments/ReviewListItem.tsx';
+import { useIntersection } from '../../hooks/useIntersection.tsx';
+import { Link } from 'react-router-dom';
+import LoadingIndicator from '@components/LoadingIndicator.tsx';
+import { Button } from '@components/Button';
+import { EmptyCard } from '@components/EmptyCard';
 
 const ReviewPage = () => {
-  const { setHeader, setNavigation } = useLayout()
-  const {
-    data,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isError,
-    refetch,
-  } = useReviews()
+  const { setHeader, setNavigation } = useLayout();
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, isError, refetch } = useReviews();
 
   const { observerTarget } = useIntersection({
     onIntersect: () => {
       if (hasNextPage && !isFetchingNextPage) {
-        void fetchNextPage()
+        void fetchNextPage();
       }
     },
-    enabled: hasNextPage && !isFetchingNextPage,
-  })
+    enabled: hasNextPage && !isFetchingNextPage
+  });
 
   useEffect(() => {
     setHeader({
       display: true,
-      title: "작성한 만족도",
-      left: "back",
-      backgroundColor: "bg-white",
-    })
-    setNavigation({ display: true })
-  }, [])
+      title: '작성한 만족도',
+      left: 'back',
+      backgroundColor: 'bg-white'
+    });
+    setNavigation({ display: true });
+  }, []);
 
   if (isLoading) {
-    return <LoadingIndicator className="min-h-screen" />
+    return <LoadingIndicator className="min-h-screen" />;
   }
 
   if (isError) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4 bg-white">
-        <span className="text-gray-500 text-sm font-medium">
-          데이터를 불러오는데 실패했습니다.
-        </span>
-        <Button
-          variantType="primary"
-          sizeType="m"
-          onClick={() => refetch()}
-          aria-label="리뷰 새로고침"
-        >
+        <span className="text-gray-500 text-sm font-medium">데이터를 불러오는데 실패했습니다.</span>
+        <Button variantType="primary" sizeType="m" onClick={() => refetch()} aria-label="리뷰 새로고침">
           새로고침
         </Button>
       </div>
-    )
+    );
   }
 
   if (!data || data.pages[0].length === 0) {
@@ -66,7 +51,7 @@ const ReviewPage = () => {
       <div className="h-screen bg-white p-5">
         <EmptyCard title="작성한 만족도가 없습니다." />
       </div>
-    )
+    );
   }
 
   return (
@@ -80,7 +65,7 @@ const ReviewPage = () => {
           >
             <ReviewListItem review={review} />
           </Link>
-        )),
+        ))
       )}
       <div ref={observerTarget} />
       {isFetchingNextPage && (
@@ -89,7 +74,7 @@ const ReviewPage = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default ReviewPage
+export default ReviewPage;

@@ -1,70 +1,67 @@
-import { Button } from "@components/Button.tsx"
-import CustomTextField from "@components/CustomTextField.tsx"
-import { GenderSelect } from "@components/GenderSelect"
-import { SwiperBrandCard } from "@components/SwiperBrandCard.tsx"
-import PostcodeModal from "@components/modal/PostcodeModal.tsx"
-import { CircularProgress } from "@mui/material"
-import { useOverlay } from "contexts/ModalContext.tsx"
-import ProfileImageButton from "pages/editProfile/_fragments/ProfileImageButton.tsx"
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { uploadImages } from "../../apis/image.api.ts"
-import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useSignup } from "../../contexts/SignupContext.tsx"
-import { useProfileSetupHandlers } from "../../hooks/useProfileSetupHandlers"
-import { useProfileSetupSubmit } from "../../hooks/useProfileSetupSubmit"
-import { useProfileSetupValidation } from "../../hooks/useProfileSetupValidation"
+import { Button } from '@components/Button.tsx';
+import CustomTextField from '@components/CustomTextField.tsx';
+import { GenderSelect } from '@components/GenderSelect';
+import { SwiperBrandCard } from '@components/SwiperBrandCard.tsx';
+import PostcodeModal from '@components/modal/PostcodeModal.tsx';
+import { CircularProgress } from '@mui/material';
+import { useOverlay } from 'contexts/ModalContext.tsx';
+import ProfileImageButton from 'pages/editProfile/_fragments/ProfileImageButton.tsx';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { uploadImages } from '../../apis/image.api.ts';
+import { useLayout } from '../../contexts/LayoutContext.tsx';
+import { useSignup } from '../../contexts/SignupContext.tsx';
+import { useProfileSetupHandlers } from '../../hooks/useProfileSetupHandlers';
+import { useProfileSetupSubmit } from '../../hooks/useProfileSetupSubmit';
+import { useProfileSetupValidation } from '../../hooks/useProfileSetupValidation';
 
 export const ProfileSetup = () => {
-  const { setHeader, setNavigation } = useLayout()
-  const { signupData, setSignupData } = useSignup()
-  const [isPostcodeOpen, setIsPostcodeOpen] = useState(false)
-  const isSocialSignup = !!sessionStorage.getItem("socialSignupInfo")
-  const { openModal } = useOverlay()
-  const navigate = useNavigate()
+  const { setHeader, setNavigation } = useLayout();
+  const { signupData, setSignupData } = useSignup();
+  const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
+  const isSocialSignup = !!sessionStorage.getItem('socialSignupInfo');
+  const { openModal } = useOverlay();
+  const navigate = useNavigate();
   const {
     // handleImageUpload,
     // handleImageDelete,
     handleCompletePostcode,
     toggleBrandSelection,
-    handleNameChange,
-  } = useProfileSetupHandlers()
-  const [profileImageUrl, setProfileImageUrl] = useState<string | undefined>()
+    handleNameChange
+  } = useProfileSetupHandlers();
+  const [profileImageUrl, setProfileImageUrl] = useState<string | undefined>();
 
-  const { nameError, validateForm } = useProfileSetupValidation()
-  const { handleSubmit } = useProfileSetupSubmit()
+  const { nameError, validateForm } = useProfileSetupValidation();
+  const { handleSubmit } = useProfileSetupSubmit();
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [profileImageFile, setProfileImageFile] = useState<File | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (!signupData.di) {
       openModal({
-        title: "알림",
-        message:
-          "회원가입 정보가 초기화되었습니다. 처음부터 다시 시작해주세요.",
+        title: '알림',
+        message: '회원가입 정보가 초기화되었습니다. 처음부터 다시 시작해주세요.',
         onConfirm: () => {
-          navigate("/login", { replace: true })
-        },
-      })
+          navigate('/login', { replace: true });
+        }
+      });
     }
-  }, [signupData])
+  }, [signupData]);
 
   useEffect(() => {
     setHeader({
       display: true,
-      left: "back",
-      backgroundColor: "bg-white",
-      title: "프로필 설정",
-    })
-    setNavigation({ display: false })
-  }, [setHeader, setNavigation])
+      left: 'back',
+      backgroundColor: 'bg-white',
+      title: '프로필 설정'
+    });
+    setNavigation({ display: false });
+  }, [setHeader, setNavigation]);
 
   useEffect(() => {
     if (isSocialSignup) {
-      const socialInfo = JSON.parse(
-        sessionStorage.getItem("socialSignupInfo") || "{}",
-      )
+      const socialInfo = JSON.parse(sessionStorage.getItem('socialSignupInfo') || '{}');
 
       setSignupData((prev) => ({
         ...prev,
@@ -73,17 +70,17 @@ export const ProfileSetup = () => {
         mobileNumber: socialInfo.mobileno || prev.mobileNumber,
         birthDate: socialInfo.birthdate || prev.birthDate,
         gender: socialInfo.gender || prev.gender,
-        profileUrl: socialInfo.profileUrl || prev.profileUrl,
-      }))
+        profileUrl: socialInfo.profileUrl || prev.profileUrl
+      }));
     }
-  }, [isSocialSignup, setSignupData])
+  }, [isSocialSignup, setSignupData]);
 
   const handleSignupSubmit = async () => {
     if (!validateForm(signupData.name)) {
-      return
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
       // 프로필 이미지가 있으면 업로드
@@ -91,35 +88,35 @@ export const ProfileSetup = () => {
         try {
           const uploadedUrls = await uploadImages({
             fileToUpload: [profileImageFile],
-            nextUrl: "/auth/signup",
-            isSignup: "Y",
-          })
+            nextUrl: '/auth/signup',
+            isSignup: 'Y'
+          });
 
           if (uploadedUrls && uploadedUrls.length > 0) {
             // 업로드된 이미지 URL로 업데이트하고 새 객체 생성하여 참조 변경
             setSignupData((prev) => ({
               ...prev,
-              profileUrl: uploadedUrls[0],
-            }))
+              profileUrl: uploadedUrls[0]
+            }));
 
             // 업로드된 이미지 URL을 사용하여 회원가입 진행
-            await handleSubmit()
+            await handleSubmit();
           }
         } catch (error) {
-          console.error("이미지 업로드 실패:", error)
+          console.error('이미지 업로드 실패:', error);
           // 이미지 업로드 실패해도 회원가입은 계속 진행
-          await handleSubmit()
+          await handleSubmit();
         }
       } else {
         // 이미지가 없는 경우 바로 회원가입 진행
-        await handleSubmit()
+        await handleSubmit();
       }
     } catch (error) {
-      console.error("회원가입 실패:", error)
+      console.error('회원가입 실패:', error);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col px-5 pt-5 pb-7 gap-10">
@@ -127,9 +124,7 @@ export const ProfileSetup = () => {
         <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 flex flex-col items-center">
             <CircularProgress color="primary" size={48} />
-            <p className="mt-4 text-16px font-medium text-[#212121]">
-              회원가입 처리 중...
-            </p>
+            <p className="mt-4 text-16px font-medium text-[#212121]">회원가입 처리 중...</p>
           </div>
         </div>
       )}
@@ -143,9 +138,7 @@ export const ProfileSetup = () => {
         {/* 프로필 사진 */}
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-0.5">
-            <span className="text-14px font-medium text-[#212121]">
-              프로필 사진
-            </span>
+            <span className="text-14px font-medium text-[#212121]">프로필 사진</span>
             <span className="text-14px text-[#A2A5AA]">(선택)</span>
           </div>
 
@@ -170,7 +163,7 @@ export const ProfileSetup = () => {
             value={signupData.name}
             onChange={handleNameChange}
             placeholder="이름 입력"
-            state={nameError ? "error" : "default"}
+            state={nameError ? 'error' : 'default'}
             helperText={nameError}
             disabled={true}
           />
@@ -181,8 +174,8 @@ export const ProfileSetup = () => {
           label="휴대폰 번호"
           value={signupData.mobileNumber}
           onChange={(e) => {
-            const value = e.target.value.replace(/[^0-9]/g, "")
-            setSignupData({ ...signupData, mobileNumber: value })
+            const value = e.target.value.replace(/[^0-9]/g, '');
+            setSignupData({ ...signupData, mobileNumber: value });
           }}
           placeholder="- 없이 입력"
           maxLength={11}
@@ -203,10 +196,7 @@ export const ProfileSetup = () => {
         {/* 생년월일 */}
         <CustomTextField
           label="생년월일"
-          value={signupData.birthDate?.replace(
-            /(\d{4})(\d{2})(\d{2})/,
-            "$1.$2.$3",
-          )}
+          value={signupData.birthDate?.replace(/(\d{4})(\d{2})(\d{2})/, '$1.$2.$3')}
           placeholder="YYYYMMDD"
           type="tel"
           disabled={true}
@@ -218,9 +208,7 @@ export const ProfileSetup = () => {
           <div className="flex gap-2">
             <CustomTextField
               value={signupData.postCode}
-              onChange={(e) =>
-                setSignupData({ ...signupData, postCode: e.target.value })
-              }
+              onChange={(e) => setSignupData({ ...signupData, postCode: e.target.value })}
               placeholder="우편번호"
               disabled
             />
@@ -236,40 +224,28 @@ export const ProfileSetup = () => {
           <CustomTextField
             value={signupData.address1}
             disabled
-            onChange={(e) =>
-              setSignupData({ ...signupData, address1: e.target.value })
-            }
+            onChange={(e) => setSignupData({ ...signupData, address1: e.target.value })}
             placeholder="기본주소"
           />
           <CustomTextField
             value={signupData.address2}
-            onChange={(e) =>
-              setSignupData({ ...signupData, address2: e.target.value })
-            }
+            onChange={(e) => setSignupData({ ...signupData, address2: e.target.value })}
             placeholder="상세주소"
           />
         </div>
 
         {isPostcodeOpen && (
-          <PostcodeModal
-            setIsPostcodeOpen={setIsPostcodeOpen}
-            handleCompletePostcode={handleCompletePostcode}
-          />
+          <PostcodeModal setIsPostcodeOpen={setIsPostcodeOpen} handleCompletePostcode={handleCompletePostcode} />
         )}
 
         {/* 브랜드 선택 */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-0.5">
-            <span className="text-14px font-medium text-black">
-              현재 이용중인 브랜드를 선택해주세요
-            </span>
+            <span className="text-14px font-medium text-black">현재 이용중인 브랜드를 선택해주세요</span>
             <span className="text-14px text-[#A2A5AA]">(선택)</span>
           </div>
 
-          <SwiperBrandCard
-            onBrandClick={toggleBrandSelection}
-            selectedBrandCodes={signupData.brandCodes}
-          />
+          <SwiperBrandCard onBrandClick={toggleBrandSelection} selectedBrandCodes={signupData.brandCodes} />
         </div>
 
         {/* 추천인 코드 -- 약손명가 헬스케어 팀의 요청으로 임시 숨김 처리 */}
@@ -304,7 +280,7 @@ export const ProfileSetup = () => {
         완료
       </Button>
     </div>
-  )
-}
+  );
+};
 
-export default ProfileSetup
+export default ProfileSetup;

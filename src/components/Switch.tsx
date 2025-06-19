@@ -1,76 +1,72 @@
-import { Switch as MuiSwitch, SwitchProps } from "@mui/material"
-import { styled } from "@mui/material/styles"
+import { Switch as MuiSwitch, SwitchProps } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
-const Switch = ({ ...props }: SwitchProps) => <MuiSwitch {...props} />
+const Switch = ({ ...props }: SwitchProps) => <MuiSwitch {...props} />;
 
 /**
  * iOS Style Switch
  * Copied from https://mui.com/material-ui/react-switch/#customization
  */
 const IOSSwitch = styled((props: SwitchProps) => (
-  <MuiSwitch
-    focusVisibleClassName=".Mui-focusVisible"
-    disableRipple
-    {...props}
-  />
+  <MuiSwitch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
 ))(({ theme }) => ({
   width: 42,
   height: 26,
   padding: 0,
-  "& .MuiSwitch-switchBase": {
+  '& .MuiSwitch-switchBase': {
     padding: 0,
     margin: 2,
-    transitionDuration: "300ms",
-    "&.Mui-checked": {
-      transform: "translateX(16px)",
-      color: "#FFFFFF",
-      "& + .MuiSwitch-track": {
-        backgroundColor: "#F37165",
+    transitionDuration: '300ms',
+    '&.Mui-checked': {
+      transform: 'translateX(16px)',
+      color: '#FFFFFF',
+      '& + .MuiSwitch-track': {
+        backgroundColor: '#F37165',
         opacity: 1,
         border: 0,
-        ...theme.applyStyles("dark", {
-          backgroundColor: "#F37165",
-        }),
+        ...theme.applyStyles('dark', {
+          backgroundColor: '#F37165'
+        })
       },
-      "&.Mui-disabled + .MuiSwitch-track": {
-        opacity: 0.5,
-      },
+      '&.Mui-disabled + .MuiSwitch-track': {
+        opacity: 0.5
+      }
     },
-    "&.Mui-focusVisible .MuiSwitch-thumb": {
-      color: "#F37165",
-      border: "6px solid #fff",
+    '&.Mui-focusVisible .MuiSwitch-thumb': {
+      color: '#F37165',
+      border: '6px solid #fff'
     },
-    "&.Mui-disabled .MuiSwitch-thumb": {
+    '&.Mui-disabled .MuiSwitch-thumb': {
       color: theme.palette.grey[100],
-      ...theme.applyStyles("dark", {
-        color: theme.palette.grey[600],
-      }),
+      ...theme.applyStyles('dark', {
+        color: theme.palette.grey[600]
+      })
     },
-    "&.Mui-disabled + .MuiSwitch-track": {
+    '&.Mui-disabled + .MuiSwitch-track': {
       opacity: 0.7,
-      ...theme.applyStyles("dark", {
-        opacity: 0.3,
-      }),
-    },
+      ...theme.applyStyles('dark', {
+        opacity: 0.3
+      })
+    }
   },
-  "& .MuiSwitch-thumb": {
-    boxSizing: "border-box",
+  '& .MuiSwitch-thumb': {
+    boxSizing: 'border-box',
     width: 22,
-    height: 22,
+    height: 22
   },
-  "& .MuiSwitch-track": {
+  '& .MuiSwitch-track': {
     borderRadius: 26 / 2,
-    backgroundColor: "#E9E9EA",
+    backgroundColor: '#E9E9EA',
     opacity: 1,
-    transition: theme.transitions.create(["background-color"], {
-      duration: 500,
+    transition: theme.transitions.create(['background-color'], {
+      duration: 500
     }),
-    ...theme.applyStyles("dark", {
-      backgroundColor: "#39393D",
-    }),
-  },
-}))
+    ...theme.applyStyles('dark', {
+      backgroundColor: '#39393D'
+    })
+  }
+}));
 
-Switch.IOS = IOSSwitch
+Switch.IOS = IOSSwitch;
 
-export default Switch
+export default Switch;

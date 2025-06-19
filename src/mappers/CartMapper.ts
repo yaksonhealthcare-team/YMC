@@ -1,12 +1,12 @@
-import { CartItem, CartItemOption, CartItemResponse } from "../types/Cart"
+import { CartItem, CartItemOption, CartItemResponse } from '../types/Cart';
 
 export class CartMapper {
   private static toValidId(id: string): string {
-    const numId = Number(id)
+    const numId = Number(id);
     if (isNaN(numId) || numId <= 0) {
-      throw new Error(`Invalid cart ID: ${id}`)
+      throw new Error(`Invalid cart ID: ${id}`);
     }
-    return numId.toString()
+    return numId.toString();
   }
 
   /**
@@ -21,22 +21,22 @@ export class CartMapper {
   static toEntities(dtos: CartItemResponse[]): CartItem[] {
     const itemsMap = dtos.reduce(
       (acc, dto) => {
-        if (Number(dto.amount) === 0) return acc
+        if (Number(dto.amount) === 0) return acc;
 
-        const itemId = dto.membership.s_idx
+        const itemId = dto.membership.s_idx;
 
         if (itemId in acc) {
-          acc[itemId] = this.updateExistingItem(acc[itemId], dto)
+          acc[itemId] = this.updateExistingItem(acc[itemId], dto);
         } else {
-          acc[itemId] = this.createNewItem(dto)
+          acc[itemId] = this.createNewItem(dto);
         }
 
-        return acc
+        return acc;
       },
-      {} as Record<string, CartItem>,
-    )
+      {} as Record<string, CartItem>
+    );
 
-    return Object.values(itemsMap)
+    return Object.values(itemsMap);
   }
 
   private static createNewItem(dto: CartItemResponse): CartItem {
@@ -49,18 +49,13 @@ export class CartMapper {
       options: [this.createOption(dto)],
       branchId: dto.branch.b_idx,
       brandCode: dto.branch.brand_code,
-      branchName: dto.branch.b_name,
-    }
+      branchName: dto.branch.b_name
+    };
   }
 
-  private static updateExistingItem(
-    item: CartItem,
-    dto: CartItemResponse,
-  ): CartItem {
-    const sessionCount = Number(dto.option.ss_count)
-    const existingOptionIndex = item.options.findIndex(
-      (option) => option.sessions === sessionCount,
-    )
+  private static updateExistingItem(item: CartItem, dto: CartItemResponse): CartItem {
+    const sessionCount = Number(dto.option.ss_count);
+    const existingOptionIndex = item.options.findIndex((option) => option.sessions === sessionCount);
 
     if (existingOptionIndex === -1) {
       return {
@@ -68,8 +63,8 @@ export class CartMapper {
         branchId: dto.branch.b_idx,
         brandCode: dto.branch.brand_code,
         branchName: dto.branch.b_name,
-        options: [...item.options, this.createOption(dto)],
-      }
+        options: [...item.options, this.createOption(dto)]
+      };
     }
 
     return {
@@ -84,34 +79,32 @@ export class CartMapper {
               items: [
                 {
                   cartId: this.toValidId(dto.csc_idx),
-                  count: Number(dto.amount),
-                },
+                  count: Number(dto.amount)
+                }
               ],
-              price: Number(dto.option.ss_unit_price.replace(/,/g, "")),
-              originalPrice:
-                dto.origin_price ||
-                Number(dto.option.ss_unit_price.replace(/,/g, "")),
+              price: Number(dto.option.ss_unit_price.replace(/,/g, '')),
+              originalPrice: dto.origin_price || Number(dto.option.ss_unit_price.replace(/,/g, ''))
             }
-          : option,
-      ),
-    }
+          : option
+      )
+    };
   }
 
   private static createOption(dto: CartItemResponse): CartItemOption {
-    const price = Number(dto.option.ss_unit_price.replace(/,/g, ""))
-    const originalPrice = dto.origin_price || price
+    const price = Number(dto.option.ss_unit_price.replace(/,/g, ''));
+    const originalPrice = dto.origin_price || price;
 
     return {
       items: [
         {
           cartId: this.toValidId(dto.csc_idx),
-          count: Number(dto.amount),
-        },
+          count: Number(dto.amount)
+        }
       ],
       sessions: Number(dto.option.ss_count),
       price,
       originalPrice,
-      ss_idx: dto.option.ss_idx,
-    }
+      ss_idx: dto.option.ss_idx
+    };
   }
 }

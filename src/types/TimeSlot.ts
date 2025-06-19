@@ -1,4 +1,4 @@
 export interface TimeSlot {
-  time: string
-  available: boolean
+  time: string;
+  available: boolean;
 }
