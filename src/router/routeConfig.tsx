@@ -1,556 +1,487 @@
-import { lazy } from "react"
-import WithdrawalPage from "../pages/profile/WithdrawalPage"
-import { RouteObject } from "react-router-dom"
+import { lazy } from 'react';
+import { RouteObject } from 'react-router-dom';
+import WithdrawalPage from '../pages/profile/WithdrawalPage';
 
-const MembershipBranchSelectPage = lazy(
-  () => import("../pages/membership/MembershipBranchSelectPage"),
-)
+const MembershipBranchSelectPage = lazy(() => import('../pages/membership/MembershipBranchSelectPage'));
 
-export interface RouteConfig extends Omit<RouteObject, "children"> {
-  auth?: boolean
-  children?: RouteConfig[]
+export interface RouteConfig extends Omit<RouteObject, 'children'> {
+  auth?: boolean;
+  children?: RouteConfig[];
 }
 
-const Home = lazy(() => import("../pages/home/Home"))
-const Login = lazy(() => import("../pages/login/Login"))
-const Membership = lazy(() => import("../pages/membership/Membership"))
-const MyPage = lazy(() => import("../pages/myPage/MyPage"))
-const Logout = lazy(() => import("../pages/logout/Logout"))
-const Dev = lazy(() => import("../pages/DevPage"))
-const Notification = lazy(() => import("../pages/home/Notification"))
-const MembershipDetailPage = lazy(
-  () => import("../pages/membership/MembershipDetailPage"),
-)
-const EmailLogin = lazy(() => import("../pages/login/EmailLogin"))
-const TermsAgreement = lazy(() => import("../pages/signup/TermsAgreement"))
-const EmailPassword = lazy(() => import("../pages/signup/EmailPassword"))
-const ProfileSetup = lazy(() => import("../pages/signup/ProfileSetup"))
-const SignupComplete = lazy(() => import("../pages/signup/SignupComplete"))
-const PointPage = lazy(() => import("../pages/point/PointPage"))
-const Branch = lazy(
-  () => import(/* webpackChunkName: "branch" */ "../pages/branch/Branch"),
-)
-const BranchDetail = lazy(
-  () =>
-    import(
-      /* webpackChunkName: "branch-detail" */ "../pages/branch/[id]/BranchDetail"
-    ),
-)
-const FavoritePage = lazy(() => import("../pages/favorite/FavoritePage"))
-const PaymentHistoryPage = lazy(
-  () => import("../pages/payment/PaymentHistoryPage"),
-)
-const ReviewPage = lazy(() => import("../pages/review/ReviewPage"))
-const InquiryPage = lazy(() => import("../pages/inquiry/InquiryPage"))
-const EventPage = lazy(() => import("../pages/event/EventPage"))
-const NoticePage = lazy(() => import("../pages/notice/NoticePage"))
-const SettingsPage = lazy(() => import("../pages/settings/SettingsPage"))
-const EventDetailPage = lazy(() => import("../pages/event/EventDetailPage"))
-const NoticeDetailPage = lazy(() => import("../pages/notice/NoticeDetail"))
-const LocationSettings = lazy(
-  () => import("../pages/branch/_fragments/LocationSettings"),
-)
-const ReservationDetailPage = lazy(
-  () => import("../pages/reservation/ReservationDetailPage"),
-)
-const ReservationCancelPage = lazy(
-  () => import("../pages/reservation/ReservationCancelPage"),
-)
-const SatisfactionPage = lazy(
-  () => import("../pages/reservation/satisfaction/SatisfactionPage"),
-)
-const MembershipUsageHistory = lazy(
-  () => import("../pages/membership/MembershipUsageHistory"),
-)
-const ReservationFormPage = lazy(
-  () => import("../pages/reservation/ReservationFormPage"),
-)
-const BranchSearch = lazy(() => import("../pages/branch/search/BranchSearch"))
-const ResetPasswordComplete = lazy(
-  () => import("@components/resetPassword/ResetPasswordComplete"),
-)
-const ReviewFormPage = lazy(() => import("../pages/review/ReviewFormPage"))
-const ReviewDetailPage = lazy(() => import("../pages/review/ReviewDetailPage"))
-const ActiveBranch = lazy(
-  () => import("../pages/myPage/activeBranch/ActiveBranch"),
-)
-const EditProfile = lazy(() => import("../pages/editProfile/EditProfile"))
-const Questionnaire = lazy(() => import("../pages/questionnaire/Questionnaire"))
-const QuestionnaireComplete = lazy(
-  () => import("../pages/questionnaire/QusetionnaireComplete"),
-)
-const GeneralQuestionnaireHistory = lazy(
-  () => import("../pages/myPage/questionnaire/GeneralQuestionnaireHistory"),
-)
+const Home = lazy(() => import('../pages/home/Home'));
+const Login = lazy(() => import('../pages/login/Login'));
+const Membership = lazy(() => import('../pages/membership/Membership'));
+const MyPage = lazy(() => import('../pages/myPage/MyPage'));
+const Logout = lazy(() => import('../pages/logout/Logout'));
+const Dev = lazy(() => import('../pages/DevPage'));
+const Notification = lazy(() => import('../pages/home/Notification'));
+const MembershipDetailPage = lazy(() => import('../pages/membership/MembershipDetailPage'));
+const EmailLogin = lazy(() => import('../pages/login/EmailLogin'));
+const TermsAgreement = lazy(() => import('../pages/signup/TermsAgreement'));
+const EmailPassword = lazy(() => import('../pages/signup/EmailPassword'));
+const ProfileSetup = lazy(() => import('../pages/signup/ProfileSetup'));
+const SignupComplete = lazy(() => import('../pages/signup/SignupComplete'));
+const PointPage = lazy(() => import('../pages/point/PointPage'));
+const Branch = lazy(() => import(/* webpackChunkName: "branch" */ '../pages/branch/Branch'));
+const BranchDetail = lazy(() => import(/* webpackChunkName: "branch-detail" */ '../pages/branch/[id]/BranchDetail'));
+const FavoritePage = lazy(() => import('../pages/favorite/FavoritePage'));
+const PaymentHistoryPage = lazy(() => import('../pages/payment/PaymentHistoryPage'));
+const ReviewPage = lazy(() => import('../pages/review/ReviewPage'));
+const InquiryPage = lazy(() => import('../pages/inquiry/InquiryPage'));
+const EventPage = lazy(() => import('../pages/event/EventPage'));
+const NoticePage = lazy(() => import('../pages/notice/NoticePage'));
+const SettingsPage = lazy(() => import('../pages/settings/SettingsPage'));
+const EventDetailPage = lazy(() => import('../pages/event/EventDetailPage'));
+const NoticeDetailPage = lazy(() => import('../pages/notice/NoticeDetail'));
+const LocationSettings = lazy(() => import('../pages/branch/_fragments/LocationSettings'));
+const ReservationDetailPage = lazy(() => import('../pages/reservation/ReservationDetailPage'));
+const ReservationCancelPage = lazy(() => import('../pages/reservation/ReservationCancelPage'));
+const SatisfactionPage = lazy(() => import('../pages/reservation/satisfaction/SatisfactionPage'));
+const MembershipUsageHistory = lazy(() => import('../pages/membership/MembershipUsageHistory'));
+const ReservationFormPage = lazy(() => import('../pages/reservation/ReservationFormPage'));
+const BranchSearch = lazy(() => import('../pages/branch/search/BranchSearch'));
+const ResetPasswordComplete = lazy(() => import('@/components/resetPassword/ResetPasswordComplete'));
+const ReviewFormPage = lazy(() => import('../pages/review/ReviewFormPage'));
+const ReviewDetailPage = lazy(() => import('../pages/review/ReviewDetailPage'));
+const ActiveBranch = lazy(() => import('../pages/myPage/activeBranch/ActiveBranch'));
+const EditProfile = lazy(() => import('../pages/editProfile/EditProfile'));
+const Questionnaire = lazy(() => import('../pages/questionnaire/Questionnaire'));
+const QuestionnaireComplete = lazy(() => import('../pages/questionnaire/QusetionnaireComplete'));
+const GeneralQuestionnaireHistory = lazy(() => import('../pages/myPage/questionnaire/GeneralQuestionnaireHistory'));
 const ReservationQuestionnaireHistory = lazy(
-  () => import("../pages/myPage/questionnaire/ReservationQuestionnaireHistory"),
-)
-const FindAccount = lazy(() => import("../pages/findAccount/FindAccount"))
-const FindAccountCallback = lazy(
-  () => import("../pages/findAccount/FindAccountCallback"),
-)
-const FindEmail = lazy(() => import("../pages/findAccount/FindEmail"))
-const ProfileResetPassword = lazy(
-  () => import("../pages/editProfile/ProfileResetPassword"),
-)
-const FindAccountResetPassword = lazy(
-  () => import("../pages/findAccount/FindAccountResetPassword"),
-)
-const CartPage = lazy(() => import("../pages/cart/CartPage"))
-const TermsPage = lazy(() => import("../pages/terms/TermsPage"))
-const ServiceTermsPage = lazy(() => import("../pages/terms/ServiceTermsPage"))
-const PrivacyTermsPage = lazy(() => import("../pages/terms/PrivacyTermsPage"))
-const LocationTermsPage = lazy(() => import("../pages/terms/LocationTermsPage"))
-const MarketingTermsPage = lazy(
-  () => import("../pages/terms/MarketingTermsPage"),
-)
-const PaymentPage = lazy(() => import("../pages/payment/PaymentPage"))
-const AddUsingBranch = lazy(
-  () => import("../pages/addUsingBranch/AddUsingBranch"),
-)
-const PaymentHistoryDetailPage = lazy(
-  () => import("../pages/payment/PaymentHistoryDetailPage"),
-)
-const PaymentCancelPage = lazy(
-  () => import("../pages/payment/PaymentCancelPage"),
-)
-const PaymentCancelCompletePage = lazy(
-  () => import("../pages/payment/PaymentCancelCompletePage"),
-)
-const PaymentCancelDetailPage = lazy(
-  () => import("../pages/payment/PaymentCancelDetailPage"),
-)
-const ReservationHistoryPage = lazy(
-  () => import("../pages/member-history/reservation/ReservationHistoryPage"),
-)
-const MembershipHistoryPage = lazy(
-  () => import("../pages/member-history/membership/MembershipHistoryPage"),
-)
-const ProfileChangePhoneNumber = lazy(
-  () => import("../pages/editProfile/ProfileChangePhoneNumber"),
-)
-const ChangePhoneNumberCallback = lazy(
-  () => import("../pages/editProfile/ChangePhoneNumberCallback"),
-)
-const PaymentCompletePage = lazy(
-  () => import("../pages/payment/PaymentCompletePage"),
-)
-const BrandDetailPage = lazy(() => import("../pages/brand/BrandDetailPage.tsx"))
-const OAuthCallback = lazy(() => import("../pages/oauth/OAuthCallback"))
-const LocationPickerMap = lazy(
-  () => import("../pages/branch/_fragments/LocationPickerMap"),
-)
-const AddressConfirm = lazy(
-  () => import("../pages/branch/_fragments/AddressConfirm.tsx"),
-)
-const SignupCallback = lazy(() => import("../pages/signup/SignupCallback"))
-const PaymentCallbackPage = lazy(
-  () => import("../pages/payment/PaymentCallbackPage"),
-)
-const PaymentFailedPage = lazy(
-  () => import("../pages/payment/PaymentFailedPage"),
-)
-const StorePage = lazy(() => import("../pages/store/Store"))
-const PopupDetailPage = lazy(() => import("../pages/popup/PopupDetailPage"))
+  () => import('../pages/myPage/questionnaire/ReservationQuestionnaireHistory')
+);
+const FindAccount = lazy(() => import('../pages/findAccount/FindAccount'));
+const FindAccountCallback = lazy(() => import('../pages/findAccount/FindAccountCallback'));
+const FindEmail = lazy(() => import('../pages/findAccount/FindEmail'));
+const ProfileResetPassword = lazy(() => import('../pages/editProfile/ProfileResetPassword'));
+const FindAccountResetPassword = lazy(() => import('../pages/findAccount/FindAccountResetPassword'));
+const CartPage = lazy(() => import('../pages/cart/CartPage'));
+const TermsPage = lazy(() => import('../pages/terms/TermsPage'));
+const ServiceTermsPage = lazy(() => import('../pages/terms/ServiceTermsPage'));
+const PrivacyTermsPage = lazy(() => import('../pages/terms/PrivacyTermsPage'));
+const LocationTermsPage = lazy(() => import('../pages/terms/LocationTermsPage'));
+const MarketingTermsPage = lazy(() => import('../pages/terms/MarketingTermsPage'));
+const PaymentPage = lazy(() => import('../pages/payment/PaymentPage'));
+const AddUsingBranch = lazy(() => import('../pages/addUsingBranch/AddUsingBranch'));
+const PaymentHistoryDetailPage = lazy(() => import('../pages/payment/PaymentHistoryDetailPage'));
+const PaymentCancelPage = lazy(() => import('../pages/payment/PaymentCancelPage'));
+const PaymentCancelCompletePage = lazy(() => import('../pages/payment/PaymentCancelCompletePage'));
+const PaymentCancelDetailPage = lazy(() => import('../pages/payment/PaymentCancelDetailPage'));
+const ReservationHistoryPage = lazy(() => import('../pages/member-history/reservation/ReservationHistoryPage'));
+const MembershipHistoryPage = lazy(() => import('../pages/member-history/membership/MembershipHistoryPage'));
+const ProfileChangePhoneNumber = lazy(() => import('../pages/editProfile/ProfileChangePhoneNumber'));
+const ChangePhoneNumberCallback = lazy(() => import('../pages/editProfile/ChangePhoneNumberCallback'));
+const PaymentCompletePage = lazy(() => import('../pages/payment/PaymentCompletePage'));
+const BrandDetailPage = lazy(() => import('../pages/brand/BrandDetailPage'));
+const OAuthCallback = lazy(() => import('../pages/oauth/OAuthCallback'));
+const LocationPickerMap = lazy(() => import('../pages/branch/_fragments/LocationPickerMap'));
+const AddressConfirm = lazy(() => import('../pages/branch/_fragments/AddressConfirm'));
+const SignupCallback = lazy(() => import('../pages/signup/SignupCallback'));
+const PaymentCallbackPage = lazy(() => import('../pages/payment/PaymentCallbackPage'));
+const PaymentFailedPage = lazy(() => import('../pages/payment/PaymentFailedPage'));
+const StorePage = lazy(() => import('../pages/store/Store'));
+const PopupDetailPage = lazy(() => import('../pages/popup/PopupDetailPage'));
 
 export const routeConfig: RouteConfig[] = [
   {
-    path: "/dev",
+    path: '/dev',
     element: <Dev />,
-    auth: false,
+    auth: false
   },
   //홈
   {
-    path: "/",
+    path: '/',
     element: <Home />,
-    auth: false,
+    auth: false
   },
   //알림
   {
-    path: "/notification",
+    path: '/notification',
     element: <Notification />,
-    auth: true,
+    auth: true
   },
   //브랜드관
   {
-    path: "/brand/:brandCode/:brandName",
+    path: '/brand/:brandCode/:brandName',
     element: <BrandDetailPage />,
-    auth: false,
+    auth: false
   },
   //로그인, 로그아웃
   {
-    path: "/login",
+    path: '/login',
     element: <Login />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/login/email",
+    path: '/login/email',
     element: <EmailLogin />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/logout",
+    path: '/logout',
     element: <Logout />,
-    auth: false,
+    auth: false
   },
   // 회원가입
   {
-    path: "/signup/terms",
+    path: '/signup/terms',
     element: <TermsAgreement />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/signup/email",
+    path: '/signup/email',
     element: <EmailPassword />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/signup/profile",
+    path: '/signup/profile',
     element: <ProfileSetup />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/signup/callback",
+    path: '/signup/callback',
     element: <SignupCallback />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/signup/complete",
+    path: '/signup/complete',
     element: <SignupComplete />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/signup/branch",
+    path: '/signup/branch',
     element: <AddUsingBranch />,
-    auth: false,
+    auth: false
   },
   // 비밀번호 찾기, 이메일 찾기
   {
-    path: "/find-account",
+    path: '/find-account',
     element: <FindAccount />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/find-account/callback/:tab",
+    path: '/find-account/callback/:tab',
     element: <FindAccountCallback />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/find-account/find-email",
+    path: '/find-account/find-email',
     element: <FindEmail />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/find-account/reset-password",
+    path: '/find-account/reset-password',
     element: <FindAccountResetPassword />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/find-account/reset-password/complete",
+    path: '/find-account/reset-password/complete',
     element: <ResetPasswordComplete />,
-    auth: false,
+    auth: false
   },
   // 문진작성
   {
-    path: "/questionnaire/common",
+    path: '/questionnaire/common',
     element: <Questionnaire type="common" />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/questionnaire/reservation",
+    path: '/questionnaire/reservation',
     element: <Questionnaire type="reservation" />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/questionnaire/complete",
+    path: '/questionnaire/complete',
     element: <QuestionnaireComplete />,
-    auth: true,
+    auth: true
   },
   //구매, 스토어, 예약
   {
-    path: "/membership",
+    path: '/membership',
     element: <Membership />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/membership/branch-select",
+    path: '/membership/branch-select',
     element: <MembershipBranchSelectPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/membership/usage/:id",
+    path: '/membership/usage/:id',
     element: <MembershipUsageHistory />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/membership/:id",
+    path: '/membership/:id',
     element: <MembershipDetailPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/store",
+    path: '/store',
     element: <StorePage />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/popup/:code",
+    path: '/popup/:code',
     element: <PopupDetailPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/member-history/reservation",
+    path: '/member-history/reservation',
     element: <ReservationHistoryPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/member-history/membership",
+    path: '/member-history/membership',
     element: <MembershipHistoryPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/reservation/form",
+    path: '/reservation/form',
     element: <ReservationFormPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/reservation/:id",
+    path: '/reservation/:id',
     element: <ReservationDetailPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/reservation/:id/cancel",
+    path: '/reservation/:id/cancel',
     element: <ReservationCancelPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/reservation/:id/satisfaction",
+    path: '/reservation/:id/satisfaction',
     element: <SatisfactionPage />,
-    auth: true,
+    auth: true
   },
   //마이페이지
   {
-    path: "/mypage",
+    path: '/mypage',
     element: <MyPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/mypage/active-branch",
+    path: '/mypage/active-branch',
     element: <ActiveBranch />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/point",
+    path: '/point',
     element: <PointPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/mypage/questionnaire/common",
+    path: '/mypage/questionnaire/common',
     element: <GeneralQuestionnaireHistory />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/mypage/questionnaire/reservation",
+    path: '/mypage/questionnaire/reservation',
     element: <ReservationQuestionnaireHistory />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/payment_history",
+    path: '/payment_history',
     element: <PaymentHistoryPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/inquiry",
+    path: '/inquiry',
     element: <InquiryPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/favorite",
+    path: '/favorite',
     element: <FavoritePage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/cart",
+    path: '/cart',
     element: <CartPage />,
-    auth: true,
+    auth: true
   },
   //결제
   {
-    path: "/payment",
+    path: '/payment',
     element: <PaymentPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/payment/complete",
+    path: '/payment/complete',
     element: <PaymentCompletePage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/payment/:id/cancel",
+    path: '/payment/:id/cancel',
     element: <PaymentCancelPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/payment/:id/cancel-detail",
+    path: '/payment/:id/cancel-detail',
     element: <PaymentCancelDetailPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/payment/:id",
+    path: '/payment/:id',
     element: <PaymentHistoryDetailPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/payment/cancel/complete",
+    path: '/payment/cancel/complete',
     element: <PaymentCancelCompletePage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/payment/failed",
+    path: '/payment/failed',
     element: <PaymentFailedPage />,
-    auth: true,
+    auth: true
   },
   //리뷰
   {
-    path: "/review",
+    path: '/review',
     element: <ReviewPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/review/form",
+    path: '/review/form',
     element: <ReviewFormPage />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/review/:reviewId",
+    path: '/review/:reviewId',
     element: <ReviewDetailPage />,
-    auth: true,
+    auth: true
   },
   //이벤트, 공지사항
   {
-    path: "/event",
+    path: '/event',
     element: <EventPage />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/event/:id",
+    path: '/event/:id',
     element: <EventDetailPage />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/notice",
+    path: '/notice',
     element: <NoticePage />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/notice/:id",
+    path: '/notice/:id',
     element: <NoticeDetailPage />,
-    auth: false,
+    auth: false
   },
   //설정
   {
-    path: "/settings/notifications",
+    path: '/settings/notifications',
     element: <SettingsPage />,
-    auth: true,
+    auth: true
   },
   //약관
   {
-    path: "/terms",
+    path: '/terms',
     element: <TermsPage />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/terms/service",
+    path: '/terms/service',
     element: <ServiceTermsPage />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/terms/privacy",
+    path: '/terms/privacy',
     element: <PrivacyTermsPage />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/terms/location",
+    path: '/terms/location',
     element: <LocationTermsPage />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/terms/marketing",
+    path: '/terms/marketing',
     element: <MarketingTermsPage />,
-    auth: false,
+    auth: false
   },
   //프로필
   {
-    path: "/profile",
+    path: '/profile',
     element: <EditProfile />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/profile/reset-password",
+    path: '/profile/reset-password',
     element: <ProfileResetPassword />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/profile/reset-password/complete",
+    path: '/profile/reset-password/complete',
     element: <ResetPasswordComplete />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/profile/change-phone",
+    path: '/profile/change-phone',
     element: <ProfileChangePhoneNumber />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/profile/change-phone/callback",
+    path: '/profile/change-phone/callback',
     element: <ChangePhoneNumberCallback />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/profile/withdrawal",
+    path: '/profile/withdrawal',
     element: <WithdrawalPage />,
-    auth: true,
+    auth: true
   },
   //지점 찾기, 지점 상세보기
   {
-    path: "/branch",
+    path: '/branch',
     element: <Branch />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/branch/location",
+    path: '/branch/location',
     element: <LocationSettings />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/branch/location/picker",
+    path: '/branch/location/picker',
     element: <LocationPickerMap />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/branch/location/confirm",
+    path: '/branch/location/confirm',
     element: <AddressConfirm />,
-    auth: true,
+    auth: true
   },
   {
-    path: "/branch/search",
+    path: '/branch/search',
     element: <BranchSearch />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/branch/:id",
+    path: '/branch/:id',
     element: <BranchDetail />,
-    auth: false,
+    auth: false
   },
   // OAuth 콜백
   {
-    path: "/oauth/callback/:provider",
+    path: '/oauth/callback/:provider',
     element: <OAuthCallback />,
-    auth: false,
+    auth: false
   },
   {
-    path: "/payment/callback",
+    path: '/payment/callback',
     element: <PaymentCallbackPage />,
-    auth: true,
-  },
-]
+    auth: true
+  }
+];
 
-export default routeConfig
+export default routeConfig;
