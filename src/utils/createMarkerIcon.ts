@@ -1,18 +1,18 @@
-import { Branch } from '../types/Branch.ts';
-import CurrentLocationPin from '@assets/icons/pin/CurrentLocationPin.svg?url';
-import DaliaActiveBookmarkPin from '@assets/icons/pin/DaliaActiveBookmarkPin.svg?url';
-import DaliaActivePin from '@assets/icons/pin/DaliaActivePin.svg?url';
-import DaliaBookmarkPin from '@assets/icons/pin/DaliaBookmarkPin.svg?url';
-import DaliaPin from '@assets/icons/pin/DaliaPin.svg?url';
-import DietActiveBookmarkPin from '@assets/icons/pin/DietActiveBookmarkPin.svg?url';
-import DietActivePin from '@assets/icons/pin/DietActivePin.svg?url';
-import DietBookmarkPin from '@assets/icons/pin/DietBookmarkPin.svg?url';
-import DietPin from '@assets/icons/pin/DietPin.svg?url';
-import LocationSelectorPin from '@assets/icons/pin/LocationSelectorPin.svg?url';
-import TherapistActiveBookmarkPin from '@assets/icons/pin/TherapistActiveBookmarkPin.svg?url';
-import TherapistActivePin from '@assets/icons/pin/TherapistActivePin.svg?url';
-import TherapistBookmarkPin from '@assets/icons/pin/TherapistBookmarkPin.svg?url';
-import TherapistPin from '@assets/icons/pin/TherapistPin.svg?url';
+import CurrentLocationPin from '@/assets/icons/pin/CurrentLocationPin.svg?url';
+import DaliaActiveBookmarkPin from '@/assets/icons/pin/DaliaActiveBookmarkPin.svg?url';
+import DaliaActivePin from '@/assets/icons/pin/DaliaActivePin.svg?url';
+import DaliaBookmarkPin from '@/assets/icons/pin/DaliaBookmarkPin.svg?url';
+import DaliaPin from '@/assets/icons/pin/DaliaPin.svg?url';
+import DietActiveBookmarkPin from '@/assets/icons/pin/DietActiveBookmarkPin.svg?url';
+import DietActivePin from '@/assets/icons/pin/DietActivePin.svg?url';
+import DietBookmarkPin from '@/assets/icons/pin/DietBookmarkPin.svg?url';
+import DietPin from '@/assets/icons/pin/DietPin.svg?url';
+import LocationSelectorPin from '@/assets/icons/pin/LocationSelectorPin.svg?url';
+import TherapistActiveBookmarkPin from '@/assets/icons/pin/TherapistActiveBookmarkPin.svg?url';
+import TherapistActivePin from '@/assets/icons/pin/TherapistActivePin.svg?url';
+import TherapistBookmarkPin from '@/assets/icons/pin/TherapistBookmarkPin.svg?url';
+import TherapistPin from '@/assets/icons/pin/TherapistPin.svg?url';
+import { Branch } from '../types/Branch';
 
 /**
  * 네이버 지도 마커의 상태를 나타내는 타입.

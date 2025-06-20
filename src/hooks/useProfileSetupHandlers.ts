@@ -1,7 +1,7 @@
+import { useSignup } from '@/contexts/SignupContext';
+import { UserSignup } from '@/types/User';
 import { useState } from 'react';
 import { Address } from 'react-daum-postcode/lib/loadPostcode';
-import { UserSignup } from '../types/User';
-import { useSignup } from '../contexts/SignupContext';
 
 export const useProfileSetupHandlers = () => {
   const { signupData, setSignupData } = useSignup();

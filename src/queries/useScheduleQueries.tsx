@@ -1,7 +1,7 @@
-import { ScheduleFilters } from '../types/Schedule.ts';
 import { useQuery } from '@tanstack/react-query';
-import { fetchScheduleDates, fetchScheduleTimes } from '../apis/schedule.api.ts';
 import dayjs from 'dayjs';
+import { fetchScheduleDates, fetchScheduleTimes } from '../apis/schedule.api';
+import { ScheduleFilters } from '../types/Schedule';
 
 const queryKeys = {
   schedules: {

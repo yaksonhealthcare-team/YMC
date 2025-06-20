@@ -1,12 +1,12 @@
 import { ListResponse } from '@/apis/membership.api';
+import { MembershipRadioCard } from '@/pages/reservation/_fragments/MembershipRadioCard';
 import { MyMembership } from '@/types/Membership';
 import { Box, RadioGroup } from '@mui/material';
 import { useEffect, useMemo, useRef, useState } from 'react';
-// import 'swiper/css';
-// import 'swiper/css/pagination';
+import 'swiper/css';
+import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { MembershipRadioCard } from '../pages/reservation/_fragments/MembershipRadioCard';
 
 interface MembershipSwiperProps {
   membershipsData: ListResponse<MyMembership>;

@@ -1,4 +1,4 @@
-import { CartItem, CartItemOption, CartItemResponse } from '../types/Cart';
+import { CartItem, CartItemOption, CartItemResponse } from '@/types/Cart';
 
 export class CartMapper {
   private static toValidId(id: string): string {

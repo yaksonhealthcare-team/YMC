@@ -1,8 +1,8 @@
-import Logo from '@components/Logo.tsx';
+import Logo from '@/components/Logo';
+import { useAuth } from '@/contexts/AuthContext';
+import { useLayout } from '@/contexts/LayoutContext';
 import { Typography } from '@mui/material';
 import { useEffect } from 'react';
-import { useAuth } from '../../contexts/AuthContext.tsx';
-import { useLayout } from '../../contexts/LayoutContext.tsx';
 import { useNavigate } from 'react-router-dom';
 
 const Logout = () => {

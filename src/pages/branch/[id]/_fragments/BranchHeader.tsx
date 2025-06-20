@@ -1,11 +1,11 @@
+import PinIcon from '@/assets/icons/PinIcon.svg?react';
+import ShareIcon from '@/assets/icons/ShareIcon.svg?react';
+import StoreIcon from '@/assets/icons/StoreIcon.svg?react';
+import ProfileCard from '@/components/ProfileCard';
+import DynamicHomeHeaderBackground from '@/pages/home/_fragments/DynamicHomeHeaderBackground';
+import { BranchDetail as BranchDetailType } from '@/types/Branch';
 import { memo, ReactNode } from 'react';
-import DynamicHomeHeaderBackground from '../../../home/_fragments/DynamicHomeHeaderBackground';
-import PinIcon from '@assets/icons/PinIcon.svg?react';
-import StoreIcon from '@assets/icons/StoreIcon.svg?react';
-import ShareIcon from '@assets/icons/ShareIcon.svg?react';
 import StaffSection from './StaffSection';
-import ProfileCard from '@components/ProfileCard';
-import { BranchDetail as BranchDetailType } from 'types/Branch';
 
 interface BranchHeaderProps {
   branch: BranchDetailType;

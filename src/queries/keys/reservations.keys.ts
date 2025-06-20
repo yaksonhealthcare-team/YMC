@@ -1,5 +1,5 @@
+import { ReservationStatusCode } from '@/types/Reservation';
 import { createQueryKeyFactory } from '../queryKeyFactory';
-import { ReservationStatusCode } from '../../types/Reservation';
 
 const reservationsKeys = createQueryKeyFactory('reservations');
 

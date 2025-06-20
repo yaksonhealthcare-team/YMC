@@ -1,5 +1,5 @@
+import { UserSignup } from '@/types/User';
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react';
-import { UserSignup } from '../types/User.ts';
 
 export interface SocialSignupInfo {
   socialId: string;

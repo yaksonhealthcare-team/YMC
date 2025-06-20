@@ -1,10 +1,10 @@
+import { SearchField } from '@/components/SearchField';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useDebounce } from '@/hooks/useDebounce';
+import { Branch } from '@/types/Branch';
 import { useEffect, useState } from 'react';
-import { useLayout } from '../../contexts/LayoutContext';
-import { Branch } from '../../types/Branch';
-import { SearchField } from '../../components/SearchField';
 import { useLocation, useNavigate } from 'react-router-dom';
-import MembershipBranchList from './MembershipBranchList.tsx';
-import { useDebounce } from '../../hooks/useDebounce';
+import MembershipBranchList from './MembershipBranchList';
 
 interface Props {
   onSelect?: (branch: Branch) => void;

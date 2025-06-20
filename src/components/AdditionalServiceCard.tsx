@@ -1,7 +1,7 @@
+import { AdditionalManagement } from '@/types/Membership';
+import { parsePrice } from '@/utils/format';
 import { Checkbox } from '@mui/material';
 import { ClockIcon } from '@mui/x-date-pickers';
-import { AdditionalManagement } from 'types/Membership';
-import { parsePrice } from 'utils/format';
 
 interface AdditionalServiceCardProps {
   option: AdditionalManagement;

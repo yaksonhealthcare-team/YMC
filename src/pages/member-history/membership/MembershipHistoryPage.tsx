@@ -1,17 +1,17 @@
-import { useLayout } from '../../../contexts/LayoutContext';
-import { useCallback, useEffect } from 'react';
-import { useUserMemberships } from '../../../queries/useMembershipQueries';
-import useIntersection from '../../../hooks/useIntersection';
-import LoadingIndicator from '@components/LoadingIndicator';
-import { useNavigate } from 'react-router-dom';
-import { MembershipCard } from '@components/MembershipCard';
-import { myMembershipFilters, MyMembershipFilterItem } from '../../../types/Membership';
-import MainTabs from '../_fragments/MainTabs';
-import { Button } from '@components/Button';
+import { Button } from '@/components/Button';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { MembershipCard } from '@/components/MembershipCard';
+import { useLayout } from '@/contexts/LayoutContext';
+import useIntersection from '@/hooks/useIntersection';
+import { useUserMemberships } from '@/queries/useMembershipQueries';
+import { MyMembershipFilterItem, myMembershipFilters } from '@/types/Membership';
 import clsx from 'clsx';
-// import AddMembershipIcon from "@assets/icons/AddMembershipIcon.svg?react"
-import { getStatusFromString } from '../../../utils/membership';
-import { useMembershipStore } from 'stores/membershipStore';
+import { useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import MainTabs from '../_fragments/MainTabs';
+// import AddMembershipIcon from "@/assets/icons/AddMembershipIcon.svg?react"
+import { useMembershipStore } from '@/stores/membershipStore';
+import { getStatusFromString } from '@/utils/membership';
 
 const MembershipContent = ({ filterId }: { filterId: string }) => {
   const { setHeader, setNavigation } = useLayout();

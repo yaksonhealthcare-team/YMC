@@ -1,5 +1,5 @@
-import { Branch } from '../../types/Branch.ts';
-import BranchItem from './BranchItem.tsx';
+import { Branch } from '@/types/Branch';
+import BranchItem from './BranchItem';
 
 interface SelectedBranchListProps {
   selectedBranches: Branch[];

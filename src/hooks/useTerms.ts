@@ -1,5 +1,5 @@
+import { fetchTerms } from '@/apis/terms.api';
 import { useQuery } from '@tanstack/react-query';
-import { fetchTerms } from '@apis/terms.api';
 
 export const useTerms = (termsCategoryIdx: number = 0, isUse: string = 'Y') => {
   return useQuery({

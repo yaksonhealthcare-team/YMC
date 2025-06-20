@@ -1,7 +1,7 @@
-import HeartDisabledIcon from '@assets/icons/HeartDisabledIcon.svg?react';
-import HeartEnabledIcon from '@assets/icons/HeartEnabledIcon.svg?react';
-import { Button } from '@components/Button.tsx';
-import FixedButtonContainer from '@components/FixedButtonContainer';
+import HeartDisabledIcon from '@/assets/icons/HeartDisabledIcon.svg?react';
+import HeartEnabledIcon from '@/assets/icons/HeartEnabledIcon.svg?react';
+import { Button } from '@/components/Button';
+import FixedButtonContainer from '@/components/FixedButtonContainer';
 
 interface BranchDetailBottomActionBarProps {
   isBookmarked: boolean;

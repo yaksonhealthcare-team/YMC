@@ -1,13 +1,13 @@
-import { useInfiniteQuery, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  getBranchBookmarks,
-  fetchBranch,
   addBranchBookmark,
+  fetchBranch,
+  getBranchBookmarks,
   removeBranchBookmark
   // fetchBranchCategories,
-} from '../apis/branch.api.ts';
-import { Coordinate } from '../types/Coordinate.ts';
-import { BranchSearchResponse, BranchDetail } from '../types/Branch';
+} from '../apis/branch.api';
+import { BranchDetail, BranchSearchResponse } from '../types/Branch';
+import { Coordinate } from '../types/Coordinate';
 import { axiosClient } from './clients';
 
 interface BranchFilters {

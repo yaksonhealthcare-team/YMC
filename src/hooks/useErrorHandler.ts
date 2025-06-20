@@ -1,6 +1,6 @@
+import { useOverlay } from '@/contexts/ModalContext';
+import { getErrorMessage } from '@/types/Error';
 import { AxiosError } from 'axios';
-import { useOverlay } from '../contexts/ModalContext';
-import { getErrorMessage } from '../types/Error';
 
 export const useErrorHandler = () => {
   const { showToast } = useOverlay();

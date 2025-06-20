@@ -1,9 +1,9 @@
 import Header from '@/components/Header';
 import PageContainer from '@/components/PageContainer';
+import { StartupPopup } from '@/components/popup/StartupPopup';
 import { Typography } from '@mui/material';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { StartupPopup } from '../components/popup/StartupPopup';
 
 type NavigationConfig = {
   display?: boolean;

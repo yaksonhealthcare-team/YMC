@@ -1,4 +1,4 @@
-import { QuestionnaireResult } from '../../../../types/Questionnaire.ts';
+import { QuestionnaireResult } from '@/types/Questionnaire';
 
 const QuestionnaireFormList = ({ questions }: { questions: QuestionnaireResult[] }) => {
   return (

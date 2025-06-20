@@ -1,4 +1,4 @@
-import CaretRightIcon from '@assets/icons/CaretRightIcon.svg?react';
+import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import { useNavigate } from 'react-router-dom';
 
 interface MembershipUsageProps {

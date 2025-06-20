@@ -1,5 +1,5 @@
-import BranchIcon from '@components/icons/BranchIcon.tsx';
-import { Branch } from '../../types/Branch.ts';
+import BranchIcon from '@/components/icons/BranchIcon';
+import { Branch } from '@/types/Branch';
 
 interface BranchItemProps {
   branch: Branch;

@@ -1,6 +1,6 @@
+import { Branch } from '@/types/Branch';
+import { PaymentItem, PaymentStatus } from '@/types/Payment';
 import { create } from 'zustand';
-import { Branch } from '../types/Branch';
-import { PaymentStatus, PaymentItem } from '../types/Payment';
 
 interface Points {
   availablePoints: number;

@@ -1,12 +1,12 @@
+import { postVisitedStore } from '@/apis/user.api';
+import { Button } from '@/components/Button';
+import { useLayout } from '@/contexts/LayoutContext';
+import { Branch } from '@/types/Branch';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@components/Button.tsx';
-import Step1SearchBranchList from './Step1SearchBranchList.tsx';
-import Step2SelectedBranchList from './Step2SelectedBranchList.tsx';
-import Step3Finish from './Step3Finish.tsx';
-import { Branch } from '../../types/Branch.ts';
-import { postVisitedStore } from '../../apis/user.api';
-import { useLayout } from 'contexts/LayoutContext.tsx';
+import Step1SearchBranchList from './Step1SearchBranchList';
+import Step2SelectedBranchList from './Step2SelectedBranchList';
+import Step3Finish from './Step3Finish';
 
 const AddUsingBranch = () => {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
-import MembershipIcon from '@assets/icons/MembershipIcon.svg?react';
-import CaretRightIcon from '@assets/icons/CaretRightIcon.svg?react';
+import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
+import MembershipIcon from '@/assets/icons/MembershipIcon.svg?react';
 
 const MembershipAvailableBanner = ({
   availableMembershipCount,

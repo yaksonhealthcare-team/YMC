@@ -1,7 +1,7 @@
+import { Image } from '@/components/common/Image';
+import { Event } from '@/types/Content';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Event } from '../../../types/Content';
-import { Image } from '@components/common/Image';
 
 const EventItem: React.FC<{ event: Event }> = ({ event }) => {
   const navigate = useNavigate();

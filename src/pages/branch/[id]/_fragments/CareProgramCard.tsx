@@ -1,6 +1,6 @@
-import { MembershipProgram } from '../../../../types/MembershipProgram.ts';
-import { Tag } from '@components/Tag.tsx';
-import ClockIcon from '@assets/icons/ClockIcon.svg?react';
+import ClockIcon from '@/assets/icons/ClockIcon.svg?react';
+import { Tag } from '@/components/Tag';
+import { MembershipProgram } from '@/types/MembershipProgram';
 
 interface CareProgramCardProps {
   program: MembershipProgram;

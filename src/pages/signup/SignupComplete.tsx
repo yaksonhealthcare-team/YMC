@@ -1,11 +1,11 @@
-import { Button } from '@components/Button.tsx';
-import { useNavigate } from 'react-router-dom';
-import { useLayout } from '../../contexts/LayoutContext.tsx';
-import { useEffect, useState } from 'react';
-import CheckCircle from '@assets/icons/CheckCircle.svg?react';
-import { useAuth } from '../../contexts/AuthContext.tsx';
-import { fetchCRMUser } from '../../apis/user.api';
+import { fetchCRMUser } from '@/apis/user.api';
+import CheckCircle from '@/assets/icons/CheckCircle.svg?react';
+import { Button } from '@/components/Button';
+import { useAuth } from '@/contexts/AuthContext';
+import { useLayout } from '@/contexts/LayoutContext';
 import { CircularProgress } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const SignupComplete = () => {
   const navigate = useNavigate();

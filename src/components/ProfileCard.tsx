@@ -1,4 +1,4 @@
-import BranchPlaceholderImage from '@assets/images/BranchPlaceholderImage.png';
+import BranchPlaceholderImage from '@/assets/images/BranchPlaceholderImage.png';
 import { Image } from './common/Image';
 
 interface ProfileCardProps {

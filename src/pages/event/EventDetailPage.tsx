@@ -1,13 +1,13 @@
-import { useParams } from 'react-router-dom';
-import { useEventDetail } from 'queries/useEventQueries';
-import { EmptyCard } from '@components/EmptyCard';
-import { useLayout } from 'contexts/LayoutContext';
+import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
+import { Image } from '@/components/common/Image';
+import { EmptyCard } from '@/components/EmptyCard';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useEventDetail } from '@/queries/useEventQueries';
+import { EventDetail } from '@/types/Event';
+import { sanitizeHtml } from '@/utils/sanitize';
 import { useEffect } from 'react';
-import CalendarIcon from '@assets/icons/CalendarIcon.svg?react';
-import LoadingIndicator from '@components/LoadingIndicator';
-import { EventDetail } from 'types/Event';
-import { sanitizeHtml } from 'utils/sanitize';
-import { Image } from '@components/common/Image';
+import { useParams } from 'react-router-dom';
 
 const EventDetailPage = () => {
   const { id } = useParams<{ id: string }>();

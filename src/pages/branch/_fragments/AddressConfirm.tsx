@@ -1,17 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useLayout } from '../../../contexts/LayoutContext';
-import { Button } from '@components/Button';
-import { useBranchLocationSelect } from '../../../hooks/useBranchLocationSelect';
+import HeartDisabledIcon from '@/assets/icons/HeartDisabledIcon.svg?react';
+import HeartEnabledIcon from '@/assets/icons/HeartEnabledIcon.svg?react';
+import { Button } from '@/components/Button';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useOverlay } from '@/contexts/ModalContext';
+import { useAddressFromCoords } from '@/hooks/useAddressFromCoords';
+import { useBranchLocationSelect } from '@/hooks/useBranchLocationSelect';
 import {
   useAddAddressBookmarkMutation,
   useAddressBookmarks,
   useDeleteAddressBookmarkMutation
-} from '../../../queries/useAddressQueries';
-import { useOverlay } from '../../../contexts/ModalContext';
-import HeartDisabledIcon from '@assets/icons/HeartDisabledIcon.svg?react';
-import HeartEnabledIcon from '@assets/icons/HeartEnabledIcon.svg?react';
-import { useAddressFromCoords } from '../../../hooks/useAddressFromCoords';
+} from '@/queries/useAddressQueries';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const AddressConfirm = () => {
   const { setHeader, setNavigation } = useLayout();

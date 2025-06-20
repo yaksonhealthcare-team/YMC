@@ -1,7 +1,7 @@
 import { Branch } from '@/types/Branch';
 import { Coordinate } from '@/types/Coordinate';
+import { createMarkerIcon, MarkerState } from '@/utils/createMarkerIcon';
 import { useEffect, useRef } from 'react';
-import { createMarkerIcon, MarkerState } from '../utils/createMarkerIcon';
 
 interface UseNaverMapBranchMarkersProps {
   map: naver.maps.Map | null;

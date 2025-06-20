@@ -1,4 +1,4 @@
-import ProfileCard from '@components/ProfileCard.tsx';
+import ProfileCard from '@/components/ProfileCard';
 
 const TherapistList = ({
   therapists

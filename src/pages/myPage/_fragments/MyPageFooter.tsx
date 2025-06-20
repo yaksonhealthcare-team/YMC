@@ -1,6 +1,6 @@
-import { useOverlay } from 'contexts/ModalContext';
-import { useNavigate } from 'react-router-dom';
+import { useOverlay } from '@/contexts/ModalContext';
 import clsx from 'clsx';
+import { useNavigate } from 'react-router-dom';
 
 const BUTTON_STYLES = {
   base: clsx(

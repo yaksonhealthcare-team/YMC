@@ -1,10 +1,10 @@
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { Image } from '@/components/common/Image';
+import { MembershipCard } from '@/pages/membership/_fragments/MembershipCard';
+import { useMembershipCategories, useMembershipList } from '@/queries/useMembershipQueries';
+import { MembershipCategory } from '@/types/Membership';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useMembershipCategories, useMembershipList } from 'queries/useMembershipQueries';
-import { MembershipCategory } from 'types/Membership';
-import { useState, useEffect } from 'react';
-import { MembershipCard } from '../../../../pages/membership/_fragments/MembershipCard';
-import LoadingIndicator from '@components/LoadingIndicator';
-import { Image } from '@components/common/Image';
 
 interface ProgramListProps {
   brandCode: string;

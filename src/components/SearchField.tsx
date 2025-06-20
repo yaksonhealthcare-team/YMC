@@ -1,8 +1,8 @@
-import { ChangeEventHandler } from 'react';
+import SearchIcon from '@/components/icons/SearchIcon';
+import XCircleIcon from '@/components/icons/XCircleIcon';
+import { COLORS } from '@/constants/ColorConstants';
 import { InputAdornment, TextField } from '@mui/material';
-import SearchIcon from '@components/icons/SearchIcon';
-import XCircleIcon from '@components/icons/XCircleIcon';
-import { COLORS } from '@constants/ColorConstants';
+import { ChangeEventHandler } from 'react';
 
 interface SearchFieldProps {
   placeholder?: string;

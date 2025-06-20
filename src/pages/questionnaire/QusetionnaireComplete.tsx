@@ -1,9 +1,9 @@
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Button } from '@components/Button';
-import { useLayout } from 'contexts/LayoutContext';
+import ReceiptEditIcon from '@/assets/icons/ReceiptEditIcon.svg?react';
+import { Button } from '@/components/Button';
+import FixedButtonContainer from '@/components/FixedButtonContainer';
+import { useLayout } from '@/contexts/LayoutContext';
 import { useEffect } from 'react';
-import FixedButtonContainer from '@components/FixedButtonContainer';
-import ReceiptEditIcon from '@assets/icons/ReceiptEditIcon.svg?react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface LocationState {
   returnPath?: string;

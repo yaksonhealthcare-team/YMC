@@ -1,8 +1,8 @@
-import BranchCard from '../../../components/BranchCard';
-import { Branch } from 'types/Branch';
-import { useAuth } from '../../../contexts/AuthContext';
-import { useLocation } from 'react-router-dom';
+import BranchCard from '@/components/BranchCard';
+import { useAuth } from '@/contexts/AuthContext';
+import { Branch } from '@/types/Branch';
 import { useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 
 interface BranchInfo {
   b_idx: string;

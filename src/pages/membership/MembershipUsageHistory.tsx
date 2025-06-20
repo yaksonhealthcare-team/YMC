@@ -1,12 +1,12 @@
-import { useLayout } from 'contexts/LayoutContext';
-import { useEffect, useCallback, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import CaretRightIcon from '@assets/icons/CaretRightIcon.svg?react';
-import { MembershipCard } from '@components/MembershipCard';
-import { MembershipStatus, MembershipDetailWithHistory } from 'types/Membership';
-import DateAndTime from '@components/DateAndTime';
-import { fetchMembershipUsageHistory } from '../../apis/membership.api';
+import { fetchMembershipUsageHistory } from '@/apis/membership.api';
+import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
+import DateAndTime from '@/components/DateAndTime';
+import { MembershipCard } from '@/components/MembershipCard';
+import { useLayout } from '@/contexts/LayoutContext';
+import { MembershipDetailWithHistory, MembershipStatus } from '@/types/Membership';
 import { CircularProgress } from '@mui/material';
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface ReservationThumbnailProps {
   title: string;

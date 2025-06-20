@@ -1,6 +1,6 @@
-import { useNavigate, useLocation } from 'react-router-dom';
-import { CustomTabs } from '@components/Tabs';
-import { MemberHistoryTab, MemberHistoryState } from 'types/MemberHistory';
+import { CustomTabs } from '@/components/Tabs';
+import { MemberHistoryState, MemberHistoryTab } from '@/types/MemberHistory';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const mainTabs = [
   { label: '예약', value: 'reservation' },

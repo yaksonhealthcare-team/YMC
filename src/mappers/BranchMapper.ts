@@ -1,14 +1,14 @@
 import {
+  BranchBookmarkResponse,
+  BranchBookmarkResult,
+  BranchCategory,
+  BranchCategoryResponse,
   BranchDetail,
   BranchDetailResponse,
   BranchesWithCurrentAddress,
   BranchSearchResponse,
-  BranchSearchResult,
-  BranchBookmarkResponse,
-  BranchBookmarkResult,
-  BranchCategory,
-  BranchCategoryResponse
-} from 'types/Branch';
+  BranchSearchResult
+} from '@/types/Branch';
 
 export class BranchMapper {
   private static toBrand(name: string): 'therapist' | 'dalia' | 'diet' {

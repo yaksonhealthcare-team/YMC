@@ -1,11 +1,11 @@
+import { EmptyCard } from '@/components/EmptyCard';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { MembershipCard } from '@/components/MembershipCard';
+import { Title } from '@/components/Title';
+import { MyMembership } from '@/types/Membership';
+import { getStatusFromString } from '@/utils/membership';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@components/Title';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { MembershipCard } from '@components/MembershipCard';
-import { EmptyCard } from '@components/EmptyCard';
-import LoadingIndicator from '@components/LoadingIndicator';
-import { MyMembership } from 'types/Membership';
-import { getStatusFromString } from 'utils/membership';
 
 interface MembershipCardSectionProps {
   memberships: MyMembership[];

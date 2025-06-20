@@ -1,5 +1,5 @@
-import { Brand } from '../types/Brand';
-import { useBrands } from '../queries/useBrandQueries';
+import { useBrands } from '@/queries/useBrandQueries';
+import { Brand } from '@/types/Brand';
 
 export function useDisplayBrands() {
   const { data: brands, ...rest } = useBrands();

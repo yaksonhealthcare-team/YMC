@@ -1,13 +1,13 @@
+import { fetchUser, setAccessToken, signinWithSocial } from '@/apis/auth.api';
 import LoadingIndicator from '@/components/LoadingIndicator';
+import { useAuth } from '@/contexts/AuthContext';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useOverlay } from '@/contexts/ModalContext';
 import { requestForToken } from '@/libs/firebase';
+import { saveAccessToken } from '@/queries/clients';
 import { AxiosError } from 'axios';
 import { useEffect, useRef } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { fetchUser, setAccessToken, signinWithSocial } from '../../apis/auth.api';
-import { useAuth } from '../../contexts/AuthContext';
-import { useLayout } from '../../contexts/LayoutContext';
-import { useOverlay } from '../../contexts/ModalContext';
-import { saveAccessToken } from '../../queries/clients';
 
 const OAuthCallback = () => {
   const { provider } = useParams();

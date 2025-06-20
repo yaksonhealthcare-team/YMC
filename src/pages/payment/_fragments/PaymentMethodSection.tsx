@@ -1,4 +1,4 @@
-import { Radio } from '@components/Radio.tsx';
+import { Radio } from '@/components/Radio';
 
 interface PaymentMethodSectionProps {
   selectedPayment: 'card' | 'bank' | 'vbank';

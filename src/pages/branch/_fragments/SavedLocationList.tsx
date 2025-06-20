@@ -1,8 +1,8 @@
-import { useAddressBookmarks, useDeleteAddressBookmarkMutation } from '../../../queries/useAddressQueries';
+import { useBranchLocationSelect } from '@/hooks/useBranchLocationSelect';
+import { useAddressBookmarks, useDeleteAddressBookmarkMutation } from '@/queries/useAddressQueries';
 import { useNavigate } from 'react-router-dom';
-import LocationSearchResultList from './LocationSearchResultList';
-import { useBranchLocationSelect } from '../../../hooks/useBranchLocationSelect';
 import LocationSearchPlaceholder from './LocationSearchPlaceholder';
+import LocationSearchResultList from './LocationSearchResultList';
 
 interface SavedLocationListProps {
   isSearchFocused?: boolean;

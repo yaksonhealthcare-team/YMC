@@ -1,13 +1,13 @@
-import { fetchEncryptDataForNice } from '@apis/pass.api';
-import { Button } from '@components/Button';
-import CheckFillCircleIcon from '@components/icons/CheckFillCircleIcon.tsx';
-import LoadingIndicator from '@components/LoadingIndicator';
+import { fetchEncryptDataForNice } from '@/apis/pass.api';
+import { Button } from '@/components/Button';
+import CheckFillCircleIcon from '@/components/icons/CheckFillCircleIcon';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useSignup } from '@/contexts/SignupContext';
+import { checkByNice } from '@/utils/niceCheck';
 import { Checkbox } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLayout } from '../../contexts/LayoutContext';
-import { checkByNice } from '../../utils/niceCheck';
-import { useSignup } from '../../contexts/SignupContext';
 
 window.name = 'Parent_window';
 

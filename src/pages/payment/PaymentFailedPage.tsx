@@ -1,7 +1,7 @@
+import { Button } from '@/components/Button';
+import { useLayout } from '@/contexts/LayoutContext';
 import { useEffect } from 'react';
-import { useLayout } from '../../contexts/LayoutContext';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Button } from '@components/Button';
 
 interface LocationState {
   error: string;

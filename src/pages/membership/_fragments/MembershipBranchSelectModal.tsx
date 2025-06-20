@@ -1,8 +1,8 @@
-import Header from '@components/Header';
-import { Branch } from '../../../types/Branch';
-import MembershipBranchSelectPage from '../MembershipBranchSelectPage';
+import Header from '@/components/Header';
+import { useLayout } from '@/contexts/LayoutContext';
+import { Branch } from '@/types/Branch';
 import { useEffect } from 'react';
-import { useLayout } from '../../../contexts/LayoutContext';
+import MembershipBranchSelectPage from '../MembershipBranchSelectPage';
 
 interface Props {
   onBranchSelect: (branch: Branch) => void;

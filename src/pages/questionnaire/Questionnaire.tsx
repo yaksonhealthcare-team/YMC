@@ -1,9 +1,9 @@
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useQuestionnaire } from '@/hooks/useQuestionnaire';
+import { Question, QuestionFieldName, QuestionnaireType } from '@/types/Questionnaire';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { QuestionItem } from './_fragments/QuestionItem';
-import { Question, QuestionFieldName, QuestionnaireType } from 'types/Questionnaire';
-import LoadingIndicator from '@components/LoadingIndicator';
-import { useQuestionnaire } from 'hooks/useQuestionnaire';
 import { QuestionnaireHeader } from './_fragments/QuestionnaireHeader';
 import { QuestionnaireNavigation } from './_fragments/QuestionnaireNavigation';
 

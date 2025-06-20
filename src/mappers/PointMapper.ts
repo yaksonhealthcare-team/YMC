@@ -1,4 +1,4 @@
-import { PointHistory, PointHistoryResponse } from 'types/Point';
+import { PointHistory, PointHistoryResponse } from '@/types/Point';
 
 export class PointMapper {
   static toHistoryTitle(doc: string) {

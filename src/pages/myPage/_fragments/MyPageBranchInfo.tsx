@@ -1,6 +1,6 @@
+import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
+import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import CaretRightIcon from '@assets/icons/CaretRightIcon.svg?react';
-import { useAuth } from '../../../contexts/AuthContext';
 
 const MyPageBranchInfo = () => {
   const navigate = useNavigate();

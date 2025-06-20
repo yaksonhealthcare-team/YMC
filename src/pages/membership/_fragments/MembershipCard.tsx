@@ -1,7 +1,7 @@
-import { MembershipItem } from '../../../types/Membership';
-import ClockIcon from '@assets/icons/ClockIcon.svg?react';
-import { Tag } from '@components/Tag';
-import { formatPrice, parsePrice } from '../../../utils/format';
+import ClockIcon from '@/assets/icons/ClockIcon.svg?react';
+import { Tag } from '@/components/Tag';
+import { MembershipItem } from '@/types/Membership';
+import { formatPrice, parsePrice } from '@/utils/format';
 
 interface MembershipCardProps {
   membership: MembershipItem;

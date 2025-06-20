@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { queryKeys } from './query.keys.ts';
-import { fetchNotice, fetchNotices, fetchPopups, fetchPopupDetail } from '../apis/contents.api.ts';
+import { fetchNotice, fetchNotices, fetchPopupDetail, fetchPopups } from '../apis/contents.api';
+import { queryKeys } from './query.keys';
 
 // 홈 화면의 공지사항 슬라이더용 (첫 페이지만)
 export const useNoticesSummary = () =>

@@ -1,6 +1,6 @@
 import { BrandSection } from './BrandSection';
-import { EventSection } from './EventSection';
 import { BusinessInfo } from './BusinessInfo';
+import { EventSection } from './EventSection';
 
 const SecondaryContentChunk = () => {
   return (

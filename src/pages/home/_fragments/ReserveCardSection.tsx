@@ -1,13 +1,13 @@
-import { useNavigate } from 'react-router-dom';
-import { Title } from '@components/Title';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { ReserveCard } from '@components/ReserveCard';
-import { EmptyCard } from '@components/EmptyCard';
-import { useUpcomingReservations } from 'queries/useReservationQueries';
-import LoadingIndicator from '@components/LoadingIndicator';
+import { EmptyCard } from '@/components/EmptyCard';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { ReserveCard } from '@/components/ReserveCard';
+import { Title } from '@/components/Title';
+import { useUpcomingReservations } from '@/queries/useReservationQueries';
+import { useReservationStore } from '@/stores/reservationStore';
+import { reservationFilters } from '@/types/Reservation';
 import { useMemo } from 'react';
-import { useReservationStore } from 'stores/reservationStore';
-import { reservationFilters } from 'types/Reservation';
+import { useNavigate } from 'react-router-dom';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 const ReserveCardSection = () => {
   const navigate = useNavigate();

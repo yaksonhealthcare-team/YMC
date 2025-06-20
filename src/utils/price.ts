@@ -1,4 +1,4 @@
-import { AdditionalManagement } from 'types/Membership';
+import { AdditionalManagement } from '@/types/Membership';
 import { parsePrice } from './format';
 
 /**

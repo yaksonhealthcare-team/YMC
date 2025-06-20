@@ -1,26 +1,26 @@
-import NotiIcon from '@assets/icons/NotiIcon.svg?react';
-import { FloatingButton } from '@components/FloatingButton';
-import Logo from '@components/Logo';
-import NoticesSummarySlider from '@components/NoticesSummarySlider';
+import NotiIcon from '@/assets/icons/NotiIcon.svg?react';
+import { FloatingButton } from '@/components/FloatingButton';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import Logo from '@/components/Logo';
+import NoticesSummarySlider from '@/components/NoticesSummarySlider';
+import { useAuth } from '@/contexts/AuthContext';
+import { useLayout } from '@/contexts/LayoutContext';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
+import { useBanner } from '@/queries/useBannerQueries';
+import { useUserMemberships } from '@/queries/useMembershipQueries';
+import { useUnreadNotificationsCount } from '@/queries/useNotificationQueries';
+import '@/styles/swiper-custom.css';
+import { BannerRequestType } from '@/types/Banner';
 import { Container, Typography } from '@mui/material';
-import { useBanner } from 'queries/useBannerQueries';
-import { useUserMemberships } from 'queries/useMembershipQueries';
 import { lazy, Suspense, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { BannerRequestType } from 'types/Banner';
-import { useAuth } from '../../contexts/AuthContext';
-import { useLayout } from '../../contexts/LayoutContext';
-import { usePreventGoBack } from '../../hooks/usePreventGoBack';
-import { useUnreadNotificationsCount } from '../../queries/useNotificationQueries';
-import '../../styles/swiper-custom.css';
 import DynamicHomeHeaderBackground from './_fragments/DynamicHomeHeaderBackground';
 import { MembershipCardSection } from './_fragments/MembershipCardSection';
 import ReserveCardSection from './_fragments/ReserveCardSection';
-import LoadingIndicator from '@components/LoadingIndicator';
 
 // 단일 코드 청크로 그룹화하여 불필요한 네트워크 요청 줄이기
 const SecondaryContentChunk = lazy(

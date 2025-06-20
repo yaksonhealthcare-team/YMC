@@ -1,5 +1,5 @@
+import { useCustomPullToRefresh } from '@/hooks/useCustomPullToRefresh';
 import { ReactNode, useEffect, useState } from 'react';
-import { useCustomPullToRefresh } from '../hooks/useCustomPullToRefresh';
 
 interface CustomPullToRefreshProps {
   onRefresh: () => Promise<void>;

@@ -1,16 +1,16 @@
-import LoadingIndicator from '@components/LoadingIndicator';
+import { fetchCartCount } from '@/apis/cart.api';
+import { ListResponse } from '@/apis/membership.api';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { BRAND_CODE } from '@/constants/brand';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useDisplayBrands } from '@/hooks/useDisplayBrands';
+import useIntersection from '@/hooks/useIntersection';
+import { useMembershipCategories, useMembershipList } from '@/queries/useMembershipQueries';
+import { MembershipCategory, MembershipItem } from '@/types/Membership';
 import { Tab, Tabs } from '@mui/material';
-import { useLayout } from 'contexts/LayoutContext';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { fetchCartCount } from '../../apis/cart.api';
-import { ListResponse } from '../../apis/membership.api';
-import useIntersection from '../../hooks/useIntersection';
-import { useMembershipCategories, useMembershipList } from '../../queries/useMembershipQueries';
-import { MembershipCategory, MembershipItem } from '../../types/Membership';
 import { MembershipCard } from './_fragments/MembershipCard';
-import { BRAND_CODE } from 'constants/brand';
-import { useDisplayBrands } from '../../hooks/useDisplayBrands';
 
 const MembershipPage = () => {
   const navigate = useNavigate();

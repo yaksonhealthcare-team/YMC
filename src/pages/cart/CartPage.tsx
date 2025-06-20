@@ -1,15 +1,15 @@
+import { getConsultationCount } from '@/apis/reservation.api';
+import { Button } from '@/components/Button';
+import CartCard from '@/components/CartCard';
+import FixedButtonContainer from '@/components/FixedButtonContainer';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
+import { usePaymentStore } from '@/hooks/usePaymentStore';
+import { useCartItems, useDeleteCartItemsMutation, useUpdateCartItemMutation } from '@/queries/useCartQueries';
+import { formatPriceWithUnit } from '@/utils/format';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLayout } from 'contexts/LayoutContext';
-import { Button } from '@components/Button';
-import FixedButtonContainer from '@components/FixedButtonContainer';
-import CartCard from '@components/CartCard.tsx';
-import { useCartItems, useDeleteCartItemsMutation, useUpdateCartItemMutation } from 'queries/useCartQueries';
-import LoadingIndicator from '@components/LoadingIndicator';
-import { usePaymentStore } from '../../hooks/usePaymentStore.ts';
-import { formatPriceWithUnit } from 'utils/format';
-import { getConsultationCount } from '../../apis/reservation.api';
-import { useQuery } from '@tanstack/react-query';
 
 interface CartOption {
   originalPrice: number;

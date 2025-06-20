@@ -1,6 +1,6 @@
-import { useOverlay } from 'contexts/ModalContext';
-import { useNavigate } from 'react-router-dom';
+import { useOverlay } from '@/contexts/ModalContext';
 import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * NICE 본인 인증 API의 응답 데이터 구조 인터페이스.

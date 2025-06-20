@@ -1,7 +1,7 @@
+import { Gender, getGenderDisplay } from '@/utils/gender';
 import { RadioGroup } from '@mui/material';
-import { RadioCard } from './RadioCard';
-import { Gender, getGenderDisplay } from '../utils/gender';
 import clsx from 'clsx';
+import { RadioCard } from './RadioCard';
 
 interface GenderSelectProps {
   value: Gender;

@@ -1,8 +1,8 @@
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
-import { queryKeys } from './query.keys.ts';
-import { cancelPayments, fetchPayment, fetchPayments, fetchBankList, requestPayment } from '../apis/payments.api.ts';
-import { PaymentRequest, PaymentHistory } from '../types/Payment.ts';
-import { queryClient } from './clients.ts';
+import { cancelPayments, fetchBankList, fetchPayment, fetchPayments, requestPayment } from '../apis/payments.api';
+import { PaymentHistory, PaymentRequest } from '../types/Payment';
+import { queryClient } from './clients';
+import { queryKeys } from './query.keys';
 
 export const usePaymentHistories = () =>
   useInfiniteQuery({

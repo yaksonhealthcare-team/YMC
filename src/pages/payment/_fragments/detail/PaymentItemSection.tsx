@@ -1,8 +1,8 @@
-import dayjs from 'dayjs';
-import { PaymentHistoryDetail } from '../../../../types/Payment.ts';
-import PaymentItemList from '../PaymentItemList.tsx';
-import { useNavigate } from 'react-router-dom';
+import { PaymentHistoryDetail } from '@/types/Payment';
 import clsx from 'clsx';
+import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
+import PaymentItemList from '../PaymentItemList';
 
 interface PaymentItemSectionProps {
   payment: PaymentHistoryDetail;

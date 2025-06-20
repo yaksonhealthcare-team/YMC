@@ -1,7 +1,7 @@
+import { useReviewDetail } from '@/queries/useReviewQueries';
 import { useParams } from 'react-router-dom';
-import { useReviewDetail } from '../../queries/useReviewQueries.tsx';
-import { ReviewDetailSkeleton } from './_fragments/ReviewDetailSkeleton.tsx';
-import { ReviewDetailContent } from './_fragments/ReviewDetailContent.tsx';
+import { ReviewDetailContent } from './_fragments/ReviewDetailContent';
+import { ReviewDetailSkeleton } from './_fragments/ReviewDetailSkeleton';
 
 const ReviewDetailPage = () => {
   const { reviewId } = useParams();

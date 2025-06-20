@@ -1,5 +1,5 @@
+import { formatPriceWithUnit } from '@/utils/format';
 import { Divider } from '@mui/material';
-import { formatPriceWithUnit } from 'utils/format';
 
 export type PriceItemType = 'default' | 'success' | 'error';
 

@@ -1,6 +1,6 @@
+import { BranchFilters } from '@/types/Branch';
+import { Coordinate } from '@/types/Coordinate';
 import { createQueryKeyFactory } from '../queryKeyFactory';
-import { BranchFilters } from '../../types/Branch';
-import { Coordinate } from '../../types/Coordinate';
 
 const notificationsKeys = createQueryKeyFactory('notifications');
 

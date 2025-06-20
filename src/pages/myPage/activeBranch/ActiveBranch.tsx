@@ -1,12 +1,12 @@
-import { useLayout } from '../../../contexts/LayoutContext';
+import InformationIcon from '@/assets/icons/InformationIcon.svg?react';
+import BranchCard from '@/components/BranchCard';
+import { Button } from '@/components/Button';
+import { EmptyCard } from '@/components/EmptyCard';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useAuth } from '@/contexts/AuthContext';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useOverlay } from '@/contexts/ModalContext';
 import { useEffect } from 'react';
-import InformationIcon from '@assets/icons/InformationIcon.svg?react';
-import { useOverlay } from '../../../contexts/ModalContext';
-import { Button } from '@components/Button';
-import BranchCard from '@components/BranchCard';
-import { useAuth } from '../../../contexts/AuthContext';
-import LoadingIndicator from '@components/LoadingIndicator';
-import { EmptyCard } from '@components/EmptyCard';
 
 interface InformationBottomSheetProps {
   onClose: () => void;

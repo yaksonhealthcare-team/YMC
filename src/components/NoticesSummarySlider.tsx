@@ -1,8 +1,8 @@
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
-import { useNoticesSummary } from '../queries/useContentQueries';
+import { useNoticesSummary } from '@/queries/useContentQueries';
 import { useNavigate } from 'react-router-dom';
 import 'swiper/css';
+import { Autoplay } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 interface NoticesSummarySliderProps {
   className?: string;

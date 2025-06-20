@@ -1,9 +1,9 @@
-import { useEffect, useRef, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Dialog, DialogContent, DialogActions, Button } from '@mui/material';
-import { usePopupStore, usePopupActions, PopupState } from '../../stores/popupStore';
+import { PopupState, usePopupActions, usePopupStore } from '@/stores/popupStore';
+import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
+import { useEffect, useMemo, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 // Import AppPopupData from the correct API file
-import { AppPopupData } from '../../apis/contents.api';
+import { AppPopupData } from '@/apis/contents.api';
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';

@@ -1,15 +1,15 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import { usePaymentCancel, usePaymentHistory } from '../../queries/usePaymentQueries.tsx';
-import { useEffect, useState } from 'react';
-import { useLayout } from '../../contexts/LayoutContext.tsx';
-import { Button } from '@components/Button.tsx';
-import { PaymentHistoryItem } from '../../types/Payment.ts';
-import CheckIcon from '@components/icons/CheckIcon.tsx';
-import { useOverlay } from '../../contexts/ModalContext.tsx';
+import { Button } from '@/components/Button';
+import CheckIcon from '@/components/icons/CheckIcon';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useOverlay } from '@/contexts/ModalContext';
+import { usePaymentGuideMessages } from '@/hooks/useGuideMessages';
+import { usePaymentCancel, usePaymentHistory } from '@/queries/usePaymentQueries';
+import { PaymentHistoryItem } from '@/types/Payment';
+import { escapeHtml } from '@/utils/sanitize';
 import { AxiosError } from 'axios';
-import LoadingIndicator from '@components/LoadingIndicator';
-import { escapeHtml } from 'utils/sanitize';
-import { usePaymentGuideMessages } from '../../hooks/useGuideMessages';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const PaymentCancelItemCard = ({
   item,

@@ -1,8 +1,8 @@
-import { useBranches } from '../../../../queries/useBranchQueries.tsx';
-import { useGeolocation } from '../../../../hooks/useGeolocation.tsx';
-import { Branch } from '../../../../types/Branch.ts';
-import LoadingIndicator from '@components/LoadingIndicator.tsx';
-import SearchIcon from '@components/icons/SearchIcon';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import SearchIcon from '@/components/icons/SearchIcon';
+import { useGeolocation } from '@/hooks/useGeolocation';
+import { useBranches } from '@/queries/useBranchQueries';
+import { Branch } from '@/types/Branch';
 import BranchFilterList from '../../_fragments/BranchFilterList';
 
 interface BranchSearchResultListProps {

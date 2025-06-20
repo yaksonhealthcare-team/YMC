@@ -1,8 +1,8 @@
-import { useLayout } from '../../contexts/LayoutContext.tsx';
+import { fetchEncryptDataForNice } from '@/apis/pass.api';
+import { Button } from '@/components/Button';
+import { useLayout } from '@/contexts/LayoutContext';
+import { checkByNice } from '@/utils/niceCheck';
 import { useEffect } from 'react';
-import { Button } from '@components/Button.tsx';
-import { checkByNice } from 'utils/niceCheck.ts';
-import { fetchEncryptDataForNice } from '@apis/pass.api.ts';
 
 const ProfileChangePhoneNumber = () => {
   const { setHeader, setNavigation } = useLayout();

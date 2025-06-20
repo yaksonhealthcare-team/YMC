@@ -1,11 +1,17 @@
-import { OptionValue, Question, QuestionFieldName, QuestionnaireFormValues, QuestionOption } from 'types/Questionnaire';
-import BirthDateInput from './BirthDateInput';
-import { useEffect, Fragment } from 'react';
+import { Image } from '@/components/common/Image';
+import CustomTextField from '@/components/CustomTextField';
+import FilledCheckIcon from '@/components/icons/FilledCheckIcon';
+import { TextArea } from '@/components/TextArea';
+import {
+  OptionValue,
+  Question,
+  QuestionFieldName,
+  QuestionnaireFormValues,
+  QuestionOption
+} from '@/types/Questionnaire';
 import clsx from 'clsx';
-import FilledCheckIcon from '@components/icons/FilledCheckIcon';
-import { TextArea } from '@components/TextArea';
-import CustomTextField from '@components/CustomTextField';
-import { Image } from '@components/common/Image';
+import { Fragment, useEffect } from 'react';
+import BirthDateInput from './BirthDateInput';
 
 interface QuestionItemProps {
   question: Question;

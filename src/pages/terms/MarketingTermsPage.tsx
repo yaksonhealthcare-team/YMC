@@ -1,7 +1,7 @@
-import { useLayout } from '../../contexts/LayoutContext.tsx';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useTermsByCategory } from '@/hooks/useTerms';
 import { useEffect } from 'react';
-import { useTermsByCategory } from '../../hooks/useTerms';
-import LoadingIndicator from '../../components/LoadingIndicator';
 
 const MarketingTermsPage = () => {
   const { setHeader, setNavigation } = useLayout();

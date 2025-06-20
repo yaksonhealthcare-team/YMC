@@ -1,4 +1,4 @@
-import { PaymentHistoryDetail } from '../../../../types/Payment.ts';
+import { PaymentHistoryDetail } from '@/types/Payment';
 
 const PaymentPointSection = ({ payment }: { payment: PaymentHistoryDetail }) => {
   const canceled = payment.status.includes('취소');

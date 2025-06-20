@@ -1,4 +1,4 @@
-import { PaymentHistoryDetail } from '../../../../types/Payment.ts';
+import { PaymentHistoryDetail } from '@/types/Payment';
 
 const PaymentRefundDescriptionSection = ({ payment }: { payment: PaymentHistoryDetail }) => {
   const payMethod = payment.items[0].cancel.payMethod;

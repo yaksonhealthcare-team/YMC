@@ -1,11 +1,11 @@
-import { useLayout } from '../../../contexts/LayoutContext.tsx';
+import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
+import EditIcon from '@/assets/icons/EditIcon.svg?react';
+import StoreIcon from '@/assets/icons/StoreIcon.svg?react';
+import { Image } from '@/components/common/Image';
+import { useLayout } from '@/contexts/LayoutContext';
+import { ReviewDetail } from '@/types/Review';
+import { formatDate, formatDateWithDay } from '@/utils/date';
 import { useEffect } from 'react';
-import CalendarIcon from '@assets/icons/CalendarIcon.svg?react';
-import StoreIcon from '@assets/icons/StoreIcon.svg?react';
-import EditIcon from '@assets/icons/EditIcon.svg?react';
-import { ReviewDetail } from '../../../types/Review.ts';
-import { formatDate, formatDateWithDay } from '../../../utils/date.ts';
-import { Image } from '@components/common/Image';
 
 const RATING_TYPE_LABEL: Record<'H' | 'M' | 'L', string> = {
   H: '만족',

@@ -1,13 +1,13 @@
-import { useLayout } from '../../contexts/LayoutContext.tsx';
+import SettingIcon from '@/assets/icons/SettingIcon.svg?react';
+import { Filter } from '@/components/Filter';
+import { NotificationCard } from '@/components/NotificationCard';
+import { useLayout } from '@/contexts/LayoutContext';
+import useIntersection from '@/hooks/useIntersection';
+import { useNotifications, useReadNotification } from '@/queries/useNotificationQueries';
+import { getSearchType, NotificationFilter, NotificationSearchType } from '@/types/Notification';
+import { Container } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SettingIcon from '@assets/icons/SettingIcon.svg?react';
-import { Filter } from '@components/Filter.tsx';
-import { NotificationCard } from '@components/NotificationCard.tsx';
-import { Container } from '@mui/material';
-import { getSearchType, NotificationFilter, NotificationSearchType } from '../../types/Notification.ts';
-import { useNotifications, useReadNotification } from '../../queries/useNotificationQueries.tsx';
-import useIntersection from '../../hooks/useIntersection.tsx';
 
 const filters = [
   { label: NotificationFilter.ALL, type: 'default' },

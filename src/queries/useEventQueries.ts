@@ -1,6 +1,6 @@
+import { fetchEventDetail, fetchEvents } from '@/apis/contents.api';
+import { Tab } from '@/types/Event';
 import { useQuery } from '@tanstack/react-query';
-import { fetchEvents, fetchEventDetail } from 'apis/contents.api';
-import { Tab } from 'types/Event';
 
 export const useEvents = (status: Tab = 'ALL') => {
   return useQuery({

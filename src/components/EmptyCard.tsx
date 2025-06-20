@@ -1,4 +1,4 @@
-import { ButtonRound } from '@components/ButtonRound.tsx';
+import { ButtonRound } from '@/components/ButtonRound';
 
 interface EmptyCardProps {
   title: string;

@@ -1,15 +1,15 @@
+import { fetchBranches } from '@/apis/branch.api';
+import LocationSelectorPin from '@/assets/icons/pin/LocationSelectorPin.svg?react';
+import { Button } from '@/components/Button';
+import MapView from '@/components/MapView';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useAddressFromCoords } from '@/hooks/useAddressFromCoords';
+import { useBranchLocationSelect } from '@/hooks/useBranchLocationSelect';
+import { useGeolocation } from '@/hooks/useGeolocation';
+import { Branch } from '@/types/Branch';
+import { Coordinate } from '@/types/Coordinate';
 import { useEffect, useState } from 'react';
-import { useLayout } from '../../../contexts/LayoutContext.tsx';
-import MapView from '@components/MapView.tsx';
-import { useGeolocation } from '../../../hooks/useGeolocation.tsx';
-import LocationSelectorPin from '@assets/icons/pin/LocationSelectorPin.svg?react';
-import { Coordinate } from '../../../types/Coordinate.ts';
-import { Button } from '@components/Button.tsx';
-import { fetchBranches } from '../../../apis/branch.api.ts';
-import { Branch } from '../../../types/Branch.ts';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useBranchLocationSelect } from '../../../hooks/useBranchLocationSelect.ts';
-import { useAddressFromCoords } from '../../../hooks/useAddressFromCoords.ts';
 
 const LocationPickerMap = () => {
   const navigate = useNavigate();

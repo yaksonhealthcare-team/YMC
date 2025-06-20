@@ -1,11 +1,11 @@
-import { Button } from '@components/Button.tsx';
-import LoadingIndicator from '@components/LoadingIndicator.tsx';
+import { Button } from '@/components/Button';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useUserGeneralQuestionnaireResult } from '@/queries/useQuestionnaireQueries';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLayout } from '../../../contexts/LayoutContext.tsx';
-import { useUserGeneralQuestionnaireResult } from '../../../queries/useQuestionnaireQueries.tsx';
-import QuestionnaireFormList from './_fragments/QuestionnaireFormList.tsx';
-import QuestionnaireHistoryNotExist from './_fragments/QuestionnaireHistoryNotExist.tsx';
+import QuestionnaireFormList from './_fragments/QuestionnaireFormList';
+import QuestionnaireHistoryNotExist from './_fragments/QuestionnaireHistoryNotExist';
 
 const GeneralQuestionnaireHistory = () => {
   const { data: questionnaire, isLoading } = useUserGeneralQuestionnaireResult();

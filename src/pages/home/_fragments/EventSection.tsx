@@ -1,9 +1,9 @@
+import { Title } from '@/components/Title';
+import { useEvents } from '@/queries/useEventQueries';
+import { Event } from '@/types/Event';
+import { formatDate } from '@/utils/date';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@components/Title';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { useEvents } from 'queries/useEventQueries';
-import { Event } from 'types/Event';
-import { formatDate } from 'utils/date';
 
 export const EventSection = () => {
   const { data: events } = useEvents('ING');

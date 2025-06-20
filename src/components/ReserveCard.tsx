@@ -1,14 +1,12 @@
+import { useOverlay } from '@/contexts/ModalContext';
+import { useCompleteVisit } from '@/queries/useReservationQueries';
+import { Reservation, ReservationStatusCode } from '@/types/Reservation';
 import clsx from 'clsx';
-import { ReservationStatusCode } from 'types/Reservation';
-import { Button } from './Button';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Reservation } from '../types/Reservation';
+import { Button } from './Button';
 import DateAndTime from './DateAndTime';
-import { useCompleteVisit } from 'queries/useReservationQueries';
-import { useOverlay } from 'contexts/ModalContext';
 import ReserveTag from './ReserveTag';
-import { useState, useEffect } from 'react';
 
 interface ReserveCardProps {
   reservation: Reservation;

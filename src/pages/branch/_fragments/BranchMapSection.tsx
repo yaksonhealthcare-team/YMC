@@ -1,13 +1,13 @@
-import MapView from '@components/MapView.tsx';
-import { Branch } from '../../../types/Branch.ts';
-import { Coordinate } from '../../../types/Coordinate.ts';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import MapView from '@/components/MapView';
+import { useBranchLocationSelect } from '@/hooks/useBranchLocationSelect';
+import { useGeolocation } from '@/hooks/useGeolocation';
+import { useBranchBookmarkMutation, useBranchUnbookmarkMutation } from '@/queries/useBranchQueries';
+import { Branch } from '@/types/Branch';
+import { Coordinate } from '@/types/Coordinate';
 import { useEffect, useState } from 'react';
-import { useBranchBookmarkMutation, useBranchUnbookmarkMutation } from '../../../queries/useBranchQueries.tsx';
 import { useNavigate } from 'react-router-dom';
-import { useBranchLocationSelect } from '../../../hooks/useBranchLocationSelect.ts';
-import { useGeolocation } from '../../../hooks/useGeolocation.tsx';
-import { BranchFilterListItem } from './BranchFilterList.tsx';
-import LoadingIndicator from '@components/LoadingIndicator.tsx';
+import { BranchFilterListItem } from './BranchFilterList';
 
 interface BranchMapSectionProps {
   brandCode?: string;

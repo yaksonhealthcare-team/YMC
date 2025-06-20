@@ -1,4 +1,4 @@
-import StoreIcon from '@assets/icons/StoreIcon.svg?react';
+import StoreIcon from '@/assets/icons/StoreIcon.svg?react';
 
 interface BranchCardProps {
   name: string;

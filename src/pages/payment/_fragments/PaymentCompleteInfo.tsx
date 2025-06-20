@@ -1,5 +1,5 @@
+import { PaymentCompleteState } from '@/types/Payment';
 import { Divider } from '@mui/material';
-import { PaymentCompleteState } from '../../../types/Payment';
 
 const BANK_CODE_MAP: { [key: string]: string } = {
   '02': '한국산업은행',

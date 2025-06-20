@@ -1,10 +1,10 @@
-import { useLayout } from '../../contexts/LayoutContext.tsx';
+import CaretLeftIcon from '@/assets/icons/CaretLeftIcon.svg?react';
+import { Button } from '@/components/Button';
+import PasswordCustomInput from '@/components/input/PasswordCustomInput';
+import { useLayout } from '@/contexts/LayoutContext';
+import validatePassword from '@/utils/passwordValidator';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CaretLeftIcon from '@assets/icons/CaretLeftIcon.svg?react';
-import { Button } from '@components/Button.tsx';
-import validatePassword from '../../utils/passwordValidator.ts';
-import PasswordCustomInput from '@components/input/PasswordCustomInput.tsx';
 
 interface ResetPasswordProps {
   requestPasswordChange: (password: string) => void;

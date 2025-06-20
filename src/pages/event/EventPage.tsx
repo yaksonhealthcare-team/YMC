@@ -1,13 +1,13 @@
-import { useNavigate } from 'react-router-dom';
-import { useEvents } from 'queries/useEventQueries';
-import { Event, Tab } from 'types/Event';
-import { useState, useLayoutEffect } from 'react';
-import { EmptyCard } from '@components/EmptyCard';
-import LoadingIndicator from '@components/LoadingIndicator.tsx';
-import Header from '@components/Header';
-import { useLayout } from '../../contexts/LayoutContext';
-import { Image } from '@components/common/Image';
+import { Image } from '@/components/common/Image';
+import { EmptyCard } from '@/components/EmptyCard';
+import Header from '@/components/Header';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useEvents } from '@/queries/useEventQueries';
+import { Event, Tab } from '@/types/Event';
 import clsx from 'clsx';
+import { useLayoutEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const EventPage = () => {
   const navigate = useNavigate();

@@ -1,6 +1,6 @@
-import CalendarIcon from '@assets/icons/CalendarIcon.svg?react';
-import formatDate from 'utils/formatDate';
-import formatTime from 'utils/formatTime';
+import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
+import formatDate from '@/utils/formatDate';
+import formatTime from '@/utils/formatTime';
 
 interface DateAndTimeProps {
   date: Date;

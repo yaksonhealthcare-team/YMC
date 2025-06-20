@@ -1,8 +1,8 @@
-import { Number } from '@components/Number';
-import ClockIcon from '@assets/icons/ClockIcon.svg?react';
-import XCircleIcon from '@components/icons/XCircleIcon.tsx';
-import { CartItemOption } from '../types/Cart.ts';
-import { formatPriceWithUnit } from '../utils/format';
+import ClockIcon from '@/assets/icons/ClockIcon.svg?react';
+import XCircleIcon from '@/components/icons/XCircleIcon';
+import { Number } from '@/components/Number';
+import { CartItemOption } from '@/types/Cart';
+import { formatPriceWithUnit } from '@/utils/format';
 
 interface PaymentCardProps {
   brand: string;

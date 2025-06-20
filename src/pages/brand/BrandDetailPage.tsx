@@ -1,10 +1,10 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { Button } from '@/components/Button';
+import { Image } from '@/components/common/Image';
+import FullPageLoading from '@/components/FullPageLoading';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useBrand } from '@/queries/useBrandQueries';
 import { useEffect, useState } from 'react';
-import { useLayout } from '../../contexts/LayoutContext.tsx';
-import { useBrand } from '../../queries/useBrandQueries.tsx';
-import { Button } from '@components/Button.tsx';
-import { Image } from '@components/common/Image';
-import FullPageLoading from '@components/FullPageLoading';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export const BrandDetailPage = () => {
   const { setHeader, setNavigation } = useLayout();

@@ -1,8 +1,8 @@
-import { useLayout } from '../../contexts/LayoutContext.tsx';
-import { useNavigate } from 'react-router-dom';
+import CheckCircle from '@/assets/icons/CheckCircle.svg?react';
+import { Button } from '@/components/Button';
+import { useLayout } from '@/contexts/LayoutContext';
 import { useEffect } from 'react';
-import { Button } from '@components/Button.tsx';
-import CheckCircle from '@assets/icons/CheckCircle.svg?react';
+import { useNavigate } from 'react-router-dom';
 
 const PaymentCancelCompletePage = () => {
   const { setHeader, setNavigation } = useLayout();

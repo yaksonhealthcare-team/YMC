@@ -1,15 +1,15 @@
-import { BranchDetail } from 'types/Branch';
-import ClockIcon from '@assets/icons/ClockIcon.svg?react';
-import PinIcon from '@assets/icons/PinIcon.svg?react';
-import PhoneIcon from '@assets/icons/PhoneIcon.svg?react';
-import CopyIcon from '@assets/icons/CopyIcon.svg?react';
+import ClockIcon from '@/assets/icons/ClockIcon.svg?react';
+import CopyIcon from '@/assets/icons/CopyIcon.svg?react';
+import PhoneIcon from '@/assets/icons/PhoneIcon.svg?react';
+import PinIcon from '@/assets/icons/PinIcon.svg?react';
+import MapView from '@/components/MapView';
+import { Tag } from '@/components/Tag';
+import { Image } from '@/components/common/Image';
+import { useOverlay } from '@/contexts/ModalContext';
+import { BranchDetail } from '@/types/Branch';
+import { copyToClipboard } from '@/utils/copyUtils';
 import { ReactNode, useState } from 'react';
-import { copyToClipboard } from '../../../../utils/copyUtils.ts';
-import { Tag } from '@components/Tag.tsx';
 import BranchImageCarousel from './BranchImageCarousel';
-import MapView from '@components/MapView.tsx';
-import { Image } from '@components/common/Image';
-import { useOverlay } from 'contexts/ModalContext';
 
 const IconSection = ({ icon, children }: { icon: ReactNode; children: ReactNode }) => (
   <div className={'flex items-start gap-2 font-r text-14px w-full'}>

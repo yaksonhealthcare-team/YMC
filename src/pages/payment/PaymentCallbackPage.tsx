@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { usePaymentStore } from '../../hooks/usePaymentStore';
-import { PaymentStatus, PaymentResponse } from '../../types/Payment';
-import { useOverlay } from '../../contexts/ModalContext';
-import LoadingIndicator from '@components/LoadingIndicator';
+import { fetchPoints } from '@/apis/points.api';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useOverlay } from '@/contexts/ModalContext';
+import { usePaymentStore } from '@/hooks/usePaymentStore';
+import { queryClient } from '@/queries/clients';
+import { PaymentResponse, PaymentStatus } from '@/types/Payment';
 import { useQuery } from '@tanstack/react-query';
-import { fetchPoints } from '../../apis/points.api';
-import { queryClient } from '../../queries/clients';
+import { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const CARD_CODE_MAP: { [key: string]: string } = {
   '01': '외환카드',

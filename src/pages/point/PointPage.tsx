@@ -1,10 +1,10 @@
-import { useLayout } from '../../contexts/LayoutContext.tsx';
+import { EmptyCard } from '@/components/EmptyCard';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { Tag } from '@/components/Tag';
+import { useLayout } from '@/contexts/LayoutContext';
+import useIntersection from '@/hooks/useIntersection';
+import { usePointHistories } from '@/queries/usePointQueries';
 import { useEffect } from 'react';
-import { usePointHistories } from '../../queries/usePointQueries.tsx';
-import { Tag } from '@components/Tag.tsx';
-import useIntersection from '../../hooks/useIntersection.tsx';
-import LoadingIndicator from '@components/LoadingIndicator';
-import { EmptyCard } from '@components/EmptyCard';
 
 const PointPage = () => {
   const { setHeader, setNavigation } = useLayout();

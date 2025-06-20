@@ -1,14 +1,14 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { queryKeys } from './query.keys';
-import { Question, QuestionnaireFormValues, QuestionnaireType } from '../types/Questionnaire';
 import {
-  fetchUserGeneralQuestionnaireResult,
-  fetchUserReservationQuestionnaireResult,
   fetchCommonQuestionnaire,
   fetchReservationQuestionnaire,
+  fetchUserGeneralQuestionnaireResult,
+  fetchUserReservationQuestionnaireResult,
   submitCommonQuestionnaire,
   submitReservationQuestionnaire
-} from 'apis/questionnaire.api';
+} from '@/apis/questionnaire.api';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Question, QuestionnaireFormValues, QuestionnaireType } from '../types/Questionnaire';
+import { queryKeys } from './query.keys';
 
 // 문진 질문 목록 조회
 export const useQuestionnaire = (type: QuestionnaireType) =>

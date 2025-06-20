@@ -1,9 +1,9 @@
-import CloseIcon from '@assets/icons/CloseIcon.svg?react';
-import { Filter } from '@components/Filter.tsx';
-import { useState, useEffect } from 'react';
-import { Button } from '@components/Button.tsx';
-import ReloadIcon from '@components/icons/ReloadIcon.tsx';
-import LoadingIndicator from '@components/LoadingIndicator.tsx';
+import CloseIcon from '@/assets/icons/CloseIcon.svg?react';
+import { Button } from '@/components/Button';
+import { Filter } from '@/components/Filter';
+import ReloadIcon from '@/components/icons/ReloadIcon';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useEffect, useState } from 'react';
 
 export type FilterItem = {
   code: string;

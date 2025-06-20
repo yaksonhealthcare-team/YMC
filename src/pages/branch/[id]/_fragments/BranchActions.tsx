@@ -1,6 +1,6 @@
+import { BranchDetail as BranchDetailType } from '@/types/Branch';
 import { memo } from 'react';
 import BranchDetailBottomActionBar from './BranchDetailBottomActionBar';
-import { BranchDetail as BranchDetailType } from 'types/Branch';
 
 interface BranchActionsProps {
   branch: BranchDetailType;

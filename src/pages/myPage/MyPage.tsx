@@ -1,9 +1,9 @@
-import { Button } from '@components/Button';
-import LoadingIndicator from '@components/LoadingIndicator';
+import { Button } from '@/components/Button';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useAuth } from '@/contexts/AuthContext';
+import { useLayout } from '@/contexts/LayoutContext';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { useLayout } from '../../contexts/LayoutContext.tsx';
 import MyPageBranchInfo from './_fragments/MyPageBranchInfo';
 import MyPageFooter from './_fragments/MyPageFooter';
 import MyPageMenu from './_fragments/MyPageMenu';

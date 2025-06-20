@@ -1,17 +1,17 @@
-import { useEffect, useState, useRef } from 'react';
-import { useLayout } from '../../../contexts/LayoutContext.tsx';
-import CloseIcon from '@assets/icons/CloseIcon.svg?react';
-import CrosshairIcon from '@assets/icons/CrosshairIcon.svg?react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { SearchField } from '@components/SearchField.tsx';
-import SavedLocationList from './SavedLocationList.tsx';
-import LocationSearchResultList from './LocationSearchResultList.tsx';
-import { useAddressBookmarks, useAddressSearch } from '../../../queries/useAddressQueries.ts';
-import { useBranchLocationSelect } from '../../../hooks/useBranchLocationSelect';
-import { useGeolocation } from '../../../hooks/useGeolocation.tsx';
-import { useOverlay } from '../../../contexts/ModalContext';
+import CloseIcon from '@/assets/icons/CloseIcon.svg?react';
+import CrosshairIcon from '@/assets/icons/CrosshairIcon.svg?react';
+import { SearchField } from '@/components/SearchField';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useOverlay } from '@/contexts/ModalContext';
+import { useBranchLocationSelect } from '@/hooks/useBranchLocationSelect';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useGeolocation } from '@/hooks/useGeolocation';
+import { useAddressBookmarks, useAddressSearch } from '@/queries/useAddressQueries';
 import { Divider } from '@mui/material';
-import { useDebounce } from '../../../hooks/useDebounce';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import LocationSearchResultList from './LocationSearchResultList';
+import SavedLocationList from './SavedLocationList';
 
 const LocationSettingsHeader = ({ onClickBack }: { onClickBack: () => void }) => (
   <div className={'flex justify-between items-center bg-white px-5 py-4 h-12'}>

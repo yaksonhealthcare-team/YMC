@@ -1,19 +1,19 @@
-import { useEffect, useState } from 'react';
-import { useLayout } from 'contexts/LayoutContext';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { TextArea } from '../../../components/TextArea';
-import { Button } from '../../../components/Button';
-import CalendarIcon from '@assets/icons/CalendarIcon.svg?react';
-import PlusIcon from '@assets/icons/PlusIcon.svg?react';
-import clsx from 'clsx';
-import { useCreateReviewMutation, useReviewQuestions } from '../../../queries/useReviewQueries';
-import { uploadImages } from '../../../apis/image.api';
-import { formatDate } from '../../../utils/date';
-import LoadingIndicator from '../../../components/LoadingIndicator';
-import { Image } from '@components/common/Image';
+import { uploadImages } from '@/apis/image.api';
+import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
+import PlusIcon from '@/assets/icons/PlusIcon.svg?react';
+import { Button } from '@/components/Button';
+import { Image } from '@/components/common/Image';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { TextArea } from '@/components/TextArea';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useOverlay } from '@/contexts/ModalContext';
+import { useCreateReviewMutation, useReviewQuestions } from '@/queries/useReviewQueries';
+import { formatDate } from '@/utils/date';
+import { escapeHtml, validateFile } from '@/utils/sanitize';
 import { useQueryClient } from '@tanstack/react-query';
-import { validateFile, escapeHtml } from 'utils/sanitize';
-import { useOverlay } from 'contexts/ModalContext';
+import clsx from 'clsx';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 type SatisfactionPageParams = {
   id: string;
