@@ -1,12 +1,12 @@
-import LoadingIndicator from '@components/LoadingIndicator';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
+import { usePaymentHistory } from '@/queries/usePaymentQueries';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useLayout } from '../../contexts/LayoutContext.tsx';
-import { usePaymentHistory } from '../../queries/usePaymentQueries.tsx';
-import PaymentCancelReasonSection from './_fragments/detail/PaymentCancelReasonSection.tsx';
-import PaymentItemSection from './_fragments/detail/PaymentItemSection.tsx';
-import PaymentPointSection from './_fragments/detail/PaymentPointSection.tsx';
-import PaymentRefundDescriptionSection from './_fragments/detail/PaymentRefundDescriptionSection.tsx';
+import PaymentCancelReasonSection from './_fragments/detail/PaymentCancelReasonSection';
+import PaymentItemSection from './_fragments/detail/PaymentItemSection';
+import PaymentPointSection from './_fragments/detail/PaymentPointSection';
+import PaymentRefundDescriptionSection from './_fragments/detail/PaymentRefundDescriptionSection';
 
 const PaymentCancelDetailPage = () => {
   const { id } = useParams();

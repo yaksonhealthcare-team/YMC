@@ -1,5 +1,5 @@
-import { AdditionalManagement } from 'types/Membership';
-import { AdditionalServiceCard } from '@components/AdditionalServiceCard';
+import { AdditionalServiceCard } from '@/components/AdditionalServiceCard';
+import { AdditionalManagement } from '@/types/Membership';
 
 interface AdditionalManagementSectionProps {
   additionalManagements: AdditionalManagement[];

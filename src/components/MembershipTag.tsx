@@ -1,4 +1,4 @@
-import { MembershipStatus, membershipStatusToKorean } from '../types/Membership';
+import { MembershipStatus, membershipStatusToKorean } from '@/types/Membership';
 import { Tag, TagType } from './Tag';
 
 interface MembershipTagProps {

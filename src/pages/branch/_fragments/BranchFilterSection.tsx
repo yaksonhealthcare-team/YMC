@@ -1,5 +1,5 @@
-import { Filter } from '@components/Filter.tsx';
-import { FilterItem } from './BranchFilterBottomSheet.tsx';
+import { Filter } from '@/components/Filter';
+import { FilterItem } from './BranchFilterBottomSheet';
 
 const BranchFilterSection = ({
   currentFilter,

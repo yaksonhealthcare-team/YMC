@@ -1,5 +1,5 @@
-import { ShopIcon } from '@components/icons/ShopIcon.tsx';
-import { formatPriceWithUnit } from '../utils/format';
+import { ShopIcon } from '@/components/icons/ShopIcon';
+import { formatPriceWithUnit } from '@/utils/format';
 
 interface CartOption {
   sessions: number;

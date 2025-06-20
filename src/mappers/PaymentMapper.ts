@@ -3,7 +3,7 @@ import {
   PaymentHistoryDetail,
   PaymentHistoryDetailResponse,
   PaymentHistoryResponse
-} from '../types/Payment.ts';
+} from '@/types/Payment';
 
 export class PaymentMapper {
   static toHistoryEntity(dto: PaymentHistoryResponse): PaymentHistory {

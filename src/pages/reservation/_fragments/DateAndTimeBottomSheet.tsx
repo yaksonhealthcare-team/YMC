@@ -1,19 +1,18 @@
-import CloseIcon from '@assets/icons/CloseIcon.svg?react';
-import { DateCalendarProps, LocalizationProvider, PickersCalendarHeaderProps } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateCalendar } from '@mui/x-date-pickers';
+import CaretLeftIcon from '@/assets/icons/CaretLeftIcon.svg?react';
+import CaretRigthIcon from '@/assets/icons/CaretRightIcon.svg?react';
+import CloseIcon from '@/assets/icons/CloseIcon.svg?react';
+import { Button } from '@/components/Button';
+import { useScheduleDateQueries, useScheduleTimesQueries } from '@/queries/useScheduleQueries';
+import { TimeSlot } from '@/types/Schedule';
+import { mapTimesToTimeSlots } from '@/utils/formatToTimeSlot';
+import CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/material/styles';
-import { useEffect, useState } from 'react';
+import { DateCalendar, DateCalendarProps, LocalizationProvider, PickersCalendarHeaderProps } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import clsx from 'clsx';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/ko';
-import CaretRigthIcon from '@assets/icons/CaretRightIcon.svg?react';
-import CaretLeftIcon from '@assets/icons/CaretLeftIcon.svg?react';
-import clsx from 'clsx';
-import { Button } from '@components/Button';
-import { useScheduleDateQueries, useScheduleTimesQueries } from '../../../queries/useScheduleQueries.tsx';
-import { TimeSlot } from '../../../types/Schedule.ts';
-import { mapTimesToTimeSlots } from '../../../utils/formatToTimeSlot.ts';
-import CircularProgress from '@mui/material/CircularProgress';
+import { useEffect, useState } from 'react';
 
 interface DateAndTimeBottomSheetProps {
   onClose: () => void;

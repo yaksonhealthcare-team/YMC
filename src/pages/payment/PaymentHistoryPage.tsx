@@ -1,12 +1,12 @@
-import { EmptyCard } from '@components/EmptyCard';
-import LoadingIndicator from '@components/LoadingIndicator.tsx';
+import { EmptyCard } from '@/components/EmptyCard';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
+import useIntersection from '@/hooks/useIntersection';
+import { usePaymentHistories } from '@/queries/usePaymentQueries';
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLayout } from '../../contexts/LayoutContext.tsx';
-import useIntersection from '../../hooks/useIntersection.tsx';
-import { usePaymentHistories } from '../../queries/usePaymentQueries.tsx';
-import PaymentHistoryListItem from './_fragments/PaymentHistoryListItem.tsx';
-import { useQueryClient } from '@tanstack/react-query';
+import PaymentHistoryListItem from './_fragments/PaymentHistoryListItem';
 
 const SCROLL_POSITION_KEY = ['payment_history_scroll_position'] as const;
 

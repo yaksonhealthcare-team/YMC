@@ -1,4 +1,4 @@
-import { Banner, BannerResponse } from '../types/Banner.ts';
+import { Banner, BannerResponse } from '@/types/Banner';
 
 export class BannerMapper {
   static toEntity(dto: BannerResponse['body'][0]): Banner {

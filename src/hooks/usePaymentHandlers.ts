@@ -1,6 +1,6 @@
+import { useOverlay } from '@/contexts/ModalContext';
+import { axiosClient } from '@/queries/clients';
 import { usePaymentStore } from './usePaymentStore';
-import { useOverlay } from 'contexts/ModalContext';
-import { axiosClient } from 'queries/clients';
 
 export const usePaymentHandlers = () => {
   const { points, setPoints } = usePaymentStore();

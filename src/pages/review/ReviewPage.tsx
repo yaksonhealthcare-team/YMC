@@ -1,12 +1,12 @@
-import { useLayout } from '../../contexts/LayoutContext.tsx';
+import { Button } from '@/components/Button';
+import { EmptyCard } from '@/components/EmptyCard';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useIntersection } from '@/hooks/useIntersection';
+import { useReviews } from '@/queries/useReviewQueries';
 import { useEffect } from 'react';
-import { useReviews } from '../../queries/useReviewQueries.tsx';
-import { ReviewListItem } from './_fragments/ReviewListItem.tsx';
-import { useIntersection } from '../../hooks/useIntersection.tsx';
 import { Link } from 'react-router-dom';
-import LoadingIndicator from '@components/LoadingIndicator.tsx';
-import { Button } from '@components/Button';
-import { EmptyCard } from '@components/EmptyCard';
+import { ReviewListItem } from './_fragments/ReviewListItem';
 
 const ReviewPage = () => {
   const { setHeader, setNavigation } = useLayout();

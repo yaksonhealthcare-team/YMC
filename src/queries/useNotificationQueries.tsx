@@ -1,13 +1,13 @@
-import { useInfiniteQuery, useQuery, useMutation, useQueryClient, InfiniteData } from '@tanstack/react-query';
-import { queryKeys } from './query.keys.ts';
-import { Notification, NotificationFilters } from '../types/Notification.ts';
+import { User } from '@/types/User';
+import { InfiniteData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   fetchNotifications,
+  fetchUnreadNotificationsCount,
   getNotificationSettings,
-  updateNotificationSettings,
-  fetchUnreadNotificationsCount
-} from '../apis/notifications.api.ts';
-import { User } from 'types/User.ts';
+  updateNotificationSettings
+} from '../apis/notifications.api';
+import { Notification, NotificationFilters } from '../types/Notification';
+import { queryKeys } from './query.keys';
 
 export const useNotifications = (filters: NotificationFilters) => {
   return useInfiniteQuery({

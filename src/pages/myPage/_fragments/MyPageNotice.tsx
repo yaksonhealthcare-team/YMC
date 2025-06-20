@@ -1,8 +1,8 @@
+import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
+import MegaPhoneIcon from '@/assets/icons/MegaPhoneIcon.svg?react';
+import NoticesSummarySlider from '@/components/NoticesSummarySlider';
+import { useNoticesSummary } from '@/queries/useContentQueries';
 import { useNavigate } from 'react-router-dom';
-import CaretRightIcon from '@assets/icons/CaretRightIcon.svg?react';
-import MegaPhoneIcon from '@assets/icons/MegaPhoneIcon.svg?react';
-import NoticesSummarySlider from '@components/NoticesSummarySlider.tsx';
-import { useNoticesSummary } from '../../../queries/useContentQueries';
 
 const MyPageNotice = () => {
   const navigate = useNavigate();

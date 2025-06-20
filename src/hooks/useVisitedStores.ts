@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { fetchVisitedStores } from '../apis/user.api';
-import { BranchSearchResult } from '../types/Branch';
-import { ListResponse } from '../types/Common';
+import { fetchVisitedStores } from '@/apis/user.api';
+import { BranchSearchResult } from '@/types/Branch';
+import { ListResponse } from '@/types/Common';
+import { useEffect, useState } from 'react';
 
 export const useVisitedStores = () => {
   const [data, setData] = useState<ListResponse<BranchSearchResult> | null>(null);

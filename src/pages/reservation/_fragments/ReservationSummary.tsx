@@ -1,6 +1,6 @@
-import CalendarIcon from '@assets/icons/CalendarIcon.svg?react';
+import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
+import { ReservationDetail } from '@/queries/useReservationQueries';
 import { Divider } from '@mui/material';
-import { ReservationDetail } from 'queries/useReservationQueries';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
 

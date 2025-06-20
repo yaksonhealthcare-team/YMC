@@ -1,11 +1,11 @@
+import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
+import { Button } from '@/components/Button';
+import { Tag } from '@/components/Tag';
+import { BranchInfo, MembershipStatus } from '@/types/Membership';
+import { formatDateRange } from '@/utils/date';
 import clsx from 'clsx';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@components/Button';
-import { Tag } from '@components/Tag';
-import CaretRightIcon from '@assets/icons/CaretRightIcon.svg?react';
 import MembershipTag from './MembershipTag';
-import { MembershipStatus, BranchInfo } from 'types/Membership';
-import { formatDateRange } from '../utils/date';
 
 const STYLES = {
   container: 'flex w-full justify-between bg-white p-5 border border-gray-100 shadow-card rounded-[20px] mb-[12px]',

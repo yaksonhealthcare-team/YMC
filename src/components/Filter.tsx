@@ -1,7 +1,7 @@
+import CaretDownIcon from '@/assets/icons/CaretDownIcon.svg?react';
+import ReloadIcon from '@/components/icons/ReloadIcon';
 import { Button } from '@mui/material';
 import clsx from 'clsx';
-import CaretDownIcon from '@assets/icons/CaretDownIcon.svg?react';
-import ReloadIcon from '@components/icons/ReloadIcon';
 
 const FILTER_STYLES = {
   default: 'border border-gray-200 font-r text-14px text-gray-500 bg-white',

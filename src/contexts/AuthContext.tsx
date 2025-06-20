@@ -1,9 +1,9 @@
+import { logout as fetchLogout, fetchUser } from '@/apis/auth.api';
+import { axiosClient } from '@/queries/clients';
+import { useStartupPopups } from '@/queries/useContentQueries';
+import { usePopupActions } from '@/stores/popupStore';
+import { User } from '@/types/User';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { logout as fetchLogout, fetchUser } from '../apis/auth.api.ts';
-import { axiosClient } from '../queries/clients.ts';
-import { useStartupPopups } from '../queries/useContentQueries.tsx';
-import { usePopupActions } from '../stores/popupStore.ts';
-import { User } from '../types/User.ts';
 
 interface AuthContextType {
   user: User | null;

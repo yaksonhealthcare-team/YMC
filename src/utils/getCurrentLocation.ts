@@ -1,4 +1,4 @@
-import { Coordinate } from '../types/Coordinate.ts';
+import { Coordinate } from '../types/Coordinate';
 
 /**
  * 사용자의 현재 위치 정보(위도, 경도)를 비동기적으로 가져옵니다.

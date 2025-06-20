@@ -1,14 +1,14 @@
-import { useNavigate, Link } from 'react-router-dom';
+import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
+import CrownIcon from '@/assets/icons/CrownIcon.svg?react';
+import InformationIcon from '@/assets/icons/InformationIcon.svg?react';
+import PersonalCardIcon from '@/assets/icons/PersonalCardIcon.svg?react';
+import PointIcon from '@/assets/icons/PointIcon.svg?react';
+import { Button } from '@/components/Button';
+import { useAuth } from '@/contexts/AuthContext';
+import { useOverlay } from '@/contexts/ModalContext';
 import { Divider } from '@mui/material';
-import CaretRightIcon from '@assets/icons/CaretRightIcon.svg?react';
-import CrownIcon from '@assets/icons/CrownIcon.svg?react';
-import PersonalCardIcon from '@assets/icons/PersonalCardIcon.svg?react';
-import InformationIcon from '@assets/icons/InformationIcon.svg?react';
-import PointIcon from '@assets/icons/PointIcon.svg?react';
-import { useAuth } from '../../../contexts/AuthContext';
-import { useOverlay } from '../../../contexts/ModalContext';
-import { Button } from '@components/Button';
 import clsx from 'clsx';
+import { Link, useNavigate } from 'react-router-dom';
 
 const MyPagePointMembership = () => {
   const navigate = useNavigate();

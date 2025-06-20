@@ -1,10 +1,10 @@
+import ErrorPage from '@/components/ErrorPage';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
+import { usePopupDetail } from '@/queries/useContentQueries';
+import { Box, Container, Typography } from '@mui/material';
 import { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useLayout } from '../../contexts/LayoutContext';
-import { usePopupDetail } from '../../queries/useContentQueries';
-import LoadingIndicator from '@components/LoadingIndicator';
-import ErrorPage from '@components/ErrorPage';
-import { Container, Typography, Box } from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function PopupDetailPage() {
   const { code } = useParams<{ code: string }>();

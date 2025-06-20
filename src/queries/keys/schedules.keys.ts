@@ -1,5 +1,5 @@
+import { ScheduleFilters } from '@/types/Schedule';
 import { createQueryKeyFactory } from '../queryKeyFactory';
-import { ScheduleFilters } from '../../types/Schedule';
 
 const schedulesKeys = createQueryKeyFactory('schedules');
 

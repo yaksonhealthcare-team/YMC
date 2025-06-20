@@ -1,7 +1,7 @@
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
+import { axiosClient } from '@/queries/clients';
 import { useEffect, useRef, useState } from 'react';
-import { useLayout } from 'contexts/LayoutContext';
-import { axiosClient } from 'queries/clients';
-import LoadingIndicator from '@components/LoadingIndicator';
 
 const Store = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null);

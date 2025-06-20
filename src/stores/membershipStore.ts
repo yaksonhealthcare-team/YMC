@@ -1,5 +1,5 @@
+import { MyMembershipFilterItem, myMembershipFilters } from '@/types/Membership';
 import { create } from 'zustand';
-import { MyMembershipFilterItem, myMembershipFilters } from 'types/Membership';
 
 interface MembershipStore {
   filter: MyMembershipFilterItem;

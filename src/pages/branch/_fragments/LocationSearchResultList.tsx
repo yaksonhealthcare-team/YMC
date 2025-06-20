@@ -1,7 +1,7 @@
-import { Location } from '../../../types/Location.ts';
-import LocationSearchPlaceholder from './LocationSearchPlaceholder.tsx';
-import PinIcon from '@assets/icons/PinIcon.svg?react';
-import HeartEnabledIcon from '@assets/icons/HeartEnabledIcon.svg?react';
+import HeartEnabledIcon from '@/assets/icons/HeartEnabledIcon.svg?react';
+import PinIcon from '@/assets/icons/PinIcon.svg?react';
+import { Location } from '@/types/Location';
+import LocationSearchPlaceholder from './LocationSearchPlaceholder';
 
 interface LocationSearchResultListProps {
   type: 'saved' | 'search';

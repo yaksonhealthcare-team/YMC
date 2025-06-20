@@ -1,7 +1,7 @@
-import { BrandCard } from '@components/BrandCard.tsx';
-import { useDisplayBrands } from '../hooks/useDisplayBrands';
-import { useRef, useState, useEffect } from 'react';
+import { BrandCard } from '@/components/BrandCard';
+import { useDisplayBrands } from '@/hooks/useDisplayBrands';
 import { Box } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
 
 interface SwiperBrandCardProps {
   className?: string;

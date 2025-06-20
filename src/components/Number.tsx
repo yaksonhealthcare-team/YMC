@@ -1,6 +1,6 @@
+import MinusIcon from '@/assets/icons/MinusIcon.svg?react';
+import PlusIcon from '@/assets/icons/PlusIcon.svg?react';
 import clsx from 'clsx';
-import MinusIcon from '@assets/icons/MinusIcon.svg?react';
-import PlusIcon from '@assets/icons/PlusIcon.svg?react';
 
 interface NumberProps {
   count: number;

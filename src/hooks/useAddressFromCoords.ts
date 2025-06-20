@@ -1,5 +1,5 @@
+import { Coordinate } from '@/types/Coordinate';
 import { useState } from 'react';
-import { Coordinate } from '../types/Coordinate';
 
 interface AddressInfo {
   jibun: string;

@@ -1,11 +1,11 @@
+import PhoneIcon from '@/assets/icons/PhoneIcon.svg?react';
+import PinIcon from '@/assets/icons/PinIcon.svg?react';
+import MapView from '@/components/MapView';
+import { useOverlay } from '@/contexts/ModalContext';
+import { ReservationDetail } from '@/queries/useReservationQueries';
+import { Branch } from '@/types/Branch';
+import { copyToClipboard } from '@/utils/copyUtils';
 import { ReactNode } from 'react';
-import PinIcon from '@assets/icons/PinIcon.svg?react';
-import PhoneIcon from '@assets/icons/PhoneIcon.svg?react';
-import { copyToClipboard } from 'utils/copyUtils';
-import MapView from '@components/MapView';
-import { Branch } from 'types/Branch';
-import { ReservationDetail } from 'queries/useReservationQueries';
-import { useOverlay } from 'contexts/ModalContext';
 
 const InfoGroup = ({ icon, children }: { icon: ReactNode; children: ReactNode }) => (
   <div className={'flex items-start gap-2 font-r text-14px w-full'}>

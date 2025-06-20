@@ -1,14 +1,14 @@
-import { Branch } from '../../../types/Branch.ts';
-import BranchPlaceholderImage from '@assets/images/BranchPlaceholderImage.png';
-import HeartDisabledIcon from '@assets/icons/HeartDisabledIcon.svg?react';
-import HeartEnabledIcon from '@assets/icons/HeartEnabledIcon.svg?react';
-import useIntersection from '../../../hooks/useIntersection.tsx';
-import { useBranchBookmarkMutation, useBranchUnbookmarkMutation } from '../../../queries/useBranchQueries.tsx';
-import { useOverlay } from '../../../contexts/ModalContext.tsx';
-import { Image } from '@components/common/Image';
-import { useCallback } from 'react';
-import LoadingIndicator from '@components/LoadingIndicator';
+import HeartDisabledIcon from '@/assets/icons/HeartDisabledIcon.svg?react';
+import HeartEnabledIcon from '@/assets/icons/HeartEnabledIcon.svg?react';
+import BranchPlaceholderImage from '@/assets/images/BranchPlaceholderImage.png';
+import { Image } from '@/components/common/Image';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useOverlay } from '@/contexts/ModalContext';
+import useIntersection from '@/hooks/useIntersection';
+import { useBranchBookmarkMutation, useBranchUnbookmarkMutation } from '@/queries/useBranchQueries';
+import { Branch } from '@/types/Branch';
 import clsx from 'clsx';
+import { useCallback } from 'react';
 
 interface BranchFilterListProps {
   branches: Branch[];

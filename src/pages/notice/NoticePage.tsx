@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
-import { useLayout } from '../../contexts/LayoutContext.tsx';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Notice } from 'types/Content';
-import { EmptyCard } from '@components/EmptyCard';
+import { fetchNotices } from '@/apis/contents.api';
+import { EmptyCard } from '@/components/EmptyCard';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
+import { Notice } from '@/types/Content';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { fetchNotices } from 'apis/contents.api';
-import LoadingIndicator from '@components/LoadingIndicator.tsx';
+import React, { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const NoticePage: React.FC = () => {
   const { setHeader, setNavigation } = useLayout();

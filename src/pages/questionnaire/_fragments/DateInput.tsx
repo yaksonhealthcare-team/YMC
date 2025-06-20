@@ -1,5 +1,5 @@
+import CustomTextField from '@/components/CustomTextField';
 import { useEffect, useState } from 'react';
-import CustomTextField from '@components/CustomTextField';
 
 interface DateInputProps {
   value: string;

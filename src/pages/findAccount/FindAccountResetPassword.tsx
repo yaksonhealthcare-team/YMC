@@ -1,11 +1,11 @@
-import { useNavigate, useLocation } from 'react-router-dom';
-import ResetPassword from '@components/resetPassword/ResetPassword.tsx';
-import { resetPassword } from '../../apis/auth.api.ts';
+import { resetPassword } from '@/apis/auth.api';
+import { FindPasswordResponse, findPasswordWithDecryptData } from '@/apis/decrypt-result.api';
+import { Button } from '@/components/Button';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import ResetPassword from '@/components/resetPassword/ResetPassword';
+import { useLayout } from '@/contexts/LayoutContext';
 import { useEffect, useState } from 'react';
-import { useLayout } from '../../contexts/LayoutContext.tsx';
-import { FindPasswordResponse, findPasswordWithDecryptData } from '@apis/decrypt-result.api.ts';
-import { Button } from '@components/Button.tsx';
-import LoadingIndicator from '@components/LoadingIndicator.tsx';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const FindAccountResetPassword = () => {
   const navigate = useNavigate();

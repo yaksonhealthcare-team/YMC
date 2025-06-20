@@ -1,9 +1,9 @@
 import {
-  QuestionnaireResult,
-  QuestionnaireResultResponse,
+  OptionValue,
   QuestionnaireFormValues,
-  OptionValue
-} from '../types/Questionnaire.ts';
+  QuestionnaireResult,
+  QuestionnaireResultResponse
+} from '@/types/Questionnaire';
 
 export class QuestionnaireMapper {
   static toQuestionnaireAnswerType(

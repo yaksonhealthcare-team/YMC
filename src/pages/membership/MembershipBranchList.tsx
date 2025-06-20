@@ -1,13 +1,13 @@
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { Image } from '@/components/common/Image';
 import SearchIcon from '@/components/icons/SearchIcon';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useGeolocation } from '@/hooks/useGeolocation';
+import { useIntersection } from '@/hooks/useIntersection';
+import { useBranches } from '@/queries/useBranchQueries';
+import { useReservationFormStore } from '@/stores/reservationFormStore';
+import { Branch, BranchSearchResult } from '@/types/Branch';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useDebounce } from '../../hooks/useDebounce';
-import { useGeolocation } from '../../hooks/useGeolocation';
-import { useIntersection } from '../../hooks/useIntersection';
-import { useBranches } from '../../queries/useBranchQueries';
-import { useReservationFormStore } from '../../stores/reservationFormStore';
-import { Branch, BranchSearchResult } from '../../types/Branch';
 
 interface MembershipBranchListProps {
   onSelect?: (branch: Branch) => void;

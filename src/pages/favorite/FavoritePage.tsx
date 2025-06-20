@@ -1,13 +1,13 @@
+import { EmptyCard } from '@/components/EmptyCard';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useOverlay } from '@/contexts/ModalContext';
+import { useGeolocation } from '@/hooks/useGeolocation';
+import { useBranchBookmarksQuery, useBranchUnbookmarkMutation } from '@/queries/useBranchQueries';
+import { Branch } from '@/types/Branch';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { EmptyCard } from '../../components/EmptyCard.tsx';
-import LoadingIndicator from '../../components/LoadingIndicator.tsx';
-import { useLayout } from '../../contexts/LayoutContext.tsx';
-import { useOverlay } from '../../contexts/ModalContext.tsx';
-import { useGeolocation } from '../../hooks/useGeolocation.tsx';
-import { useBranchBookmarksQuery, useBranchUnbookmarkMutation } from '../../queries/useBranchQueries.tsx';
-import { Branch } from '../../types/Branch.ts';
-import { BranchFilterListItem } from '../branch/_fragments/BranchFilterList.tsx';
+import { BranchFilterListItem } from '../branch/_fragments/BranchFilterList';
 
 const FavoritePage = () => {
   const { setHeader, setNavigation } = useLayout();

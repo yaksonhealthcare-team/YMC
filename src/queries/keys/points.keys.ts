@@ -1,5 +1,5 @@
+import { PointFilters } from '@/types/Point';
 import { createQueryKeyFactory } from '../queryKeyFactory';
-import { PointFilters } from '../../types/Point';
 
 const pointsKeys = createQueryKeyFactory('points');
 

@@ -1,5 +1,5 @@
-import { MembershipOption } from '../types/Membership.ts';
-import { Branch } from '../types/Branch.ts';
+import { Branch } from '@/types/Branch';
+import { MembershipOption } from '@/types/Membership';
 import { create } from 'zustand';
 
 export interface SelectedOption {

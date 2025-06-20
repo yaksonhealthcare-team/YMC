@@ -1,5 +1,5 @@
-import MegaPhoneIcon from '@assets/icons/MegaPhoneIcon.svg?react';
-import CaretRightIcon from '@assets/icons/CaretRightIcon.svg?react';
+import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
+import MegaPhoneIcon from '@/assets/icons/MegaPhoneIcon.svg?react';
 import clsx from 'clsx';
 
 interface NoticeProps {

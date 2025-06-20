@@ -1,9 +1,9 @@
-import { fetchEncryptDataForNice } from '@apis/pass.api.ts';
-import { Button } from '@components/Button.tsx';
-import { useEffect, useState } from 'react';
-import { checkByNice } from 'utils/niceCheck.ts';
-import { useLayout } from '../../contexts/LayoutContext.tsx';
+import { fetchEncryptDataForNice } from '@/apis/pass.api';
+import { Button } from '@/components/Button';
+import { useLayout } from '@/contexts/LayoutContext';
+import { checkByNice } from '@/utils/niceCheck';
 import { Box } from '@mui/material';
+import { useEffect, useState } from 'react';
 
 window.name = 'Parent_window';
 

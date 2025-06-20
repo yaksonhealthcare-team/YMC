@@ -1,8 +1,8 @@
-import { findEmailWithDecryptData } from '@apis/decrypt-result.api';
-import { useOverlay } from 'contexts/ModalContext';
+import { findEmailWithDecryptData } from '@/apis/decrypt-result.api';
+import { useOverlay } from '@/contexts/ModalContext';
+import { useNiceAuthCallback } from '@/utils/niceAuth';
 import { useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { useNiceAuthCallback } from 'utils/niceAuth';
 
 const FindAccountCallback = () => {
   const { openModal } = useOverlay();

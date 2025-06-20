@@ -1,8 +1,8 @@
-import React, { createContext, ReactNode, useContext, useState, useRef } from 'react';
+import { Button } from '@/components/Button';
+import { useModalBackButtonHandler } from '@/hooks/useModalBackButtonHandler';
 import { Dialog, DialogContent, Slide } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
-import { Button } from '../components/Button';
-import { useModalBackButtonHandler } from '../hooks/useModalBackButtonHandler';
+import React, { createContext, ReactNode, useContext, useRef, useState } from 'react';
 
 /**
  * 오버레이 타입을 정의하는 열거형

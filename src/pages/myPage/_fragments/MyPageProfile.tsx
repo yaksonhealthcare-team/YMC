@@ -1,10 +1,10 @@
-import Profile from '@assets/icons/Profile.svg?react';
-import { useAuth } from '../../../contexts/AuthContext';
-import { Image } from '@components/common/Image';
+import { fetchCRMUser } from '@/apis/user.api';
+import Profile from '@/assets/icons/Profile.svg?react';
+import { Image } from '@/components/common/Image';
+import { useAuth } from '@/contexts/AuthContext';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useOverlay } from '@/contexts/ModalContext';
 import { useEffect, useState } from 'react';
-import { useLayout } from 'contexts/LayoutContext';
-import { fetchCRMUser } from '@apis/user.api';
-import { useOverlay } from 'contexts/ModalContext';
 
 const MyPageProfile = () => {
   const { user } = useAuth();

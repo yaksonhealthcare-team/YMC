@@ -1,13 +1,13 @@
-import { useQuery, useMutation, useQueryClient, useInfiniteQuery, QueryClient } from '@tanstack/react-query';
 import {
-  completeVisit,
   cancelReservation,
-  fetchReservations,
-  fetchReservationDetail,
+  completeVisit,
   createReservation,
-  CreateReservationRequest
-} from 'apis/reservation.api';
-import { Reservation, ReservationStatusCode } from 'types/Reservation';
+  CreateReservationRequest,
+  fetchReservationDetail,
+  fetchReservations
+} from '@/apis/reservation.api';
+import { Reservation, ReservationStatusCode } from '@/types/Reservation';
+import { QueryClient, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createUserContextQueryKey } from '../queries/queryKeyFactory';
 
 export interface ReservationDetail extends Reservation {

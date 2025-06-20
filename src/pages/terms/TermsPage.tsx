@@ -1,6 +1,6 @@
-import { useLayout } from '../../contexts/LayoutContext.tsx';
+import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
+import { useLayout } from '@/contexts/LayoutContext';
 import { useEffect } from 'react';
-import CaretRightIcon from '@assets/icons/CaretRightIcon.svg?react';
 import { useNavigate } from 'react-router-dom';
 
 const TermsPage = () => {

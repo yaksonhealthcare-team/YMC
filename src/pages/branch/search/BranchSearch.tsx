@@ -1,10 +1,10 @@
+import { SearchField } from '@/components/SearchField';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useDebounce } from '@/hooks/useDebounce';
 import { useEffect, useState } from 'react';
-import { useLayout } from '../../../contexts/LayoutContext.tsx';
-import ActiveBranchList from './_fragments/ActiveBranchList.tsx';
-import BranchSearchResultList from './_fragments/BranchSearchResultList.tsx';
-import { SearchField } from '@components/SearchField.tsx';
 import { useNavigate } from 'react-router-dom';
-import { useDebounce } from '../../../hooks/useDebounce';
+import ActiveBranchList from './_fragments/ActiveBranchList';
+import BranchSearchResultList from './_fragments/BranchSearchResultList';
 
 const BranchSearch = () => {
   const { setHeader, setNavigation } = useLayout();

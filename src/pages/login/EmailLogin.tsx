@@ -1,16 +1,16 @@
 import { DeviceType, fetchUser, loginWithEmail } from '@/apis/auth.api';
+import EyeIcon from '@/assets/icons/EyeIcon.svg?react';
+import EyeSlashIcon from '@/assets/icons/EyeSlashIcon.svg?react';
 import { Button } from '@/components/Button';
 import CustomTextField from '@/components/CustomTextField';
 import { LOCAL_STORAGE_KEYS } from '@/constants/storage';
+import { useAuth } from '@/contexts/AuthContext';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useOverlay } from '@/contexts/ModalContext';
+import { requestForToken } from '@/libs/firebase';
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import EyeIcon from '../../assets/icons/EyeIcon.svg?react';
-import EyeSlashIcon from '../../assets/icons/EyeSlashIcon.svg?react';
-import { useAuth } from '../../contexts/AuthContext';
-import { useLayout } from '../../contexts/LayoutContext';
-import { useOverlay } from '../../contexts/ModalContext';
-import { requestForToken } from '../../libs/firebase';
 
 interface LoginForm {
   email: string;

@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { Button } from '@/components/Button';
 import clsx from 'clsx';
-import { Button } from '@components/Button.tsx';
+import { ReactNode } from 'react';
 
 export const LabeledForm = ({
   label,

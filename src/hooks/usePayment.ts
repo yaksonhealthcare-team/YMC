@@ -1,7 +1,7 @@
-import { useOverlay } from 'contexts/ModalContext';
-import { OrderResponse, BasePaymentParams, PaymentItem } from 'types/Payment';
+import { useOverlay } from '@/contexts/ModalContext';
+import { axiosClient } from '@/queries/clients';
+import { BasePaymentParams, OrderResponse, PaymentItem } from '@/types/Payment';
 import { usePaymentStore } from './usePaymentStore';
-import { axiosClient } from 'queries/clients';
 
 export const usePayment = () => {
   const { showToast } = useOverlay();

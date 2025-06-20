@@ -1,5 +1,5 @@
+import { fetchReservations } from '@/apis/reservation.api';
 import { useQuery } from '@tanstack/react-query';
-import { fetchReservations } from '../apis/reservation.api';
 
 export const useConsultationCount = () => {
   return useQuery({

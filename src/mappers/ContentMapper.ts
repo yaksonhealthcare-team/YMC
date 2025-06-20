@@ -1,5 +1,5 @@
-import { Notice, NoticeDetail } from '../types/Content.ts';
-import { Event, EventDetail } from 'types/Event';
+import { Notice, NoticeDetail } from '@/types/Content';
+import { Event, EventDetail } from '@/types/Event';
 
 /**
  * API 응답 데이터를 애플리케이션 내부 모델로 변환하는 매퍼 클래스입니다.

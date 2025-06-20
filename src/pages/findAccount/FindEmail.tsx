@@ -1,8 +1,8 @@
-import { Button } from '@components/Button.tsx';
-import LoadingIndicator from '@components/LoadingIndicator.tsx';
+import { Button } from '@/components/Button';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLayout } from '../../contexts/LayoutContext.tsx';
 
 const FindEmail = () => {
   const { setHeader, setNavigation } = useLayout();

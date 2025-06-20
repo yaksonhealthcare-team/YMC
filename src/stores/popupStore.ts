@@ -1,6 +1,6 @@
+import { AppPopupData } from '@/apis/contents.api'; // Correct import path assumption
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import { AppPopupData } from '@apis/contents.api'; // Correct import path assumption
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 // interface PopupData {
 //   code: string

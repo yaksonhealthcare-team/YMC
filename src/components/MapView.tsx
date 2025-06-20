@@ -1,9 +1,9 @@
-import CrosshairIcon from '@assets/icons/CrosshairIcon.svg?react';
+import CrosshairIcon from '@/assets/icons/CrosshairIcon.svg?react';
+import { useNaverMapBranchMarkers } from '@/hooks/useNaverMapBranchMarkers';
+import { Branch } from '@/types/Branch';
+import { Coordinate } from '@/types/Coordinate';
+import { getCurrentLocation } from '@/utils/getCurrentLocation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useNaverMapBranchMarkers } from '../hooks/useNaverMapBranchMarkers.tsx';
-import { Branch } from '../types/Branch.ts';
-import { Coordinate } from '../types/Coordinate.ts';
-import { getCurrentLocation } from '../utils/getCurrentLocation.ts';
 
 interface MapViewProps {
   center: Coordinate;

@@ -1,5 +1,5 @@
+import { fetchCartCount } from '@/apis/cart.api';
 import { useEffect, useState } from 'react';
-import { fetchCartCount } from '../../apis/cart.api.ts';
 import { useNavigate } from 'react-router-dom';
 
 const CartIcon = () => {

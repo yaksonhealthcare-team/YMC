@@ -1,8 +1,8 @@
-import { useNavigate } from 'react-router-dom';
-import Header from '@components/Header';
+import Header from '@/components/Header';
+import { XIcon } from '@/components/icons/XIcon';
+import { useLayout } from '@/contexts/LayoutContext';
 import { useEffect, useRef } from 'react';
-import { useLayout } from 'contexts/LayoutContext';
-import { XIcon } from '@components/icons/XIcon';
+import { useNavigate } from 'react-router-dom';
 
 const InquiryPage = () => {
   const navigate = useNavigate();

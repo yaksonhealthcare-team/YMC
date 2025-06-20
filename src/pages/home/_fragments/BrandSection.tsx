@@ -1,7 +1,7 @@
+import { SwiperBrandCard } from '@/components/SwiperBrandCard';
+import { Title } from '@/components/Title';
+import { useDisplayBrands } from '@/hooks/useDisplayBrands';
 import { useNavigate } from 'react-router-dom';
-import { Title } from '@components/Title';
-import { SwiperBrandCard } from '@components/SwiperBrandCard';
-import { useDisplayBrands } from '../../../hooks/useDisplayBrands';
 
 export const BrandSection = () => {
   const navigate = useNavigate();

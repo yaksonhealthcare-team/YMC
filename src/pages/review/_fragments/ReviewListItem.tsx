@@ -1,10 +1,10 @@
-import { Review } from '../../../types/Review.ts';
-import { formatDate, formatDateWithDay } from '../../../utils/date.ts';
-import { getGradeLabel } from '../../../utils/grade.ts';
-import CalendarIcon from '@assets/icons/CalendarIcon.svg?react';
-import StoreIcon from '@assets/icons/StoreIcon.svg?react';
-import EditIcon from '@assets/icons/EditIcon.svg?react';
-import { Image } from '@components/common/Image';
+import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
+import EditIcon from '@/assets/icons/EditIcon.svg?react';
+import StoreIcon from '@/assets/icons/StoreIcon.svg?react';
+import { Image } from '@/components/common/Image';
+import { Review } from '@/types/Review';
+import { formatDate, formatDateWithDay } from '@/utils/date';
+import { getGradeLabel } from '@/utils/grade';
 
 interface ReviewListItemProps {
   review: Review;

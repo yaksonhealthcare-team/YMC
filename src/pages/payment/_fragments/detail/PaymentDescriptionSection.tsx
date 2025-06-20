@@ -1,4 +1,4 @@
-import { PaymentHistoryDetail } from '../../../../types/Payment.ts';
+import { PaymentHistoryDetail } from '@/types/Payment';
 
 const PaymentDescriptionSection = ({ payment }: { payment: PaymentHistoryDetail }) => {
   return (

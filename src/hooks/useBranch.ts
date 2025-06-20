@@ -1,7 +1,7 @@
+import { fetchBranch } from '@/apis/branch.api';
+import { BranchDetail } from '@/types/Branch';
 import { useQuery } from '@tanstack/react-query';
-import { fetchBranch } from '../apis/branch.api';
 import { useGeolocation } from './useGeolocation';
-import { BranchDetail } from '../types/Branch';
 
 const staleTime = 1000 * 60 * 5; // 5분
 

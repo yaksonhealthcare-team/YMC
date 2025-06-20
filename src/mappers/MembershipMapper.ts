@@ -12,7 +12,7 @@ import {
   ServiceCategoryResponse,
   ServiceCourse,
   ServiceCourseResponse
-} from 'types/Membership';
+} from '@/types/Membership';
 
 export const toServiceCategory = (dto: ServiceCategoryResponse): ServiceCategory => {
   return {

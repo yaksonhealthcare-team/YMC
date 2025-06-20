@@ -1,4 +1,4 @@
-import { UpdateUserProfileRequest, User, UserResponse } from '../types/User.ts';
+import { UpdateUserProfileRequest, User, UserResponse } from '@/types/User';
 
 export class UserMapper {
   static toEntity(response: UserResponse): User {

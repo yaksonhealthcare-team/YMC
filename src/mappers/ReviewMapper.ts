@@ -1,4 +1,4 @@
-import { Review, ReviewResponse, ReviewDetail } from '../types/Review.ts';
+import { Review, ReviewDetail, ReviewResponse } from '@/types/Review';
 
 export class ReviewMapper {
   static toReviewEntity(review: ReviewResponse): Review {

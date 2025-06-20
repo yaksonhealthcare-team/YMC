@@ -1,5 +1,5 @@
+import { BannerRequestType } from '@/types/Banner';
 import { createQueryKeyFactory } from '../queryKeyFactory';
-import { BannerRequestType } from '../../types/Banner';
 
 const bannersKeys = createQueryKeyFactory('banners');
 

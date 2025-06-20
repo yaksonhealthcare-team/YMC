@@ -1,8 +1,8 @@
+import EyeIcon from '@/assets/icons/EyeIcon.svg?react';
+import EyeSlashIcon from '@/assets/icons/EyeSlashIcon.svg?react';
+import validatePassword from '@/utils/passwordValidator';
 import { useEffect, useState } from 'react';
 import CustomTextField from '../CustomTextField';
-import EyeIcon from '../../assets/icons/EyeIcon.svg?react';
-import EyeSlashIcon from '../../assets/icons/EyeSlashIcon.svg?react';
-import validatePassword from '../../utils/passwordValidator';
 
 interface props {
   onPasswordChange: (value: string) => void;

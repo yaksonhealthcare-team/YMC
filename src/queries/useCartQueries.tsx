@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { queryKeys } from './query.keys.ts';
-import { fetchCart, removeCart, updateCart, addCart } from '../apis/cart.api.ts';
-import { queryClient } from './clients.ts';
+import { addCart, fetchCart, removeCart, updateCart } from '../apis/cart.api';
+import { queryClient } from './clients';
+import { queryKeys } from './query.keys';
 
 export const useCartItems = () =>
   useQuery({

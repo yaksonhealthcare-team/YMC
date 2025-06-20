@@ -1,12 +1,12 @@
+import BookmarkIcon from '@/assets/icons/BookmarkIcon.svg?react';
+import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
+import EventIcon from '@/assets/icons/EventIcon.svg?react';
+import InquiryIcon from '@/assets/icons/InquiryIcon.svg?react';
+import NoticeIcon from '@/assets/icons/NoticeIcon.svg?react';
+import NotificationIcon from '@/assets/icons/NotificationIcon.svg?react';
+import PaymentIcon from '@/assets/icons/PaymentIcon.svg?react';
+import ReviewIcon from '@/assets/icons/ReviewIcon.svg?react';
 import { useNavigate } from 'react-router-dom';
-import CaretRightIcon from '@assets/icons/CaretRightIcon.svg?react';
-import BookmarkIcon from '@assets/icons/BookmarkIcon.svg?react';
-import PaymentIcon from '@assets/icons/PaymentIcon.svg?react';
-import ReviewIcon from '@assets/icons/ReviewIcon.svg?react';
-import InquiryIcon from '@assets/icons/InquiryIcon.svg?react';
-import EventIcon from '@assets/icons/EventIcon.svg?react';
-import NoticeIcon from '@assets/icons/NoticeIcon.svg?react';
-import NotificationIcon from '@assets/icons/NotificationIcon.svg?react';
 
 const menuItems = [
   {

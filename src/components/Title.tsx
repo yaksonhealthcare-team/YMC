@@ -1,5 +1,5 @@
+import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import clsx from 'clsx';
-import CaretRightIcon from '@assets/icons/CaretRightIcon.svg?react';
 
 const TITLE_STYLES = {
   title: 'font-b text-18px text-gray-700',

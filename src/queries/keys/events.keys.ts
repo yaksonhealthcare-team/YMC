@@ -1,5 +1,5 @@
+import { EventStatus } from '@/types/Content';
 import { createQueryKeyFactory } from '../queryKeyFactory';
-import { EventStatus } from '../../types/Content';
 
 const eventsKeys = createQueryKeyFactory('events');
 

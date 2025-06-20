@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import CustomTextField from '@components/CustomTextField.tsx';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@components/Button.tsx';
-import { useLayout } from '../../contexts/LayoutContext.tsx';
-import { useSignup } from '../../contexts/SignupContext.tsx';
-import PasswordCustomInput from '@components/input/PasswordCustomInput.tsx';
-import validateEmail from '../../utils/emailValidator.ts';
+import { checkEmail } from '@/apis/auth.api';
+import { Button } from '@/components/Button';
+import CustomTextField from '@/components/CustomTextField';
+import PasswordCustomInput from '@/components/input/PasswordCustomInput';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useOverlay } from '@/contexts/ModalContext';
+import { useSignup } from '@/contexts/SignupContext';
+import validateEmail from '@/utils/emailValidator';
+import validatePassword from '@/utils/passwordValidator';
 import { CircularProgress } from '@mui/material';
-import { checkEmail } from '../../apis/auth.api.ts';
-import { useOverlay } from '../../contexts/ModalContext.tsx';
-import validatePassword from '../../utils/passwordValidator.ts';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const EmailPassword = () => {
   const { setHeader, setNavigation } = useLayout();

@@ -1,5 +1,5 @@
+import { COLORS } from '@/constants/ColorConstants';
 import clsx from 'clsx';
-import { COLORS } from '@constants/ColorConstants';
 
 export type TagType = 'used' | 'unused' | 'rect' | 'round' | 'green' | 'blue' | 'red';
 

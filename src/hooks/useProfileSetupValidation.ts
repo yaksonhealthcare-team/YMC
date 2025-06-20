@@ -1,5 +1,5 @@
+import { useOverlay } from '@/contexts/ModalContext';
 import { useState } from 'react';
-import { useOverlay } from '../contexts/ModalContext';
 
 export const useProfileSetupValidation = () => {
   const { showToast } = useOverlay();

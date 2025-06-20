@@ -1,14 +1,14 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import { usePaymentHistory } from '../../queries/usePaymentQueries.tsx';
-import { useLayout } from '../../contexts/LayoutContext.tsx';
+import { Button } from '@/components/Button';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
+import { usePaymentHistory } from '@/queries/usePaymentQueries';
 import { useEffect } from 'react';
-import { Button } from '@components/Button.tsx';
-import PaymentDescriptionSection from './_fragments/detail/PaymentDescriptionSection.tsx';
-import PaymentPointSection from './_fragments/detail/PaymentPointSection.tsx';
-import PaymentItemSection from './_fragments/detail/PaymentItemSection.tsx';
-import PaymentCancelReasonSection from './_fragments/detail/PaymentCancelReasonSection.tsx';
-import PaymentRefundDescriptionSection from './_fragments/detail/PaymentRefundDescriptionSection.tsx';
-import LoadingIndicator from '@components/LoadingIndicator';
+import { useNavigate, useParams } from 'react-router-dom';
+import PaymentCancelReasonSection from './_fragments/detail/PaymentCancelReasonSection';
+import PaymentDescriptionSection from './_fragments/detail/PaymentDescriptionSection';
+import PaymentItemSection from './_fragments/detail/PaymentItemSection';
+import PaymentPointSection from './_fragments/detail/PaymentPointSection';
+import PaymentRefundDescriptionSection from './_fragments/detail/PaymentRefundDescriptionSection';
 
 const PaymentHistoryDetailPage = () => {
   const { id } = useParams();

@@ -1,4 +1,4 @@
-import { ScheduleTime, TimeSlot } from '../types/Schedule.ts';
+import { ScheduleTime, TimeSlot } from '../types/Schedule';
 
 /**
  * API에서 받은 시간 데이터 배열(ScheduleTime[])을

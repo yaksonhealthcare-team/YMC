@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useLayout } from '../../contexts/LayoutContext';
-import { useOverlay } from '../../contexts/ModalContext';
-import { TextArea } from '@components/TextArea';
-import { Button } from '@components/Button';
-import FixedButtonContainer from '@components/FixedButtonContainer';
-import ReservationCancelBottomSheetContent from './_fragments/ReservationCancelBottomSheetContent';
+import { Button } from '@/components/Button';
+import FixedButtonContainer from '@/components/FixedButtonContainer';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { TextArea } from '@/components/TextArea';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useOverlay } from '@/contexts/ModalContext';
+import { useReservationGuideMessages } from '@/hooks/useGuideMessages';
+import { useCancelReservation, useReservationDetail } from '@/queries/useReservationQueries';
+import { escapeHtml } from '@/utils/sanitize';
 import { Divider } from '@mui/material';
-import { useCancelReservation, useReservationDetail } from 'queries/useReservationQueries';
-import { escapeHtml } from 'utils/sanitize';
-import LoadingIndicator from '@components/LoadingIndicator';
-import { useReservationGuideMessages } from '../../hooks/useGuideMessages';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import ReservationCancelBottomSheetContent from './_fragments/ReservationCancelBottomSheetContent';
 
 interface ReservationDetailView {
   branchName: string;

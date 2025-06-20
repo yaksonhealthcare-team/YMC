@@ -1,11 +1,11 @@
+import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { Image } from '@/components/common/Image';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useNotice } from '@/queries/useContentQueries';
+import { NoticeDetail as Notice } from '@/types/Content';
 import React, { useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { useLayout } from '../../contexts/LayoutContext.tsx';
-import { useNotice } from '../../queries/useContentQueries.tsx';
-import { NoticeDetail as Notice } from '../../types/Content.ts';
-import CalendarIcon from '@assets/icons/CalendarIcon.svg?react';
-import LoadingIndicator from '@components/LoadingIndicator.tsx';
-import { Image } from '@components/common/Image';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const NoticeDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();

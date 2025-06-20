@@ -1,5 +1,5 @@
+import { fetchGuideMessages, GuideMessage } from '@/apis/guidemessages.api';
 import { useQuery } from '@tanstack/react-query';
-import { fetchGuideMessages, GuideMessage } from '../apis/guidemessages.api';
 
 /**
  * 가이드 메시지를 가져오는 훅

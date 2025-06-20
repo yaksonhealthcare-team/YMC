@@ -1,19 +1,12 @@
+import { fetchUser, loginWithEmail, setAccessToken, signinWithSocial, signup, signupWithSocial } from '@/apis/auth.api';
+import { useAuth } from '@/contexts/AuthContext';
+import { useOverlay } from '@/contexts/ModalContext';
+import { useSignup } from '@/contexts/SignupContext';
+import { requestForToken } from '@/libs/firebase';
+import { saveAccessToken } from '@/queries/clients';
+import { UserSignup } from '@/types/User';
 import { AxiosError } from 'axios';
-import { requestForToken } from 'libs/firebase';
 import { useNavigate } from 'react-router-dom';
-import {
-  fetchUser,
-  loginWithEmail,
-  setAccessToken,
-  signinWithSocial,
-  signup,
-  signupWithSocial
-} from '../apis/auth.api';
-import { useAuth } from '../contexts/AuthContext';
-import { useOverlay } from '../contexts/ModalContext';
-import { useSignup } from '../contexts/SignupContext';
-import { saveAccessToken } from '../queries/clients';
-import { UserSignup } from 'types/User';
 
 type SocialProvider = 'N' | 'K' | 'G' | 'A';
 

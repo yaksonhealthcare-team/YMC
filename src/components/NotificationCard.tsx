@@ -1,6 +1,6 @@
+import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
+import { Notification } from '@/types/Notification';
 import clsx from 'clsx';
-import CalendarIcon from '@assets/icons/CalendarIcon.svg?react';
-import { Notification } from '../types/Notification.ts';
 
 interface NotificationCardProps {
   notification: Notification;

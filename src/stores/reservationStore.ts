@@ -1,5 +1,5 @@
+import { FilterItem, reservationFilters } from '@/types/Reservation';
 import { create } from 'zustand';
-import { FilterItem, reservationFilters } from 'types/Reservation';
 
 interface ReservationStore {
   filter: FilterItem;

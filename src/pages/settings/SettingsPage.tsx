@@ -1,8 +1,8 @@
-import { useLayout } from '../../contexts/LayoutContext.tsx';
+import Switch from '@/components/Switch';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useNotificationSettings, useUpdateNotificationSettings } from '@/queries/useNotificationQueries';
+import { NotificationSettings } from '@/types/Notification';
 import { useEffect } from 'react';
-import Switch from '@components/Switch.tsx';
-import { useNotificationSettings, useUpdateNotificationSettings } from '../../queries/useNotificationQueries';
-import { NotificationSettings } from '../../types/Notification';
 
 const SettingsPage = () => {
   const { setHeader, setNavigation } = useLayout();

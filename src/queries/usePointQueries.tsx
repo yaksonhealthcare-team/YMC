@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
-import { queryKeys } from './query.keys.ts';
-import { earnPoints, fetchPointHistories } from '../apis/points.api.ts';
-import { queryClient } from './clients.ts';
+import { earnPoints, fetchPointHistories } from '../apis/points.api';
+import { queryClient } from './clients';
+import { queryKeys } from './query.keys';
 
 export const usePointHistories = () =>
   useInfiniteQuery({

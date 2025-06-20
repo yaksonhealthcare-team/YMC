@@ -1,6 +1,6 @@
-import BranchCard from '@components/BranchCard.tsx';
+import BranchCard from '@/components/BranchCard';
+import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../../contexts/AuthContext.tsx';
 
 const ActiveBranchList = () => {
   const { user } = useAuth();

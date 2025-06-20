@@ -1,19 +1,19 @@
-import { Button } from '@components/Button.tsx';
-import CustomTextField from '@components/CustomTextField.tsx';
-import { GenderSelect } from '@components/GenderSelect';
-import { SwiperBrandCard } from '@components/SwiperBrandCard.tsx';
-import PostcodeModal from '@components/modal/PostcodeModal.tsx';
+import { uploadImages } from '@/apis/image.api';
+import { Button } from '@/components/Button';
+import CustomTextField from '@/components/CustomTextField';
+import { GenderSelect } from '@/components/GenderSelect';
+import { SwiperBrandCard } from '@/components/SwiperBrandCard';
+import PostcodeModal from '@/components/modal/PostcodeModal';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useOverlay } from '@/contexts/ModalContext';
+import { useSignup } from '@/contexts/SignupContext';
+import { useProfileSetupHandlers } from '@/hooks/useProfileSetupHandlers';
+import { useProfileSetupSubmit } from '@/hooks/useProfileSetupSubmit';
+import { useProfileSetupValidation } from '@/hooks/useProfileSetupValidation';
+import ProfileImageButton from '@/pages/editProfile/_fragments/ProfileImageButton';
 import { CircularProgress } from '@mui/material';
-import { useOverlay } from 'contexts/ModalContext.tsx';
-import ProfileImageButton from 'pages/editProfile/_fragments/ProfileImageButton.tsx';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { uploadImages } from '../../apis/image.api.ts';
-import { useLayout } from '../../contexts/LayoutContext.tsx';
-import { useSignup } from '../../contexts/SignupContext.tsx';
-import { useProfileSetupHandlers } from '../../hooks/useProfileSetupHandlers';
-import { useProfileSetupSubmit } from '../../hooks/useProfileSetupSubmit';
-import { useProfileSetupValidation } from '../../hooks/useProfileSetupValidation';
 
 export const ProfileSetup = () => {
   const { setHeader, setNavigation } = useLayout();

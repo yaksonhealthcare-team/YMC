@@ -1,6 +1,6 @@
-import { useNavigate, useLocation } from 'react-router-dom';
-import DocumentEditIcon from '@assets/icons/DocumentEditIcon.svg?react';
-import { Button } from '@components/Button.tsx';
+import DocumentEditIcon from '@/assets/icons/DocumentEditIcon.svg?react';
+import { Button } from '@/components/Button';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const QuestionnaireHistoryNotExist = ({ onStartQuestionnaire }: { onStartQuestionnaire: () => void }) => {
   const navigate = useNavigate();

@@ -3,7 +3,7 @@ import {
   NotificationResponse,
   NotificationSettings,
   NotificationSettingsResponse
-} from '../types/Notification';
+} from '@/types/Notification';
 
 export const NotificationMapper = {
   toNotification: (response: NotificationResponse): Notification => ({

@@ -1,11 +1,11 @@
-import { useOverlay } from 'contexts/ModalContext';
-import { useSignup } from 'contexts/SignupContext';
-import { useEffect, useCallback, useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Gender } from 'utils/gender';
-import { useNiceAuthCallback } from 'utils/niceAuth';
+import { useOverlay } from '@/contexts/ModalContext';
+import { useSignup } from '@/contexts/SignupContext';
+import { useProfileSetupSubmit } from '@/hooks/useProfileSetupSubmit';
+import { Gender } from '@/utils/gender';
+import { useNiceAuthCallback } from '@/utils/niceAuth';
 import { CircularProgress } from '@mui/material';
-import { useProfileSetupSubmit } from '../../hooks/useProfileSetupSubmit';
+import { useCallback, useEffect, useRef } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const SignupCallback = () => {
   const { signupData, setSignupData } = useSignup();

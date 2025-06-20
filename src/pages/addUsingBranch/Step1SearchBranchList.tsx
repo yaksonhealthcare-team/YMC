@@ -1,16 +1,16 @@
-import CloseGrayFillIcon from '@assets/icons/CloseGrayFillIcon.svg?react';
-import CustomTextField from '@components/CustomTextField.tsx';
-import LoadingIndicator from '@components/LoadingIndicator';
-import BranchIcon from '@components/icons/BranchIcon.tsx';
-import CheckIcon from '@components/icons/CheckIcon.tsx';
-import SearchIcon from '@components/icons/SearchIcon.tsx';
+import CloseGrayFillIcon from '@/assets/icons/CloseGrayFillIcon.svg?react';
+import CustomTextField from '@/components/CustomTextField';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import BranchIcon from '@/components/icons/BranchIcon';
+import CheckIcon from '@/components/icons/CheckIcon';
+import SearchIcon from '@/components/icons/SearchIcon';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useGeolocation } from '@/hooks/useGeolocation';
+import useIntersection from '@/hooks/useIntersection';
+import { useBranches } from '@/queries/useBranchQueries';
+import { Branch } from '@/types/Branch';
 import { IconButton } from '@mui/material';
 import React, { useState } from 'react';
-import { useDebounce } from '../../hooks/useDebounce';
-import { useGeolocation } from '../../hooks/useGeolocation.tsx';
-import useIntersection from '../../hooks/useIntersection.tsx';
-import { useBranches } from '../../queries/useBranchQueries.tsx';
-import { Branch } from '../../types/Branch.ts';
 
 interface SearchBranchListProps {
   selectedBranches: Branch[];

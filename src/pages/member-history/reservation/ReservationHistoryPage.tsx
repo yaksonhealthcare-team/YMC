@@ -1,17 +1,17 @@
-import MainTabs from '../_fragments/MainTabs';
-import { useCallback, useEffect, useRef } from 'react';
-import { Button } from '@components/Button';
-import clsx from 'clsx';
-import { ReserveCard } from '@components/ReserveCard';
-import { useNavigate } from 'react-router-dom';
-import ReservationIcon from '@assets/icons/ReservationIcon.svg?react';
-import { useLayout } from 'contexts/LayoutContext';
-import { useReservations } from 'queries/useReservationQueries';
-import { FilterItem, reservationFilters, ReservationStatusCode } from 'types/Reservation';
-import LoadingIndicator from '@components/LoadingIndicator';
-import { useReservationStore } from 'stores/reservationStore';
+import ReservationIcon from '@/assets/icons/ReservationIcon.svg?react';
+import { Button } from '@/components/Button';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { ReserveCard } from '@/components/ReserveCard';
+import { useLayout } from '@/contexts/LayoutContext';
+import { createUserContextQueryKey } from '@/queries/queryKeyFactory';
+import { useReservations } from '@/queries/useReservationQueries';
+import { useReservationStore } from '@/stores/reservationStore';
+import { FilterItem, reservationFilters, ReservationStatusCode } from '@/types/Reservation';
 import { useQueryClient } from '@tanstack/react-query';
-import { createUserContextQueryKey } from '../../../queries/queryKeyFactory';
+import clsx from 'clsx';
+import { useCallback, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import MainTabs from '../_fragments/MainTabs';
 
 const ReservationContent = ({ filterId }: { filterId: ReservationStatusCode }) => {
   const queryClient = useQueryClient();

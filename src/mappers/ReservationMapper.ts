@@ -1,4 +1,4 @@
-import { Reservation, ReservationResponse, ReservationType } from '../types/Reservation';
+import { Reservation, ReservationResponse, ReservationType } from '@/types/Reservation';
 
 const typeMap: Record<string, ReservationType> = {
   '1': ReservationType.MANAGEMENT,

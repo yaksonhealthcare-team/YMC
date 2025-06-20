@@ -1,6 +1,6 @@
-import { PaymentHistory, PaymentHistoryItem } from '../../../types/Payment.ts';
-import StoreIcon from '@assets/icons/StoreIcon.svg?react';
-import { Button } from '@components/Button.tsx';
+import StoreIcon from '@/assets/icons/StoreIcon.svg?react';
+import { Button } from '@/components/Button';
+import { PaymentHistory, PaymentHistoryItem } from '@/types/Payment';
 
 const PaymentItemCard = ({
   canceled,

@@ -1,4 +1,4 @@
-import { axiosClient } from '../queries/clients';
+import { axiosClient } from '@/queries/clients';
 
 const GOOGLE_CLIENT_ID = '39001505358-fosqvj6oti6qgiud6ispraraoo7niut6.apps.googleusercontent.com';
 const GOOGLE_REDIRECT_URI = import.meta.env.VITE_GOOGLE_REDIRECT_URI;

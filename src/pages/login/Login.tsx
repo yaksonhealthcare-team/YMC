@@ -1,18 +1,18 @@
+import AppleIcon from '@/assets/icons/AppleIcon.svg?react';
+import GoogleIcon from '@/assets/icons/GoogleIcon.svg?react';
+import KakaoIcon from '@/assets/icons/KakaoIcon.svg?react';
+import NaverIcon from '@/assets/icons/NaverIcon.svg?react';
 import { Button } from '@/components/Button';
 import Logo from '@/components/Logo';
+import { useLayout } from '@/contexts/LayoutContext';
+import { getAppleLoginUrl } from '@/libs/apple';
 import { requestNotificationPermission } from '@/libs/firebase';
+import { getGoogleLoginUrl } from '@/libs/google';
 import { getKakaoLoginUrl } from '@/libs/kakao';
+import { getNaverLoginUrl } from '@/libs/naver';
 import { CircularProgress, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AppleIcon from '../../assets/icons/AppleIcon.svg?react';
-import GoogleIcon from '../../assets/icons/GoogleIcon.svg?react';
-import KakaoIcon from '../../assets/icons/KakaoIcon.svg?react';
-import NaverIcon from '../../assets/icons/NaverIcon.svg?react';
-import { useLayout } from '../../contexts/LayoutContext';
-import { getAppleLoginUrl } from '../../libs/apple';
-import { getGoogleLoginUrl } from '../../libs/google';
-import { getNaverLoginUrl } from '../../libs/naver';
 
 const Login = () => {
   const { setHeader, setNavigation } = useLayout();

@@ -1,19 +1,19 @@
+import CaretLeftIcon from '@/assets/icons/CaretLeftIcon.svg?react';
+import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
+import ClockIcon from '@/assets/icons/ClockIcon.svg?react';
+import NoteIcon from '@/assets/icons/NoteIcon.svg?react';
+import StoreIcon from '@/assets/icons/StoreIcon.svg?react';
+import MembershipPlaceholderImage from '@/assets/images/MembershipPlaceholderImage.jpg';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { Image } from '@/components/common/Image';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useMembershipDetail } from '@/queries/useMembershipQueries';
+import { formatPrice, parsePrice } from '@/utils/format';
+import { calculateDiscountRate, toNumber } from '@/utils/number';
 import { useEffect } from 'react';
-import { useLayout } from '../../contexts/LayoutContext.tsx';
-import { useNavigate, useParams, useLocation, useSearchParams } from 'react-router-dom';
-import CaretLeftIcon from '@assets/icons/CaretLeftIcon.svg?react';
-import ClockIcon from '@assets/icons/ClockIcon.svg?react';
-import StoreIcon from '@assets/icons/StoreIcon.svg?react';
-import NoteIcon from '@assets/icons/NoteIcon.svg?react';
-import { useMembershipDetail } from 'queries/useMembershipQueries.tsx';
-import { calculateDiscountRate, toNumber } from '../../utils/number';
-import CaretRightIcon from '@assets/icons/CaretRightIcon.svg?react';
-import { formatPrice, parsePrice } from '../../utils/format';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import 'swiper/css';
-import MembershipPlaceholderImage from '@assets/images/MembershipPlaceholderImage.jpg';
-import LoadingIndicator from '@components/LoadingIndicator';
-import { Image } from '@components/common/Image';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 const MembershipDetailPage = () => {
   const { id } = useParams();

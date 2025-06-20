@@ -1,4 +1,4 @@
-import { DeviceType } from '@apis/auth.api';
+import { DeviceType } from '@/apis/auth.api';
 
 export interface SocialLoginRequest {
   provider: 'A' | 'K' | 'N' | 'G';

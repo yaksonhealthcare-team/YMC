@@ -1,4 +1,4 @@
-import { Brand, BrandDetail, BrandDetailResponse, BrandResponse } from '../types/Brand.ts';
+import { Brand, BrandDetail, BrandDetailResponse, BrandResponse } from '@/types/Brand';
 
 export class BrandMapper {
   static toEntity(dto: BrandResponse): Brand {
