@@ -1,0 +1,10 @@
+{
+  "git": {
+    "branch": "release/v${version}",
+    "commitMessage": "CHORE: release v${version}"
+  },
+  "git.bumpFiles": ["package.json"],
+  "npm": {
+    "publish": false
+  }
+}
