@@ -10,9 +10,6 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper core and types
 import SwiperCore from 'swiper';
 
-// Import Swiper styles
-import 'swiper/css';
-
 // Placeholder image URL
 const TEMP_IMAGE_URL = 'https://via.placeholder.com/400x400.png?text=Square+Popup';
 

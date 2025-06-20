@@ -1,5 +1,6 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { QueryClientProvider } from '@tanstack/react-query';
+import 'swiper/swiper-bundle.css';
 import ErrorBoundary from './components/ErrorBoundary';
 import { queryClient } from './queries/clients';
 import { AppRouter } from './router/router';

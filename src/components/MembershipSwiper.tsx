@@ -3,8 +3,6 @@ import { MembershipRadioCard } from '@/pages/reservation/_fragments/MembershipRa
 import { MyMembership } from '@/types/Membership';
 import { Box, RadioGroup } from '@mui/material';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import 'swiper/css';
-import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 

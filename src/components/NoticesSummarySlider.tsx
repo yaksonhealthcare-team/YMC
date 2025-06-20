@@ -1,6 +1,5 @@
 import { useNoticesSummary } from '@/queries/useContentQueries';
 import { useNavigate } from 'react-router-dom';
-import 'swiper/css';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
