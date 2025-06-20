@@ -1,19 +1,13 @@
-import {
-  useInfiniteQuery,
-  useQuery,
-  useMutation,
-  useQueryClient,
-  InfiniteData,
-} from "@tanstack/react-query"
-import { queryKeys } from "./query.keys.ts"
-import { Notification, NotificationFilters } from "../types/Notification.ts"
+import { User } from '@/types/User';
+import { InfiniteData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   fetchNotifications,
-  getNotificationSettings,
-  updateNotificationSettings,
   fetchUnreadNotificationsCount,
-} from "../apis/notifications.api.ts"
-import { User } from "types/User.ts"
+  getNotificationSettings,
+  updateNotificationSettings
+} from '../apis/notifications.api';
+import { Notification, NotificationFilters } from '../types/Notification';
+import { queryKeys } from './query.keys';
 
 export const useNotifications = (filters: NotificationFilters) => {
   return useInfiniteQuery({
@@ -21,71 +15,71 @@ export const useNotifications = (filters: NotificationFilters) => {
     queryFn: ({ pageParam = 1 }) =>
       fetchNotifications({
         page: pageParam,
-        searchType: filters.searchType,
+        searchType: filters.searchType
       }),
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === 0) return undefined
-      return allPages.length + 1
+      if (lastPage.length === 0) return undefined;
+      return allPages.length + 1;
     },
     initialPageParam: 1,
-    retry: false,
-  })
-}
+    retry: false
+  });
+};
 
 export const useNotificationSettings = () => {
   return useQuery({
-    queryKey: ["notificationSettings"],
+    queryKey: ['notificationSettings'],
     queryFn: getNotificationSettings,
-    retry: false,
-  })
-}
+    retry: false
+  });
+};
 
 export const useUpdateNotificationSettings = () => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: updateNotificationSettings,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notificationSettings"] })
+      queryClient.invalidateQueries({ queryKey: ['notificationSettings'] });
     },
-    retry: false,
-  })
-}
+    retry: false
+  });
+};
 
 export const useUnreadNotificationsCount = (user: User | null) => {
   return useQuery({
-    queryKey: ["unreadNotificationsCount"],
+    queryKey: ['unreadNotificationsCount'],
     queryFn: async () => {
       try {
-        const count = await fetchUnreadNotificationsCount()
-        return count ?? 0
+        const count = await fetchUnreadNotificationsCount();
+        return count ?? 0;
       } catch (error) {
-        console.error("Failed to fetch unread notifications count:", error)
-        return 0
+        console.error('Failed to fetch unread notifications count:', error);
+        return 0;
       }
     },
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     staleTime: 1000 * 30, // 30초
     retry: false,
-    enabled: !!user,
-  })
-}
+    enabled: !!user
+  });
+};
 
 export const useReadNotification = () => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (notificationId: number) => {
       // 실제 API 호출 없이 클라이언트 측 캐시만 업데이트
-      return notificationId
+      return notificationId;
     },
     onSuccess: (notificationId) => {
       // 알림 목록 캐시 업데이트
       queryClient.setQueriesData(
-        { queryKey: ["notifications"] },
+        { queryKey: ['notifications'] },
         (oldData: InfiniteData<Notification[]> | undefined) => {
-          if (!oldData) return oldData
+          if (!oldData) return oldData;
 
           // pages 속성이 있는 무한 쿼리 데이터 처리
           if (oldData.pages) {
@@ -93,34 +87,29 @@ export const useReadNotification = () => {
               ...oldData,
               pages: oldData.pages.map((page: Notification[]) =>
                 page.map((notification) =>
-                  notification.id === notificationId
-                    ? { ...notification, isRead: true }
-                    : notification,
-                ),
-              ),
-            }
+                  notification.id === notificationId ? { ...notification, isRead: true } : notification
+                )
+              )
+            };
           }
-          return oldData
-        },
-      )
+          return oldData;
+        }
+      );
 
       // 읽지 않은 알림 수 캐시 업데이트
-      queryClient.setQueryData(
-        ["unreadNotificationsCount"],
-        (oldCount: number | undefined) => {
-          return Math.max(0, (oldCount || 0) - 1)
-        },
-      )
+      queryClient.setQueryData(['unreadNotificationsCount'], (oldCount: number | undefined) => {
+        return Math.max(0, (oldCount || 0) - 1);
+      });
     },
-    retry: false,
-  })
-}
+    retry: false
+  });
+};
 
 export const useUnreadNotificationCount = () => {
   return useQuery({
-    queryKey: ["notifications", "unread"],
-    queryFn: () => Promise.reject(new Error("Not implemented")),
+    queryKey: ['notifications', 'unread'],
+    queryFn: () => Promise.reject(new Error('Not implemented')),
     enabled: false,
-    retry: false,
-  })
-}
+    retry: false
+  });
+};

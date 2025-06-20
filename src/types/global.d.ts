@@ -1,3 +1,3 @@
 interface Window {
-  Kakao: unknown
+  Kakao: unknown;
 }

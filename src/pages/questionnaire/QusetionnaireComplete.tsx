@@ -1,31 +1,30 @@
-import { useNavigate, useLocation } from "react-router-dom"
-import { Button } from "@components/Button"
-import { useLayout } from "contexts/LayoutContext"
-import { useEffect } from "react"
-import FixedButtonContainer from "@components/FixedButtonContainer"
-import ReceiptEditIcon from "@assets/icons/ReceiptEditIcon.svg?react"
+import ReceiptEditIcon from '@/assets/icons/ReceiptEditIcon.svg?react';
+import { Button } from '@/components/Button';
+import FixedButtonContainer from '@/components/FixedButtonContainer';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface LocationState {
-  returnPath?: string
-  returnText?: string
+  returnPath?: string;
+  returnText?: string;
 }
 
 const QuestionnaireComplete = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { setHeader, setNavigation } = useLayout()
-  const { returnPath = "/", returnText = "홈으로" } =
-    (location.state as LocationState) || {}
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { setHeader, setNavigation } = useLayout();
+  const { returnPath = '/', returnText = '홈으로' } = (location.state as LocationState) || {};
 
   useEffect(() => {
     setHeader({
       display: true,
-      title: "",
-      left: "back",
-      backgroundColor: "bg-white",
-    })
-    setNavigation({ display: false })
-  }, [setHeader, setNavigation])
+      title: '',
+      left: 'back',
+      backgroundColor: 'bg-white'
+    });
+    setNavigation({ display: false });
+  }, [setHeader, setNavigation]);
 
   return (
     <div className="flex flex-col items-center justify-between h-full bg-white">
@@ -34,9 +33,7 @@ const QuestionnaireComplete = () => {
           <ReceiptEditIcon />
         </div>
 
-        <h1 className="text-gray-700 text-xl font-semibold mb-7 text-center">
-          문진 내용이 등록되었어요
-        </h1>
+        <h1 className="text-gray-700 text-xl font-semibold mb-7 text-center">문진 내용이 등록되었어요</h1>
 
         <p className="text-gray-400 text-sm font-medium text-center">
           문진 내용은 마이페이지 '내 문진'에서
@@ -46,17 +43,12 @@ const QuestionnaireComplete = () => {
       </div>
 
       <FixedButtonContainer className="bg-white">
-        <Button
-          variantType="primary"
-          sizeType="l"
-          onClick={() => navigate(returnPath)}
-          className="w-full"
-        >
+        <Button variantType="primary" sizeType="l" onClick={() => navigate(returnPath)} className="w-full">
           {returnText}
         </Button>
       </FixedButtonContainer>
     </div>
-  )
-}
+  );
+};
 
-export default QuestionnaireComplete
+export default QuestionnaireComplete;

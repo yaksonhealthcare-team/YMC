@@ -1,15 +1,9 @@
-import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon"
+import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 
 export const ShopIcon = (props: SvgIconProps) => {
   return (
     <SvgIcon {...props}>
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 14 14"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           d="M1.75586 6.54492V9.16409C1.75586 11.7833 2.80586 12.8333 5.42503 12.8333H8.56919C11.1884 12.8333 12.2384 11.7833 12.2384 9.16409V6.54492"
           stroke="#757575"
@@ -42,5 +36,5 @@ export const ShopIcon = (props: SvgIconProps) => {
         />
       </svg>
     </SvgIcon>
-  )
-}
+  );
+};

@@ -1,65 +1,59 @@
-import { ReactNode } from "react"
-import PinIcon from "@assets/icons/PinIcon.svg?react"
-import PhoneIcon from "@assets/icons/PhoneIcon.svg?react"
-import { copyToClipboard } from "utils/copyUtils"
-import MapView from "@components/MapView"
-import { Branch } from "types/Branch"
-import { ReservationDetail } from "queries/useReservationQueries"
-import { useOverlay } from "contexts/ModalContext"
+import PhoneIcon from '@/assets/icons/PhoneIcon.svg?react';
+import PinIcon from '@/assets/icons/PinIcon.svg?react';
+import MapView from '@/components/MapView';
+import { useOverlay } from '@/contexts/ModalContext';
+import { ReservationDetail } from '@/queries/useReservationQueries';
+import { Branch } from '@/types/Branch';
+import { copyToClipboard } from '@/utils/copyUtils';
+import { ReactNode } from 'react';
 
-const InfoGroup = ({
-  icon,
-  children,
-}: {
-  icon: ReactNode
-  children: ReactNode
-}) => (
-  <div className={"flex items-start gap-2 font-r text-14px w-full"}>
-    <div className={"h-5 content-center"}>{icon}</div>
+const InfoGroup = ({ icon, children }: { icon: ReactNode; children: ReactNode }) => (
+  <div className={'flex items-start gap-2 font-r text-14px w-full'}>
+    <div className={'h-5 content-center'}>{icon}</div>
     {children}
   </div>
-)
+);
 
 interface LocationProps {
-  reservation: ReservationDetail
+  reservation: ReservationDetail;
 }
 
 const Location = ({ reservation }: LocationProps) => {
-  const { showToast } = useOverlay()
+  const { showToast } = useOverlay();
 
-  const hasLocation = reservation.latitude && reservation.longitude
-  const hasAddress = !!reservation.address
-  const hasPhone = !!reservation.phone
+  const hasLocation = reservation.latitude && reservation.longitude;
+  const hasAddress = !!reservation.address;
+  const hasPhone = !!reservation.phone;
 
   const branchLocation = {
     latitude: reservation.latitude || 0,
-    longitude: reservation.longitude || 0,
-  }
+    longitude: reservation.longitude || 0
+  };
 
   const branch: Branch = {
     b_idx: reservation.branchId,
     name: reservation.store,
-    address: reservation.address || "",
+    address: reservation.address || '',
     latitude: branchLocation.latitude,
     longitude: branchLocation.longitude,
     canBookToday: true,
     distanceInMeters: null,
     isFavorite: false,
-    brandCode: "T",
-    brand: "therapist",
-  }
+    brandCode: 'T',
+    brand: 'therapist'
+  };
 
   const handleCopyAddress = async () => {
-    if (!hasAddress) return
-    await copyToClipboard(branch.address)
-    showToast("주소가 복사되었습니다")
-  }
+    if (!hasAddress) return;
+    await copyToClipboard(branch.address);
+    showToast('주소가 복사되었습니다');
+  };
 
   const handleCopyPhone = async () => {
-    if (!hasPhone) return
-    await copyToClipboard(reservation.phone || "")
-    showToast("전화번호가 복사되었습니다")
-  }
+    if (!hasPhone) return;
+    await copyToClipboard(reservation.phone || '');
+    showToast('전화번호가 복사되었습니다');
+  };
 
   return (
     <div className="flex flex-col gap-[16px] mt-[40px]">
@@ -72,7 +66,7 @@ const Location = ({ reservation }: LocationProps) => {
             useStaticPinIcon={true}
             options={{
               showCurrentLocationButton: false,
-              showCurrentLocation: false,
+              showCurrentLocation: false
             }}
           />
         ) : (
@@ -83,12 +77,12 @@ const Location = ({ reservation }: LocationProps) => {
       </div>
       <div className="flex gap-[12px] flex-col mt-[16px]">
         <InfoGroup icon={<PinIcon />}>
-          <div className={"flex w-full flex-row items-start gap-2"}>
-            <p className={`flex-1 ${!hasAddress ? "text-gray-500" : ""}`}>
-              {hasAddress ? branch.address : "주소 정보가 없습니다"}
+          <div className={'flex w-full flex-row items-start gap-2'}>
+            <p className={`flex-1 ${!hasAddress ? 'text-gray-500' : ''}`}>
+              {hasAddress ? branch.address : '주소 정보가 없습니다'}
             </p>
             <button
-              className={`flex-shrink-0 ${hasAddress ? "text-tag-blue" : "text-gray-300 cursor-not-allowed"}`}
+              className={`flex-shrink-0 ${hasAddress ? 'text-tag-blue' : 'text-gray-300 cursor-not-allowed'}`}
               onClick={handleCopyAddress}
               disabled={!hasAddress}
             >
@@ -97,12 +91,12 @@ const Location = ({ reservation }: LocationProps) => {
           </div>
         </InfoGroup>
         <InfoGroup icon={<PhoneIcon />}>
-          <div className={"flex w-full flex-row items-start gap-2"}>
-            <p className={`flex-1 ${!hasPhone ? "text-gray-500" : ""}`}>
-              {hasPhone ? reservation.phone : "전화번호가 없습니다"}
+          <div className={'flex w-full flex-row items-start gap-2'}>
+            <p className={`flex-1 ${!hasPhone ? 'text-gray-500' : ''}`}>
+              {hasPhone ? reservation.phone : '전화번호가 없습니다'}
             </p>
             <button
-              className={`flex-shrink-0 ${hasPhone ? "text-tag-blue" : "text-gray-300 cursor-not-allowed"}`}
+              className={`flex-shrink-0 ${hasPhone ? 'text-tag-blue' : 'text-gray-300 cursor-not-allowed'}`}
               onClick={handleCopyPhone}
               disabled={!hasPhone}
             >
@@ -112,7 +106,7 @@ const Location = ({ reservation }: LocationProps) => {
         </InfoGroup>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Location
+export default Location;

@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQuery, useMutation } from "@tanstack/react-query"
+import { useInfiniteQuery, useQuery, useMutation } from '@tanstack/react-query';
 import {
   CreateReviewRequest,
   createReview,
@@ -6,134 +6,134 @@ import {
   fetchReviews,
   fetchReservationReviewInfo,
   fetchReviewSections,
-  fetchReviewQuestions,
-} from "../apis/review.api"
-import { useNavigate } from "react-router-dom"
-import { reviews } from "./keys/reviews.keys"
+  fetchReviewQuestions
+} from '../apis/review.api';
+import { useNavigate } from 'react-router-dom';
+import { reviews } from './keys/reviews.keys';
 
 export const useReviews = () => {
   return useInfiniteQuery({
-    queryKey: ["reviews"],
+    queryKey: ['reviews'],
     queryFn: ({ pageParam = 1 }) => fetchReviews(pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === 0) return undefined
-      const totalPages = lastPage[0].total_page_count
-      const nextPage = allPages.length + 1
-      return nextPage <= totalPages ? nextPage : undefined
+      if (lastPage.length === 0) return undefined;
+      const totalPages = lastPage[0].total_page_count;
+      const nextPage = allPages.length + 1;
+      return nextPage <= totalPages ? nextPage : undefined;
     },
     retry: false,
     enabled: true,
     refetchOnMount: true,
-    staleTime: 0,
-  })
-}
+    staleTime: 0
+  });
+};
 
 export const useReviewDetail = (reviewId: string) => {
   return useQuery({
-    queryKey: ["review", reviewId],
+    queryKey: ['review', reviewId],
     queryFn: () => fetchReviewDetail(reviewId),
-    retry: false,
-  })
-}
+    retry: false
+  });
+};
 
 export const useReviewsQuery = (page: number) => {
   return useQuery({
-    queryKey: ["reviews", page],
+    queryKey: ['reviews', page],
     queryFn: () => fetchReviews(page),
-    retry: false,
-  })
-}
+    retry: false
+  });
+};
 
 export const useReviewDetailQuery = (reviewId: string) => {
   return useQuery({
-    queryKey: ["review", reviewId],
+    queryKey: ['review', reviewId],
     queryFn: () => fetchReviewDetail(reviewId),
-    retry: false,
-  })
-}
+    retry: false
+  });
+};
 
 export const useCreateReviewMutation = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: (request: CreateReviewRequest) => createReview(request),
     onSuccess: () => {
-      navigate("/review", {
+      navigate('/review', {
         replace: true,
-        state: { returnPath: "/mypage" },
-      })
+        state: { returnPath: '/mypage' }
+      });
     },
-    retry: false,
-  })
-}
+    retry: false
+  });
+};
 
 export const useReservationReviewInfoQuery = (reservationId: string) => {
   return useQuery({
-    queryKey: ["reservationReviewInfo", reservationId],
+    queryKey: ['reservationReviewInfo', reservationId],
     queryFn: () => fetchReservationReviewInfo(reservationId),
-    retry: false,
-  })
-}
+    retry: false
+  });
+};
 
 export const useReviewSections = () => {
   return useQuery({
     queryKey: reviews.sections,
     queryFn: fetchReviewSections,
-    retry: false,
-  })
-}
+    retry: false
+  });
+};
 
 export const useReviewQuestions = (reviewId: string) => {
   return useQuery({
-    queryKey: ["reviewQuestions", reviewId],
+    queryKey: ['reviewQuestions', reviewId],
     queryFn: () => fetchReviewQuestions(reviewId),
     enabled: !!reviewId,
-    retry: false,
-  })
-}
+    retry: false
+  });
+};
 
 export const useReview = (id: number) => {
   return useQuery({
-    queryKey: ["reviews", id],
-    queryFn: () => Promise.reject(new Error("Not implemented")),
+    queryKey: ['reviews', id],
+    queryFn: () => Promise.reject(new Error('Not implemented')),
     enabled: false,
-    retry: false,
-  })
-}
+    retry: false
+  });
+};
 
 export const useMyReviews = () => {
   return useQuery({
-    queryKey: ["reviews", "my"],
-    queryFn: () => Promise.reject(new Error("Not implemented")),
+    queryKey: ['reviews', 'my'],
+    queryFn: () => Promise.reject(new Error('Not implemented')),
     enabled: false,
-    retry: false,
-  })
-}
+    retry: false
+  });
+};
 
 export const useReviewByReservation = (reservationId: number) => {
   return useQuery({
-    queryKey: ["reviews", "reservation", reservationId],
-    queryFn: () => Promise.reject(new Error("Not implemented")),
+    queryKey: ['reviews', 'reservation', reservationId],
+    queryFn: () => Promise.reject(new Error('Not implemented')),
     enabled: false,
-    retry: false,
-  })
-}
+    retry: false
+  });
+};
 
 export const useReviewByTherapist = (therapistId: number) => {
   return useQuery({
-    queryKey: ["reviews", "therapist", therapistId],
-    queryFn: () => Promise.reject(new Error("Not implemented")),
+    queryKey: ['reviews', 'therapist', therapistId],
+    queryFn: () => Promise.reject(new Error('Not implemented')),
     enabled: false,
-    retry: false,
-  })
-}
+    retry: false
+  });
+};
 
 export const useReviewByBranch = (branchId: number) => {
   return useQuery({
-    queryKey: ["reviews", "branch", branchId],
-    queryFn: () => Promise.reject(new Error("Not implemented")),
+    queryKey: ['reviews', 'branch', branchId],
+    queryFn: () => Promise.reject(new Error('Not implemented')),
     enabled: false,
-    retry: false,
-  })
-}
+    retry: false
+  });
+};

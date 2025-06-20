@@ -1,106 +1,102 @@
-import NotiIcon from "@assets/icons/NotiIcon.svg?react"
-import { FloatingButton } from "@components/FloatingButton"
-import Logo from "@components/Logo"
-import NoticesSummarySlider from "@components/NoticesSummarySlider"
-import { Container, Typography } from "@mui/material"
-import { useBanner } from "queries/useBannerQueries"
-import { useUserMemberships } from "queries/useMembershipQueries"
-import { lazy, Suspense, useEffect, useMemo } from "react"
-import { useNavigate } from "react-router-dom"
-import "swiper/css"
-import "swiper/css/pagination"
-import { Pagination } from "swiper/modules"
-import { Swiper, SwiperSlide } from "swiper/react"
-import { BannerRequestType } from "types/Banner"
-import { useAuth } from "../../contexts/AuthContext"
-import { useLayout } from "../../contexts/LayoutContext"
-import { usePreventGoBack } from "../../hooks/usePreventGoBack"
-import { useUnreadNotificationsCount } from "../../queries/useNotificationQueries"
-import "../../styles/swiper-custom.css"
-import DynamicHomeHeaderBackground from "./_fragments/DynamicHomeHeaderBackground"
-import { MembershipCardSection } from "./_fragments/MembershipCardSection"
-import ReserveCardSection from "./_fragments/ReserveCardSection"
-import LoadingIndicator from "@components/LoadingIndicator"
+import NotiIcon from '@/assets/icons/NotiIcon.svg?react';
+import { FloatingButton } from '@/components/FloatingButton';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import Logo from '@/components/Logo';
+import NoticesSummarySlider from '@/components/NoticesSummarySlider';
+import { useAuth } from '@/contexts/AuthContext';
+import { useLayout } from '@/contexts/LayoutContext';
+import { usePreventGoBack } from '@/hooks/usePreventGoBack';
+import { useBanner } from '@/queries/useBannerQueries';
+import { useUserMemberships } from '@/queries/useMembershipQueries';
+import { useUnreadNotificationsCount } from '@/queries/useNotificationQueries';
+import '@/styles/swiper-custom.css';
+import { BannerRequestType } from '@/types/Banner';
+import { Container, Typography } from '@mui/material';
+import { lazy, Suspense, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import DynamicHomeHeaderBackground from './_fragments/DynamicHomeHeaderBackground';
+import { MembershipCardSection } from './_fragments/MembershipCardSection';
+import ReserveCardSection from './_fragments/ReserveCardSection';
 
 // 단일 코드 청크로 그룹화하여 불필요한 네트워크 요청 줄이기
 const SecondaryContentChunk = lazy(
-  () =>
-    import(
-      /* webpackChunkName: "home-secondary" */ "./_fragments/SecondaryContentChunk"
-    ),
-)
+  () => import(/* webpackChunkName: "home-secondary" */ './_fragments/SecondaryContentChunk')
+);
 
 const Home = () => {
-  const { setHeader, setNavigation } = useLayout()
-  const navigate = useNavigate()
-  const { user, isLoading } = useAuth()
+  const { setHeader, setNavigation } = useLayout();
+  const navigate = useNavigate();
+  const { user, isLoading } = useAuth();
   const { data: mainBanner } = useBanner(
     {
       gubun: BannerRequestType.SLIDE,
-      area01: "Y",
-      area02: "Y",
+      area01: 'Y',
+      area02: 'Y'
     },
     {
       retry: 3,
-      enabled: !!user,
-    },
-  )
-  const { data: memberships, isLoading: membershipLoading } =
-    useUserMemberships("T", user)
-  const { data: unreadCount = 0 } = useUnreadNotificationsCount(user)
+      enabled: !!user
+    }
+  );
+  const { data: memberships, isLoading: membershipLoading } = useUserMemberships('T', user);
+  const { data: unreadCount = 0 } = useUnreadNotificationsCount(user);
 
   // 뒤로가기 방지 훅 적용
-  usePreventGoBack()
+  usePreventGoBack();
 
   const getDisplayCount = (count: number) => {
-    if (count > 99) return "99+"
-    return count
-  }
+    if (count > 99) return '99+';
+    return count;
+  };
 
   const availableMemberships = useMemo(() => {
-    if (!memberships?.pages[0]?.body) return []
-    if (!user) return []
-    return memberships.pages[0].body
-  }, [user, memberships])
+    if (!memberships?.pages[0]?.body) return [];
+    if (!user) return [];
+    return memberships.pages[0].body;
+  }, [user, memberships]);
 
   const totalMembershipCount = useMemo(() => {
-    if (!memberships?.pages[0]) return 0
-    if (!user) return 0
+    if (!memberships?.pages[0]) return 0;
+    if (!user) return 0;
 
-    return memberships.pages[0].total_count ?? 0
-  }, [user, memberships])
+    return memberships.pages[0].total_count ?? 0;
+  }, [user, memberships]);
 
   useEffect(() => {
     setHeader({
       display: false,
-      backgroundColor: "bg-system-bg",
-    })
-    setNavigation({ display: true })
-  }, [])
+      backgroundColor: 'bg-system-bg'
+    });
+    setNavigation({ display: true });
+  }, []);
 
   const handleReservationClick = () => {
     if (!user) {
-      navigate("/login", {
-        replace: true,
-      })
+      navigate('/login', {
+        replace: true
+      });
 
-      return
+      return;
     }
 
-    navigate("/reservation/form", {
+    navigate('/reservation/form', {
       state: {
-        originalPath: "/",
-        fromHome: true,
-      },
-    })
-  }
+        originalPath: '/',
+        fromHome: true
+      }
+    });
+  };
 
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-full">
         <LoadingIndicator />
       </div>
-    )
+    );
   }
 
   return (
@@ -108,40 +104,34 @@ const Home = () => {
       <Container className="relative pt-4 px-0 max-w-screen overflow-hidden">
         <DynamicHomeHeaderBackground
           header={
-            <div className={"space-y-2"}>
+            <div className={'space-y-2'}>
               <Logo text size={136} />
               <NoticesSummarySlider
-                className={"h-[21px] mt-[12px] max-w-[90%] text-gray-500"}
+                className={'h-[21px] mt-[12px] max-w-[90%] text-gray-500'}
                 fromPath="/"
                 left={<span className="min-w-[40px]">[공지]</span>}
               />
             </div>
           }
           contents={[
-            <div
-              key="user-info"
-              className="flex justify-between items-center bg-primary-300 rounded-2xl p-4"
-            >
+            <div key="user-info" className="flex justify-between items-center bg-primary-300 rounded-2xl p-4">
               <div className="flex gap-2 flex-col text-white">
                 <div className="max-[370px]:hidden flex">
                   <Typography>
-                    <span className={"text-18px font-b"}>
-                      {user ? `${user?.name}님 ` : ""}
-                    </span>
+                    <span className={'text-18px font-b'}>{user ? `${user?.name}님 ` : ''}</span>
                     반갑습니다.
                   </Typography>
                 </div>
                 <div className="max-[370px]:flex hidden">
                   <Typography>
-                    <span className={"text-18px font-b"}>{user?.name}님</span>{" "}
-                    <br />
+                    <span className={'text-18px font-b'}>{user?.name}님</span> <br />
                     반갑습니다.
                   </Typography>
                 </div>
                 <Typography className="font-m text-14px">
                   {user ? (
                     <>
-                      <span className="mr-2">{user?.levelName}</span>{" "}
+                      <span className="mr-2">{user?.levelName}</span>{' '}
                       <span className="font-b mr-[2px]">{user?.point}</span>
                       <span>P</span>
                     </>
@@ -163,7 +153,7 @@ const Home = () => {
                 <Swiper
                   modules={[Pagination]}
                   pagination={{
-                    clickable: true,
+                    clickable: true
                   }}
                   slidesPerView={1}
                   className="w-full aspect-[8/5] rounded-2xl"
@@ -171,17 +161,16 @@ const Home = () => {
                 >
                   {mainBanner?.map((banner) => {
                     const getBannerLink = (link: string) => {
-                      if (link.startsWith("http")) return link
-                      return `https://${link}`
-                    }
+                      if (link.startsWith('http')) return link;
+                      return `https://${link}`;
+                    };
 
                     return (
                       <SwiperSlide key={banner.code}>
                         <button
                           className="w-full"
                           onClick={() => {
-                            window.location.href =
-                              getBannerLink(banner.link) || "/membership"
+                            window.location.href = getBannerLink(banner.link) || '/membership';
                           }}
                           aria-label={banner.title}
                         >
@@ -194,18 +183,18 @@ const Home = () => {
                           />
                         </button>
                       </SwiperSlide>
-                    )
+                    );
                   })}
                 </Swiper>
               </div>
-            ),
+            )
           ]}
           buttonArea={
             <div className="relative">
               <button
                 className="w-11 h-11 bg-primary-300 text-white rounded-full shadow-lg flex justify-center items-center relative hover:bg-primary-400 transition-colors duration-200"
-                onClick={() => navigate("/notification")}
-                aria-label={`알림${unreadCount > 0 ? `, ${unreadCount}개의 새로운 알림이 있습니다` : ""}`}
+                onClick={() => navigate('/notification')}
+                aria-label={`알림${unreadCount > 0 ? `, ${unreadCount}개의 새로운 알림이 있습니다` : ''}`}
                 aria-live="polite"
                 aria-atomic="true"
               >
@@ -216,10 +205,7 @@ const Home = () => {
                     role="status"
                     aria-label={`${unreadCount}개의 새로운 알림`}
                   >
-                    <span
-                      className="text-primary text-[10px] leading-none font-m"
-                      aria-hidden="true"
-                    >
+                    <span className="text-primary text-[10px] leading-none font-m" aria-hidden="true">
                       {getDisplayCount(unreadCount)}
                     </span>
                   </div>
@@ -239,9 +225,7 @@ const Home = () => {
 
         {/* 화면 아래 컴포넌트는 지연 로드 */}
         <Suspense
-          fallback={
-            <div className="skeleton-loader h-[300px] w-full animate-pulse bg-gray-200 rounded-lg my-4"></div>
-          }
+          fallback={<div className="skeleton-loader h-[300px] w-full animate-pulse bg-gray-200 rounded-lg my-4"></div>}
         >
           <SecondaryContentChunk />
         </Suspense>
@@ -249,12 +233,12 @@ const Home = () => {
       <FloatingButton
         type="search"
         onClick={() => {
-          navigate("/branch")
+          navigate('/branch');
         }}
         aria-label="지점 검색하기"
       />
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

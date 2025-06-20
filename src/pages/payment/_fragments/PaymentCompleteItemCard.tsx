@@ -1,8 +1,8 @@
-import { PaymentItem } from "../../../types/Payment"
-import { formatPriceWithUnit } from "../../../utils/format"
+import { PaymentItem } from '@/types/Payment';
+import { formatPriceWithUnit } from '@/utils/format';
 
 interface PaymentItemCardProps {
-  item: PaymentItem
+  item: PaymentItem;
 }
 
 const PaymentItemCard = ({ item }: PaymentItemCardProps) => (
@@ -12,22 +12,12 @@ const PaymentItemCard = ({ item }: PaymentItemCardProps) => (
       <div className="flex flex-col gap-1.5">
         <div className="text-gray-900 text-16px font-sb">{item.title}</div>
         <div className="flex items-baseline gap-1.5">
-          <span className="text-gray-900 text-14px font-r">
-            {item.sessions}회
-          </span>
-          <span className="text-gray-900 text-14px font-b">
-            {formatPriceWithUnit(item.price * item.amount)}
-          </span>
+          <span className="text-gray-900 text-14px font-r">{item.sessions}회</span>
+          <span className="text-gray-900 text-14px font-b">{formatPriceWithUnit(item.price * item.amount)}</span>
         </div>
       </div>
       <div className="flex items-center gap-1.5">
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 14 14"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             d="M1.75586 6.54492V9.16409C1.75586 11.7833 2.80586 12.8333 5.42503 12.8333H8.56919C11.1884 12.8333 12.2384 11.7833 12.2384 9.16409V6.54492"
             stroke="#757575"
@@ -61,12 +51,10 @@ const PaymentItemCard = ({ item }: PaymentItemCardProps) => (
         </svg>
         <span className="text-gray-500 text-12px font-r">{item.brand}</span>
         <div className="w-[1px] h-3 bg-[#DDDDDD] rotate-90" />
-        <span className="text-gray-500 text-12px font-r">
-          {item.branchType}
-        </span>
+        <span className="text-gray-500 text-12px font-r">{item.branchType}</span>
       </div>
     </div>
   </div>
-)
+);
 
-export default PaymentItemCard
+export default PaymentItemCard;

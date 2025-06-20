@@ -6,18 +6,16 @@
  */
 const validatePassword = (password: string): boolean => {
   // 길이 검사: 10자 이상 20자 이하
-  if (password.length < 10 || password.length > 20) return false
+  if (password.length < 10 || password.length > 20) return false;
 
   // 필수 포함 요소 검사
-  const containsUppercase = /[A-Z]/.test(password)
-  const containsLowercase = /[a-z]/.test(password)
-  const containsNumber = /[0-9]/.test(password)
-  const containsSpecial = /[@$!%*?&#]/.test(password) // 지정된 특수문자만 허용
+  const containsUppercase = /[A-Z]/.test(password);
+  const containsLowercase = /[a-z]/.test(password);
+  const containsNumber = /[0-9]/.test(password);
+  const containsSpecial = /[@$!%*?&#]/.test(password); // 지정된 특수문자만 허용
 
   // 모든 조건 만족 여부 반환
-  return (
-    containsUppercase && containsLowercase && containsNumber && containsSpecial
-  )
-}
+  return containsUppercase && containsLowercase && containsNumber && containsSpecial;
+};
 
-export default validatePassword
+export default validatePassword;

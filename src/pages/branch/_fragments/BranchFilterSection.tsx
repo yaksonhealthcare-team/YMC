@@ -1,25 +1,23 @@
-import { Filter } from "@components/Filter.tsx"
-import { FilterItem } from "./BranchFilterBottomSheet.tsx"
+import { Filter } from '@/components/Filter';
+import { FilterItem } from './BranchFilterBottomSheet';
 
 const BranchFilterSection = ({
   currentFilter,
   onClick,
-  onInitialize: performInitialize,
+  onInitialize: performInitialize
 }: {
-  currentFilter: { brand: FilterItem | null; category: FilterItem | null }
-  onClick: () => void
-  onInitialize: () => void
+  currentFilter: { brand: FilterItem | null; category: FilterItem | null };
+  onClick: () => void;
+  onInitialize: () => void;
 }) => {
   return (
-    <div className={"flex overflow-x-auto px-5 py-2 bg-white no-scrollbar"}>
-      <div className={"flex flex-none gap-2"}>
-        {(currentFilter.brand || currentFilter.category) && (
-          <Filter type={"reload"} onClick={performInitialize} />
-        )}
+    <div className={'flex overflow-x-auto px-5 py-2 bg-white no-scrollbar'}>
+      <div className={'flex flex-none gap-2'}>
+        {(currentFilter.brand || currentFilter.category) && <Filter type={'reload'} onClick={performInitialize} />}
         <Filter
-          type={"arrow"}
-          state={!currentFilter.brand ? "default" : "active"}
-          label={currentFilter.brand?.title ?? "브랜드"}
+          type={'arrow'}
+          state={!currentFilter.brand ? 'default' : 'active'}
+          label={currentFilter.brand?.title ?? '브랜드'}
           onClick={onClick}
         />
         {/* <Filter
@@ -30,7 +28,7 @@ const BranchFilterSection = ({
         /> */}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default BranchFilterSection
+export default BranchFilterSection;

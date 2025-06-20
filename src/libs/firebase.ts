@@ -1,6 +1,6 @@
-import { initializeApp } from "@firebase/app"
-import { getMessaging, getToken, onMessage } from "firebase/messaging"
-import { LOCAL_STORAGE_KEYS } from "../constants/storage"
+import { LOCAL_STORAGE_KEYS } from '@/constants/storage';
+import { initializeApp } from '@firebase/app';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -9,29 +9,29 @@ const firebaseConfig = {
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
-}
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+};
 
 // Firebase 초기화는 앱에서 한 번만 해야 함
-const app = initializeApp(firebaseConfig)
+const app = initializeApp(firebaseConfig);
 
 // 알림 권한 요청
 export async function requestNotificationPermission(): Promise<boolean> {
   try {
     if (window.ReactNativeWebView) {
-      return false
+      return false;
     }
 
-    if (!("Notification" in window)) {
-      console.log("이 브라우저는 알림을 지원하지 않습니다.")
-      return false
+    if (!('Notification' in window)) {
+      console.log('이 브라우저는 알림을 지원하지 않습니다.');
+      return false;
     }
 
-    const permission = await Notification.requestPermission()
-    return permission === "granted"
+    const permission = await Notification.requestPermission();
+    return permission === 'granted';
   } catch (error) {
-    console.error("알림 권한 요청 중 오류 발생:", error)
-    return false
+    console.error('알림 권한 요청 중 오류 발생:', error);
+    return false;
   }
 }
 
@@ -39,22 +39,22 @@ export async function requestNotificationPermission(): Promise<boolean> {
 export async function requestForToken() {
   try {
     if (window.ReactNativeWebView) {
-      return localStorage.getItem(LOCAL_STORAGE_KEYS.FCM_TOKEN)
+      return localStorage.getItem(LOCAL_STORAGE_KEYS.FCM_TOKEN);
     }
 
     // ServiceWorker API 지원 확인
-    const hasServiceWorker = "serviceWorker" in navigator
+    const hasServiceWorker = 'serviceWorker' in navigator;
 
     if (hasServiceWorker) {
       const currentToken = await getToken(getMessaging(app), {
-        vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
-      })
-      return currentToken
+        vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY
+      });
+      return currentToken;
     }
 
-    return null
-  } catch (error) {
-    return null
+    return null;
+  } catch {
+    return null;
   }
 }
 
@@ -62,6 +62,6 @@ export async function requestForToken() {
 export const onMessageListener = () =>
   new Promise((resolve) => {
     onMessage(getMessaging(app), (payload) => {
-      resolve(payload)
-    })
-  })
+      resolve(payload);
+    });
+  });

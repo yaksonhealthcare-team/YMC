@@ -3,10 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <meta
       name="description"
       content="약손명가 예약 앱 '테라피스트'로 간편하게 예약, 멤버십 관리, 특별 혜택 확인까지!"
@@ -16,94 +13,62 @@
       content="테라피스트, 약손명가, 약손명가 리프팅, 약손명가 예약, 피부 관리, 얼굴 붓기 빼는법, 경락, 스파, 에스테틱"
     />
     <!-- 중요한 API 도메인 미리 연결 -->
-    <link rel="preconnect" href="https://yaksonhc.com" crossorigin>
-    <link rel="preconnect" href="https://devapi.yaksonhc.com" crossorigin>
-    <link rel="preconnect" href="https://image.yaksonhc.com" crossorigin>
-    
+    <link rel="preconnect" href="https://yaksonhc.com" crossorigin />
+    <link rel="preconnect" href="https://devapi.yaksonhc.com" crossorigin />
+    <link rel="preconnect" href="https://image.yaksonhc.com" crossorigin />
+
     <!-- 폰트 미리 로드 -->
-    <link
-      rel="preload"
-      href="/fonts/Pretendard-Regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/Pretendard-Medium.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/Pretendard-Bold.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/Pretendard-SemiBold.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    
+    <link rel="preload" href="/fonts/Pretendard-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Pretendard-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Pretendard-Bold.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Pretendard-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
+
     <!-- 중요 이미지만 미리 로드 -->
-    <link
-      rel="preload"
-      href="/assets/home_card_top.png"
-      as="image"
-      type="image/png"
-      fetchpriority="high"
-    />
-    
+    <link rel="preload" href="/assets/home_card_top.png" as="image" type="image/png" fetchpriority="high" />
+
     <title>테라피스트-에스테틱 예약</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
-      window.addEventListener("error", function (e) {
-        if (e.filename && e.filename.includes("maps.js")) {
+      window.addEventListener('error', function (e) {
+        if (e.filename && e.filename.includes('maps.js')) {
           // 네이버 지도 API 로딩 실패 시 에러 처리
         }
-      })
+      });
 
       // 네이버 지도 API 스크립트 동적 로딩
       function loadNaverMapScript() {
-        const clientId = "iorpsr2u1r" // .env 파일의 VITE_NAVER_MAP_CLIENT_ID 값
-        if (!clientId) {
-          return
-        }
+        const clientId = '%VITE_NAVER_MAP_CLIENT_ID%'; // .env 파일의 VITE_NAVER_MAP_CLIENT_ID 값
+        if (!clientId) return;
 
-        const script = document.createElement("script")
-        script.type = "text/javascript"
-        script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${clientId}&submodules=geocoder`
-        script.async = true
-        script.defer = true
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${clientId}&submodules=geocoder`;
+        script.async = true;
+        script.defer = true;
         script.onerror = () => {
           // 네이버 지도 API 스크립트 로딩 실패 처리
-        }
+        };
         script.onload = () => {
           // 네이버 지도 API 스크립트 로딩 완료 처리
-        }
-        document.body.appendChild(script)
+        };
+        document.body.appendChild(script);
       }
 
       // 사용자 상호작용 후 지도 스크립트 로드
-      if ("IntersectionObserver" in window) {
+      if ('IntersectionObserver' in window) {
         const observer = new IntersectionObserver((entries) => {
           if (entries[0].isIntersecting) {
             loadNaverMapScript();
             observer.disconnect();
           }
         });
-        
+
         // DOM이 로드된 후 옵저버 설정
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", () => {
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => {
             observer.observe(document.body);
           });
         } else {
@@ -111,8 +76,8 @@
         }
       } else {
         // IntersectionObserver를 지원하지 않는 브라우저 대비
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", loadNaverMapScript);
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', loadNaverMapScript);
         } else {
           loadNaverMapScript();
         }

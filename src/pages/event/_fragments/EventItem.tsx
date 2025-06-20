@@ -1,12 +1,12 @@
-import React from "react"
-import { useNavigate } from "react-router-dom"
-import { Event } from "../../../types/Content"
-import { Image } from "@components/common/Image"
+import { Image } from '@/components/common/Image';
+import { Event } from '@/types/Content';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const EventItem: React.FC<{ event: Event }> = ({ event }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const thumbnail = event.files.find((file) => file.fileurl.length > 0)
+  const thumbnail = event.files.find((file) => file.fileurl.length > 0);
 
   return (
     <div className="bg-white py-4 flex items-start gap-4">
@@ -20,15 +20,11 @@ const EventItem: React.FC<{ event: Event }> = ({ event }) => {
       <div className="flex-1 flex flex-col">
         <div className="flex-1 flex flex-col justify-between">
           <div>
-            <div className="font-bold text-gray-900 text-16px">
-              {event.title}
-            </div>
+            <div className="font-bold text-gray-900 text-16px">{event.title}</div>
           </div>
           <div className="flex items-center mt-2 gap-2">
-            {event.status === "END" && (
-              <div className="px-2 py-1 bg-gray-100 rounded-md text-gray-500 text-12px font-medium">
-                종료
-              </div>
+            {event.status === 'END' && (
+              <div className="px-2 py-1 bg-gray-100 rounded-md text-gray-500 text-12px font-medium">종료</div>
             )}
             <div className="text-gray-500 text-12px">
               {event.sdate} ~ {event.edate}
@@ -44,7 +40,7 @@ const EventItem: React.FC<{ event: Event }> = ({ event }) => {
         {/* Placeholder for the button */}
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default EventItem
+export default EventItem;

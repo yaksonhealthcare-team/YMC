@@ -1,36 +1,26 @@
-import clsx from "clsx"
-import CaretRightIcon from "@assets/icons/CaretRightIcon.svg?react"
+import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
+import clsx from 'clsx';
 
 const TITLE_STYLES = {
-  title: "font-b text-18px text-gray-700",
-  count: "ml-1.5 font-b text-18px text-primary",
-  arrow: "w-4 h-4",
-} as const
+  title: 'font-b text-18px text-gray-700',
+  count: 'ml-1.5 font-b text-18px text-primary',
+  arrow: 'w-4 h-4'
+} as const;
 
 interface TitleProps {
-  type?: "default" | "arrow"
-  title: string
-  count?: string
-  onClick?: () => void
-  className?: string
-  headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
+  type?: 'default' | 'arrow';
+  title: string;
+  count?: string;
+  onClick?: () => void;
+  className?: string;
+  headingLevel?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 }
 
-export const Title = ({
-  type = "default",
-  title,
-  count,
-  onClick,
-  className,
-  headingLevel = "h2",
-}: TitleProps) => {
-  const HeadingTag = headingLevel
+export const Title = ({ type = 'default', title, count, onClick, className, headingLevel = 'h2' }: TitleProps) => {
+  const HeadingTag = headingLevel;
 
   return (
-    <header
-      className={clsx("flex justify-between items-center", className)}
-      role="banner"
-    >
+    <header className={clsx('flex justify-between items-center', className)} role="banner">
       <div className="flex items-center">
         <HeadingTag className={TITLE_STYLES.title}>{title}</HeadingTag>
         {count && (
@@ -39,17 +29,17 @@ export const Title = ({
           </span>
         )}
       </div>
-      {type === "arrow" && onClick && (
+      {type === 'arrow' && onClick && (
         <button
           onClick={onClick}
-          className={clsx("flex justify-between p-1", className, " rounded-lg")}
-          aria-label={`${title} ${count ? `${count}개의` : ""} 전체 목록 보기`}
+          className={clsx('flex justify-between p-1', className, ' rounded-lg')}
+          aria-label={`${title} ${count ? `${count}개의` : ''} 전체 목록 보기`}
         >
           <CaretRightIcon className={TITLE_STYLES.arrow} aria-hidden="true" />
         </button>
       )}
     </header>
-  )
-}
+  );
+};
 
-Title.displayName = "Title"
+Title.displayName = 'Title';

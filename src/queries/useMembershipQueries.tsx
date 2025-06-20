@@ -1,114 +1,104 @@
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query"
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import {
   fetchMembershipDetail,
   fetchMembershipCategories,
   fetchUserMemberships,
   fetchAdditionalManagement,
   fetchMembershipList,
-  ListResponse,
-} from "../apis/membership.api"
-import { MyMembership, MembershipItem } from "../types/Membership"
-import { createUserContextQueryKey } from "./queryKeyFactory"
-import { User } from "../types/User"
+  ListResponse
+} from '../apis/membership.api';
+import { MyMembership, MembershipItem } from '../types/Membership';
+import { createUserContextQueryKey } from './queryKeyFactory';
+import { User } from '../types/User';
 
-export const useMembershipList = (
-  brandCode: string,
-  bIdx?: string,
-  scCode?: string,
-) => {
+export const useMembershipList = (brandCode: string, bIdx?: string, scCode?: string) => {
   return useInfiniteQuery<ListResponse<MembershipItem>>({
-    queryKey: ["memberships", brandCode, scCode, bIdx],
+    queryKey: ['memberships', brandCode, scCode, bIdx],
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
-      fetchMembershipList(
-        brandCode,
-        bIdx ? Number(bIdx) : undefined,
-        scCode,
-        Number(pageParam),
-      ),
+      fetchMembershipList(brandCode, bIdx ? Number(bIdx) : undefined, scCode, Number(pageParam)),
     getNextPageParam: (lastPage) => {
-      if (!lastPage.body || lastPage.body.length === 0) return undefined
-      return lastPage.current_page + 1
+      if (!lastPage.body || lastPage.body.length === 0) return undefined;
+      return lastPage.current_page + 1;
     },
-    retry: true,
-  })
-}
+    retry: true
+  });
+};
 
 export const useMembershipDetail = (sIdx: string) => {
   return useQuery({
-    queryKey: ["memberships", "detail", sIdx],
+    queryKey: ['memberships', 'detail', sIdx],
     queryFn: () => fetchMembershipDetail(sIdx),
     enabled: !!sIdx,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    retry: true,
-  })
-}
+    retry: true
+  });
+};
 
 export const useMembershipCategories = (brandCode: string) => {
   return useQuery({
-    queryKey: ["memberships", "categories", brandCode],
+    queryKey: ['memberships', 'categories', brandCode],
     queryFn: () => fetchMembershipCategories(brandCode),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    retry: true,
-  })
-}
+    retry: true
+  });
+};
 
 export const useUserMemberships = (searchType?: string, user?: User | null) => {
   return useInfiniteQuery<ListResponse<MyMembership>>({
-    queryKey: createUserContextQueryKey(["memberships", searchType]),
+    queryKey: createUserContextQueryKey(['memberships', searchType]),
     initialPageParam: 1,
-    queryFn: ({ pageParam }) =>
-      fetchUserMemberships(searchType, Number(pageParam)),
+    queryFn: ({ pageParam }) => fetchUserMemberships(searchType, Number(pageParam)),
     getNextPageParam: (lastPage) => {
-      if (!lastPage.body || lastPage.body.length === 0) return undefined
-      return lastPage.current_page + 1
+      if (!lastPage.body || lastPage.body.length === 0) return undefined;
+      return lastPage.current_page + 1;
     },
     retry: true,
-    enabled: !!user,
-  })
-}
+    enabled: !!user
+  });
+};
 
 export const useAdditionalManagement = (membershipIdx?: string) => {
   return useQuery({
-    queryKey: ["memberships", "additional", membershipIdx],
+    queryKey: ['memberships', 'additional', membershipIdx],
     queryFn: () => {
       if (!membershipIdx) {
-        throw new Error("membershipIdx is required")
+        throw new Error('membershipIdx is required');
       }
-      return fetchAdditionalManagement(membershipIdx)
+      return fetchAdditionalManagement(membershipIdx);
     },
     enabled: !!membershipIdx,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    retry: true,
-  })
-}
+    retry: true
+  });
+};
 
 export const useMembership = (id: number) => {
   return useQuery({
-    queryKey: ["memberships", id],
-    queryFn: () => Promise.reject(new Error("Not implemented")),
+    queryKey: ['memberships', id],
+    queryFn: () => Promise.reject(new Error('Not implemented')),
     enabled: false,
-    retry: true,
-  })
-}
+    retry: true
+  });
+};
 
 export const useMembershipByUser = () => {
   return useQuery({
-    queryKey: ["memberships", "user"],
-    queryFn: () => Promise.reject(new Error("Not implemented")),
+    queryKey: ['memberships', 'user'],
+    queryFn: () => Promise.reject(new Error('Not implemented')),
     enabled: false,
-    retry: true,
-  })
-}
+    retry: true
+  });
+};
 
 export const useAvailableMemberships = () => {
   return useQuery({
-    queryKey: ["memberships", "available"],
-    queryFn: () => Promise.reject(new Error("Not implemented")),
+    queryKey: ['memberships', 'available'],
+    queryFn: () => Promise.reject(new Error('Not implemented')),
     enabled: false,
-    retry: true,
-  })
-}
+    retry: true
+  });
+};

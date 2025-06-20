@@ -1,17 +1,17 @@
-import { useNavigate } from "react-router-dom"
-import { Title } from "@components/Title"
-import { Swiper, SwiperSlide } from "swiper/react"
-import { useEvents } from "queries/useEventQueries"
-import { Event } from "types/Event"
-import { formatDate } from "utils/date"
+import { Title } from '@/components/Title';
+import { useEvents } from '@/queries/useEventQueries';
+import { Event } from '@/types/Event';
+import { formatDate } from '@/utils/date';
+import { useNavigate } from 'react-router-dom';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 export const EventSection = () => {
-  const { data: events } = useEvents("ING")
-  const navigate = useNavigate()
+  const { data: events } = useEvents('ING');
+  const navigate = useNavigate();
 
   const formatDateForAPI = (date: Date) => {
-    return formatDate(date, "YYYY-MM-DD")
-  }
+    return formatDate(date, 'YYYY-MM-DD');
+  };
 
   return (
     events &&
@@ -21,14 +21,11 @@ export const EventSection = () => {
         <Swiper
           spaceBetween={10}
           slidesPerView={events.length === 1 ? 1 : 1.1}
-          style={{ overflow: "visible" }}
+          style={{ overflow: 'visible' }}
           className="mt-2"
         >
           {events.map((event: Event) => (
-            <SwiperSlide
-              key={event.code}
-              className={events.length === 1 ? "" : "mr-3"}
-            >
+            <SwiperSlide key={event.code} className={events.length === 1 ? '' : 'mr-3'}>
               <div
                 className="flex flex-col gap-4 bg-white pb-4 rounded-[20px] border border-gray-100"
                 onClick={() => navigate(`/event/${event.code}`)}
@@ -43,12 +40,9 @@ export const EventSection = () => {
                   </div>
                 )}
                 <div className="flex flex-col px-5 gap-1.5">
-                  <span className="font-b text-16px text-gray-700">
-                    {event.title}
-                  </span>
+                  <span className="font-b text-16px text-gray-700">{event.title}</span>
                   <span className="font-r text-12px text-gray-600">
-                    {formatDateForAPI(new Date(event.sdate))} ~{" "}
-                    {formatDateForAPI(new Date(event.edate))}
+                    {formatDateForAPI(new Date(event.sdate))} ~ {formatDateForAPI(new Date(event.edate))}
                   </span>
                 </div>
               </div>
@@ -57,5 +51,5 @@ export const EventSection = () => {
         </Swiper>
       </div>
     )
-  )
-}
+  );
+};

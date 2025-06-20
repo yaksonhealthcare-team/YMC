@@ -1,29 +1,23 @@
-import { ShopIcon } from "@components/icons/ShopIcon.tsx"
-import { formatPriceWithUnit } from "../utils/format"
+import { ShopIcon } from '@/components/icons/ShopIcon';
+import { formatPriceWithUnit } from '@/utils/format';
 
 interface CartOption {
-  sessions: number
-  count: number
-  price: number
-  originalPrice: number
+  sessions: number;
+  count: number;
+  price: number;
+  originalPrice: number;
 }
 
 interface OrderSummaryCardProps {
-  status: "결제완료" | "결제미완료"
-  brand: string
-  branchType: "전지점" | "지정 지점"
-  branchName?: string
-  title: string
-  options: CartOption[]
+  status: '결제완료' | '결제미완료';
+  brand: string;
+  branchType: '전지점' | '지정 지점';
+  branchName?: string;
+  title: string;
+  options: CartOption[];
 }
 
-const OrderSummaryCard = ({
-  status,
-  brand,
-  branchName,
-  title,
-  options,
-}: OrderSummaryCardProps) => {
+const OrderSummaryCard = ({ status, brand, branchName, title, options }: OrderSummaryCardProps) => {
   return (
     <div className="p-5 bg-white rounded-[20px] border border-gray-100">
       <div className="mb-3">
@@ -32,12 +26,8 @@ const OrderSummaryCard = ({
 
       <p className="text-gray-700 text-16px font-sb mb-1.5">{title}</p>
       <div className="flex gap-1.5 items-baseline">
-        <span className="text-gray-700 text-14px font-r">
-          {options[0].sessions}회
-        </span>
-        <span className="text-gray-700 text-14px font-b">
-          {formatPriceWithUnit(options[0].price)}
-        </span>
+        <span className="text-gray-700 text-14px font-r">{options[0].sessions}회</span>
+        <span className="text-gray-700 text-14px font-b">{formatPriceWithUnit(options[0].price)}</span>
       </div>
 
       <div className="flex items-center gap-1.5 mt-3">
@@ -51,7 +41,7 @@ const OrderSummaryCard = ({
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default OrderSummaryCard
+export default OrderSummaryCard;

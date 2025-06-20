@@ -1,104 +1,86 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react"
-import { logout as fetchLogout, fetchUser } from "../apis/auth.api.ts"
-import { axiosClient } from "../queries/clients.ts"
-import { useStartupPopups } from "../queries/useContentQueries.tsx"
-import { usePopupActions } from "../stores/popupStore.ts"
-import { User } from "../types/User.ts"
+import { logout as fetchLogout, fetchUser } from '@/apis/auth.api';
+import { axiosClient } from '@/queries/clients';
+import { useStartupPopups } from '@/queries/useContentQueries';
+import { usePopupActions } from '@/stores/popupStore';
+import { User } from '@/types/User';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 interface AuthContextType {
-  user: User | null
-  login: (userData: { user: User | null }) => Promise<void>
-  logout: () => Promise<void>
-  isLoading: boolean
-  setIsLoading: (isLoading: boolean) => void
+  user: User | null;
+  login: (userData: { user: User | null }) => Promise<void>;
+  logout: () => Promise<void>;
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null)
+const AuthContext = createContext<AuthContextType | null>(null);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const [user, setUser] = useState<User | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const { openPopup } = usePopupActions()
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const { openPopup } = usePopupActions();
 
   const { data: popupData, isLoading: isPopupLoading } = useStartupPopups({
-    enabled: !!user,
-  })
+    enabled: !!user
+  });
 
   useEffect(() => {
-    if (
-      user &&
-      !isLoading &&
-      !isPopupLoading &&
-      popupData &&
-      popupData.length > 0
-    ) {
-      console.log(
-        "User authenticated and popup data loaded, attempting to open popup.",
-      )
+    if (user && !isLoading && !isPopupLoading && popupData && popupData.length > 0) {
+      console.log('User authenticated and popup data loaded, attempting to open popup.');
       setTimeout(() => {
-        openPopup(popupData)
-      }, 500)
+        openPopup(popupData);
+      }, 500);
     }
-  }, [user, isLoading, isPopupLoading, popupData, openPopup])
+  }, [user, isLoading, isPopupLoading, popupData, openPopup]);
 
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        const userData = await fetchUser()
-        if (userData) setUser(userData)
+        const userData = await fetchUser();
+        if (userData) setUser(userData);
       } catch (error) {
-        console.error("AuthProvider fetchUser error", error)
+        console.error('AuthProvider fetchUser error', error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
-    initializeAuth()
-  }, [])
+    };
+    initializeAuth();
+  }, []);
 
   const login = async ({ user: userData }: { user: User | null }) => {
     if (userData) {
-      setUser(userData)
-      setIsLoading(false)
-      return
+      setUser(userData);
+      setIsLoading(false);
+      return;
     }
-    setIsLoading(false)
-  }
+    setIsLoading(false);
+  };
 
   const logout = async () => {
     try {
-      await fetchLogout()
+      await fetchLogout();
     } catch (error) {
-      console.error("로그아웃 중 오류 발생:", error)
+      console.error('로그아웃 중 오류 발생:', error);
     } finally {
-      delete axiosClient.defaults.headers.common.Authorization
-      localStorage.clear()
-      sessionStorage.clear()
-      setUser(null)
+      delete axiosClient.defaults.headers.common.Authorization;
+      localStorage.clear();
+      sessionStorage.clear();
+      setUser(null);
     }
-  }
+  };
 
   const authValue = useMemo(
     () => ({ user, login, logout, isLoading, setIsLoading }),
-    [user, login, logout, isLoading, setIsLoading],
-  )
+    [user, login, logout, isLoading, setIsLoading]
+  );
 
-  return (
-    <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>
-  )
-}
+  return <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>;
+};
 
 export const useAuth = () => {
-  const context = useContext(AuthContext)
+  const context = useContext(AuthContext);
   if (context === null) {
-    throw new Error("useAuth must be used within an AuthProvider")
+    throw new Error('useAuth must be used within an AuthProvider');
   }
-  return context
-}
+  return context;
+};

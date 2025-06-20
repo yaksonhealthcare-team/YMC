@@ -1,4 +1,4 @@
-import BranchIcon from "@components/icons/BranchIcon.tsx"
+import BranchIcon from '@/components/icons/BranchIcon';
 
 const Step3Finish = () => {
   return (
@@ -13,7 +13,7 @@ const Step3Finish = () => {
         </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Step3Finish
+export default Step3Finish;

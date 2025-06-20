@@ -1,9 +1,9 @@
-import { ImgHTMLAttributes, useState } from "react"
-import Profile from "@assets/icons/Profile.svg?react"
+import Profile from '@/assets/icons/Profile.svg?react';
+import { ImgHTMLAttributes, useState } from 'react';
 
 interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
-  fallbackSrc?: string
-  useDefaultProfile?: boolean
+  fallbackSrc?: string;
+  useDefaultProfile?: boolean;
 }
 
 export const Image = ({
@@ -11,48 +11,31 @@ export const Image = ({
   alt,
   fallbackSrc,
   useDefaultProfile = false,
-  className = "",
+  className = '',
   onLoad,
   ...props
 }: ImageProps) => {
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(false);
 
   const handleError = () => {
-    setError(true)
-  }
+    setError(true);
+  };
 
   const handleLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
     if (onLoad) {
-      onLoad(e)
+      onLoad(e);
     }
-  }
+  };
 
   if (error) {
     if (useDefaultProfile) {
-      return <Profile className={`text-gray-300 ${className}`} />
+      return <Profile className={`text-gray-300 ${className}`} />;
     }
     if (fallbackSrc) {
-      return (
-        <img
-          {...props}
-          src={fallbackSrc}
-          alt={alt}
-          className={className}
-          onLoad={handleLoad}
-        />
-      )
+      return <img {...props} src={fallbackSrc} alt={alt} className={className} onLoad={handleLoad} />;
     }
-    return <div className={`bg-gray-100 ${className}`} />
+    return <div className={`bg-gray-100 ${className}`} />;
   }
 
-  return (
-    <img
-      {...props}
-      src={src}
-      alt={alt}
-      onError={handleError}
-      onLoad={handleLoad}
-      className={className}
-    />
-  )
-}
+  return <img {...props} src={src} alt={alt} onError={handleError} onLoad={handleLoad} className={className} />;
+};

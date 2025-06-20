@@ -1,108 +1,107 @@
-import { refreshAccessToken } from "@apis/auth.api"
-import { QueryClient } from "@tanstack/react-query"
-import axios from "axios"
-import { ERROR_CODES, getErrorMessage } from "../types/Error"
+import { refreshAccessToken } from '@/apis/auth.api';
+import { QueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import { ERROR_CODES, getErrorMessage } from '../types/Error';
 
 // localStorage 토큰 관리 유틸리티 함수
-const TOKEN_KEY = "access_token"
+const TOKEN_KEY = 'access_token';
 
 export const saveAccessToken = (token: string) => {
   try {
-    localStorage.setItem(TOKEN_KEY, token)
+    localStorage.setItem(TOKEN_KEY, token);
   } catch (error) {
-    console.error("토큰 저장 중 오류 발생:", error)
+    console.error('토큰 저장 중 오류 발생:', error);
   }
-}
+};
 
 export const removeAccessToken = () => {
   try {
-    localStorage.removeItem(TOKEN_KEY)
+    localStorage.removeItem(TOKEN_KEY);
   } catch (error) {
-    console.error("토큰 삭제 중 오류 발생:", error)
+    console.error('토큰 삭제 중 오류 발생:', error);
   }
-}
+};
 
 interface ApiResponse<T> {
-  resultCode: string
-  resultMessage: string
-  resultCount: string
-  body: T
+  resultCode: string;
+  resultMessage: string;
+  resultCount: string;
+  body: T;
 }
 
 // 전역 에러 메시지 표시를 위한 함수
-let globalShowToast: ((message: string) => void) | null = null
+let globalShowToast: ((message: string) => void) | null = null;
 
 export const setGlobalShowToast = (showToast: (message: string) => void) => {
-  globalShowToast = showToast
-}
+  globalShowToast = showToast;
+};
 
 const showErrorMessage = (message: string, errorData?: unknown) => {
   if (globalShowToast) {
-    globalShowToast(message)
+    globalShowToast(message);
   }
 
   // 웹 환경에서 로깅
-  console.error(message, errorData)
-}
+  console.error(message, errorData);
+};
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: false,
+      retry: false
     },
     mutations: {
-      retry: false,
-    },
-  },
-})
+      retry: false
+    }
+  }
+});
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 30000, // 30초 타임아웃
-  timeoutErrorMessage: "요청 시간이 초과되었습니다. 다시 시도해주세요.",
-  withCredentials: true,
-})
+  timeoutErrorMessage: '요청 시간이 초과되었습니다. 다시 시도해주세요.',
+  withCredentials: true
+});
 
 axiosClient.interceptors.request.use(async (config) => {
   // 요청 전에 기본 설정만 적용
-  return config
-})
+  return config;
+});
 
-let isRefreshing = false
+let isRefreshing = false;
 
 axiosClient.interceptors.response.use(
   async (response) => {
-    const data = response.data as ApiResponse<unknown>
+    const data = response.data as ApiResponse<unknown>;
 
     if (data.resultCode === ERROR_CODES.TOKEN_EXPIRED) {
       if (isRefreshing) {
-        return response
+        return response;
       }
 
-      isRefreshing = true
+      isRefreshing = true;
 
-      const newAccessToken = await refreshAccessToken()
+      const newAccessToken = await refreshAccessToken();
 
-      isRefreshing = false
+      isRefreshing = false;
       // 토큰 갱신에 성공한 경우 사용자 정보 다시 요청
       if (newAccessToken) {
-        response.config.headers.Authorization = `Bearer ${newAccessToken}`
-        axiosClient.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`
+        response.config.headers.Authorization = `Bearer ${newAccessToken}`;
+        axiosClient.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
 
-        return axios(response.config)
+        return axios(response.config);
       }
 
-      return Promise.reject(new Error("토큰 갱신 후에도 데이터가 없습니다"))
+      return Promise.reject(new Error('토큰 갱신 후에도 데이터가 없습니다'));
     }
 
-    return response
+    return response;
   },
   async (error) => {
-    const errorCode = error.response?.data?.resultCode || ""
-    const errorMessage =
-      error.response?.data?.resultMessage || getErrorMessage(errorCode)
+    const errorCode = error.response?.data?.resultCode || '';
+    const errorMessage = error.response?.data?.resultMessage || getErrorMessage(errorCode);
 
-    const originalRequest = error.config
+    const originalRequest = error.config;
 
     // 에러 메시지 표시
     if (error.response) {
@@ -111,25 +110,25 @@ axiosClient.interceptors.response.use(
         code: errorCode,
         response: error.response.data,
         status: error.response.status,
-        url: originalRequest?.url,
-      })
+        url: originalRequest?.url
+      });
     } else if (error.request) {
       // 요청은 보냈지만 응답이 없는 경우
-      showErrorMessage("서버와의 통신에 실패했습니다", {
+      showErrorMessage('서버와의 통신에 실패했습니다', {
         request: error.request,
         url: originalRequest?.url,
-        method: originalRequest?.method,
-      })
+        method: originalRequest?.method
+      });
     } else {
       // 요청 자체를 보내지 못한 경우
-      showErrorMessage("네트워크 연결을 확인해주세요", {
+      showErrorMessage('네트워크 연결을 확인해주세요', {
         error: error.message,
-        config: originalRequest,
-      })
+        config: originalRequest
+      });
     }
 
-    return Promise.reject(error)
-  },
-)
+    return Promise.reject(error);
+  }
+);
 
-export { axiosClient, queryClient }
+export { axiosClient, queryClient };

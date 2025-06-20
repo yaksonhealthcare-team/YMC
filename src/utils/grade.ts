@@ -5,14 +5,14 @@
  */
 export const getGradeLabel = (grade: string): string => {
   switch (grade) {
-    case "H":
-      return "만족"
-    case "M":
-      return "보통"
-    case "L":
-      return "불만족"
+    case 'H':
+      return '만족';
+    case 'M':
+      return '보통';
+    case 'L':
+      return '불만족';
     default:
-      console.warn(`Invalid grade code: ${grade}`)
-      return ""
+      console.warn(`Invalid grade code: ${grade}`);
+      return '';
   }
-}
+};
