@@ -1,33 +1,23 @@
-import { useEffect, useState } from "react"
-import { fetchCartCount } from "../../apis/cart.api.ts"
-import { useNavigate } from "react-router-dom"
+import { fetchCartCount } from '@/apis/cart.api';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const CartIcon = () => {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchCartCount().then((data) => setCount(data))
-  }, [])
+    fetchCartCount().then((data) => setCount(data));
+  }, []);
 
   const moveToCartPage = () => {
-    navigate("/cart")
-  }
+    navigate('/cart');
+  };
 
   return (
-    <button
-      className="relative inline-block  rounded"
-      onClick={moveToCartPage}
-      aria-label="장바구니"
-    >
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+    <button className="relative inline-block  rounded" onClick={moveToCartPage} aria-label="장바구니">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           d="M8.40002 6.5H15.6C19 6.5 19.34 8.09 19.57 10.03L20.47 17.53C20.76 19.99 20 22 16.5 22H7.51003C4.00003 22 3.24002 19.99 3.54002 17.53L4.44003 10.03C4.66003 8.09 5.00002 6.5 8.40002 6.5Z"
           stroke="currentColor"
@@ -52,11 +42,11 @@ const CartIcon = () => {
       </svg>
       {count > 0 && (
         <div className="absolute -top-1 -right-1 w-4 h-4 flex items-center justify-center bg-primary text-white text-[10px] font-sb rounded-full">
-          {count > 99 ? "99+" : count}
+          {count > 99 ? '99+' : count}
         </div>
       )}
     </button>
-  )
-}
+  );
+};
 
-export default CartIcon
+export default CartIcon;

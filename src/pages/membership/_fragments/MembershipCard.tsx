@@ -1,35 +1,31 @@
-import { MembershipItem } from "../../../types/Membership"
-import ClockIcon from "@assets/icons/ClockIcon.svg?react"
-import { Tag } from "@components/Tag"
-import { formatPrice, parsePrice } from "../../../utils/format"
+import ClockIcon from '@/assets/icons/ClockIcon.svg?react';
+import { Tag } from '@/components/Tag';
+import { MembershipItem } from '@/types/Membership';
+import { formatPrice, parsePrice } from '@/utils/format';
 
 interface MembershipCardProps {
-  membership: MembershipItem
-  onClick?: () => void
+  membership: MembershipItem;
+  onClick?: () => void;
 }
 
-export const MembershipCard = ({
-  membership,
-  onClick,
-}: MembershipCardProps) => {
-  const firstOption = membership.options?.[0]
+export const MembershipCard = ({ membership, onClick }: MembershipCardProps) => {
+  const firstOption = membership.options?.[0];
   const hasDiscount =
     firstOption?.original_price &&
     firstOption?.ss_price &&
-    parsePrice(firstOption.original_price) > parsePrice(firstOption.ss_price)
+    parsePrice(firstOption.original_price) > parsePrice(firstOption.ss_price);
 
   // 할인율 계산
   const discountRate = hasDiscount
     ? Math.floor(
-        ((parsePrice(firstOption!.original_price) -
-          parsePrice(firstOption!.ss_price)) /
+        ((parsePrice(firstOption!.original_price) - parsePrice(firstOption!.ss_price)) /
           parsePrice(firstOption!.original_price)) *
-          100,
+          100
       )
-    : 0
+    : 0;
 
   // 실제 할인이 있는지 확인 (0%가 아닌지)
-  const hasActualDiscount = hasDiscount && discountRate > 0
+  const hasActualDiscount = hasDiscount && discountRate > 0;
 
   return (
     <div
@@ -38,11 +34,8 @@ export const MembershipCard = ({
     >
       <div className="flex flex-col gap-[4px]">
         <div className="flex justify-between items-center">
-          <Tag
-            type="rect"
-            title={membership.s_type?.replace("회원권", "").trim()}
-          />
-          {membership.s_time !== "0" && (
+          <Tag type="rect" title={membership.s_type?.replace('회원권', '').trim()} />
+          {membership.s_time !== '0' && (
             <div className="flex items-center gap-1 text-gray-500">
               <ClockIcon className="w-4 h-4 text-[#F37165]" />
               <span className="text-sm">{membership.s_time}분 소요</span>
@@ -52,17 +45,15 @@ export const MembershipCard = ({
         <span
           className="text-[14px] text-gray-700 font-normal"
           style={{
-            fontFamily: "Pretendard",
-            lineHeight: "148%",
-            letterSpacing: "-0.07px",
+            fontFamily: 'Pretendard',
+            lineHeight: '148%',
+            letterSpacing: '-0.07px'
           }}
         >
           {membership.brand_name}
         </span>
         <div className="flex justify-between items-start gap-4">
-          <h3 className="text-gray-700 text-base font-semibold">
-            {membership.s_name}
-          </h3>
+          <h3 className="text-gray-700 text-base font-semibold">{membership.s_name}</h3>
         </div>
       </div>
 
@@ -75,23 +66,15 @@ export const MembershipCard = ({
               </span>
             </div>
           )}
-          <div
-            className={`flex ${hasActualDiscount ? "justify-between" : "justify-end"} items-center mt-1`}
-          >
-            {hasActualDiscount && (
-              <span className="text-primary font-b text-18px">
-                {discountRate}%
-              </span>
-            )}
+          <div className={`flex ${hasActualDiscount ? 'justify-between' : 'justify-end'} items-center mt-1`}>
+            {hasActualDiscount && <span className="text-primary font-b text-18px">{discountRate}%</span>}
             <div className="flex items-baseline gap-1">
-              <span className="text-gray-900 font-b text-18px">
-                {formatPrice(firstOption.ss_price)}원
-              </span>
+              <span className="text-gray-900 font-b text-18px">{formatPrice(firstOption.ss_price)}원</span>
               <span className="text-gray-900 font-r text-12px">부터~</span>
             </div>
           </div>
         </div>
       )}
     </div>
-  )
-}
+  );
+};

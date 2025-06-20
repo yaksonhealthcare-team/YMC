@@ -1,78 +1,68 @@
-import { useNavigate } from "react-router-dom"
-import { useEvents } from "queries/useEventQueries"
-import { Event, Tab } from "types/Event"
-import { useState, useLayoutEffect } from "react"
-import { EmptyCard } from "@components/EmptyCard"
-import LoadingIndicator from "@components/LoadingIndicator.tsx"
-import Header from "@components/Header"
-import { useLayout } from "../../contexts/LayoutContext"
-import { Image } from "@components/common/Image"
-import clsx from "clsx"
+import { Image } from '@/components/common/Image';
+import { EmptyCard } from '@/components/EmptyCard';
+import Header from '@/components/Header';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useEvents } from '@/queries/useEventQueries';
+import { Event, Tab } from '@/types/Event';
+import clsx from 'clsx';
+import { useLayoutEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const EventPage = () => {
-  const navigate = useNavigate()
-  const [selectedTab, setSelectedTab] = useState<Tab>("ALL")
-  const { data: events, isLoading } = useEvents(selectedTab)
-  const { setNavigation, setHeader } = useLayout()
+  const navigate = useNavigate();
+  const [selectedTab, setSelectedTab] = useState<Tab>('ALL');
+  const { data: events, isLoading } = useEvents(selectedTab);
+  const { setNavigation, setHeader } = useLayout();
 
   useLayoutEffect(() => {
-    window.scrollTo(0, 0)
+    window.scrollTo(0, 0);
     setTimeout(() => {
-      window.scrollTo(0, 0)
-    }, 100)
+      window.scrollTo(0, 0);
+    }, 100);
     setHeader({
-      backgroundColor: "bg-white",
-    })
-    setNavigation({ display: true })
-  }, [setNavigation, setHeader])
+      backgroundColor: 'bg-white'
+    });
+    setNavigation({ display: true });
+  }, [setNavigation, setHeader]);
 
   return (
     <div className="pb-[82px]">
       <div className="fixed top-0 left-0 right-0 z-10 bg-white">
-        <Header
-          type="back_title"
-          title="이벤트"
-          onClickBack={() => navigate(-1)}
-        />
+        <Header type="back_title" title="이벤트" onClickBack={() => navigate(-1)} />
         <div className="flex px-5">
           <button
-            onClick={() => setSelectedTab("ALL")}
+            onClick={() => setSelectedTab('ALL')}
             className={clsx(
-              "flex-1 py-3 font-sb text-16px relative",
-              selectedTab === "ALL" ? "text-primary" : "text-gray-700",
+              'flex-1 py-3 font-sb text-16px relative',
+              selectedTab === 'ALL' ? 'text-primary' : 'text-gray-700'
             )}
             aria-label="전체 이벤트"
           >
             전체
-            {selectedTab === "ALL" && (
-              <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary" />
-            )}
+            {selectedTab === 'ALL' && <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary" />}
           </button>
           <button
-            onClick={() => setSelectedTab("ING")}
+            onClick={() => setSelectedTab('ING')}
             className={clsx(
-              "flex-1 py-3 font-sb text-16px relative",
-              selectedTab === "ING" ? "text-primary" : "text-gray-700",
+              'flex-1 py-3 font-sb text-16px relative',
+              selectedTab === 'ING' ? 'text-primary' : 'text-gray-700'
             )}
             aria-label="진행중인 이벤트"
           >
             진행중
-            {selectedTab === "ING" && (
-              <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary" />
-            )}
+            {selectedTab === 'ING' && <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary" />}
           </button>
           <button
-            onClick={() => setSelectedTab("END")}
+            onClick={() => setSelectedTab('END')}
             className={clsx(
-              "flex-1 py-3 font-sb text-16px relative",
-              selectedTab === "END" ? "text-primary" : "text-gray-700",
+              'flex-1 py-3 font-sb text-16px relative',
+              selectedTab === 'END' ? 'text-primary' : 'text-gray-700'
             )}
             aria-label="종료된 이벤트"
           >
             종료
-            {selectedTab === "END" && (
-              <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary" />
-            )}
+            {selectedTab === 'END' && <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary" />}
           </button>
         </div>
       </div>
@@ -83,11 +73,7 @@ const EventPage = () => {
         ) : events && events.length > 0 ? (
           <div className="flex flex-col divide-y divide-gray-100">
             {events.map((event: Event) => (
-              <div
-                key={event.code}
-                className="bg-white p-5"
-                onClick={() => navigate(`/event/${event.code}`)}
-              >
+              <div key={event.code} className="bg-white p-5" onClick={() => navigate(`/event/${event.code}`)}>
                 <div className="flex gap-4">
                   {event.files.length > 0 && (
                     <Image
@@ -97,11 +83,9 @@ const EventPage = () => {
                     />
                   )}
                   <div className="flex flex-col flex-1">
-                    <span className="font-b text-16px text-gray-900 line-clamp-2">
-                      {event.title}
-                    </span>
+                    <span className="font-b text-16px text-gray-900 line-clamp-2">{event.title}</span>
                     <div className="flex items-center gap-2 mt-2">
-                      {event.status === "END" && (
+                      {event.status === 'END' && (
                         <span className="px-2 h-5 rounded text-12px font-m bg-[#ECECEC] text-[#9E9E9E] inline-flex items-center justify-center leading-5">
                           종료
                         </span>
@@ -116,13 +100,11 @@ const EventPage = () => {
             ))}
           </div>
         ) : (
-          <EmptyCard
-            title={`진행중인 이벤트가 없어요.\n새로운 이벤트로 곧 찾아뵐게요.`}
-          />
+          <EmptyCard title={`진행중인 이벤트가 없어요.\n새로운 이벤트로 곧 찾아뵐게요.`} />
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default EventPage
+export default EventPage;

@@ -1,14 +1,10 @@
-import {
-  Reservation,
-  ReservationResponse,
-  ReservationType,
-} from "../types/Reservation"
+import { Reservation, ReservationResponse, ReservationType } from '@/types/Reservation';
 
 const typeMap: Record<string, ReservationType> = {
-  "1": ReservationType.MANAGEMENT,
-  "2": ReservationType.CONSULTATION,
-  "3": ReservationType.OTHER,
-}
+  '1': ReservationType.MANAGEMENT,
+  '2': ReservationType.CONSULTATION,
+  '3': ReservationType.OTHER
+};
 
 export const ReservationMapper = {
   toReservation: (dto: ReservationResponse): Reservation => {
@@ -24,11 +20,11 @@ export const ReservationMapper = {
       duration: dto.r_take_time,
       type: typeMap[dto.r_gubun] || ReservationType.OTHER,
       reviewPositiveYn: dto.review_positive_yn,
-      branchId: dto.b_idx,
-    }
+      branchId: dto.b_idx
+    };
   },
 
   toReservationEntities: (dtos: ReservationResponse[]): Reservation[] => {
-    return dtos.map(ReservationMapper.toReservation)
-  },
-}
+    return dtos.map(ReservationMapper.toReservation);
+  }
+};

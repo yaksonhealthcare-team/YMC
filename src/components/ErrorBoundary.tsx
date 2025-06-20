@@ -1,32 +1,32 @@
-import { Component, ErrorInfo, ReactNode } from "react"
-import { Button } from "./Button"
+import { Component, ErrorInfo, ReactNode } from 'react';
+import { Button } from './Button';
 
 interface Props {
-  children: ReactNode
+  children: ReactNode;
 }
 
 interface State {
-  hasError: boolean
-  error: Error | null
+  hasError: boolean;
+  error: Error | null;
 }
 
 class ErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false,
-    error: null,
-  }
+    error: null
+  };
 
   public static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error }
+    return { hasError: true, error };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("Uncaught error:", error, errorInfo)
+    console.error('Uncaught error:', error, errorInfo);
   }
 
   private handleReload = () => {
-    window.location.reload()
-  }
+    window.location.reload();
+  };
 
   public render() {
     if (this.state.hasError) {
@@ -35,19 +35,17 @@ class ErrorBoundary extends Component<Props, State> {
           <h1 className="text-2xl font-bold mb-4">죄송합니다</h1>
           <p className="text-gray-600 mb-6">예상치 못한 오류가 발생했습니다.</p>
           <div className="flex gap-2">
-            <Button onClick={() => (window.location.href = "/")}>
-              홈으로 이동
-            </Button>
+            <Button onClick={() => (window.location.href = '/')}>홈으로 이동</Button>
             <Button variantType="line" onClick={this.handleReload}>
               페이지 새로고침
             </Button>
           </div>
         </div>
-      )
+      );
     }
 
-    return this.props.children
+    return this.props.children;
   }
 }
 
-export default ErrorBoundary
+export default ErrorBoundary;

@@ -1,10 +1,10 @@
 import { Button } from '@/components/Button';
 import { useLayout } from '@/contexts/LayoutContext';
 import { useOverlay } from '@/contexts/ModalContext';
+import { useWithdrawalGuideMessage } from '@/hooks/useGuideMessages';
 import { useWithdrawal } from '@/queries/useAuthQueries';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useWithdrawalGuideMessage } from '../../hooks/useGuideMessages';
 
 const WithdrawalPage = () => {
   const { setHeader, setNavigation } = useLayout();

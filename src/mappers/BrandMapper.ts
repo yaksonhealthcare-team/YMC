@@ -1,9 +1,4 @@
-import {
-  Brand,
-  BrandDetail,
-  BrandDetailResponse,
-  BrandResponse,
-} from "../types/Brand.ts"
+import { Brand, BrandDetail, BrandDetailResponse, BrandResponse } from '@/types/Brand';
 
 export class BrandMapper {
   static toEntity(dto: BrandResponse): Brand {
@@ -11,14 +6,14 @@ export class BrandMapper {
       code: dto.brand_code,
       name: dto.brand_name,
       imageUrl: dto.brand_pic,
-      displayYn: dto.brand_display_yn === "Y",
+      displayYn: dto.brand_display_yn === 'Y',
       csbIdx: dto.csb_idx,
-      prior: dto.prior,
-    }
+      prior: dto.prior
+    };
   }
 
   static toEntities(dtos: BrandResponse[]): Brand[] {
-    return dtos.map(this.toEntity)
+    return dtos.map(this.toEntity);
   }
 }
 
@@ -26,7 +21,7 @@ export class BrandDetailMapper {
   static toEntity(dto: BrandDetailResponse): BrandDetail {
     return {
       descriptionImageUrls: dto.brand_pic,
-      logoImageUrl: dto.thumbnail,
-    }
+      logoImageUrl: dto.thumbnail
+    };
   }
 }

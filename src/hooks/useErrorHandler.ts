@@ -1,26 +1,25 @@
-import { AxiosError } from "axios"
-import { useOverlay } from "../contexts/ModalContext"
-import { getErrorMessage } from "../types/Error"
+import { useOverlay } from '@/contexts/ModalContext';
+import { getErrorMessage } from '@/types/Error';
+import { AxiosError } from 'axios';
 
 export const useErrorHandler = () => {
-  const { showToast } = useOverlay()
+  const { showToast } = useOverlay();
 
   const handleError = (error: unknown, defaultMessage?: string) => {
     if (error instanceof AxiosError) {
-      const errorCode = error.response?.data?.resultCode || ""
-      const errorMessage =
-        error.response?.data?.resultMessage || getErrorMessage(errorCode)
-      showToast(errorMessage)
-      return
+      const errorCode = error.response?.data?.resultCode || '';
+      const errorMessage = error.response?.data?.resultMessage || getErrorMessage(errorCode);
+      showToast(errorMessage);
+      return;
     }
 
     if (error instanceof Error) {
-      showToast(error.message)
-      return
+      showToast(error.message);
+      return;
     }
 
-    showToast(defaultMessage || "알 수 없는 오류가 발생했습니다")
-  }
+    showToast(defaultMessage || '알 수 없는 오류가 발생했습니다');
+  };
 
-  return { handleError }
-}
+  return { handleError };
+};

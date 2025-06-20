@@ -1,31 +1,31 @@
-import { Button } from "@components/Button"
-import LoadingIndicator from "@components/LoadingIndicator"
-import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { useAuth } from "../../contexts/AuthContext"
-import { useLayout } from "../../contexts/LayoutContext.tsx"
-import MyPageBranchInfo from "./_fragments/MyPageBranchInfo"
-import MyPageFooter from "./_fragments/MyPageFooter"
-import MyPageMenu from "./_fragments/MyPageMenu"
-import MyPageNotice from "./_fragments/MyPageNotice"
-import MyPagePointMembership from "./_fragments/MyPagePointMembership"
-import MyPageProfile from "./_fragments/MyPageProfile"
+import { Button } from '@/components/Button';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useAuth } from '@/contexts/AuthContext';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import MyPageBranchInfo from './_fragments/MyPageBranchInfo';
+import MyPageFooter from './_fragments/MyPageFooter';
+import MyPageMenu from './_fragments/MyPageMenu';
+import MyPageNotice from './_fragments/MyPageNotice';
+import MyPagePointMembership from './_fragments/MyPagePointMembership';
+import MyPageProfile from './_fragments/MyPageProfile';
 
 const MyPage = () => {
-  const navigate = useNavigate()
-  const { setHeader, setNavigation } = useLayout()
-  const { isLoading } = useAuth()
+  const navigate = useNavigate();
+  const { setHeader, setNavigation } = useLayout();
+  const { isLoading } = useAuth();
 
   useEffect(() => {
     setHeader({
       display: false,
-      backgroundColor: "bg-system-bg",
-    })
-    setNavigation({ display: true })
-  }, [])
+      backgroundColor: 'bg-system-bg'
+    });
+    setNavigation({ display: true });
+  }, []);
 
   if (isLoading) {
-    return <LoadingIndicator className="min-h-screen" />
+    return <LoadingIndicator className="min-h-screen" />;
   }
 
   return (
@@ -37,12 +37,7 @@ const MyPage = () => {
           <div className="space-y-5">
             <MyPageBranchInfo />
             <MyPagePointMembership />
-            <Button
-              variantType="primary"
-              sizeType="m"
-              onClick={() => navigate("/profile")}
-              className="w-full"
-            >
+            <Button variantType="primary" sizeType="m" onClick={() => navigate('/profile')} className="w-full">
               프로필 수정
             </Button>
           </div>
@@ -51,7 +46,7 @@ const MyPage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default MyPage
+export default MyPage;

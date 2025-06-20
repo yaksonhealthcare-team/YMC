@@ -1,11 +1,11 @@
-import { Button } from "@components/Button"
+import { Button } from '@/components/Button';
 
 interface QuestionnaireNavigationProps {
-  currentQuestionNumber: number
-  totalQuestions: number
-  isCurrentValid: boolean
-  onPrev: () => void
-  onNext: () => void
+  currentQuestionNumber: number;
+  totalQuestions: number;
+  isCurrentValid: boolean;
+  onPrev: () => void;
+  onNext: () => void;
 }
 
 export const QuestionnaireNavigation = ({
@@ -13,7 +13,7 @@ export const QuestionnaireNavigation = ({
   totalQuestions,
   isCurrentValid,
   onPrev,
-  onNext,
+  onNext
 }: QuestionnaireNavigationProps) => {
   return (
     <div className="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-gray-100 p-5">
@@ -26,7 +26,7 @@ export const QuestionnaireNavigation = ({
             <div
               className="bg-primary h-1 rounded-full transition-all duration-300"
               style={{
-                width: `${(currentQuestionNumber / totalQuestions) * 100}%`,
+                width: `${(currentQuestionNumber / totalQuestions) * 100}%`
               }}
             />
           </div>
@@ -42,16 +42,10 @@ export const QuestionnaireNavigation = ({
         >
           이전
         </Button>
-        <Button
-          variantType="primary"
-          sizeType="l"
-          onClick={onNext}
-          className="flex-1"
-          disabled={!isCurrentValid}
-        >
-          {currentQuestionNumber === totalQuestions ? "완료" : "다음"}
+        <Button variantType="primary" sizeType="l" onClick={onNext} className="flex-1" disabled={!isCurrentValid}>
+          {currentQuestionNumber === totalQuestions ? '완료' : '다음'}
         </Button>
       </div>
     </div>
-  )
-}
+  );
+};

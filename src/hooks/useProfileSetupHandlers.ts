@@ -1,56 +1,54 @@
-import { useState } from "react"
-import { Address } from "react-daum-postcode/lib/loadPostcode"
-import { UserSignup } from "../types/User"
-import { useSignup } from "../contexts/SignupContext"
+import { useSignup } from '@/contexts/SignupContext';
+import { UserSignup } from '@/types/User';
+import { useState } from 'react';
+import { Address } from 'react-daum-postcode/lib/loadPostcode';
 
 export const useProfileSetupHandlers = () => {
-  const { signupData, setSignupData } = useSignup()
-  const [isPostcodeOpen, setIsPostcodeOpen] = useState(false)
+  const { signupData, setSignupData } = useSignup();
+  const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.[0]) {
-      const file = event.target.files[0]
-      const imageUrl = URL.createObjectURL(file)
+      const file = event.target.files[0];
+      const imageUrl = URL.createObjectURL(file);
       setSignupData((prev) => ({
         ...prev,
-        profileUrl: imageUrl,
-      }))
+        profileUrl: imageUrl
+      }));
     }
-  }
+  };
 
   const handleImageDelete = () => {
     setSignupData((prev) => ({
       ...prev,
-      profileUrl: undefined,
-    }))
-  }
+      profileUrl: undefined
+    }));
+  };
 
   const handleCompletePostcode = (address: Address) => {
     setSignupData({
       ...signupData,
       postCode: address.zonecode,
-      address1: address.address,
-    })
-    setIsPostcodeOpen(false)
-  }
+      address1: address.address
+    });
+    setIsPostcodeOpen(false);
+  };
 
   const toggleBrandSelection = (code: string) => {
     setSignupData((prev: UserSignup) => {
-      const brandCodes = prev.brandCodes || []
-      const isSelected = brandCodes.includes(code)
+      const brandCodes = prev.brandCodes || [];
+      const isSelected = brandCodes.includes(code);
 
-      const updatedBrands = isSelected
-        ? brandCodes.filter((brandCode) => brandCode !== code)
-        : [...brandCodes, code]
+      const updatedBrands = isSelected ? brandCodes.filter((brandCode) => brandCode !== code) : [...brandCodes, code];
 
-      return { ...prev, brandCodes: updatedBrands }
-    })
-  }
+      return { ...prev, brandCodes: updatedBrands };
+    });
+  };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newName = e.target.value
-    setSignupData({ ...signupData, name: newName })
-  }
+    const newName = e.target.value;
+    setSignupData({ ...signupData, name: newName });
+  };
 
   return {
     isPostcodeOpen,
@@ -59,6 +57,6 @@ export const useProfileSetupHandlers = () => {
     handleImageDelete,
     handleCompletePostcode,
     toggleBrandSelection,
-    handleNameChange,
-  }
-}
+    handleNameChange
+  };
+};

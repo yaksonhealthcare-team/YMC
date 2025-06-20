@@ -1,7 +1,7 @@
-import { createQueryKeyFactory } from "../queryKeyFactory"
+import { createQueryKeyFactory } from '../queryKeyFactory';
 
-const cartsKeys = createQueryKeyFactory("carts")
+const cartsKeys = createQueryKeyFactory('carts');
 
 export const carts = {
-  all: cartsKeys.all(),
-} as const
+  all: cartsKeys.all()
+} as const;

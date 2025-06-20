@@ -1,13 +1,13 @@
-import clsx from "clsx"
+import clsx from 'clsx';
 
 interface CustomInputButtonProps {
-  label?: string
-  value?: string
-  placeholder?: string
-  iconRight?: React.ReactNode
-  onClick?: () => void
-  className?: string
-  disabled?: boolean
+  label?: string;
+  value?: string;
+  placeholder?: string;
+  iconRight?: React.ReactNode;
+  onClick?: () => void;
+  className?: string;
+  disabled?: boolean;
 }
 
 const CustomInputButton = ({
@@ -17,7 +17,7 @@ const CustomInputButton = ({
   iconRight,
   onClick,
   className,
-  disabled = false,
+  disabled = false
 }: CustomInputButtonProps) => {
   return (
     <div>
@@ -27,9 +27,9 @@ const CustomInputButton = ({
         onClick={onClick}
         disabled={disabled}
         className={clsx(
-          "w-full bg-white border !border-gray-100 rounded-xl h-[56px] px-[14px] flex items-center justify-between cursor-pointer",
-          disabled && "opacity-70 cursor-not-allowed",
-          className,
+          'w-full bg-white border !border-gray-100 rounded-xl h-[56px] px-[14px] flex items-center justify-between cursor-pointer',
+          disabled && 'opacity-70 cursor-not-allowed',
+          className
         )}
       >
         <span className="flex-1 text-left text-gray-700">
@@ -38,7 +38,7 @@ const CustomInputButton = ({
         {iconRight && <span>{iconRight}</span>}
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default CustomInputButton
+export default CustomInputButton;

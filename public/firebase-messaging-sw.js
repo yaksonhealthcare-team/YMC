@@ -7,7 +7,7 @@ firebase.initializeApp({
   projectId: 'therapist-dd196',
   storageBucket: 'therapist-dd196.firebasestorage.app',
   messagingSenderId: '39001505358',
-  appId: '1:39001505358:web:a68d1851390d2e766d4d1f',
+  appId: '1:39001505358:web:a68d1851390d2e766d4d1f'
 });
 
 const messaging = firebase.messaging();
@@ -18,8 +18,8 @@ messaging.onBackgroundMessage((payload) => {
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
-    icon: '/favicon.ico',
+    icon: '/favicon.ico'
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
-}); 
+});

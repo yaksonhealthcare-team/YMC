@@ -1,153 +1,137 @@
-import { useEffect, useState, useRef } from "react"
-import { useLayout } from "../../../contexts/LayoutContext.tsx"
-import CloseIcon from "@assets/icons/CloseIcon.svg?react"
-import CrosshairIcon from "@assets/icons/CrosshairIcon.svg?react"
-import { useLocation, useNavigate } from "react-router-dom"
-import { SearchField } from "@components/SearchField.tsx"
-import SavedLocationList from "./SavedLocationList.tsx"
-import LocationSearchResultList from "./LocationSearchResultList.tsx"
-import {
-  useAddressBookmarks,
-  useAddressSearch,
-} from "../../../queries/useAddressQueries.ts"
-import { useBranchLocationSelect } from "../../../hooks/useBranchLocationSelect"
-import { useGeolocation } from "../../../hooks/useGeolocation.tsx"
-import { useOverlay } from "../../../contexts/ModalContext"
-import { Divider } from "@mui/material"
-import { useDebounce } from "../../../hooks/useDebounce"
+import CloseIcon from '@/assets/icons/CloseIcon.svg?react';
+import CrosshairIcon from '@/assets/icons/CrosshairIcon.svg?react';
+import { SearchField } from '@/components/SearchField';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useOverlay } from '@/contexts/ModalContext';
+import { useBranchLocationSelect } from '@/hooks/useBranchLocationSelect';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useGeolocation } from '@/hooks/useGeolocation';
+import { useAddressBookmarks, useAddressSearch } from '@/queries/useAddressQueries';
+import { Divider } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import LocationSearchResultList from './LocationSearchResultList';
+import SavedLocationList from './SavedLocationList';
 
-const LocationSettingsHeader = ({
-  onClickBack,
-}: {
-  onClickBack: () => void
-}) => (
-  <div className={"flex justify-between items-center bg-white px-5 py-4 h-12"}>
+const LocationSettingsHeader = ({ onClickBack }: { onClickBack: () => void }) => (
+  <div className={'flex justify-between items-center bg-white px-5 py-4 h-12'}>
     <button onClick={onClickBack}>
-      <CloseIcon className={"w-5 h-5"} />
+      <CloseIcon className={'w-5 h-5'} />
     </button>
-    <p className={"font-sb text-16px"}>{"위치 설정"}</p>
-    <div className={"w-5"} />
+    <p className={'font-sb text-16px'}>{'위치 설정'}</p>
+    <div className={'w-5'} />
   </div>
-)
+);
 
 const LocationSettingsSearchBar = ({
   text,
   setText,
   onClickCurrentLocation,
   onFocus,
-  onBlur,
+  onBlur
 }: {
-  text: string
-  setText: (text: string) => void
-  onClickCurrentLocation: () => void
-  onFocus: () => void
-  onBlur: () => void
+  text: string;
+  setText: (text: string) => void;
+  onClickCurrentLocation: () => void;
+  onFocus: () => void;
+  onBlur: () => void;
 }) => {
   return (
-    <div className={"flex flex-col gap-6 px-5 pt-[1px]"}>
+    <div className={'flex flex-col gap-6 px-5 pt-[1px]'}>
       <SearchField
         placeholder="도로명, 건물명, 지번으로 검색하세요."
         value={text}
         onChange={(e) => setText(e.target.value)}
-        onClear={text.length > 0 ? () => setText("") : undefined}
+        onClear={text.length > 0 ? () => setText('') : undefined}
         onFocus={onFocus}
         onBlur={onBlur}
       />
-      <button
-        className={"flex justify-center items-center gap-2"}
-        onClick={onClickCurrentLocation}
-      >
-        <CrosshairIcon className={"text-primary"} />
-        <p className={"font-sb text-14px"}>{"현재 위치로 주소 설정"}</p>
+      <button className={'flex justify-center items-center gap-2'} onClick={onClickCurrentLocation}>
+        <CrosshairIcon className={'text-primary'} />
+        <p className={'font-sb text-14px'}>{'현재 위치로 주소 설정'}</p>
       </button>
     </div>
-  )
-}
+  );
+};
 
 const LocationSettings = () => {
-  const { setHeader, setNavigation } = useLayout()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const [address, setAddress] = useState("")
-  const [isSearchFocused, setIsSearchFocused] = useState(false)
-  const searchTimeoutRef = useRef<number | null>(null)
-  const { setLocation } = useBranchLocationSelect()
-  const {
-    location: currentLocation,
-    error: locationError,
-    loading: locationLoading,
-  } = useGeolocation()
-  const { showToast } = useOverlay()
+  const { setHeader, setNavigation } = useLayout();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [address, setAddress] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const searchTimeoutRef = useRef<number | null>(null);
+  const { setLocation } = useBranchLocationSelect();
+  const { location: currentLocation, error: locationError, loading: locationLoading } = useGeolocation();
+  const { showToast } = useOverlay();
 
-  const debouncedAddress = useDebounce(address, 300)
-  const { data: searchResults = [] } = useAddressSearch(debouncedAddress)
-  useAddressBookmarks()
+  const debouncedAddress = useDebounce(address, 300);
+  const { data: searchResults = [] } = useAddressSearch(debouncedAddress);
+  useAddressBookmarks();
 
   const handleCloseButtonClicked = () => {
-    if (location.state?.from === "/branch") {
-      navigate(-1)
+    if (location.state?.from === '/branch') {
+      navigate(-1);
     } else {
-      navigate("/branch")
+      navigate('/branch');
     }
-  }
+  };
 
   useEffect(() => {
     setHeader({
       display: true,
-      component: (
-        <LocationSettingsHeader onClickBack={handleCloseButtonClicked} />
-      ),
-    })
-    setNavigation({ display: false })
-  }, [])
+      component: <LocationSettingsHeader onClickBack={handleCloseButtonClicked} />
+    });
+    setNavigation({ display: false });
+  }, []);
 
   const handleCurrentLocationClick = () => {
     if (locationLoading) {
-      showToast("위치 정보를 가져오는 중입니다.")
-      return
+      showToast('위치 정보를 가져오는 중입니다.');
+      return;
     }
 
     if (locationError) {
-      showToast("위치 정보를 사용할 수 없습니다.")
-      return
+      showToast('위치 정보를 사용할 수 없습니다.');
+      return;
     }
 
     if (currentLocation) {
       const coords = {
         latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
-      }
+        longitude: currentLocation.longitude
+      };
       setLocation({
-        address: "현재 위치",
-        coords,
-      })
-      navigate("/branch/location/picker", {
+        address: '현재 위치',
+        coords
+      });
+      navigate('/branch/location/picker', {
         state: {
           selectedLocation: {
             address: {
-              road: "현재 위치",
-              jibun: "",
+              road: '현재 위치',
+              jibun: ''
             },
             coords,
-            name: "",
-          },
-        },
-      })
+            name: ''
+          }
+        }
+      });
     }
-  }
+  };
 
   const handleFocus = () => {
-    setIsSearchFocused(true)
-  }
+    setIsSearchFocused(true);
+  };
 
   const handleBlur = () => {
     if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current)
+      clearTimeout(searchTimeoutRef.current);
     }
     searchTimeoutRef.current = window.setTimeout(() => {
-      setIsSearchFocused(false)
-    }, 150)
-  }
+      setIsSearchFocused(false);
+    }, 150);
+  };
 
   const renderContent = () => {
     if (address.length > 0) {
@@ -158,30 +142,30 @@ const LocationSettings = () => {
           onClick={(location) => {
             const coords = {
               latitude: parseFloat(location.lat),
-              longitude: parseFloat(location.lon),
-            }
+              longitude: parseFloat(location.lon)
+            };
             setLocation({
               address: location.address,
-              coords,
-            })
-            navigate("/branch/location/confirm", {
+              coords
+            });
+            navigate('/branch/location/confirm', {
               state: {
                 selectedLocation: {
                   address: location.address,
-                  coords,
-                },
-              },
-            })
+                  coords
+                }
+              }
+            });
           }}
           isSearchFocused={isSearchFocused}
         />
-      )
+      );
     }
-    return <SavedLocationList isSearchFocused={isSearchFocused} />
-  }
+    return <SavedLocationList isSearchFocused={isSearchFocused} />;
+  };
 
   return (
-    <div className={"flex flex-col h-full overflow-y-scroll bg-white"}>
+    <div className={'flex flex-col h-full overflow-y-scroll bg-white'}>
       <LocationSettingsSearchBar
         text={address}
         setText={setAddress}
@@ -192,7 +176,7 @@ const LocationSettings = () => {
       <Divider className="my-[24px] border-gray-50 border-b-[8px]" />
       {renderContent()}
     </div>
-  )
-}
+  );
+};
 
-export default LocationSettings
+export default LocationSettings;

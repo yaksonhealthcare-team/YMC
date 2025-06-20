@@ -1,44 +1,39 @@
-import Header from "@components/Header"
-import { Branch } from "../../../types/Branch"
-import MembershipBranchSelectPage from "../MembershipBranchSelectPage"
-import { useEffect } from "react"
-import { useLayout } from "../../../contexts/LayoutContext"
+import Header from '@/components/Header';
+import { useLayout } from '@/contexts/LayoutContext';
+import { Branch } from '@/types/Branch';
+import { useEffect } from 'react';
+import MembershipBranchSelectPage from '../MembershipBranchSelectPage';
 
 interface Props {
-  onBranchSelect: (branch: Branch) => void
-  onClose: () => void
-  brandCode: string
-  memberShipId?: string
+  onBranchSelect: (branch: Branch) => void;
+  onClose: () => void;
+  brandCode: string;
+  memberShipId?: string;
 }
 
-export const MembershipBranchSelectModal = ({
-  onBranchSelect,
-  onClose,
-  brandCode,
-  memberShipId,
-}: Props) => {
-  const { setNavigation } = useLayout()
+export const MembershipBranchSelectModal = ({ onBranchSelect, onClose, brandCode, memberShipId }: Props) => {
+  const { setNavigation } = useLayout();
 
   // 모달이 닫힐 때 헤더를 복원
   useEffect(() => {
     // 모달이 열릴 때 네비게이션 숨김
-    setNavigation({ display: false })
+    setNavigation({ display: false });
 
     return () => {
       // 모달이 닫힐 때는 헤더를 설정하지 않음 (onClose 함수에서 처리)
       // 네비게이션 상태만 명시적으로 false로 설정
-      setNavigation({ display: false })
-    }
-  }, [setNavigation])
+      setNavigation({ display: false });
+    };
+  }, [setNavigation]);
 
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 z-[9001]"
-      style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0 }}
+      style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
     >
       <div
         className="fixed inset-0 bg-white h-full w-full flex flex-col"
-        style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0 }}
+        style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
       >
         <div className="bg-white">
           <Header
@@ -46,15 +41,15 @@ export const MembershipBranchSelectModal = ({
             type="back_title"
             onClickBack={() => {
               // history.back()을 사용하는 대신 직접 onClose 호출
-              onClose()
+              onClose();
             }}
           />
         </div>
         <div className="flex-1 overflow-hidden">
           <MembershipBranchSelectPage
             onSelect={(branch) => {
-              onBranchSelect(branch)
-              onClose()
+              onBranchSelect(branch);
+              onClose();
             }}
             brandCode={brandCode}
             memberShipId={memberShipId}
@@ -62,5 +57,5 @@ export const MembershipBranchSelectModal = ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

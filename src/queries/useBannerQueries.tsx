@@ -1,12 +1,11 @@
-import { BannerRequestParams } from "../types/Banner.ts"
-import { useQuery, UseQueryOptions } from "@tanstack/react-query"
-import { queryKeys } from "./query.keys.ts"
-import { fetchBanners } from "../apis/banner.api.ts"
-import { Banner } from "../types/Banner"
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { fetchBanners } from '../apis/banner.api';
+import { Banner, BannerRequestParams } from '../types/Banner';
+import { queryKeys } from './query.keys';
 
 export const useBanner = (
   params: BannerRequestParams,
-  options?: Omit<UseQueryOptions<Banner[], Error>, "queryKey" | "queryFn">,
+  options?: Omit<UseQueryOptions<Banner[], Error>, 'queryKey' | 'queryFn'>
 ) =>
   useQuery({
     queryKey: queryKeys.banners.bannerType(params.gubun),
@@ -14,17 +13,15 @@ export const useBanner = (
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     retry: false,
-    ...options,
-  })
+    ...options
+  });
 
-export const useBanners = (
-  options?: Omit<UseQueryOptions<Banner[], Error>, "queryKey" | "queryFn">,
-) => {
+export const useBanners = (options?: Omit<UseQueryOptions<Banner[], Error>, 'queryKey' | 'queryFn'>) => {
   return useQuery({
-    queryKey: ["banners"],
-    queryFn: () => Promise.reject(new Error("Not implemented")),
+    queryKey: ['banners'],
+    queryFn: () => Promise.reject(new Error('Not implemented')),
     enabled: false,
     retry: false,
-    ...options,
-  })
-}
+    ...options
+  });
+};

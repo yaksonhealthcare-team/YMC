@@ -1,12 +1,11 @@
-import { Notice, NoticeDetail } from "../types/Content.ts"
-import { Event, EventDetail } from "types/Event"
+import { Notice, NoticeDetail } from '@/types/Content';
+import { Event, EventDetail } from '@/types/Event';
 
 /**
  * API 응답 데이터를 애플리케이션 내부 모델로 변환하는 매퍼 클래스입니다.
  */
 
-const defaultErrorImageUrl =
-  "https://image.yaksonhc.com/api/brands/brands/error_img_20250429133638_fc7576ff.png"
+const defaultErrorImageUrl = 'https://image.yaksonhc.com/api/brands/brands/error_img_20250429133638_fc7576ff.png';
 
 export class ContentMapper {
   /**
@@ -18,25 +17,25 @@ export class ContentMapper {
     return dtos.map((dto) => ({
       code: dto.code,
       title: dto.title,
-      contents: dto.contents || "",
+      contents: dto.contents || '',
       sdate: dto.sdate,
       edate: dto.edate,
       status: dto.status,
       files: dto.files || [
         {
-          fileCode: "",
-          fileurl: defaultErrorImageUrl,
-        },
+          fileCode: '',
+          fileurl: defaultErrorImageUrl
+        }
       ],
       thumbnail:
-        dto.thumbnail.fileurl === ""
+        dto.thumbnail.fileurl === ''
           ? {
-              fileCode: "",
-              fileurl: defaultErrorImageUrl,
+              fileCode: '',
+              fileurl: defaultErrorImageUrl
             }
           : dto.thumbnail,
-      gubun: dto.gubun,
-    }))
+      gubun: dto.gubun
+    }));
   }
 
   /**
@@ -48,25 +47,25 @@ export class ContentMapper {
     return {
       code: dto.code,
       title: dto.title,
-      contents: dto.contents || "",
+      contents: dto.contents || '',
       sdate: dto.sdate,
       edate: dto.edate,
       status: dto.status,
       files: dto.files || [
         {
-          fileCode: "",
-          fileurl: defaultErrorImageUrl,
-        },
+          fileCode: '',
+          fileurl: defaultErrorImageUrl
+        }
       ],
       thumbnail:
-        dto.thumbnail.fileurl === ""
+        dto.thumbnail.fileurl === ''
           ? {
-              fileCode: "",
-              fileurl: defaultErrorImageUrl,
+              fileCode: '',
+              fileurl: defaultErrorImageUrl
             }
           : dto.thumbnail,
-      gubun: dto.gubun,
-    }
+      gubun: dto.gubun
+    };
   }
 
   /**
@@ -79,8 +78,8 @@ export class ContentMapper {
       code: dto.code,
       gubun: dto.gubun,
       title: dto.title,
-      regDate: dto.regDate,
-    }))
+      regDate: dto.regDate
+    }));
   }
 
   /**
@@ -95,7 +94,7 @@ export class ContentMapper {
       title: dto.title,
       regDate: dto.regDate,
       contents: dto.contents,
-      files: dto.files || [],
-    }
+      files: dto.files || []
+    };
   }
 }

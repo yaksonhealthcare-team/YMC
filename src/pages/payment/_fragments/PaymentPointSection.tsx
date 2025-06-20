@@ -1,17 +1,17 @@
-import { Button } from "@components/Button"
+import { Button } from '@/components/Button';
 
 interface PaymentPointSectionProps {
-  availablePoints: number
-  usedPoints: number
-  onPointChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  onUseAllPoints: () => void
+  availablePoints: number;
+  usedPoints: number;
+  onPointChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onUseAllPoints: () => void;
 }
 
 const PaymentPointSection = ({
   availablePoints,
   usedPoints,
   onPointChange,
-  onUseAllPoints,
+  onUseAllPoints
 }: PaymentPointSectionProps) => {
   return (
     <div className="p-5 border-b-8 border-gray-50">
@@ -19,7 +19,7 @@ const PaymentPointSection = ({
       <div className="flex gap-2 mb-2">
         <input
           type="number"
-          value={usedPoints || ""}
+          value={usedPoints || ''}
           onChange={onPointChange}
           placeholder="0"
           className="flex-1 p-3 border border-gray-100 rounded-xl font-r text-16px min-w-0"
@@ -36,12 +36,10 @@ const PaymentPointSection = ({
       </div>
       <div className="flex items-center gap-2">
         <span className="text-gray-400 text-14px font-m">사용 가능 포인트</span>
-        <span className="text-primary text-14px font-m">
-          {availablePoints.toLocaleString()}P
-        </span>
+        <span className="text-primary text-14px font-m">{availablePoints.toLocaleString()}P</span>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default PaymentPointSection
+export default PaymentPointSection;

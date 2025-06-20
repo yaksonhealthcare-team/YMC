@@ -1,5 +1,5 @@
-import { axiosClient } from '../queries/clients';
-import { HTTPResponse } from '../types/HTTPResponse';
+import { axiosClient } from '@/queries/clients';
+import { HTTPResponse } from '@/types/HTTPResponse';
 
 export interface DecryptRequest {
   token_version_id: string;

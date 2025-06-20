@@ -1,58 +1,53 @@
-import { useNavigate, useParams } from "react-router-dom"
-import { useEffect, useState } from "react"
-import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useBrand } from "../../queries/useBrandQueries.tsx"
-import { Button } from "@components/Button.tsx"
-import { Image } from "@components/common/Image"
-import FullPageLoading from "@components/FullPageLoading"
+import { Button } from '@/components/Button';
+import { Image } from '@/components/common/Image';
+import FullPageLoading from '@/components/FullPageLoading';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useBrand } from '@/queries/useBrandQueries';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export const BrandDetailPage = () => {
-  const { setHeader, setNavigation } = useLayout()
-  const { brandCode, brandName } = useParams()
-  const { data: brandDetail, isLoading: isDataLoading } = useBrand(brandCode)
-  const navigate = useNavigate()
-  const [loadedImages, setLoadedImages] = useState<Record<number, boolean>>({})
-  const [isImagesLoading, setIsImagesLoading] = useState(true)
+  const { setHeader, setNavigation } = useLayout();
+  const { brandCode, brandName } = useParams();
+  const { data: brandDetail, isLoading: isDataLoading } = useBrand(brandCode);
+  const navigate = useNavigate();
+  const [loadedImages, setLoadedImages] = useState<Record<number, boolean>>({});
+  const [isImagesLoading, setIsImagesLoading] = useState(true);
 
   useEffect(() => {
     setHeader({
       display: true,
       title: brandName,
-      left: "back",
-      backgroundColor: "bg-white",
-      onClickBack: () => navigate(-1),
-    })
-    setNavigation({ display: false })
-  }, [brandDetail])
+      left: 'back',
+      backgroundColor: 'bg-white',
+      onClickBack: () => navigate(-1)
+    });
+    setNavigation({ display: false });
+  }, [brandDetail]);
 
   useEffect(() => {
-    if (!brandDetail || !brandDetail.descriptionImageUrls.length) return
+    if (!brandDetail || !brandDetail.descriptionImageUrls.length) return;
 
-    const totalImages = brandDetail.descriptionImageUrls.length
-    if (
-      Object.values(loadedImages).filter((loaded) => loaded).length ===
-      totalImages
-    ) {
-      setIsImagesLoading(false)
+    const totalImages = brandDetail.descriptionImageUrls.length;
+    if (Object.values(loadedImages).filter((loaded) => loaded).length === totalImages) {
+      setIsImagesLoading(false);
     }
-  }, [loadedImages, brandDetail])
+  }, [loadedImages, brandDetail]);
 
   const handleImageLoad = (index: number) => {
     setLoadedImages((prev) => ({
       ...prev,
-      [index]: true,
-    }))
-  }
+      [index]: true
+    }));
+  };
 
-  const isLoading = isDataLoading || isImagesLoading
+  const isLoading = isDataLoading || isImagesLoading;
 
   return (
     <div className="relative w-full h-full flex flex-col">
       {isLoading && <FullPageLoading />}
 
-      <div
-        className={`flex-1 overflow-y-auto pb-[100px] ${isLoading ? "hidden" : ""}`}
-      >
+      <div className={`flex-1 overflow-y-auto pb-[100px] ${isLoading ? 'hidden' : ''}`}>
         {brandDetail?.descriptionImageUrls?.map((url, index) => (
           <div key={index} className="w-full">
             <Image
@@ -65,18 +60,16 @@ export const BrandDetailPage = () => {
         ))}
       </div>
 
-      <div
-        className={`fixed bottom-0 w-full px-[20px] pb-[30px] pt-[12px] bg-white ${isLoading ? "hidden" : ""}`}
-      >
+      <div className={`fixed bottom-0 w-full px-[20px] pb-[30px] pt-[12px] bg-white ${isLoading ? 'hidden' : ''}`}>
         <Button
           className="w-full !rounded-[12px]"
           onClick={() =>
-            navigate("/reservation/form", {
+            navigate('/reservation/form', {
               state: {
                 originalPath: location.pathname,
                 fromBrandDetail: true,
-                brandCode: brandCode,
-              },
+                brandCode: brandCode
+              }
             })
           }
         >
@@ -84,7 +77,7 @@ export const BrandDetailPage = () => {
         </Button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default BrandDetailPage
+export default BrandDetailPage;

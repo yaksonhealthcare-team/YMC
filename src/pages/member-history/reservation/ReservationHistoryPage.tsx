@@ -1,101 +1,79 @@
-import MainTabs from "../_fragments/MainTabs"
-import { useCallback, useEffect, useRef } from "react"
-import { Button } from "@components/Button"
-import clsx from "clsx"
-import { ReserveCard } from "@components/ReserveCard"
-import { useNavigate } from "react-router-dom"
-import ReservationIcon from "@assets/icons/ReservationIcon.svg?react"
-import { useLayout } from "contexts/LayoutContext"
-import { useReservations } from "queries/useReservationQueries"
-import {
-  FilterItem,
-  reservationFilters,
-  ReservationStatusCode,
-} from "types/Reservation"
-import LoadingIndicator from "@components/LoadingIndicator"
-import { useReservationStore } from "stores/reservationStore"
-import { useQueryClient } from "@tanstack/react-query"
-import { createUserContextQueryKey } from "../../../queries/queryKeyFactory"
+import ReservationIcon from '@/assets/icons/ReservationIcon.svg?react';
+import { Button } from '@/components/Button';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { ReserveCard } from '@/components/ReserveCard';
+import { useLayout } from '@/contexts/LayoutContext';
+import { createUserContextQueryKey } from '@/queries/queryKeyFactory';
+import { useReservations } from '@/queries/useReservationQueries';
+import { useReservationStore } from '@/stores/reservationStore';
+import { FilterItem, reservationFilters, ReservationStatusCode } from '@/types/Reservation';
+import { useQueryClient } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { useCallback, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import MainTabs from '../_fragments/MainTabs';
 
-const ReservationContent = ({
-  filterId,
-}: {
-  filterId: ReservationStatusCode
-}) => {
-  const queryClient = useQueryClient()
-  const {
-    data,
-    isLoading,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-    refetch,
-  } = useReservations(filterId)
-  const reservations = data?.pages.flatMap((page) => page.reservations) || []
-  const bottomRef = useRef<HTMLDivElement>(null)
+const ReservationContent = ({ filterId }: { filterId: ReservationStatusCode }) => {
+  const queryClient = useQueryClient();
+  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage, refetch } = useReservations(filterId);
+  const reservations = data?.pages.flatMap((page) => page.reservations) || [];
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   // 탭 전환하거나 페이지에 포커스가 올 때 데이터 리프레시
   useEffect(() => {
-    refetch()
-  }, [filterId, refetch])
+    refetch();
+  }, [filterId, refetch]);
 
   // 페이지가 마운트되거나 포커스될 때 데이터 리프레시
   useEffect(() => {
     const handleFocus = () => {
-      refetch()
-    }
+      refetch();
+    };
 
-    window.addEventListener("focus", handleFocus)
+    window.addEventListener('focus', handleFocus);
     return () => {
-      window.removeEventListener("focus", handleFocus)
-    }
-  }, [refetch])
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [refetch]);
 
   // 주기적으로 데이터 리프레시 (옵션)
   useEffect(() => {
     const interval = setInterval(() => {
       queryClient.invalidateQueries({
-        queryKey: createUserContextQueryKey(["reservations", filterId]),
-      })
-    }, 30000) // 30초마다 refresh
+        queryKey: createUserContextQueryKey(['reservations', filterId])
+      });
+    }, 30000); // 30초마다 refresh
 
-    return () => clearInterval(interval)
-  }, [filterId, queryClient])
+    return () => clearInterval(interval);
+  }, [filterId, queryClient]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage()
+          fetchNextPage();
         }
       },
-      { threshold: 0.5 },
-    )
+      { threshold: 0.5 }
+    );
 
     if (bottomRef.current) {
-      observer.observe(bottomRef.current)
+      observer.observe(bottomRef.current);
     }
 
-    return () => observer.disconnect()
-  }, [hasNextPage, fetchNextPage, isFetchingNextPage])
+    return () => observer.disconnect();
+  }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   if (isLoading) {
-    return <LoadingIndicator className="flex-1" />
+    return <LoadingIndicator className="flex-1" />;
   }
 
   if (reservations.length === 0) {
-    return (
-      <div className="flex justify-center items-center p-4">
-        예약 내역이 없습니다.
-      </div>
-    )
+    return <div className="flex justify-center items-center p-4">예약 내역이 없습니다.</div>;
   }
 
   return (
-    <div
-      className="flex-1 overflow-y-auto pb-[100px] scrollbar-hide"
-      key={`reservation-content-${filterId}`}
-    >
+    <div className="flex-1 overflow-y-auto pb-[100px] scrollbar-hide" key={`reservation-content-${filterId}`}>
       <div className="px-5">
         {reservations.map((reservation) => (
           <div className="pb-[12px]" key={reservation.id}>
@@ -112,78 +90,74 @@ const ReservationContent = ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const FilterContent = ({
   reservationFilter,
-  onFilterChange,
+  onFilterChange
 }: {
-  reservationFilter: FilterItem
-  onFilterChange: (filter: FilterItem) => void
+  reservationFilter: FilterItem;
+  onFilterChange: (filter: FilterItem) => void;
 }) => {
   return (
     <div className="px-5 py-[16px] flex justify-center gap-2">
       {reservationFilters.map((filter) => {
-        const isSelected = filter.id === reservationFilter.id
+        const isSelected = filter.id === reservationFilter.id;
         return (
           <Button
             key={filter.id}
             fullCustom
             className={clsx(
-              "min-w-0 whitespace-nowrap px-[12px] py-[5px] text-14px !rounded-[15px]",
+              'min-w-0 whitespace-nowrap px-[12px] py-[5px] text-14px !rounded-[15px]',
               isSelected
-                ? "bg-primary-50 text-primary border border-solid border-primary font-sb"
-                : "bg-white text-gray-500 border border-solid border-gray-200 font-r",
+                ? 'bg-primary-50 text-primary border border-solid border-primary font-sb'
+                : 'bg-white text-gray-500 border border-solid border-gray-200 font-r'
             )}
             onClick={() => onFilterChange(filter)}
           >
             {filter.title}
           </Button>
-        )
+        );
       })}
     </div>
-  )
-}
+  );
+};
 
 const ReservationHistoryPage = () => {
-  const navigate = useNavigate()
-  const { setHeader, setNavigation } = useLayout()
-  const {
-    filter: reservationFilter,
-    setFilter: setReservationFilter,
-    resetFilter,
-  } = useReservationStore()
+  const navigate = useNavigate();
+  const { setHeader, setNavigation } = useLayout();
+  const { filter: reservationFilter, setFilter: setReservationFilter, resetFilter } = useReservationStore();
 
   const handleFilterChange = useCallback(
     (filter: FilterItem) => {
-      setReservationFilter(filter)
+      setReservationFilter(filter);
     },
-    [setReservationFilter],
-  )
+    [setReservationFilter]
+  );
 
   const handleReservationClick = () => {
-    navigate("/reservation/form", {
+    navigate('/reservation/form', {
       state: {
-        originalPath: "/member-history/reservation",
-        fromReservationHistory: true,
-      },
-    })
-  }
+        originalPath: '/member-history/reservation',
+        fromReservationHistory: true
+      }
+    });
+  };
 
   useEffect(() => {
     setHeader({
       display: false,
-      backgroundColor: "bg-system-bg",
-    })
-    setNavigation({ display: true })
-  }, [])
+      backgroundColor: 'bg-system-bg'
+    });
+    setNavigation({ display: true });
+  }, []);
 
   useEffect(() => {
     return () => {
-      resetFilter()
-    }
-  }, [resetFilter])
+      resetFilter();
+    };
+  }, [resetFilter]);
 
   return (
     <div className="flex flex-col bg-system-bg min-h-screen overflow-hidden">
@@ -192,10 +166,7 @@ const ReservationHistoryPage = () => {
           <MainTabs />
         </div>
 
-        <FilterContent
-          reservationFilter={reservationFilter}
-          onFilterChange={handleFilterChange}
-        />
+        <FilterContent reservationFilter={reservationFilter} onFilterChange={handleFilterChange} />
 
         <ReservationContent filterId={reservationFilter.id} />
       </div>
@@ -206,7 +177,7 @@ const ReservationHistoryPage = () => {
         <ReservationIcon className="w-8 h-8 mx-auto text-white" />
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default ReservationHistoryPage
+export default ReservationHistoryPage;

@@ -1,28 +1,20 @@
-import { ChangeEventHandler } from "react"
-import { InputAdornment, TextField } from "@mui/material";
-import SearchIcon from "@components/icons/SearchIcon";
-import XCircleIcon from "@components/icons/XCircleIcon";
-import { COLORS } from "@constants/ColorConstants";
+import SearchIcon from '@/components/icons/SearchIcon';
+import XCircleIcon from '@/components/icons/XCircleIcon';
+import { COLORS } from '@/constants/ColorConstants';
+import { InputAdornment, TextField } from '@mui/material';
+import { ChangeEventHandler } from 'react';
 
 interface SearchFieldProps {
-  placeholder?: string
-  value?: string
-  onChange?: ChangeEventHandler<HTMLInputElement>
-  disabled?: boolean
-  onClear?: () => void
-  onFocus?: () => void
-  onBlur?: () => void
+  placeholder?: string;
+  value?: string;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  disabled?: boolean;
+  onClear?: () => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
-export const SearchField = ({
-  placeholder,
-  value,
-  onChange,
-  disabled,
-  onClear,
-  onFocus,
-  onBlur,
-}: SearchFieldProps) => (
+export const SearchField = ({ placeholder, value, onChange, disabled, onClear, onFocus, onBlur }: SearchFieldProps) => (
   <TextField
     placeholder={placeholder}
     value={value}
@@ -42,24 +34,24 @@ export const SearchField = ({
         <InputAdornment position="end">
           <XCircleIcon className="w-5 h-5 cursor-pointer" onClick={onClear} />
         </InputAdornment>
-      ),
+      )
     }}
     sx={{
-      "& .MuiOutlinedInput-root": {
+      '& .MuiOutlinedInput-root': {
         paddingX: 2,
         borderColor: COLORS.BORDER,
-        borderRadius: "12px",
-        "& fieldset": { borderColor: COLORS.BORDER },
-        "&:hover fieldset": { borderColor: COLORS.BORDER },
-        "&.Mui-focused fieldset": {
+        borderRadius: '12px',
+        '& fieldset': { borderColor: COLORS.BORDER },
+        '&:hover fieldset': { borderColor: COLORS.BORDER },
+        '&.Mui-focused fieldset': {
           borderWidth: 1,
-          borderColor: COLORS.FOCUSED_BORDER,
+          borderColor: COLORS.FOCUSED_BORDER
         },
-        "& input::placeholder": {
+        '& input::placeholder': {
           color: COLORS.PLACEHOLDER,
-          opacity: 1,
-        },
-      },
+          opacity: 1
+        }
+      }
     }}
   />
-)
+);

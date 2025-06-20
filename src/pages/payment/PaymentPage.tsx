@@ -1,84 +1,73 @@
-import { Button } from "@components/Button"
-import FixedButtonContainer from "@components/FixedButtonContainer"
-import LoadingIndicator from "@components/LoadingIndicator"
-import { useQuery } from "@tanstack/react-query"
-import { usePayment } from "hooks/usePayment"
-import { usePaymentHandlers } from "hooks/usePaymentHandlers"
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { formatPriceWithUnit } from "utils/format"
-import { fetchPoints } from "../../apis/points.api"
-import { useLayout } from "../../contexts/LayoutContext"
-import { usePaymentStore } from "../../hooks/usePaymentStore"
-import PaymentAgreementSection from "./_fragments/PaymentAgreementSection"
-import PaymentMethodSection from "./_fragments/PaymentMethodSection"
-import PaymentPointSection from "./_fragments/PaymentPointSection"
-import PaymentProductSection from "./_fragments/PaymentProductSection"
-import PaymentSummarySection from "./_fragments/PaymentSummarySection"
+import { fetchPoints } from '@/apis/points.api';
+import { Button } from '@/components/Button';
+import FixedButtonContainer from '@/components/FixedButtonContainer';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { useLayout } from '@/contexts/LayoutContext';
+import { usePayment } from '@/hooks/usePayment';
+import { usePaymentHandlers } from '@/hooks/usePaymentHandlers';
+import { usePaymentStore } from '@/hooks/usePaymentStore';
+import { formatPriceWithUnit } from '@/utils/format';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import PaymentAgreementSection from './_fragments/PaymentAgreementSection';
+import PaymentMethodSection from './_fragments/PaymentMethodSection';
+import PaymentPointSection from './_fragments/PaymentPointSection';
+import PaymentProductSection from './_fragments/PaymentProductSection';
+import PaymentSummarySection from './_fragments/PaymentSummarySection';
 
 const PaymentPage = () => {
-  const navigate = useNavigate()
-  const { setHeader, setNavigation } = useLayout()
-  const { items, points, setPaymentMethod } = usePaymentStore()
-  const { handlePayment, calculateTotalAmount } = usePayment()
-  const {
-    handlePointChange,
-    handleUseAllPoints,
-    handleCountChange,
-    handleDelete,
-  } = usePaymentHandlers()
+  const navigate = useNavigate();
+  const { setHeader, setNavigation } = useLayout();
+  const { items, points, setPaymentMethod } = usePaymentStore();
+  const { handlePayment, calculateTotalAmount } = usePayment();
+  const { handlePointChange, handleUseAllPoints, handleCountChange, handleDelete } = usePaymentHandlers();
 
-  const [selectedPayment, setSelectedPayment] = useState<
-    "card" | "bank" | "vbank"
-  >("card")
-  const [isAgreed, setIsAgreed] = useState(false)
+  const [selectedPayment, setSelectedPayment] = useState<'card' | 'bank' | 'vbank'>('card');
+  const [isAgreed, setIsAgreed] = useState(false);
 
   const { data: availablePoints = 0, isLoading: isPointsLoading } = useQuery({
-    queryKey: ["points"],
+    queryKey: ['points'],
     queryFn: fetchPoints,
-    retry: false,
-  })
+    retry: false
+  });
 
-  const totalAmount = calculateTotalAmount(items)
+  const totalAmount = calculateTotalAmount(items);
 
   useEffect(() => {
     if (availablePoints > 0) {
       usePaymentStore.setState((state) => ({
         points: {
           ...state.points,
-          availablePoints,
-        },
-      }))
+          availablePoints
+        }
+      }));
     }
-  }, [availablePoints])
+  }, [availablePoints]);
 
   useEffect(() => {
     setHeader({
       display: true,
-      title: "결제하기",
-      left: "back",
+      title: '결제하기',
+      left: 'back',
       onClickBack: () => navigate(-1),
-      backgroundColor: "bg-white",
-    })
-    setNavigation({ display: false })
-  }, [setHeader, setNavigation, navigate])
+      backgroundColor: 'bg-white'
+    });
+    setNavigation({ display: false });
+  }, [setHeader, setNavigation, navigate]);
 
   if (isPointsLoading) {
-    return <LoadingIndicator className="min-h-screen" />
+    return <LoadingIndicator className="min-h-screen" />;
   }
 
-  const handlePaymentMethodChange = (method: "card" | "bank" | "vbank") => {
-    setSelectedPayment(method)
-    setPaymentMethod(method)
-  }
+  const handlePaymentMethodChange = (method: 'card' | 'bank' | 'vbank') => {
+    setSelectedPayment(method);
+    setPaymentMethod(method);
+  };
 
   return (
     <div className="bg-white pb-[95px]">
-      <PaymentProductSection
-        items={items}
-        onCountChange={handleCountChange}
-        onDelete={handleDelete}
-      />
+      <PaymentProductSection items={items} onCountChange={handleCountChange} onDelete={handleDelete} />
 
       <PaymentPointSection
         availablePoints={points.availablePoints}
@@ -87,43 +76,27 @@ const PaymentPage = () => {
         onUseAllPoints={handleUseAllPoints}
       />
 
-      <PaymentMethodSection
-        selectedPayment={selectedPayment}
-        onPaymentMethodChange={handlePaymentMethodChange}
-      />
+      <PaymentMethodSection selectedPayment={selectedPayment} onPaymentMethodChange={handlePaymentMethodChange} />
 
       <PaymentSummarySection
-        totalAmount={items.reduce(
-          (total, item) => total + item.price * item.amount,
-          0,
-        )}
+        totalAmount={items.reduce((total, item) => total + item.price * item.amount, 0)}
         discountAmount={0}
         pointAmount={points.usedPoints}
         finalAmount={Math.max(
-          items.reduce((total, item) => total + item.price * item.amount, 0) -
-            points.usedPoints,
-          0,
+          items.reduce((total, item) => total + item.price * item.amount, 0) - points.usedPoints,
+          0
         )}
       />
 
-      <PaymentAgreementSection
-        isAgreed={isAgreed}
-        onAgreementChange={setIsAgreed}
-      />
+      <PaymentAgreementSection isAgreed={isAgreed} onAgreementChange={setIsAgreed} />
 
       <FixedButtonContainer className="bg-white">
-        <Button
-          variantType="primary"
-          sizeType="l"
-          onClick={handlePayment}
-          disabled={!isAgreed}
-          className="w-full"
-        >
+        <Button variantType="primary" sizeType="l" onClick={handlePayment} disabled={!isAgreed} className="w-full">
           {formatPriceWithUnit(totalAmount)} 결제하기
         </Button>
       </FixedButtonContainer>
     </div>
-  )
-}
+  );
+};
 
-export default PaymentPage
+export default PaymentPage;

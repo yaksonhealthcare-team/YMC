@@ -1,6 +1,6 @@
+import { LOCAL_STORAGE_KEYS } from '@/constants/storage';
 import { initializeApp } from '@firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import { LOCAL_STORAGE_KEYS } from '../constants/storage';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,

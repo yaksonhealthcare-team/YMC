@@ -2,15 +2,15 @@ import {
   PaymentHistory,
   PaymentHistoryDetail,
   PaymentHistoryDetailResponse,
-  PaymentHistoryResponse,
-} from "../types/Payment.ts"
+  PaymentHistoryResponse
+} from '@/types/Payment';
 
 export class PaymentMapper {
   static toHistoryEntity(dto: PaymentHistoryResponse): PaymentHistory {
-    const payDate = new Date(dto.pay_date)
-    const currentYear = new Date().getFullYear()
+    const payDate = new Date(dto.pay_date);
+    const currentYear = new Date().getFullYear();
     if (payDate.getFullYear() > currentYear) {
-      payDate.setFullYear(currentYear)
+      payDate.setFullYear(currentYear);
     }
 
     return {
@@ -19,10 +19,10 @@ export class PaymentMapper {
       paidAt: payDate,
       type: dto.pay_gubun,
       status: dto.pay_status,
-      pointStatus: dto.point_status === "적립" ? "done" : "yet",
+      pointStatus: dto.point_status === '적립' ? 'done' : 'yet',
       point: dto.point,
-      category: dto.is_add_service === "Y" ? "additional" : "membership",
-      isPointAvailable: dto.is_point_available === "Y",
+      category: dto.is_add_service === 'Y' ? 'additional' : 'membership',
+      isPointAvailable: dto.is_point_available === 'Y',
       items: dto.paysub.map((sub) => ({
         index: sub.ps_idx,
         name: sub.ps_name,
@@ -30,26 +30,24 @@ export class PaymentMapper {
         brand: sub.brand_name,
         branchName: sub.b_name,
         amount: Number(sub.ps_total_amount),
-        price: Number(sub.ps_total_price),
-      })),
-    }
+        price: Number(sub.ps_total_price)
+      }))
+    };
   }
 
   static toHistoryEntities(
     dtos: PaymentHistoryResponse[],
-    totalPageCount: number,
+    totalPageCount: number
   ): PaymentHistory[] & { totalPageCount: number } {
-    const entities = dtos.map((dto) => this.toHistoryEntity(dto))
-    return Object.assign(entities, { totalPageCount })
+    const entities = dtos.map((dto) => this.toHistoryEntity(dto));
+    return Object.assign(entities, { totalPageCount });
   }
 
-  static toHistoryDetailEntity(
-    dto: PaymentHistoryDetailResponse,
-  ): PaymentHistoryDetail {
-    const payDate = new Date(dto.pay_date)
-    const currentYear = new Date().getFullYear()
+  static toHistoryDetailEntity(dto: PaymentHistoryDetailResponse): PaymentHistoryDetail {
+    const payDate = new Date(dto.pay_date);
+    const currentYear = new Date().getFullYear();
     if (payDate.getFullYear() > currentYear) {
-      payDate.setFullYear(currentYear)
+      payDate.setFullYear(currentYear);
     }
 
     return {
@@ -58,15 +56,15 @@ export class PaymentMapper {
       paidAt: payDate,
       type: dto.pay_gubun,
       status: dto.pay_status,
-      pointStatus: dto.point_status === "적립" ? "done" : "yet",
+      pointStatus: dto.point_status === '적립' ? 'done' : 'yet',
       point: Number(dto.point),
-      isPointAvailable: dto.is_point_available === "Y",
+      isPointAvailable: dto.is_point_available === 'Y',
       payMethod: dto.pay_method,
       totalPrice: Number(dto.total_price),
       usedPoint: Number(dto.use_point),
       actualPrice: Number(dto.actual_price),
-      category: dto.is_add_service === "Y" ? "additional" : "membership",
-      isOfflinePayment: !dto.orderid || dto.orderid === "",
+      category: dto.is_add_service === 'Y' ? 'additional' : 'membership',
+      isOfflinePayment: !dto.orderid || dto.orderid === '',
       items: dto.paysub.map((sub) => ({
         index: sub.p_idx,
         name: sub.ps_name,
@@ -83,9 +81,9 @@ export class PaymentMapper {
           usedPoint: Number(sub.payCancel.ps_cancel_use_point),
           refundPoint: Number(sub.payCancel.ps_cancel_refund_point),
           totalPrice: Number(sub.payCancel.ps_cancel_total_price),
-          reason: sub.payCancel.ps_cancel_message,
-        },
-      })),
-    }
+          reason: sub.payCancel.ps_cancel_message
+        }
+      }))
+    };
   }
 }

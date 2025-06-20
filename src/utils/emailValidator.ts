@@ -4,8 +4,8 @@
  * @returns 유효성 검사 결과 (true: 유효함, false: 유효하지 않음)
  */
 const validateEmail = (email: string): boolean => {
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-  return emailRegex.test(email)
-}
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
+};
 
-export default validateEmail
+export default validateEmail;

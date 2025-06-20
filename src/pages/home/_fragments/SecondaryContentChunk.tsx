@@ -1,6 +1,6 @@
-import { BrandSection } from "./BrandSection"
-import { EventSection } from "./EventSection"
-import { BusinessInfo } from "./BusinessInfo"
+import { BrandSection } from './BrandSection';
+import { BusinessInfo } from './BusinessInfo';
+import { EventSection } from './EventSection';
 
 const SecondaryContentChunk = () => {
   return (
@@ -9,7 +9,7 @@ const SecondaryContentChunk = () => {
       <EventSection />
       <BusinessInfo />
     </>
-  )
-}
+  );
+};
 
-export default SecondaryContentChunk
+export default SecondaryContentChunk;

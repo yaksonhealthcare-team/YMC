@@ -1,54 +1,50 @@
-import Logo from "@components/Logo.tsx"
-import { Typography } from "@mui/material"
-import { useEffect } from "react"
-import { useAuth } from "../../contexts/AuthContext.tsx"
-import { useLayout } from "../../contexts/LayoutContext.tsx"
-import { useNavigate } from "react-router-dom"
+import Logo from '@/components/Logo';
+import { useAuth } from '@/contexts/AuthContext';
+import { useLayout } from '@/contexts/LayoutContext';
+import { Typography } from '@mui/material';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Logout = () => {
-  const { logout } = useAuth()
-  const { setHeader, setNavigation } = useLayout()
-  const navigate = useNavigate()
+  const { logout } = useAuth();
+  const { setHeader, setNavigation } = useLayout();
+  const navigate = useNavigate();
   const handleLogout = async () => {
-    await logout()
-    await new Promise((resolve) => setTimeout(resolve, 500))
-    navigate("/login", { replace: true })
+    await logout();
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    navigate('/login', { replace: true });
 
     if (window.ReactNativeWebView) {
       window.ReactNativeWebView.postMessage(
         JSON.stringify({
-          type: "LOGOUT",
-        }),
-      )
+          type: 'LOGOUT'
+        })
+      );
     }
-  }
+  };
 
   useEffect(() => {
     setHeader({
       display: false,
-      backgroundColor: "bg-system-bg",
-    })
-    setNavigation({ display: false })
-    handleLogout()
-  }, [])
+      backgroundColor: 'bg-system-bg'
+    });
+    setNavigation({ display: false });
+    handleLogout();
+  }, []);
 
   return (
-    <div
-      className={
-        "flex flex-col h-full w-full justify-center items-center bg-system-bg p-14"
-      }
-    >
-      <div className={"py-48"}>
+    <div className={'flex flex-col h-full w-full justify-center items-center bg-system-bg p-14'}>
+      <div className={'py-48'}>
         <Logo text size={191} />
 
-        <div className={"flex justify-center"}>
-          <Typography variant="body2" className={"p-4"}>
+        <div className={'flex justify-center'}>
+          <Typography variant="body2" className={'p-4'}>
             안전하게 로그아웃 중입니다.
           </Typography>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Logout
+export default Logout;

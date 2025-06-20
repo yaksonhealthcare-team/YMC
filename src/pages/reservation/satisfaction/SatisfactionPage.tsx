@@ -1,174 +1,164 @@
-import { useEffect, useState } from "react"
-import { useLayout } from "contexts/LayoutContext"
-import { useNavigate, useParams, useLocation } from "react-router-dom"
-import { TextArea } from "../../../components/TextArea"
-import { Button } from "../../../components/Button"
-import CalendarIcon from "@assets/icons/CalendarIcon.svg?react"
-import PlusIcon from "@assets/icons/PlusIcon.svg?react"
-import clsx from "clsx"
-import {
-  useCreateReviewMutation,
-  useReviewQuestions,
-} from "../../../queries/useReviewQueries"
-import { uploadImages } from "../../../apis/image.api"
-import { formatDate } from "../../../utils/date"
-import LoadingIndicator from "../../../components/LoadingIndicator"
-import { Image } from "@components/common/Image"
-import { useQueryClient } from "@tanstack/react-query"
-import { validateFile, escapeHtml } from "utils/sanitize"
-import { useOverlay } from "contexts/ModalContext"
+import { uploadImages } from '@/apis/image.api';
+import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
+import PlusIcon from '@/assets/icons/PlusIcon.svg?react';
+import { Button } from '@/components/Button';
+import { Image } from '@/components/common/Image';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { TextArea } from '@/components/TextArea';
+import { useLayout } from '@/contexts/LayoutContext';
+import { useOverlay } from '@/contexts/ModalContext';
+import { useCreateReviewMutation, useReviewQuestions } from '@/queries/useReviewQueries';
+import { formatDate } from '@/utils/date';
+import { escapeHtml, validateFile } from '@/utils/sanitize';
+import { useQueryClient } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 type SatisfactionPageParams = {
-  id: string
-}
+  id: string;
+};
 
-type Grade = "L" | "M" | "H"
+type Grade = 'L' | 'M' | 'H';
 
 interface ReservationInfo {
-  r_idx: string
-  r_date: string
-  b_name: string
-  ps_name: string
+  r_idx: string;
+  r_date: string;
+  b_name: string;
+  ps_name: string;
   review_items: Array<{
-    rs_idx: string
-    rs_type: string
-  }>
+    rs_idx: string;
+    rs_type: string;
+  }>;
 }
 
 interface SatisfactionForm {
-  [key: string]: Grade | string | File[] | null
-  content: string
-  images: File[]
+  [key: string]: Grade | string | File[] | null;
+  content: string;
+  images: File[];
 }
 
 const GRADE_TEXT = {
-  L: "아쉬워요",
-  M: "보통이에요",
-  H: "최고예요!",
-} as const
+  L: '아쉬워요',
+  M: '보통이에요',
+  H: '최고예요!'
+} as const;
 
 const SatisfactionPage = () => {
-  const { id } = useParams<SatisfactionPageParams>()
-  const location = useLocation()
-  const navigate = useNavigate()
-  const { setHeader, setNavigation } = useLayout()
-  const queryClient = useQueryClient()
-  const { showToast } = useOverlay()
-  const createReviewMutation = useCreateReviewMutation()
-  const {
-    data: reviewQuestions,
-    isLoading,
-    isError,
-  } = useReviewQuestions(id || "")
-  const reservationInfo = location.state as ReservationInfo
+  const { id } = useParams<SatisfactionPageParams>();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { setHeader, setNavigation } = useLayout();
+  const queryClient = useQueryClient();
+  const { showToast } = useOverlay();
+  const createReviewMutation = useCreateReviewMutation();
+  const { data: reviewQuestions, isLoading, isError } = useReviewQuestions(id || '');
+  const reservationInfo = location.state as ReservationInfo;
   const [form, setForm] = useState<SatisfactionForm>({
-    content: "",
-    images: [],
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
+    content: '',
+    images: []
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!reservationInfo) {
-      navigate("/member-history/reservation")
-      return
+      navigate('/member-history/reservation');
+      return;
     }
 
     setHeader({
       display: true,
-      title: "만족도 작성",
-      left: "back",
-      backgroundColor: "bg-white",
-    })
-    setNavigation({ display: false })
-  }, [setHeader, setNavigation, navigate, reservationInfo])
+      title: '만족도 작성',
+      left: 'back',
+      backgroundColor: 'bg-white'
+    });
+    setNavigation({ display: false });
+  }, [setHeader, setNavigation, navigate, reservationInfo]);
 
   const handleGradeSelect = (key: string, grade: Grade) => {
     setForm((prev) => ({
       ...prev,
-      [key]: grade,
-    }))
-  }
+      [key]: grade
+    }));
+  };
 
   const handleSelectAll = (grade: Grade) => {
-    if (!reviewQuestions) return
+    if (!reviewQuestions) return;
 
-    const newForm = { ...form }
+    const newForm = { ...form };
     reviewQuestions.forEach((question) => {
-      newForm[question.rs_idx] = grade
-    })
-    setForm(newForm)
-  }
+      newForm[question.rs_idx] = grade;
+    });
+    setForm(newForm);
+  };
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setForm((prev) => ({
       ...prev,
-      content: e.target.value,
-    }))
-  }
+      content: e.target.value
+    }));
+  };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || [])
+    const files = Array.from(e.target.files || []);
 
     // 파일 유효성 검증
-    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"]
-    const maxSize = 5 * 1024 * 1024 // 5MB
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
 
     const validFiles = files.filter((file) => {
-      const validation = validateFile(file, allowedTypes, maxSize)
+      const validation = validateFile(file, allowedTypes, maxSize);
       if (!validation.valid) {
-        alert(validation.message)
-        return false
+        alert(validation.message);
+        return false;
       }
-      return true
-    })
+      return true;
+    });
 
     if (validFiles.length + form.images.length > 8) {
-      alert("최대 8장까지 업로드 가능합니다.")
-      return
+      alert('최대 8장까지 업로드 가능합니다.');
+      return;
     }
 
     setForm((prev) => ({
       ...prev,
-      images: [...prev.images, ...validFiles],
-    }))
-  }
+      images: [...prev.images, ...validFiles]
+    }));
+  };
 
   const handleImageDelete = (index: number) => {
     setForm((prev) => ({
       ...prev,
-      images: prev.images.filter((_, i) => i !== index),
-    }))
-  }
+      images: prev.images.filter((_, i) => i !== index)
+    }));
+  };
 
   const isFormValid = () => {
-    if (!reviewQuestions) return false
-    return reviewQuestions.every(
-      (question) =>
-        form[question.rs_idx] !== undefined && form[question.rs_idx] !== null,
-    )
-  }
+    if (!reviewQuestions) return false;
+    return reviewQuestions.every((question) => form[question.rs_idx] !== undefined && form[question.rs_idx] !== null);
+  };
 
   const handleSubmit = async () => {
-    if (!id || !isFormValid() || !reviewQuestions) return
+    if (!id || !isFormValid() || !reviewQuestions) return;
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     const reviewData = reviewQuestions.map((question) => ({
       rs_idx: question.rs_idx,
-      rs_grade: form[question.rs_idx] as Grade,
-    }))
+      rs_grade: form[question.rs_idx] as Grade
+    }));
 
     // 리뷰 내용 이스케이프 처리
-    const reviewMemo = form.content ? escapeHtml(form.content) : undefined
+    const reviewMemo = form.content ? escapeHtml(form.content) : undefined;
 
     try {
       // 이미지가 있는 경우 먼저 업로드
-      let imageUrls: string[] = []
+      let imageUrls: string[] = [];
       if (form.images.length > 0) {
         imageUrls = await uploadImages({
           fileToUpload: form.images,
-          nextUrl: "/reviews/reviews",
-        })
+          nextUrl: '/reviews/reviews'
+        });
       }
 
       // 리뷰 생성
@@ -177,43 +167,43 @@ const SatisfactionPage = () => {
           r_idx: id,
           review: reviewData,
           review_memo: reviewMemo,
-          images: imageUrls.length > 0 ? imageUrls : undefined,
+          images: imageUrls.length > 0 ? imageUrls : undefined
         },
         {
           onSuccess: () => {
-            setIsSubmitting(false)
+            setIsSubmitting(false);
             // 토스트 메시지 표시
-            showToast("만족도 작성이 완료되었습니다.")
+            showToast('만족도 작성이 완료되었습니다.');
             // 예약 리스트와 상세 정보 쿼리 무효화
-            queryClient.invalidateQueries({ queryKey: ["reservations"] })
+            queryClient.invalidateQueries({ queryKey: ['reservations'] });
             queryClient.invalidateQueries({
-              queryKey: ["reservationDetail", id],
-            })
-            navigate("/member-history/reservation")
+              queryKey: ['reservationDetail', id]
+            });
+            navigate('/member-history/reservation');
           },
           onError: () => {
-            setIsSubmitting(false)
-            showToast("리뷰 등록에 실패했습니다. 다시 시도해주세요.")
-          },
-        },
-      )
+            setIsSubmitting(false);
+            showToast('리뷰 등록에 실패했습니다. 다시 시도해주세요.');
+          }
+        }
+      );
     } catch (error) {
-      console.error("이미지 업로드 또는 리뷰 생성 중 오류 발생:", error)
-      showToast("리뷰 등록에 실패했습니다. 다시 시도해주세요.")
-      setIsSubmitting(false)
+      console.error('이미지 업로드 또는 리뷰 생성 중 오류 발생:', error);
+      showToast('리뷰 등록에 실패했습니다. 다시 시도해주세요.');
+      setIsSubmitting(false);
     }
-  }
+  };
 
   if (!reservationInfo) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <p className="text-gray-500">예약 정보를 찾을 수 없습니다.</p>
       </div>
-    )
+    );
   }
 
   if (isLoading) {
-    return <LoadingIndicator className="min-h-screen" />
+    return <LoadingIndicator className="min-h-screen" />;
   }
 
   if (isError) {
@@ -224,7 +214,7 @@ const SatisfactionPage = () => {
           이전으로 돌아가기
         </Button>
       </div>
-    )
+    );
   }
 
   return (
@@ -239,29 +229,25 @@ const SatisfactionPage = () => {
                 {formatDate(new Date(reservationInfo.r_date))}
               </span>
             </div>
-            <h2 className="text-18px font-bold text-gray-900">
-              {reservationInfo.b_name}
-            </h2>
+            <h2 className="text-18px font-bold text-gray-900">{reservationInfo.b_name}</h2>
           </div>
-          <p className="text-14px font-medium text-gray-500">
-            {reservationInfo.ps_name}
-          </p>
+          <p className="text-14px font-medium text-gray-500">{reservationInfo.ps_name}</p>
         </div>
 
         <div className="h-2 bg-gray-50 -mx-5" />
 
         {/* 만족도 평가 */}
         <div className="space-y-8 pt-2">
-           {/* 전체 선택 버튼 */}
-           <div>
+          {/* 전체 선택 버튼 */}
+          <div>
             <div className="flex gap-2">
-              {(["L", "M", "H"] as const).map((grade) => (
+              {(['L', 'M', 'H'] as const).map((grade) => (
                 <button
                   key={grade}
                   onClick={() => handleSelectAll(grade)}
                   className={clsx(
-                    "flex-1 h-10 rounded-lg text-14px font-m",
-                    "border border-gray-100 text-gray-900 hover:bg-gray-50",
+                    'flex-1 h-10 rounded-lg text-14px font-m',
+                    'border border-gray-100 text-gray-900 hover:bg-gray-50'
                   )}
                 >
                   {GRADE_TEXT[grade]}
@@ -272,24 +258,20 @@ const SatisfactionPage = () => {
 
           {/* 구분선 */}
           <div className="h-px bg-gray-100 my-4"></div>
-          
+
           {reviewQuestions?.map((question) => (
             <div key={question.rs_idx} className="space-y-4">
-              <h3 className="text-16px font-sb text-gray-900">
-                {question.sc_name}
-              </h3>
+              <h3 className="text-16px font-sb text-gray-900">{question.sc_name}</h3>
               <div className="flex gap-2">
-                {(["L", "M", "H"] as const).map((grade) => (
+                {(['L', 'M', 'H'] as const).map((grade) => (
                   <button
                     key={grade}
-                    onClick={() =>
-                      handleGradeSelect(question.rs_idx, grade as Grade)
-                    }
+                    onClick={() => handleGradeSelect(question.rs_idx, grade as Grade)}
                     className={clsx(
-                      "flex-1 h-10 rounded-lg text-14px font-m",
+                      'flex-1 h-10 rounded-lg text-14px font-m',
                       form[question.rs_idx] === grade
-                        ? "bg-primary text-white font-m"
-                        : "border border-gray-100 text-gray-900",
+                        ? 'bg-primary text-white font-m'
+                        : 'border border-gray-100 text-gray-900'
                     )}
                   >
                     {GRADE_TEXT[grade]}
@@ -301,9 +283,7 @@ const SatisfactionPage = () => {
 
           {/* 종합 평가 */}
           <div className="space-y-4">
-            <h3 className="text-16px font-sb text-gray-900">
-              종합적인 평가를 작성해주세요. (선택)
-            </h3>
+            <h3 className="text-16px font-sb text-gray-900">종합적인 평가를 작성해주세요. (선택)</h3>
             <TextArea
               value={form.content}
               onChange={handleContentChange}
@@ -314,9 +294,7 @@ const SatisfactionPage = () => {
 
           {/* 이미지 업로드 */}
           <div className="space-y-4">
-            <h3 className="text-16px font-sb text-gray-900">
-              사진을 올려서 테라피 히스토리를 관리하세요. (선택)
-            </h3>
+            <h3 className="text-16px font-sb text-gray-900">사진을 올려서 테라피 히스토리를 관리하세요. (선택)</h3>
             <div className="flex flex-wrap gap-2">
               <label className="w-20 h-20 flex flex-col items-center justify-center border border-gray-200 rounded-lg cursor-pointer">
                 <input
@@ -327,9 +305,7 @@ const SatisfactionPage = () => {
                   className="hidden"
                 />
                 <PlusIcon className="w-6 h-6 text-gray-400" />
-                <span className="text-12px font-m text-gray-400 mt-1">
-                  {form.images.length} / 8
-                </span>
+                <span className="text-12px font-m text-gray-400 mt-1">{form.images.length} / 8</span>
               </label>
               {form.images.map((image, index) => (
                 <div key={index} className="relative w-20 h-20">
@@ -364,11 +340,11 @@ const SatisfactionPage = () => {
           onClick={handleSubmit}
           className="w-full"
         >
-          {isSubmitting ? "제출 중..." : "작성 완료"}
+          {isSubmitting ? '제출 중...' : '작성 완료'}
         </Button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SatisfactionPage
+export default SatisfactionPage;

@@ -1,49 +1,46 @@
-import CloseGrayFillIcon from "@assets/icons/CloseGrayFillIcon.svg?react"
-import CustomTextField from "@components/CustomTextField.tsx"
-import LoadingIndicator from "@components/LoadingIndicator"
-import BranchIcon from "@components/icons/BranchIcon.tsx"
-import CheckIcon from "@components/icons/CheckIcon.tsx"
-import SearchIcon from "@components/icons/SearchIcon.tsx"
-import { IconButton } from "@mui/material"
-import React, { useState } from "react"
-import { useDebounce } from "../../hooks/useDebounce"
-import { useGeolocation } from "../../hooks/useGeolocation.tsx"
-import useIntersection from "../../hooks/useIntersection.tsx"
-import { useBranches } from "../../queries/useBranchQueries.tsx"
-import { Branch } from "../../types/Branch.ts"
+import CloseGrayFillIcon from '@/assets/icons/CloseGrayFillIcon.svg?react';
+import CustomTextField from '@/components/CustomTextField';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import BranchIcon from '@/components/icons/BranchIcon';
+import CheckIcon from '@/components/icons/CheckIcon';
+import SearchIcon from '@/components/icons/SearchIcon';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useGeolocation } from '@/hooks/useGeolocation';
+import useIntersection from '@/hooks/useIntersection';
+import { useBranches } from '@/queries/useBranchQueries';
+import { Branch } from '@/types/Branch';
+import { IconButton } from '@mui/material';
+import React, { useState } from 'react';
 
 interface SearchBranchListProps {
-  selectedBranches: Branch[]
-  setSelectedBranches: React.Dispatch<React.SetStateAction<Branch[]>>
+  selectedBranches: Branch[];
+  setSelectedBranches: React.Dispatch<React.SetStateAction<Branch[]>>;
 }
 
-const Step1SearchBranchList = ({
-  selectedBranches,
-  setSelectedBranches,
-}: SearchBranchListProps) => {
-  const [searchQuery, setSearchQuery] = useState("")
-  const debouncedSearchQuery = useDebounce(searchQuery, 300)
-  const { location: currentLocation } = useGeolocation()
+const Step1SearchBranchList = ({ selectedBranches, setSelectedBranches }: SearchBranchListProps) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  const { location: currentLocation } = useGeolocation();
   const { observerTarget } = useIntersection({
     onIntersect: () => {
       if (hasNextPage && !isFetchingNextPage) {
-        fetchNextPage()
+        fetchNextPage();
       }
-    },
-  })
+    }
+  });
 
   const {
     data: branchPages,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-    isLoading,
+    isLoading
   } = useBranches({
     latitude: currentLocation?.latitude,
     longitude: currentLocation?.longitude,
     search: debouncedSearchQuery,
-    enabled: !!currentLocation,
-  })
+    enabled: !!currentLocation
+  });
 
   const branches =
     branchPages?.pages.flatMap((page) =>
@@ -53,34 +50,34 @@ const Step1SearchBranchList = ({
         address: branch.b_addr,
         latitude: Number(branch.b_lat),
         longitude: Number(branch.b_lon),
-        canBookToday: branch.reserve === "Y",
+        canBookToday: branch.reserve === 'Y',
         distanceInMeters: branch.distance,
-        isFavorite: branch.b_bookmark === "Y",
+        isFavorite: branch.b_bookmark === 'Y',
         brandCode: branch.brand_code,
-        brand: "therapist",
-      })),
-    ) || []
+        brand: 'therapist'
+      }))
+    ) || [];
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value)
-  }
+    setSearchQuery(event.target.value);
+  };
 
   const handleSearchClear = () => {
-    setSearchQuery("")
-  }
+    setSearchQuery('');
+  };
 
   const handleSelectBranch = (branch: Branch) => {
     setSelectedBranches((prev) => {
       if (prev.some((b) => b.b_idx === branch.b_idx)) {
-        return prev.filter((b) => b.b_idx !== branch.b_idx)
+        return prev.filter((b) => b.b_idx !== branch.b_idx);
       }
-      return [...prev, branch]
-    })
-  }
+      return [...prev, branch];
+    });
+  };
 
   const handleRemoveBranch = (branch: Branch) => {
-    setSelectedBranches((prev) => prev.filter((b) => b.b_idx !== branch.b_idx))
-  }
+    setSelectedBranches((prev) => prev.filter((b) => b.b_idx !== branch.b_idx));
+  };
 
   return (
     <div className="flex flex-col justify-between h-full bg-white">
@@ -90,23 +87,18 @@ const Step1SearchBranchList = ({
           <br />
           지점을 선택해주세요
         </p>
-        <p className="mt-[12px] text-gray-400">
-          지점명을 검색해 이용하셨던 매장을 알려주세요
-        </p>
+        <p className="mt-[12px] text-gray-400">지점명을 검색해 이용하셨던 매장을 알려주세요</p>
 
         <div className="mt-[40px]">
           <CustomTextField
-            type={"text"}
+            type={'text'}
             value={searchQuery}
             onChange={handleSearchChange}
             placeholder="지점명 검색"
             iconLeft={<SearchIcon className="ml-[2px] w-[24px] h-[24px]" />}
             iconRight={
               searchQuery && (
-                <IconButton
-                  className="px-0 py-[15px] mr-[2px] h-full"
-                  onClick={handleSearchClear}
-                >
+                <IconButton className="px-0 py-[15px] mr-[2px] h-full" onClick={handleSearchClear}>
                   <CloseGrayFillIcon className="w-[24px] h-[24px]" />
                 </IconButton>
               )
@@ -125,8 +117,8 @@ const Step1SearchBranchList = ({
                 {item.name}
                 <button
                   onClick={(e) => {
-                    e.stopPropagation()
-                    handleRemoveBranch(item)
+                    e.stopPropagation();
+                    handleRemoveBranch(item);
                   }}
                   className="ml-[4px] text-gray-500 hover:text-gray-700 "
                   aria-label="Remove"
@@ -149,9 +141,7 @@ const Step1SearchBranchList = ({
         ) : (
           <>
             {branches.length === 0 ? (
-              <div className="flex justify-center items-center py-8 text-gray-500">
-                검색 결과가 없습니다.
-              </div>
+              <div className="flex justify-center items-center py-8 text-gray-500">검색 결과가 없습니다.</div>
             ) : (
               branches.map((branch) => (
                 <div
@@ -159,8 +149,8 @@ const Step1SearchBranchList = ({
                   className="w-full flex justify-between py-[16px] cursor-pointer border-b border-b-[#ECECEC] text-left"
                   onClick={() => handleSelectBranch(branch)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      handleSelectBranch(branch)
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      handleSelectBranch(branch);
                     }
                   }}
                   role="button"
@@ -172,24 +162,17 @@ const Step1SearchBranchList = ({
                     <div className="text-[14px] w-full">
                       <div className="flex justify-between items-center h-[24px] w-full">
                         <p className="font-bold text-gray-700">{branch.name}</p>
-                        {selectedBranches.some(
-                          (b) => b.b_idx === branch.b_idx,
-                        ) && (
-                          <CheckIcon
-                            className="w-[24px] h-[24px] flex-shrink-0"
-                            htmlColor="#F37165"
-                          />
+                        {selectedBranches.some((b) => b.b_idx === branch.b_idx) && (
+                          <CheckIcon className="w-[24px] h-[24px] flex-shrink-0" htmlColor="#F37165" />
                         )}
                       </div>
-                      <p className="font-normal text-gray-500 mt-[8px]">
-                        {branch.address}
-                      </p>
+                      <p className="font-normal text-gray-500 mt-[8px]">{branch.address}</p>
                     </div>
                   </div>
                 </div>
               ))
             )}
-            <div ref={observerTarget} className={"h-4"} />
+            <div ref={observerTarget} className={'h-4'} />
             {isFetchingNextPage && (
               <div className="flex justify-center py-4">
                 <LoadingIndicator size={24} />
@@ -199,7 +182,7 @@ const Step1SearchBranchList = ({
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Step1SearchBranchList
+export default Step1SearchBranchList;

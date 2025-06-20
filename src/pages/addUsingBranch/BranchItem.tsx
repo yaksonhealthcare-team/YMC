@@ -1,8 +1,8 @@
-import BranchIcon from "@components/icons/BranchIcon.tsx"
-import { Branch } from "../../types/Branch.ts"
+import BranchIcon from '@/components/icons/BranchIcon';
+import { Branch } from '@/types/Branch';
 
 interface BranchItemProps {
-  branch: Branch
+  branch: Branch;
 }
 
 const BranchItem = ({ branch }: BranchItemProps) => {
@@ -16,7 +16,7 @@ const BranchItem = ({ branch }: BranchItemProps) => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default BranchItem
+export default BranchItem;
