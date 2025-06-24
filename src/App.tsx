@@ -5,6 +5,10 @@ import ErrorBoundary from './components/ErrorBoundary';
 import { queryClient } from './queries/clients';
 import { AppRouter } from './router/router';
 
+/**
+ * @deprecated
+ * 점진적으로 mui를 tailwind로 대체합니다.
+ */
 const theme = createTheme({
   // MUI 테마 설정
   components: {

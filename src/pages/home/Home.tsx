@@ -1,3 +1,4 @@
+import '@/assets/css/swiper-custom.css';
 import NotiIcon from '@/assets/icons/NotiIcon.svg?react';
 import { FloatingButton } from '@/components/FloatingButton';
 import LoadingIndicator from '@/components/LoadingIndicator';
@@ -9,7 +10,6 @@ import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { useBanner } from '@/queries/useBannerQueries';
 import { useUserMemberships } from '@/queries/useMembershipQueries';
 import { useUnreadNotificationsCount } from '@/queries/useNotificationQueries';
-import '@/styles/swiper-custom.css';
 import { BannerRequestType } from '@/types/Banner';
 import { Container, Typography } from '@mui/material';
 import { lazy, Suspense, useEffect, useMemo } from 'react';
