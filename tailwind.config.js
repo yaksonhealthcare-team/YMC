@@ -1,10 +1,7 @@
-import { blue } from '@mui/material/colors';
-import tailwindScrollbarHide from 'tailwind-scrollbar-hide';
-
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
-  important: true,
+  important: true, // @deprecated mui 점진적 제거 후 제거 필요
   theme: {
     extend: {
       fontFamily: {
@@ -18,16 +15,14 @@ export default {
       },
       // 폰트 크기, line-height 설정
       fontSize: {
-        '10px': ['10px', '148%'],
-        '12px': ['12px', '148%'],
-        '14px': ['14px', '148%'],
-        '14pxb': ['14px', '168%'],
-        '16px': ['16px', '148%'],
-        '16pxb': ['16px', '168%'],
-        '18px': ['18px', '168%'],
-        '20px': ['20px', '148%'],
-        '24px': ['24px', '148%'],
-        '28px': ['28px', '148%']
+        '10px': ['10px', '1.48'],
+        '12px': ['12px', '1.48'],
+        '14px': ['14px', '1.48'],
+        '16px': ['16px', '1.48'],
+        '18px': ['18px', '1.68'],
+        '20px': ['20px', '1.48'],
+        '24px': ['24px', '1.48'],
+        '28px': ['28px', '1.48']
       },
       // letter-spacing (-0.50%) 설정
       letterSpacing: {
@@ -90,7 +85,6 @@ export default {
     }
   },
   plugins: [
-    tailwindScrollbarHide,
     function ({ addUtilities }) {
       const newUtilities = {
         '.no-scrollbar': {

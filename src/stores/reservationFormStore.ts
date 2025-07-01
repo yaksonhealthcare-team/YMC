@@ -1,33 +1,35 @@
+import dayjs from 'dayjs';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import dayjs from 'dayjs';
-import { TimeSlot } from '../types/Schedule';
-import { AdditionalManagement } from '../types/Membership';
 import { Branch } from '../types/Branch';
+import { AdditionalManagement } from '../types/Membership';
+import { TimeSlot } from '../types/Schedule';
 
 export interface ReservationFormData {
-  item: undefined | string;
-  branch: undefined | string;
   date: null | dayjs.Dayjs;
   timeSlot: null | TimeSlot;
   request: string;
   additionalServices: AdditionalManagement[];
+  item?: string;
+  consult?: { value: string; name: string };
+  branch?: string;
   membershipId?: string;
 }
 
 interface ReservationFormState {
   formData: ReservationFormData;
   selectedBranch: Branch | null;
-  initialMembershipId: string | undefined;
   setFormData: (data: Partial<ReservationFormData>) => void;
   resetFormData: () => void;
   setSelectedBranch: (branch: Branch) => void;
-  setInitialMembershipId: (id: string | undefined) => void;
+  setInitialMembershipId: (id?: string) => void;
   clearAll: () => void;
+  initialMembershipId?: string;
 }
 
 const initialState: ReservationFormData = {
   item: undefined,
+  consult: { value: '', name: '' },
   branch: undefined,
   date: null,
   timeSlot: null,

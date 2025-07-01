@@ -281,6 +281,9 @@ const extractColor = (className: string): string => {
   }
 };
 
+/**
+ * @deprecated
+ */
 const useLayout = () => {
   const context = useContext(LayoutContext);
   if (!context) {

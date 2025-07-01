@@ -1,10 +1,11 @@
+import { RadioGroup, RadioLabelCard } from '@/_shared/components';
 import ShareIcon from '@/assets/icons/ShareIcon.svg?react';
 import { Button } from '@/components/Button';
 import TextField from '@/components/CustomTextField';
 import { Filter } from '@/components/Filter';
 import { FloatingButton } from '@/components/FloatingButton';
 import { GenderSelect } from '@/components/GenderSelect';
-import { Header } from '@/components/Header';
+import { Header as LegacyHeader } from '@/components/Header';
 import ReloadIcon from '@/components/icons/ReloadIcon';
 import { Indicator } from '@/components/Indicator';
 import { Notice } from '@/components/Notice';
@@ -69,9 +70,18 @@ const DevPage = () => {
   };
 
   const [selectedGender, setSelectedGender] = useState<Gender>('F');
+  const [selected, setSelected] = useState('상담만');
 
   return (
     <>
+      <div className="flex flex-col py-8 border-t gap-2">
+        {'<RadioButton>'}
+        <RadioGroup name="ex" value={selected} onChange={setSelected} className="flex flex-row gap-4">
+          <RadioLabelCard value={'상담만'} label="상담만" checked={selected === '상담만'} />
+          <RadioLabelCard value={'상담 후 관리'} label="상담 후 관리" checked={selected === '상담 후 관리'} />
+        </RadioGroup>
+      </div>
+
       <div className="p-4 border-t">
         {'Buttons: '}
         <Button variantType="primary" sizeType="xs" iconLeft={<ReloadIcon />}>
@@ -221,7 +231,7 @@ const DevPage = () => {
       </div>
       <div className="p-4 border-t bg-gray-200">
         {'Header: '}
-        <Header
+        <LegacyHeader
           type="location"
           title="서울 강남구 테헤란로78길 14-10"
           onClickLocation={() => {
@@ -234,13 +244,13 @@ const DevPage = () => {
             alert('Right Icon Clicked');
           }}
         />
-        <Header type="back_w" />
-        <Header type="back_b" />
-        <Header type="back_title" title="Title" />
-        <Header type="back_title_icon" iconRight={<ShareIcon />} title="Title" />
-        <Header type="two_icon" iconLeft={<ShareIcon />} iconRight={<ShareIcon />} />
-        <Header type="back_title_text" title="Title" textRight="저장" />
-        <Header type="title_right_icon" title="Title" iconRight={<ShareIcon />} />
+        <LegacyHeader type="back_w" />
+        <LegacyHeader type="back_b" />
+        <LegacyHeader type="back_title" title="Title" />
+        <LegacyHeader type="back_title_icon" iconRight={<ShareIcon />} title="Title" />
+        <LegacyHeader type="two_icon" iconLeft={<ShareIcon />} iconRight={<ShareIcon />} />
+        <LegacyHeader type="back_title_text" title="Title" textRight="저장" />
+        <LegacyHeader type="title_right_icon" title="Title" iconRight={<ShareIcon />} />
       </div>
       <div className="p-4 border-t">
         {'Indicator: '}
@@ -275,6 +285,7 @@ const DevPage = () => {
           로그아웃
         </Button>
       </div>
+      <div className="mt-24" />
     </>
   );
 };
