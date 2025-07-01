@@ -1,3 +1,6 @@
+import { ConvertedConsultMenuData } from '@/_domain/reservation/business';
+import { ConsultMenuChoicePage } from '@/_domain/reservation/components';
+import { Collapse, RadioLabelCard } from '@/_shared/components';
 import { createAdditionalManagementOrder } from '@/apis/order.api';
 import { getConsultationCount } from '@/apis/reservation.api';
 import { Button } from '@/components/Button';
@@ -16,7 +19,7 @@ import { Branch } from '@/types/Branch';
 import { Membership } from '@/types/Membership';
 import { formatDateForAPI } from '@/utils/date';
 import { toNumber } from '@/utils/number';
-import { CircularProgress, RadioGroup } from '@mui/material';
+import { CircularProgress, RadioGroup as MUIRadioGroup } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -219,8 +222,10 @@ const ReservationFormPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { handleError } = useErrorHandler();
+  const [showConsultPage, setShowConsultPage] = useState(false);
   const [showBranchModal, setShowBranchModal] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
+  const [consultType, setConsultType] = useState<'consult_only' | 'manage_after_consult'>('consult_only');
   const isInitialized = useRef(false);
 
   const {
@@ -287,9 +292,7 @@ const ReservationFormPage = () => {
 
   // 컴포넌트 언마운트 시에만 clearAll 실행
   useEffect(() => {
-    return () => {
-      clearAll();
-    };
+    return clearAll;
   }, [clearAll]);
 
   // 초기 데이터 로딩 Effect - 최초 한 번만 실행되도록 수정
@@ -454,6 +457,7 @@ const ReservationFormPage = () => {
 
         setFormDataInStore({
           item: value,
+          consult: { value: '', name: '' },
           date: null,
           timeSlot: null,
           additionalServices: [],
@@ -461,10 +465,12 @@ const ReservationFormPage = () => {
           // 단일 지점이 있으면 자동 선택, 없으면 undefined
           branch: branchId
         });
+        setConsultType('consult_only');
       } else {
         // 상담 예약 선택 시
         setFormDataInStore({
           item: value,
+          consult: { value: '', name: '' },
           date: null,
           timeSlot: null,
           additionalServices: [],
@@ -484,6 +490,58 @@ const ReservationFormPage = () => {
       initialMembershipId,
       memberships // 회원권 목록 의존성 추가
     ]
+  );
+
+  const handleClickConsult = (value: string) => {
+    if (value !== 'consult_only' && value !== 'manage_after_consult') return;
+
+    if (value === 'consult_only') {
+      setFormDataInStore({
+        consult: { value: '', name: '' }
+      });
+      setShowConsultPage(false);
+    }
+
+    const isValidAfterConsult = value === 'manage_after_consult' && !formData.branch;
+    if (isValidAfterConsult) {
+      openModal({
+        title: '지점을 먼저 선택해주세요.',
+        message: '',
+        onConfirm: closeOverlay
+      });
+      return;
+    } else if (value === 'manage_after_consult') {
+      setShowConsultPage(true);
+    }
+
+    if (consultType !== value) {
+      setFormDataInStore({
+        timeSlot: null
+      });
+    }
+
+    setConsultType(value);
+  };
+
+  const handleClickBack = useCallback(() => {
+    if (showConsultPage) setShowConsultPage(false);
+
+    const isInvalidConsult = !formData.consult?.value;
+    if (isInvalidConsult) {
+      setFormDataInStore({ consult: { value: '', name: '' } });
+      setConsultType('consult_only');
+    }
+  }, [formData.consult?.value, setFormDataInStore, showConsultPage]);
+
+  const handleClickCard = useCallback(
+    ({ name, idx }: ConvertedConsultMenuData[number]) => {
+      if (formData.consult?.value !== idx) {
+        setFormDataInStore({ timeSlot: null });
+      }
+      setFormDataInStore({ consult: { name, value: idx } });
+      setShowConsultPage(false);
+    },
+    [formData.consult?.value, setFormDataInStore]
   );
 
   const handleOpenCalendar = useCallback(() => {
@@ -507,6 +565,7 @@ const ReservationFormPage = () => {
         membershipIndex={formData.item === '상담 예약' ? 0 : toNumber(formData.membershipId)}
         addServices={formData.additionalServices.map((service) => toNumber(service.s_idx))}
         b_idx={formData.branch}
+        ss_idx={formData.consult?.value}
       />,
       { height: 'large' }
     );
@@ -525,9 +584,11 @@ const ReservationFormPage = () => {
       setSelectedBranch(branch);
       setFormDataInStore({
         branch: branch.b_idx,
+        consult: { name: '', value: '' },
         timeSlot: null,
         date: null
       });
+      setConsultType('consult_only');
       setShowBranchModal(false);
     },
     [setFormDataInStore]
@@ -564,7 +625,8 @@ const ReservationFormPage = () => {
         b_idx: branchId,
         r_date: formatDateForAPI(formData.date?.toDate() || null),
         r_stime: formData.timeSlot!.time,
-        r_memo: formData.request
+        r_memo: formData.request,
+        consult_ss_idx: formData.consult?.value
       })) as any;
 
       if (response.resultCode !== '00') {
@@ -692,6 +754,8 @@ const ReservationFormPage = () => {
 
   return (
     <div className="flex-1 space-y-3 pb-32 overflow-y-auto overflow-x-hidden">
+      {showConsultPage && <ConsultMenuChoicePage onBack={handleClickBack} onClickCard={handleClickCard} />}
+
       {showBranchModal && (
         <MembershipBranchSelectModal
           onBranchSelect={handleBranchSelect}
@@ -705,53 +769,70 @@ const ReservationFormPage = () => {
         <h2 className="text-gray-700 text-18px font-sb leading-[148%] tracking-[-0.09px] mb-4">
           원하는 예약을 선택해주세요.
         </h2>
-        <RadioGroup
-          className="flex flex-col space-y-4"
+        <MUIRadioGroup
+          className="flex flex-col"
           value={formData.item ?? ''}
           onChange={(e) => handleOnChangeItem(e.target.value)}
         >
-          <div>
-            <RadioCard
-              checked={formData.item === '상담 예약'}
-              value="상담 예약"
-              disabled={consultationCount && consultationCount.maxCount - consultationCount.currentCount <= 0}
-            >
-              <div className="justify-start items-center gap-2 flex">
+          <RadioCard
+            checked={formData.item === '상담 예약'}
+            className="mb-4"
+            value="상담 예약"
+            disabled={consultationCount && consultationCount.maxCount - consultationCount.currentCount <= 0}
+          >
+            <div className="justify-start items-center gap-2 flex">
+              <div
+                className={`text-16px font-sb ${
+                  consultationCount && consultationCount.maxCount - consultationCount.currentCount <= 0
+                    ? 'text-gray-400'
+                    : 'text-gray-700'
+                }`}
+              >
+                상담 예약
+              </div>
+              <div
+                className={`px-2 py-0.5 rounded-[999px] justify-center items-center flex ${
+                  consultationCount && consultationCount.maxCount - consultationCount.currentCount <= 0
+                    ? 'bg-[#FFF8F7]'
+                    : 'bg-tag-greenBg'
+                }`}
+              >
                 <div
-                  className={`text-16px font-sb ${
+                  className={`text-center text-12px font-m ${
                     consultationCount && consultationCount.maxCount - consultationCount.currentCount <= 0
-                      ? 'text-gray-400'
-                      : 'text-gray-700'
+                      ? 'text-error'
+                      : 'text-tag-green'
                   }`}
                 >
-                  상담 예약
-                </div>
-                <div
-                  className={`px-2 py-0.5 rounded-[999px] justify-center items-center flex ${
-                    consultationCount && consultationCount.maxCount - consultationCount.currentCount <= 0
-                      ? 'bg-[#FFF8F7]'
-                      : 'bg-tag-greenBg'
-                  }`}
-                >
-                  <div
-                    className={`text-center text-12px font-m ${
-                      consultationCount && consultationCount.maxCount - consultationCount.currentCount <= 0
-                        ? 'text-error'
-                        : 'text-tag-green'
-                    }`}
-                  >
-                    {!consultationCount
-                      ? '...'
-                      : consultationCount.currentCount >= consultationCount.maxCount
-                        ? '소진'
-                        : consultationCount.currentCount === 0
-                          ? 'FREE'
-                          : `${consultationCount.maxCount - consultationCount.currentCount}/${consultationCount.maxCount}`}
-                  </div>
+                  {!consultationCount
+                    ? '...'
+                    : consultationCount.currentCount >= consultationCount.maxCount
+                      ? '소진'
+                      : consultationCount.currentCount === 0
+                        ? 'FREE'
+                        : `${consultationCount.maxCount - consultationCount.currentCount}/${consultationCount.maxCount}`}
                 </div>
               </div>
-            </RadioCard>
-          </div>
+            </div>
+          </RadioCard>
+
+          <Collapse isOpen={formData.item === '상담 예약'}>
+            <div className="flex flex-row gap-4 mb-4">
+              <RadioLabelCard
+                value={'consult_only'}
+                label="상담만"
+                checked={consultType === 'consult_only'}
+                onClick={handleClickConsult}
+              />
+              <RadioLabelCard
+                value={'manage_after_consult'}
+                label={formData.consult?.name || '상담 후 관리'}
+                checked={consultType === 'manage_after_consult'}
+                onClick={handleClickConsult}
+              />
+            </div>
+          </Collapse>
+
           {memberships.length > 0 && (
             <MembershipSwiper
               membershipsData={{
@@ -770,7 +851,7 @@ const ReservationFormPage = () => {
               initialMembershipId={initialMembershipId}
             />
           )}
-        </RadioGroup>
+        </MUIRadioGroup>
         <div className="flex flex-col mt-[16px]">
           <p className="text-gray-500 text-14px">
             * 상담 예약은 월간 {consultationCount?.maxCount ?? '?'}회까지 이용 가능합니다.

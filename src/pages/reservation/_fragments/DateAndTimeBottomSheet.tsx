@@ -21,6 +21,7 @@ interface DateAndTimeBottomSheetProps {
   onSelect: (date: Dayjs | null, timeSlot: TimeSlot | null) => void;
   membershipIndex?: number;
   addServices?: number[];
+  ss_idx?: string;
   b_idx: string;
 }
 
@@ -31,7 +32,8 @@ const DateAndTimeBottomSheet = ({
   onSelect,
   membershipIndex,
   addServices,
-  b_idx
+  b_idx,
+  ss_idx
 }: DateAndTimeBottomSheetProps) => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(initialDate);
   const [selectedTime, setSelectedTime] = useState<TimeSlot | null>(initialTime);
@@ -70,6 +72,7 @@ const DateAndTimeBottomSheet = ({
         membershipIndex={membershipIndex}
         addServices={addServices}
         b_idx={b_idx}
+        ss_idx={ss_idx}
       />
       <div className="w-full h-px bg-gray-100" />
       {selectedDate ? (
@@ -80,6 +83,7 @@ const DateAndTimeBottomSheet = ({
           addServices={addServices}
           selectedDate={selectedDate}
           b_idx={b_idx}
+          ss_idx={ss_idx}
         />
       ) : (
         <div className="w-full p-4 bg-[#f7f7f7] rounded-lg">
@@ -192,10 +196,18 @@ interface DatePickerSectionProps {
   handleDateSelect: (date: Dayjs | null) => void;
   membershipIndex?: number;
   addServices?: number[];
+  ss_idx?: string;
   b_idx: string;
 }
 
-const DatePickerSection = ({ date, handleDateSelect, membershipIndex, addServices, b_idx }: DatePickerSectionProps) => {
+const DatePickerSection = ({
+  date,
+  handleDateSelect,
+  membershipIndex,
+  addServices,
+  b_idx,
+  ss_idx
+}: DatePickerSectionProps) => {
   const [currentYearMonth, setCurrentYearMonth] = useState<Dayjs>(date || dayjs());
   const [isMonthChanging, setIsMonthChanging] = useState(false);
 
@@ -212,7 +224,8 @@ const DatePickerSection = ({ date, handleDateSelect, membershipIndex, addService
     membershipIndex,
     searchDate: currentYearMonth,
     addServices,
-    b_idx
+    b_idx,
+    ss_idx
   });
 
   useEffect(() => {
@@ -338,6 +351,7 @@ interface TimePickerSectionProps {
   membershipIndex?: number;
   addServices?: number[];
   selectedDate?: Dayjs;
+  ss_idx?: string;
   b_idx: string;
 }
 
@@ -347,7 +361,8 @@ const TimePickerSection = ({
   membershipIndex,
   addServices,
   selectedDate,
-  b_idx
+  b_idx,
+  ss_idx
 }: TimePickerSectionProps) => {
   const {
     data: times,
@@ -357,7 +372,8 @@ const TimePickerSection = ({
     membershipIndex,
     searchDate: selectedDate,
     addServices,
-    b_idx
+    b_idx,
+    ss_idx
   });
 
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
