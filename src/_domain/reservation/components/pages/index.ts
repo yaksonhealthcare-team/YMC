@@ -1,0 +1,1 @@
+export { ConsultMenuChoicePage } from './ConsultMenuChoicePage';
