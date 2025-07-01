@@ -1,0 +1,24 @@
+export const ERROR_CODES = {
+  // 인증 관련 에러
+  TOKEN_EXPIRED: '10',
+  REFRESH_TOKEN_EXPIRED: '11',
+  INVALID_TOKEN: '20',
+  UNAUTHORIZED: '21',
+
+  // 요청 관련 에러
+  INVALID_REQUEST: '24',
+  BAD_REQUEST: '25',
+
+  // 서버 에러
+  SERVER_ERROR: '50',
+  DATABASE_ERROR: '51',
+
+  // 결제 관련 에러
+  PAYMENT_ERROR: '60',
+  PAYMENT_CANCEL_ERROR: '61',
+
+  // 예약 관련 에러
+  CONSULTATION_LIMIT_EXCEEDED: '40',
+  ALREADY_RESERVED: '41',
+  INVALID_RESERVATION_TIME: '42'
+} as const;

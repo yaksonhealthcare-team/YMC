@@ -1,0 +1,63 @@
+import { refreshAccessToken } from '@/_domain/auth/services';
+import { getAccessToken, removeAccessToken, saveAccessToken } from '@/_domain/auth/utils';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { ERROR_CODES } from '../constants';
+import { ListResponse } from '../types/response.types';
+
+export const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  timeout: 15000,
+  timeoutErrorMessage: '요청 시간이 초과되었습니다. 다시 시도해주세요.',
+  withCredentials: true // 쿠키 통신을 위해 필요
+});
+
+export const authApi = api.create();
+
+authApi.interceptors.request.use(
+  async (config) => {
+    const token = getAccessToken();
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+authApi.interceptors.response.use(
+  async (response: AxiosResponse<ListResponse<[]>>) => {
+    const originalRequest = response.config as any;
+    const responseData = response?.data;
+    const responseStatus = response?.status;
+    const isTokenExpired = responseData?.resultCode === ERROR_CODES.TOKEN_EXPIRED;
+
+    if ((isTokenExpired || responseStatus === 401) && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        const { data } = await refreshAccessToken();
+        const { accessToken: newAccessToken } = data.body;
+        if (!newAccessToken) throw new Error('토큰 갱신 실패');
+
+        saveAccessToken(newAccessToken);
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        authApi.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+
+        return authApi(originalRequest);
+      } catch (error) {
+        removeAccessToken();
+        window.location.replace('/login');
+        return Promise.reject(error);
+      }
+    }
+
+    return response;
+  },
+  async (error: AxiosError<ListResponse<[]>>) => {
+    return Promise.reject(
+      new AxiosError('네트워크 에러', undefined, error.config, error.response?.request, error.response)
+    );
+  }
+);
