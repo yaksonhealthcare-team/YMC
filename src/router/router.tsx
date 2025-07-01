@@ -14,6 +14,10 @@ export const createRoutes = () => {
     return routes.map((route) => {
       let element = route.element;
 
+      if (route.path?.startsWith('/dev') && process.env.NODE_ENV !== 'development') {
+        element = null;
+      }
+
       if (route.path?.startsWith('/signup')) {
         element = <SignupProvider>{element}</SignupProvider>;
       }
