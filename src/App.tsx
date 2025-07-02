@@ -1,5 +1,7 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { QueryClientProvider } from '@tanstack/react-query';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import 'swiper/swiper-bundle.css';
 import ErrorBoundary from './components/ErrorBoundary';
 import { queryClient } from './queries/clients';
@@ -39,6 +41,8 @@ const theme = createTheme({
     fontFamily: 'Pretendard, sans-serif' // Pretendard 폰트 설정
   }
 });
+
+dayjs.extend(customParseFormat);
 
 function App() {
   return (
