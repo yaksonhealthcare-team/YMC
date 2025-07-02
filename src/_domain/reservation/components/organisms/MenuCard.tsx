@@ -1,17 +1,8 @@
 import ClockIcon from '@/assets/icons/ClockIcon.svg?react';
 import clsx from 'clsx';
+import { MenuCardProps } from './MenuCard.types';
 
-export interface MenuCardProps {
-  item: MenuCardItemProps;
-}
-export interface MenuCardItemProps {
-  name: string;
-  category?: string;
-  spentTime?: string;
-  price?: string;
-}
-
-export const MenuCard = ({ item }: MenuCardProps) => {
+export const MenuCard = ({ item, type = 'standard' }: MenuCardProps) => {
   const { name, category, price, spentTime } = item;
 
   return (
@@ -32,7 +23,7 @@ export const MenuCard = ({ item }: MenuCardProps) => {
 
       <div className="flex items-center justify-end gap-1">
         <p className="text-base font-b text-gray-700">{price}원</p>
-        <p className="text-xs font-r text-gray-700">부터~</p>
+        <p className="text-xs font-r text-gray-700">{type === 'standard' ? '부터~' : '차감'}</p>
       </div>
     </div>
   );

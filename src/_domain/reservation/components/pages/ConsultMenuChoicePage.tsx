@@ -1,7 +1,7 @@
 import { useGetConsultMenu } from '@/_domain/category/services/queries/menu.queries';
 import { useDebounce } from '@/_shared/hooks/useDebounce';
 import { useReservationFormStore } from '@/stores/reservationFormStore';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { convertConsultMenu, ConvertedConsultMenuData } from '../../business';
 import { ConsultMenuChoiceTemplate } from '../templates';
 
@@ -15,14 +15,12 @@ export const ConsultMenuChoicePage = ({ onBack, onClickCard }: ConsultMenuChoice
 
   const { formData } = useReservationFormStore();
   const debouncedValue = useDebounce(search);
-  const {
-    data: infiniteData,
-    fetchNextPage,
-    hasNextPage,
-    isPending
-  } = useGetConsultMenu({ b_idx: formData.branch || '', search: debouncedValue });
-  const data = infiniteData?.pages.flatMap((page) => page.data) || [];
-  const convertedData = convertConsultMenu(data);
+  const { data, fetchNextPage, hasNextPage, isPending } = useGetConsultMenu({
+    b_idx: formData.branch || '',
+    search: debouncedValue
+  });
+  const consultMenuData = useMemo(() => data?.flatMap((page) => page.data.body), [data]);
+  const convertedData = convertConsultMenu(consultMenuData);
 
   const handleFetch = () => {
     if (hasNextPage) fetchNextPage();
