@@ -7,6 +7,7 @@ import { CryptoTokenReissueSchema } from '../types/auth.types';
 const BASE_URL = `/auth`;
 
 /**
+ * 토큰 재요청
  * @link
  * https://yaksonhc.postman.co/workspace/Team-Workspace~34821a51-840a-442c-80f4-eeb9dc894ed4/request/37761356-993ebd2e-fe67-4c78-a024-f97e393798d9?action=share&creator=45468383&ctx=documentation
  */
