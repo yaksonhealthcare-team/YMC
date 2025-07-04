@@ -140,30 +140,37 @@ const BranchDetail = () => {
       brand: branch.brand
     };
 
-    if (hasMembershipForBranch) {
-      // 회원권 있음: isConsultation: false + branchId + selectedBranch 전달
-      console.log('Navigating with existing membership for branch:', branch.b_idx);
-      navigate('/reservation/form', {
-        state: {
-          isConsultation: false,
-          branchId: branch.b_idx,
-          selectedBranch: branchForState
-        }
-      });
-    } else {
-      // 회원권 없음: isConsultation: true + branchId + selectedBranch 전달
-      console.log('Navigating for consultation for branch:', branch.b_idx);
-      navigate('/reservation/form', {
-        state: {
-          isConsultation: true,
-          branchId: branch.b_idx,
-          selectedBranch: branchForState
-        }
-      });
-    }
+    navigate('/reservation/form', {
+      state: {
+        isConsultation: true,
+        branchId: branch.b_idx,
+        selectedBranch: branchForState
+      }
+    });
+    // if (hasMembershipForBranch) {
+    //   // 회원권 있음: isConsultation: false + branchId + selectedBranch 전달
+    //   console.log('Navigating with existing membership for branch:', branch.b_idx);
+    //   navigate('/reservation/form', {
+    //     state: {
+    //       isConsultation: false,
+    //       branchId: branch.b_idx,
+    //       selectedBranch: branchForState
+    //     }
+    //   });
+    // } else {
+    //   // 회원권 없음: isConsultation: true + branchId + selectedBranch 전달
+    //   console.log('Navigating for consultation for branch:', branch.b_idx);
+    //   navigate('/reservation/form', {
+    //     state: {
+    //       isConsultation: true,
+    //       branchId: branch.b_idx,
+    //       selectedBranch: branchForState
+    //     }
+    //   });
+    // }
     // 기존 URL 파라미터 방식 제거
     // navigate(`/reservation/form?branchId=${branch.b_idx}`)
-  }, [branch, navigate, hasMembershipForBranch]);
+  }, [branch, navigate]);
 
   const handleBookmark = useCallback(() => {
     if (!branch) return;
