@@ -1,1 +1,1 @@
-export { ConsultMenuChoicePage } from './ConsultMenuChoicePage';
+export { MenuChoicePage, type MenuChoicePageProps } from './MenuChoicePage';
