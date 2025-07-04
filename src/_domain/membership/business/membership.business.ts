@@ -9,13 +9,22 @@ export type ConvertedMembershipData = ReturnType<typeof convertMembership>;
  */
 export const convertMembership = (data: UserMembershipSchema[] = [], location?: Location) => {
   const copiedData = [...data];
-  const rebookingMembershipId = location?.state.rebookingMembershipId;
+  const rebookingMembershipId = location?.state?.rebookingMembershipId;
+  const params = new URLSearchParams(location?.search);
+  const membershipId = params.get('membershipId');
 
   // 재예약하기로 들어왔을 경우
   if (rebookingMembershipId) {
     copiedData.sort((a, b) => {
       if (a.mp_idx === rebookingMembershipId) return -1;
       if (b.mp_idx === rebookingMembershipId) return 1;
+      return 0;
+    });
+  } else if (membershipId) {
+    // 홈 - 보유 회원권 -> 예약하기로 들어왔을 경우
+    copiedData.sort((a, b) => {
+      if (a.mp_idx === membershipId) return -1;
+      if (b.mp_idx === membershipId) return 1;
       return 0;
     });
   }
