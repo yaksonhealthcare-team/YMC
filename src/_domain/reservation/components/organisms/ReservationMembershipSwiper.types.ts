@@ -11,5 +11,5 @@ export interface ReservationMembershipSwiperProps {
   /**
    * 라디오 버튼 선택 이벤트
    */
-  onChange: (value: string) => void;
+  onChange: (checked: boolean, value: string, item: ReservationMembershipCardItem) => void;
 }

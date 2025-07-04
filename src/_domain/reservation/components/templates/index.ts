@@ -1,1 +1,1 @@
-export { ConsultMenuChoiceTemplate, type ConsultMenuChoiceTemplateProps } from './ConsultMenuChoiceTemplate';
+export { MenuChoiceTemplate, type MenuChoiceTemplateProps } from './MenuChoiceTemplate';

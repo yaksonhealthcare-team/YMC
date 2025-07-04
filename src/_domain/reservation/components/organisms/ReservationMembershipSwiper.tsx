@@ -4,6 +4,7 @@ import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import type { Swiper as SwiperType } from 'swiper/types';
 import { ReservationMembershipCard } from './ReservationMembershipCard';
+import { ReservationMembershipCardItem } from './ReservationMembershipCard.types';
 import { ReservationMembershipSwiperProps } from './ReservationMembershipSwiper.types';
 
 export const ReservationMembershipSwiper = ({ data, value, onChange }: ReservationMembershipSwiperProps) => {
@@ -16,7 +17,7 @@ export const ReservationMembershipSwiper = ({ data, value, onChange }: Reservati
 
     const setInitialIndex = () => {
       const idx = data.findIndex((item) => item.id === value);
-      setActiveIdx(idx);
+      setActiveIdx(idx === -1 ? 0 : idx);
     };
 
     if (!renderRef.current) {
@@ -30,8 +31,8 @@ export const ReservationMembershipSwiper = ({ data, value, onChange }: Reservati
   }, []);
 
   const handleChange = useCallback(
-    (_: unknown, value: string) => {
-      onChange(value);
+    (checked: boolean, value: string, item: ReservationMembershipCardItem) => {
+      onChange(checked, value, item);
     },
     [onChange]
   );
@@ -44,7 +45,11 @@ export const ReservationMembershipSwiper = ({ data, value, onChange }: Reservati
 
           return (
             <SwiperSlide key={key}>
-              <ReservationMembershipCard data={item} checked={value === item.id} onChange={handleChange} />
+              <ReservationMembershipCard
+                data={item}
+                checked={value === item.id}
+                onChange={(checked, value) => handleChange(checked, value, item)}
+              />
             </SwiperSlide>
           );
         })}
