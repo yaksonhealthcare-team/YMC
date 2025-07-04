@@ -3,9 +3,9 @@ import { useIntersectionObserver } from '@/_shared/hooks/useIntersectionObserver
 import { useHeaderStore } from '@/_shared/store';
 import { useLayoutEffect, useRef } from 'react';
 import { ConvertedConsultMenuData } from '../../business';
-import { MenuCard } from '../organisms';
+import { MenuCard, MenuCardProps } from '../organisms';
 
-export interface ConsultMenuChoiceTemplateProps {
+export interface MenuChoiceTemplateProps {
   onNextFetch: () => void;
   onBack: () => void;
   onClickCard: (item: ConvertedConsultMenuData[number]) => void;
@@ -13,17 +13,19 @@ export interface ConsultMenuChoiceTemplateProps {
   data?: ConvertedConsultMenuData;
   search?: string;
   onChangeSearch?: (value: string) => void;
+  type?: MenuCardProps['type'];
 }
 
-export const ConsultMenuChoiceTemplate = ({
+export const MenuChoiceTemplate = ({
   data = [],
   search,
+  type = 'standard',
   isPending,
   onBack,
   onNextFetch,
   onClickCard,
   onChangeSearch
-}: ConsultMenuChoiceTemplateProps) => {
+}: MenuChoiceTemplateProps) => {
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const { setTitle, setOnBack, reset } = useHeaderStore();
@@ -43,7 +45,7 @@ export const ConsultMenuChoiceTemplate = ({
       <div className="flex flex-col gap-4">
         {data.map((item, idx) => (
           <button key={`${item.idx}-${idx}`} onClick={() => onClickCard(item)}>
-            <MenuCard key={`${item.idx}-${idx}`} item={item} />
+            <MenuCard key={`${item.idx}-${idx}`} item={item} type={type} />
           </button>
         ))}
       </div>
