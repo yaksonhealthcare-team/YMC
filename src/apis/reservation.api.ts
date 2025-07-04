@@ -71,6 +71,7 @@ export interface CreateReservationRequest {
   add_services?: number[]; // 추가관리 옵션 식별자 목록
   r_memo?: string; // 요청사항
   consult_ss_idx?: string; // 상담 후 관리 메뉴
+  ss_idx?: string; // 정액권 관리 메뉴
 }
 
 interface CreateReservationResponse {
