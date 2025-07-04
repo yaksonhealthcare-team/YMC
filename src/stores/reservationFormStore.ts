@@ -7,11 +7,21 @@ import { TimeSlot } from '../types/Schedule';
 
 export interface ReservationFormData {
   date: null | dayjs.Dayjs;
+  /**
+   * 예약 일시
+   */
   timeSlot: null | TimeSlot;
   request: string;
   additionalServices: AdditionalManagement[];
   item?: string;
-  consult?: { value: string; name: string };
+  /**
+   * 상담예약 - 메뉴
+   */
+  menu?: { value: string; name: string; price: string };
+
+  /**
+   * 지점
+   */
   branch?: string;
   membershipId?: string;
 }
@@ -24,12 +34,11 @@ interface ReservationFormState {
   setSelectedBranch: (branch: Branch) => void;
   setInitialMembershipId: (id?: string) => void;
   clearAll: () => void;
-  initialMembershipId?: string;
 }
 
 const initialState: ReservationFormData = {
   item: undefined,
-  consult: { value: '', name: '' },
+  menu: { value: '', name: '', price: '' },
   branch: undefined,
   date: null,
   timeSlot: null,
@@ -43,7 +52,6 @@ export const useReservationFormStore = create<ReservationFormState>()(
     (set) => ({
       formData: initialState,
       selectedBranch: null,
-      initialMembershipId: undefined,
       setFormData: (data) =>
         set((state) => ({
           formData: { ...state.formData, ...data }
@@ -54,12 +62,10 @@ export const useReservationFormStore = create<ReservationFormState>()(
           selectedBranch: branch,
           formData: { ...state.formData, branch: branch.b_idx }
         })),
-      setInitialMembershipId: (id) => set({ initialMembershipId: id }),
       clearAll: () =>
         set({
           formData: initialState,
-          selectedBranch: null,
-          initialMembershipId: undefined
+          selectedBranch: null
         })
     }),
     { name: 'reservation-form-store' }

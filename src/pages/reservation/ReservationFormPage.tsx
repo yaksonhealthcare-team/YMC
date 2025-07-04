@@ -1,22 +1,24 @@
+import { convertMembership } from '@/_domain/membership/business';
+import { useGetUserMembership } from '@/_domain/membership/services/queries/membership.queries';
+import { UserMembershipSchema } from '@/_domain/membership/types/membership.types';
 import { ConvertedConsultMenuData } from '@/_domain/reservation/business';
-import { ConsultMenuChoicePage } from '@/_domain/reservation/components';
-import { Collapse, RadioLabelCard } from '@/_shared/components';
+import { MenuChoicePage, MenuChoicePageProps, ReservationMembershipCardItem } from '@/_domain/reservation/components';
+import { ReservationMembershipSwiper } from '@/_domain/reservation/components/organisms/ReservationMembershipSwiper';
+import { Collapse, InputBox, RadioLabelCard } from '@/_shared/components';
 import { createAdditionalManagementOrder } from '@/apis/order.api';
 import { getConsultationCount } from '@/apis/reservation.api';
+import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import { Button } from '@/components/Button';
 import FixedButtonContainer from '@/components/FixedButtonContainer';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { MembershipSwiper } from '@/components/MembershipSwiper';
 import { RadioCard } from '@/components/RadioCard';
 import { useLayout } from '@/contexts/LayoutContext';
 import { useOverlay } from '@/contexts/ModalContext';
 import { useBranch } from '@/hooks/useBranch';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { useUserMemberships } from '@/queries/useMembershipQueries';
 import { useCreateReservationMutation } from '@/queries/useReservationQueries';
 import { ReservationFormData, useReservationFormStore } from '@/stores/reservationFormStore';
 import { Branch } from '@/types/Branch';
-import { Membership } from '@/types/Membership';
 import { formatDateForAPI } from '@/utils/date';
 import { toNumber } from '@/utils/number';
 import { CircularProgress, RadioGroup as MUIRadioGroup } from '@mui/material';
@@ -40,13 +42,12 @@ interface LocationState {
 
 function calculateInitialState(
   location: ReturnType<typeof useLocation>,
-  memberships: Membership[],
+  memberships: UserMembershipSchema[],
   openModal: ReturnType<typeof useOverlay>['openModal'],
   closeOverlay: ReturnType<typeof useOverlay>['closeOverlay'],
   handleBack: () => void
 ): {
   initialFormData: Partial<ReservationFormData>;
-  initialSwiperId: string | undefined;
   initialSelectedBranch: Branch | null;
   shouldShowNoMembershipToast: boolean;
 } {
@@ -56,7 +57,6 @@ function calculateInitialState(
   const branchIdFromUrl = params.get('branchId');
 
   let initialFormData: Partial<ReservationFormData> = {};
-  let initialSwiperId: string | undefined = undefined;
   let initialSelectedBranch: Branch | null = null;
   let shouldShowNoMembershipToast = false;
 
@@ -84,11 +84,9 @@ function calculateInitialState(
           branch: branchIdFromState,
           membershipId: rebookingMembershipId
         };
-        initialSwiperId = rebookingMembershipId;
         initialSelectedBranch = branchFromState || null;
         return {
           initialFormData,
-          initialSwiperId,
           initialSelectedBranch,
           shouldShowNoMembershipToast
         };
@@ -104,12 +102,10 @@ function calculateInitialState(
           branch: branchIdFromState,
           membershipId: undefined
         };
-        initialSwiperId = undefined;
         initialSelectedBranch = branchFromState || null;
 
         return {
           initialFormData,
-          initialSwiperId,
           initialSelectedBranch,
           shouldShowNoMembershipToast
         };
@@ -122,11 +118,9 @@ function calculateInitialState(
         branch: branchIdFromState,
         membershipId: undefined
       };
-      initialSwiperId = undefined;
       initialSelectedBranch = branchFromState || null;
       return {
         initialFormData,
-        initialSwiperId,
         initialSelectedBranch,
         shouldShowNoMembershipToast
       };
@@ -141,7 +135,6 @@ function calculateInitialState(
         item: selectedItem,
         membershipId: selectedItem
       };
-      initialSwiperId = selectedItem;
     } else if (rebookingMembershipId || branchIdFromState || selectedItem) {
       console.warn('Invalid ID provided in location state:', location.state);
     }
@@ -163,7 +156,6 @@ function calculateInitialState(
         });
         return {
           initialFormData: {},
-          initialSwiperId: undefined,
           initialSelectedBranch: null,
           shouldShowNoMembershipToast: true
         };
@@ -174,7 +166,6 @@ function calculateInitialState(
         branch: undefined,
         membershipId: membershipIdFromUrl
       };
-      initialSwiperId = membershipIdFromUrl;
 
       // 단일 지점 자동 선택 로직
       if (foundMembership?.branchs && foundMembership.branchs.length === 1) {
@@ -183,7 +174,6 @@ function calculateInitialState(
       }
       return {
         initialFormData,
-        initialSwiperId,
         initialSelectedBranch,
         shouldShowNoMembershipToast
       };
@@ -195,10 +185,8 @@ function calculateInitialState(
         branch: branchIdFromUrl,
         membershipId: undefined
       };
-      initialSwiperId = undefined;
       return {
         initialFormData,
-        initialSwiperId,
         initialSelectedBranch,
         shouldShowNoMembershipToast
       };
@@ -210,7 +198,6 @@ function calculateInitialState(
   // [4] 4순위: 기본값 - 위 모든 정보가 없으면 빈 상태로 시작
   return {
     initialFormData,
-    initialSwiperId,
     initialSelectedBranch,
     shouldShowNoMembershipToast
   };
@@ -222,26 +209,21 @@ const ReservationFormPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { handleError } = useErrorHandler();
-  const [showConsultPage, setShowConsultPage] = useState(false);
   const [showBranchModal, setShowBranchModal] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
+  const [isPrepaid, setIsPrepaid] = useState(false);
+  const [menuType, setMenuType] = useState<MenuChoicePageProps['type'] | null>(null);
   const [consultType, setConsultType] = useState<'consult_only' | 'manage_after_consult'>('consult_only');
   const isInitialized = useRef(false);
 
-  const {
-    formData,
-    setFormData: setFormDataInStore,
-    clearAll,
-    setInitialMembershipId,
-    initialMembershipId
-  } = useReservationFormStore();
+  const { formData, setFormData: setFormDataInStore, clearAll } = useReservationFormStore();
 
   const {
-    data: userMembershipPaginationData,
+    data: membershipData,
     isLoading: isMembershipsLoading,
     error: membershipsError,
     isError: isMembershipsError
-  } = useUserMemberships('T');
+  } = useGetUserMembership({ searchType: 'T' });
 
   const {
     data: initialBranchData,
@@ -249,11 +231,6 @@ const ReservationFormPage = () => {
     error: initialBranchError,
     isError: isInitialBranchError
   } = useBranch(formData.branch);
-
-  const memberships = useMemo(() => {
-    if (!userMembershipPaginationData || userMembershipPaginationData.pages.length === 0) return [];
-    return userMembershipPaginationData.pages.flatMap((page) => page.body || []);
-  }, [userMembershipPaginationData]);
 
   const handleBack = useCallback(() => {
     navigate(-1);
@@ -265,6 +242,9 @@ const ReservationFormPage = () => {
   });
   const { mutateAsync: createReservation, isPending: isCreatingReservation } = useCreateReservationMutation();
 
+  const memberships = useMemo(() => membershipData?.flatMap((page) => page.data.body) || [], [membershipData]);
+  const convertedMembershipData = useMemo(() => convertMembership(memberships, location), [location, memberships]);
+
   const selectedMembershipInfo = useMemo(() => {
     return memberships.find((m) => m.mp_idx === formData.membershipId);
   }, [memberships, formData.membershipId]);
@@ -273,6 +253,22 @@ const ReservationFormPage = () => {
     () => formData.item !== '상담 예약' && !!selectedMembershipInfo && selectedMembershipInfo.branchs?.length === 1,
     [formData.item, selectedMembershipInfo]
   );
+
+  useEffect(() => {
+    const isCompletedFetch = convertedMembershipData && convertedMembershipData.length > 0;
+    const isRebooking = location.state?.rebookingMembershipId;
+    if (!isCompletedFetch || !isRebooking) return;
+
+    const setRebookingForm = () => {
+      const [item] = convertedMembershipData;
+      setFormDataInStore({
+        item: item.id
+      });
+      setIsPrepaid(item.type === 'pre-paid');
+    };
+
+    setRebookingForm();
+  }, [convertedMembershipData, location.state?.rebookingMembershipId, setFormDataInStore]);
 
   useEffect(() => {
     if (showBranchModal) return;
@@ -310,8 +306,13 @@ const ReservationFormPage = () => {
 
     // 멤버십 데이터가 로드된 경우에만 초기화 진행
     if (!isMembershipsLoading && memberships.length >= 0) {
-      const { initialFormData, initialSwiperId, initialSelectedBranch, shouldShowNoMembershipToast } =
-        calculateInitialState(location, memberships, openModal, closeOverlay, handleBack);
+      const { initialFormData, initialSelectedBranch, shouldShowNoMembershipToast } = calculateInitialState(
+        location,
+        memberships,
+        openModal,
+        closeOverlay,
+        handleBack
+      );
 
       // 한 번만 설정하도록 조건 추가
       if (!isInitialized.current) {
@@ -322,10 +323,6 @@ const ReservationFormPage = () => {
           request: '',
           additionalServices: []
         });
-
-        if (initialSwiperId) {
-          setInitialMembershipId(initialSwiperId);
-        }
 
         if (initialSelectedBranch) {
           setSelectedBranch(initialSelectedBranch);
@@ -351,9 +348,10 @@ const ReservationFormPage = () => {
     closeOverlay,
     handleBack,
     setFormDataInStore,
-    setInitialMembershipId,
     handleError,
-    showToast
+    showToast,
+    memberships,
+    selectedBranch
   ]);
 
   // 컴포넌트 언마운트 시 isInitialized 리셋
@@ -434,10 +432,13 @@ const ReservationFormPage = () => {
     isInitialBranchLoading,
     isInitialBranchError,
     initialBranchError,
-    handleError
+    handleError,
+    selectedBranch
   ]);
 
-  const handleOnChangeItem = useCallback(
+  useEffect(() => {}, []);
+
+  const handleChangeItem = useCallback(
     (value: string) => {
       // 이미 선택된 항목이면 중복 업데이트하지 않음
       if (formData.item === value) {
@@ -457,7 +458,7 @@ const ReservationFormPage = () => {
 
         setFormDataInStore({
           item: value,
-          consult: { value: '', name: '' },
+          menu: { value: '', name: '', price: '' },
           date: null,
           timeSlot: null,
           additionalServices: [],
@@ -470,36 +471,33 @@ const ReservationFormPage = () => {
         // 상담 예약 선택 시
         setFormDataInStore({
           item: value,
-          consult: { value: '', name: '' },
+          menu: { value: '', name: '', price: '' },
           date: null,
           timeSlot: null,
           additionalServices: [],
           membershipId: undefined
         });
-      }
-
-      // 멤버십 ID 변경
-      if (initialMembershipId !== (value !== '상담 예약' ? value : undefined)) {
-        setInitialMembershipId(value !== '상담 예약' ? value : undefined);
+        setIsPrepaid(false);
       }
     },
-    [
-      setFormDataInStore,
-      setInitialMembershipId,
-      formData.item,
-      initialMembershipId,
-      memberships // 회원권 목록 의존성 추가
-    ]
+    [formData.item, memberships, setFormDataInStore]
   );
+
+  const handleChangeMembership = (_: unknown, value: string, item: ReservationMembershipCardItem) => {
+    handleChangeItem(value);
+
+    const isPrepaid = item.type === 'pre-paid';
+    setIsPrepaid(isPrepaid);
+  };
 
   const handleClickConsult = (value: string) => {
     if (value !== 'consult_only' && value !== 'manage_after_consult') return;
 
     if (value === 'consult_only') {
       setFormDataInStore({
-        consult: { value: '', name: '' }
+        menu: { value: '', name: '', price: '' }
       });
-      setShowConsultPage(false);
+      setMenuType(null);
     }
 
     const isValidAfterConsult = value === 'manage_after_consult' && !formData.branch;
@@ -511,11 +509,12 @@ const ReservationFormPage = () => {
       });
       return;
     } else if (value === 'manage_after_consult') {
-      setShowConsultPage(true);
+      setMenuType('standard');
     }
 
     if (consultType !== value) {
       setFormDataInStore({
+        date: null,
         timeSlot: null
       });
     }
@@ -524,24 +523,24 @@ const ReservationFormPage = () => {
   };
 
   const handleClickBack = useCallback(() => {
-    if (showConsultPage) setShowConsultPage(false);
+    if (menuType) setMenuType(null);
 
-    const isInvalidConsult = !formData.consult?.value;
+    const isInvalidConsult = !formData.menu?.value;
     if (isInvalidConsult) {
-      setFormDataInStore({ consult: { value: '', name: '' } });
+      setFormDataInStore({ menu: { value: '', name: '', price: '' } });
       setConsultType('consult_only');
     }
-  }, [formData.consult?.value, setFormDataInStore, showConsultPage]);
+  }, [formData.menu?.value, menuType, setFormDataInStore]);
 
   const handleClickCard = useCallback(
-    ({ name, idx }: ConvertedConsultMenuData[number]) => {
-      if (formData.consult?.value !== idx) {
-        setFormDataInStore({ timeSlot: null });
-      }
-      setFormDataInStore({ consult: { name, value: idx } });
-      setShowConsultPage(false);
+    ({ name, idx, price }: ConvertedConsultMenuData[number]) => {
+      const isChangedConsultMenu = formData.menu?.value !== idx;
+      if (isChangedConsultMenu) setFormDataInStore({ date: null, timeSlot: null });
+
+      setFormDataInStore({ menu: { name, price, value: idx } });
+      setMenuType(null);
     },
-    [formData.consult?.value, setFormDataInStore]
+    [formData.menu?.value, setFormDataInStore]
   );
 
   const handleOpenCalendar = useCallback(() => {
@@ -565,7 +564,7 @@ const ReservationFormPage = () => {
         membershipIndex={formData.item === '상담 예약' ? 0 : toNumber(formData.membershipId)}
         addServices={formData.additionalServices.map((service) => toNumber(service.s_idx))}
         b_idx={formData.branch}
-        ss_idx={formData.consult?.value}
+        ss_idx={formData.menu?.value}
       />,
       { height: 'large' }
     );
@@ -584,7 +583,7 @@ const ReservationFormPage = () => {
       setSelectedBranch(branch);
       setFormDataInStore({
         branch: branch.b_idx,
-        consult: { name: '', value: '' },
+        menu: { name: '', value: '', price: '' },
         timeSlot: null,
         date: null
       });
@@ -599,20 +598,28 @@ const ReservationFormPage = () => {
   }, []);
 
   const validateReservationData = useCallback(() => {
-    if (!formData.item) {
+    const { item, date, timeSlot, branch, menu } = formData;
+    if (!item) {
       handleError(new Error('회원권을 먼저 선택해주세요.'));
       return false;
     }
-    if (!formData.date || !formData.timeSlot) {
+    if (!date || !timeSlot) {
       handleError(new Error('예약 날짜와 시간을 선택해주세요.'));
       return false;
     }
-    if (!formData.branch) {
+    if (!branch) {
       handleError(new Error('지점을 선택해주세요.'));
       return false;
     }
+
+    const isPrepaidMembershipMenu = item !== '상담 예약' && isPrepaid;
+    if (isPrepaidMembershipMenu && !menu?.value) {
+      handleError(new Error('관리메뉴를 선택해주세요.'));
+      return false;
+    }
+
     return true;
-  }, [formData, handleError]);
+  }, [formData, handleError, isPrepaid]);
 
   const handleConsultationReservation = useCallback(async () => {
     try {
@@ -626,7 +633,7 @@ const ReservationFormPage = () => {
         r_date: formatDateForAPI(formData.date?.toDate() || null),
         r_stime: formData.timeSlot!.time,
         r_memo: formData.request,
-        consult_ss_idx: formData.consult?.value
+        consult_ss_idx: formData.menu?.value
       })) as any;
 
       if (response.resultCode !== '00') {
@@ -681,7 +688,8 @@ const ReservationFormPage = () => {
         r_date: formatDateForAPI(formData.date?.toDate() || null),
         r_stime: formData.timeSlot!.time,
         add_services: formData.additionalServices.map((service) => toNumber(service.s_idx)),
-        r_memo: formData.request
+        r_memo: formData.request,
+        ss_idx: formData.menu?.value
       })) as any;
 
       if (reservationResponse.resultCode !== '00') {
@@ -752,15 +760,40 @@ const ReservationFormPage = () => {
     return <LoadingIndicator className="min-h-screen" />;
   }
 
+  const renderMembershipMenu = () => {
+    const { name, price } = formData.menu || {};
+    const formattedPrice = `(${price}원 차감)`;
+
+    return (
+      <div className="flex items-center justify-between w-full min-w-0">
+        <span className="min-w-0 truncate text-black font-r text-base text-left">{name}</span>
+        <span className="flex-shrink-0 whitespace-nowrap mx-2 text-black font-r text-base">{formattedPrice}</span>
+      </div>
+    );
+  };
+
+  const hasMembershipData = convertedMembershipData && convertedMembershipData.length > 0;
+  const hasMembershipMenu = !!formData.menu?.value && formData.item !== '상담 예약';
+
   return (
     <div className="flex-1 space-y-3 pb-32 overflow-y-auto overflow-x-hidden">
-      {showConsultPage && <ConsultMenuChoicePage onBack={handleClickBack} onClickCard={handleClickCard} />}
+      {menuType && (
+        <MenuChoicePage
+          onBack={handleClickBack}
+          onClickCard={handleClickCard}
+          type={menuType}
+          fetchParams={{
+            b_idx: menuType === 'standard' ? formData.branch : '',
+            mp_idx: menuType === 'pre-paid' ? formData.item || '' : ''
+          }}
+        />
+      )}
 
       {showBranchModal && (
         <MembershipBranchSelectModal
           onBranchSelect={handleBranchSelect}
           onClose={handleCloseBranchModal}
-          brandCode={selectedMembershipInfo?.brandCode || BRAND_CODE}
+          brandCode={BRAND_CODE}
           memberShipId={formData.membershipId}
         />
       )}
@@ -772,7 +805,7 @@ const ReservationFormPage = () => {
         <MUIRadioGroup
           className="flex flex-col"
           value={formData.item ?? ''}
-          onChange={(e) => handleOnChangeItem(e.target.value)}
+          onChange={(e) => handleChangeItem(e.target.value)}
         >
           <RadioCard
             checked={formData.item === '상담 예약'}
@@ -826,30 +859,37 @@ const ReservationFormPage = () => {
               />
               <RadioLabelCard
                 value={'manage_after_consult'}
-                label={formData.consult?.name || '상담 후 관리'}
+                label={formData.menu?.name || '상담 후 관리'}
                 checked={consultType === 'manage_after_consult'}
                 onClick={handleClickConsult}
               />
             </div>
           </Collapse>
 
-          {memberships.length > 0 && (
-            <MembershipSwiper
-              membershipsData={{
-                ...(userMembershipPaginationData?.pages[0] || {
-                  resultCode: '00',
-                  resultMessage: '',
-                  resultCount: 0,
-                  total_count: 0,
-                  total_page_count: 0,
-                  current_page: 0
-                }),
-                body: memberships
-              }}
-              selectedItem={formData.item}
-              onChangeItem={handleOnChangeItem}
-              initialMembershipId={initialMembershipId}
-            />
+          {hasMembershipData && (
+            <>
+              <ReservationMembershipSwiper
+                data={convertedMembershipData}
+                onChange={handleChangeMembership}
+                value={formData.item}
+              />
+              <Collapse isOpen={isPrepaid}>
+                <div className="mt-5">
+                  <InputBox
+                    type="button"
+                    placeholder="관리 메뉴를 선택해주세요."
+                    onClick={() => setMenuType('pre-paid')}
+                    icon={<CaretRightIcon width={16} height={16} className="text-gray-300" />}
+                  >
+                    {hasMembershipMenu ? (
+                      renderMembershipMenu()
+                    ) : (
+                      <span className="text-gray-300 text-base font-r">관리 메뉴를 선택해주세요.</span>
+                    )}
+                  </InputBox>
+                </div>
+              </Collapse>
+            </>
           )}
         </MUIRadioGroup>
         <div className="flex flex-col mt-[16px]">
