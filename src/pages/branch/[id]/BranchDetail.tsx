@@ -5,7 +5,7 @@ import { useGeolocation } from '@/hooks/useGeolocation';
 import { useBranch, useBranchBookmarkMutation, useBranchUnbookmarkMutation } from '@/queries/useBranchQueries';
 import { useUserMemberships } from '@/queries/useMembershipQueries';
 import { Branch } from '@/types/Branch';
-import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // const MembershipAvailableBanner = lazy(
@@ -36,15 +36,15 @@ const BranchDetail = () => {
   });
   const { mutate: addBookmark } = useBranchBookmarkMutation();
   const { mutate: removeBookmark } = useBranchUnbookmarkMutation();
-  const { data: userMembershipsData, isLoading: isMembershipsLoading } = useUserMemberships('T');
+  const { isLoading: isMembershipsLoading } = useUserMemberships('T');
 
-  const hasMembershipForBranch = useMemo(() => {
-    if (!branch || !userMembershipsData?.pages?.length || isMembershipsLoading) return false;
-    const userMemberships = userMembershipsData.pages.flatMap((page) => page.body);
-    return userMemberships.some(
-      (membership) => membership.branchs?.some((b) => b.b_idx === branch.b_idx) && Number(membership.remain_amount) > 0
-    );
-  }, [branch, userMembershipsData, isMembershipsLoading]);
+  // const hasMembershipForBranch = useMemo(() => {
+  //   if (!branch || !userMembershipsData?.pages?.length || isMembershipsLoading) return false;
+  //   const userMemberships = userMembershipsData.pages.flatMap((page) => page.body);
+  //   return userMemberships.some(
+  //     (membership) => membership.branchs?.some((b) => b.b_idx === branch.b_idx) && Number(membership.remain_amount) > 0
+  //   );
+  // }, [branch, userMembershipsData, isMembershipsLoading]);
 
   const handleShare = useCallback(async () => {
     try {
@@ -199,7 +199,7 @@ const BranchDetail = () => {
       backgroundColor: 'bg-system-bg'
     });
     setNavigation({ display: false });
-  }, []);
+  }, [branch?.name, handleBack, setHeader, setNavigation]);
 
   if (!branch || isLoading || isMembershipsLoading) {
     return <LoadingIndicator className="min-h-screen" />;
