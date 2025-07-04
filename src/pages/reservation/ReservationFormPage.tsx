@@ -257,9 +257,10 @@ const ReservationFormPage = () => {
   useEffect(() => {
     const isCompletedFetch = convertedMembershipData && convertedMembershipData.length > 0;
     const isRebooking = location.state?.rebookingMembershipId;
-    if (!isCompletedFetch || !isRebooking) return;
+    const hasMembershipId = !!new URLSearchParams(location.search).get('membershipId');
+    if (!isCompletedFetch || !(isRebooking || hasMembershipId)) return;
 
-    const setRebookingForm = () => {
+    const setInitMembershipForm = () => {
       const [item] = convertedMembershipData;
       setFormDataInStore({
         item: item.id
@@ -267,8 +268,8 @@ const ReservationFormPage = () => {
       setIsPrepaid(item.type === 'pre-paid');
     };
 
-    setRebookingForm();
-  }, [convertedMembershipData, location.state?.rebookingMembershipId, setFormDataInStore]);
+    setInitMembershipForm();
+  }, [convertedMembershipData, location.search, location.state?.rebookingMembershipId, setFormDataInStore]);
 
   useEffect(() => {
     if (showBranchModal) return;
