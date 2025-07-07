@@ -1,9 +1,9 @@
-import { convertMembership } from '@/_domain/membership/business';
+import { convertMembershipForSwiper } from '@/_domain/membership/business';
 import { useGetUserMembership } from '@/_domain/membership/services/queries/membership.queries';
 import { UserMembershipSchema } from '@/_domain/membership/types/membership.types';
 import { ConvertedConsultMenuData } from '@/_domain/reservation/business';
 import { MenuChoicePage, MenuChoicePageProps, ReservationMembershipCardItem } from '@/_domain/reservation/components';
-import { ReservationMembershipSwiper } from '@/_domain/reservation/components/organisms/ReservationMembershipSwiper';
+import { ReservationMembershipSwiper } from '@/_domain/reservation/components/organisms/ReservationMembershipSwiper/ReservationMembershipSwiper';
 import { Collapse, InputBox, RadioLabelCard } from '@/_shared/components';
 import { createAdditionalManagementOrder } from '@/apis/order.api';
 import { getConsultationCount } from '@/apis/reservation.api';
@@ -223,7 +223,7 @@ const ReservationFormPage = () => {
     isLoading: isMembershipsLoading,
     error: membershipsError,
     isError: isMembershipsError
-  } = useGetUserMembership({ searchType: 'T' });
+  } = useGetUserMembership({ search_type: 'T' });
 
   const {
     data: initialBranchData,
@@ -243,7 +243,10 @@ const ReservationFormPage = () => {
   const { mutateAsync: createReservation, isPending: isCreatingReservation } = useCreateReservationMutation();
 
   const memberships = useMemo(() => membershipData?.flatMap((page) => page.data.body) || [], [membershipData]);
-  const convertedMembershipData = useMemo(() => convertMembership(memberships, location), [location, memberships]);
+  const convertedMembershipData = useMemo(
+    () => convertMembershipForSwiper(memberships, location),
+    [location, memberships]
+  );
 
   const selectedMembershipInfo = useMemo(() => {
     return memberships.find((m) => m.mp_idx === formData.membershipId);
