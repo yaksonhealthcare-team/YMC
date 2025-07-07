@@ -1,4 +1,4 @@
-import { RadioButtonProps } from '../atoms';
+import { RadioButtonProps } from '../../atoms';
 
 export interface RadioLabelCardProps extends RadioButtonProps {
   /**

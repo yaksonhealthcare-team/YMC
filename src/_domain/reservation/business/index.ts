@@ -1,1 +1,6 @@
-export { convertConsultMenu, type ConvertedConsultMenuData } from './menu.business';
+export {
+  convertConsultMenu,
+  convertPrepaidMenu,
+  type ConvertedConsultMenuData,
+  type ConvertedPrepaidMenuData
+} from './menu.business';

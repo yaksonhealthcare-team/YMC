@@ -48,7 +48,8 @@ const showErrorMessage = (message: string, errorData?: unknown) => {
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: false
+      retry: false,
+      refetchOnWindowFocus: false
     },
     mutations: {
       retry: false

@@ -1,7 +1,4 @@
-export interface LoadingProps {
-  className?: string;
-  size?: number;
-}
+import { LoadingProps } from './Loading.types';
 
 export const Loading = ({ className, size = 48 }: LoadingProps) => {
   return (
