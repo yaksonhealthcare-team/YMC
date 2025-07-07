@@ -1,6 +1,6 @@
 import { Divider, Layout, Loading, SearchTextField } from '@/_shared/components';
 import { useIntersectionObserver } from '@/_shared/hooks/useIntersectionObserver';
-import { useHeaderStore } from '@/_shared/store';
+import { useHeaderStore } from '@/_shared/stores';
 import { useLayoutEffect, useRef } from 'react';
 import { ConvertedConsultMenuData } from '../../business';
 import { MenuCard, MenuCardProps } from '../organisms';

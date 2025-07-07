@@ -3,8 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import type { Swiper as SwiperType } from 'swiper/types';
-import { ReservationMembershipCard } from './ReservationMembershipCard';
-import { ReservationMembershipCardItem } from './ReservationMembershipCard.types';
+import { ReservationMembershipCard, ReservationMembershipCardItem } from '../ReservationMembershipCard';
 import { ReservationMembershipSwiperProps } from './ReservationMembershipSwiper.types';
 
 export const ReservationMembershipSwiper = ({ data, value, onChange }: ReservationMembershipSwiperProps) => {

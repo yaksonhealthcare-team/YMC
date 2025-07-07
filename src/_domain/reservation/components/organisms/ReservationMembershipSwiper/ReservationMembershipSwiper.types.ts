@@ -1,4 +1,4 @@
-import { ReservationMembershipCardItem } from './ReservationMembershipCard.types';
+import { ReservationMembershipCardItem } from '../ReservationMembershipCard/ReservationMembershipCard.types';
 
 export interface ReservationMembershipSwiperProps {
   data: ReservationMembershipCardItem[];
