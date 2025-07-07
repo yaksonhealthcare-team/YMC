@@ -217,7 +217,7 @@ export const useAppBridge = () => {
 
         navigate('/login', { replace: true });
         return;
-      } catch (error) {
+      } catch {
         navigate('/login', { replace: true });
         return;
       }

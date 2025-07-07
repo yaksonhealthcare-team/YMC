@@ -1,20 +1,35 @@
+import { ConvertedMembershipForCardData, MembershipCard } from '@/_domain/membership';
 import { EmptyCard } from '@/components/EmptyCard';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { MembershipCard } from '@/components/MembershipCard';
 import { Title } from '@/components/Title';
-import { MyMembership } from '@/types/Membership';
-import { getStatusFromString } from '@/utils/membership';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 interface MembershipCardSectionProps {
-  memberships: MyMembership[];
+  memberships: ConvertedMembershipForCardData;
   isLoading: boolean;
   totalCount: number;
 }
 
 export const MembershipCardSection = ({ memberships, isLoading, totalCount }: MembershipCardSectionProps) => {
   const navigate = useNavigate();
+
+  const handleCardClick = (membershipId: string) => {
+    navigate(`/membership/usage/${membershipId}`, {
+      state: { from: '/member-history/membership' }
+    });
+  };
+
+  const handleClickReservation = (membershipId: string) => {
+    const currentPath = window.location.pathname;
+
+    navigate(`/reservation/form?membershipId=${membershipId}`, {
+      state: {
+        originalPath: currentPath,
+        fromMembershipCard: true
+      }
+    });
+  };
 
   const renderContent = () => {
     if (isLoading)
@@ -36,20 +51,19 @@ export const MembershipCardSection = ({ memberships, isLoading, totalCount }: Me
     }
     return (
       <Swiper spaceBetween={10} slidesPerView={1} style={{ overflow: 'visible' }} className="mt-2">
-        {memberships.map((membership) => {
-          const cardTitle = membership.service_name || '회원권 이름';
+        {memberships.map((membership, idx) => {
+          const key = `${membership.id}-${idx}`;
+          const price = membership.remainAmount;
+
           return (
-            <SwiperSlide key={membership.mp_idx} className="mr-2">
+            <SwiperSlide key={key} className="mr-2">
               <MembershipCard
-                id={parseInt(membership.mp_idx)}
-                title={cardTitle}
-                count={`${membership.remain_amount}회 / ${membership.buy_amount}회`}
-                startDate={membership.pay_date}
-                endDate={membership.expiration_date}
-                status={getStatusFromString(membership.status)}
-                showReserveButton={true}
-                serviceType={membership.s_type.replace('회원권', '').trim()}
-                branchs={membership.branchs}
+                title={membership.serviceName}
+                date={membership.date}
+                chips={membership.chips}
+                content={price}
+                onClick={() => handleCardClick(membership.id)}
+                onClickReservation={() => handleClickReservation(membership.id)}
               />
             </SwiperSlide>
           );
