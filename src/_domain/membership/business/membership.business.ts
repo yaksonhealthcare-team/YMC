@@ -1,13 +1,16 @@
-import { ReservationMembershipCardItem } from '@/_domain/reservation/components/organisms/ReservationMembershipCard.types';
+import { ReservationMembershipCardItem } from '@/_domain/reservation/components';
+import dayjs from 'dayjs';
 import { Location } from 'react-router-dom';
-import { UserMembershipSchema } from '../types/membership.types';
+import { MembershipChipProps } from '../components/molecules';
+import { MembershipStatusValue, UserMembershipSchema } from '../types/membership.types';
+import { convertMembershipPriceUnit, convertMembershipStatusValue } from '../utils';
 
-export type ConvertedMembershipData = ReturnType<typeof convertMembership>;
+export type ConvertedMembershipForSwiperData = ReturnType<typeof convertMembershipForSwiper>;
 /**
  * ReservationMembershipSwiper에서 사용할 데이터로 변환
- * @return {ConvertedMembershipData}
+ * @return {ConvertedMembershipForSwiperData}
  */
-export const convertMembership = (data: UserMembershipSchema[] = [], location?: Location) => {
+export const convertMembershipForSwiper = (data: UserMembershipSchema[] = [], location?: Location) => {
   const copiedData = [...data];
   const rebookingMembershipId = location?.state?.rebookingMembershipId;
   const params = new URLSearchParams(location?.search);
@@ -45,4 +48,46 @@ export const convertMembership = (data: UserMembershipSchema[] = [], location?: 
   });
 
   return newData;
+};
+
+export type ConvertedMembershipForCardData = ReturnType<typeof convertMembershipForCard>;
+/**
+ * MembershipCard에서 사용할 데이터로 변환
+ * @return {ConvertedMembershipForCardData}
+ */
+export const convertMembershipForCard = (data: UserMembershipSchema[] = []) => {
+  return data.map((item) => {
+    const convertedRemainAmount = convertMembershipPriceUnit(item.mp_gubun, Number(item.remain_amount));
+    const convertedTotalAmount = convertMembershipPriceUnit(item.mp_gubun, Number(item.buy_amount));
+    const formattedDate = formatDate(item.pay_date, item.expiration_date);
+    const chipData: MembershipChipProps[] = [
+      {
+        type: 'status',
+        value: item.status,
+        status: convertMembershipStatusValue(item.status as MembershipStatusValue)
+      },
+      { type: 'branch', value: item.branchs[0].b_name }
+    ];
+
+    return {
+      id: item.mp_idx,
+      status: item.status,
+      serviceName: item.service_name,
+      remainAmount: convertedRemainAmount,
+      totalAmount: convertedTotalAmount,
+      date: formattedDate,
+      branch: item.branchs[0],
+      chips: chipData
+    };
+  });
+};
+
+const formatDate = (startDate: string, expireDate: string) => {
+  const fmt = 'YYYY.MM.DD';
+  const parseFmt = 'YYYY-MM-DD HH:mm';
+
+  const start = dayjs(startDate, parseFmt).format(fmt);
+  const end = dayjs(expireDate, parseFmt).format(fmt);
+
+  return `${start} - ${end}`;
 };

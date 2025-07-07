@@ -1,3 +1,6 @@
+import { MembershipStatus } from '../constants';
+import { MembershipType } from '../constants/membership.constants';
+
 export interface UserMembershipParams {
   /**
    * 검색 타입
@@ -6,7 +9,7 @@ export interface UserMembershipParams {
    * F: 사용완료
    * E: 만료
    */
-  searchType: '' | 'T' | 'F' | 'E';
+  search_type: '' | MembershipStatusType;
 
   /**
    * 페이지 숫자
@@ -62,7 +65,7 @@ export interface UserMembershipSchema {
    * F: 정액권
    * M: 횟수권
    */
-  mp_gubun: 'F' | 'M';
+  mp_gubun: MembershipGubunType;
 }
 
 /**
@@ -79,3 +82,7 @@ export interface Branch {
    */
   b_name: string;
 }
+
+export type MembershipStatusValue = '사용가능' | '사용완료' | '만료됨';
+export type MembershipStatusType = (typeof MembershipStatus)[keyof typeof MembershipStatus];
+export type MembershipGubunType = (typeof MembershipType)[keyof typeof MembershipType];
