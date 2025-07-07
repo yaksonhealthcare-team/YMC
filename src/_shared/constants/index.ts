@@ -1,1 +1,1 @@
-export * from './error.constants';
+export { ERROR_CODES } from './error.constants';

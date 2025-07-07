@@ -1,4 +1,4 @@
-import { useHeaderStore } from '@/_shared/store';
+import { useHeaderStore } from '@/_shared/stores';
 import CaretLeftIcon from '@/assets/icons/CaretLeftIcon.svg?react';
 import clsx from 'clsx';
 

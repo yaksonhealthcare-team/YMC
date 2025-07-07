@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { RadioButton } from '../atoms';
+import { RadioButton } from '../../atoms';
 import { RadioLabelCardProps } from './RadioLabelCard.types';
 
 export const RadioLabelCard = ({ className, label, checked, value, name, onChange, onClick }: RadioLabelCardProps) => {
