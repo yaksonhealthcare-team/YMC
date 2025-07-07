@@ -1,5 +1,6 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import 'swiper/swiper-bundle.css';
@@ -49,6 +50,7 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
           <AppRouter />
         </QueryClientProvider>
       </ThemeProvider>
