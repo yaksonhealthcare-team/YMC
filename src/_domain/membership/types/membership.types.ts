@@ -15,6 +15,27 @@ export interface UserMembershipParams {
    * 페이지 숫자
    */
   page?: number;
+
+  /**
+   * 한 페이지 크기
+   */
+  page_size?: number;
+}
+export interface UserMembershipDetailParams {
+  /**
+   * 회원권 일련번호
+   */
+  mp_idx: string;
+
+  /**
+   * 페이지 숫자
+   */
+  page?: number;
+
+  /**
+   * 한 페이지 크기
+   */
+  page_size?: number;
 }
 
 export interface UserMembershipSchema {
@@ -67,6 +88,9 @@ export interface UserMembershipSchema {
    */
   mp_gubun: MembershipGubunType;
 }
+export interface UserMembershipDetailSchema extends Omit<UserMembershipSchema, 'mp_idx'> {
+  reservations: MembershipReservations[];
+}
 
 /**
  * 지점
@@ -81,6 +105,12 @@ export interface Branch {
    * 지점 이름
    */
   b_name: string;
+}
+export interface MembershipReservations {
+  r_idx: string;
+  r_date: string;
+  ps_name: string;
+  visit: string;
 }
 
 export type MembershipStatusValue = '사용가능' | '사용완료' | '만료됨';
