@@ -1,11 +1,14 @@
-import { fetchMembershipUsageHistory } from '@/apis/membership.api';
+import {
+  convertMembershipForCard,
+  MembershipCard,
+  MembershipCardProps,
+  useGetUserMembershipDetail
+} from '@/_domain/membership';
+import { Loading } from '@/_shared';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import DateAndTime from '@/components/DateAndTime';
-import { MembershipCard } from '@/components/MembershipCard';
 import { useLayout } from '@/contexts/LayoutContext';
-import { MembershipDetailWithHistory, MembershipStatus } from '@/types/Membership';
-import { CircularProgress } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 interface ReservationThumbnailProps {
@@ -14,6 +17,79 @@ interface ReservationThumbnailProps {
   date: Date;
   onClick: () => void;
 }
+
+const MembershipUsageHistory = () => {
+  const { setHeader, setNavigation } = useLayout();
+  const { id = '' } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
+  const { data, isLoading } = useGetUserMembershipDetail({ mp_idx: id }, { enabled: !!id, initialPageParam: 1 });
+  const membershipDetail = useMemo(() => data?.flatMap((page) => page.data.body) || [], [data]);
+  const hasMembershipDetail = membershipDetail && membershipDetail.length > 0;
+
+  useEffect(() => {
+    setHeader({
+      display: true,
+      title: '회원권 이용내역',
+      left: 'back'
+    });
+    setNavigation({
+      display: true,
+      activeTab: '예약/회원권'
+    });
+  }, [setHeader, setNavigation]);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <Loading />
+      </div>
+    );
+  }
+
+  if (!hasMembershipDetail) {
+    return (
+      <div className="flex flex-1 items-center justify-center bg-system-bg">
+        <p className="text-gray-500">내역이 없습니다.</p>
+      </div>
+    );
+  }
+
+  const [convertedMembershipDetail] = convertMembershipForCard(membershipDetail);
+
+  const membershipCardProps: MembershipCardProps = {
+    chips: convertedMembershipDetail.chips,
+    content: `${convertedMembershipDetail.remainAmount} / ${convertedMembershipDetail.totalAmount}`,
+    title: convertedMembershipDetail.serviceName,
+    date: convertedMembershipDetail.date
+  };
+
+  const reservationsCount = membershipDetail[0].reservations?.length || 0;
+
+  return (
+    <div className="h-[calc(100vh-82px)] bg-system-bg overflow-y-auto">
+      <div className="px-[20px] pt-[16px] pb-[100px]">
+        <MembershipCard {...membershipCardProps} />
+        <p className="mt-10 mb-4 text-sm font-sb">
+          <span className="text-primary-300 ">{reservationsCount || 0}건</span>의 이용내역이 있습니다.
+        </p>
+        <div className="flex flex-col gap-3">
+          {membershipDetail[0].reservations?.map((history) => (
+            <ReservationThumbnail
+              key={`history-${history.r_idx}`}
+              title={history.ps_name}
+              date={new Date(history.r_date)}
+              onClick={() => navigate(`/reservation/${history.r_idx}`)}
+              visit={history.visit}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MembershipUsageHistory;
 
 const ReservationThumbnail = ({ title, visit, date, onClick }: ReservationThumbnailProps) => {
   return (
@@ -34,112 +110,3 @@ const ReservationThumbnail = ({ title, visit, date, onClick }: ReservationThumbn
     </div>
   );
 };
-
-const MembershipUsageHistory = () => {
-  const { setHeader, setNavigation } = useLayout();
-  const { id } = useParams<{ id: string }>();
-  const [memberShipDetail, setMemberShipDetail] = useState<MembershipDetailWithHistory>();
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const page = 1;
-  const pageSize = 50;
-
-  const navigate = useNavigate();
-
-  const fetchData = useCallback(async () => {
-    if (!id) return;
-    try {
-      setIsLoading(true);
-      setError(null);
-      const data = await fetchMembershipUsageHistory(id, page, pageSize);
-      setMemberShipDetail(data);
-    } catch (error) {
-      console.error('Failed to fetch membership history:', error);
-      setError(error instanceof Error ? error.message : '회원권 이용내역을 불러오는데 실패했습니다.');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [id]);
-
-  useEffect(() => {
-    setHeader({
-      display: true,
-      title: '회원권 이용내역',
-      left: 'back'
-      // right: <CartIcon />,
-    });
-    setNavigation({
-      display: true,
-      activeTab: '예약/회원권'
-    });
-    fetchData();
-  }, [setHeader, setNavigation, fetchData]);
-
-  if (isLoading) {
-    return (
-      <div className="h-[calc(100vh-82px)] bg-system-bg flex justify-center items-center">
-        <CircularProgress />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="h-[calc(100vh-82px)] bg-system-bg flex justify-center items-center text-gray-500">
-        <p>{error}</p>
-      </div>
-    );
-  }
-
-  if (!memberShipDetail) {
-    return (
-      <div className="h-[calc(100vh-82px)] bg-system-bg flex justify-center items-center text-gray-500">
-        <p>내역이 없습니다.</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="h-[calc(100vh-82px)] bg-system-bg overflow-y-auto">
-      <div className="px-[20px] pt-[16px] pb-[100px]">
-        <MembershipCard
-          id={parseInt(memberShipDetail.mp_idx)}
-          title={memberShipDetail.service_name || memberShipDetail.s_type}
-          count={`${memberShipDetail.remain_amount}회 / ${memberShipDetail.buy_amount}회`}
-          startDate={memberShipDetail.pay_date ? memberShipDetail.pay_date.split(' ')[0] : ''}
-          endDate={memberShipDetail.expiration_date ? memberShipDetail.expiration_date.split(' ')[0] : ''}
-          status={
-            memberShipDetail.status === '사용가능'
-              ? MembershipStatus.ACTIVE
-              : memberShipDetail.status === '사용완료'
-                ? MembershipStatus.INACTIVE
-                : MembershipStatus.EXPIRED
-          }
-          serviceType={memberShipDetail.s_type.replace('회원권', '').trim()}
-          showReserveButton={false}
-          showHistoryButton={false}
-          branchs={memberShipDetail.branchs}
-        />
-        <div>
-          <p className="text-[14px] font-sb mt-[40px] mb-[16px]">
-            <span className="text-primary-300">{memberShipDetail.reservations?.length || 0}건</span>의 이용내역이
-            있습니다.
-          </p>
-        </div>
-        <div className="flex flex-col gap-[12px]">
-          {memberShipDetail.reservations?.map((history) => (
-            <ReservationThumbnail
-              key={`history-${history.r_idx}`}
-              title={history.ps_name}
-              date={new Date(history.r_date)}
-              onClick={() => navigate(`/reservation/${history.r_idx}`)}
-              visit={history.visit}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default MembershipUsageHistory;

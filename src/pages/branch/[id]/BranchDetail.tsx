@@ -5,7 +5,7 @@ import { useGeolocation } from '@/hooks/useGeolocation';
 import { useBranch, useBranchBookmarkMutation, useBranchUnbookmarkMutation } from '@/queries/useBranchQueries';
 import { useUserMemberships } from '@/queries/useMembershipQueries';
 import { Branch } from '@/types/Branch';
-import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // const MembershipAvailableBanner = lazy(
@@ -36,15 +36,15 @@ const BranchDetail = () => {
   });
   const { mutate: addBookmark } = useBranchBookmarkMutation();
   const { mutate: removeBookmark } = useBranchUnbookmarkMutation();
-  const { data: userMembershipsData, isLoading: isMembershipsLoading } = useUserMemberships('T');
+  const { isLoading: isMembershipsLoading } = useUserMemberships('T');
 
-  const hasMembershipForBranch = useMemo(() => {
-    if (!branch || !userMembershipsData?.pages?.length || isMembershipsLoading) return false;
-    const userMemberships = userMembershipsData.pages.flatMap((page) => page.body);
-    return userMemberships.some(
-      (membership) => membership.branchs?.some((b) => b.b_idx === branch.b_idx) && Number(membership.remain_amount) > 0
-    );
-  }, [branch, userMembershipsData, isMembershipsLoading]);
+  // const hasMembershipForBranch = useMemo(() => {
+  //   if (!branch || !userMembershipsData?.pages?.length || isMembershipsLoading) return false;
+  //   const userMemberships = userMembershipsData.pages.flatMap((page) => page.body);
+  //   return userMemberships.some(
+  //     (membership) => membership.branchs?.some((b) => b.b_idx === branch.b_idx) && Number(membership.remain_amount) > 0
+  //   );
+  // }, [branch, userMembershipsData, isMembershipsLoading]);
 
   const handleShare = useCallback(async () => {
     try {
@@ -140,30 +140,37 @@ const BranchDetail = () => {
       brand: branch.brand
     };
 
-    if (hasMembershipForBranch) {
-      // 회원권 있음: isConsultation: false + branchId + selectedBranch 전달
-      console.log('Navigating with existing membership for branch:', branch.b_idx);
-      navigate('/reservation/form', {
-        state: {
-          isConsultation: false,
-          branchId: branch.b_idx,
-          selectedBranch: branchForState
-        }
-      });
-    } else {
-      // 회원권 없음: isConsultation: true + branchId + selectedBranch 전달
-      console.log('Navigating for consultation for branch:', branch.b_idx);
-      navigate('/reservation/form', {
-        state: {
-          isConsultation: true,
-          branchId: branch.b_idx,
-          selectedBranch: branchForState
-        }
-      });
-    }
+    navigate('/reservation/form', {
+      state: {
+        isConsultation: true,
+        branchId: branch.b_idx,
+        selectedBranch: branchForState
+      }
+    });
+    // if (hasMembershipForBranch) {
+    //   // 회원권 있음: isConsultation: false + branchId + selectedBranch 전달
+    //   console.log('Navigating with existing membership for branch:', branch.b_idx);
+    //   navigate('/reservation/form', {
+    //     state: {
+    //       isConsultation: false,
+    //       branchId: branch.b_idx,
+    //       selectedBranch: branchForState
+    //     }
+    //   });
+    // } else {
+    //   // 회원권 없음: isConsultation: true + branchId + selectedBranch 전달
+    //   console.log('Navigating for consultation for branch:', branch.b_idx);
+    //   navigate('/reservation/form', {
+    //     state: {
+    //       isConsultation: true,
+    //       branchId: branch.b_idx,
+    //       selectedBranch: branchForState
+    //     }
+    //   });
+    // }
     // 기존 URL 파라미터 방식 제거
     // navigate(`/reservation/form?branchId=${branch.b_idx}`)
-  }, [branch, navigate, hasMembershipForBranch]);
+  }, [branch, navigate]);
 
   const handleBookmark = useCallback(() => {
     if (!branch) return;
@@ -192,7 +199,7 @@ const BranchDetail = () => {
       backgroundColor: 'bg-system-bg'
     });
     setNavigation({ display: false });
-  }, []);
+  }, [branch?.name, handleBack, setHeader, setNavigation]);
 
   if (!branch || isLoading || isMembershipsLoading) {
     return <LoadingIndicator className="min-h-screen" />;

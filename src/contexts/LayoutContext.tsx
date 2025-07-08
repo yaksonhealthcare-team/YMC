@@ -1,6 +1,7 @@
 import Header from '@/components/Header';
 import PageContainer from '@/components/PageContainer';
 import { StartupPopup } from '@/components/popup/StartupPopup';
+import { useAppBridge } from '@/hooks/useAppBridge';
 import { Typography } from '@mui/material';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -58,6 +59,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
   });
   const location = useLocation();
   const pageContainerRef = useRef<HTMLDivElement>(null);
+  useAppBridge();
 
   // 경로 변경 시 스크롤을 맨 위로 이동
   useEffect(() => {
@@ -279,6 +281,9 @@ const extractColor = (className: string): string => {
   }
 };
 
+/**
+ * @deprecated
+ */
 const useLayout = () => {
   const context = useContext(LayoutContext);
   if (!context) {

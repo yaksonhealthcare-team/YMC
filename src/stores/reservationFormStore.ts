@@ -1,33 +1,44 @@
+import dayjs from 'dayjs';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import dayjs from 'dayjs';
-import { TimeSlot } from '../types/Schedule';
-import { AdditionalManagement } from '../types/Membership';
 import { Branch } from '../types/Branch';
+import { AdditionalManagement } from '../types/Membership';
+import { TimeSlot } from '../types/Schedule';
 
 export interface ReservationFormData {
-  item: undefined | string;
-  branch: undefined | string;
   date: null | dayjs.Dayjs;
+  /**
+   * 예약 일시
+   */
   timeSlot: null | TimeSlot;
   request: string;
   additionalServices: AdditionalManagement[];
+  item?: string;
+  /**
+   * 상담예약 - 메뉴
+   */
+  menu?: { value: string; name: string; price: string };
+
+  /**
+   * 지점
+   */
+  branch?: string;
   membershipId?: string;
 }
 
 interface ReservationFormState {
   formData: ReservationFormData;
   selectedBranch: Branch | null;
-  initialMembershipId: string | undefined;
   setFormData: (data: Partial<ReservationFormData>) => void;
   resetFormData: () => void;
   setSelectedBranch: (branch: Branch) => void;
-  setInitialMembershipId: (id: string | undefined) => void;
+  setInitialMembershipId: (id?: string) => void;
   clearAll: () => void;
 }
 
 const initialState: ReservationFormData = {
   item: undefined,
+  menu: { value: '', name: '', price: '' },
   branch: undefined,
   date: null,
   timeSlot: null,
@@ -41,7 +52,6 @@ export const useReservationFormStore = create<ReservationFormState>()(
     (set) => ({
       formData: initialState,
       selectedBranch: null,
-      initialMembershipId: undefined,
       setFormData: (data) =>
         set((state) => ({
           formData: { ...state.formData, ...data }
@@ -52,12 +62,10 @@ export const useReservationFormStore = create<ReservationFormState>()(
           selectedBranch: branch,
           formData: { ...state.formData, branch: branch.b_idx }
         })),
-      setInitialMembershipId: (id) => set({ initialMembershipId: id }),
       clearAll: () =>
         set({
           formData: initialState,
-          selectedBranch: null,
-          initialMembershipId: undefined
+          selectedBranch: null
         })
     }),
     { name: 'reservation-form-store' }

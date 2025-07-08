@@ -4,6 +4,7 @@ export interface ScheduleFilters {
   membershipIndex?: number;
   searchDate?: Dayjs;
   addServices?: number[];
+  ss_idx?: string;
   b_idx: string;
 }
 

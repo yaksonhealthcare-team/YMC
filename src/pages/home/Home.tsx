@@ -1,3 +1,5 @@
+import { convertMembershipForCard, useGetUserMembership } from '@/_domain/membership';
+import '@/assets/css/swiper-custom.css';
 import NotiIcon from '@/assets/icons/NotiIcon.svg?react';
 import { FloatingButton } from '@/components/FloatingButton';
 import LoadingIndicator from '@/components/LoadingIndicator';
@@ -7,9 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLayout } from '@/contexts/LayoutContext';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { useBanner } from '@/queries/useBannerQueries';
-import { useUserMemberships } from '@/queries/useMembershipQueries';
 import { useUnreadNotificationsCount } from '@/queries/useNotificationQueries';
-import '@/styles/swiper-custom.css';
 import { BannerRequestType } from '@/types/Banner';
 import { Container, Typography } from '@mui/material';
 import { lazy, Suspense, useEffect, useMemo } from 'react';
@@ -40,7 +40,13 @@ const Home = () => {
       enabled: !!user
     }
   );
-  const { data: memberships, isLoading: membershipLoading } = useUserMemberships('T', user);
+
+  const { data, isLoading: isMembershipLoading } = useGetUserMembership({ search_type: 'T' });
+  const memberships = useMemo(() => data?.flatMap((page) => page.data.body) || [], [data]);
+  const totalCount = data?.[0]?.data?.total_count || 0;
+  const convertedMemberships = convertMembershipForCard(memberships);
+  const hasMembership = memberships && memberships.length > 0;
+
   const { data: unreadCount = 0 } = useUnreadNotificationsCount(user);
 
   // 뒤로가기 방지 훅 적용
@@ -50,19 +56,6 @@ const Home = () => {
     if (count > 99) return '99+';
     return count;
   };
-
-  const availableMemberships = useMemo(() => {
-    if (!memberships?.pages[0]?.body) return [];
-    if (!user) return [];
-    return memberships.pages[0].body;
-  }, [user, memberships]);
-
-  const totalMembershipCount = useMemo(() => {
-    if (!memberships?.pages[0]) return 0;
-    if (!user) return 0;
-
-    return memberships.pages[0].total_count ?? 0;
-  }, [user, memberships]);
 
   useEffect(() => {
     setHeader({
@@ -216,9 +209,9 @@ const Home = () => {
         {/* 주요 섹션은 즉시 로드 */}
         <ReserveCardSection />
         <MembershipCardSection
-          memberships={availableMemberships}
-          isLoading={membershipLoading}
-          totalCount={totalMembershipCount}
+          memberships={hasMembership ? convertedMemberships : []}
+          isLoading={isMembershipLoading}
+          totalCount={totalCount}
         />
 
         {/* 화면 아래 컴포넌트는 지연 로드 */}

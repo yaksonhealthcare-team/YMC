@@ -1,5 +1,5 @@
 import { UserMapper } from '@/mappers/UserMapper';
-import { axiosClient } from '@/queries/clients';
+import { axiosClient, saveAccessToken } from '@/queries/clients';
 import { HTTPResponse } from '@/types/HTTPResponse';
 import { UpdateUserProfileRequest, User, UserResponse } from '@/types/User';
 import axios from 'axios';
@@ -58,6 +58,7 @@ export const refreshAccessToken = async (): Promise<string | null> => {
     const { accessToken } = response.data.body;
 
     if (accessToken) {
+      saveAccessToken(accessToken);
       return accessToken;
     }
 

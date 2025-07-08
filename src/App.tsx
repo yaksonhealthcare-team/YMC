@@ -1,10 +1,17 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import 'swiper/swiper-bundle.css';
 import ErrorBoundary from './components/ErrorBoundary';
 import { queryClient } from './queries/clients';
 import { AppRouter } from './router/router';
 
+/**
+ * @deprecated
+ * 점진적으로 mui를 tailwind로 대체합니다.
+ */
 const theme = createTheme({
   // MUI 테마 설정
   components: {
@@ -36,11 +43,14 @@ const theme = createTheme({
   }
 });
 
+dayjs.extend(customParseFormat);
+
 function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
           <AppRouter />
         </QueryClientProvider>
       </ThemeProvider>
