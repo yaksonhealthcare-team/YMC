@@ -479,8 +479,10 @@ const ReservationFormPage = () => {
           date: null,
           timeSlot: null,
           additionalServices: [],
-          membershipId: undefined
+          membershipId: undefined,
+          branch: undefined
         });
+
         setIsPrepaid(false);
       }
     },
