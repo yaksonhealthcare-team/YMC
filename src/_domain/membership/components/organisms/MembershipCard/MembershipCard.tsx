@@ -30,10 +30,12 @@ export const MembershipCard = ({ chips, title, content, date, onClick, onClickRe
             return <MembershipChip key={key} {...chip} />;
           })}
         </div>
-        <button onClick={onClick} className="flex justify-self-end gap-0.5">
-          <p className="font-r text-xs text-gray-500">이용내역</p>
-          <CaretRightIcon className="w-3 h-3 mt-[1px]" />
-        </button>
+        {onClick && (
+          <button onClick={onClick} className="flex justify-self-end gap-0.5">
+            <p className="font-r text-xs text-gray-500">이용내역</p>
+            <CaretRightIcon className="w-3 h-3 mt-[1px]" />
+          </button>
+        )}
       </div>
 
       <p className="font-sb text-base text-gray-700 truncate">{title}</p>
