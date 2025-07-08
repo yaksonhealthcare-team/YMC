@@ -2,7 +2,7 @@ import { ReservationMembershipCardItem } from '@/_domain/reservation/components'
 import dayjs from 'dayjs';
 import { Location } from 'react-router-dom';
 import { MembershipChipProps } from '../components/molecules';
-import { MembershipStatusValue, UserMembershipSchema } from '../types/membership.types';
+import { MembershipStatusValue, UserMembershipDetailSchema, UserMembershipSchema } from '../types/membership.types';
 import { convertMembershipPriceUnit, convertMembershipStatusValue } from '../utils';
 
 export type ConvertedMembershipForSwiperData = ReturnType<typeof convertMembershipForSwiper>;
@@ -55,7 +55,7 @@ export type ConvertedMembershipForCardData = ReturnType<typeof convertMembership
  * MembershipCard에서 사용할 데이터로 변환
  * @return {ConvertedMembershipForCardData}
  */
-export const convertMembershipForCard = (data: UserMembershipSchema[] = []) => {
+export const convertMembershipForCard = (data: Array<UserMembershipSchema | UserMembershipDetailSchema> = []) => {
   return data.map((item) => {
     const convertedRemainAmount = convertMembershipPriceUnit(item.mp_gubun, Number(item.remain_amount));
     const convertedTotalAmount = convertMembershipPriceUnit(item.mp_gubun, Number(item.buy_amount));
@@ -70,7 +70,7 @@ export const convertMembershipForCard = (data: UserMembershipSchema[] = []) => {
     ];
 
     return {
-      id: item.mp_idx,
+      id: isUserMembership(item) ? item.mp_idx : '',
       status: item.status,
       serviceName: item.service_name,
       remainAmount: convertedRemainAmount,
@@ -90,4 +90,7 @@ const formatDate = (startDate: string, expireDate: string) => {
   const end = dayjs(expireDate, parseFmt).format(fmt);
 
   return `${start} - ${end}`;
+};
+const isUserMembership = (item: UserMembershipSchema | UserMembershipDetailSchema): item is UserMembershipSchema => {
+  return (item as UserMembershipSchema).mp_idx !== undefined;
 };
