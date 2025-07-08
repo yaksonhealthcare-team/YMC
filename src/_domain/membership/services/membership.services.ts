@@ -1,6 +1,6 @@
-import { authApi } from '@/_shared/services';
 import { ListResponse } from '@/_shared/types/response.types';
 import { handleError } from '@/_shared/utils';
+import { axiosClient } from '@/queries/clients';
 import { AxiosResponse } from 'axios';
 import {
   UserMembershipDetailParams,
@@ -21,7 +21,7 @@ export const getUserMemberships = async (
   try {
     const endpoint = `${BASE_URL}/me/me`;
 
-    return authApi.get(endpoint, { params });
+    return axiosClient.get(endpoint, { params });
   } catch (error) {
     throw handleError(error, 'getUserMemberships');
   }
@@ -37,7 +37,7 @@ export const getUserMembershipsDetail = async (
   try {
     const endpoint = `${BASE_URL}/me/detail`;
 
-    return authApi.get(endpoint, { params });
+    return axiosClient.get(endpoint, { params });
   } catch (error) {
     throw handleError(error, 'getUserMembershipsDetail');
   }
