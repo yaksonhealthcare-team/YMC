@@ -1,7 +1,6 @@
-import { api } from '@/_shared/services';
 import { ApiResponse } from '@/_shared/types/response.types';
 import { handleError } from '@/_shared/utils';
-import { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { CryptoTokenReissueSchema } from '../types/auth.types';
 
 const BASE_URL = `/auth`;
@@ -17,7 +16,7 @@ export const refreshAccessToken = async (): Promise<
   try {
     const endpoint = `${BASE_URL}/crypto/tokenreissue.php`;
 
-    return await api.get(endpoint);
+    return await axios.get(endpoint);
   } catch (error) {
     throw handleError(error, 'refreshAccessToken');
   }
