@@ -16,7 +16,7 @@ export const InputBox = ({
   return (
     <Container
       className={clsx(
-        'w-full px-5 py-4 flex items-center justify-between border border-gray-100 rounded-xl',
+        'box-border w-full px-5 py-4 flex items-center justify-between border border-gray-100 rounded-xl',
         className
       )}
       onClick={onClick}

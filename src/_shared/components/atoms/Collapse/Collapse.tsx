@@ -16,8 +16,13 @@ export const Collapse = ({ children, isOpen, mountOnEnter = false, unmountOnExit
   }, [isOpen, unmountOnExit]);
 
   useEffect(() => {
-    if (contentRef.current) {
-      setMaxH(isOpen ? `${contentRef.current.scrollHeight}px` : '0px');
+    if (!contentRef.current) return;
+
+    if (isOpen) {
+      const ceilHeight = Math.ceil(contentRef.current.scrollHeight);
+      setMaxH(`${ceilHeight}px`);
+    } else {
+      setMaxH('0px');
     }
   }, [isOpen, children]);
 
