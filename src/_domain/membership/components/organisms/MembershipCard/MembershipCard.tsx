@@ -41,14 +41,9 @@ export const MembershipCard = ({ chips, title, content, date, onClick, onClickRe
       <p className="font-sb text-base text-gray-700 truncate">{title}</p>
 
       <div className="flex items-start">
-        <div className="flex flex-1">
+        <div className="flex flex-1 flex-col gap-1.5">
+          {date && <p className="font-r text-xs text-gray-600">{date}</p>}
           <p className="font-r text-xs text-gray-600">{content}</p>
-          {date && (
-            <>
-              <span className="text-xs text-gray-200 mx-1.5">|</span>
-              <p className="font-r text-xs text-gray-600">{date}</p>
-            </>
-          )}
         </div>
         {onClickReservation && <ReservationButton onClick={handleClickReservation} />}
       </div>

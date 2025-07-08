@@ -53,7 +53,7 @@ export const MembershipCardSection = ({ memberships, isLoading, totalCount }: Me
       <Swiper spaceBetween={10} slidesPerView={1} style={{ overflow: 'visible' }} className="mt-2">
         {memberships.map((membership, idx) => {
           const key = `${membership.id}-${idx}`;
-          const price = membership.remainAmount;
+          const price = `${membership.remainAmount} / ${membership.totalAmount}`;
 
           return (
             <SwiperSlide key={key} className="mr-2">

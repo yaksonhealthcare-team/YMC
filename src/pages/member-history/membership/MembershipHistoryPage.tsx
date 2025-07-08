@@ -4,8 +4,7 @@ import {
   MembershipStatusType,
   useGetUserMembership
 } from '@/_domain/membership';
-import { Loading } from '@/_shared/components';
-import { useIntersectionObserver } from '@/_shared/hooks';
+import { Loading, useIntersectionObserver } from '@/_shared';
 import { Button } from '@/components/Button';
 import { useLayout } from '@/contexts/LayoutContext';
 import { useMembershipStore } from '@/stores/membershipStore';
@@ -50,7 +49,7 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
   const convertedMemberships = convertMembershipForCard(memberships);
   const hasMembership = memberships && memberships.length > 0;
 
-  if (isLoading) <Loading />;
+  if (isLoading) return <Loading />;
   if (!hasMembership) return <div className="flex flex-1 justify-center items-center">회원권 내역이 없습니다.</div>;
 
   return (
