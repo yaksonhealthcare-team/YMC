@@ -38,7 +38,7 @@ export const MembershipCard = ({ membership, onClick }: MembershipCardProps) => 
           {membership.s_time !== '0' && (
             <div className="flex items-center gap-1 text-gray-500">
               <ClockIcon className="w-4 h-4 text-[#F37165]" />
-              <span className="text-sm">{membership.s_time}분 소요</span>
+              <span className="text-sm">약 {membership.s_time}분 소요</span>
             </div>
           )}
         </div>
