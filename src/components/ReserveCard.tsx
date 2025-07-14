@@ -1,10 +1,7 @@
-import { useOverlay } from '@/contexts/ModalContext';
-import { useCompleteVisit } from '@/queries/useReservationQueries';
 import { Reservation, ReservationStatusCode } from '@/types/Reservation';
 import clsx from 'clsx';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from './Button';
 import DateAndTime from './DateAndTime';
 import ReserveTag from './ReserveTag';
 
@@ -15,18 +12,18 @@ interface ReserveCardProps {
 
 export const ReserveCard = ({ reservation, className = '' }: ReserveCardProps) => {
   const navigate = useNavigate();
-  const { mutate: completeVisit } = useCompleteVisit();
-  const { openModal, overlayState } = useOverlay();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const { mutate: completeVisit } = useCompleteVisit();
+  // const { openModal, overlayState } = useOverlay();
+  // const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 오버레이 상태 감지
-  useEffect(() => {
-    if (overlayState.isOpen && overlayState.type === 'modal') {
-      setIsModalOpen(true);
-    } else {
-      setIsModalOpen(false);
-    }
-  }, [overlayState]);
+  // useEffect(() => {
+  //   if (overlayState.isOpen && overlayState.type === 'modal') {
+  //     setIsModalOpen(true);
+  //   } else {
+  //     setIsModalOpen(false);
+  //   }
+  // }, [overlayState]);
 
   const classifyReservationStatus = (status: ReservationStatusCode) => {
     const statusGroups = {
@@ -43,33 +40,33 @@ export const ReserveCard = ({ reservation, className = '' }: ReserveCardProps) =
     return null;
   };
 
-  const handleCompleteVisit = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    openModal({
-      title: '방문 완료',
-      message: '방문을 완료하시겠습니까?',
-      onConfirm: () => {
-        completeVisit(reservation.id);
-      }
-    });
-  };
+  // const handleCompleteVisit = (e: React.MouseEvent) => {
+  //   e.stopPropagation();
+  //   openModal({
+  //     title: '방문 완료',
+  //     message: '방문을 완료하시겠습니까?',
+  //     onConfirm: () => {
+  //       completeVisit(reservation.id);
+  //     }
+  //   });
+  // };
 
-  const handleSatisfactionClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    navigate(`/reservation/${reservation.id}/satisfaction`, {
-      state: {
-        r_idx: reservation.id,
-        r_date: reservation.date.toISOString(),
-        b_name: reservation.store,
-        ps_name: reservation.programName,
-        review_items: [
-          { rs_idx: '1', rs_type: '시술만족도' },
-          { rs_idx: '2', rs_type: '친절도' },
-          { rs_idx: '3', rs_type: '청결도' }
-        ]
-      }
-    });
-  };
+  // const handleSatisfactionClick = (e: React.MouseEvent) => {
+  //   e.stopPropagation();
+  //   navigate(`/reservation/${reservation.id}/satisfaction`, {
+  //     state: {
+  //       r_idx: reservation.id,
+  //       r_date: reservation.date.toISOString(),
+  //       b_name: reservation.store,
+  //       ps_name: reservation.programName,
+  //       review_items: [
+  //         { rs_idx: '1', rs_type: '시술만족도' },
+  //         { rs_idx: '2', rs_type: '친절도' },
+  //         { rs_idx: '3', rs_type: '청결도' }
+  //       ]
+  //     }
+  //   });
+  // };
 
   const getButton = (): ReactNode => {
     const statusType = classifyReservationStatus(reservation.statusCode);
@@ -103,53 +100,53 @@ export const ReserveCard = ({ reservation, className = '' }: ReserveCardProps) =
 
     switch (statusType) {
       case 'completed':
-        if (reservation.reviewPositiveYn === 'Y') {
-          return (
-            <Button
-              variantType="primary"
-              sizeType="xs"
-              onClick={handleSatisfactionClick}
-              className={isModalOpen ? 'opacity-50 cursor-not-allowed text-[14px]' : 'min-w-[73px] text-[14px]'}
-              disabled={isModalOpen}
-            >
-              만족도 작성
-            </Button>
-          );
-        }
         return null;
-
+      // 만족도 작성 기능 임시 주석
+      // if (reservation.reviewPositiveYn === 'Y') {
+      //   return (
+      //     <Button
+      //       variantType="primary"
+      //       sizeType="xs"
+      //       onClick={handleSatisfactionClick}
+      //       className={isModalOpen ? 'opacity-50 cursor-not-allowed text-[14px]' : 'min-w-[73px] text-[14px]'}
+      //       disabled={isModalOpen}
+      //     >
+      //       만족도 작성
+      //     </Button>
+      //   );
+      // }
       case 'upcoming':
         // 예약 시작 시간이 지났고, 상태가 예약완료(001)인 경우에만 방문 완료 버튼 표시
         if (isReservationDatePassed && reservation.statusCode === '001') {
           return null; // 방문 완료 버튼 임시 숨김
-          return (
-            <Button
-              variantType="primary"
-              sizeType="xs"
-              onClick={handleCompleteVisit}
-              className={isModalOpen ? 'opacity-50 cursor-not-allowed text-[14px]' : 'min-w-[73px] text-[14px]'}
-              disabled={isModalOpen}
-            >
-              방문 완료
-            </Button>
-          );
+          // return (
+          //   <Button
+          //     variantType="primary"
+          //     sizeType="xs"
+          //     onClick={handleCompleteVisit}
+          //     className={isModalOpen ? 'opacity-50 cursor-not-allowed text-[14px]' : 'min-w-[73px] text-[14px]'}
+          //     disabled={isModalOpen}
+          //   >
+          //     방문 완료
+          //   </Button>
+          // );
         }
         return null;
 
       case 'progressing':
         // 관리중 상태에서도 방문 완료 버튼 표시
         return null; // 방문 완료 버튼 임시 숨김
-        return (
-          <Button
-            variantType="primary"
-            sizeType="xs"
-            onClick={handleCompleteVisit}
-            className={isModalOpen ? 'opacity-50 cursor-not-allowed text-[14px]' : 'min-w-[73px] text-[14px]'}
-            disabled={isModalOpen}
-          >
-            방문 완료
-          </Button>
-        );
+      // return (
+      //   <Button
+      //     variantType="primary"
+      //     sizeType="xs"
+      //     onClick={handleCompleteVisit}
+      //     className={isModalOpen ? 'opacity-50 cursor-not-allowed text-[14px]' : 'min-w-[73px] text-[14px]'}
+      //     disabled={isModalOpen}
+      //   >
+      //     방문 완료
+      //   </Button>
+      // );
 
       default:
         return null;
