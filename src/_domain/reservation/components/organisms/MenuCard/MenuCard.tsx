@@ -13,7 +13,7 @@ export const MenuCard = ({ item, type = 'standard' }: MenuCardProps) => {
         </div>
         <div className="flex items-center gap-1">
           <ClockIcon className="w-[14px] h-[14px] text-primary" />
-          <p className="text-sm font-r text-gray-500">{spentTime}분 소요</p>
+          <p className="text-sm font-r text-gray-500">약 {spentTime}분 소요</p>
         </div>
       </div>
 
