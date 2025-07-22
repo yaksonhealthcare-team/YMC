@@ -25,7 +25,6 @@ import { CircularProgress, RadioGroup as MUIRadioGroup } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { MembershipBranchSelectModal } from '../membership/_fragments/MembershipBranchSelectModal';
 import DateAndTimeBottomSheet from './_fragments/DateAndTimeBottomSheet';
 import { ReservationFormSection } from './_fragments/ReservationFormSection';
 
@@ -789,20 +788,19 @@ const ReservationFormPage = () => {
           onClickCard={handleClickCard}
           type={menuType}
           fetchParams={{
-            b_idx: menuType === 'standard' ? formData.branch : '',
-            mp_idx: menuType === 'pre-paid' ? formData.item || '' : ''
+            b_idx: menuType === 'consult' ? formData.branch : '',
+            mp_idx: menuType === 'membership' ? formData.item || '' : ''
           }}
         />
       )}
 
-      {showBranchModal && (
+      {/* {showBranchModal && (
         <MembershipBranchSelectModal
-          onBranchSelect={handleBranchSelect}
+          onSelect={handleBranchSelect}
           onClose={handleCloseBranchModal}
-          brandCode={BRAND_CODE}
           memberShipId={formData.membershipId}
         />
-      )}
+      )} */}
 
       <section className="px-5 pt-2 pb-6 border-b-8 border-[#f7f7f7]">
         <h2 className="text-gray-700 text-18px font-sb leading-[148%] tracking-[-0.09px] mb-4">

@@ -1,29 +1,41 @@
+import { ReservationService } from '@/_domain/reservation';
+import { ReservationMembershipType } from '@/_domain/reservation/types/reservation.types';
 import dayjs from 'dayjs';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { Branch } from '../types/Branch';
-import { AdditionalManagement } from '../types/Membership';
 import { TimeSlot } from '../types/Schedule';
 
+interface ReservationFormService extends ReservationService {
+  name: string;
+  price?: string;
+  membershipType?: ReservationMembershipType;
+}
 export interface ReservationFormData {
-  date: null | dayjs.Dayjs;
+  /**
+   * - consult: 상담 예약
+   * - membership: 회원권
+   */
+  type: 'consult' | 'membership' | null;
+
   /**
    * 예약 일시
    */
-  timeSlot: null | TimeSlot;
+  date: dayjs.Dayjs | null;
+  timeSlot: TimeSlot;
   request: string;
-  additionalServices: AdditionalManagement[];
   item?: string;
-  /**
-   * 상담예약 - 메뉴
-   */
-  menu?: { value: string; name: string; price: string };
 
   /**
    * 지점
    */
-  branch?: string;
+  branch: string;
   membershipId?: string;
+
+  /**
+   * 예약 상품
+   */
+  services: ReservationFormService[];
 }
 
 interface ReservationFormState {
@@ -37,14 +49,14 @@ interface ReservationFormState {
 }
 
 const initialState: ReservationFormData = {
+  type: null,
   item: undefined,
-  menu: { value: '', name: '', price: '' },
-  branch: undefined,
+  branch: '',
   date: null,
-  timeSlot: null,
+  timeSlot: { code: '', time: '' },
   request: '',
-  additionalServices: [],
-  membershipId: undefined
+  membershipId: undefined,
+  services: []
 };
 
 export const useReservationFormStore = create<ReservationFormState>()(
