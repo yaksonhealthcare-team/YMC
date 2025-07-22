@@ -4,7 +4,6 @@ import { useOverlay } from '@/contexts/ModalContext';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { useBranch, useBranchBookmarkMutation, useBranchUnbookmarkMutation } from '@/queries/useBranchQueries';
 import { useUserMemberships } from '@/queries/useMembershipQueries';
-import { Branch } from '@/types/Branch';
 import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -126,27 +125,22 @@ const BranchDetail = () => {
   const handleReservation = useCallback(() => {
     if (!branch) return;
 
+    const branchId = branch.b_idx;
     // BranchDetail 타입을 Branch 타입으로 변환
-    const branchForState: Branch = {
-      b_idx: branch.b_idx,
-      name: branch.name,
-      address: branch.location.address,
-      latitude: branch.location.latitude,
-      longitude: branch.location.longitude,
-      canBookToday: true, // 임시 값, ReservationFormPage와 일치 필요
-      distanceInMeters: branch.location.distance ?? null,
-      isFavorite: branch.isBookmarked ?? false, // ReservationFormPage와 일치 필요
-      brandCode: branch.brandCode,
-      brand: branch.brand
-    };
+    // const branchForState: Branch = {
+    //   b_idx: branch.b_idx,
+    //   name: branch.name,
+    //   address: branch.location.address,
+    //   latitude: branch.location.latitude,
+    //   longitude: branch.location.longitude,
+    //   canBookToday: true, // 임시 값, ReservationFormPage와 일치 필요
+    //   distanceInMeters: branch.location.distance ?? null,
+    //   isFavorite: branch.isBookmarked ?? false, // ReservationFormPage와 일치 필요
+    //   brandCode: branch.brandCode,
+    //   brand: branch.brand
+    // };
 
-    navigate('/reservation/form', {
-      state: {
-        isConsultation: true,
-        branchId: branch.b_idx,
-        selectedBranch: branchForState
-      }
-    });
+    navigate(`/reservation?branchId=${branchId}`);
     // if (hasMembershipForBranch) {
     //   // 회원권 있음: isConsultation: false + branchId + selectedBranch 전달
     //   console.log('Navigating with existing membership for branch:', branch.b_idx);

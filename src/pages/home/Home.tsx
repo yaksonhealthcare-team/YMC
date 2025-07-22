@@ -74,12 +74,7 @@ const Home = () => {
       return;
     }
 
-    navigate('/reservation/form', {
-      state: {
-        originalPath: '/',
-        fromHome: true
-      }
-    });
+    navigate('/reservation');
   };
 
   if (isLoading) {

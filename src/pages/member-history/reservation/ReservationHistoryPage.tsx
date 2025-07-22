@@ -137,12 +137,7 @@ const ReservationHistoryPage = () => {
   );
 
   const handleReservationClick = () => {
-    navigate('/reservation/form', {
-      state: {
-        originalPath: '/member-history/reservation',
-        fromReservationHistory: true
-      }
-    });
+    navigate('/reservation');
   };
 
   useEffect(() => {

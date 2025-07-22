@@ -183,22 +183,12 @@ const ReservationDetailPage = () => {
   const handleNavigateToReservationForm = () => {
     if (!reservation) return;
 
+    const membershipId = reservation.membershipId;
+    const branchId = reservation.branchId;
     if (reservation.type === ReservationType.MANAGEMENT) {
-      // 관리 예약 재예약: rebookingMembershipId와 branchId 전달
-      navigate(`/reservation/form`, {
-        state: {
-          rebookingMembershipId: reservation.membershipId,
-          branchId: reservation.branchId
-        }
-      });
+      navigate(`/reservation?membershipId=${membershipId}&branchId=${branchId}`);
     } else {
-      // 상담 예약 재예약: isConsultation 플래그와 branchId 전달
-      navigate(`/reservation/form`, {
-        state: {
-          isConsultation: true,
-          branchId: reservation.branchId
-        }
-      });
+      navigate(`/reservation?membershipId=${membershipId}`);
     }
   };
 
