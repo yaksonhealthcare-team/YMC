@@ -54,6 +54,9 @@ export default {
           800: '#6D332D',
           900: '#552823'
         },
+        secondary: {
+          DEFAULT: '#FEF2F1'
+        },
         error: {
           DEFAULT: '#FF453A'
         },
