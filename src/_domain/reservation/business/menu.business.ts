@@ -10,7 +10,7 @@ export const convertConsultMenu = (data?: ConsultMenuSchema[]) => {
   if (!hasData) return [];
 
   return data.map(({ s_name, s_time, sc_name, ss_count, ss_idx, ss_price }) => ({
-    idx: ss_idx,
+    ss_idx,
     name: s_name,
     category: sc_name,
     price: ss_price,
@@ -29,7 +29,7 @@ export const convertPrepaidMenu = (data?: PrepaidMenuSchema[]) => {
   if (!hasData) return [];
 
   return data.map(({ s_name, s_time, sc_name, ss_count, ss_idx, ss_unit_price }) => ({
-    idx: ss_idx,
+    ss_idx,
     name: s_name,
     category: sc_name,
     price: ss_unit_price,

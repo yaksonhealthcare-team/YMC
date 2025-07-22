@@ -1,17 +1,17 @@
+import { BranchesSchema } from '@/_domain/reservation';
 import Header from '@/components/Header';
 import { useLayout } from '@/contexts/LayoutContext';
-import { Branch } from '@/types/Branch';
 import { useEffect } from 'react';
 import MembershipBranchSelectPage from '../MembershipBranchSelectPage';
 
 interface Props {
-  onBranchSelect: (branch: Branch) => void;
+  onSelect: (branch: BranchesSchema) => void;
   onClose: () => void;
-  brandCode: string;
-  memberShipId?: string;
+  // memberShipId?: string;
+  // brandCode: string;
 }
 
-export const MembershipBranchSelectModal = ({ onBranchSelect, onClose, brandCode, memberShipId }: Props) => {
+export const MembershipBranchSelectModal = ({ onSelect, onClose /* brandCode, */ /* memberShipId */ }: Props) => {
   const { setNavigation } = useLayout();
 
   // 모달이 닫힐 때 헤더를 복원
@@ -25,6 +25,11 @@ export const MembershipBranchSelectModal = ({ onBranchSelect, onClose, brandCode
       setNavigation({ display: false });
     };
   }, [setNavigation]);
+
+  const handleSelect = (branch: BranchesSchema) => {
+    onSelect(branch);
+    onClose();
+  };
 
   return (
     <div
@@ -47,12 +52,9 @@ export const MembershipBranchSelectModal = ({ onBranchSelect, onClose, brandCode
         </div>
         <div className="flex-1 overflow-hidden">
           <MembershipBranchSelectPage
-            onSelect={(branch) => {
-              onBranchSelect(branch);
-              onClose();
-            }}
-            brandCode={brandCode}
-            memberShipId={memberShipId}
+            onSelect={handleSelect}
+            // memberShipId={memberShipId}
+            // brandCode={brandCode}
           />
         </div>
       </div>

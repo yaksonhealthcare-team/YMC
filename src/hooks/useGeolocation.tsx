@@ -9,7 +9,7 @@ interface MessageEvent {
   type: 'GET_LOCATION';
 }
 
-export const useGeolocation = (options: GeolocationOptions = {}) => {
+export const useGeolocation = (options?: GeolocationOptions) => {
   const { location, error, loading, setLocation, setError, setLoading } = useGeolocationStore();
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export const useGeolocation = (options: GeolocationOptions = {}) => {
     };
 
     navigator.geolocation.getCurrentPosition(successHandler, errorHandler, defaultOptions);
-  }, []);
+  }, [options, setError, setLoading, setLocation]);
 
   return { location, error, loading, setLocation };
 };

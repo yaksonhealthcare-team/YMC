@@ -20,3 +20,13 @@ export interface ListResponse<T> {
   current_page: number;
   body: T[];
 }
+
+/**
+ * Result Response 타입
+ */
+export interface ResultResponse<T> extends Omit<ListResponse<T>, 'body'> {
+  body: {
+    current_addr: string;
+    result: T[];
+  };
+}

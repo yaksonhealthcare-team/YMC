@@ -47,7 +47,7 @@ const PaymentCompletePage = () => {
       if (isAdditional) {
         navigate('/member-history/reservation');
       } else {
-        navigate('/reservation/form');
+        navigate('/reservation');
       }
     } catch (error) {
       openModal({

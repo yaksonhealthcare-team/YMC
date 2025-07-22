@@ -1,53 +1,49 @@
 import clsx from 'clsx';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import type { Swiper as SwiperType } from 'swiper/types';
-import { ReservationMembershipCard, ReservationMembershipCardItem } from '../ReservationMembershipCard';
+import { ReservationMembershipCard } from '../ReservationMembershipCard';
 import { ReservationMembershipSwiperProps } from './ReservationMembershipSwiper.types';
 
-export const ReservationMembershipSwiper = ({ data, value, onChange }: ReservationMembershipSwiperProps) => {
-  const [activeIdx, setActiveIdx] = useState(0);
-  const renderRef = useRef(false);
+export const ReservationMembershipSwiper = ({
+  data,
+  currentIndex,
+  value,
+  onChangeIndex,
+  onChange
+}: ReservationMembershipSwiperProps) => {
+  const swiperRef = useRef<SwiperType>();
+  const filteredData = data.filter((item) => !!item.mp_idx);
+
+  const handleChangeSlide = (swiper: SwiperType) => {
+    onChangeIndex(swiper.activeIndex);
+  };
 
   useEffect(() => {
-    const isValid = data && data.length > 0 && value;
-    if (!isValid) return;
-
-    const setInitialIndex = () => {
-      const idx = data.findIndex((item) => item.id === value);
-      setActiveIdx(idx === -1 ? 0 : idx);
-    };
-
-    if (!renderRef.current) {
-      setInitialIndex();
-      renderRef.current = true;
+    if (swiperRef.current) {
+      swiperRef.current.slideTo(currentIndex, 0);
     }
-  }, [value, data]);
-
-  const handleSlideChange = useCallback((swiper: SwiperType) => {
-    setActiveIdx(swiper.activeIndex);
-  }, []);
-
-  const handleChange = useCallback(
-    (checked: boolean, value: string, item: ReservationMembershipCardItem) => {
-      onChange(checked, value, item);
-    },
-    [onChange]
-  );
+  }, [currentIndex]);
 
   return (
     <>
-      <Swiper modules={[Pagination]} spaceBetween={20} onSlideChange={handleSlideChange} className="w-full">
-        {data.map((item, idx) => {
-          const key = `${item.id}-${idx}`;
+      <Swiper
+        modules={[Pagination]}
+        spaceBetween={20}
+        onSlideChange={handleChangeSlide}
+        onSwiper={(sw) => (swiperRef.current = sw)}
+        className="w-full"
+      >
+        {filteredData.map((item, idx) => {
+          const key = `${item.mp_idx}-${idx}`;
 
           return (
             <SwiperSlide key={key}>
               <ReservationMembershipCard
                 data={item}
-                checked={value === item.id}
-                onChange={(checked, value) => handleChange(checked, value, item)}
+                checked={value === item.mp_idx}
+                onChange={(checked, value) => onChange(checked, value, item)}
               />
             </SwiperSlide>
           );
@@ -55,10 +51,10 @@ export const ReservationMembershipSwiper = ({ data, value, onChange }: Reservati
       </Swiper>
 
       <div className="flex justify-center mt-4">
-        {data.map((item, idx) => {
-          const key = `i-${item.id}-${idx}`;
+        {filteredData.map((item, idx) => {
+          const key = `i-${item.mp_idx}-${idx}`;
 
-          return <Indicator key={key} active={idx === activeIdx} />;
+          return <Indicator key={key} active={idx === currentIndex} />;
         })}
       </div>
     </>

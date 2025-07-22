@@ -1,100 +1,80 @@
+import { BranchesSchema } from '@/_domain/reservation';
+import { useGetBranches } from '@/_domain/reservation/services/queries/branch.queries';
+import { useIntersectionObserver } from '@/_shared';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { Image } from '@/components/common/Image';
 import SearchIcon from '@/components/icons/SearchIcon';
+import { DEFAULT_COORDINATE } from '@/constants/coordinate';
+import { useAuth } from '@/contexts/AuthContext';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useGeolocation } from '@/hooks/useGeolocation';
-import { useIntersection } from '@/hooks/useIntersection';
-import { useBranches } from '@/queries/useBranchQueries';
-import { useReservationFormStore } from '@/stores/reservationFormStore';
-import { Branch, BranchSearchResult } from '@/types/Branch';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useCallback, useMemo, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 
 interface MembershipBranchListProps {
-  onSelect?: (branch: Branch) => void;
+  onSelect?: (branch: BranchesSchema) => void;
   query?: string;
-  memberShipId?: string;
+  // memberShipId?: string;
 }
 
-const MembershipBranchList = ({ onSelect, query, memberShipId }: MembershipBranchListProps) => {
+const MembershipBranchList = ({ onSelect, query /* memberShipId */ }: MembershipBranchListProps) => {
   const location = useLocation();
-  const navigate = useNavigate();
+  const loadMoreRef = useRef(null);
   const { location: geolocationLocation } = useGeolocation();
-  const { setFormData } = useReservationFormStore();
+  const { user } = useAuth();
 
   const debouncedQuery = useDebounce(query, 300);
-  const s_idx = location.state?.s_idx ?? location.state?.membershipId;
 
-  const {
-    data: branchPages,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-    isLoading,
-    isError,
-    error,
-    isFetching
-  } = useBranches({
-    latitude: geolocationLocation?.latitude,
-    longitude: geolocationLocation?.longitude,
-    search: debouncedQuery,
-    brandCode: undefined,
-    mp_idx:
-      memberShipId === '상담 예약' || location.state?.selectedItem === '상담 예약'
-        ? undefined
-        : memberShipId || location.state?.selectedItem,
-    s_idx: s_idx,
-    isConsultation:
-      location.state?.isConsultation || memberShipId === '상담 예약' || location.state?.selectedItem === '상담 예약',
-    enabled: !!geolocationLocation
-  });
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading, isError, error, isFetching } =
+    useGetBranches(user?.phone || '', {
+      nowlat: geolocationLocation?.latitude || DEFAULT_COORDINATE.latitude,
+      nowlon: geolocationLocation?.longitude || DEFAULT_COORDINATE.longitude,
+      search: debouncedQuery,
+      mp_idx: location.state?.selectedItem
+    });
 
-  const branches = branchPages?.pages.flatMap((page) => page.body.result) ?? [];
-
-  // 서버에서 이미 필터링된 결과를 사용
-  const filteredBranches = branches;
-
-  const { observerTarget } = useIntersection({
-    onIntersect: () => {
-      if (hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
-      }
+  const handleNextPage = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
     }
-  });
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  const handleBranchSelect = (branch: BranchSearchResult | Branch) => {
-    const branchData: Branch =
-      'b_idx' in branch && 'b_name' in branch
-        ? {
-            b_idx: branch.b_idx,
-            name: branch.b_name,
-            address: branch.b_addr,
-            latitude: Number(branch.b_lat),
-            longitude: Number(branch.b_lon),
-            canBookToday: branch.reserve === 'Y',
-            distanceInMeters: branch.distance,
-            isFavorite: branch.b_bookmark === 'Y',
-            brandCode: branch.brand_code,
-            brand: 'therapist'
-          }
-        : branch;
+  useIntersectionObserver(loadMoreRef, handleNextPage, { rootMargin: '200px' });
 
-    if (onSelect) {
-      onSelect(branchData);
-    } else {
-      setFormData({
-        branch: branchData.b_idx
-      });
-      navigate(-1);
-    }
-  };
+  // const handleBranchSelect = (branch: BranchesSchema | Branch) => {
+  //   const branchData: Branch =
+  //     'b_idx' in branch && 'b_name' in branch
+  //       ? {
+  //           b_idx: branch.b_idx,
+  //           name: branch.b_name,
+  //           address: branch.b_addr,
+  //           latitude: Number(branch.b_lat),
+  //           longitude: Number(branch.b_lon),
+  //           canBookToday: branch.reserve === 'Y',
+  //           distanceInMeters: branch.distance,
+  //           isFavorite: branch.b_bookmark === 'Y',
+  //           brandCode: branch.brand_code,
+  //           brand: 'therapist'
+  //         }
+  //       : branch;
+
+  //   if (onSelect) {
+  //     onSelect(branchData);
+  //   } else {
+  //     setFormData({
+  //       branch: branchData.b_idx
+  //     });
+  //     navigate(-1);
+  //   }
+  // };
 
   // 지점 목록 렌더링 컴포넌트 추출
-  const renderBranchList = (branches: BranchSearchResult[]) => (
+  const renderBranchList = (branches: BranchesSchema[]) => (
     <ul className="h-full overflow-y-auto divide-y divide-gray-100">
       {branches.map((branch) => (
         <li key={branch.b_idx}>
           <button
-            onClick={() => handleBranchSelect(branch)}
+            onClick={() => onSelect?.(branch)}
             className="w-full px-5 py-4 gap-4 flex items-stretch  rounded"
             aria-label={`${branch.b_name} 선택`}
           >
@@ -115,9 +95,11 @@ const MembershipBranchList = ({ onSelect, query, memberShipId }: MembershipBranc
           </button>
         </li>
       ))}
-      <div ref={observerTarget} className="h-1" />
+      <div ref={loadMoreRef} />
     </ul>
   );
+
+  const branches = useMemo(() => data.flatMap((page) => page.data.body.result), [data]);
 
   // 초기 데이터 로딩 상태 (완전히 빈 상태일 때)
   if (isLoading && !branches.length) {
@@ -147,7 +129,7 @@ const MembershipBranchList = ({ onSelect, query, memberShipId }: MembershipBranc
     );
   }
 
-  if (filteredBranches.length === 0) {
+  if (branches.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center px-5 min-h-[200px] mt-8">
         <div className="mb-4 p-3 rounded-full bg-gray-100">
@@ -159,7 +141,7 @@ const MembershipBranchList = ({ onSelect, query, memberShipId }: MembershipBranc
     );
   }
 
-  return <div className="h-full">{renderBranchList(filteredBranches)}</div>;
+  return <div className="h-full">{renderBranchList(branches)}</div>;
 };
 
 export default MembershipBranchList;

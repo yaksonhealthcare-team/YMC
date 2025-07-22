@@ -1,54 +1,73 @@
-import { ReservationMembershipCardItem } from '@/_domain/reservation/components';
+import { ReservationFormValues, ReservationMembershipCardItem, ReservationMembershipType } from '@/_domain/reservation';
 import dayjs from 'dayjs';
-import { Location } from 'react-router-dom';
 import { MembershipChipProps } from '../components/molecules';
 import { MembershipStatusValue, UserMembershipDetailSchema, UserMembershipSchema } from '../types/membership.types';
 import { convertMembershipPriceUnit, convertMembershipStatusValue } from '../utils';
 
-export type ConvertedMembershipForSwiperData = ReturnType<typeof convertMembershipForSwiper>;
 /**
- * ReservationMembershipSwiper에서 사용할 데이터로 변환
- * @return {ConvertedMembershipForSwiperData}
+ * 슬롯 인덱스에 따라:
+ * - slotIndex=0: 전체 멤버십을 변환
+ * - slotIndex>0: 이전 슬롯에서 standard로 선택된 mp_idx를 제외
  */
-export const convertMembershipForSwiper = (data: UserMembershipSchema[] = [], location?: Location) => {
-  const copiedData = [...data];
-  const rebookingMembershipId = location?.state?.rebookingMembershipId;
-  const params = new URLSearchParams(location?.search);
-  const membershipId = params.get('membershipId');
-
-  // 재예약하기로 들어왔을 경우
-  if (rebookingMembershipId) {
-    copiedData.sort((a, b) => {
-      if (a.mp_idx === rebookingMembershipId) return -1;
-      if (b.mp_idx === rebookingMembershipId) return 1;
-      return 0;
-    });
-  } else if (membershipId) {
-    // 홈 - 보유 회원권 -> 예약하기로 들어왔을 경우
-    copiedData.sort((a, b) => {
-      if (a.mp_idx === membershipId) return -1;
-      if (b.mp_idx === membershipId) return 1;
-      return 0;
-    });
-  }
-
-  const newData: ReservationMembershipCardItem[] = copiedData.map((item) => {
+export function convertMembershipForSwiperBySlot(
+  data: UserMembershipSchema[] = [],
+  services: ReservationFormValues['services'] = [],
+  slotIndex: number = 0
+): ReservationMembershipCardItem[] {
+  // 공통 map 함수
+  const toCardItem = (item: UserMembershipSchema): ReservationMembershipCardItem => {
     const { mp_idx, mp_gubun, branchs, service_name, pay_date, expiration_date, buy_amount, remain_amount } = item;
-
     return {
-      id: mp_idx,
+      mp_idx,
+      branchId: branchs[0].b_idx,
       branchName: branchs[0].b_name,
       serviceName: service_name,
       startDate: pay_date,
       expireDate: expiration_date,
       remainAmount: remain_amount,
       totalAmount: buy_amount,
-      type: mp_gubun === 'F' ? 'pre-paid' : 'standard'
+      type: (mp_gubun === 'F' ? 'pre-paid' : 'standard') as ReservationMembershipType
     };
-  });
+  };
 
-  return newData;
-};
+  // 0번 슬롯: 원본 data 전체 변환
+  if (slotIndex === 0) {
+    return data.map(toCardItem);
+  }
+
+  // ① 이전 슬롯(0..slotIndex-1)에서 standard & mp_idx 존재하는 것만 뽑아 mp_idx 배열로(횟수권은 추가 예약 대상에서 제외)
+  const prevMpIdxs = services
+    .slice(0, slotIndex)
+    .filter((s) => s.type === 'standard' && !!s.mp_idx)
+    .map((s) => s.mp_idx!);
+
+  const excludedSet = new Set(prevMpIdxs);
+
+  // ② 첫번째 슬롯에서 선택된 서비스의 mp_idx로 branchId 추출
+  const firstMpIdx = services[0]?.mp_idx;
+  const firstItem = data.find((item) => item.mp_idx === firstMpIdx);
+  const firstBranchId = firstItem?.branchs[0].b_idx;
+  if (!firstBranchId) {
+    return [];
+  }
+
+  const placeholder: ReservationMembershipCardItem = {
+    mp_idx: '',
+    branchId: '',
+    branchName: '',
+    serviceName: '',
+    startDate: '',
+    expireDate: '',
+    remainAmount: '',
+    totalAmount: '',
+    type: '' as ReservationMembershipType
+  };
+
+  // ③ 같은 branchId인 data만 map → excludedSet에 있으면 placeholder, 아니면 toCardItem
+  return data
+    .filter((item) => item.branchs[0].b_idx === firstBranchId)
+    .map((item) => (excludedSet.has(item.mp_idx) ? placeholder : toCardItem(item)));
+}
 
 export type ConvertedMembershipForCardData = ReturnType<typeof convertMembershipForCard>;
 /**

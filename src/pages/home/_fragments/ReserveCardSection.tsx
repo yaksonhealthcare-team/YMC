@@ -28,12 +28,7 @@ const ReserveCardSection = () => {
   }
 
   const handleReservationClick = () => {
-    navigate('/reservation/form', {
-      state: {
-        originalPath: '/',
-        fromHome: true
-      }
-    });
+    navigate('/reservation');
   };
 
   const handleTitleClick = () => {

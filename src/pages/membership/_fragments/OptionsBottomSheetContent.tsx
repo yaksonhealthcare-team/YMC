@@ -13,9 +13,7 @@ import { MembershipOption } from '@/types/Membership';
 import { formatPrice, parsePrice } from '@/utils/format';
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import { MembershipBranchSelectModal } from './MembershipBranchSelectModal';
 
 interface OptionsBottomSheetContentProps {
   serviceType: string;
@@ -426,7 +424,7 @@ export const OptionsBottomSheetContent = ({
         </div>
       </div>
 
-      {isModalOpen &&
+      {/* {isModalOpen &&
         createPortal(
           <MembershipBranchSelectModal
             onBranchSelect={handleBranchSelect}
@@ -448,7 +446,7 @@ export const OptionsBottomSheetContent = ({
             brandCode={brandCode}
           />,
           document.body
-        )}
+        )} */}
     </div>
   );
 };

@@ -1,7 +1,10 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import 'swiper/swiper-bundle.css';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -44,14 +47,17 @@ const theme = createTheme({
 });
 
 dayjs.extend(customParseFormat);
+dayjs.locale('ko');
 
 function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
-          <AppRouter />
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
+            <ReactQueryDevtools initialIsOpen={false} />
+            <AppRouter />
+          </LocalizationProvider>
         </QueryClientProvider>
       </ThemeProvider>
     </ErrorBoundary>
