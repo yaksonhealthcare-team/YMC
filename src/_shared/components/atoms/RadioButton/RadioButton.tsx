@@ -5,7 +5,15 @@ import { RadioButtonProps } from './RadioButton.types';
  * @description
  * RadioButton을 여러개 핸들링 할 경우, RadioGroup과 함께 사용해주세요.
  */
-export const RadioButton = ({ className, value, label, checked = false, onChange, name }: RadioButtonProps) => {
+export const RadioButton = ({
+  className,
+  value,
+  label,
+  checked = false,
+  onChange,
+  name,
+  disabled = false
+}: RadioButtonProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange?.(e.target.checked, value);
   };
@@ -20,6 +28,7 @@ export const RadioButton = ({ className, value, label, checked = false, onChange
           checked={checked}
           onChange={handleChange}
           className="absolute inset-0 opacity-0 peer cursor-pointer"
+          disabled={disabled}
         />
         <Outer checked={checked} />
         {checked && <Inner />}
