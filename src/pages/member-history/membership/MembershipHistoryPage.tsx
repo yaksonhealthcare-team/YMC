@@ -6,6 +6,7 @@ import {
 } from '@/_domain/membership';
 import { Loading, useIntersectionObserver } from '@/_shared';
 import { Button } from '@/components/Button';
+import { useAuth } from '@/contexts/AuthContext';
 import { useLayout } from '@/contexts/LayoutContext';
 import { useMembershipStore } from '@/stores/membershipStore';
 import { MyMembershipFilterItem, myMembershipFilters } from '@/types/Membership';
@@ -15,11 +16,13 @@ import { useNavigate } from 'react-router-dom';
 import MainTabs from '../_fragments/MainTabs';
 
 const MembershipContent = ({ filterId }: { filterId: string }) => {
+  const { user } = useAuth();
   const { setHeader, setNavigation } = useLayout();
   const navigate = useNavigate();
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useGetUserMembership(
+    user?.phone || '',
     { search_type: filterId === '-' ? '' : (filterId as MembershipStatusType) },
     { refetchOnMount: 'always', staleTime: 0, initialPageParam: 1 }
   );

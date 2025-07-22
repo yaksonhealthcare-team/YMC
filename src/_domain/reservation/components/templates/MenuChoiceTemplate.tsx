@@ -44,8 +44,8 @@ export const MenuChoiceTemplate = ({
     return (
       <div className="flex flex-col gap-4">
         {data.map((item, idx) => (
-          <button key={`${item.idx}-${idx}`} onClick={() => onClickCard(item)}>
-            <MenuCard key={`${item.idx}-${idx}`} item={item} type={type} />
+          <button key={`${item.ss_idx}-${idx}`} onClick={() => onClickCard(item)}>
+            <MenuCard key={`${item.ss_idx}-${idx}`} item={item} type={type} />
           </button>
         ))}
       </div>

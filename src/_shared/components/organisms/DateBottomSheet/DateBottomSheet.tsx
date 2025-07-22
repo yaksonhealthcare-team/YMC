@@ -139,8 +139,8 @@ const buildParams = (
   };
 
   const idxSource = type === 'consult' ? consultService : type === 'membership' ? services : [];
-  const mp_idx = idxSource.map((s) => s.mp_idx).filter(Boolean);
-  const ss_idx = idxSource.map((s) => s.ss_idx).filter(Boolean);
+  const mp_idx = idxSource.map((s) => s.mp_idx).filter((s): s is string => typeof s === 'string' && s.length > 0);
+  const ss_idx = idxSource.map((s) => s.ss_idx).filter((s): s is string => typeof s === 'string' && s.length > 0);
 
   return {
     ...base,
