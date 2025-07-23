@@ -154,13 +154,15 @@ const ReservationPage = () => {
   const [branch] = useMemo(() => branchData?.body || {}, [branchData?.body]);
 
   useEffect(() => {
+    if (enabled) return;
+
     const initForms = getInitFormValues(searchParams, memberships, consultCount);
     (Object.entries(initForms) as Array<[keyof ReservationFormValues, any]>).forEach(([field, value]) => {
       methods.setValue(field, value);
     });
 
     setEnabled(true);
-  }, [consultCount, memberships, methods, searchParams]);
+  }, [consultCount, enabled, memberships, methods, searchParams]);
 
   useEffect(() => {
     if (branch) {

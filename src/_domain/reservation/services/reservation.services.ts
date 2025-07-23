@@ -2,7 +2,12 @@ import { ApiResponse, handleError } from '@/_shared';
 import { axiosClient } from '@/queries/clients';
 import { AxiosResponse } from 'axios';
 import { CreateReservationBody } from '../types';
-import { ReservationConsultCountSchema, ReservationSchema } from '../types/reservation.types';
+import {
+  ReservationConsultCountSchema,
+  ReservationDetailParams,
+  ReservationDetailSchema,
+  ReservationSchema
+} from '../types/reservation.types';
 
 const BASE_URL = `/reservation`;
 
@@ -33,5 +38,21 @@ export const getReservationCount = async (): Promise<AxiosResponse<ApiResponse<R
     return axiosClient.get(endpoint);
   } catch (error) {
     throw handleError(error, 'getReservationCount');
+  }
+};
+
+/**
+ * 상담 예약 상세 조회
+ * @link https://yaksonhc.postman.co/workspace/Team-Workspace~34821a51-840a-442c-80f4-eeb9dc894ed4/request/37761356-9b8c2ab5-437b-4727-8b0f-12a6acd5a534?action=share&source=copy-link&creator=45468383
+ */
+export const getReservationDetail = async (
+  params: ReservationDetailParams
+): Promise<AxiosResponse<ApiResponse<ReservationDetailSchema[]>>> => {
+  try {
+    const endpoint = `${BASE_URL}/detail`;
+
+    return await axiosClient.get(endpoint, { params });
+  } catch (error) {
+    throw handleError(error, 'getReservationDetail');
   }
 };

@@ -108,6 +108,10 @@ export const ReservationMenuSection = ({ memberships, consultCount }: Reservatio
 
     handleChangeType(false, 'membership');
     setValue('branch', { id: item.branchId, name: item.branchName });
+
+    if (idx === 0 && branch?.id !== item.branchId) {
+      setRenderCount(1);
+    }
   };
   const handleClickAddReservation = () => {
     if (!services[renderCount - 1]?.mp_idx) return;

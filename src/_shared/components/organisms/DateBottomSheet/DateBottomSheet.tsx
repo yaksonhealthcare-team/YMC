@@ -139,12 +139,12 @@ const buildParams = (
   };
 
   const idxSource = type === 'consult' ? consultService : type === 'membership' ? services : [];
-  const mp_idx = idxSource.map((s) => s.mp_idx).filter((s): s is string => typeof s === 'string' && s.length > 0);
-  const ss_idx = idxSource.map((s) => s.ss_idx).filter((s): s is string => typeof s === 'string' && s.length > 0);
+  const mp_idx = idxSource.map((s) => (typeof s.mp_idx === 'string' && s.mp_idx.length > 0 ? s.mp_idx : ''));
+  const ss_idx = idxSource.map((s) => (typeof s.ss_idx === 'string' && s.ss_idx.length > 0 ? s.ss_idx : ''));
 
   return {
     ...base,
-    ...(mp_idx.length > 0 && { mp_idx }),
-    ...(ss_idx.length > 0 && { ss_idx })
+    ...(mp_idx.some((v) => v) && { mp_idx }),
+    ...(ss_idx.some((v) => v) && { ss_idx })
   };
 };

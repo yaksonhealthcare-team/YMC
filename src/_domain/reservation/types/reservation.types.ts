@@ -54,9 +54,37 @@ export interface ReservationSchema {
    */
   r_idx: string;
 }
+export interface ReservationDetailSchema {
+  r_idx: string;
+  r_gubun: string;
+  b_idx: string;
+  b_name: string;
+  b_lat: string;
+  b_lon: string;
+  b_tel: string;
+  b_addr: string;
+  r_date: string;
+  p_idx: string;
+  mp_idx: string;
+  ps_name: string;
+  r_take_time: string;
+  visit: string;
+  r_status: ReservationStatusCode;
+  r_status_code: ReservationStatusCode;
+  r_memo: string;
+  s_name: string;
+  buy_amount: string;
+  remain_amount: string;
+  remaining_days: string;
+  review_positive_yn: string;
+  add_services: ReservationAddService[];
+}
 export interface ReservationConsultCountSchema {
   current_count: string;
   consultation_max_count: string;
+}
+export interface ReservationDetailParams {
+  r_idx: string;
 }
 export type ReservationMembershipType = 'pre-paid' | 'standard';
 export type ReservationType = 'consult' | 'membership';
@@ -101,7 +129,20 @@ export interface ReservationBranch {
   id: string;
   name: string;
 }
+export interface ReservationAddService {
+  ps_name: string;
+  total_price: string;
+}
+export type ReservationStatusCode =
+  | '000' // 전체
+  | '001' // 예약완료
+  | '002' // 방문완료
+  | '003' // 예약취소
+  | '008'; // 관리중
 
+/*************************/
+/********타입가드 함수*******/
+/************************/
 export const isReservationType = (v: string): v is ReservationType => {
   return v === 'consult' || v === 'membership';
 };

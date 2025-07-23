@@ -52,9 +52,10 @@ const ReservationDetailPage = () => {
   const { mutate } = useCompleteVisit();
   const { openModal, openBottomSheet, closeOverlay, overlayState } = useOverlay();
   const queryClient = useQueryClient();
-  const { data: reservation, isLoading, isError, error, refetch } = useReservationDetail(id ?? '');
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { data: reservation, isLoading, isError, error, refetch } = useReservationDetail(id ?? '');
 
   // 페이지 진입 시 데이터 리프레시
   useEffect(() => {
@@ -154,11 +155,13 @@ const ReservationDetailPage = () => {
         <p className="mx-5 mt-5 font-sb text-18px">취소하시겠습니까?</p>
         <p className="mx-5 mt-2 font-r text-16px text-gray-900">예약 취소 시 차감된 상담 횟수는 복원됩니다.</p>
         <div className="mt-10 border-t border-gray-50 flex gap-2 py-3 px-5">
+          <Button className="w-full" variantType="line" onClick={closeOverlay}>
+            돌아가기
+          </Button>
           <Button
             className="w-full"
-            variantType="line"
+            variantType="primary"
             onClick={() => {
-              closeOverlay();
               navigate(`/reservation/${id}/cancel`, {
                 replace: true,
                 state: {
@@ -168,12 +171,10 @@ const ReservationDetailPage = () => {
                   ps_name: reservation?.programName
                 }
               });
+              closeOverlay();
             }}
           >
             취소하기
-          </Button>
-          <Button className="w-full" variantType="primary" onClick={() => closeOverlay()}>
-            돌아가기
           </Button>
         </div>
       </div>
@@ -183,13 +184,17 @@ const ReservationDetailPage = () => {
   const handleNavigateToReservationForm = () => {
     if (!reservation) return;
 
-    const membershipId = reservation.membershipId;
-    const branchId = reservation.branchId;
-    if (reservation.type === ReservationType.MANAGEMENT) {
-      navigate(`/reservation?membershipId=${membershipId}&branchId=${branchId}`);
-    } else {
-      navigate(`/reservation?membershipId=${membershipId}`);
+    const { membershipId, branchId, remainingCount } = reservation;
+    const params = new URLSearchParams();
+    if (Number(membershipId) !== -1 && Boolean(Number(remainingCount))) {
+      params.append('membershipId', String(membershipId));
     }
+    if (branchId != null && branchId !== '') {
+      params.append('branchId', String(branchId));
+    }
+
+    const query = params.toString();
+    navigate(`/reservation${query ? `?${query}` : ''}`);
   };
 
   const renderActionButtons = () => {
