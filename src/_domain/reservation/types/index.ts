@@ -16,6 +16,7 @@ export type {
   CreateReservationBody,
   ReservationBranch,
   ReservationConsultCountSchema,
+  ReservationDetailParams,
   ReservationFormValues,
   ReservationMembershipType,
   ReservationSchema,
