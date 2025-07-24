@@ -96,6 +96,13 @@ const ReservationPage = () => {
         });
 
         if (response.data.resultCode !== '00') {
+          if (response.data.resultCode === '75') {
+            // 기타메뉴만 예약한 경우
+            const message = response.data.resultMessage;
+
+            showToast(message);
+            return;
+          }
           throw new Error();
         }
 
