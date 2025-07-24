@@ -113,7 +113,7 @@ const ReservationCancelPage = () => {
     <div className="w-full flex flex-col pb-[120px]">
       <div className="w-full px-[20px] pt-[16px] pb-[24px] flex flex-col gap-5">
         <h2 className="font-b text-18px text-gray-700">{b_name}</h2>
-        <p className="font-bold text-base text-primary">* 추가 예약을 포함해, 예약하신 모든 항목이 함께 취소됩니다.</p>
+        <p className="font-bold text-sm text-primary">* 추가 예약을 포함해, 예약하신 모든 항목이 함께 취소됩니다.</p>
 
         <Divider className="my-[24px] border-gray-100" />
 
