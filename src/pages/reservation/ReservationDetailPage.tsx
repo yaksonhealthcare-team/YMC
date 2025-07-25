@@ -1,95 +1,38 @@
+import { useGetReservationDetail } from '@/_domain/reservation';
 import { Button } from '@/components/Button';
 import FixedButtonContainer from '@/components/FixedButtonContainer';
+import { useAuth } from '@/contexts/AuthContext';
 import { useLayout } from '@/contexts/LayoutContext';
 import { useOverlay } from '@/contexts/ModalContext';
-import { createUserContextQueryKey } from '@/queries/queryKeyFactory';
-import { useCompleteVisit, useReservationDetail } from '@/queries/useReservationQueries';
+import { useCompleteVisit } from '@/queries/useReservationQueries';
 import { ReservationType } from '@/types/Reservation';
 import { Skeleton } from '@mui/material';
 import Divider from '@mui/material/Divider';
-import { useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Location from './_fragments/Location';
 import MembershipUsage from './_fragments/MembershipUsage';
 import ReservationSummary from './_fragments/ReservationSummary';
 
-const LoadingSkeleton = () => (
-  <div className="flex-1 px-[20px] pt-[16px] pb-[150px] bg-system-bg">
-    {/* 예약 정보 스켈레톤 */}
-    <div className="flex flex-col gap-2">
-      <Skeleton variant="rectangular" width={100} height={24} />
-      <Skeleton variant="rectangular" width="100%" height={120} />
-    </div>
-
-    {/* 예약 문진 버튼 스켈레톤 */}
-    <Skeleton variant="rectangular" width="100%" height={40} className="mt-[24px]" />
-
-    {/* 위치 정보 스켈레톤 */}
-    <div className="mt-[24px]">
-      <Skeleton variant="rectangular" width={80} height={24} />
-      <Skeleton variant="rectangular" width="100%" height={200} className="mt-[16px]" />
-      <div className="mt-[16px] flex flex-col gap-[12px]">
-        <Skeleton variant="rectangular" width="100%" height={40} />
-        <Skeleton variant="rectangular" width="100%" height={40} />
-      </div>
-    </div>
-
-    <Divider className="my-[24px] border-gray-100" />
-
-    {/* 회원권 정보 스켈레톤 */}
-    <div className="flex flex-col gap-2">
-      <Skeleton variant="rectangular" width={120} height={24} />
-      <Skeleton variant="rectangular" width="100%" height={80} />
-    </div>
-  </div>
-);
-
 const ReservationDetailPage = () => {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const { setHeader, setNavigation } = useLayout();
-  const { mutate } = useCompleteVisit();
-  const { openModal, openBottomSheet, closeOverlay, overlayState } = useOverlay();
-  const queryClient = useQueryClient();
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data: reservation, isLoading, isError, error, refetch } = useReservationDetail(id ?? '');
+  const { setHeader, setNavigation } = useLayout();
+  const { openModal, openBottomSheet, closeOverlay, overlayState } = useOverlay();
 
-  // 페이지 진입 시 데이터 리프레시
-  useEffect(() => {
-    if (id) {
-      refetch();
-    }
-  }, [id, refetch]);
+  const { id = '' } = useParams<{ id: string }>();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { mutate } = useCompleteVisit();
 
-  // 페이지가 focus를 받을 때 데이터 리프레시
-  useEffect(() => {
-    const handleFocus = () => {
-      if (id) {
-        refetch();
-      }
-    };
+  const { data, isLoading, isError, error } = useGetReservationDetail(
+    user?.phone || '',
+    { r_idx: id },
+    { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0 }
+  );
 
-    window.addEventListener('focus', handleFocus);
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-    };
-  }, [id, refetch]);
-
-  // 주기적으로 데이터 리프레시 (30초마다)
-  useEffect(() => {
-    if (!id) return;
-
-    const interval = setInterval(() => {
-      queryClient.invalidateQueries({
-        queryKey: createUserContextQueryKey(['reservationDetail', id])
-      });
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, [id, queryClient]);
+  const reservation = useMemo(() => data.body[0], [data]);
 
   useEffect(() => {
     setHeader({
@@ -122,7 +65,6 @@ const ReservationDetailPage = () => {
       onConfirm: () => {}
     });
   };
-
   const handleVisitError = (error: unknown) => {
     openModal({
       title: '오류',
@@ -130,7 +72,6 @@ const ReservationDetailPage = () => {
       onConfirm: () => {}
     });
   };
-
   const handleVisitConfirm = () => {
     if (id) {
       mutate(id, {
@@ -139,7 +80,6 @@ const ReservationDetailPage = () => {
       });
     }
   };
-
   const handleCompleteVisit = () => {
     openModal({
       title: '방문 완료',
@@ -148,8 +88,9 @@ const ReservationDetailPage = () => {
       onCancel: () => {}
     });
   };
-
   const handleCancelReservation = () => {
+    const { r_idx, r_date, b_name, ps_name } = reservation;
+
     openBottomSheet(
       <div className="flex flex-col">
         <p className="mx-5 mt-5 font-sb text-18px">취소하시겠습니까?</p>
@@ -164,12 +105,7 @@ const ReservationDetailPage = () => {
             onClick={() => {
               navigate(`/reservation/${id}/cancel`, {
                 replace: true,
-                state: {
-                  r_idx: reservation?.id,
-                  r_date: reservation?.date.toISOString(),
-                  b_name: reservation?.store,
-                  ps_name: reservation?.programName
-                }
+                state: { r_idx, r_date, b_name, ps_name }
               });
               closeOverlay();
             }}
@@ -184,13 +120,13 @@ const ReservationDetailPage = () => {
   const handleNavigateToReservationForm = () => {
     if (!reservation) return;
 
-    const { membershipId, branchId, remainingCount } = reservation;
+    const { mp_idx, b_idx, remain_amount } = reservation;
     const params = new URLSearchParams();
-    if (Number(membershipId) !== -1 && Boolean(Number(remainingCount))) {
-      params.append('membershipId', String(membershipId));
+    if (Number(mp_idx) !== -1 && Boolean(Number(remain_amount))) {
+      params.append('membershipId', String(mp_idx));
     }
-    if (branchId != null && branchId !== '') {
-      params.append('branchId', String(branchId));
+    if (b_idx != null && b_idx !== '') {
+      params.append('branchId', String(b_idx));
     }
 
     const query = params.toString();
@@ -200,22 +136,23 @@ const ReservationDetailPage = () => {
   const renderActionButtons = () => {
     if (!reservation) return null;
 
+    const { r_date, r_take_time, r_status_code, review_positive_yn, r_idx, b_name, ps_name } = reservation;
     const now = new Date();
 
     // 원본 날짜를 복제하여 사용
-    const reservationDate = new Date(reservation.date);
+    const reservationDate = new Date(r_date);
 
     // 날짜가 올바르게 파싱되었는지 확인 (예약 날짜가 유효한지)
     if (isNaN(reservationDate.getTime())) {
-      console.error('예약 날짜가 유효하지 않습니다:', reservation.date);
+      console.error('예약 날짜가 유효하지 않습니다:', r_date);
       return null;
     }
 
     // 소요 시간을 파싱
     let hours = 0;
     let minutes = 0;
-    if (reservation.duration) {
-      const durationParts = reservation.duration.split(':');
+    if (r_take_time) {
+      const durationParts = r_take_time.split(':');
       hours = parseInt(durationParts[0], 10) || 0;
       minutes = parseInt(durationParts[1], 10) || 0;
     }
@@ -228,12 +165,12 @@ const ReservationDetailPage = () => {
     // 현재 시간이 예약 날짜(시작 시간)보다 이후인지 확인
     const isReservationDatePassed = now.getTime() > reservationDate.getTime();
 
-    switch (reservation.statusCode) {
+    switch (r_status_code) {
       case '000': // 전체
       case '002': // 방문완료
         return (
           <div className="flex gap-[8px]">
-            {reservation.reviewPositiveYn === 'Y' ? (
+            {review_positive_yn === 'Y' ? (
               <>
                 <Button
                   variantType="line"
@@ -242,10 +179,10 @@ const ReservationDetailPage = () => {
                   onClick={() =>
                     navigate(`/reservation/${id}/satisfaction`, {
                       state: {
-                        r_idx: reservation.id,
-                        r_date: reservation.date.toISOString(),
-                        b_name: reservation.store,
-                        ps_name: reservation.programName,
+                        r_idx,
+                        r_date: new Date(r_date).toISOString(),
+                        b_name,
+                        ps_name,
                         review_items: [
                           { rs_idx: '1', rs_type: '시술만족도' },
                           { rs_idx: '2', rs_type: '친절도' },
@@ -368,13 +305,14 @@ const ReservationDetailPage = () => {
       </Button>
       <Location reservation={reservation} />
       <Divider className="my-[24px] border-gray-100" />
-      {reservation.type === ReservationType.MANAGEMENT && (
+      {reservation.r_gubun === ReservationType.MANAGEMENT && (
         <MembershipUsage
-          membershipName={reservation.membershipName}
-          branchName={reservation.branchName}
-          remainingCount={reservation.remainingCount}
-          totalCount={reservation.totalCount}
+          membershipName={reservation.s_name}
+          branchName={reservation.b_name}
+          remainAmount={reservation.remain_amount}
+          totalAmount={reservation.buy_amount}
           membershipId={reservation.mp_idx}
+          gubun={reservation.mp_gubun}
         />
       )}
       {!isBottomSheetOpen && actionButtons && (
@@ -385,3 +323,34 @@ const ReservationDetailPage = () => {
 };
 
 export default ReservationDetailPage;
+
+const LoadingSkeleton = () => (
+  <div className="flex-1 px-[20px] pt-[16px] pb-[150px] bg-system-bg">
+    {/* 예약 정보 스켈레톤 */}
+    <div className="flex flex-col gap-2">
+      <Skeleton variant="rectangular" width={100} height={24} />
+      <Skeleton variant="rectangular" width="100%" height={120} />
+    </div>
+
+    {/* 예약 문진 버튼 스켈레톤 */}
+    <Skeleton variant="rectangular" width="100%" height={40} className="mt-[24px]" />
+
+    {/* 위치 정보 스켈레톤 */}
+    <div className="mt-[24px]">
+      <Skeleton variant="rectangular" width={80} height={24} />
+      <Skeleton variant="rectangular" width="100%" height={200} className="mt-[16px]" />
+      <div className="mt-[16px] flex flex-col gap-[12px]">
+        <Skeleton variant="rectangular" width="100%" height={40} />
+        <Skeleton variant="rectangular" width="100%" height={40} />
+      </div>
+    </div>
+
+    <Divider className="my-[24px] border-gray-100" />
+
+    {/* 회원권 정보 스켈레톤 */}
+    <div className="flex flex-col gap-2">
+      <Skeleton variant="rectangular" width={120} height={24} />
+      <Skeleton variant="rectangular" width="100%" height={80} />
+    </div>
+  </div>
+);
