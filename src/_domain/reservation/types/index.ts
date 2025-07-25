@@ -14,13 +14,18 @@ export type {
   ConsultReservationService,
   ConsultReservationType,
   CreateReservationBody,
+  ReservationAddService,
   ReservationBranch,
   ReservationConsultCountSchema,
   ReservationDetailParams,
+  ReservationDetailSchema,
   ReservationFormValues,
   ReservationMembershipType,
   ReservationSchema,
   ReservationService,
+  ReservationsParams,
+  ReservationsSchema,
+  ReservationStatusCode,
   ReservationType
 } from './reservation.types';
 export type { ScheduleDateScheme, SchedulesParams, ScheduleTimeScheme, TimeSlot } from './schedule.types';

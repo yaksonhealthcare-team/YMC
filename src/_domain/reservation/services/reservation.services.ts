@@ -6,7 +6,8 @@ import {
   ReservationConsultCountSchema,
   ReservationDetailParams,
   ReservationDetailSchema,
-  ReservationSchema
+  ReservationSchema,
+  ReservationsParams
 } from '../types/reservation.types';
 
 const BASE_URL = `/reservation`;
@@ -24,6 +25,20 @@ export const createReservation = async (
     return await axiosClient.post(endpoint, body);
   } catch (error) {
     throw handleError(error, 'createReservation');
+  }
+};
+
+/**
+ * 예약 조회
+ * @link https://yaksonhc.postman.co/workspace/Team-Workspace~34821a51-840a-442c-80f4-eeb9dc894ed4/request/37761356-78cbb602-b61d-4d6a-84d4-a02a6e5ee8d0?action=share&source=copy-link&creator=45468383
+ */
+export const getReservations = async (params: ReservationsParams) => {
+  try {
+    const endpoint = `${BASE_URL}/reservations`;
+
+    return await axiosClient.get(endpoint, { params });
+  } catch (error) {
+    throw handleError(error, 'getReservations');
   }
 };
 

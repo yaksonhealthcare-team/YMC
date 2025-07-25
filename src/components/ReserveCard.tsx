@@ -1,12 +1,14 @@
-import { Reservation, ReservationStatusCode } from '@/types/Reservation';
+import { ReservationsSchema } from '@/_domain/reservation';
+import { ReservationStatusCode } from '@/types/Reservation';
 import clsx from 'clsx';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DateAndTime from './DateAndTime';
 import ReserveTag from './ReserveTag';
+import { Tag } from './Tag';
 
 interface ReserveCardProps {
-  reservation: Reservation;
+  reservation: ReservationsSchema;
   className?: string;
 }
 
@@ -69,23 +71,23 @@ export const ReserveCard = ({ reservation, className = '' }: ReserveCardProps) =
   // };
 
   const getButton = (): ReactNode => {
-    const statusType = classifyReservationStatus(reservation.statusCode);
+    const statusType = classifyReservationStatus(reservation.r_status_code);
     const now = new Date();
 
     // 원본 날짜를 복제하여 사용
-    const reservationDate = new Date(reservation.date);
+    const reservationDate = new Date(reservation.r_date);
 
     // 날짜가 올바르게 파싱되었는지 확인
     if (isNaN(reservationDate.getTime())) {
-      console.error('예약 날짜가 유효하지 않습니다:', reservation.date);
+      console.error('예약 날짜가 유효하지 않습니다:', reservation.r_date);
       return null;
     }
 
     // 소요 시간을 파싱
     let hours = 0;
     let minutes = 0;
-    if (reservation.duration) {
-      const durationParts = reservation.duration.split(':');
+    if (reservation.r_take_time) {
+      const durationParts = reservation.r_take_time.split(':');
       hours = parseInt(durationParts[0], 10) || 0;
       minutes = parseInt(durationParts[1], 10) || 0;
     }
@@ -117,7 +119,7 @@ export const ReserveCard = ({ reservation, className = '' }: ReserveCardProps) =
       // }
       case 'upcoming':
         // 예약 시작 시간이 지났고, 상태가 예약완료(001)인 경우에만 방문 완료 버튼 표시
-        if (isReservationDatePassed && reservation.statusCode === '001') {
+        if (isReservationDatePassed && reservation.r_status_code === '001') {
           return null; // 방문 완료 버튼 임시 숨김
           // return (
           //   <Button
@@ -153,34 +155,36 @@ export const ReserveCard = ({ reservation, className = '' }: ReserveCardProps) =
     }
   };
 
+  const isPrePaid = reservation.mp_gubun === 'F';
+
   return (
     <button
       className={clsx(
         `flex flex-col w-full gap-[12px] bg-white p-5 border border-gray-100 shadow-card rounded-[20px] text-left cursor-pointer relative`,
         className
       )}
-      onClick={() => navigate(`/reservation/${reservation.id}`)}
-      aria-label={`${reservation.store} ${reservation.programName} ${reservation.statusCode !== '003' ? `${reservation.visit}회차` : ''} 예약`}
+      onClick={() => navigate(`/reservation/${reservation.r_idx}`)}
       role="button"
     >
       <div className="inline-flex w-full flex-col justify-center items-start gap-1">
         <div className="self-stretch w-full inline-flex justify-between items-center">
           <div className="flex w-full justify-between items-baseline gap-1.5">
             <div className="justify-start text-neutral-800 text-base font-bold font-['Pretendard'] leading-normal">
-              {reservation.store}
+              {reservation.b_name}
             </div>
           </div>
 
+          {isPrePaid && <Tag title="정액권" type="green" className="rounded-full min-w-fit px-2 mr-1" />}
           <ReserveTag
-            status={classifyReservationStatus(reservation.statusCode)}
-            remainingDays={reservation.remainingDays!}
+            status={classifyReservationStatus(reservation.r_status_code)}
+            remainingDays={reservation.remaining_days}
           />
         </div>
         <div className="self-stretch inline-flex justify-start items-baseline gap-1.5">
           <div className="justify-start text-neutral-800 text-sm font-normal font-['Pretendard'] leading-tight">
-            {reservation.programName}
+            {reservation.ps_name}
           </div>
-          {reservation.statusCode !== '003' && (
+          {reservation.r_status_code !== '003' && (
             <div className="justify-start text-red-400 text-sm font-semibold font-['Pretendard'] leading-tight">
               {reservation.visit}회차
             </div>
@@ -190,7 +194,7 @@ export const ReserveCard = ({ reservation, className = '' }: ReserveCardProps) =
 
       <div className="relative flex items-end text-gray-500 text-sm w-full">
         <div className={clsx(getButton() && 'mr-[72px]')}>
-          <DateAndTime date={reservation.date} />
+          <DateAndTime date={new Date(reservation.r_date)} />
         </div>
         <div className="absolute right-0">{getButton()}</div>
       </div>

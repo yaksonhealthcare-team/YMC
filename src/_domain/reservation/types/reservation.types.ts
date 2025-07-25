@@ -1,3 +1,4 @@
+import { MembershipGubunType } from '@/_domain/membership';
 import dayjs from 'dayjs';
 import { TimeSlot } from './schedule.types';
 
@@ -54,6 +55,19 @@ export interface ReservationSchema {
    */
   r_idx: string;
 }
+export interface ReservationsSchema {
+  r_idx: string;
+  b_name: string;
+  r_date: string;
+  remaining_days: string;
+  visit: string;
+  mp_gubun: MembershipGubunType;
+  ps_name: string;
+  r_take_time: string;
+  r_status: string;
+  r_status_code: ReservationStatusCode;
+  review_positive_yn: string;
+}
 export interface ReservationDetailSchema {
   r_idx: string;
   r_gubun: string;
@@ -66,6 +80,7 @@ export interface ReservationDetailSchema {
   r_date: string;
   p_idx: string;
   mp_idx: string;
+  mp_gubun: MembershipGubunType;
   ps_name: string;
   r_take_time: string;
   visit: string;
@@ -82,6 +97,11 @@ export interface ReservationDetailSchema {
 export interface ReservationConsultCountSchema {
   current_count: string;
   consultation_max_count: string;
+}
+export interface ReservationsParams {
+  r_status: ReservationStatusCode;
+  page?: number;
+  page_size?: number;
 }
 export interface ReservationDetailParams {
   r_idx: string;

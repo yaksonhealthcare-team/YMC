@@ -1,5 +1,5 @@
+import { formatAmount } from '@/_domain/reservation/utils';
 import { RadioButton } from '@/_shared/components';
-import { formatPriceKO } from '@/_shared/utils';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { ReservationMembershipCardProps } from './ReservationMembershipCard.types';
@@ -37,17 +37,6 @@ export const ReservationMembershipCard = ({ data, checked, onChange }: Reservati
       </div>
     </label>
   );
-};
-
-const formatAmount = (remainAmount: string, totalAmount: string, type: 'pre-paid' | 'standard') => {
-  switch (type) {
-    case 'pre-paid':
-      return `${formatPriceKO(Number(remainAmount))}원 / ${formatPriceKO(Number(totalAmount))}원`;
-    case 'standard':
-      return `${remainAmount}회 / ${totalAmount}회`;
-    default:
-      return null;
-  }
 };
 
 const formatDate = (startDate: string, expireDate: string) => {

@@ -3,6 +3,7 @@ export { useGetGuideMessages } from './guide.queries';
 export {
   useCreateReservationMutation,
   useGetReservationConsultCount,
-  useGetReservationDetail
+  useGetReservationDetail,
+  useGetReservations
 } from './reservation.queries';
 export { useGetSchedulesDate } from './schedule.queries';

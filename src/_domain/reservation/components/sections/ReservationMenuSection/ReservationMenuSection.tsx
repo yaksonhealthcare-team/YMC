@@ -203,6 +203,7 @@ export const ReservationMenuSection = ({ memberships, consultCount }: Reservatio
           const hasMembershipMenu = !!ss_idx;
           const isAddReservationSection = idx === renderCount - 1 && (hasMembershipMenu || type === 'standard');
           const isAddReservation = idx > 0;
+          const hasAddReservation = dataForSwiper.length > 1;
 
           return (
             <div key={idx}>
@@ -215,6 +216,7 @@ export const ReservationMenuSection = ({ memberships, consultCount }: Reservatio
                       <CloseIcon width={18} height={18} className="text-gray-700" />
                     </button>
                   </div>
+                  {!hasAddReservation && <p className="px-5 mt-4 text-gray-500">추가 가능한 회원권이 없습니다.</p>}
                 </>
               )}
               <div className="px-5">
