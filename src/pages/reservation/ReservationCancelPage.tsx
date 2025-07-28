@@ -106,7 +106,7 @@ const ReservationCancelPage = () => {
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCancelReason(e.target.value);
   };
-  const { b_name, ps_name, r_take_time, r_memo, add_services } = useMemo(() => detailData.body[0], [detailData]);
+  const { b_name, r_take_time, r_memo, add_services, s_name } = useMemo(() => detailData.body[0], [detailData]);
   const hasAddServices = add_services && add_services.length > 0;
 
   return (
@@ -120,14 +120,14 @@ const ReservationCancelPage = () => {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
             <span className="font-sb text-14px text-gray-500">관리 프로그램</span>
-            <span className="font-r text-14px text-gray-700">- {ps_name}</span>
+            <span className="font-r text-14px text-gray-700">- {s_name}</span>
             {hasAddServices &&
               add_services.map((service, idx) => {
-                const key = `${service.ps_name}-${idx}`;
+                const key = `${service.s_name}-${idx}`;
 
                 return (
                   <p key={key} className="font-r text-sm">
-                    - {service.ps_name}
+                    - {service.s_name}
                   </p>
                 );
               })}
