@@ -151,6 +151,7 @@ export interface ReservationBranch {
 }
 export interface ReservationAddService {
   ps_name: string;
+  s_name: string;
   total_price: string;
 }
 export type ReservationStatusCode =
