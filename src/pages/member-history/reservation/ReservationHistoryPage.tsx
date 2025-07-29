@@ -32,7 +32,7 @@ const ReservationContent = ({ filterId }: { filterId: ReservationStatusCode }) =
 
   const reservations = useMemo(() => data?.flatMap((page) => page.data.body), [data]) || [];
 
-  if (reservations.length === 0) {
+  if (!reservations || reservations.length === 0) {
     return <div className="flex justify-center items-center p-4">예약 내역이 없습니다.</div>;
   }
 

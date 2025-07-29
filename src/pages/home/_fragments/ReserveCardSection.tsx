@@ -40,7 +40,7 @@ const ReserveCardSection = () => {
     navigate('/member-history/reservation');
   };
 
-  const hasReservations = reservations.body.length > 0;
+  const hasReservations = reservations.body?.length > 0;
   const totalCount = reservations.total_count || 0;
 
   return (
@@ -54,7 +54,7 @@ const ReserveCardSection = () => {
         />
       ) : (
         <Swiper spaceBetween={10} slidesPerView={1} style={{ overflow: 'visible' }} className="mt-2">
-          {reservations.body.map((reservation, idx) => {
+          {reservations.body?.map((reservation, idx) => {
             const key = `${reservation.r_idx}-${idx}`;
 
             return (
