@@ -13,22 +13,14 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 const ReserveCardSection = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { setFilter } = useReservationStore();
   const { data, isLoading } = useGetReservations(
     user?.phone || '',
     { r_status: '001' },
     { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0, initialPageParam: 1 }
   );
 
-  const [reservations] = useMemo(() => data.flatMap((page) => page.data) || [], [data]);
-  const { setFilter } = useReservationStore();
-
-  // 예약이 있는지 여부와 총 예약 수를 미리 계산
-  const { hasReservations, totalCount } = useMemo(() => {
-    return {
-      hasReservations: reservations.body.length > 0,
-      totalCount: reservations.total_count || 0
-    };
-  }, [reservations.body.length, reservations.total_count]);
+  const [reservations] = useMemo(() => data?.flatMap((page) => page.data) || [], [data]);
 
   if (isLoading) {
     return <LoadingIndicator className="min-h-[114px] flex-1" />;
@@ -47,6 +39,9 @@ const ReserveCardSection = () => {
 
     navigate('/member-history/reservation');
   };
+
+  const hasReservations = reservations.body.length > 0;
+  const totalCount = reservations.total_count || 0;
 
   return (
     <div className="mt-6 px-5">
