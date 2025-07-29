@@ -3,7 +3,8 @@ export interface MenuCardProps {
 
   /**
    * 카드 타입
-   * pre-paid: 정액권
+   * - pre-paid: 정액권
+   * - standard: 보통
    * @default 'standard'
    */
   type?: 'pre-paid' | 'standard';

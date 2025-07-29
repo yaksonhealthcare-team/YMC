@@ -13,9 +13,7 @@ import { MembershipOption } from '@/types/Membership';
 import { formatPrice, parsePrice } from '@/utils/format';
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import { MembershipBranchSelectModal } from './MembershipBranchSelectModal';
 
 interface OptionsBottomSheetContentProps {
   serviceType: string;
@@ -252,22 +250,22 @@ export const OptionsBottomSheetContent = ({
     return false;
   }, [selectedOptions.length, serviceType, selectedBranch]);
 
-  const handleBranchSelect = (branch: Branch) => {
-    setSelectedBranch(branch);
-    setIsModalOpen(false);
+  // const handleBranchSelect = (branch: Branch) => {
+  //   setSelectedBranch(branch);
+  //   setIsModalOpen(false);
 
-    // 지점 선택 후 헤더가 사라지는 문제 해결을 위해 회원권 상세 페이지 헤더를 명시적으로 복원
-    setMembershipDetailHeader();
+  //   // 지점 선택 후 헤더가 사라지는 문제 해결을 위해 회원권 상세 페이지 헤더를 명시적으로 복원
+  //   setMembershipDetailHeader();
 
-    // 히스토리 관리 - 현재 URL 상태를 replace하여 히스토리에서 중복 항목 제거
-    navigate('.', {
-      replace: true,
-      state: {
-        s_idx: membershipId,
-        brand_code: brandCode
-      }
-    });
-  };
+  //   // 히스토리 관리 - 현재 URL 상태를 replace하여 히스토리에서 중복 항목 제거
+  //   navigate('.', {
+  //     replace: true,
+  //     state: {
+  //       s_idx: membershipId,
+  //       brand_code: brandCode
+  //     }
+  //   });
+  // };
 
   const openBranchSelectModal = () => {
     // 모달을 열기 전에 회원권 상세 헤더 설정 확인
@@ -426,7 +424,7 @@ export const OptionsBottomSheetContent = ({
         </div>
       </div>
 
-      {isModalOpen &&
+      {/* {isModalOpen &&
         createPortal(
           <MembershipBranchSelectModal
             onBranchSelect={handleBranchSelect}
@@ -448,7 +446,7 @@ export const OptionsBottomSheetContent = ({
             brandCode={brandCode}
           />,
           document.body
-        )}
+        )} */}
     </div>
   );
 };

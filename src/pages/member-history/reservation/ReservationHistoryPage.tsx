@@ -1,72 +1,36 @@
+import { useGetReservations } from '@/_domain/reservation';
+import { useIntersectionObserver } from '@/_shared';
 import ReservationIcon from '@/assets/icons/ReservationIcon.svg?react';
 import { Button } from '@/components/Button';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { ReserveCard } from '@/components/ReserveCard';
+import { useAuth } from '@/contexts/AuthContext';
 import { useLayout } from '@/contexts/LayoutContext';
-import { createUserContextQueryKey } from '@/queries/queryKeyFactory';
-import { useReservations } from '@/queries/useReservationQueries';
 import { useReservationStore } from '@/stores/reservationStore';
 import { FilterItem, reservationFilters, ReservationStatusCode } from '@/types/Reservation';
-import { useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainTabs from '../_fragments/MainTabs';
 
 const ReservationContent = ({ filterId }: { filterId: ReservationStatusCode }) => {
-  const queryClient = useQueryClient();
-  const { data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage, refetch } = useReservations(filterId);
-  const reservations = data?.pages.flatMap((page) => page.reservations) || [];
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = useGetReservations(
+    user?.phone || '',
+    { r_status: filterId },
+    { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0, initialPageParam: 1 }
+  );
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  // 탭 전환하거나 페이지에 포커스가 올 때 데이터 리프레시
-  useEffect(() => {
-    refetch();
-  }, [filterId, refetch]);
-
-  // 페이지가 마운트되거나 포커스될 때 데이터 리프레시
-  useEffect(() => {
-    const handleFocus = () => {
-      refetch();
-    };
-
-    window.addEventListener('focus', handleFocus);
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-    };
-  }, [refetch]);
-
-  // 주기적으로 데이터 리프레시 (옵션)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      queryClient.invalidateQueries({
-        queryKey: createUserContextQueryKey(['reservations', filterId])
-      });
-    }, 30000); // 30초마다 refresh
-
-    return () => clearInterval(interval);
-  }, [filterId, queryClient]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    if (bottomRef.current) {
-      observer.observe(bottomRef.current);
+  const handleNextFetch = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
     }
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-    return () => observer.disconnect();
-  }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
+  useIntersectionObserver(loadMoreRef, handleNextFetch, { rootMargin: '200px' });
 
-  if (isLoading) {
-    return <LoadingIndicator className="flex-1" />;
-  }
+  const reservations = useMemo(() => data.flatMap((page) => page.data.body), [data]);
 
   if (reservations.length === 0) {
     return <div className="flex justify-center items-center p-4">예약 내역이 없습니다.</div>;
@@ -75,19 +39,22 @@ const ReservationContent = ({ filterId }: { filterId: ReservationStatusCode }) =
   return (
     <div className="flex-1 overflow-y-auto pb-[100px] scrollbar-hide" key={`reservation-content-${filterId}`}>
       <div className="px-5">
-        {reservations.map((reservation) => (
-          <div className="pb-[12px]" key={reservation.id}>
-            <ReserveCard reservation={reservation} />
-          </div>
-        ))}
+        {reservations.map((reservation, idx) => {
+          const key = `${reservation.r_idx}-${idx}`;
 
-        <div ref={bottomRef} className="h-4 py-2">
-          {isFetchingNextPage && (
-            <div className="flex justify-center py-4">
-              <LoadingIndicator className="w-6 h-6" />
+          return (
+            <div className="pb-[12px]" key={key}>
+              <ReserveCard reservation={reservation} />
             </div>
-          )}
-        </div>
+          );
+        })}
+        {isFetchingNextPage && (
+          <div className="flex justify-center py-4">
+            <LoadingIndicator className="w-6 h-6" />
+          </div>
+        )}
+
+        <div ref={loadMoreRef} />
       </div>
     </div>
   );
@@ -137,12 +104,7 @@ const ReservationHistoryPage = () => {
   );
 
   const handleReservationClick = () => {
-    navigate('/reservation/form', {
-      state: {
-        originalPath: '/member-history/reservation',
-        fromReservationHistory: true
-      }
-    });
+    navigate('/reservation');
   };
 
   useEffect(() => {

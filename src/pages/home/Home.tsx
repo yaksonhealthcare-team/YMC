@@ -41,7 +41,7 @@ const Home = () => {
     }
   );
 
-  const { data, isLoading: isMembershipLoading } = useGetUserMembership({ search_type: 'T' });
+  const { data, isLoading: isMembershipLoading } = useGetUserMembership(user?.phone || '', { search_type: 'T' });
   const memberships = useMemo(() => data?.flatMap((page) => page.data.body) || [], [data]);
   const totalCount = data?.[0]?.data?.total_count || 0;
   const convertedMemberships = convertMembershipForCard(memberships);
@@ -74,12 +74,7 @@ const Home = () => {
       return;
     }
 
-    navigate('/reservation/form', {
-      state: {
-        originalPath: '/',
-        fromHome: true
-      }
-    });
+    navigate('/reservation');
   };
 
   if (isLoading) {

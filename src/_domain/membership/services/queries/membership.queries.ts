@@ -1,6 +1,6 @@
 import { ListResponse } from '@/_shared/types/response.types';
 import { CustomUseInfiniteQueryOptions } from '@/_shared/types/util.types';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import {
   UserMembershipDetailParams,
@@ -11,6 +11,7 @@ import {
 import { getUserMemberships, getUserMembershipsDetail } from '../membership.services';
 
 export const useGetUserMembership = (
+  key: string,
   params: UserMembershipParams,
   options?: CustomUseInfiniteQueryOptions<
     AxiosResponse<ListResponse<UserMembershipSchema>>,
@@ -18,12 +19,8 @@ export const useGetUserMembership = (
     AxiosResponse<ListResponse<UserMembershipSchema>>[]
   >
 ) => {
-  return useInfiniteQuery<
-    AxiosResponse<ListResponse<UserMembershipSchema>>,
-    AxiosError,
-    AxiosResponse<ListResponse<UserMembershipSchema>>[]
-  >({
-    queryKey: ['get-user-memberships', params],
+  return useSuspenseInfiniteQuery({
+    queryKey: ['get-user-memberships', key, params],
     queryFn: ({ pageParam = 1 }) => getUserMemberships({ ...params, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
@@ -42,11 +39,7 @@ export const useGetUserMembershipDetail = (
     AxiosResponse<ListResponse<UserMembershipDetailSchema>>[]
   >
 ) => {
-  return useInfiniteQuery<
-    AxiosResponse<ListResponse<UserMembershipDetailSchema>>,
-    AxiosError,
-    AxiosResponse<ListResponse<UserMembershipDetailSchema>>[]
-  >({
+  return useInfiniteQuery({
     queryKey: ['get-user-membership-detail', params],
     queryFn: ({ pageParam = 1 }) => getUserMembershipsDetail({ ...params, page: pageParam as number }),
     initialPageParam: 1,

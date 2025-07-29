@@ -21,14 +21,7 @@ export const MembershipCardSection = ({ memberships, isLoading, totalCount }: Me
   };
 
   const handleClickReservation = (membershipId: string) => {
-    const currentPath = window.location.pathname;
-
-    navigate(`/reservation/form?membershipId=${membershipId}`, {
-      state: {
-        originalPath: currentPath,
-        fromMembershipCard: true
-      }
-    });
+    navigate(`/reservation?membershipId=${membershipId}`);
   };
 
   const renderContent = () => {

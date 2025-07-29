@@ -16,7 +16,9 @@ export const InputBox = ({
   return (
     <Container
       className={clsx(
-        'box-border w-full px-5 py-4 flex items-center justify-between border border-gray-100 rounded-xl',
+        'box-border w-full p-4 flex items-center justify-between border border-gray-100 rounded-xl',
+        disabled && 'cursor-not-allowed',
+        type === 'textfield' && 'focus-within:border-gray-500 focus-within:border-1',
         className
       )}
       onClick={onClick}

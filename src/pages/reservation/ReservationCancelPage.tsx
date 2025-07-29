@@ -1,38 +1,31 @@
+import { useGetReservationDetail } from '@/_domain/reservation/services/queries/reservation.queries';
 import { Button } from '@/components/Button';
 import FixedButtonContainer from '@/components/FixedButtonContainer';
-import LoadingIndicator from '@/components/LoadingIndicator';
 import { TextArea } from '@/components/TextArea';
+import { useAuth } from '@/contexts/AuthContext';
 import { useLayout } from '@/contexts/LayoutContext';
 import { useOverlay } from '@/contexts/ModalContext';
 import { useReservationGuideMessages } from '@/hooks/useGuideMessages';
-import { useCancelReservation, useReservationDetail } from '@/queries/useReservationQueries';
+import { useCancelReservation } from '@/queries/useReservationQueries';
 import { escapeHtml } from '@/utils/sanitize';
 import { Divider } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ReservationCancelBottomSheetContent from './_fragments/ReservationCancelBottomSheetContent';
-
-interface ReservationDetailView {
-  branchName: string;
-  programName: string;
-  duration: string;
-  additionalServices: string[];
-  totalPrice: number;
-  request?: string;
-}
 
 const ReservationCancelPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
+  const { user } = useAuth();
   const { setHeader, setNavigation } = useLayout();
   const { showToast, openBottomSheet } = useOverlay();
   const [cancelReason, setCancelReason] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [reservation, setReservation] = useState<ReservationDetailView | null>(null);
+
   const { mutate: cancelReservation } = useCancelReservation();
-  const { data: reservationDetail, isLoading: isDetailLoading } = useReservationDetail(id ?? '');
   const { reservationCancelMessage, isLoading: isGuideMessageLoading } = useReservationGuideMessages();
+  const { data: detailData } = useGetReservationDetail(user?.phone || '', { r_idx: id || '' });
 
   useEffect(() => {
     setHeader({
@@ -42,25 +35,7 @@ const ReservationCancelPage = () => {
       backgroundColor: 'bg-white'
     });
     setNavigation({ display: false });
-  }, [id]);
-
-  useEffect(() => {
-    if (reservationDetail) {
-      const totalPrice = (reservationDetail.additionalServices || []).reduce(
-        (sum: number, service) => sum + service.price,
-        0
-      );
-
-      setReservation({
-        branchName: reservationDetail.branchName,
-        programName: reservationDetail.programName,
-        duration: reservationDetail.duration || '00:00',
-        additionalServices: reservationDetail.additionalServices?.map((service) => service.name) || [],
-        totalPrice,
-        request: reservationDetail.request
-      });
-    }
-  }, [reservationDetail?.id]);
+  }, [id, setHeader, setNavigation]);
 
   const handleConfirmCancel = async () => {
     try {
@@ -108,7 +83,6 @@ const ReservationCancelPage = () => {
       setIsLoading(false);
     }
   };
-
   const handleCancel = async () => {
     if (cancelReason.length < 5) {
       showToast('취소 사유를 5자 이상 입력해주세요.');
@@ -129,43 +103,47 @@ const ReservationCancelPage = () => {
       />
     );
   };
-
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCancelReason(e.target.value);
   };
-
-  if (isDetailLoading) {
-    return <LoadingIndicator className="min-h-screen" />;
-  }
+  const { b_name, r_take_time, r_memo, add_services, s_name } = useMemo(() => detailData.body[0], [detailData]);
+  const hasAddServices = add_services && add_services.length > 0;
 
   return (
     <div className="w-full flex flex-col pb-[120px]">
       <div className="w-full px-[20px] pt-[16px] pb-[24px] flex flex-col gap-5">
-        <h2 className="font-b text-18px text-gray-700">{reservation?.branchName}</h2>
+        <h2 className="font-b text-18px text-gray-700">{b_name}</h2>
+        <p className="font-bold text-sm text-primary">* 추가 예약을 포함해, 예약하신 모든 항목이 함께 취소됩니다.</p>
 
         <Divider className="my-[24px] border-gray-100" />
 
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
             <span className="font-sb text-14px text-gray-500">관리 프로그램</span>
-            <span className="font-r text-14px text-gray-700">{reservation?.programName}</span>
+            <span className="font-r text-14px text-gray-700">- {s_name}</span>
+            {hasAddServices &&
+              add_services.map((service, idx) => {
+                const key = `${service.s_name}-${idx}`;
+
+                return (
+                  <p key={key} className="font-r text-sm">
+                    - {service.s_name}
+                  </p>
+                );
+              })}
           </div>
 
           <div className="flex flex-col gap-1.5">
             <span className="font-sb text-14px text-gray-500">소요시간</span>
-            <span className="font-r text-14px text-gray-700">{reservation?.duration}</span>
+            {r_take_time !== null && r_take_time !== undefined && (
+              <span className="font-r text-14px text-gray-700">{r_take_time}분</span>
+            )}
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <span className="font-sb text-14px text-gray-500">추가관리</span>
-            <span className="font-r text-14px text-gray-700">{reservation?.additionalServices.join(' / ')}</span>
-            <span className="font-sb text-14px text-gray-700">총 {reservation?.totalPrice.toLocaleString()}원</span>
-          </div>
-
-          {reservation?.request && (
+          {r_memo && (
             <div className="flex flex-col gap-1.5">
               <span className="font-sb text-14px text-gray-500">요청사항</span>
-              <span className="font-r text-14px text-gray-700">{reservation?.request}</span>
+              <span className="font-r text-14px text-gray-700">{r_memo}</span>
             </div>
           )}
         </div>

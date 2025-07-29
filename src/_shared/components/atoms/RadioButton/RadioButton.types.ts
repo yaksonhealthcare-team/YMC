@@ -25,6 +25,11 @@ export interface RadioButtonProps {
   name?: string;
 
   /**
+   * 비활성화
+   */
+  disabled?: boolean;
+
+  /**
    * 추가 클래스
    */
   className?: string;

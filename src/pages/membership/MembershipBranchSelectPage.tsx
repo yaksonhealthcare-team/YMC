@@ -1,24 +1,23 @@
+import { BranchesSchema } from '@/_domain/reservation';
 import { SearchField } from '@/components/SearchField';
 import { useLayout } from '@/contexts/LayoutContext';
 import { useDebounce } from '@/hooks/useDebounce';
-import { Branch } from '@/types/Branch';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import MembershipBranchList from './MembershipBranchList';
 
 interface Props {
-  onSelect?: (branch: Branch) => void;
-  brandCode?: string;
-  memberShipId?: string;
+  onSelect?: (branch: BranchesSchema) => void;
+  // memberShipId?: string;
+  // brandCode?: string;
 }
 
-const MembershipBranchSelectPage = ({ onSelect, brandCode, memberShipId }: Props) => {
+const MembershipBranchSelectPage = ({ onSelect /* brandCode */ /* memberShipId */ }: Props) => {
   const [query, setQuery] = useState('');
   const { setHeader, setNavigation } = useLayout();
-  const location = useLocation();
   const navigate = useNavigate();
   const debouncedQuery = useDebounce(query, 300);
-  const currentBrandCode = brandCode || location.state?.brand_code;
+  // const currentBrandCode = brandCode || location.state?.brand_code;
 
   // 헤더 설정
   useEffect(() => {
@@ -32,20 +31,20 @@ const MembershipBranchSelectPage = ({ onSelect, brandCode, memberShipId }: Props
       }
     });
     setNavigation({ display: false });
-  }, []);
+  }, [navigate, setHeader, setNavigation]);
 
   // 브랜드 코드 설정
-  useEffect(() => {
-    if (location.state?.brand_code !== currentBrandCode) {
-      navigate(location.pathname, {
-        replace: true, // 히스토리에 새 항목 추가하지 않고 현재 상태 교체
-        state: {
-          ...location.state,
-          brand_code: currentBrandCode
-        }
-      });
-    }
-  }, [currentBrandCode, location.pathname, location.state?.brand_code, navigate]);
+  // useEffect(() => {
+  //   if (location.state?.brand_code !== currentBrandCode) {
+  //     navigate(location.pathname, {
+  //       replace: true, // 히스토리에 새 항목 추가하지 않고 현재 상태 교체
+  //       state: {
+  //         ...location.state,
+  //         brand_code: currentBrandCode
+  //       }
+  //     });
+  //   }
+  // }, [currentBrandCode, location.pathname, location.state, location.state?.brand_code, navigate]);
 
   return (
     <div className={'flex flex-col h-full'}>
@@ -54,7 +53,7 @@ const MembershipBranchSelectPage = ({ onSelect, brandCode, memberShipId }: Props
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        <MembershipBranchList onSelect={onSelect} query={debouncedQuery} memberShipId={memberShipId} />
+        <MembershipBranchList onSelect={onSelect} query={debouncedQuery} /* memberShipId={memberShipId} */ />
       </div>
     </div>
   );

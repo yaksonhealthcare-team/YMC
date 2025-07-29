@@ -39,7 +39,8 @@ const ReservationDetailPage = lazy(() => import('../pages/reservation/Reservatio
 const ReservationCancelPage = lazy(() => import('../pages/reservation/ReservationCancelPage'));
 const SatisfactionPage = lazy(() => import('../pages/reservation/satisfaction/SatisfactionPage'));
 const MembershipUsageHistory = lazy(() => import('../pages/membership/MembershipUsageHistory'));
-const ReservationFormPage = lazy(() => import('../pages/reservation/ReservationFormPage'));
+// const ReservationFormPage = lazy(() => import('../pages/reservation/ReservationFormPage'));
+const ReservationPage = lazy(() => import('@/_domain/reservation/components/pages/ReservationPage'));
 const BranchSearch = lazy(() => import('../pages/branch/search/BranchSearch'));
 const ResetPasswordComplete = lazy(() => import('@/components/resetPassword/ResetPasswordComplete'));
 const ReviewFormPage = lazy(() => import('../pages/review/ReviewFormPage'));
@@ -239,10 +240,15 @@ export const routeConfig: RouteConfig[] = [
     auth: true
   },
   {
-    path: '/reservation/form',
-    element: <ReservationFormPage />,
+    path: '/reservation',
+    element: <ReservationPage />,
     auth: true
   },
+  // {
+  //   path: '/reservation/form',
+  //   element: <ReservationFormPage />,
+  //   auth: true
+  // },
   {
     path: '/reservation/:id',
     element: <ReservationDetailPage />,

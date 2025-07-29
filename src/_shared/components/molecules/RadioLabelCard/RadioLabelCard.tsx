@@ -2,7 +2,16 @@ import clsx from 'clsx';
 import { RadioButton } from '../../atoms';
 import { RadioLabelCardProps } from './RadioLabelCard.types';
 
-export const RadioLabelCard = ({ className, label, checked, value, name, onChange, onClick }: RadioLabelCardProps) => {
+export const RadioLabelCard = ({
+  className,
+  label,
+  checked,
+  value,
+  name,
+  onChange,
+  onClick,
+  disabled = false
+}: RadioLabelCardProps) => {
   const handleClick = () => {
     onClick?.(value, checked);
   };
@@ -16,8 +25,8 @@ export const RadioLabelCard = ({ className, label, checked, value, name, onChang
         className
       )}
     >
-      <p className="text-base font-semibold truncate">{label}</p>
-      <RadioButton value={value} name={name} checked={checked} onChange={onChange} />
+      {typeof label === 'string' ? <p className="text-base font-semibold truncate">{label}</p> : label}
+      {!disabled && <RadioButton value={value} name={name} checked={checked} onChange={onChange} disabled={disabled} />}
     </label>
   );
 };

@@ -1,8 +1,9 @@
+import { useGetReservations } from '@/_domain/reservation';
 import { EmptyCard } from '@/components/EmptyCard';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { ReserveCard } from '@/components/ReserveCard';
 import { Title } from '@/components/Title';
-import { useUpcomingReservations } from '@/queries/useReservationQueries';
+import { useAuth } from '@/contexts/AuthContext';
 import { useReservationStore } from '@/stores/reservationStore';
 import { reservationFilters } from '@/types/Reservation';
 import { useMemo } from 'react';
@@ -11,29 +12,30 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 const ReserveCardSection = () => {
   const navigate = useNavigate();
-  const { data: upcomingReservations, isLoading } = useUpcomingReservations();
+  const { user } = useAuth();
+  const { data, isLoading } = useGetReservations(
+    user?.phone || '',
+    { r_status: '001' },
+    { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0, initialPageParam: 1 }
+  );
+
+  const [reservations] = useMemo(() => data.flatMap((page) => page.data) || [], [data]);
   const { setFilter } = useReservationStore();
 
   // 예약이 있는지 여부와 총 예약 수를 미리 계산
   const { hasReservations, totalCount } = useMemo(() => {
-    const reservations = upcomingReservations?.reservations || [];
     return {
-      hasReservations: reservations.length > 0,
-      totalCount: upcomingReservations?.total_count || 0
+      hasReservations: reservations.body.length > 0,
+      totalCount: reservations.total_count || 0
     };
-  }, [upcomingReservations]);
+  }, [reservations.body.length, reservations.total_count]);
 
   if (isLoading) {
     return <LoadingIndicator className="min-h-[114px] flex-1" />;
   }
 
   const handleReservationClick = () => {
-    navigate('/reservation/form', {
-      state: {
-        originalPath: '/',
-        fromHome: true
-      }
-    });
+    navigate('/reservation');
   };
 
   const handleTitleClick = () => {
@@ -57,11 +59,15 @@ const ReserveCardSection = () => {
         />
       ) : (
         <Swiper spaceBetween={10} slidesPerView={1} style={{ overflow: 'visible' }} className="mt-2">
-          {upcomingReservations?.reservations?.map((reservation) => (
-            <SwiperSlide key={reservation.id}>
-              <ReserveCard reservation={reservation} />
-            </SwiperSlide>
-          ))}
+          {reservations.body.map((reservation, idx) => {
+            const key = `${reservation.r_idx}-${idx}`;
+
+            return (
+              <SwiperSlide key={key}>
+                <ReserveCard reservation={reservation} />
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       )}
     </div>

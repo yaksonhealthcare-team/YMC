@@ -1,8 +1,8 @@
+import { ReservationDetailSchema } from '@/_domain/reservation';
 import PhoneIcon from '@/assets/icons/PhoneIcon.svg?react';
 import PinIcon from '@/assets/icons/PinIcon.svg?react';
 import MapView from '@/components/MapView';
 import { useOverlay } from '@/contexts/ModalContext';
-import { ReservationDetail } from '@/queries/useReservationQueries';
 import { Branch } from '@/types/Branch';
 import { copyToClipboard } from '@/utils/copyUtils';
 import { ReactNode } from 'react';
@@ -15,27 +15,23 @@ const InfoGroup = ({ icon, children }: { icon: ReactNode; children: ReactNode })
 );
 
 interface LocationProps {
-  reservation: ReservationDetail;
+  reservation: ReservationDetailSchema;
 }
 
 const Location = ({ reservation }: LocationProps) => {
   const { showToast } = useOverlay();
+  const { b_lat, b_lon, b_addr, b_tel, b_idx, b_name } = reservation;
 
-  const hasLocation = reservation.latitude && reservation.longitude;
-  const hasAddress = !!reservation.address;
-  const hasPhone = !!reservation.phone;
-
-  const branchLocation = {
-    latitude: reservation.latitude || 0,
-    longitude: reservation.longitude || 0
-  };
+  const hasLocation = !!b_lat && !!b_lon;
+  const hasAddress = !!b_addr;
+  const hasPhone = !!b_tel;
 
   const branch: Branch = {
-    b_idx: reservation.branchId,
-    name: reservation.store,
-    address: reservation.address || '',
-    latitude: branchLocation.latitude,
-    longitude: branchLocation.longitude,
+    b_idx,
+    name: b_name,
+    address: b_addr,
+    latitude: Number(b_lat) || 0,
+    longitude: Number(b_lon) || 0,
     canBookToday: true,
     distanceInMeters: null,
     isFavorite: false,
@@ -51,7 +47,7 @@ const Location = ({ reservation }: LocationProps) => {
 
   const handleCopyPhone = async () => {
     if (!hasPhone) return;
-    await copyToClipboard(reservation.phone || '');
+    await copyToClipboard(reservation.b_tel || '');
     showToast('전화번호가 복사되었습니다');
   };
 
@@ -61,7 +57,7 @@ const Location = ({ reservation }: LocationProps) => {
       <div className="aspect-[1.8] relative">
         {hasLocation ? (
           <MapView
-            center={branchLocation}
+            center={{ latitude: branch.latitude, longitude: branch.longitude }}
             branches={[branch]}
             useStaticPinIcon={true}
             options={{
@@ -93,7 +89,7 @@ const Location = ({ reservation }: LocationProps) => {
         <InfoGroup icon={<PhoneIcon />}>
           <div className={'flex w-full flex-row items-start gap-2'}>
             <p className={`flex-1 ${!hasPhone ? 'text-gray-500' : ''}`}>
-              {hasPhone ? reservation.phone : '전화번호가 없습니다'}
+              {hasPhone ? reservation.b_tel : '전화번호가 없습니다'}
             </p>
             <button
               className={`flex-shrink-0 ${hasPhone ? 'text-tag-blue' : 'text-gray-300 cursor-not-allowed'}`}
