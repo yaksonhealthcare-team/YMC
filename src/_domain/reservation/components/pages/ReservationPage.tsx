@@ -158,7 +158,6 @@ const ReservationPage = () => {
 
     return expirationSorted;
   }, [membershipData, membershipId]);
-  const [branch] = useMemo(() => branchData?.body || {}, [branchData?.body]);
 
   useEffect(() => {
     if (enabled) return;
@@ -172,10 +171,11 @@ const ReservationPage = () => {
   }, [consultCount, enabled, memberships, methods, searchParams]);
 
   useEffect(() => {
-    if (branch) {
-      methods.setValue('branch', { id: branch.b_idx, name: branch.b_name });
-    }
-  }, [branch, methods]);
+    const [branch] = branchData?.body || [];
+    if (!branch) return;
+
+    methods.setValue('branch', { id: branch.b_idx, name: branch.b_name });
+  }, [branchData?.body, methods]);
 
   return (
     <FormProvider {...methods}>

@@ -99,7 +99,7 @@ const MembershipBranchList = ({ onSelect, query /* memberShipId */ }: Membership
     </ul>
   );
 
-  const branches = useMemo(() => data.flatMap((page) => page.data.body.result), [data]);
+  const branches = useMemo(() => data?.flatMap((page) => page.data.body.result), [data]) || [];
 
   // 초기 데이터 로딩 상태 (완전히 빈 상태일 때)
   if (isLoading && !branches.length) {

@@ -1,6 +1,6 @@
 import { ListResponse } from '@/_shared/types/response.types';
 import { CustomUseInfiniteQueryOptions } from '@/_shared/types/util.types';
-import { useInfiniteQuery, useSuspenseInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import {
   UserMembershipDetailParams,
@@ -19,7 +19,7 @@ export const useGetUserMembership = (
     AxiosResponse<ListResponse<UserMembershipSchema>>[]
   >
 ) => {
-  return useSuspenseInfiniteQuery({
+  return useInfiniteQuery({
     queryKey: ['get-user-memberships', key, params],
     queryFn: ({ pageParam = 1 }) => getUserMemberships({ ...params, page: pageParam as number }),
     initialPageParam: 1,

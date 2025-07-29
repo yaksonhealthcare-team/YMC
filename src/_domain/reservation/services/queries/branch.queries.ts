@@ -1,5 +1,5 @@
 import { ApiResponse, CustomUseInfiniteQueryOptions, CustomUseQueryOptions, ResultResponse } from '@/_shared';
-import { useSuspenseInfiniteQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { BranchDetailParams, BranchDetailSchema, BranchesParams, BranchesSchema } from '../../types';
 import { getBranchDetail, getBranches } from '../branch.services';
@@ -13,7 +13,7 @@ export const useGetBranchDetail = (
     ApiResponse<BranchDetailSchema[]>
   >
 ) => {
-  return useSuspenseQuery({
+  return useQuery({
     queryKey: ['get-branch-detail', key, params],
     queryFn: () => getBranchDetail(params),
     select: ({ data }) => data,
@@ -31,7 +31,7 @@ export const useGetBranches = (
     AxiosResponse<ResultResponse<BranchesSchema>>[]
   >
 ) => {
-  return useSuspenseInfiniteQuery({
+  return useInfiniteQuery({
     queryKey: ['get-branches', key, params],
     queryFn: ({ pageParam = 1 }) => getBranches({ ...params, page: pageParam as number }),
     initialPageParam: 1,

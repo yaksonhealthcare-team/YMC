@@ -14,7 +14,7 @@ const ReservationSummary = ({ reservation }: ReservationSummaryProps) => {
     useMemo(() => {
       const date = dayjs(reservation.r_date);
       const hasStatus = !!reservation.r_status;
-      const hasProgramName = !!reservation.ps_name;
+      const hasProgramName = !!reservation.s_name;
       const isPrepaid = hasProgramName && reservation.mp_gubun === 'F';
       const hasDuration = !!reservation.r_take_time;
       const hasRequest = !!reservation.r_memo;
@@ -65,7 +65,7 @@ const ReservationSummary = ({ reservation }: ReservationSummaryProps) => {
       <div>
         <p className="text-gray-500 font-sb text-[14px]">관리 프로그램</p>
         <p className={`font-r text-[14px] mt-[6px] ${!hasProgramName ? 'text-gray-500' : 'text-gray-700'}`}>
-          {hasProgramName ? `${isPrepaid ? '(정액권) ' : ''}${reservation.ps_name}` : '프로그램 정보가 없습니다'}
+          {hasProgramName ? `${isPrepaid ? '(정액권) ' : ''}${reservation.s_name}` : '프로그램 정보가 없습니다'}
         </p>
       </div>
 

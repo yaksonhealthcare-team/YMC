@@ -5,7 +5,7 @@ import {
   CustomUseQueryOptions,
   ListResponse
 } from '@/_shared';
-import { useMutation, useQuery, useSuspenseInfiniteQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { CreateReservationBody } from '../../types';
 import {
@@ -52,7 +52,7 @@ export const useGetReservations = (
     AxiosResponse<ListResponse<ReservationsSchema>>[]
   >
 ) => {
-  return useSuspenseInfiniteQuery({
+  return useInfiniteQuery({
     queryKey: ['get-reservations', key, params],
     queryFn: ({ pageParam = 1 }) => getReservations({ ...params, page: pageParam as number }),
     initialPageParam: 1,
@@ -73,7 +73,7 @@ export const useGetReservationDetail = (
     ApiResponse<ReservationDetailSchema[]>
   >
 ) => {
-  return useSuspenseQuery({
+  return useQuery({
     queryKey: ['reservation-detail', key, params],
     queryFn: () => getReservationDetail(params),
     select: ({ data }) => data,
