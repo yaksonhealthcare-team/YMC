@@ -78,7 +78,7 @@ export const ReservationRestSection = () => {
   );
 
   const reservationDate = useMemo(() => formatReservationDate(date, timeSlot), [date, timeSlot]);
-  const reserveMessage = useMemo(() => guideMessagesData?.body[0].reserve_msg, [guideMessagesData]);
+  const reserveMessage = useMemo(() => guideMessagesData?.body?.[0]?.reserve_msg ?? '', [guideMessagesData]);
   const canInputBox = type === 'consult';
 
   return (

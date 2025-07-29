@@ -6,7 +6,6 @@ import { Title } from '@/components/Title';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReservationStore } from '@/stores/reservationStore';
 import { reservationFilters } from '@/types/Reservation';
-import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -20,7 +19,8 @@ const ReserveCardSection = () => {
     { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0, initialPageParam: 1 }
   );
 
-  const [reservations] = useMemo(() => data?.flatMap((page) => page.data) || [], [data]);
+  const firstPage = data?.[0]?.data;
+  const reservations = firstPage ?? { body: [], total_count: 0 };
 
   if (isLoading) {
     return <LoadingIndicator className="min-h-[114px] flex-1" />;

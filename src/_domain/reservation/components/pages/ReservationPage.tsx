@@ -129,11 +129,11 @@ const ReservationPage = () => {
   );
 
   const consultCount = useMemo(() => {
-    const { consultation_max_count, current_count } = consultCountData?.body || {};
+    const { consultation_max_count = 0, current_count = 0 } = consultCountData?.body || {};
 
     return {
-      maxCount: Number(consultation_max_count || 0),
-      currentCount: Number(current_count || 0)
+      maxCount: Number(consultation_max_count),
+      currentCount: Number(current_count)
     };
   }, [consultCountData?.body]);
   const memberships = useMemo(() => {

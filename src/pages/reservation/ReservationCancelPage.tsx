@@ -25,7 +25,9 @@ const ReservationCancelPage = () => {
 
   const { mutate: cancelReservation } = useCancelReservation();
   const { reservationCancelMessage, isLoading: isGuideMessageLoading } = useReservationGuideMessages();
-  const { data: detailData } = useGetReservationDetail(user?.phone || '', { r_idx: id || '' });
+  const { data: detailData } = useGetReservationDetail(user?.phone || '', {
+    r_idx: id || ''
+  });
 
   useEffect(() => {
     setHeader({
