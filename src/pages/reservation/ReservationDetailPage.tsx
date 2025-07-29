@@ -32,7 +32,7 @@ const ReservationDetailPage = () => {
     { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0 }
   );
 
-  const reservation = useMemo(() => data.body[0], [data]);
+  const reservation = useMemo(() => data?.body[0], [data]);
 
   useEffect(() => {
     setHeader({
@@ -89,6 +89,7 @@ const ReservationDetailPage = () => {
     });
   };
   const handleCancelReservation = () => {
+    if (!reservation) return;
     const { r_idx, r_date, b_name, ps_name } = reservation;
 
     openBottomSheet(

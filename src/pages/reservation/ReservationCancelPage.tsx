@@ -9,7 +9,7 @@ import { useReservationGuideMessages } from '@/hooks/useGuideMessages';
 import { useCancelReservation } from '@/queries/useReservationQueries';
 import { escapeHtml } from '@/utils/sanitize';
 import { Divider } from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ReservationCancelBottomSheetContent from './_fragments/ReservationCancelBottomSheetContent';
 
@@ -106,7 +106,9 @@ const ReservationCancelPage = () => {
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCancelReason(e.target.value);
   };
-  const { b_name, r_take_time, r_memo, add_services, s_name } = useMemo(() => detailData.body[0], [detailData]);
+
+  if (!detailData) return null;
+  const { b_name, r_take_time, r_memo, add_services, s_name } = detailData.body[0];
   const hasAddServices = add_services && add_services.length > 0;
 
   return (
