@@ -84,6 +84,7 @@ const PaymentCallbackPage = lazy(() => import('../pages/payment/PaymentCallbackP
 const PaymentFailedPage = lazy(() => import('../pages/payment/PaymentFailedPage'));
 const StorePage = lazy(() => import('../pages/store/Store'));
 const PopupDetailPage = lazy(() => import('../pages/popup/PopupDetailPage'));
+const ErrorPage2 = lazy(() => import('../pages/error/ErrorPage2'));
 
 export const routeConfig: RouteConfig[] = [
   {
@@ -487,6 +488,11 @@ export const routeConfig: RouteConfig[] = [
     path: '/payment/callback',
     element: <PaymentCallbackPage />,
     auth: true
+  },
+  {
+    path: '/error',
+    element: <ErrorPage2 />,
+    auth: false
   }
 ];
 
