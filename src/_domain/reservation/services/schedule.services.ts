@@ -1,5 +1,4 @@
-import { ApiResponse, handleError } from '@/_shared';
-import { axiosClient } from '@/queries/clients';
+import { ApiResponse, authApi, handleError } from '@/_shared';
 import { AxiosResponse } from 'axios';
 import { ScheduleDateScheme, SchedulesParams, ScheduleTimeScheme } from '../types/schedule.types';
 
@@ -15,7 +14,7 @@ export const getSchedulesDate = async (
   try {
     const endpoint = `${BASE_URL}/date`;
 
-    return await axiosClient.get(endpoint, { params, paramsSerializer: { indexes: true } });
+    return await authApi.get(endpoint, { params, paramsSerializer: { indexes: true } });
   } catch (error) {
     throw handleError(error, 'getScheduleDate');
   }
@@ -31,7 +30,7 @@ export const getSchedulesTimes = async (
   try {
     const endpoint = `${BASE_URL}/times`;
 
-    return await axiosClient.get(endpoint, { params, paramsSerializer: { indexes: true } });
+    return await authApi.get(endpoint, { params, paramsSerializer: { indexes: true } });
   } catch (error) {
     throw handleError(error, 'getScheduleTimes');
   }
