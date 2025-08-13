@@ -4,6 +4,7 @@ import Profile from '@/assets/icons/Profile.svg?react';
 import { Image } from '@/components/common/Image';
 import { useLayout } from '@/stores/LayoutContext';
 import { useOverlay } from '@/stores/ModalContext';
+import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
 const MyPageProfile = () => {
@@ -53,7 +54,10 @@ const MyPageProfile = () => {
       </div>
       <span className="font-b text-[20px] text-gray-900">{user?.name ? `${user.name}님` : '회원님'}</span>
       <button
-        className={`ml-auto bg-primary disabled:bg-gray-200 px-4 py-2 rounded-full  text-gray-900 font-sb text-sm`}
+        className={clsx(
+          'ml-auto bg-primary px-4 py-2 rounded-full disabled:bg-gray-200 font-sb text-sm',
+          isCRMConnected ? 'text-white' : 'text-gray-900'
+        )}
         onClick={handleCRMConnect}
         disabled={isCRMConnected}
       >
