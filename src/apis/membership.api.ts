@@ -1,3 +1,4 @@
+import { authApi } from '@/_shared';
 import { axiosClient } from '@/queries/clients';
 import { HTTPResponse } from '@/types/HTTPResponse';
 import {
@@ -26,7 +27,7 @@ export const fetchMembershipList = async (
   page: number = 1,
   pageSize: number = 10
 ) => {
-  const response = await axiosClient.get<ListResponse<MembershipItem>>(`/memberships/memberships`, {
+  const response = await authApi.get<ListResponse<MembershipItem>>(`/memberships/memberships`, {
     params: {
       brand_code: brandCode,
       b_idx: bIdx,
@@ -39,7 +40,7 @@ export const fetchMembershipList = async (
 };
 
 export const fetchMembershipDetail = async (sIdx: string) => {
-  const response = await axiosClient.get<HTTPResponse<MembershipDetail>>(`/memberships/detail`, {
+  const response = await authApi.get<HTTPResponse<MembershipDetail>>(`/memberships/detail`, {
     params: {
       s_idx: sIdx
     }
@@ -48,7 +49,7 @@ export const fetchMembershipDetail = async (sIdx: string) => {
 };
 
 export const fetchMembershipCategories = async (brandCode: string) => {
-  const response = await axiosClient.get<ListResponse<MembershipCategory>>(`/memberships/categories`, {
+  const response = await authApi.get<ListResponse<MembershipCategory>>(`/memberships/categories`, {
     params: {
       brand_code: brandCode
     }
@@ -68,7 +69,7 @@ export const fetchUserMemberships = async (searchType?: string, page: number = 1
 };
 
 export const fetchAdditionalManagement = async (membershipIdx: string, page: number = 1) => {
-  const response = await axiosClient.get<ListResponse<AdditionalManagement>>(`/memberships/additional-managements`, {
+  const response = await authApi.get<ListResponse<AdditionalManagement>>(`/memberships/additional-managements`, {
     params: {
       s_idx: membershipIdx,
       page
@@ -78,7 +79,7 @@ export const fetchAdditionalManagement = async (membershipIdx: string, page: num
 };
 
 export const fetchMembershipUsageHistory = async (membershipIdx: string, page: number = 1, pageSize: number = 50) => {
-  const response = await axiosClient.get<HTTPResponse<MembershipDetailWithHistory>>(`/memberships/me/detail`, {
+  const response = await authApi.get<HTTPResponse<MembershipDetailWithHistory>>(`/memberships/me/detail`, {
     params: {
       mp_idx: membershipIdx,
       page,

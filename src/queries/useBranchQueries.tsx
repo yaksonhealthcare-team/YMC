@@ -8,7 +8,7 @@ import {
 } from '../apis/branch.api';
 import { BranchDetail, BranchSearchResponse } from '../types/Branch';
 import { Coordinate } from '../types/Coordinate';
-import { axiosClient } from './clients';
+import { authApi } from '@/_shared';
 
 interface BranchFilters {
   page?: number;
@@ -35,7 +35,7 @@ export const useBranches = (filters: BranchFilters) =>
     initialPageParam: 1,
     queryKey: queryKeys.branches.list(filters),
     queryFn: async ({ pageParam = 1 }) => {
-      const { data } = await axiosClient.get<BranchSearchResponse>('/branches/branches', {
+      const { data } = await authApi.get<BranchSearchResponse>('/branches/branches', {
         params: {
           page: pageParam,
           nowlat: filters.latitude,

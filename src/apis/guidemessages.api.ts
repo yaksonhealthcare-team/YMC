@@ -1,4 +1,4 @@
-import { axiosClient } from '@/queries/clients';
+import { authApi } from '@/_shared';
 import { HTTPResponse } from '@/types/HTTPResponse';
 
 // 가이드 메시지 응답 타입 정의
@@ -20,7 +20,7 @@ export interface GuideMessage {
  * @returns 가이드 메시지 설정
  */
 export const fetchGuideMessages = async (): Promise<GuideMessage> => {
-  const { data } = await axiosClient.get<HTTPResponse<GuideMessage[]>>('/guidemessages/setting');
+  const { data } = await authApi.get<HTTPResponse<GuideMessage[]>>('/guidemessages/setting');
 
   // 응답의 body는 배열 형태이지만 첫 번째 항목만 사용
   return data.body[0];

@@ -1,13 +1,13 @@
 import { ReservationMapper } from '@/mappers/ReservationMapper';
-import { axiosClient } from '@/queries/clients';
 import { HTTPResponse } from '@/types/HTTPResponse';
 import { Reservation, ReservationResponse, ReservationStatusCode } from '@/types/Reservation';
 import { ApiResponse } from './address.api';
+import { authApi } from '@/_shared';
 export const fetchReservations = async (
   status: ReservationStatusCode,
   page: number
 ): Promise<{ reservations: Reservation[]; total_count: number }> => {
-  const { data } = await axiosClient.get<HTTPResponse<ReservationResponse[]>>('/reservation/reservations', {
+  const { data } = await authApi.get<HTTPResponse<ReservationResponse[]>>('/reservation/reservations', {
     params: {
       r_status: status,
       page
@@ -25,7 +25,7 @@ export const fetchReservations = async (
 };
 
 export const fetchReservationDetail = async (id: string): Promise<ReservationResponse> => {
-  const { data } = await axiosClient.get<HTTPResponse<ReservationResponse[]>>('/reservation/detail', {
+  const { data } = await authApi.get<HTTPResponse<ReservationResponse[]>>('/reservation/detail', {
     params: {
       r_idx: id
     }
@@ -43,7 +43,7 @@ export const fetchReservationDetail = async (id: string): Promise<ReservationRes
 };
 
 export const completeVisit = async (r_idx: string): Promise<void> => {
-  const { data } = await axiosClient.post<HTTPResponse<null>>('/reservation/complete', {
+  const { data } = await authApi.post<HTTPResponse<null>>('/reservation/complete', {
     r_idx
   });
 
@@ -53,7 +53,7 @@ export const completeVisit = async (r_idx: string): Promise<void> => {
 };
 
 export const cancelReservation = async (reservationId: string, cancelMemo: string): Promise<ApiResponse<null>> => {
-  const { data } = await axiosClient.delete(`/reservation/reservations`, {
+  const { data } = await authApi.delete(`/reservation/reservations`, {
     params: {
       r_idx: reservationId,
       cancel_memo: cancelMemo
@@ -79,7 +79,7 @@ interface CreateReservationResponse {
 }
 
 export const createReservation = async (params: CreateReservationRequest) => {
-  const { data } = await axiosClient.post<HTTPResponse<CreateReservationResponse>>('/reservation/reservations', params);
+  const { data } = await authApi.post<HTTPResponse<CreateReservationResponse>>('/reservation/reservations', params);
   return data;
 };
 
@@ -87,7 +87,7 @@ export const getConsultationCount = async (): Promise<{
   currentCount: number;
   maxCount: number;
 }> => {
-  const { data } = await axiosClient.get<
+  const { data } = await authApi.get<
     HTTPResponse<{
       current_count: string;
       consultation_max_count: string;

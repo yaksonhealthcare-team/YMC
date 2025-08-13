@@ -1,7 +1,7 @@
 import { useOverlay } from '@/contexts/ModalContext';
-import { axiosClient } from '@/queries/clients';
 import { BasePaymentParams, OrderResponse, PaymentItem } from '@/types/Payment';
 import { usePaymentStore } from './usePaymentStore';
+import { authApi } from '@/_shared';
 
 export const usePayment = () => {
   const { showToast } = useOverlay();
@@ -72,7 +72,7 @@ export const usePayment = () => {
   };
 
   const createMembershipOrder = async () => {
-    const response = await axiosClient.post<OrderResponse>('/orders/memberships', {
+    const response = await authApi.post<OrderResponse>('/orders/memberships', {
       orders: items.map((item) => ({
         s_idx: item.s_idx,
         ss_idx: item.ss_idx,

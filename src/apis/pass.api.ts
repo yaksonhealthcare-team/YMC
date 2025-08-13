@@ -1,4 +1,4 @@
-import { axiosClient } from '@/queries/clients';
+import { publicApi } from '@/_shared/services/instance';
 import { HTTPResponse } from '@/types/HTTPResponse';
 
 export interface EncryptData {
@@ -21,7 +21,7 @@ const getReturnUrl = () => {
 export const fetchEncryptDataForNice = async (returnUrl?: string) => {
   const return_url = returnUrl ?? getReturnUrl();
 
-  const { data } = await axiosClient.post<HTTPResponse<EncryptData[]>>('/auth/crypto/token.php', { return_url });
+  const { data } = await publicApi.post<HTTPResponse<EncryptData[]>>('/auth/crypto/token.php', { return_url });
 
   return data.body[0];
 };

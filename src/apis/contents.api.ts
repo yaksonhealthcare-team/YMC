@@ -1,11 +1,11 @@
+import { authApi } from '@/_shared';
 import { ContentMapper } from '@/mappers/ContentMapper';
-import { axiosClient } from '@/queries/clients';
 import { Notice, NoticeDetail, PopupDetail } from '@/types/Content';
 import { Event, EventDetail, Tab } from '@/types/Event';
 import { HTTPResponse } from '@/types/HTTPResponse';
 
 export const fetchEvents = async (status: Tab = 'ALL'): Promise<Event[]> => {
-  const { data } = await axiosClient.get<HTTPResponse<Event[]>>('/contents/contents', {
+  const { data } = await authApi.get<HTTPResponse<Event[]>>('/contents/contents', {
     params: {
       gubun: 'E01',
       page: 1,
@@ -16,7 +16,7 @@ export const fetchEvents = async (status: Tab = 'ALL'): Promise<Event[]> => {
 };
 
 export const fetchEventDetail = async (code: string): Promise<EventDetail> => {
-  const { data } = await axiosClient.get<HTTPResponse<EventDetail[]>>('/contents/detail', {
+  const { data } = await authApi.get<HTTPResponse<EventDetail[]>>('/contents/detail', {
     params: {
       gubun: 'E01',
       code
@@ -31,7 +31,7 @@ export const fetchNotices = async (
   notices: Notice[];
   pageInfo: { totalPages: number; currentPage: number };
 }> => {
-  const { data } = await axiosClient.get<HTTPResponse<Notice[]>>('/contents/contents', {
+  const { data } = await authApi.get<HTTPResponse<Notice[]>>('/contents/contents', {
     params: {
       gubun: 'N01',
       page
@@ -47,7 +47,7 @@ export const fetchNotices = async (
 };
 
 export const fetchNotice = async (code: string): Promise<NoticeDetail> => {
-  const { data } = await axiosClient.get<HTTPResponse<NoticeDetail[]>>('/contents/detail', {
+  const { data } = await authApi.get<HTTPResponse<NoticeDetail[]>>('/contents/detail', {
     params: {
       gubun: 'N01',
       code
@@ -85,7 +85,7 @@ export interface AppPopupData {
 // Function to fetch popup data
 export const fetchPopups = async (): Promise<AppPopupData[]> => {
   // Use axiosClient and the standard HTTPResponse type
-  const response = await axiosClient.get<HTTPResponse<ApiPopupItem[]>>('/contents/popup?status=ING');
+  const response = await authApi.get<HTTPResponse<ApiPopupItem[]>>('/contents/popup?status=ING');
 
   // Extract the popup array from response.data.body
   const apiPopups = response.data.body || [];
@@ -116,7 +116,7 @@ export const fetchPopups = async (): Promise<AppPopupData[]> => {
 // Function to fetch popup detail data
 export const fetchPopupDetail = async (code: string): Promise<PopupDetail> => {
   // Use the provided endpoint structure
-  const { data } = await axiosClient.get<HTTPResponse<PopupDetail[]>>('/contents/detail', {
+  const { data } = await authApi.get<HTTPResponse<PopupDetail[]>>('/contents/detail', {
     params: {
       gubun: 'P01', // P01은 팝업을 위한 올바른 gubun 값입니다
       code

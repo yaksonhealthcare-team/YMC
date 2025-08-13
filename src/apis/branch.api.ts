@@ -1,10 +1,10 @@
+import { authApi } from '@/_shared';
 import { BranchMapper } from '@/mappers/BranchMapper';
-import { axiosClient } from '@/queries/clients';
 import { BranchDetail, BranchesWithCurrentAddress, BranchFilters } from '@/types/Branch';
 import { Coordinate } from '@/types/Coordinate';
 
 export const fetchBranches = async (filters: BranchFilters): Promise<BranchesWithCurrentAddress> => {
-  const { data } = await axiosClient.get('/branches/branches', {
+  const { data } = await authApi.get('/branches/branches', {
     params: {
       page: filters.page,
       nowlat: filters.latitude,
@@ -27,7 +27,7 @@ export const fetchBranch = async (id: string, coords?: Coordinate): Promise<Bran
     params.nowlon = coords.longitude;
   }
 
-  const { data } = await axiosClient.get('/branches/detail', {
+  const { data } = await authApi.get('/branches/detail', {
     params: params
   });
   if (!data.body || data.body.length === 0) {
@@ -37,11 +37,11 @@ export const fetchBranch = async (id: string, coords?: Coordinate): Promise<Bran
 };
 
 export const bookmarkBranch = async (id: string): Promise<void> => {
-  await axiosClient.post('/bookmarks/bookmarks', { b_idx: id });
+  await authApi.post('/bookmarks/bookmarks', { b_idx: id });
 };
 
 export const unbookmarkBranch = async (id: string): Promise<void> => {
-  await axiosClient.delete('/bookmarks/bookmarks', {
+  await authApi.delete('/bookmarks/bookmarks', {
     data: {
       b_idx: id
     }
@@ -52,7 +52,7 @@ export const unbookmarkBranch = async (id: string): Promise<void> => {
 export const getBranchBookmarks = async (coords?: Coordinate) => {
   if (!coords) return { branches: [], address: '' };
 
-  const response = await axiosClient.get('/bookmarks/bookmarks', {
+  const response = await authApi.get('/bookmarks/bookmarks', {
     params: {
       page: 1,
       nowlat: coords.latitude,
@@ -64,14 +64,14 @@ export const getBranchBookmarks = async (coords?: Coordinate) => {
 
 // 즐겨찾기 추가
 export const addBranchBookmark = async (branchId: string) => {
-  return axiosClient.post('/bookmarks/bookmarks', {
+  return authApi.post('/bookmarks/bookmarks', {
     b_idx: branchId
   });
 };
 
 // 즐겨찾기 제거
 export const removeBranchBookmark = async (branchId: string) => {
-  return axiosClient.delete('/bookmarks/bookmarks', {
+  return authApi.delete('/bookmarks/bookmarks', {
     params: {
       b_idx: branchId
     }

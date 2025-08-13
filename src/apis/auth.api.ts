@@ -1,5 +1,7 @@
+import { saveAccessToken } from '@/_domain/auth';
+import { authApi } from '@/_shared';
+import { publicApi } from '@/_shared/services/instance';
 import { UserMapper } from '@/mappers/UserMapper';
-import { axiosClient, saveAccessToken } from '@/queries/clients';
 import { HTTPResponse } from '@/types/HTTPResponse';
 import { UpdateUserProfileRequest, User, UserResponse } from '@/types/User';
 import axios from 'axios';
@@ -23,7 +25,7 @@ export const loginWithEmail = async ({
 }): Promise<{
   accessToken: string;
 }> => {
-  const { data } = await axiosClient.post('/auth/signin/email', {
+  const { data } = await publicApi.post('/auth/signin/email', {
     username: username,
     password: password,
     deviceToken: deviceToken,
@@ -32,10 +34,10 @@ export const loginWithEmail = async ({
 
   const accessToken = data.body[0].accessToken;
 
-  axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+  authApi.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
   if (window.ReactNativeWebView) {
-    setAccessToken(accessToken);
+    saveAccessToken(accessToken);
   }
 
   return {
@@ -71,7 +73,7 @@ export const refreshAccessToken = async (): Promise<string | null> => {
 
 export const fetchUser = async (): Promise<User | null> => {
   try {
-    const response = await axiosClient.get<HTTPResponse<UserResponse[]>>('/auth/me');
+    const response = await authApi.get<HTTPResponse<UserResponse[]>>('/auth/me');
 
     if (response.data.body && response.data.body.length > 0) {
       return UserMapper.toEntity(response.data.body[0]);
@@ -94,7 +96,7 @@ export const fetchUser = async (): Promise<User | null> => {
 };
 
 export const resetPassword = async (password: string, token_version_id?: string, di?: string): Promise<void> => {
-  await axiosClient.put('/auth/reset_password', {
+  await publicApi.put('/auth/reset_password', {
     password: password,
     token_version_id: token_version_id,
     di: di
@@ -103,7 +105,7 @@ export const resetPassword = async (password: string, token_version_id?: string,
 
 export const updateUserProfile = async (data: UpdateUserProfileRequest) => {
   const requestData = UserMapper.toUpdateProfileRequest(data);
-  const response = await axiosClient.patch('/auth/me', requestData);
+  const response = await authApi.patch('/auth/me', requestData);
   return response.data;
 };
 
@@ -120,7 +122,7 @@ export const signupWithSocial = async ({
     token_version_id: userInfo.token_version_id
   };
 
-  const response = await axiosClient.post(
+  const response = await publicApi.post(
     '/auth/signup/social',
     {
       thirdPartyType,
@@ -176,7 +178,7 @@ const createSignupRequest = ({ userInfo, authData, optional = {} }: SignupFormDa
 export const signup = async (signupData: SignupFormData) => {
   const requestData = createSignupRequest(signupData);
 
-  const { data } = await axiosClient.post('/auth/signup/email', requestData, {
+  const { data } = await publicApi.post('/auth/signup/email', requestData, {
     withCredentials: true
   }); // 쿠키를 받기 위해 추가
 
@@ -205,24 +207,21 @@ export class UserNotFoundError extends Error {
 }
 
 export function signinWithSocial(request: SignInWithSocialRequest) {
-  return axiosClient.post<HTTPResponse<SignInResponseBody[]>>(
+  return publicApi.post<HTTPResponse<SignInResponseBody[]>>(
     '/auth/signin/social',
     request,
-    { withCredentials: true, timeout: 10000 } // 쿠키를 받기 위해 추가
+    { withCredentials: true } // 쿠키를 받기 위해 추가
   );
 }
 
-export const setAccessToken = (accessToken: string) => {
-  axiosClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-};
 export const withdrawal = async () => {
-  const response = await axiosClient.delete(`/auth/withdrawal`);
+  const response = await authApi.delete(`/auth/withdrawal`);
   return response.data;
 };
 
 export const logout = async () => {
   try {
-    await axiosClient.get('/auth/logout');
+    await authApi.get('/auth/logout');
   } catch (error) {
     console.error('로그아웃 실패', error);
   }
@@ -237,7 +236,7 @@ export const findEmail = async ({
   mobileNumber: string;
   birthDate: string;
 }): Promise<string> => {
-  const { data } = await axiosClient.post<HTTPResponse<{ email: string }[]>>('/auth/account/find-account', {
+  const { data } = await publicApi.post<HTTPResponse<{ email: string }[]>>('/auth/account/find-account', {
     name,
     mobileno: mobileNumber,
     birthdate: birthDate
@@ -247,7 +246,7 @@ export const findEmail = async ({
 };
 
 export const checkEmail = async (email: string): Promise<boolean> => {
-  const { data } = await axiosClient.post<HTTPResponse<null>>('/auth/signup/check-id', {
+  const { data } = await publicApi.post<HTTPResponse<null>>('/auth/signup/check-id', {
     email
   });
   // resultCode가 "23"이면 이메일이 중복된 경우

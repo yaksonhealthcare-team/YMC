@@ -1,4 +1,4 @@
-import { axiosClient } from '@/queries/clients';
+import { authApi } from '@/_shared';
 import { OrderResponse } from '@/types/Payment';
 
 export interface CreateAdditionalManagementOrderRequest {
@@ -13,6 +13,6 @@ export interface CreateAdditionalManagementOrderRequest {
 export const createAdditionalManagementOrder = async (
   data: CreateAdditionalManagementOrderRequest
 ): Promise<OrderResponse> => {
-  const response = await axiosClient.post<OrderResponse>('/orders/additional-managements', data);
+  const response = await authApi.post<OrderResponse>('/orders/additional-managements', data);
   return response.data;
 };
