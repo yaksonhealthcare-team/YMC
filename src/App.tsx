@@ -6,10 +6,12 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { Suspense } from 'react';
 import 'swiper/swiper-bundle.css';
+import { Loading, useVConsole } from './_shared';
 import ErrorBoundary from './components/ErrorBoundary';
 import { queryClient } from './queries/clients';
-import { AppRouter } from './router/router';
+import Router from './router/NewRouter';
 
 /**
  * @deprecated
@@ -49,19 +51,23 @@ const theme = createTheme({
 dayjs.extend(customParseFormat);
 dayjs.locale('ko');
 
-function App() {
+const App = () => {
+  useVConsole();
+
   return (
     <ErrorBoundary>
-      <ThemeProvider theme={theme}>
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
             <ReactQueryDevtools initialIsOpen={false} />
-            <AppRouter />
+            <Suspense fallback={<Loading variant="global" />}>
+              <Router />
+            </Suspense>
           </LocalizationProvider>
-        </QueryClientProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
     </ErrorBoundary>
   );
-}
+};
 
 export default App;

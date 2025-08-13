@@ -50,6 +50,12 @@ const initialState: UserSignup = {
 
 const SignupContext = createContext<SignupContextType | undefined>(undefined);
 
+/**
+ * @deprecated
+ * 이 Provider가 필요한지 확인 후,
+ * 필요하다면 zustand로 전환.
+ * 필요없다면 순차적으로 제거.
+ */
 export const SignupProvider = ({ children }: { children: ReactNode }) => {
   const [signupData, setSignupData] = useState<UserSignup>(initialState);
 

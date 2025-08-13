@@ -9,6 +9,7 @@ interface UseModalBackButtonHandlerProps {
  * 모달/바텀시트 등 오버레이 컴포넌트가 열려 있을 때
  * 기기의 뒤로가기 버튼 (안드로이드) 또는 브라우저 뒤로가기 액션 시
  * 모달을 닫도록 처리하는 훅.
+ * @deprecated
  */
 export function useModalBackButtonHandler({ isOpen, onClose }: UseModalBackButtonHandlerProps) {
   useEffect(() => {

@@ -1,13 +1,12 @@
-import { logout as fetchLogout, fetchUser } from '@/apis/auth.api';
-import { axiosClient } from '@/queries/clients';
+import { getUser, UserSchema } from '@/_domain/auth';
+import { logout as fetchLogout } from '@/apis/auth.api';
 import { useStartupPopups } from '@/queries/useContentQueries';
 import { usePopupActions } from '@/stores/popupStore';
-import { User } from '@/types/User';
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 interface AuthContextType {
-  user: User | null;
-  login: (userData: { user: User | null }) => Promise<void>;
+  user: UserSchema | null;
+  login: (userData: { user: UserSchema | null }) => Promise<void>;
   logout: () => Promise<void>;
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
@@ -15,18 +14,19 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
+/**
+ * @deprecated
+ * 점진적 제거
+ */
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserSchema | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { openPopup } = usePopupActions();
 
-  const { data: popupData, isLoading: isPopupLoading } = useStartupPopups({
-    enabled: !!user
-  });
+  const { data: popupData, isLoading: isPopupLoading } = useStartupPopups({ enabled: !!user });
 
   useEffect(() => {
     if (user && !isLoading && !isPopupLoading && popupData && popupData.length > 0) {
-      console.log('User authenticated and popup data loaded, attempting to open popup.');
       setTimeout(() => {
         openPopup(popupData);
       }, 500);
@@ -34,9 +34,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [user, isLoading, isPopupLoading, popupData, openPopup]);
 
   useEffect(() => {
+    /**
+     * @deprecated
+     * NewRouter의 loader로 점진적 대체
+     */
     const initializeAuth = async () => {
       try {
-        const userData = await fetchUser();
+        const response = await getUser();
+        const userData = response.data.body[0];
+
         if (userData) setUser(userData);
       } catch (error) {
         console.error('AuthProvider fetchUser error', error);
@@ -47,27 +53,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initializeAuth();
   }, []);
 
-  const login = async ({ user: userData }: { user: User | null }) => {
+  const login = useCallback(async ({ user: userData }: { user: UserSchema | null }) => {
     if (userData) {
       setUser(userData);
       setIsLoading(false);
       return;
     }
     setIsLoading(false);
-  };
+  }, []);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await fetchLogout();
     } catch (error) {
       console.error('로그아웃 중 오류 발생:', error);
     } finally {
-      delete axiosClient.defaults.headers.common.Authorization;
       localStorage.clear();
       sessionStorage.clear();
       setUser(null);
     }
-  };
+  }, []);
 
   const authValue = useMemo(
     () => ({ user, login, logout, isLoading, setIsLoading }),

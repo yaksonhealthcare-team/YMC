@@ -22,7 +22,7 @@ const WithdrawalPage = () => {
       backgroundColor: 'bg-white'
     });
     setNavigation({ display: false });
-  }, []);
+  }, [setHeader, setNavigation]);
 
   const handleWithdrawal = async () => {
     if (!isAgreed) {

@@ -60,8 +60,8 @@ const SignupCallback = () => {
         const isSocialExist: { [key: string]: string } = initialSignupData.isSocialExist;
         const socialSignupInfo = JSON.parse(sessionStorage.getItem('socialSignupInfo') ?? '{}');
 
-        if (socialSignupInfo.provider) {
-          if (isSocialExist[socialSignupInfo.provider] === 'Y') {
+        if (socialSignupInfo.thirdPartyType) {
+          if (isSocialExist[socialSignupInfo.thirdPartyType] === 'Y') {
             openModal({
               title: '알림',
               message: '이미 가입된 회원입니다.',
@@ -93,15 +93,9 @@ const SignupCallback = () => {
           return;
         }
 
-        if (initialSignupData.isIdExist === 'Y') {
-          handleSubmit(initialSignupData);
-          return;
-        }
-
         setSignupData(initialSignupData);
         navigate('/signup/email', { replace: true });
-      } catch (error) {
-        console.error('회원가입 처리 오류:', error);
+      } catch {
         openModal({
           title: '오류',
           message: '회원가입 정보 처리에 실패했습니다.',
@@ -113,7 +107,7 @@ const SignupCallback = () => {
         isProcessing.current = false;
       }
     },
-    [navigate, openModal, parseNiceAuthData, setSignupData]
+    [handleSubmit, navigate, openModal, parseNiceAuthData, setSignupData, signupData]
   );
 
   useEffect(() => {

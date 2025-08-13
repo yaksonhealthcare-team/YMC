@@ -1,5 +1,4 @@
 import { Button } from '@/components/Button';
-import { useModalBackButtonHandler } from '@/hooks/useModalBackButtonHandler';
 import { Dialog, DialogContent, Slide } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import React, { createContext, ReactNode, useContext, useRef, useState } from 'react';
@@ -220,12 +219,6 @@ const OverlayContainer: React.FC = () => {
   const [isDragging, setIsDragging] = useState(false);
   const sheetRef = useRef<HTMLDivElement>(null);
   const DRAG_THRESHOLD = 50; // 드래그 닫기 임계값을 50픽셀로 낮춤
-
-  // 뒤로가기 핸들러 훅 사용
-  useModalBackButtonHandler({
-    isOpen: overlayState.isOpen,
-    onClose: closeOverlay
-  });
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
