@@ -1,7 +1,7 @@
+import { useUserStore } from '@/_domain/auth';
 import { fetchCRMUser } from '@/apis/user.api';
 import CheckCircle from '@/assets/icons/CheckCircle.svg?react';
 import { Button } from '@/components/Button';
-import { useAuth } from '@/contexts/AuthContext';
 import { useLayout } from '@/contexts/LayoutContext';
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -10,22 +10,22 @@ import { useNavigate } from 'react-router-dom';
 export const SignupComplete = () => {
   const navigate = useNavigate();
   const { setHeader, setNavigation } = useLayout();
-  const { user } = useAuth();
+  const { user } = useUserStore();
   const [isExistingUserLoading, setIsExistingUserLoading] = useState(false);
   const [isNewUserLoading, setIsNewUserLoading] = useState(false);
 
   useEffect(() => {
     setHeader({ display: false, backgroundColor: 'bg-white' });
     setNavigation({ display: false });
-  }, []);
+  }, [setHeader, setNavigation]);
 
   const handleExistingUser = async () => {
     try {
       setIsExistingUserLoading(true);
-      if (!user?.name || !user?.phone) {
+      if (!user?.name || !user?.hp) {
         throw new Error('사용자 정보가 없습니다');
       }
-      await fetchCRMUser(user.name, user.phone);
+      await fetchCRMUser(user.name, user.hp);
       navigate('/signup/branch');
     } catch (error) {
       console.error('CRM 사용자 조회 실패:', error);
@@ -38,10 +38,10 @@ export const SignupComplete = () => {
   const handleNewUser = async () => {
     try {
       setIsNewUserLoading(true);
-      if (!user?.name || !user?.phone) {
+      if (!user?.name || !user?.hp) {
         throw new Error('사용자 정보가 없습니다');
       }
-      await fetchCRMUser(user.name, user.phone);
+      await fetchCRMUser(user.name, user.hp);
     } catch (error) {
       console.error('CRM 사용자 조회 실패:', error);
     } finally {

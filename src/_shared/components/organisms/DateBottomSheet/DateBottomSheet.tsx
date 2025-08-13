@@ -1,10 +1,10 @@
+import { useUserStore } from '@/_domain/auth';
 import { ReservationFormValues, TimeSlot, useGetSchedulesDate } from '@/_domain/reservation';
 import { useGetSchedulesTimes } from '@/_domain/reservation/services/queries/schedule.queries';
 import { SchedulesParams } from '@/_domain/reservation/types/schedule.types';
 import { BottomFixedSection, Button, Calendar, Loading, TimePicker } from '@/_shared';
 import { formatScheduleTime } from '@/_shared/utils/date.utils';
 import CloseIcon from '@/assets/icons/CloseIcon.svg?react';
-import { useAuth } from '@/contexts/AuthContext';
 import dayjs, { Dayjs } from 'dayjs';
 import { useCallback, useMemo, useState } from 'react';
 import { DateBottomSheetProps } from './DateBottomSheet.types';
@@ -14,13 +14,13 @@ export const DateBottomSheet = ({ values, onClose, onSelect, ...props }: DateBot
   const [searchDate, setSearchDate] = useState<Dayjs>(date || dayjs());
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(date);
   const [selectedTime, setSelectedTime] = useState<TimeSlot | null>(timeSlot);
+  const { user } = useUserStore();
 
-  const { user } = useAuth();
   const {
     data: schedulesDateData,
     isLoading: isScheduleDateLoading,
     isFetching: isScheduleDateFetching
-  } = useGetSchedulesDate(user?.phone || '', buildParams('date', values, searchDate), {
+  } = useGetSchedulesDate(user?.hp || '', buildParams('date', values, searchDate), {
     enabled: !!searchDate,
     refetchOnMount: true,
     staleTime: 0
@@ -29,7 +29,7 @@ export const DateBottomSheet = ({ values, onClose, onSelect, ...props }: DateBot
     data: schedulesTimesData,
     isLoading: isScheduleTimesLoading,
     isFetching: isScheduleTimesFetching
-  } = useGetSchedulesTimes(user?.phone || '', buildParams('times', values, selectedDate), {
+  } = useGetSchedulesTimes(user?.hp || '', buildParams('times', values, selectedDate), {
     enabled: !!selectedDate,
     refetchOnMount: true,
     staleTime: 0

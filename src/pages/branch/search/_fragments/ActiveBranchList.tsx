@@ -1,9 +1,9 @@
+import { useUserStore } from '@/_domain/auth';
 import BranchCard from '@/components/BranchCard';
-import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const ActiveBranchList = () => {
-  const { user } = useAuth();
+  const { user } = useUserStore();
   const navigate = useNavigate();
 
   return (
@@ -19,7 +19,7 @@ const ActiveBranchList = () => {
                 navigate(`/branch/${brand.b_idx}`);
               }}
             >
-              <BranchCard name={brand.brandName} address={brand.address} />
+              <BranchCard name={brand.b_name} address={brand.addr} />
             </li>
           ))}
         </ul>

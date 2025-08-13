@@ -1,10 +1,10 @@
+import { useUserStore } from '@/_domain/auth';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import CrownIcon from '@/assets/icons/CrownIcon.svg?react';
 import InformationIcon from '@/assets/icons/InformationIcon.svg?react';
 import PersonalCardIcon from '@/assets/icons/PersonalCardIcon.svg?react';
 import PointIcon from '@/assets/icons/PointIcon.svg?react';
 import { Button } from '@/components/Button';
-import { useAuth } from '@/contexts/AuthContext';
 import { useOverlay } from '@/contexts/ModalContext';
 import { Divider } from '@mui/material';
 import clsx from 'clsx';
@@ -12,7 +12,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const MyPagePointMembership = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useUserStore();
   const { openBottomSheet, closeOverlay } = useOverlay();
 
   const handleOpenQuestionnaire = () => {
@@ -139,14 +139,14 @@ const MyPagePointMembership = () => {
             'rounded-lg p-1'
           )}
           onClick={() => navigate('/point')}
-          aria-label={`포인트 ${user?.point ?? 0}P 확인하기`}
+          aria-label={`포인트 ${user?.points ?? 0}P 확인하기`}
         >
           <div className="flex items-center gap-2">
             <PointIcon className="w-4 h-4" aria-hidden="true" />
             <span className="font-m text-14px text-gray-500">포인트</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="font-sb text-16px text-gray-900">{`${(user?.point ?? 0).toLocaleString()}P`}</span>
+            <span className="font-sb text-16px text-gray-900">{`${(user?.points ?? 0).toLocaleString()}P`}</span>
             <CaretRightIcon className="w-3 h-3" aria-hidden="true" />
           </div>
         </button>
@@ -160,14 +160,14 @@ const MyPagePointMembership = () => {
             'rounded-lg p-1'
           )}
           onClick={handleOpenUserLevel}
-          aria-label={`회원등급 ${user?.levelName ?? 'Basic'} 안내`}
+          aria-label={`회원등급 ${user?.level_name ?? 'Basic'} 안내`}
         >
           <div className="flex items-center gap-2">
             <CrownIcon className="w-4 h-4" aria-hidden="true" />
             <span className="font-m text-14px text-gray-500">회원등급</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="font-sb text-16px text-gray-900">{user?.levelName ?? 'Basic'}</span>
+            <span className="font-sb text-16px text-gray-900">{user?.level_name ?? 'Basic'}</span>
             <InformationIcon className="w-4 h-4 text-gray-400" aria-hidden="true" />
           </div>
         </button>

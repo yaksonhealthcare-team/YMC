@@ -1,10 +1,10 @@
+import { useUserStore } from '@/_domain/auth';
 import { useGetReservations } from '@/_domain/reservation';
 import { useIntersectionObserver } from '@/_shared';
 import ReservationIcon from '@/assets/icons/ReservationIcon.svg?react';
 import { Button } from '@/components/Button';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { ReserveCard } from '@/components/ReserveCard';
-import { useAuth } from '@/contexts/AuthContext';
 import { useLayout } from '@/contexts/LayoutContext';
 import { useReservationStore } from '@/stores/reservationStore';
 import { FilterItem, reservationFilters, ReservationStatusCode } from '@/types/Reservation';
@@ -14,11 +14,11 @@ import { useNavigate } from 'react-router-dom';
 import MainTabs from '../_fragments/MainTabs';
 
 const ReservationContent = ({ filterId }: { filterId: ReservationStatusCode }) => {
-  const { user } = useAuth();
+  const { user } = useUserStore();
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = useGetReservations(
-    user?.phone || '',
+    user?.hp || '',
     { r_status: filterId },
-    { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0, initialPageParam: 1 }
+    { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0, initialPageParam: 1, enabled: !!user }
   );
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
@@ -113,7 +113,7 @@ const ReservationHistoryPage = () => {
       backgroundColor: 'bg-system-bg'
     });
     setNavigation({ display: true });
-  }, []);
+  }, [setHeader, setNavigation]);
 
   useEffect(() => {
     return () => {

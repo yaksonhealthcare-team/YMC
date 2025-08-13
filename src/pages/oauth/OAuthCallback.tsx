@@ -1,11 +1,9 @@
-import { fetchUser, setAccessToken, signinWithSocial } from '@/apis/auth.api';
+import { getUser, saveAccessToken, useUserStore } from '@/_domain/auth';
+import { signinWithSocial } from '@/apis/auth.api';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useAuth } from '@/contexts/AuthContext';
 import { useLayout } from '@/contexts/LayoutContext';
 import { useOverlay } from '@/contexts/ModalContext';
 import { requestForToken } from '@/libs/firebase';
-import { saveAccessToken } from '@/queries/clients';
-import { AxiosError } from 'axios';
 import { useEffect, useRef } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
@@ -13,7 +11,7 @@ const OAuthCallback = () => {
   const { provider } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { login } = useAuth();
+  const { setUser } = useUserStore();
   const { openModal } = useOverlay();
   const { setHeader, setNavigation } = useLayout();
   const isProcessing = useRef(false);
@@ -21,7 +19,7 @@ const OAuthCallback = () => {
   useEffect(() => {
     setHeader({ display: false });
     setNavigation({ display: false });
-  }, []);
+  }, [setHeader, setNavigation]);
 
   useEffect(() => {
     const handleCallback = async () => {
@@ -30,13 +28,10 @@ const OAuthCallback = () => {
 
       try {
         const jsonData = searchParams.get('jsonData');
-        if (!jsonData) {
-          return;
-        }
+        if (!jsonData) return;
 
         const decodedData = decodeURIComponent(jsonData);
         const parsedData = JSON.parse(decodedData);
-
         const socialData = parsedData.body[0];
 
         // next_action_type에 따라 분기 처리
@@ -64,39 +59,23 @@ const OAuthCallback = () => {
           });
 
           const accessToken = signinResponse.data.body[0].accessToken;
-          setAccessToken(accessToken);
+          saveAccessToken(accessToken);
 
-          // ReactNativeWebView 환경에서 localStorage에 accessToken 저장
-          if (window.ReactNativeWebView) {
-            saveAccessToken(accessToken);
-
-            // ReactNativeWebView로 accessToken 전달
-            window.ReactNativeWebView.postMessage(
-              JSON.stringify({
-                type: 'LOGIN_SUCCESS',
-                data: {
-                  accessToken: accessToken
-                }
-              })
-            );
-          }
-
-          const user = await fetchUser();
-          login({ user });
+          const data = await getUser();
+          const user = data.data.body[0];
+          setUser(user);
           navigate('/', { replace: true });
           return;
-        } catch (error) {
-          if (error instanceof AxiosError) {
-            if (error.response?.status === 401) {
-              const socialSignupInfo = {
-                provider: getProviderCode(provider),
-                ...socialData
-              };
+        } catch (error: any) {
+          if (error.response?.status === 401) {
+            const socialSignupInfo = {
+              provider: getProviderCode(provider),
+              ...socialData
+            };
 
-              sessionStorage.setItem('socialSignupInfo', JSON.stringify(socialSignupInfo));
-              navigate('/signup/terms', { replace: true });
-              return;
-            }
+            sessionStorage.setItem('socialSignupInfo', JSON.stringify(socialSignupInfo));
+            navigate('/signup/terms', { replace: true });
+            return;
           }
           throw error;
         }
@@ -112,7 +91,7 @@ const OAuthCallback = () => {
     };
 
     handleCallback();
-  }, [provider, navigate, login, openModal, searchParams]);
+  }, [provider, navigate, openModal, searchParams, setUser]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">

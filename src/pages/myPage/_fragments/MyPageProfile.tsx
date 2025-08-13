@@ -1,20 +1,20 @@
+import { useUserStore } from '@/_domain/auth';
 import { fetchCRMUser } from '@/apis/user.api';
 import Profile from '@/assets/icons/Profile.svg?react';
 import { Image } from '@/components/common/Image';
-import { useAuth } from '@/contexts/AuthContext';
 import { useLayout } from '@/contexts/LayoutContext';
 import { useOverlay } from '@/contexts/ModalContext';
 import { useEffect, useState } from 'react';
 
 const MyPageProfile = () => {
-  const { user } = useAuth();
+  const { user } = useUserStore();
   const { setHeader, setNavigation } = useLayout();
   const { showToast } = useOverlay();
   const [isCRMConnected, setIsCRMConnected] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsCRMConnected(user?.memberConnectYn === 'Y');
-  }, [user?.memberConnectYn]);
+    setIsCRMConnected(user?.member_connect_yn === 'Y');
+  }, [user?.member_connect_yn]);
 
   useEffect(() => {
     setHeader({
@@ -22,14 +22,14 @@ const MyPageProfile = () => {
       backgroundColor: 'bg-white'
     });
     setNavigation({ display: false });
-  }, []);
+  }, [setHeader, setNavigation]);
 
   const handleCRMConnect = async () => {
     try {
-      if (!user?.name || !user?.phone) {
+      if (!user?.name || !user?.hp) {
         throw new Error('사용자 정보가 없습니다');
       }
-      const res = await fetchCRMUser(user.name, user.phone);
+      const res = await fetchCRMUser(user.name, user.hp);
       if (res.resultCode === '00') {
         showToast('회원 정보가 연동되었습니다');
         setIsCRMConnected(true);
@@ -51,7 +51,7 @@ const MyPageProfile = () => {
           <Profile className="w-8 h-8 text-gray-300" />
         )}
       </div>
-      <span className="font-b text-[20px] text-gray-900">{user?.username ? `${user.username}님` : '회원님'}</span>
+      <span className="font-b text-[20px] text-gray-900">{user?.name ? `${user.name}님` : '회원님'}</span>
       <button
         className={`ml-auto bg-primary disabled:bg-gray-200 text-white px-4 py-2 rounded-full  text-gray-900 font-sb text-sm`}
         onClick={handleCRMConnect}

@@ -1,7 +1,7 @@
+import { useUserStore } from '@/_domain/auth';
 import { useGetReservationDetail } from '@/_domain/reservation';
 import { Button } from '@/components/Button';
 import FixedButtonContainer from '@/components/FixedButtonContainer';
-import { useAuth } from '@/contexts/AuthContext';
 import { useLayout } from '@/contexts/LayoutContext';
 import { useOverlay } from '@/contexts/ModalContext';
 import { useCompleteVisit } from '@/queries/useReservationQueries';
@@ -22,14 +22,14 @@ const ReservationDetailPage = () => {
   const { openModal, openBottomSheet, closeOverlay, overlayState } = useOverlay();
 
   const { id = '' } = useParams<{ id: string }>();
-  const { user } = useAuth();
+  const { user } = useUserStore();
   const navigate = useNavigate();
   const { mutate } = useCompleteVisit();
 
   const { data, isLoading, isError, error } = useGetReservationDetail(
-    user?.phone || '',
+    user?.hp || '',
     { r_idx: id },
-    { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0 }
+    { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0, enabled: !!user }
   );
 
   const reservation = useMemo(() => data?.body[0], [data]);

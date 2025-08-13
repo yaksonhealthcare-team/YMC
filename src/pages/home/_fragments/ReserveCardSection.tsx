@@ -1,9 +1,9 @@
+import { useUserStore } from '@/_domain/auth';
 import { useGetReservations } from '@/_domain/reservation';
 import { EmptyCard } from '@/components/EmptyCard';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { ReserveCard } from '@/components/ReserveCard';
 import { Title } from '@/components/Title';
-import { useAuth } from '@/contexts/AuthContext';
 import { useReservationStore } from '@/stores/reservationStore';
 import { reservationFilters } from '@/types/Reservation';
 import { useNavigate } from 'react-router-dom';
@@ -11,12 +11,12 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 const ReserveCardSection = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useUserStore();
   const { setFilter } = useReservationStore();
   const { data, isLoading } = useGetReservations(
-    user?.phone || '',
+    user?.hp || '',
     { r_status: '001' },
-    { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0, initialPageParam: 1 }
+    { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0, initialPageParam: 1, enabled: !!user }
   );
 
   const firstPage = data?.[0]?.data;

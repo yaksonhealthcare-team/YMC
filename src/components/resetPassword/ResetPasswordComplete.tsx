@@ -1,20 +1,20 @@
+import { useUserStore } from '@/_domain/auth';
 import CaretLeftIcon from '@/assets/icons/CaretLeftIcon.svg?react';
 import CheckCircle from '@/assets/icons/CheckCircle.svg?react';
 import { Button } from '@/components/Button';
-import { useAuth } from '@/contexts/AuthContext';
 import { useLayout } from '@/contexts/LayoutContext';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const ResetPasswordComplete = () => {
-  const { user } = useAuth();
+  const { user } = useUserStore();
   const { setHeader, setNavigation } = useLayout();
   const navigate = useNavigate();
 
   useEffect(() => {
     setHeader({ display: false });
     setNavigation({ display: false });
-  }, []);
+  }, [setHeader, setNavigation]);
 
   const navigateToLogin = () => {
     if (user) {

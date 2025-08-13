@@ -1,9 +1,9 @@
+import { useUserStore } from '@/_domain/auth';
 import { useGetGuideMessages } from '@/_domain/reservation/services';
 import { BranchesSchema, ReservationFormValues, TimeSlot } from '@/_domain/reservation/types';
 import { DateBottomSheet, formatReservationDate, InputBox, setMultipleValues } from '@/_shared';
 import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
-import { useAuth } from '@/contexts/AuthContext';
 import { useOverlay } from '@/contexts/ModalContext';
 import { MembershipBranchSelectModal } from '@/pages/membership/_fragments/MembershipBranchSelectModal';
 import clsx from 'clsx';
@@ -19,9 +19,9 @@ export const ReservationRestSection = () => {
     control,
     name: ['type', 'branch', 'date', 'timeSlot', 'request']
   });
-  const { user } = useAuth();
+  const { user } = useUserStore();
   const { openBottomSheet, showToast, closeOverlay } = useOverlay();
-  const { data: guideMessagesData } = useGetGuideMessages(user?.phone || '');
+  const { data: guideMessagesData } = useGetGuideMessages(user?.hp || '');
 
   const handleSelectBranch = (branch: BranchesSchema) => {
     setMultipleValues(setValue, {

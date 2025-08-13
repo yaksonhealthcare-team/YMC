@@ -1,7 +1,7 @@
+import { useUserStore } from '@/_domain/auth';
 import { useGetUserMembership, UserMembershipSchema } from '@/_domain/membership';
 import { parseScheduleTime } from '@/_shared';
 import { DEFAULT_COORDINATE } from '@/constants/coordinate';
-import { useAuth } from '@/contexts/AuthContext';
 import { useOverlay } from '@/contexts/ModalContext';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import dayjs from 'dayjs';
@@ -31,16 +31,16 @@ const ReservationPage = () => {
   });
   const branchValues = useWatch({ control: methods.control, name: 'branch' });
   const [searchParams] = useSearchParams();
-  const { user } = useAuth();
+  const { user } = useUserStore();
   const { location } = useGeolocation();
   const navigate = useNavigate();
   const membershipId = searchParams.get('membershipId') ?? '';
 
   const { showToast, openModal, closeOverlay } = useOverlay();
-  const { data: consultCountData } = useGetReservationConsultCount(user?.phone || '');
-  const { data: membershipData } = useGetUserMembership(user?.phone || '', { search_type: 'T' });
+  const { data: consultCountData } = useGetReservationConsultCount(user?.hp || '');
+  const { data: membershipData } = useGetUserMembership(user?.hp || '', { search_type: 'T' });
   const { data: branchData } = useGetBranchDetail(
-    user?.phone || '',
+    user?.hp || '',
     {
       b_idx: branchValues?.id || '',
       nowlat: location?.latitude || DEFAULT_COORDINATE.latitude,

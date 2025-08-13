@@ -1,3 +1,4 @@
+import { useUserStore } from '@/_domain/auth';
 import { BranchesSchema } from '@/_domain/reservation';
 import { useGetBranches } from '@/_domain/reservation/services/queries/branch.queries';
 import { useIntersectionObserver } from '@/_shared';
@@ -5,7 +6,6 @@ import LoadingIndicator from '@/components/LoadingIndicator';
 import { Image } from '@/components/common/Image';
 import SearchIcon from '@/components/icons/SearchIcon';
 import { DEFAULT_COORDINATE } from '@/constants/coordinate';
-import { useAuth } from '@/contexts/AuthContext';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { useCallback, useMemo, useRef } from 'react';
@@ -21,17 +21,21 @@ const MembershipBranchList = ({ onSelect, query /* memberShipId */ }: Membership
   const location = useLocation();
   const loadMoreRef = useRef(null);
   const { location: geolocationLocation } = useGeolocation();
-  const { user } = useAuth();
+  const { user } = useUserStore();
 
   const debouncedQuery = useDebounce(query, 300);
 
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading, isError, error, isFetching } =
-    useGetBranches(user?.phone || '', {
-      nowlat: geolocationLocation?.latitude || DEFAULT_COORDINATE.latitude,
-      nowlon: geolocationLocation?.longitude || DEFAULT_COORDINATE.longitude,
-      search: debouncedQuery,
-      mp_idx: location.state?.selectedItem
-    });
+    useGetBranches(
+      user?.hp || '',
+      {
+        nowlat: geolocationLocation?.latitude || DEFAULT_COORDINATE.latitude,
+        nowlon: geolocationLocation?.longitude || DEFAULT_COORDINATE.longitude,
+        search: debouncedQuery,
+        mp_idx: location.state?.selectedItem
+      },
+      { enabled: !!user, initialPageParam: 1 }
+    );
 
   const handleNextPage = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) {

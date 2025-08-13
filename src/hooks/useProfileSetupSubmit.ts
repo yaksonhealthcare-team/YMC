@@ -1,9 +1,8 @@
-import { fetchUser, loginWithEmail, setAccessToken, signinWithSocial, signup, signupWithSocial } from '@/apis/auth.api';
-import { useAuth } from '@/contexts/AuthContext';
+import { getUser, saveAccessToken, SigninEmailBody, useSigninEmailMutation, useUserStore } from '@/_domain/auth';
+import { signinWithSocial, signup, signupWithSocial } from '@/apis/auth.api';
 import { useOverlay } from '@/contexts/ModalContext';
 import { useSignup } from '@/contexts/SignupContext';
 import { requestForToken } from '@/libs/firebase';
-import { saveAccessToken } from '@/queries/clients';
 import { UserSignup } from '@/types/User';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -25,9 +24,10 @@ export interface SocialSignupInfo {
 
 export const useProfileSetupSubmit = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { setUser } = useUserStore();
   const { showToast } = useOverlay();
   const { signupData: storedSignupData, cleanup } = useSignup();
+  const { mutateAsync: loginMutateAsync } = useSigninEmailMutation();
 
   const handleSocialSignup = async (socialInfo: SocialSignupInfo, signupData: UserSignup) => {
     const response = await signupWithSocial({
@@ -67,29 +67,12 @@ export const useProfileSetupSubmit = () => {
 
     const accessToken = signinResponse.data.body[0].accessToken;
 
-    if (!accessToken) {
-      throw new Error('회원가입에 실패했습니다. 계속 문제가 발생할 경우 고객센터에 문의해 주세요.');
-    }
+    if (!accessToken) throw new Error('회원가입에 실패했습니다. 계속 문제가 발생할 경우 고객센터에 문의해 주세요.');
+    saveAccessToken(accessToken);
 
-    setAccessToken(accessToken);
-
-    // ReactNativeWebView 환경에서 localStorage에 accessToken 저장
-    if (window.ReactNativeWebView) {
-      saveAccessToken(accessToken);
-
-      // ReactNativeWebView로 accessToken 전달
-      window.ReactNativeWebView.postMessage(
-        JSON.stringify({
-          type: 'LOGIN_SUCCESS',
-          data: {
-            accessToken: accessToken
-          }
-        })
-      );
-    }
-
-    const user = await fetchUser();
-    login({ user });
+    const data = await getUser();
+    const user = data.data.body[0];
+    setUser(user);
     cleanup();
     navigate('/signup/complete', { replace: true });
   };
@@ -123,33 +106,21 @@ export const useProfileSetupSubmit = () => {
 
     await signup(signupFormData);
 
-    const loginResponse = await loginWithEmail({
+    const body: SigninEmailBody = {
       username: signupData.email,
       password: signupData.password,
       deviceToken: await requestForToken(),
       deviceType: window.osType ?? 'web'
-    });
+    };
+    const loginResponse = await loginMutateAsync(body);
+    const accessToken = loginResponse.data.body[0]?.accessToken;
 
-    const accessToken = loginResponse.accessToken;
+    if (!accessToken) throw new Error(loginResponse.data.resultMessage || '로그인에 실패했습니다.');
+    saveAccessToken(accessToken);
 
-    if (!accessToken) {
-      throw new Error('로그인에 실패했습니다.');
-    }
-
-    // ReactNativeWebView 환경에서 accessToken 전달
-    if (window.ReactNativeWebView) {
-      window.ReactNativeWebView.postMessage(
-        JSON.stringify({
-          type: 'LOGIN_SUCCESS',
-          data: {
-            accessToken: accessToken
-          }
-        })
-      );
-    }
-
-    const user = await fetchUser();
-    login({ user });
+    const data = await getUser();
+    const user = data.data.body[0];
+    setUser(user);
     cleanup();
     navigate('/signup/complete', { replace: true });
   };
