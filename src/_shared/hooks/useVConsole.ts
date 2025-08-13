@@ -13,7 +13,7 @@ export function useVConsole() {
     if (isAppWebView() && isDev) {
       (async () => {
         const { default: VConsole } = await import('vconsole');
-        const v = new VConsole({ theme: 'dark' });
+        const v = new VConsole({ theme: 'light' });
         (window as any).__VCONSOLE__ = v;
         inited.current = true;
       })();
