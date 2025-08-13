@@ -3,7 +3,7 @@ import { Button } from '@/components/Button';
 import CartCard from '@/components/CartCard';
 import FixedButtonContainer from '@/components/FixedButtonContainer';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { usePaymentStore } from '@/hooks/usePaymentStore';
 import { useCartItems, useDeleteCartItemsMutation, useUpdateCartItemMutation } from '@/queries/useCartQueries';
 import { formatPriceWithUnit } from '@/utils/format';

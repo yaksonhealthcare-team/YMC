@@ -5,7 +5,7 @@ import ReservationIcon from '@/assets/icons/ReservationIcon.svg?react';
 import { Button } from '@/components/Button';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { ReserveCard } from '@/components/ReserveCard';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useReservationStore } from '@/stores/reservationStore';
 import { FilterItem, reservationFilters, ReservationStatusCode } from '@/types/Reservation';
 import clsx from 'clsx';

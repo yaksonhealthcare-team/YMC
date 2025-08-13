@@ -1,6 +1,6 @@
 import { useLogoutMutation, useUserStore } from '@/_domain/auth';
 import Logo from '@/components/Logo';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { Typography } from '@mui/material';
 import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';

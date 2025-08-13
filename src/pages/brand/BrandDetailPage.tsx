@@ -1,7 +1,7 @@
 import { Button } from '@/components/Button';
 import { Image } from '@/components/common/Image';
 import FullPageLoading from '@/components/FullPageLoading';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useBrand } from '@/queries/useBrandQueries';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';

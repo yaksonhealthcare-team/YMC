@@ -1,14 +1,6 @@
 import { authApi } from '@/_shared';
-import { axiosClient } from '@/queries/clients';
 import { HTTPResponse } from '@/types/HTTPResponse';
-import {
-  AdditionalManagement,
-  MembershipCategory,
-  MembershipDetail,
-  MembershipDetailWithHistory,
-  MembershipItem,
-  MyMembership
-} from '@/types/Membership';
+import { MembershipCategory, MembershipDetail, MembershipItem, MyMembership } from '@/types/Membership';
 
 export interface ListResponse<T> {
   resultCode: string;
@@ -58,7 +50,7 @@ export const fetchMembershipCategories = async (brandCode: string) => {
 };
 
 export const fetchUserMemberships = async (searchType?: string, page: number = 1, pageSize: number = 10) => {
-  const response = await axiosClient.get<ListResponse<MyMembership>>(`/memberships/me/me`, {
+  const response = await authApi.get<ListResponse<MyMembership>>(`/memberships/me/me`, {
     params: {
       search_type: searchType,
       page,
@@ -66,34 +58,4 @@ export const fetchUserMemberships = async (searchType?: string, page: number = 1
     }
   });
   return response.data;
-};
-
-export const fetchAdditionalManagement = async (membershipIdx: string, page: number = 1) => {
-  const response = await authApi.get<ListResponse<AdditionalManagement>>(`/memberships/additional-managements`, {
-    params: {
-      s_idx: membershipIdx,
-      page
-    }
-  });
-  return response.data;
-};
-
-export const fetchMembershipUsageHistory = async (membershipIdx: string, page: number = 1, pageSize: number = 50) => {
-  const response = await authApi.get<HTTPResponse<MembershipDetailWithHistory>>(`/memberships/me/detail`, {
-    params: {
-      mp_idx: membershipIdx,
-      page,
-      page_size: pageSize
-    }
-  });
-
-  if (response.data.resultCode !== '00') {
-    throw new Error(response.data.resultMessage || 'API 오류가 발생했습니다.');
-  }
-
-  if (!response.data.body && response.data.resultCode !== '00') {
-    throw new Error('회원권 정보를 찾을 수 없습니다.');
-  }
-
-  return response.data.body;
 };

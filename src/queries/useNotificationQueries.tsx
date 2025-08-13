@@ -104,12 +104,3 @@ export const useReadNotification = () => {
     retry: false
   });
 };
-
-export const useUnreadNotificationCount = () => {
-  return useQuery({
-    queryKey: ['notifications', 'unread'],
-    queryFn: () => Promise.reject(new Error('Not implemented')),
-    enabled: false,
-    retry: false
-  });
-};

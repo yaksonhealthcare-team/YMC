@@ -1,8 +1,8 @@
 import { Button } from '@/components/Button';
 import CheckIcon from '@/components/icons/CheckIcon';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/contexts/LayoutContext';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { usePaymentGuideMessages } from '@/hooks/useGuideMessages';
 import { usePaymentCancel, usePaymentHistory } from '@/queries/usePaymentQueries';
 import { PaymentHistoryItem } from '@/types/Payment';

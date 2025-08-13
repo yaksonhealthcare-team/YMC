@@ -1,6 +1,5 @@
-import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { earnPoints, fetchPointHistories } from '../apis/points.api';
-import { queryClient } from './clients';
 import { queryKeys } from './query.keys';
 
 export const usePointHistories = () =>
@@ -15,33 +14,15 @@ export const usePointHistories = () =>
     retry: false
   });
 
-export const usePointsEarn = () =>
-  useMutation({
+export const usePointsEarn = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: (paymentId: string) => earnPoints(paymentId),
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.payments.all
       });
     },
-    retry: false
-  });
-
-export const usePointHistory = () => {
-  return useInfiniteQuery({
-    queryKey: ['points', 'history'],
-    queryFn: ({ pageParam = 1 }) => fetchPointHistories({ page: pageParam, sort: 'D' }),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
-      if (!lastPage.data?.length || lastPage.currentPage >= lastPage.totalPage) return undefined;
-      return lastPage.currentPage + 1;
-    },
-    retry: false
-  });
-};
-
-export const useUsePoint = () => {
-  return useMutation({
-    mutationFn: earnPoints,
     retry: false
   });
 };

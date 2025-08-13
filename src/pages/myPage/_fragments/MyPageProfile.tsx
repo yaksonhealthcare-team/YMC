@@ -2,8 +2,8 @@ import { useUserStore } from '@/_domain/auth';
 import { fetchCRMUser } from '@/apis/user.api';
 import Profile from '@/assets/icons/Profile.svg?react';
 import { Image } from '@/components/common/Image';
-import { useLayout } from '@/contexts/LayoutContext';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { useEffect, useState } from 'react';
 
 const MyPageProfile = () => {
@@ -53,7 +53,7 @@ const MyPageProfile = () => {
       </div>
       <span className="font-b text-[20px] text-gray-900">{user?.name ? `${user.name}님` : '회원님'}</span>
       <button
-        className={`ml-auto bg-primary disabled:bg-gray-200 text-white px-4 py-2 rounded-full  text-gray-900 font-sb text-sm`}
+        className={`ml-auto bg-primary disabled:bg-gray-200 px-4 py-2 rounded-full  text-gray-900 font-sb text-sm`}
         onClick={handleCRMConnect}
         disabled={isCRMConnected}
       >

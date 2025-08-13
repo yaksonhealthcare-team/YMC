@@ -10,7 +10,9 @@ export interface SigninSocialBody {
   id_token?: string;
   SocialRefreshToken?: string | null;
 }
-export interface SigninSocialSchema {}
+export interface SigninSocialSchema extends SigninEmailSchema {
+  SocialAccessToken: string;
+}
 export interface SigninEmailBody {
   username: string;
   password: string;

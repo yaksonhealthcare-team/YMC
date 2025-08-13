@@ -1,5 +1,5 @@
-import { useOverlay } from '@/contexts/ModalContext';
-import { useSignup } from '@/contexts/SignupContext';
+import { useOverlay } from '@/stores/ModalContext';
+import { useSignup } from '@/stores/SignupContext';
 import { useProfileSetupSubmit } from '@/hooks/useProfileSetupSubmit';
 import { Gender } from '@/utils/gender';
 import { useNiceAuthCallback } from '@/utils/niceAuth';

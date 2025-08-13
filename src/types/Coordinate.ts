@@ -3,11 +3,6 @@ type Coordinate = {
   longitude: number;
 };
 
-const DEFAULT_COORDINATE: Coordinate = {
-  latitude: 37.52304,
-  longitude: 127.028841
-};
-
 interface GeolocationState {
   location?: Coordinate;
   error: string | null;
@@ -20,5 +15,4 @@ interface GeolocationOptions {
   maximumAge?: number;
 }
 
-export { DEFAULT_COORDINATE };
 export type { Coordinate, GeolocationOptions, GeolocationState };

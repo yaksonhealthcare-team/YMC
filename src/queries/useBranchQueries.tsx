@@ -83,14 +83,6 @@ export const useBranchBookmarksQuery = (key: string, coords?: Coordinate) => {
   });
 };
 
-export const useBranchDetailQuery = (b_idx: string) => {
-  return useQuery({
-    queryKey: ['branchDetail', b_idx],
-    queryFn: () => fetchBranch(b_idx, { latitude: 0, longitude: 0 }),
-    retry: false
-  });
-};
-
 export const useBranchBookmarkMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -132,12 +124,3 @@ export const useBranchUnbookmarkMutation = () => {
     retry: false
   });
 };
-
-// export const useBranchCategories = (brandCode?: string) => {
-//   return useQuery<BranchCategory[], Error>({
-//     queryKey: ["branches", "categories", brandCode],
-//     queryFn: () => fetchBranchCategories(brandCode),
-//     staleTime: 0,
-//     gcTime: 0,
-//   })
-// }

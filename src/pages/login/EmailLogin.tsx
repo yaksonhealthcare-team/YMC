@@ -4,9 +4,8 @@ import EyeIcon from '@/assets/icons/EyeIcon.svg?react';
 import EyeSlashIcon from '@/assets/icons/EyeSlashIcon.svg?react';
 import { Button } from '@/components/Button';
 import CustomTextField from '@/components/CustomTextField';
-import { LOCAL_STORAGE_KEYS } from '@/constants/storage';
-import { useLayout } from '@/contexts/LayoutContext';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { requestForToken } from '@/libs/firebase';
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -59,7 +58,7 @@ const EmailLogin = () => {
       const body: SigninEmailBody = {
         username: formData.email,
         password: formData.password,
-        deviceToken: isWebView ? (localStorage.getItem(LOCAL_STORAGE_KEYS.FCM_TOKEN) ?? '') : await requestForToken(),
+        deviceToken: isWebView ? (localStorage.getItem('FCM_TOKEN') ?? '') : await requestForToken(),
         deviceType: isWebView ? (localStorage.getItem('DEVICE_TYPE') as DeviceType) : 'web'
       };
 

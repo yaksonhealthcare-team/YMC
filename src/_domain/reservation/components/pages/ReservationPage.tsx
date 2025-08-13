@@ -1,8 +1,7 @@
 import { useUserStore } from '@/_domain/auth';
 import { useGetUserMembership, UserMembershipSchema } from '@/_domain/membership';
-import { parseScheduleTime } from '@/_shared';
-import { DEFAULT_COORDINATE } from '@/constants/coordinate';
-import { useOverlay } from '@/contexts/ModalContext';
+import { DEFAULT_COORDINATE, parseScheduleTime } from '@/_shared';
+import { useOverlay } from '@/stores/ModalContext';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import dayjs from 'dayjs';
 import { useCallback, useEffect, useMemo, useState } from 'react';

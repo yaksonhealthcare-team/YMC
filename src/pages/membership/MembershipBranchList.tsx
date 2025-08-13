@@ -1,11 +1,10 @@
 import { useUserStore } from '@/_domain/auth';
 import { BranchesSchema } from '@/_domain/reservation';
 import { useGetBranches } from '@/_domain/reservation/services/queries/branch.queries';
-import { useIntersectionObserver } from '@/_shared';
+import { DEFAULT_COORDINATE, useIntersectionObserver } from '@/_shared';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { Image } from '@/components/common/Image';
 import SearchIcon from '@/components/icons/SearchIcon';
-import { DEFAULT_COORDINATE } from '@/constants/coordinate';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { useCallback, useMemo, useRef } from 'react';

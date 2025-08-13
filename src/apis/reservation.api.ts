@@ -3,6 +3,7 @@ import { HTTPResponse } from '@/types/HTTPResponse';
 import { Reservation, ReservationResponse, ReservationStatusCode } from '@/types/Reservation';
 import { ApiResponse } from './address.api';
 import { authApi } from '@/_shared';
+
 export const fetchReservations = async (
   status: ReservationStatusCode,
   page: number
@@ -24,24 +25,6 @@ export const fetchReservations = async (
   };
 };
 
-export const fetchReservationDetail = async (id: string): Promise<ReservationResponse> => {
-  const { data } = await authApi.get<HTTPResponse<ReservationResponse[]>>('/reservation/detail', {
-    params: {
-      r_idx: id
-    }
-  });
-
-  if (data.resultCode !== '00') {
-    throw new Error(data.resultMessage || 'API 오류가 발생했습니다.');
-  }
-
-  if (!data.body || !Array.isArray(data.body) || !data.body[0]) {
-    throw new Error('예약 정보를 찾을 수 없습니다.');
-  }
-
-  return data.body[0];
-};
-
 export const completeVisit = async (r_idx: string): Promise<void> => {
   const { data } = await authApi.post<HTTPResponse<null>>('/reservation/complete', {
     r_idx
@@ -59,27 +42,6 @@ export const cancelReservation = async (reservationId: string, cancelMemo: strin
       cancel_memo: cancelMemo
     }
   });
-  return data;
-};
-
-export interface CreateReservationRequest {
-  r_gubun: 'R' | 'C'; // 예약(R) 상담(C)
-  mp_idx?: string; // 회원권 식별자 (일반 예약시에만 필요)
-  b_idx?: string; // 지점 식별자 (지정지점인 경우에만 필요)
-  r_date: string; // 예약 일자
-  r_stime: string; // 예약 시간
-  add_services?: number[]; // 추가관리 옵션 식별자 목록
-  r_memo?: string; // 요청사항
-  consult_ss_idx?: string; // 상담 후 관리 메뉴
-  ss_idx?: string; // 정액권 관리 메뉴
-}
-
-interface CreateReservationResponse {
-  r_idx: string; // 예약 식별자
-}
-
-export const createReservation = async (params: CreateReservationRequest) => {
-  const { data } = await authApi.post<HTTPResponse<CreateReservationResponse>>('/reservation/reservations', params);
   return data;
 };
 

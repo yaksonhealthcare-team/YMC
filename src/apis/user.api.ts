@@ -1,7 +1,6 @@
-import { authApi } from '@/_shared';
+import { authApi, ListResponse } from '@/_shared';
 import { ApiResponse } from '@/apis/address.api';
 import { BranchSearchResult } from '@/types/Branch';
-import { ListResponse } from '@/types/Common';
 import { HTTPResponse } from '@/types/HTTPResponse';
 import { CRMUserResponse } from '@/types/User';
 

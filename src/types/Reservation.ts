@@ -1,33 +1,9 @@
-import { AdditionalManagement } from './Membership';
-import { TimeSlot } from './TimeSlot';
-import { Dayjs } from 'dayjs';
-
 export type ReservationStatusCode =
   | '000' // 전체
   | '001' // 예약완료
   | '002' // 방문완료
   | '003' // 예약취소
   | '008'; // 관리중
-
-export const ReservationStatus = {
-  COMPLETED: '000',
-  CONFIRMED: '001',
-  PENDING: '002',
-  CUSTOMER_CANCELLED: '003',
-  STORE_CANCELLED: '003',
-  IN_PROGRESS: '001',
-  NO_SHOW: '003'
-} as const;
-
-export type ReservationStatus = (typeof ReservationStatus)[keyof typeof ReservationStatus];
-
-export const ReservationStatusLabel = {
-  '000': '관리완료',
-  '001': '예약완료',
-  '002': '대기예약',
-  '003': '예약취소',
-  '008': '관리중'
-} as const;
 
 export enum ReservationType {
   MANAGEMENT = '관리예약',
@@ -102,12 +78,3 @@ export const reservationFilters: FilterItem[] = [
     title: '예약취소'
   }
 ];
-
-export interface FormDataType {
-  branch: string;
-  item: string | null;
-  date: Dayjs | null;
-  timeSlot: TimeSlot | null;
-  request: string;
-  additionalServices: AdditionalManagement[];
-}

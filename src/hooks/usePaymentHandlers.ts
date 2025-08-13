@@ -1,6 +1,6 @@
-import { useOverlay } from '@/contexts/ModalContext';
-import { axiosClient } from '@/queries/clients';
+import { useOverlay } from '@/stores/ModalContext';
 import { usePaymentStore } from './usePaymentStore';
+import { authApi } from '@/_shared';
 
 export const usePaymentHandlers = () => {
   const { points, setPoints } = usePaymentStore();
@@ -57,7 +57,7 @@ export const usePaymentHandlers = () => {
 
   const handleDelete = async (cartId: string) => {
     try {
-      await axiosClient.delete(`/carts/${cartId}`);
+      await authApi.delete(`/carts/${cartId}`);
       showToast('상품이 장바구니에서 삭제되었습니다.');
     } catch (error) {
       console.error('삭제 실패:', error);

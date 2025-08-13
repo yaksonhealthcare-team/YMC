@@ -1,12 +1,11 @@
 import { Button } from '@/components/Button';
-import { COLORS } from '@/constants/ColorConstants';
 import { InputAdornment, TextField } from '@mui/material';
 import { type ChangeEvent, forwardRef, type ReactNode } from 'react';
 
 const STATE_COLORS = {
-  default: COLORS.BORDER,
-  error: COLORS.ERROR,
-  success: COLORS.SUCCESS
+  default: '#ECECEC',
+  error: '#FF453A',
+  success: '#0A84FF'
 } as const;
 
 const TEXT_FIELD_STYLES = {
@@ -32,28 +31,27 @@ const TEXT_FIELD_STYLES = {
       },
       '&.Mui-focused fieldset': {
         borderWidth: 1,
-        borderColor: (state: keyof typeof STATE_COLORS) =>
-          state === 'default' ? COLORS.FOCUSED_BORDER : STATE_COLORS[state]
+        borderColor: (state: keyof typeof STATE_COLORS) => (state === 'default' ? '#757575' : STATE_COLORS[state])
       },
       '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
         borderWidth: 1
       },
       '&.Mui-disabled fieldset': {
         borderColor: 'white',
-        backgroundColor: COLORS.DISABLED_BG
+        backgroundColor: '#F8F8F8'
       },
       '& input::placeholder': {
-        color: COLORS.PLACEHOLDER,
+        color: '#BDBDBD',
         opacity: 1
       },
       '& input.Mui-disabled': {
         zIndex: 1,
-        WebkitTextFillColor: COLORS.DISABLED_TEXT
+        WebkitTextFillColor: '#DDDDDD'
       }
     },
     '& .MuiInputLabel-root': {
       fontSize: '12px',
-      color: COLORS.LABEL
+      color: '#6B7280'
     }
   }
 } as const;
@@ -118,7 +116,7 @@ const CustomTextField = forwardRef<HTMLInputElement, CustomTextFieldProps>(
             ...TEXT_FIELD_STYLES.input,
             '& .MuiOutlinedInput-root': {
               ...TEXT_FIELD_STYLES.input['& .MuiOutlinedInput-root'],
-              borderColor: state === 'default' ? COLORS.BORDER : undefined,
+              borderColor: state === 'default' ? '#ECECEC' : undefined,
               '& fieldset': {
                 borderColor: STATE_COLORS[state]
               },
@@ -126,7 +124,7 @@ const CustomTextField = forwardRef<HTMLInputElement, CustomTextFieldProps>(
                 borderColor: STATE_COLORS[state]
               },
               '&.Mui-focused fieldset': {
-                borderColor: state === 'default' ? COLORS.FOCUSED_BORDER : STATE_COLORS[state]
+                borderColor: state === 'default' ? '#757575' : STATE_COLORS[state]
               }
             }
           }}

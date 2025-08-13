@@ -7,7 +7,7 @@ import {
 } from '@/_domain/membership';
 import { Loading, useIntersectionObserver } from '@/_shared';
 import { Button } from '@/components/Button';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useMembershipStore } from '@/stores/membershipStore';
 import { MyMembershipFilterItem, myMembershipFilters } from '@/types/Membership';
 import clsx from 'clsx';

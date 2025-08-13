@@ -4,7 +4,7 @@ import { BranchesSchema, ReservationFormValues, TimeSlot } from '@/_domain/reser
 import { DateBottomSheet, formatReservationDate, InputBox, setMultipleValues } from '@/_shared';
 import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { MembershipBranchSelectModal } from '@/pages/membership/_fragments/MembershipBranchSelectModal';
 import clsx from 'clsx';
 import dayjs from 'dayjs';

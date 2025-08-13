@@ -1,7 +1,7 @@
 import { getUser, saveAccessToken, SigninEmailBody, useSigninEmailMutation, useUserStore } from '@/_domain/auth';
 import { signinWithSocial, signup, signupWithSocial } from '@/apis/auth.api';
-import { useOverlay } from '@/contexts/ModalContext';
-import { useSignup } from '@/contexts/SignupContext';
+import { useOverlay } from '@/stores/ModalContext';
+import { useSignup } from '@/stores/SignupContext';
 import { requestForToken } from '@/libs/firebase';
 import { UserSignup } from '@/types/User';
 import { AxiosError } from 'axios';

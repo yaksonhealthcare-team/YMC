@@ -1,6 +1,6 @@
 import ErrorPage from '@/components/ErrorPage';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { usePopupDetail } from '@/queries/useContentQueries';
 import { Box, Container, Typography } from '@mui/material';
 import { useEffect } from 'react';

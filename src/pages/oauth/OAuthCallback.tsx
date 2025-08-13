@@ -1,8 +1,8 @@
 import { getUser, saveAccessToken, useUserStore } from '@/_domain/auth';
 import { signinWithSocial } from '@/apis/auth.api';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/contexts/LayoutContext';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { requestForToken } from '@/libs/firebase';
 import { useEffect, useRef } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';

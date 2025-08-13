@@ -1,5 +1,5 @@
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useTermsByCategory } from '@/hooks/useTerms';
 import { useEffect } from 'react';
 
@@ -14,7 +14,7 @@ const MarketingTermsPage = () => {
       display: true
     });
     setNavigation({ display: false });
-  }, []);
+  }, [setHeader, setNavigation]);
 
   if (isLoading) {
     return <LoadingIndicator className="min-h-screen" />;

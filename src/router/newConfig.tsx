@@ -153,6 +153,9 @@ const authRoutes: CustomRouteObject[] = [
   { path: '/signup/branch', element: <AddUsingBranch /> }
 ];
 
+/**
+ * 로그인 여부 미검증 페이지
+ */
 const noAuthRoutes: CustomRouteObject[] = [
   { path: '/dev', element: <Dev />, noAuth: true, isDev: true },
   { path: '/login', element: <Login />, noAuth: true },

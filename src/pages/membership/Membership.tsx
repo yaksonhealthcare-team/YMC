@@ -1,8 +1,7 @@
 import { fetchCartCount } from '@/apis/cart.api';
 import { ListResponse } from '@/apis/membership.api';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { BRAND_CODE } from '@/constants/brand';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useDisplayBrands } from '@/hooks/useDisplayBrands';
 import useIntersection from '@/hooks/useIntersection';
 import { useMembershipCategories, useMembershipList } from '@/queries/useMembershipQueries';
@@ -11,6 +10,7 @@ import { Tab, Tabs } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { MembershipCard } from './_fragments/MembershipCard';
+import { BRAND_CODE } from '@/_shared';
 
 const MembershipPage = () => {
   const navigate = useNavigate();

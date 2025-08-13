@@ -5,7 +5,7 @@ import InformationIcon from '@/assets/icons/InformationIcon.svg?react';
 import PersonalCardIcon from '@/assets/icons/PersonalCardIcon.svg?react';
 import PointIcon from '@/assets/icons/PointIcon.svg?react';
 import { Button } from '@/components/Button';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { Divider } from '@mui/material';
 import clsx from 'clsx';
 import { Link, useNavigate } from 'react-router-dom';

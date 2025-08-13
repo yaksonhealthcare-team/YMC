@@ -4,18 +4,6 @@ export enum MembershipStatus {
   EXPIRED = 'E'
 }
 
-export const membershipStatusToKorean = {
-  [MembershipStatus.ACTIVE]: '사용가능',
-  [MembershipStatus.INACTIVE]: '사용완료',
-  [MembershipStatus.EXPIRED]: '만료됨'
-} as const;
-
-export const koreanToMembershipStatus = {
-  사용가능: MembershipStatus.ACTIVE,
-  사용완료: MembershipStatus.INACTIVE,
-  만료됨: MembershipStatus.EXPIRED
-} as const;
-
 export interface MembershipCategory {
   brand_code: string;
   sc_code: string;
@@ -125,10 +113,6 @@ export interface MembershipUsageHistory {
   r_date: string;
   ps_name: string;
   visit: string;
-}
-
-export interface MembershipDetailWithHistory extends Omit<MyMembership, 'reservations'> {
-  reservations?: MembershipUsageHistory[];
 }
 
 export interface ServiceCategory {

@@ -3,7 +3,7 @@ import { FindPasswordResponse, findPasswordWithDecryptData } from '@/apis/decryp
 import { Button } from '@/components/Button';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import ResetPassword from '@/components/resetPassword/ResetPassword';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 

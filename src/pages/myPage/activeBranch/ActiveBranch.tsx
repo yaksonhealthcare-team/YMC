@@ -3,8 +3,8 @@ import InformationIcon from '@/assets/icons/InformationIcon.svg?react';
 import BranchCard from '@/components/BranchCard';
 import { Button } from '@/components/Button';
 import { EmptyCard } from '@/components/EmptyCard';
-import { useLayout } from '@/contexts/LayoutContext';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { useCallback, useEffect } from 'react';
 
 interface InformationBottomSheetProps {

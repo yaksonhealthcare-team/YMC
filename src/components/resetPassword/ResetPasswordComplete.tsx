@@ -2,7 +2,7 @@ import { useUserStore } from '@/_domain/auth';
 import CaretLeftIcon from '@/assets/icons/CaretLeftIcon.svg?react';
 import CheckCircle from '@/assets/icons/CheckCircle.svg?react';
 import { Button } from '@/components/Button';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 

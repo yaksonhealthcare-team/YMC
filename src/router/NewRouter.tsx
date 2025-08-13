@@ -1,8 +1,8 @@
-import { getUser, useUserStore } from '@/_domain/auth';
+import { getUser, removeAccessToken, useUserStore } from '@/_domain/auth';
 import ErrorPage from '@/components/ErrorPage';
-import { LayoutProvider } from '@/contexts/LayoutContext';
-import { OverlayProvider } from '@/contexts/ModalContext';
-import { SignupProvider } from '@/contexts/SignupContext';
+import { LayoutProvider } from '@/stores/LayoutContext';
+import { OverlayProvider } from '@/stores/ModalContext';
+import { SignupProvider } from '@/stores/SignupContext';
 import { PropsWithChildren } from 'react';
 import { createBrowserRouter, LoaderFunction, Outlet, redirect, RouterProvider } from 'react-router-dom';
 import config, { CustomRouteObject } from './newConfig';
@@ -71,6 +71,7 @@ const requireAuth: LoaderFunction = async () => {
 
     return null;
   } catch {
+    removeAccessToken();
     return redirect('/login');
   }
 };

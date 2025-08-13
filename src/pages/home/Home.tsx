@@ -4,7 +4,7 @@ import NotiIcon from '@/assets/icons/NotiIcon.svg?react';
 import { FloatingButton } from '@/components/FloatingButton';
 import Logo from '@/components/Logo';
 import NoticesSummarySlider from '@/components/NoticesSummarySlider';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { useUnreadNotificationsCount } from '@/queries/useNotificationQueries';
 import { Container, Typography } from '@mui/material';

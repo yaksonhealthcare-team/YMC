@@ -1,6 +1,6 @@
+import { getAccessToken } from '@/_domain/auth';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/contexts/LayoutContext';
-import { axiosClient } from '@/queries/clients';
+import { useLayout } from '@/stores/LayoutContext';
 import { useEffect, useRef, useState } from 'react';
 
 const Store = () => {
@@ -11,32 +11,29 @@ const Store = () => {
   useEffect(() => {
     setHeader({ display: false, backgroundColor: 'bg-white' });
     setNavigation({ display: true });
-  }, []);
+  }, [setHeader, setNavigation]);
 
   useEffect(() => {
-    // iframe이 로드된 후에 메시지 전송
-    const sendTokenToStore = () => {
-      if (iframeRef.current?.contentWindow) {
-        iframeRef.current.contentWindow.postMessage(
-          {
-            type: 'AUTH_TOKEN',
-            accessToken: axiosClient.defaults.headers.common.Authorization
-          },
-          'https://mall.yaksonhc.com/'
-        );
-        setIsLoading(false);
-      }
+    const iframeEl = iframeRef.current;
+    if (!iframeEl) return;
+
+    const onLoad = () => {
+      const win = iframeEl.contentWindow;
+      if (!win) return;
+
+      win.postMessage(
+        {
+          type: 'AUTH_TOKEN',
+          accessToken: getAccessToken()
+        },
+        'https://mall.yaksonhc.com'
+      );
+      setIsLoading(false);
     };
 
-    // iframe이 로드되면 토큰 전송
-    if (iframeRef.current) {
-      iframeRef.current.addEventListener('load', sendTokenToStore);
-    }
-
+    iframeEl.addEventListener('load', onLoad);
     return () => {
-      if (iframeRef.current) {
-        iframeRef.current.removeEventListener('load', sendTokenToStore);
-      }
+      iframeEl.removeEventListener('load', onLoad);
     };
   }, []);
 

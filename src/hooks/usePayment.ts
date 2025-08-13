@@ -1,4 +1,4 @@
-import { useOverlay } from '@/contexts/ModalContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { BasePaymentParams, OrderResponse, PaymentItem } from '@/types/Payment';
 import { usePaymentStore } from './usePaymentStore';
 import { authApi } from '@/_shared';

@@ -40,14 +40,6 @@ export const bookmarkBranch = async (id: string): Promise<void> => {
   await authApi.post('/bookmarks/bookmarks', { b_idx: id });
 };
 
-export const unbookmarkBranch = async (id: string): Promise<void> => {
-  await authApi.delete('/bookmarks/bookmarks', {
-    data: {
-      b_idx: id
-    }
-  });
-};
-
 // 즐겨찾는 지점 목록 조회
 export const getBranchBookmarks = async (coords?: Coordinate) => {
   if (!coords) return { branches: [], address: '' };
@@ -77,27 +69,3 @@ export const removeBranchBookmark = async (branchId: string) => {
     }
   });
 };
-
-// 지점 카테고리 목록 조회
-// export const fetchBranchCategories = async (
-//   brandCode?: string,
-// ): Promise<BranchCategory[]> => {
-//   try {
-//     // 모든 카테고리를 가져오기 위해 브랜드 코드 파라미터를 제거
-//     const { data } = await axiosClient.get("/categories/categories", {
-//       params: {
-//         // 브랜드 코드가 있을 때만 전달
-//         ...(brandCode ? { brand_code: brandCode } : {}),
-//       },
-//     })
-
-//     if (!data.body || !Array.isArray(data.body)) {
-//       return []
-//     }
-
-//     // 브랜드 코드를 매퍼에 전달하여 현재 브랜드에 맞는 카테고리만 필터링
-//     return BranchMapper.toCategoryEntities(data.body, brandCode)
-//   } catch (error) {
-//     return []
-//   }
-// }

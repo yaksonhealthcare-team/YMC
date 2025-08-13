@@ -1,5 +1,5 @@
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ const TermsPage = () => {
       display: true
     });
     setNavigation({ display: false });
-  }, []);
+  }, [setHeader, setNavigation]);
 
   return (
     <div className={'flex flex-col px-5 divide-y divide-gray-100'}>

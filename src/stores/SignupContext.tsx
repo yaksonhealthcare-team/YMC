@@ -1,18 +1,6 @@
 import { UserSignup } from '@/types/User';
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react';
 
-export interface SocialSignupInfo {
-  socialId: string;
-  email?: string;
-  next_action_type: 'signup';
-  thirdPartyType: string;
-  SocialAccessToken: string;
-  deviceToken?: string;
-  deviceType?: string;
-  SocialRefreshToken?: string;
-  id_token?: string;
-}
-
 interface SignupContextType {
   signupData: UserSignup;
   setSignupData: Dispatch<SetStateAction<UserSignup>>;

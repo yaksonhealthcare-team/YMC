@@ -3,8 +3,8 @@ import { useGetReservationDetail } from '@/_domain/reservation/services/queries/
 import { Button } from '@/components/Button';
 import FixedButtonContainer from '@/components/FixedButtonContainer';
 import { TextArea } from '@/components/TextArea';
-import { useLayout } from '@/contexts/LayoutContext';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { useReservationGuideMessages } from '@/hooks/useGuideMessages';
 import { useCancelReservation } from '@/queries/useReservationQueries';
 import { escapeHtml } from '@/utils/sanitize';

@@ -1,6 +1,6 @@
 import { postVisitedStore } from '@/apis/user.api';
 import { Button } from '@/components/Button';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { Branch } from '@/types/Branch';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

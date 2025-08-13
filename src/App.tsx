@@ -1,7 +1,7 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
@@ -10,7 +10,6 @@ import { Suspense } from 'react';
 import 'swiper/swiper-bundle.css';
 import { Loading, useVConsole } from './_shared';
 import ErrorBoundary from './components/ErrorBoundary';
-import { queryClient } from './queries/clients';
 import Router from './router/NewRouter';
 
 /**
@@ -50,6 +49,18 @@ const theme = createTheme({
 
 dayjs.extend(customParseFormat);
 dayjs.locale('ko');
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false
+    },
+    mutations: {
+      retry: false
+    }
+  }
+});
 
 const App = () => {
   useVConsole();

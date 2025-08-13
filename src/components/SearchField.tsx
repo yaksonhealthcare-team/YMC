@@ -1,6 +1,5 @@
 import SearchIcon from '@/components/icons/SearchIcon';
 import XCircleIcon from '@/components/icons/XCircleIcon';
-import { COLORS } from '@/constants/ColorConstants';
 import { InputAdornment, TextField } from '@mui/material';
 import { ChangeEventHandler } from 'react';
 
@@ -39,16 +38,16 @@ export const SearchField = ({ placeholder, value, onChange, disabled, onClear, o
     sx={{
       '& .MuiOutlinedInput-root': {
         paddingX: 2,
-        borderColor: COLORS.BORDER,
+        borderColor: '#ECECEC',
         borderRadius: '12px',
-        '& fieldset': { borderColor: COLORS.BORDER },
-        '&:hover fieldset': { borderColor: COLORS.BORDER },
+        '& fieldset': { borderColor: '#ECECEC' },
+        '&:hover fieldset': { borderColor: '#ECECEC' },
         '&.Mui-focused fieldset': {
           borderWidth: 1,
-          borderColor: COLORS.FOCUSED_BORDER
+          borderColor: '#757575'
         },
         '& input::placeholder': {
-          color: COLORS.PLACEHOLDER,
+          color: '#BDBDBD',
           opacity: 1
         }
       }

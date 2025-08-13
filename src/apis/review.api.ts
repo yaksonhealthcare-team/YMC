@@ -62,23 +62,6 @@ export const createReview = (request: CreateReviewRequest) => {
   });
 };
 
-export interface ReservationReviewInfo {
-  r_idx: string;
-  r_date: string;
-  b_name: string;
-  ps_name: string;
-  review_items: Array<{
-    rs_idx: string;
-    rs_type: string;
-  }>;
-}
-
-export const fetchReservationReviewInfo = async (reservationId: string): Promise<ReservationReviewInfo> => {
-  const { data } = await authApi.get<HTTPResponse<ReservationReviewInfo>>(`/reviews/reviews/info/${reservationId}`);
-
-  return data.body;
-};
-
 export const fetchReviewSections = async (): Promise<ReviewSection[]> => {
   const { data } = await authApi.get<HTTPResponse<ReviewSection[]>>('/reviews/sections');
   return data.body;

@@ -16,10 +16,10 @@ export const removeAccessToken = () => {
   }
 };
 
-export function getAccessToken() {
+export const getAccessToken = () => {
   try {
     return localStorage.getItem(ACCESS_TOKEN);
   } catch (error) {
     console.error('액세스 토큰 조회 오류:', error);
   }
-}
+};
