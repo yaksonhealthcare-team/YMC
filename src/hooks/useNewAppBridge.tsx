@@ -117,9 +117,9 @@ export const useNewAppBridge = () => {
       }
     };
 
-    window.addEventListener('message', handleWebviewMessage);
+    window.addEventListener('message', handleWebviewMessage, true);
     return () => {
-      window.removeEventListener('message', handleWebviewMessage);
+      window.removeEventListener('message', handleWebviewMessage, true);
     };
   }, [handleSocialLogin]);
 };

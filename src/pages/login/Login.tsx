@@ -6,13 +6,13 @@ import NaverIcon from '@/assets/icons/NaverIcon.svg?react';
 import Logo from '@/components/Logo';
 import { useLayout } from '@/stores/LayoutContext';
 import { useOverlay } from '@/stores/ModalContext';
-import { getAppleLoginUrl } from '@/libs/apple';
 import { requestNotificationPermission } from '@/libs/firebase';
 import { getGoogleLoginUrl } from '@/libs/google';
 import { getKakaoLoginUrl } from '@/libs/kakao';
 import { getNaverLoginUrl } from '@/libs/naver';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getAppleLoginUrl } from '@/libs/apple';
 
 const Login = () => {
   const [loadingProvider, setLoadingProvider] = useState<'kakao' | 'naver' | 'google' | 'apple' | null>(null);
@@ -35,11 +35,15 @@ const Login = () => {
     setInit();
   }, [setHeader, setNavigation]);
 
+  /**
+   * NOTE: 앱에서 애플 native 로그인 시, signinWithSocial 네트워크 에러 있어 url 방식으로 임시 구현
+   */
   const handleSocialLogin = async (provider: 'kakao' | 'naver' | 'google' | 'apple') => {
     setLoadingProvider(provider);
+
     try {
       const isApp = !!window.ReactNativeWebView;
-      if (isApp) {
+      if (isApp && provider !== 'apple') {
         window.ReactNativeWebView?.postMessage(JSON.stringify({ type: 'SOCIAL_LOGIN', provider }));
         return;
       }
