@@ -1,6 +1,6 @@
 import { useUserStore } from '@/_domain/auth';
 import { useGetUserMembership, UserMembershipSchema } from '@/_domain/membership';
-import { DEFAULT_COORDINATE, parseScheduleTime } from '@/_shared';
+import { DEFAULT_COORDINATE, Loading, parseScheduleTime } from '@/_shared';
 import { useOverlay } from '@/stores/ModalContext';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import dayjs from 'dayjs';
@@ -37,7 +37,7 @@ const ReservationPage = () => {
 
   const { showToast, openModal, closeOverlay } = useOverlay();
   const { data: consultCountData } = useGetReservationConsultCount(user?.hp || '');
-  const { data: membershipData } = useGetUserMembership(user?.hp || '', { search_type: 'T' });
+  const { data: membershipData, isLoading } = useGetUserMembership(user?.hp || '', { search_type: 'T' });
   const { data: branchData } = useGetBranchDetail(
     user?.hp || '',
     {
@@ -51,24 +51,21 @@ const ReservationPage = () => {
 
   const handleSubmit = useCallback(
     async (values: ReservationFormValues) => {
-      const { branch, date, timeSlot, services, consultService, request, type } = values;
-      const hasConsultService = consultService.length > 0;
-      const hasServices = services.length > 0;
-
-      if (!hasConsultService && !hasServices) {
-        showToast('회원권을 선택해주세요.');
-        return;
-      }
-      if (!date || !timeSlot.time) {
-        showToast('예약 날짜와 시간을 선택해주세요.');
-        return;
-      }
-      if (!branch?.id) {
-        showToast('지점을 선택해주세요.');
-        return;
-      }
-
       try {
+        const { branch, date, timeSlot, services, consultService, request, type } = values;
+        const hasConsultService = consultService.length > 0;
+        const hasServices = services.length > 0;
+
+        if (!hasConsultService && !hasServices) {
+          throw new Error('회원권을 선택해주세요.');
+        }
+        if (!date || !timeSlot.time) {
+          throw new Error('예약 날짜와 시간을 선택해주세요.');
+        }
+        if (!branch?.id) {
+          throw new Error('지점을 선택해주세요.');
+        }
+
         const formattedDate = date.format('YYYY-MM-DD');
         const formattedTime = parseScheduleTime(timeSlot.time);
         const servicesArray = type === 'consult' ? consultService : services;
@@ -95,14 +92,8 @@ const ReservationPage = () => {
         });
 
         if (response.data.resultCode !== '00') {
-          if (response.data.resultCode === '75') {
-            // 기타메뉴만 예약한 경우
-            const message = response.data.resultMessage;
-
-            showToast(message);
-            return;
-          }
-          throw new Error();
+          const message = response.data.resultMessage || '예약에 실패했습니다. 다시 시도해주세요.';
+          throw new Error(message);
         }
 
         openModal({
@@ -120,8 +111,12 @@ const ReservationPage = () => {
             closeOverlay();
           }
         });
-      } catch {
-        showToast('예약에 실패했습니다. 다시 시도해주세요.');
+      } catch (error) {
+        if (error instanceof Error && error.message) {
+          showToast(error.message);
+        } else {
+          showToast('예약에 실패했습니다. 다시 시도해주세요.');
+        }
       }
     },
     [closeOverlay, mutateAsync, navigate, openModal, showToast]
@@ -159,7 +154,7 @@ const ReservationPage = () => {
   }, [membershipData, membershipId]);
 
   useEffect(() => {
-    if (enabled) return;
+    if (enabled || (membershipId && !membershipData)) return;
 
     const initForms = getInitFormValues(searchParams, memberships, consultCount);
     (Object.entries(initForms) as Array<[keyof ReservationFormValues, any]>).forEach(([field, value]) => {
@@ -167,7 +162,7 @@ const ReservationPage = () => {
     });
 
     setEnabled(true);
-  }, [consultCount, enabled, memberships, methods, searchParams]);
+  }, [consultCount, enabled, membershipData, membershipId, memberships, methods, searchParams]);
 
   useEffect(() => {
     const [branch] = branchData?.body || [];
@@ -175,6 +170,8 @@ const ReservationPage = () => {
 
     methods.setValue('branch', { id: branch.b_idx, name: branch.b_name });
   }, [branchData?.body, methods]);
+
+  if (isLoading) return <Loading variant="global" />;
 
   return (
     <FormProvider {...methods}>
