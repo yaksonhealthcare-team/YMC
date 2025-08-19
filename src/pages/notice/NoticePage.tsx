@@ -1,7 +1,7 @@
 import { fetchNotices } from '@/apis/contents.api';
 import { EmptyCard } from '@/components/EmptyCard';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { Notice } from '@/types/Content';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import React, { useEffect } from 'react';

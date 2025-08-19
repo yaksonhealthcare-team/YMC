@@ -1,5 +1,5 @@
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useTermsByCategory } from '@/hooks/useTerms';
 import { useEffect, useRef } from 'react';
 
@@ -15,7 +15,7 @@ const PrivacyTermsPage = () => {
       display: true
     });
     setNavigation({ display: false });
-  }, []);
+  }, [setHeader, setNavigation]);
 
   useEffect(() => {
     if (contentRef.current) {

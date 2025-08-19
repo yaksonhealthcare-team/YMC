@@ -14,15 +14,6 @@ export const useNoticesSummary = () =>
     retry: false
   });
 
-// 공지사항 목록 페이지용 (무한 스크롤)
-export const useNotices = () => {
-  return useQuery({
-    queryKey: ['notices'],
-    queryFn: () => fetchNotices(),
-    retry: false
-  });
-};
-
 export const useNotice = (code: string) => {
   return useQuery({
     queryKey: ['notice', code],
@@ -32,34 +23,6 @@ export const useNotice = (code: string) => {
   });
 };
 
-export const useContent = (id: number) => {
-  return useQuery({
-    queryKey: ['contents', id],
-    queryFn: () => Promise.reject(new Error('Not implemented')),
-    enabled: false,
-    retry: false
-  });
-};
-
-export const useContents = () => {
-  return useQuery({
-    queryKey: ['contents'],
-    queryFn: () => Promise.reject(new Error('Not implemented')),
-    enabled: false,
-    retry: false
-  });
-};
-
-export const useContentsByCategory = (category: string) => {
-  return useQuery({
-    queryKey: ['contents', 'category', category],
-    queryFn: () => Promise.reject(new Error('Not implemented')),
-    enabled: false,
-    retry: false
-  });
-};
-
-// Query hook for fetching startup popups
 export const useStartupPopups = (options = {}) => {
   return useQuery({
     queryKey: queryKeys.popups.startup,
@@ -71,7 +34,6 @@ export const useStartupPopups = (options = {}) => {
   });
 };
 
-// Query hook for fetching a single popup detail
 export const usePopupDetail = (code: string, options = {}) => {
   return useQuery({
     queryKey: [...queryKeys.popups.startup, code],

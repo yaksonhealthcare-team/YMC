@@ -1,12 +1,11 @@
-import { DeviceType, fetchUser, loginWithEmail } from '@/apis/auth.api';
+import { getUser, saveAccessToken, SigninEmailBody, useSigninEmailMutation, useUserStore } from '@/_domain/auth';
+import { DeviceType } from '@/apis/auth.api';
 import EyeIcon from '@/assets/icons/EyeIcon.svg?react';
 import EyeSlashIcon from '@/assets/icons/EyeSlashIcon.svg?react';
 import { Button } from '@/components/Button';
 import CustomTextField from '@/components/CustomTextField';
-import { LOCAL_STORAGE_KEYS } from '@/constants/storage';
-import { useAuth } from '@/contexts/AuthContext';
-import { useLayout } from '@/contexts/LayoutContext';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { requestForToken } from '@/libs/firebase';
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -16,19 +15,17 @@ interface LoginForm {
   email: string;
   password: string;
 }
-
 const EmailLogin = () => {
   const { setHeader, setNavigation } = useLayout();
-  const { login } = useAuth();
+  const { setUser } = useUserStore();
   const navigate = useNavigate();
   const { showToast } = useOverlay();
-  const [formData, setFormData] = useState<LoginForm>({
-    email: '',
-    password: ''
-  });
+  const [formData, setFormData] = useState<LoginForm>({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const isFormValid = formData.email.length > 0 && formData.password.length > 0;
+
+  const { mutateAsync: loginMutateAsync } = useSigninEmailMutation();
 
   useEffect(() => {
     setHeader({
@@ -38,7 +35,7 @@ const EmailLogin = () => {
       backgroundColor: 'bg-white'
     });
     setNavigation({ display: false });
-  }, []);
+  }, [setHeader, setNavigation]);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -57,51 +54,27 @@ const EmailLogin = () => {
         return;
       }
 
-      let accessToken = '';
+      const isWebView = !!window.ReactNativeWebView;
+      const body: SigninEmailBody = {
+        username: formData.email,
+        password: formData.password,
+        deviceToken: isWebView ? (localStorage.getItem('FCM_TOKEN') ?? '') : await requestForToken(),
+        deviceType: isWebView ? (localStorage.getItem('DEVICE_TYPE') as DeviceType) : 'web'
+      };
 
-      if (window.ReactNativeWebView) {
-        const loginResponse = await loginWithEmail({
-          username: formData.email,
-          password: formData.password,
-          deviceToken: localStorage.getItem(LOCAL_STORAGE_KEYS.FCM_TOKEN) ?? '',
-          deviceType: localStorage.getItem('DEVICE_TYPE') as DeviceType
-        });
+      const loginResponse = await loginMutateAsync(body);
+      const accessToken = loginResponse.data.body[0]?.accessToken;
 
-        if (!loginResponse.accessToken) {
-          throw new Error('로그인에 실패했습니다');
-        }
+      if (!accessToken) throw new Error(loginResponse.data.resultMessage || '로그인에 실패했습니다.');
+      saveAccessToken(accessToken);
 
-        accessToken = loginResponse.accessToken;
+      const data = await getUser();
+      const user = data.data.body[0];
+      setUser(user);
 
-        window.ReactNativeWebView.postMessage(
-          JSON.stringify({
-            type: 'LOGIN_SUCCESS',
-            data: {
-              accessToken: accessToken
-            }
-          })
-        );
-      } else {
-        const response = await loginWithEmail({
-          username: formData.email,
-          password: formData.password,
-          deviceToken: await requestForToken(),
-          deviceType: 'web'
-        });
-
-        if (!response.accessToken) {
-          throw new Error('로그인에 실패했습니다');
-        }
-      }
-
-      const user = await fetchUser();
-
-      login({
-        user: user
-      });
       navigate('/', { replace: true });
-    } catch {
-      showToast('로그인에 실패했습니다');
+    } catch (error) {
+      if (error instanceof Error) showToast(error.message);
     } finally {
       setIsLoading(false);
     }

@@ -1,5 +1,5 @@
 import { changePhoneNumberWithDecryptData } from '@/apis/decrypt-result.api';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { useNiceAuthCallback } from '@/utils/niceAuth';
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';

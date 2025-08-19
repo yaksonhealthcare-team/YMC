@@ -1,8 +1,8 @@
 import CloseIcon from '@/assets/icons/CloseIcon.svg?react';
 import CrosshairIcon from '@/assets/icons/CrosshairIcon.svg?react';
 import { SearchField } from '@/components/SearchField';
-import { useLayout } from '@/contexts/LayoutContext';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { useBranchLocationSelect } from '@/hooks/useBranchLocationSelect';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useGeolocation } from '@/hooks/useGeolocation';

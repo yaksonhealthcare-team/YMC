@@ -1,5 +1,4 @@
-import { ApiResponse, handleError } from '@/_shared';
-import { axiosClient } from '@/queries/clients';
+import { ApiResponse, authApi, handleError } from '@/_shared';
 import { AxiosResponse } from 'axios';
 import { GuideMessagesSchema } from '../types';
 
@@ -9,7 +8,7 @@ export const getGuideMessages = async (): Promise<AxiosResponse<ApiResponse<Guid
   try {
     const endpoint = `${BASE_URL}/setting`;
 
-    return await axiosClient.get(endpoint);
+    return await authApi.get(endpoint);
   } catch (error) {
     throw handleError(error, 'getGuideMessages');
   }

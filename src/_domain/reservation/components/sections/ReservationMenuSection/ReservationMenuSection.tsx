@@ -4,7 +4,7 @@ import { isConsultReservationType, isReservationType, ReservationFormValues } fr
 import { Collapse, Divider, InputBox, RadioLabelCard, setMultipleValues } from '@/_shared';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import CloseIcon from '@/assets/icons/CloseIcon.svg?react';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useOverlay } from '@/stores/ModalContext';
 import clsx from 'clsx';
 import { useState } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
@@ -203,7 +203,7 @@ export const ReservationMenuSection = ({ memberships, consultCount }: Reservatio
           const hasMembershipMenu = !!ss_idx;
           const isAddReservationSection = idx === renderCount - 1 && (hasMembershipMenu || type === 'standard');
           const isAddReservation = idx > 0;
-          const hasAddReservation = dataForSwiper.length > 1;
+          const hasAddReservation = dataForSwiper.length > 0;
 
           return (
             <div key={idx}>

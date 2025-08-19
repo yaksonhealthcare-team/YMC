@@ -1,7 +1,7 @@
 import { EmptyCard } from '@/components/EmptyCard';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/contexts/LayoutContext';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { useBranchBookmarksQuery, useBranchUnbookmarkMutation } from '@/queries/useBranchQueries';
 import { Branch } from '@/types/Branch';

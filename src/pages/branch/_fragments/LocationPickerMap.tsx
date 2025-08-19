@@ -2,7 +2,7 @@ import { fetchBranches } from '@/apis/branch.api';
 import LocationSelectorPin from '@/assets/icons/pin/LocationSelectorPin.svg?react';
 import { Button } from '@/components/Button';
 import MapView from '@/components/MapView';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useAddressFromCoords } from '@/hooks/useAddressFromCoords';
 import { useBranchLocationSelect } from '@/hooks/useBranchLocationSelect';
 import { useGeolocation } from '@/hooks/useGeolocation';

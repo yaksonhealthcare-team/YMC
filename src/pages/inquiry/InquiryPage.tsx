@@ -1,6 +1,6 @@
 import Header from '@/components/Header';
 import { XIcon } from '@/components/icons/XIcon';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 

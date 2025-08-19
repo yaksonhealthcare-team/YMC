@@ -7,8 +7,6 @@ import { FloatingButton } from '@/components/FloatingButton';
 import { GenderSelect } from '@/components/GenderSelect';
 import { Header as LegacyHeader } from '@/components/Header';
 import ReloadIcon from '@/components/icons/ReloadIcon';
-import { Indicator } from '@/components/Indicator';
-import { Notice } from '@/components/Notice';
 import { Number } from '@/components/Number';
 import { SearchField } from '@/components/SearchField';
 import { SearchFloatingButton } from '@/components/SearchFloatingButton';
@@ -18,10 +16,13 @@ import { TextArea } from '@/components/TextArea';
 import { Title } from '@/components/Title';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLayout } from '../contexts/LayoutContext';
+import { useLayout } from '../stores/LayoutContext';
 import { Gender } from '../utils/gender';
 
 const DevPage = () => {
+  const [value, setValue] = useState('');
+  const [activeTab, setActiveTab] = useState('reservation');
+  const navigate = useNavigate();
   const { setHeader, setNavigation } = useLayout();
 
   useEffect(() => {
@@ -36,13 +37,7 @@ const DevPage = () => {
       )
     });
     setNavigation({ display: true });
-  }, []);
-
-  const navigate = useNavigate();
-
-  const [value, setValue] = useState('');
-
-  const [activeTab, setActiveTab] = useState('reservation');
+  }, [navigate, setHeader, setNavigation]);
 
   const tabs = [
     { label: '예약', value: 'reservation' },
@@ -51,13 +46,6 @@ const DevPage = () => {
 
   const handleTabChange = (newValue: string) => {
     setActiveTab(newValue);
-  };
-
-  // Indicator
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const totalSlides = 3; // 총 슬라이드 수 (예시로 3개 설정)
-  const handleSlideChange = (index: number) => {
-    setCurrentSlide(index);
   };
 
   // Number
@@ -251,19 +239,6 @@ const DevPage = () => {
         <LegacyHeader type="two_icon" iconLeft={<ShareIcon />} iconRight={<ShareIcon />} />
         <LegacyHeader type="back_title_text" title="Title" textRight="저장" />
         <LegacyHeader type="title_right_icon" title="Title" iconRight={<ShareIcon />} />
-      </div>
-      <div className="p-4 border-t">
-        {'Indicator: '}
-        <Indicator total={totalSlides} current={currentSlide} onChange={handleSlideChange} />
-      </div>
-      <div className="p-4 border-t">
-        {'Notice: '}
-        <Notice
-          title="9월 1일 회원권 변경사항 안내드립니다."
-          onClick={() => {
-            alert('Button Clicked');
-          }}
-        />
       </div>
       <div className="p-4 border-t">
         {'Number: '}

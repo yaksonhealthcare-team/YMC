@@ -1,4 +1,4 @@
-import { axiosClient } from '@/queries/clients';
+import { publicApi } from '@/_shared/services/instance';
 
 export interface FileUploadRequest {
   fileToUpload: File[];
@@ -34,7 +34,7 @@ export const uploadImages = async (request: FileUploadRequest): Promise<string[]
     formData.append('isSignup', request.isSignup);
   }
 
-  const { data } = await axiosClient.post<FileUploadResponse>('/images/images', formData, {
+  const { data } = await publicApi.post<FileUploadResponse>('/images/images', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }

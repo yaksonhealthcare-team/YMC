@@ -1,6 +1,5 @@
-import { LOCAL_STORAGE_KEYS } from '@/constants/storage';
 import { initializeApp } from '@firebase/app';
-import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import { getMessaging, getToken } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -39,7 +38,7 @@ export async function requestNotificationPermission(): Promise<boolean> {
 export async function requestForToken() {
   try {
     if (window.ReactNativeWebView) {
-      return localStorage.getItem(LOCAL_STORAGE_KEYS.FCM_TOKEN);
+      return localStorage.getItem('FCM_TOKEN');
     }
 
     // ServiceWorker API 지원 확인
@@ -57,11 +56,3 @@ export async function requestForToken() {
     return null;
   }
 }
-
-// FCM 메시지 수신 핸들러
-export const onMessageListener = () =>
-  new Promise((resolve) => {
-    onMessage(getMessaging(app), (payload) => {
-      resolve(payload);
-    });
-  });

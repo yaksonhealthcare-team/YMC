@@ -1,5 +1,5 @@
 import Switch from '@/components/Switch';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useNotificationSettings, useUpdateNotificationSettings } from '@/queries/useNotificationQueries';
 import { NotificationSettings } from '@/types/Notification';
 import { useEffect } from 'react';

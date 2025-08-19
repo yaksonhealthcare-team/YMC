@@ -1,6 +1,6 @@
+import { authApi } from '@/_shared';
 import { ListResponse } from '@/_shared/types/response.types';
 import { handleError } from '@/_shared/utils';
-import { axiosClient } from '@/queries/clients';
 import { AxiosResponse } from 'axios';
 import { ConsultMenuParams, ConsultMenuSchema, PrepaidMenuParams } from '../types/menu.types';
 
@@ -16,7 +16,7 @@ export const getConsultMenu = async (
   try {
     const endpoint = `${BASE_URL}/get-consultation-memberships`;
 
-    return await axiosClient.get(endpoint, { params });
+    return await authApi.get(endpoint, { params });
   } catch (error) {
     throw handleError(error, 'getConsultMenu');
   }
@@ -30,7 +30,7 @@ export const getPrepaidMenu = async (params: PrepaidMenuParams) => {
   try {
     const endpoint = `${BASE_URL}/get-flat-memberships`;
 
-    return await axiosClient.get(endpoint, { params });
+    return await authApi.get(endpoint, { params });
   } catch (error) {
     throw handleError(error, 'getPrepaidMenu');
   }

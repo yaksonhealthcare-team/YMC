@@ -1,6 +1,6 @@
 import { fetchEncryptDataForNice } from '@/apis/pass.api';
 import { Button } from '@/components/Button';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { checkByNice } from '@/utils/niceCheck';
 import { useEffect } from 'react';
 

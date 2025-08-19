@@ -1,6 +1,6 @@
 import { UserMembershipSchema } from '@/_domain/membership';
 import { BottomFixedSection, Button, Divider } from '@/_shared';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';

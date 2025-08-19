@@ -1,10 +1,9 @@
+import { useUserStore } from '@/_domain/auth';
 import { useGetReservationDetail } from '@/_domain/reservation';
 import { Button } from '@/components/Button';
 import FixedButtonContainer from '@/components/FixedButtonContainer';
-import { useAuth } from '@/contexts/AuthContext';
-import { useLayout } from '@/contexts/LayoutContext';
-import { useOverlay } from '@/contexts/ModalContext';
-import { useCompleteVisit } from '@/queries/useReservationQueries';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { ReservationType } from '@/types/Reservation';
 import { Skeleton } from '@mui/material';
 import Divider from '@mui/material/Divider';
@@ -19,17 +18,16 @@ const ReservationDetailPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { setHeader, setNavigation } = useLayout();
-  const { openModal, openBottomSheet, closeOverlay, overlayState } = useOverlay();
+  const { openBottomSheet, closeOverlay, overlayState } = useOverlay();
 
   const { id = '' } = useParams<{ id: string }>();
-  const { user } = useAuth();
+  const { user } = useUserStore();
   const navigate = useNavigate();
-  const { mutate } = useCompleteVisit();
 
   const { data, isLoading, isError, error } = useGetReservationDetail(
-    user?.phone || '',
+    user?.hp || '',
     { r_idx: id },
-    { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0 }
+    { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0, enabled: !!user }
   );
 
   const reservation = useMemo(() => data?.body[0], [data]);
@@ -58,36 +56,6 @@ const ReservationDetailPage = () => {
     }
   }, [overlayState]);
 
-  const handleVisitSuccess = () => {
-    openModal({
-      title: '완료',
-      message: '방문 완료 처리되었습니다.',
-      onConfirm: () => {}
-    });
-  };
-  const handleVisitError = (error: unknown) => {
-    openModal({
-      title: '오류',
-      message: error instanceof Error ? error.message : '방문 완료 처리에 실패했습니다.',
-      onConfirm: () => {}
-    });
-  };
-  const handleVisitConfirm = () => {
-    if (id) {
-      mutate(id, {
-        onSuccess: handleVisitSuccess,
-        onError: handleVisitError
-      });
-    }
-  };
-  const handleCompleteVisit = () => {
-    openModal({
-      title: '방문 완료',
-      message: '방문을 완료하시겠습니까?',
-      onConfirm: handleVisitConfirm,
-      onCancel: () => {}
-    });
-  };
   const handleCancelReservation = () => {
     if (!reservation) return;
     const { r_idx, r_date, b_name, ps_name } = reservation;
@@ -223,17 +191,6 @@ const ReservationDetailPage = () => {
       case '001': // 예약완료
         if (isReservationDatePassed) {
           return null; // 방문 완료 버튼 임시 숨김
-          return (
-            <Button
-              variantType="primary"
-              sizeType="l"
-              className={`w-full ${isModalOpen ? 'opacity-50 cursor-not-allowed' : ''}`}
-              onClick={handleCompleteVisit}
-              disabled={isModalOpen}
-            >
-              방문 완료하기
-            </Button>
-          );
         }
         return (
           <Button
@@ -250,17 +207,6 @@ const ReservationDetailPage = () => {
       case '008': // 관리중
         if (isReservationDatePassed) {
           return null; // 방문 완료 버튼 임시 숨김
-          return (
-            <Button
-              variantType="primary"
-              sizeType="l"
-              className={`w-full ${isModalOpen ? 'opacity-50 cursor-not-allowed' : ''}`}
-              onClick={handleCompleteVisit}
-              disabled={isModalOpen}
-            >
-              방문 완료하기
-            </Button>
-          );
         }
         return null;
 

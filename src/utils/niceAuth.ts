@@ -1,4 +1,4 @@
-import { useOverlay } from '@/contexts/ModalContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 

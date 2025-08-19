@@ -10,7 +10,7 @@ export const TimePicker = ({ times, selectedTime, isLoading = false, onClick }: 
   }
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full mb-5">
       <div className="grid grid-cols-4 gap-2">
         {hasTimes ? (
           times.map((slot, idx) => {

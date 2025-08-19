@@ -1,4 +1,5 @@
-import { fetchUser, updateUserProfile } from '@/apis/auth.api';
+import { getUser, useUserStore } from '@/_domain/auth';
+import { updateUserProfile } from '@/apis/auth.api';
 import { uploadImages } from '@/apis/image.api';
 import CaretLeftIcon from '@/assets/icons/CaretLeftIcon.svg?react';
 import AppleLoginIcon from '@/assets/icons/third_party_logo/AppleLoginIcon.svg?react';
@@ -9,67 +10,51 @@ import CustomTextField from '@/components/CustomTextField';
 import { GenderSelect } from '@/components/GenderSelect';
 import PostcodeModal from '@/components/modal/PostcodeModal';
 import Switch from '@/components/Switch';
-import { useAuth } from '@/contexts/AuthContext';
-import { useLayout } from '@/contexts/LayoutContext';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { UpdateUserProfileRequest } from '@/types/User';
 import { Gender } from '@/utils/gender';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BottomSheetForm from './_fragments/EditProfileBottomSheetForm';
 import { FieldWithButton, LabeledForm } from './_fragments/ProfileFormComponents';
 import ProfileImageButton from './_fragments/ProfileImageButton';
 
 const EditProfile = () => {
-  const { user, login } = useAuth();
+  const { user, setUser } = useUserStore();
   const { setNavigation, setHeader } = useLayout();
   const { openBottomSheet, closeOverlay, showToast } = useOverlay();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [gender, setGender] = useState<Gender>(user?.gender ?? 'M');
+  const [gender, setGender] = useState<Gender>(user?.sex ?? 'M');
   const [address, setAddress] = useState({
-    ...user!.address,
-    postalCode: user!.postalCode
+    road: user?.addr1 || '',
+    detail: user?.addr2 || '',
+    postalCode: user!.post
   });
-  const [marketingAgreed, setMarketingAgreed] = useState(user!.marketingAgreed);
+  const [marketingAgreed, setMarketingAgreed] = useState(user!.marketing_yn === 'Y');
   const [openPostcode, setOpenPostcode] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState<string | undefined>(user?.profileURL);
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
   const detailAddressFieldRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    setHeader({
-      left: 'back',
-      title: '내 정보 수정',
-      component: (
-        <div className="h-12 flex items-center justify-between px-5 bg-white relative">
-          <button onClick={handleClickBackButton} className="absolute left-5">
-            <CaretLeftIcon />
-          </button>
-          <span className="font-sb text-18px flex-1 text-center">내 정보 수정</span>
-          <button
-            className={'font-m text-gray-500 disabled:text-gray-300 disabled:cursor-default absolute right-5'}
-            onClick={handleSubmit}
-            disabled={!hasChanges()}
-          >
-            <p>{'저장'}</p>
-          </button>
-        </div>
-      ),
-      backgroundColor: 'bg-white',
-      display: true,
-      onClickBack: handleClickBackButton
-    });
-    setNavigation({ display: false });
-  }, [address, marketingAgreed, gender, profileImageUrl, profileImageFile]);
+  // 변경사항이 있는지 확인하는 함수
+  const hasChanges = useCallback(() => {
+    if (!user) return false;
+    const isMarketingAgree = user.marketing_yn === 'Y';
 
-  if (!user) {
-    return <></>;
-  }
+    return (
+      user.profileURL !== profileImageUrl ||
+      address.postalCode !== user.post ||
+      address.road !== user.addr1 ||
+      address.detail !== user.addr2 ||
+      marketingAgreed !== isMarketingAgree
+    );
+  }, [address.detail, address.postalCode, address.road, marketingAgreed, profileImageUrl, user]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (!user || !hasChanges()) return;
 
     setIsSubmitting(true);
@@ -107,9 +92,11 @@ const EditProfile = () => {
 
       // 최신 사용자 정보 가져오기
       try {
-        const updatedUser = await fetchUser();
-        if (updatedUser) {
-          login({ user: updatedUser });
+        const data = await getUser();
+        const user = data.data.body[0];
+
+        if (user) {
+          setUser(user);
           showToast('프로필이 성공적으로 수정되었습니다.');
           navigate('/mypage', { replace: true });
         } else {
@@ -125,13 +112,25 @@ const EditProfile = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [
+    address.detail,
+    address.postalCode,
+    address.road,
+    hasChanges,
+    marketingAgreed,
+    navigate,
+    profileImageFile,
+    profileImageUrl,
+    setUser,
+    showToast,
+    user
+  ]);
 
   const handleImageChange = (file: File | null) => {
     setProfileImageFile(file);
   };
 
-  const handleClickBackButton = () => {
+  const handleClickBackButton = useCallback(() => {
     if (hasChanges()) {
       openBottomSheet(
         <BottomSheetForm
@@ -153,7 +152,7 @@ const EditProfile = () => {
     } else {
       navigate(-1);
     }
-  };
+  }, [closeOverlay, hasChanges, navigate, openBottomSheet]);
 
   const handleClickWithdrawal = () => {
     openBottomSheet(
@@ -175,6 +174,47 @@ const EditProfile = () => {
     );
   };
 
+  useEffect(() => {
+    setHeader({
+      left: 'back',
+      title: '내 정보 수정',
+      component: (
+        <div className="h-12 flex items-center justify-between px-5 bg-white relative">
+          <button onClick={handleClickBackButton} className="absolute left-5">
+            <CaretLeftIcon />
+          </button>
+          <span className="font-sb text-18px flex-1 text-center">내 정보 수정</span>
+          <button
+            className={'font-m text-gray-500 disabled:text-gray-300 disabled:cursor-default absolute right-5'}
+            onClick={handleSubmit}
+            disabled={!hasChanges()}
+          >
+            <p>{'저장'}</p>
+          </button>
+        </div>
+      ),
+      backgroundColor: 'bg-white',
+      display: true,
+      onClickBack: handleClickBackButton
+    });
+    setNavigation({ display: false });
+  }, [
+    address,
+    marketingAgreed,
+    gender,
+    profileImageUrl,
+    profileImageFile,
+    setHeader,
+    handleClickBackButton,
+    handleSubmit,
+    hasChanges,
+    setNavigation
+  ]);
+
+  if (!user) {
+    return <></>;
+  }
+
   const renderSocialLoginIcon = () => {
     switch (user.thirdPartyType) {
       case 'naver':
@@ -188,19 +228,6 @@ const EditProfile = () => {
       default:
         return null;
     }
-  };
-
-  // 변경사항이 있는지 확인하는 함수
-  const hasChanges = () => {
-    if (!user) return false;
-
-    return (
-      user.profileURL !== profileImageUrl ||
-      address.postalCode !== user.postalCode ||
-      address.road !== user.address.road ||
-      address.detail !== user.address.detail ||
-      marketingAgreed !== user.marketingAgreed
-    );
   };
 
   return (
@@ -222,7 +249,7 @@ const EditProfile = () => {
       <div className={'mx-5 mt-5'}>
         <div className={'flex flex-col gap-10 mb-10'}>
           <LabeledForm label={'이름'}>
-            <p>{user.username}</p>
+            <p>{user.name}</p>
           </LabeledForm>
           <LabeledForm className={'flex justify-between'} label={'이메일'}>
             <p>{user.email}</p>
@@ -240,7 +267,7 @@ const EditProfile = () => {
           </LabeledForm>
           <LabeledForm label={'휴대폰 번호'}>
             <FieldWithButton
-              fieldValue={user.phone}
+              fieldValue={user.hp}
               buttonLabel={'변경하기'}
               buttonClassName="px-5 py-3.5 font-bold rounded-[12px]"
               onClick={() => {

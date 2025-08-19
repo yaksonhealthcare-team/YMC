@@ -1,6 +1,6 @@
 import { Button } from '@/components/Button';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { usePaymentHistory } from '@/queries/usePaymentQueries';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';

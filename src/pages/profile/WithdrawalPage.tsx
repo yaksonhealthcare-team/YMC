@@ -1,8 +1,9 @@
+import { withdrawal } from '@/apis/auth.api';
 import { Button } from '@/components/Button';
-import { useLayout } from '@/contexts/LayoutContext';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { useWithdrawalGuideMessage } from '@/hooks/useGuideMessages';
-import { useWithdrawal } from '@/queries/useAuthQueries';
+import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,7 +12,7 @@ const WithdrawalPage = () => {
   const navigate = useNavigate();
   const { openModal } = useOverlay();
   const [isAgreed, setIsAgreed] = useState(false);
-  const { mutateAsync: withdrawal } = useWithdrawal();
+  const { mutateAsync: withdrawalMutate } = useMutation({ mutationFn: withdrawal });
   const { withdrawalMessage, isLoading: isGuideMessageLoading } = useWithdrawalGuideMessage();
 
   useEffect(() => {
@@ -22,7 +23,7 @@ const WithdrawalPage = () => {
       backgroundColor: 'bg-white'
     });
     setNavigation({ display: false });
-  }, []);
+  }, [setHeader, setNavigation]);
 
   const handleWithdrawal = async () => {
     if (!isAgreed) {
@@ -35,7 +36,7 @@ const WithdrawalPage = () => {
     }
 
     try {
-      await withdrawal();
+      await withdrawalMutate();
       openModal({
         title: '안내',
         message: '회원탈퇴가 완료되었습니다.',

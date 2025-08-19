@@ -1,7 +1,5 @@
 import { Button } from '@/components/Button';
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { useAuth } from '@/contexts/AuthContext';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MyPageBranchInfo from './_fragments/MyPageBranchInfo';
@@ -14,7 +12,6 @@ import MyPageProfile from './_fragments/MyPageProfile';
 const MyPage = () => {
   const navigate = useNavigate();
   const { setHeader, setNavigation } = useLayout();
-  const { isLoading } = useAuth();
 
   useEffect(() => {
     setHeader({
@@ -22,11 +19,7 @@ const MyPage = () => {
       backgroundColor: 'bg-system-bg'
     });
     setNavigation({ display: true });
-  }, []);
-
-  if (isLoading) {
-    return <LoadingIndicator className="min-h-screen" />;
-  }
+  }, [setHeader, setNavigation]);
 
   return (
     <div className="h-full bg-[#F8F5F2]">

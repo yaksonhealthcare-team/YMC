@@ -1,10 +1,10 @@
+import { useUserStore } from '@/_domain/auth';
 import { useGetReservationDetail } from '@/_domain/reservation/services/queries/reservation.queries';
 import { Button } from '@/components/Button';
 import FixedButtonContainer from '@/components/FixedButtonContainer';
 import { TextArea } from '@/components/TextArea';
-import { useAuth } from '@/contexts/AuthContext';
-import { useLayout } from '@/contexts/LayoutContext';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { useReservationGuideMessages } from '@/hooks/useGuideMessages';
 import { useCancelReservation } from '@/queries/useReservationQueries';
 import { escapeHtml } from '@/utils/sanitize';
@@ -17,7 +17,7 @@ const ReservationCancelPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { user } = useAuth();
+  const { user } = useUserStore();
   const { setHeader, setNavigation } = useLayout();
   const { showToast, openBottomSheet } = useOverlay();
   const [cancelReason, setCancelReason] = useState('');
@@ -25,9 +25,13 @@ const ReservationCancelPage = () => {
 
   const { mutate: cancelReservation } = useCancelReservation();
   const { reservationCancelMessage, isLoading: isGuideMessageLoading } = useReservationGuideMessages();
-  const { data: detailData } = useGetReservationDetail(user?.phone || '', {
-    r_idx: id || ''
-  });
+  const { data: detailData } = useGetReservationDetail(
+    user?.hp || '',
+    {
+      r_idx: id || ''
+    },
+    { enabled: !!user }
+  );
 
   useEffect(() => {
     setHeader({

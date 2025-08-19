@@ -23,16 +23,6 @@ export const toNumber = (value: string | number | undefined, defaultValue = 0): 
 };
 
 /**
- * 문자열 형태의 개수를 숫자로 변환합니다.
- * 유효하지 않은 경우 0을 반환합니다.
- * @param count - 변환할 개수 문자열.
- * @returns 변환된 숫자 개수. 유효하지 않으면 0.
- */
-export const parseCount = (count: string | undefined): number => {
-  return toNumber(count, 0);
-};
-
-/**
  * 주어진 숫자가 특정 범위 내에 있는지 확인합니다. (경계값 포함)
  * @param value - 확인할 숫자.
  * @param min - 최소값.
@@ -41,29 +31,6 @@ export const parseCount = (count: string | undefined): number => {
  */
 export const isInRange = (value: number, min: number, max: number): boolean => {
   return value >= min && value <= max;
-};
-
-/**
- * 숫자를 지정된 최소값과 최대값 사이로 제한합니다.
- * @param value - 제한할 숫자.
- * @param min - 최소 허용값.
- * @param max - 최대 허용값.
- * @returns 제한된 범위 내의 숫자.
- */
-export const clamp = (value: number, min: number, max: number): number => {
-  return Math.min(Math.max(value, min), max);
-};
-
-/**
- * 전체값 대비 특정 값의 백분율을 계산합니다.
- * 결과는 정수로 반올림됩니다.
- * @param value - 백분율을 계산할 값.
- * @param total - 전체 값.
- * @returns 계산된 백분율 (정수). 전체 값이 0이면 0을 반환.
- */
-export const calculatePercent = (value: number, total: number): number => {
-  if (total === 0) return 0;
-  return Math.round((value / total) * 100);
 };
 
 /**

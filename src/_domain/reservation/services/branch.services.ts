@@ -1,5 +1,4 @@
-import { ApiResponse, handleError, ResultResponse } from '@/_shared';
-import { axiosClient } from '@/queries/clients';
+import { ApiResponse, authApi, handleError, ResultResponse } from '@/_shared';
 import { AxiosResponse } from 'axios';
 import { BranchDetailParams, BranchDetailSchema, BranchesParams, BranchesSchema } from '../types/branch.types';
 
@@ -15,7 +14,7 @@ export const getBranchDetail = async (
   try {
     const endpoint = `${BASE_URL}/detail`;
 
-    return await axiosClient.get(endpoint, { params });
+    return await authApi.get(endpoint, { params });
   } catch (error) {
     throw handleError(error, 'getBranchesDetail');
   }
@@ -29,7 +28,7 @@ export const getBranches = async (params: BranchesParams): Promise<AxiosResponse
   try {
     const endpoint = `${BASE_URL}/branches`;
 
-    return await axiosClient.get(endpoint, { params });
+    return await authApi.get(endpoint, { params });
   } catch (error) {
     throw handleError(error, 'getBranches');
   }

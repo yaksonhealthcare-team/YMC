@@ -3,7 +3,7 @@ import HeartEnabledIcon from '@/assets/icons/HeartEnabledIcon.svg?react';
 import BranchPlaceholderImage from '@/assets/images/BranchPlaceholderImage.png';
 import { Image } from '@/components/common/Image';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useOverlay } from '@/stores/ModalContext';
 import useIntersection from '@/hooks/useIntersection';
 import { useBranchBookmarkMutation, useBranchUnbookmarkMutation } from '@/queries/useBranchQueries';
 import { Branch } from '@/types/Branch';

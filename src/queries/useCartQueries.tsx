@@ -1,6 +1,5 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { addCart, fetchCart, removeCart, updateCart } from '../apis/cart.api';
-import { queryClient } from './clients';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { fetchCart, removeCart, updateCart } from '../apis/cart.api';
 import { queryKeys } from './query.keys';
 
 export const useCartItems = () =>
@@ -12,8 +11,9 @@ export const useCartItems = () =>
     retry: false
   });
 
-export const useDeleteCartItemsMutation = () =>
-  useMutation({
+export const useDeleteCartItemsMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: (cartIds: string[]) => removeCart(cartIds),
     onSettled: async () => {
       await queryClient.invalidateQueries({
@@ -22,37 +22,17 @@ export const useDeleteCartItemsMutation = () =>
     },
     retry: false
   });
+};
 
-export const useUpdateCartItemMutation = () =>
-  useMutation({
+export const useUpdateCartItemMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: ({ cartId, amount }: { cartId: string; amount: number }) => updateCart(cartId, amount),
     onSettled: async () => {
       await queryClient.invalidateQueries({
         queryKey: queryKeys.carts.all
       });
     },
-    retry: false
-  });
-
-export const useCart = () => {
-  return useQuery({
-    queryKey: ['cart'],
-    queryFn: () => Promise.reject(new Error('Not implemented')),
-    enabled: false,
-    retry: false
-  });
-};
-
-export const useAddToCart = () => {
-  return useMutation({
-    mutationFn: addCart,
-    retry: false
-  });
-};
-
-export const useRemoveFromCart = () => {
-  return useMutation({
-    mutationFn: () => Promise.reject(new Error('Not implemented')),
     retry: false
   });
 };

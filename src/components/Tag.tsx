@@ -1,11 +1,10 @@
-import { COLORS } from '@/constants/ColorConstants';
 import clsx from 'clsx';
 
 export type TagType = 'used' | 'unused' | 'rect' | 'round' | 'green' | 'blue' | 'red';
 
 const TAG_VARIANTS = {
   used: 'rounded text-gray-400 bg-gray-100',
-  unused: `rounded text-primary bg-[${COLORS.SECONDARY}]`,
+  unused: `rounded text-primary bg-[#FEF2F1]`,
   rect: 'rounded text-gray-500 bg-gray-100',
   round: 'text-gray-500 bg-gray-100 rounded-full px-2',
   green: 'text-tag-green bg-tag-greenBg rounded-full px-2',

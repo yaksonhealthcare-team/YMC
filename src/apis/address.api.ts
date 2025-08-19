@@ -1,4 +1,4 @@
-import { axiosClient } from '@/queries/clients';
+import { authApi } from '@/_shared';
 import { Location } from '@/types/Location';
 
 export interface AddressSearchResult {
@@ -52,7 +52,7 @@ interface AddressSearchResponse {
 }
 
 export const searchAddress = async (keyword: string): Promise<Location[]> => {
-  const { data } = await axiosClient.get<AddressSearchResponse>('/address/search', {
+  const { data } = await authApi.get<AddressSearchResponse>('/address/search', {
     params: {
       keyword
     }
@@ -67,7 +67,7 @@ export const searchAddress = async (keyword: string): Promise<Location[]> => {
 };
 
 export const getAddressBookmarks = async (): Promise<Location[]> => {
-  const { data } = await axiosClient.get<AddressBookmarkResponse>('/address/bookmarks');
+  const { data } = await authApi.get<AddressBookmarkResponse>('/address/bookmarks');
   return data.body.map((item) => ({
     csab_idx: item.csab_idx,
     b_idx: item.csab_idx,
@@ -80,12 +80,12 @@ export const getAddressBookmarks = async (): Promise<Location[]> => {
 };
 
 export const addAddressBookmark = async (bookmark: Omit<Location, 'csab_idx'>): Promise<ApiResponse<null>> => {
-  const { data } = await axiosClient.post<ApiResponse<null>>('/address/bookmarks', bookmark);
+  const { data } = await authApi.post<ApiResponse<null>>('/address/bookmarks', bookmark);
   return data;
 };
 
 export const deleteAddressBookmark = async (b_idx: string): Promise<ApiResponse<null>> => {
-  const { data } = await axiosClient.delete<ApiResponse<null>>(`/address/bookmarks`, {
+  const { data } = await authApi.delete<ApiResponse<null>>(`/address/bookmarks`, {
     data: {
       b_idx
     }

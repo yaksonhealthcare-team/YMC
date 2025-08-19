@@ -1,17 +1,17 @@
+import { useUserStore } from '@/_domain/auth';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
-import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const MyPageBranchInfo = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useUserStore();
 
   const hasBranches = user?.brands && user.brands.length > 0;
 
   const getBranchText = () => {
     if (!hasBranches) return '이용중인 지점이 없습니다';
     const suffix = user.brands.length > 1 ? ` 외 ${user.brands.length - 1}개` : '';
-    return `${user.brands[0].brandName}${suffix}`;
+    return `${user.brands[0].b_name}${suffix}`;
   };
 
   const branchText = getBranchText();

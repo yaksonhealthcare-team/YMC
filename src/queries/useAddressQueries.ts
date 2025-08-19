@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { addAddressBookmark, deleteAddressBookmark, getAddressBookmarks, searchAddress } from '../apis/address.api';
 import { addressKeys } from './keys/address.keys';
-import { useOverlay } from '../contexts/ModalContext';
+import { useOverlay } from '../stores/ModalContext';
 
 export const useAddressBookmarks = () => {
   return useQuery({

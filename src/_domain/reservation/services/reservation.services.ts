@@ -1,5 +1,4 @@
-import { ApiResponse, handleError } from '@/_shared';
-import { axiosClient } from '@/queries/clients';
+import { ApiResponse, authApi, handleError } from '@/_shared';
 import { AxiosResponse } from 'axios';
 import { CreateReservationBody } from '../types';
 import {
@@ -22,7 +21,7 @@ export const createReservation = async (
   try {
     const endpoint = `${BASE_URL}/reservations`;
 
-    return await axiosClient.post(endpoint, body);
+    return await authApi.post(endpoint, body);
   } catch (error) {
     throw handleError(error, 'createReservation');
   }
@@ -36,7 +35,7 @@ export const getReservations = async (params: ReservationsParams) => {
   try {
     const endpoint = `${BASE_URL}/reservations`;
 
-    return await axiosClient.get(endpoint, { params });
+    return await authApi.get(endpoint, { params });
   } catch (error) {
     throw handleError(error, 'getReservations');
   }
@@ -50,7 +49,7 @@ export const getReservationCount = async (): Promise<AxiosResponse<ApiResponse<R
   try {
     const endpoint = `${BASE_URL}/consultation-count`;
 
-    return axiosClient.get(endpoint);
+    return await authApi.get(endpoint);
   } catch (error) {
     throw handleError(error, 'getReservationCount');
   }
@@ -66,7 +65,7 @@ export const getReservationDetail = async (
   try {
     const endpoint = `${BASE_URL}/detail`;
 
-    return await axiosClient.get(endpoint, { params });
+    return await authApi.get(endpoint, { params });
   } catch (error) {
     throw handleError(error, 'getReservationDetail');
   }

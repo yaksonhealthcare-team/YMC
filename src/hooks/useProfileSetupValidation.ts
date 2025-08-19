@@ -1,4 +1,4 @@
-import { useOverlay } from '@/contexts/ModalContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { useState } from 'react';
 
 export const useProfileSetupValidation = () => {

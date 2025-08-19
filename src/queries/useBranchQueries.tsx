@@ -8,7 +8,7 @@ import {
 } from '../apis/branch.api';
 import { BranchDetail, BranchSearchResponse } from '../types/Branch';
 import { Coordinate } from '../types/Coordinate';
-import { axiosClient } from './clients';
+import { authApi } from '@/_shared';
 
 interface BranchFilters {
   page?: number;
@@ -35,7 +35,7 @@ export const useBranches = (filters: BranchFilters) =>
     initialPageParam: 1,
     queryKey: queryKeys.branches.list(filters),
     queryFn: async ({ pageParam = 1 }) => {
-      const { data } = await axiosClient.get<BranchSearchResponse>('/branches/branches', {
+      const { data } = await authApi.get<BranchSearchResponse>('/branches/branches', {
         params: {
           page: pageParam,
           nowlat: filters.latitude,
@@ -83,14 +83,6 @@ export const useBranchBookmarksQuery = (key: string, coords?: Coordinate) => {
   });
 };
 
-export const useBranchDetailQuery = (b_idx: string) => {
-  return useQuery({
-    queryKey: ['branchDetail', b_idx],
-    queryFn: () => fetchBranch(b_idx, { latitude: 0, longitude: 0 }),
-    retry: false
-  });
-};
-
 export const useBranchBookmarkMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -132,12 +124,3 @@ export const useBranchUnbookmarkMutation = () => {
     retry: false
   });
 };
-
-// export const useBranchCategories = (brandCode?: string) => {
-//   return useQuery<BranchCategory[], Error>({
-//     queryKey: ["branches", "categories", brandCode],
-//     queryFn: () => fetchBranchCategories(brandCode),
-//     staleTime: 0,
-//     gcTime: 0,
-//   })
-// }

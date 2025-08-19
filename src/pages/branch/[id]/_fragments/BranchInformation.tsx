@@ -5,7 +5,7 @@ import PinIcon from '@/assets/icons/PinIcon.svg?react';
 import MapView from '@/components/MapView';
 import { Tag } from '@/components/Tag';
 import { Image } from '@/components/common/Image';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { BranchDetail } from '@/types/Branch';
 import { copyToClipboard } from '@/utils/copyUtils';
 import { ReactNode, useState } from 'react';

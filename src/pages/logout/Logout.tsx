@@ -1,27 +1,24 @@
+import { useLogoutMutation, useUserStore } from '@/_domain/auth';
 import Logo from '@/components/Logo';
-import { useAuth } from '@/contexts/AuthContext';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { Typography } from '@mui/material';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Logout = () => {
-  const { logout } = useAuth();
+  const { resetUser } = useUserStore();
+  const { mutateAsync } = useLogoutMutation();
   const { setHeader, setNavigation } = useLayout();
   const navigate = useNavigate();
-  const handleLogout = async () => {
-    await logout();
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    navigate('/login', { replace: true });
 
-    if (window.ReactNativeWebView) {
-      window.ReactNativeWebView.postMessage(
-        JSON.stringify({
-          type: 'LOGOUT'
-        })
-      );
-    }
-  };
+  const handleLogout = useCallback(async () => {
+    await mutateAsync();
+    localStorage.clear();
+    sessionStorage.clear();
+    resetUser();
+
+    navigate('/login', { replace: true });
+  }, [mutateAsync, navigate, resetUser]);
 
   useEffect(() => {
     setHeader({
@@ -30,7 +27,7 @@ const Logout = () => {
     });
     setNavigation({ display: false });
     handleLogout();
-  }, []);
+  }, [handleLogout, setHeader, setNavigation]);
 
   return (
     <div className={'flex flex-col h-full w-full justify-center items-center bg-system-bg p-14'}>

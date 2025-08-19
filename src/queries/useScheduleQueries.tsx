@@ -39,21 +39,3 @@ export const useScheduleTimesQueries = (filter: ScheduleFilters) =>
     enabled: Boolean(filter.searchDate),
     retry: false // 에러 발생시 재시도 하지 않음
   });
-
-export const useSchedule = (id: number) => {
-  return useQuery({
-    queryKey: ['schedules', id],
-    queryFn: () => Promise.reject(new Error('Not implemented')),
-    enabled: false,
-    retry: false
-  });
-};
-
-export const useSchedules = () => {
-  return useQuery({
-    queryKey: ['schedules'],
-    queryFn: () => Promise.reject(new Error('Not implemented')),
-    enabled: false,
-    retry: false
-  });
-};

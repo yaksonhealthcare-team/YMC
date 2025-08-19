@@ -6,7 +6,7 @@ import { Image } from '@/components/common/Image';
 import FixedButtonContainer from '@/components/FixedButtonContainer';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { TextArea } from '@/components/TextArea';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useReviewSections } from '@/queries/useReviewQueries';
 import { escapeHtml, validateFile } from '@/utils/sanitize';
 import { useCallback, useEffect, useState } from 'react';

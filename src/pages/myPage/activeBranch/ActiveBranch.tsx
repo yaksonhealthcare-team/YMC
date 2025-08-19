@@ -1,12 +1,11 @@
+import { useUserStore } from '@/_domain/auth';
 import InformationIcon from '@/assets/icons/InformationIcon.svg?react';
 import BranchCard from '@/components/BranchCard';
 import { Button } from '@/components/Button';
 import { EmptyCard } from '@/components/EmptyCard';
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { useAuth } from '@/contexts/AuthContext';
-import { useLayout } from '@/contexts/LayoutContext';
-import { useOverlay } from '@/contexts/ModalContext';
-import { useEffect } from 'react';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
+import { useCallback, useEffect } from 'react';
 
 interface InformationBottomSheetProps {
   onClose: () => void;
@@ -32,11 +31,11 @@ const InformationBottomSheet = ({ onClose }: InformationBottomSheetProps) => (
 const ActiveBranch = () => {
   const { setHeader, setNavigation } = useLayout();
   const { openBottomSheet, closeOverlay } = useOverlay();
-  const { user, isLoading } = useAuth();
+  const { user } = useUserStore();
 
-  const handleClickInformation = () => {
+  const handleClickInformation = useCallback(() => {
     openBottomSheet(<InformationBottomSheet onClose={closeOverlay} />);
-  };
+  }, [closeOverlay, openBottomSheet]);
 
   useEffect(() => {
     setHeader({
@@ -47,15 +46,7 @@ const ActiveBranch = () => {
       backgroundColor: 'bg-white'
     });
     setNavigation({ display: false });
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-white">
-        <LoadingIndicator />
-      </div>
-    );
-  }
+  }, [handleClickInformation, setHeader, setNavigation]);
 
   if (!user?.brands?.length) {
     return (
@@ -70,7 +61,7 @@ const ActiveBranch = () => {
       <ul className="space-y-3">
         {user.brands.map((branch) => (
           <li key={branch.b_idx} className="p-5 rounded-2xl border border-gray-100">
-            <BranchCard name={branch.brandName} address={branch.address} />
+            <BranchCard name={branch.b_name} address={branch.addr} />
           </li>
         ))}
       </ul>

@@ -15,13 +15,3 @@ export const useBanner = (
     retry: false,
     ...options
   });
-
-export const useBanners = (options?: Omit<UseQueryOptions<Banner[], Error>, 'queryKey' | 'queryFn'>) => {
-  return useQuery({
-    queryKey: ['banners'],
-    queryFn: () => Promise.reject(new Error('Not implemented')),
-    enabled: false,
-    retry: false,
-    ...options
-  });
-};

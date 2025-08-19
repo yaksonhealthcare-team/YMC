@@ -4,13 +4,13 @@ import CaretLeftIcon from '@/assets/icons/CaretLeftIcon.svg?react';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import { Button } from '@/components/Button';
 import XCircleIcon from '@/components/icons/XCircleIcon';
-import { useLayout } from '@/contexts/LayoutContext';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { usePaymentStore } from '@/hooks/usePaymentStore';
-import { queryClient } from '@/queries/clients';
 import { Branch } from '@/types/Branch';
 import { MembershipOption } from '@/types/Membership';
 import { formatPrice, parsePrice } from '@/utils/format';
+import { useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -50,6 +50,8 @@ export const OptionsBottomSheetContent = ({
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const queryClient = useQueryClient();
 
   // 회원권 상세 페이지 헤더 설정 함수
   const setMembershipDetailHeader = useCallback(() => {
