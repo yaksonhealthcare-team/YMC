@@ -7,6 +7,7 @@ import { PropsWithChildren } from 'react';
 import { createBrowserRouter, LoaderFunction, Outlet, redirect, RouterProvider } from 'react-router-dom';
 import config, { CustomRouteObject } from './newConfig';
 import { useNewAppBridge } from '@/hooks/useNewAppBridge';
+import { useOverlayBackHandler } from '@/_shared';
 
 const Router = () => {
   const routes: CustomRouteObject[] = config.map((route) => {
@@ -54,6 +55,7 @@ const AppProviders = ({ children }: PropsWithChildren) => (
  */
 const BridgeMount = () => {
   useNewAppBridge();
+  useOverlayBackHandler();
 
   return null;
 };

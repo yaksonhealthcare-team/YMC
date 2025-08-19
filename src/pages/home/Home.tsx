@@ -5,7 +5,6 @@ import { FloatingButton } from '@/components/FloatingButton';
 import Logo from '@/components/Logo';
 import NoticesSummarySlider from '@/components/NoticesSummarySlider';
 import { useLayout } from '@/stores/LayoutContext';
-import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { useUnreadNotificationsCount } from '@/queries/useNotificationQueries';
 import { Container, Typography } from '@mui/material';
 import { lazy, Suspense, useEffect, useMemo } from 'react';
@@ -43,9 +42,6 @@ const Home = () => {
   const totalCount = data?.[0]?.data?.total_count || 0;
   const convertedMemberships = convertMembershipForCard(memberships);
   const hasMembership = memberships && memberships.length > 0;
-
-  // 뒤로가기 방지 훅 적용
-  usePreventGoBack();
 
   const getDisplayCount = (count: number) => {
     if (count > 99) return '99+';
