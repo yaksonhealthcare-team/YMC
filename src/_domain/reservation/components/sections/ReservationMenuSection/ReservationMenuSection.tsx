@@ -203,7 +203,7 @@ export const ReservationMenuSection = ({ memberships, consultCount }: Reservatio
           const hasMembershipMenu = !!ss_idx;
           const isAddReservationSection = idx === renderCount - 1 && (hasMembershipMenu || type === 'standard');
           const isAddReservation = idx > 0;
-          const hasAddReservation = dataForSwiper.length > 1;
+          const hasAddReservation = dataForSwiper.length > 0;
 
           return (
             <div key={idx}>
