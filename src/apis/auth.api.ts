@@ -4,10 +4,6 @@ import { UserMapper } from '@/mappers/UserMapper';
 import { HTTPResponse } from '@/types/HTTPResponse';
 import { UpdateUserProfileRequest } from '@/types/User';
 
-interface SignInResponseBody {
-  accessToken: string;
-}
-
 export type DeviceType = 'android' | 'ios' | 'web';
 
 export const resetPassword = async (password: string, token_version_id?: string, di?: string): Promise<void> => {
@@ -100,35 +96,9 @@ export const signup = async (signupData: SignupFormData) => {
   return data;
 };
 
-export interface SignInWithSocialRequest {
-  SocialAccessToken: string;
-  thirdPartyType: 'K' | 'N' | 'G' | 'A';
-  socialId: string;
-  deviceToken?: string | null;
-  deviceType?: 'android' | 'ios' | 'web';
-  id_token?: string;
-  SocialRefreshToken?: string | null;
-}
-
-export function signinWithSocial(request: SignInWithSocialRequest) {
-  return publicApi.post<HTTPResponse<SignInResponseBody[]>>(
-    '/auth/signin/social',
-    request,
-    { withCredentials: true } // 쿠키를 받기 위해 추가
-  );
-}
-
 export const withdrawal = async () => {
   const response = await authApi.delete(`/auth/withdrawal`);
   return response.data;
-};
-
-export const logout = async () => {
-  try {
-    await authApi.get('/auth/logout');
-  } catch (error) {
-    console.error('로그아웃 실패', error);
-  }
 };
 
 export const checkEmail = async (email: string): Promise<boolean> => {

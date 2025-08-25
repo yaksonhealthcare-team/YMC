@@ -7,10 +7,14 @@ import dayjs from 'dayjs';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useCreateReservationMutation, useGetBranchDetail, useGetReservationConsultCount } from '../../services';
-import { ReservationFormValues } from '../../types/reservation.types';
-import { ReservationMenuSectionProps } from '../sections';
-import { ReservationTemplate } from '../templates';
+import {
+  ReservationFormValues,
+  ReservationMenuSectionProps,
+  ReservationTemplate,
+  useCreateReservationMutation,
+  useGetBranchDetail,
+  useGetReservationConsultCount
+} from '@/_domain/reservation';
 
 /**
  * 예약하기 페이지

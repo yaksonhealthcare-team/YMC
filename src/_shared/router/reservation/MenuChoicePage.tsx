@@ -1,11 +1,10 @@
-import { useGetConsultMenu, useGetPrepaidMenu } from '@/_domain/category/services/queries/menu.queries';
-import { ConsultMenuParams, PrepaidMenuParams } from '@/_domain/category/types/menu.types';
 import { useDebounce } from '@/_shared/hooks/useDebounce';
 import { useMemo, useState } from 'react';
-import { ConvertedConsultMenuData, convertConsultMenu } from '../../business';
-import { convertPrepaidMenu } from '../../business/menu.business';
-import { MenuCardProps } from '../organisms';
-import { MenuChoiceTemplate } from '../templates';
+import { ConvertedConsultMenuData, convertConsultMenu } from '../../../_domain/reservation/business';
+import { convertPrepaidMenu } from '../../../_domain/reservation/business/menu.business';
+import { MenuCardProps } from '../../../_domain/reservation/components/organisms';
+import { MenuChoiceTemplate } from '../../../_domain/reservation/components/templates';
+import { ConsultMenuParams, PrepaidMenuParams, useGetConsultMenu, useGetPrepaidMenu } from '@/_domain/category';
 
 export interface MenuChoicePageProps {
   onBack: () => void;
@@ -14,7 +13,7 @@ export interface MenuChoicePageProps {
   type?: MenuCardProps['type'];
 }
 
-export const MenuChoicePage = ({ onBack, onClickCard, fetchParams, type = 'standard' }: MenuChoicePageProps) => {
+const MenuChoicePage = ({ onBack, onClickCard, fetchParams, type = 'standard' }: MenuChoicePageProps) => {
   const isConsult = type === 'standard' && 'b_idx' in fetchParams;
   const isPrepaid = type === 'pre-paid' && 'mp_idx' in fetchParams;
 
@@ -92,3 +91,5 @@ export const MenuChoicePage = ({ onBack, onClickCard, fetchParams, type = 'stand
     />
   );
 };
+
+export default MenuChoicePage;

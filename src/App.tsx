@@ -10,7 +10,7 @@ import { Suspense } from 'react';
 import 'swiper/swiper-bundle.css';
 import { Loading, useVConsole } from './_shared';
 import ErrorBoundary from './components/ErrorBoundary';
-import Router from './router/NewRouter';
+import { Router } from './_shared/router';
 
 /**
  * @deprecated

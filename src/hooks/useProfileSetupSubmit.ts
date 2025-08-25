@@ -1,8 +1,15 @@
-import { getUser, saveAccessToken, SigninEmailBody, useSigninEmailMutation, useUserStore } from '@/_domain/auth';
-import { signinWithSocial, signup, signupWithSocial } from '@/apis/auth.api';
+import {
+  getUser,
+  saveAccessToken,
+  SigninEmailBody,
+  useSigninEmailMutation,
+  useSigninSocialMutation,
+  useUserStore
+} from '@/_domain/auth';
+import { requestForToken } from '@/_shared';
+import { signup, signupWithSocial } from '@/apis/auth.api';
 import { useOverlay } from '@/stores/ModalContext';
 import { useSignup } from '@/stores/SignupContext';
-import { requestForToken } from '@/libs/firebase';
 import { UserSignup } from '@/types/User';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -28,6 +35,7 @@ export const useProfileSetupSubmit = () => {
   const { showToast } = useOverlay();
   const { signupData: storedSignupData, cleanup } = useSignup();
   const { mutateAsync: loginMutateAsync } = useSigninEmailMutation();
+  const { mutateAsync: signinMutateAsync } = useSigninSocialMutation();
 
   const handleSocialSignup = async (socialInfo: SocialSignupInfo, signupData: UserSignup) => {
     const response = await signupWithSocial({
@@ -55,7 +63,7 @@ export const useProfileSetupSubmit = () => {
       throw new Error(response?.resultMessage ?? '회원가입 응답이 올바르지 않습니다');
     }
 
-    const signinResponse = await signinWithSocial({
+    const body = {
       thirdPartyType: socialInfo.thirdPartyType,
       SocialAccessToken: response.body[0].accessToken,
       socialId: socialInfo.socialId,
@@ -63,8 +71,8 @@ export const useProfileSetupSubmit = () => {
       SocialRefreshToken: socialInfo.SocialRefreshToken,
       deviceToken: socialInfo.deviceToken ?? (await requestForToken()),
       deviceType: socialInfo.deviceType ?? window.osType ?? 'web'
-    });
-
+    };
+    const signinResponse = await signinMutateAsync(body);
     const accessToken = signinResponse.data.body[0].accessToken;
 
     if (!accessToken) throw new Error('회원가입에 실패했습니다. 계속 문제가 발생할 경우 고객센터에 문의해 주세요.');

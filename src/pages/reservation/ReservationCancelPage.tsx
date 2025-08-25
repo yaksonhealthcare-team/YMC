@@ -1,5 +1,4 @@
 import { useUserStore } from '@/_domain/auth';
-import { useGetReservationDetail } from '@/_domain/reservation/services/queries/reservation.queries';
 import { Button } from '@/components/Button';
 import FixedButtonContainer from '@/components/FixedButtonContainer';
 import { TextArea } from '@/components/TextArea';
@@ -12,6 +11,7 @@ import { Divider } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ReservationCancelBottomSheetContent from './_fragments/ReservationCancelBottomSheetContent';
+import { useGetReservationDetail } from '@/_domain/reservation';
 
 const ReservationCancelPage = () => {
   const { id } = useParams<{ id: string }>();

@@ -1,6 +1,5 @@
 import { useUserStore } from '@/_domain/auth';
-import { ReservationFormValues, TimeSlot, useGetSchedulesDate } from '@/_domain/reservation';
-import { useGetSchedulesTimes } from '@/_domain/reservation/services/queries/schedule.queries';
+import { ReservationFormValues, TimeSlot, useGetSchedulesDate, useGetSchedulesTimes } from '@/_domain/reservation';
 import { SchedulesParams } from '@/_domain/reservation/types/schedule.types';
 import { BottomFixedSection, Button, Calendar, Loading, TimePicker } from '@/_shared';
 import { formatScheduleTime } from '@/_shared/utils/date.utils';

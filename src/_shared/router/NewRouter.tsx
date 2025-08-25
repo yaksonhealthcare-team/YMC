@@ -5,12 +5,12 @@ import { OverlayProvider } from '@/stores/ModalContext';
 import { SignupProvider } from '@/stores/SignupContext';
 import { PropsWithChildren } from 'react';
 import { createBrowserRouter, LoaderFunction, Outlet, redirect, RouterProvider } from 'react-router-dom';
-import config, { CustomRouteObject } from './newConfig';
-import { useNewAppBridge } from '@/hooks/useNewAppBridge';
+import { useNewAppBridge } from '@/_shared/hooks/useNewAppBridge';
 import { useOverlayBackHandler } from '@/_shared';
+import { CustomRouteObject, routeConfig } from './newConfig';
 
-const Router = () => {
-  const routes: CustomRouteObject[] = config.map((route) => {
+export const Router = () => {
+  const routes: CustomRouteObject[] = routeConfig.map((route) => {
     if (route.isDev && process.env.NODE_ENV !== 'development') {
       return {};
     }
@@ -39,8 +39,6 @@ const Router = () => {
 
   return <RouterProvider router={router} />;
 };
-
-export default Router;
 
 const AppProviders = ({ children }: PropsWithChildren) => (
   <SignupProvider>

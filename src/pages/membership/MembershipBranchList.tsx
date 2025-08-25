@@ -1,6 +1,5 @@
 import { useUserStore } from '@/_domain/auth';
-import { BranchesSchema } from '@/_domain/reservation';
-import { useGetBranches } from '@/_domain/reservation/services/queries/branch.queries';
+import { BranchesSchema, useGetBranches } from '@/_domain/reservation';
 import { DEFAULT_COORDINATE, useIntersectionObserver } from '@/_shared';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { Image } from '@/components/common/Image';

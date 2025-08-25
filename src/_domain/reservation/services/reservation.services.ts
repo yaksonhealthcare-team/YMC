@@ -1,13 +1,23 @@
-import { ApiResponse, authApi, handleError } from '@/_shared';
-import { AxiosResponse } from 'axios';
+import {
+  ApiResponse,
+  authApi,
+  CustomUseInfiniteQueryOptions,
+  CustomUseMutationOptions,
+  CustomUseQueryOptions,
+  handleError,
+  ListResponse
+} from '@/_shared';
+import { AxiosError, AxiosResponse } from 'axios';
 import { CreateReservationBody } from '../types';
 import {
   ReservationConsultCountSchema,
   ReservationDetailParams,
   ReservationDetailSchema,
   ReservationSchema,
-  ReservationsParams
+  ReservationsParams,
+  ReservationsSchema
 } from '../types/reservation.types';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
 const BASE_URL = `/reservation`;
 
@@ -15,7 +25,7 @@ const BASE_URL = `/reservation`;
  * 예약 생성
  * @link https://yaksonhc.postman.co/workspace/Team-Workspace~34821a51-840a-442c-80f4-eeb9dc894ed4/request/37761356-7fc8a650-497f-49d0-bb8c-532d57d4a948?action=share&creator=45468383&ctx=documentation
  */
-export const createReservation = async (
+const createReservation = async (
   body: CreateReservationBody
 ): Promise<AxiosResponse<ApiResponse<ReservationSchema>>> => {
   try {
@@ -26,12 +36,20 @@ export const createReservation = async (
     throw handleError(error, 'createReservation');
   }
 };
+export const useCreateReservationMutation = (
+  options?: CustomUseMutationOptions<AxiosResponse<ApiResponse<ReservationSchema>>, AxiosError, CreateReservationBody>
+) => {
+  return useMutation<AxiosResponse<ApiResponse<ReservationSchema>>, AxiosError, CreateReservationBody>({
+    mutationFn: (body: CreateReservationBody) => createReservation(body),
+    ...options
+  });
+};
 
 /**
  * 예약 조회
  * @link https://yaksonhc.postman.co/workspace/Team-Workspace~34821a51-840a-442c-80f4-eeb9dc894ed4/request/37761356-78cbb602-b61d-4d6a-84d4-a02a6e5ee8d0?action=share&source=copy-link&creator=45468383
  */
-export const getReservations = async (params: ReservationsParams) => {
+const getReservations = async (params: ReservationsParams) => {
   try {
     const endpoint = `${BASE_URL}/reservations`;
 
@@ -40,12 +58,32 @@ export const getReservations = async (params: ReservationsParams) => {
     throw handleError(error, 'getReservations');
   }
 };
+export const useGetReservations = (
+  key: string,
+  params: ReservationsParams,
+  options?: CustomUseInfiniteQueryOptions<
+    AxiosResponse<ListResponse<ReservationsSchema>>,
+    AxiosError,
+    AxiosResponse<ListResponse<ReservationsSchema>>[]
+  >
+) => {
+  return useInfiniteQuery({
+    queryKey: ['get-reservations', key, params],
+    queryFn: ({ pageParam = 1 }) => getReservations({ ...params, page: pageParam as number }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      return lastPage.data.current_page < lastPage.data.total_page_count ? lastPage.data.current_page + 1 : undefined;
+    },
+    select: (data) => data.pages.flatMap((page) => page),
+    ...options
+  });
+};
 
 /**
  * 상담 예약 갯수 조회
  * @link https://yaksonhc.postman.co/workspace/Team-Workspace~34821a51-840a-442c-80f4-eeb9dc894ed4/request/37761356-f1bd36bd-bcd3-4b40-871a-abb1b2ae6714?action=share&creator=45468383&ctx=documentation
  */
-export const getReservationCount = async (): Promise<AxiosResponse<ApiResponse<ReservationConsultCountSchema>>> => {
+const getReservationCount = async (): Promise<AxiosResponse<ApiResponse<ReservationConsultCountSchema>>> => {
   try {
     const endpoint = `${BASE_URL}/consultation-count`;
 
@@ -54,12 +92,27 @@ export const getReservationCount = async (): Promise<AxiosResponse<ApiResponse<R
     throw handleError(error, 'getReservationCount');
   }
 };
+export const useGetReservationConsultCount = (
+  key: string,
+  options?: CustomUseQueryOptions<
+    AxiosResponse<ApiResponse<ReservationConsultCountSchema>>,
+    AxiosError,
+    ApiResponse<ReservationConsultCountSchema>
+  >
+) => {
+  return useQuery({
+    queryKey: ['consultation-count', key],
+    queryFn: () => getReservationCount(),
+    select: ({ data }) => data,
+    ...options
+  });
+};
 
 /**
  * 상담 예약 상세 조회
  * @link https://yaksonhc.postman.co/workspace/Team-Workspace~34821a51-840a-442c-80f4-eeb9dc894ed4/request/37761356-9b8c2ab5-437b-4727-8b0f-12a6acd5a534?action=share&source=copy-link&creator=45468383
  */
-export const getReservationDetail = async (
+const getReservationDetail = async (
   params: ReservationDetailParams
 ): Promise<AxiosResponse<ApiResponse<ReservationDetailSchema[]>>> => {
   try {
@@ -69,4 +122,20 @@ export const getReservationDetail = async (
   } catch (error) {
     throw handleError(error, 'getReservationDetail');
   }
+};
+export const useGetReservationDetail = (
+  key: string,
+  params: ReservationDetailParams,
+  options?: CustomUseQueryOptions<
+    AxiosResponse<ApiResponse<ReservationDetailSchema[]>>,
+    AxiosError,
+    ApiResponse<ReservationDetailSchema[]>
+  >
+) => {
+  return useQuery({
+    queryKey: ['reservation-detail', key, params],
+    queryFn: () => getReservationDetail(params),
+    select: ({ data }) => data,
+    ...options
+  });
 };

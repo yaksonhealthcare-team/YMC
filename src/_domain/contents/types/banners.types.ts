@@ -1,3 +1,9 @@
+import { ApiResponse } from '@/_shared';
+
+export interface BannerResponse extends ApiResponse<BannerSchema> {
+  gubun: string;
+  use: string;
+}
 export interface BannerParams {
   gubun: BannerGubun;
   area01?: string;

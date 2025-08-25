@@ -1,10 +1,11 @@
-import { ApiResponse, authApi, handleError } from '@/_shared';
-import { AxiosResponse } from 'axios';
+import { ApiResponse, authApi, CustomUseQueryOptions, handleError } from '@/_shared';
+import { AxiosError, AxiosResponse } from 'axios';
 import { GuideMessagesSchema } from '../types';
+import { useQuery } from '@tanstack/react-query';
 
 const BASE_URL = `/guidemessages`;
 
-export const getGuideMessages = async (): Promise<AxiosResponse<ApiResponse<GuideMessagesSchema[]>>> => {
+const getGuideMessages = async (): Promise<AxiosResponse<ApiResponse<GuideMessagesSchema[]>>> => {
   try {
     const endpoint = `${BASE_URL}/setting`;
 
@@ -12,4 +13,19 @@ export const getGuideMessages = async (): Promise<AxiosResponse<ApiResponse<Guid
   } catch (error) {
     throw handleError(error, 'getGuideMessages');
   }
+};
+export const useGetGuideMessages = (
+  key: string,
+  options?: CustomUseQueryOptions<
+    AxiosResponse<ApiResponse<GuideMessagesSchema[]>>,
+    AxiosError,
+    ApiResponse<GuideMessagesSchema[]>
+  >
+) => {
+  return useQuery({
+    queryKey: ['get-guide-messages', key],
+    queryFn: () => getGuideMessages(),
+    select: ({ data }) => data,
+    ...options
+  });
 };

@@ -8,8 +8,12 @@ import {
   SigninEmailBody,
   SigninEmailSchema,
   SigninSocialBody,
-  SigninSocialSchema
+  SigninSocialSchema,
+  TermsParams,
+  TermsSchema
 } from '../types/auth.types';
+import { CustomUseMutationOptions, CustomUseQueryOptions } from '@/_shared';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 const BASE_URL = `/auth`;
 
@@ -35,7 +39,7 @@ export const refreshAccessToken = async (): Promise<
  * @link
  * https://yaksonhc.postman.co/workspace/Team-Workspace~34821a51-840a-442c-80f4-eeb9dc894ed4/request/37761356-7975850e-3c46-4db4-9620-8797ca4fe750?action=share&source=copy-link&creator=45468383
  */
-export const signinSocial = async (
+const signinSocial = async (
   body: SigninSocialBody
 ): Promise<AxiosResponse<ApiResponse<SigninSocialSchema[]>, AxiosError>> => {
   try {
@@ -45,6 +49,11 @@ export const signinSocial = async (
   } catch (error) {
     throw handleError(error, 'signinSocial');
   }
+};
+export const useSigninSocialMutation = () => {
+  return useMutation({
+    mutationFn: (body: SigninSocialBody) => signinSocial(body)
+  });
 };
 
 /**
@@ -61,13 +70,26 @@ export const getUser = async (): Promise<AxiosResponse<ApiResponse<UserSchema[]>
     throw handleError(error, 'getUser');
   }
 };
+export const useGetUser = (
+  options?: CustomUseQueryOptions<
+    AxiosResponse<ApiResponse<UserSchema[]>>,
+    AxiosError,
+    AxiosResponse<ApiResponse<UserSchema[]>>
+  >
+) => {
+  return useQuery({
+    queryKey: ['get-user'],
+    queryFn: () => getUser(),
+    ...options
+  });
+};
 
 /**
  * 로그아웃
  * @link
  * https://yaksonhc.postman.co/workspace/Team-Workspace~34821a51-840a-442c-80f4-eeb9dc894ed4/request/37761356-b9793758-fd37-4cd7-9d40-b76f7c0c8376?action=share&source=copy-link&creator=45468383
  */
-export const logout = async (): Promise<AxiosResponse<ApiResponse<{ message: string }>, AxiosError>> => {
+const logout = async (): Promise<AxiosResponse<ApiResponse<{ message: string }>, AxiosError>> => {
   try {
     const endpoint = `${BASE_URL}/logout`;
 
@@ -76,13 +98,18 @@ export const logout = async (): Promise<AxiosResponse<ApiResponse<{ message: str
     throw handleError(error, 'logout');
   }
 };
+export const useLogoutMutation = () => {
+  return useMutation({
+    mutationFn: () => logout()
+  });
+};
 
 /**
  * 이메일 로그인
  * @link
  * https://yaksonhc.postman.co/workspace/Team-Workspace~34821a51-840a-442c-80f4-eeb9dc894ed4/request/37761356-bca7f957-1cf3-4786-8e01-c8f65f37bb7b?action=share&source=copy-link&creator=45468383
  */
-export const signinEmail = async (
+const signinEmail = async (
   body: SigninEmailBody
 ): Promise<AxiosResponse<ApiResponse<SigninEmailSchema[]>, AxiosError>> => {
   try {
@@ -92,4 +119,32 @@ export const signinEmail = async (
   } catch (error) {
     throw handleError(error, 'signinEmail');
   }
+};
+export const useSigninEmailMutation = (
+  options?: CustomUseMutationOptions<AxiosResponse<ApiResponse<SigninEmailSchema[]>>, AxiosError, SigninEmailBody>
+) => {
+  return useMutation({
+    mutationFn: (body: SigninEmailBody) => signinEmail(body),
+    ...options
+  });
+};
+
+const getTerms = async (params: TermsParams): Promise<AxiosResponse<ApiResponse<TermsSchema>, AxiosError>> => {
+  try {
+    const endpoint = `${BASE_URL}/signup/terms`;
+
+    return await publicApi.get(endpoint, { params });
+  } catch (error) {
+    throw handleError(error, 'getTerms');
+  }
+};
+export const useGetTerms = (
+  params: TermsParams,
+  options?: CustomUseQueryOptions<AxiosResponse<ApiResponse<TermsSchema>, AxiosError>>
+) => {
+  return useQuery({
+    queryKey: ['get-terms', params],
+    queryFn: () => getTerms(params),
+    ...options
+  });
 };

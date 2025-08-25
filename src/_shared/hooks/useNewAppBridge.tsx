@@ -1,7 +1,6 @@
-import { getUser, saveAccessToken, useUserStore } from '@/_domain/auth';
+import { getUser, saveAccessToken, useSigninSocialMutation, useUserStore } from '@/_domain/auth';
 import { logger } from '@/_shared';
 import { publicApi } from '@/_shared/services/instance';
-import { signinWithSocial } from '@/apis/auth.api';
 import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -24,6 +23,7 @@ interface SocialLoginBody {
 export const useNewAppBridge = () => {
   const navigate = useNavigate();
   const { setUser } = useUserStore();
+  const { mutateAsync: signinMutateAsync } = useSigninSocialMutation();
 
   const handleSocialLogin = useCallback(
     async (data: SocialLoginBody) => {
@@ -33,17 +33,20 @@ export const useNewAppBridge = () => {
         if (provider === 'A') {
           // 애플 로그인
           const callbackUrl = 'auth/apple_callback';
-          await publicApi.post(callbackUrl, {
+          const response = await publicApi.post(callbackUrl, {
             code: data.authorizationCode,
             id_token: data.idToken,
             state: 'state',
             client_type: 'bundle'
           });
+
+          const msg = JSON.stringify(response.data);
+          window.ReactNativeWebView?.postMessage(JSON.stringify({ type: 'NETWORK', msg }));
           return;
         }
 
         const { accessToken, socialId, fcmToken, deviceType, idToken, refreshToken } = data;
-        const response = await signinWithSocial({
+        const body = {
           SocialAccessToken: accessToken,
           SocialRefreshToken: refreshToken,
           socialId,
@@ -51,7 +54,8 @@ export const useNewAppBridge = () => {
           deviceToken: fcmToken,
           deviceType,
           id_token: idToken
-        });
+        };
+        const response = await signinMutateAsync(body);
 
         const resAccessToken = response.data.body[0].accessToken;
         if (!resAccessToken) throw new Error();
@@ -62,6 +66,9 @@ export const useNewAppBridge = () => {
         setUser(userData);
         navigate('/', { replace: true });
       } catch (error: any) {
+        const msg = JSON.stringify(error);
+        window.ReactNativeWebView?.postMessage(JSON.stringify({ type: 'NETWORK', msg }));
+
         if (error.response?.status === 401) {
           // 첫 로그인하는 회원일 경우
           const { accessToken, socialId, fcmToken, deviceType, idToken, refreshToken, email } = data;
@@ -87,7 +94,7 @@ export const useNewAppBridge = () => {
         window.ReactNativeWebView?.postMessage(JSON.stringify({ type: 'LOGIN_FAIL' }));
       }
     },
-    [navigate, setUser]
+    [navigate, setUser, signinMutateAsync]
   );
 
   useEffect(() => {

@@ -1,9 +1,8 @@
-import { getUser, saveAccessToken, useUserStore } from '@/_domain/auth';
-import { signinWithSocial } from '@/apis/auth.api';
+import { getUser, saveAccessToken, useSigninSocialMutation, useUserStore } from '@/_domain/auth';
+import { requestForToken } from '@/_shared';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { useLayout } from '@/stores/LayoutContext';
 import { useOverlay } from '@/stores/ModalContext';
-import { requestForToken } from '@/libs/firebase';
 import { useEffect, useRef } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
@@ -15,6 +14,7 @@ const OAuthCallback = () => {
   const { openModal } = useOverlay();
   const { setHeader, setNavigation } = useLayout();
   const isProcessing = useRef(false);
+  const { mutateAsync: signinMutateAsync } = useSigninSocialMutation();
 
   useEffect(() => {
     setHeader({ display: false });
@@ -48,7 +48,7 @@ const OAuthCallback = () => {
 
         // 이미 가입된 회원 (next_action_type === "signin")
         try {
-          const signinResponse = await signinWithSocial({
+          const body = {
             SocialAccessToken: socialData.SocialAccessToken,
             thirdPartyType: getProviderCode(provider),
             socialId: socialData.socialId,
@@ -56,8 +56,8 @@ const OAuthCallback = () => {
             deviceType: window.osType ?? 'web',
             id_token: socialData.id_token,
             SocialRefreshToken: socialData.SocialRefreshToken
-          });
-
+          };
+          const signinResponse = await signinMutateAsync(body);
           const accessToken = signinResponse.data.body[0].accessToken;
           saveAccessToken(accessToken);
 
@@ -91,7 +91,7 @@ const OAuthCallback = () => {
     };
 
     handleCallback();
-  }, [provider, navigate, openModal, searchParams, setUser]);
+  }, [provider, navigate, openModal, searchParams, setUser, signinMutateAsync]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
