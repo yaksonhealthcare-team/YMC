@@ -7,10 +7,12 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { Suspense } from 'react';
-import 'swiper/swiper-bundle.css';
 import { Loading, useVConsole } from './_shared';
-import ErrorBoundary from './components/ErrorBoundary';
 import { Router } from './_shared/router';
+import ErrorBoundary from './components/ErrorBoundary';
+
+dayjs.extend(customParseFormat);
+dayjs.locale('ko');
 
 /**
  * @deprecated
@@ -46,9 +48,6 @@ const theme = createTheme({
     fontFamily: 'Pretendard, sans-serif' // Pretendard 폰트 설정
   }
 });
-
-dayjs.extend(customParseFormat);
-dayjs.locale('ko');
 
 const queryClient = new QueryClient({
   defaultOptions: {
