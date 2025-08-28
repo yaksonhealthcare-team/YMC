@@ -1,7 +1,7 @@
 import { ApiResponse, authApi, CustomUseQueryOptions, handleError } from '@/_shared';
+import { useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ScheduleDateScheme, SchedulesParams, ScheduleTimeScheme } from '../types/schedule.types';
-import { useQuery } from '@tanstack/react-query';
 
 const BASE_URL = `/schedules`;
 
@@ -19,7 +19,7 @@ const getSchedulesDate = async (params: SchedulesParams): Promise<AxiosResponse<
   }
 };
 export const useGetSchedulesDate = (
-  key: string,
+  userId: string,
   params: SchedulesParams,
   options?: CustomUseQueryOptions<
     AxiosResponse<ApiResponse<ScheduleDateScheme[]>>,
@@ -28,7 +28,7 @@ export const useGetSchedulesDate = (
   >
 ) => {
   return useQuery({
-    queryKey: ['schedule-date', key, params],
+    queryKey: ['schedule-date', userId, params],
     queryFn: () => getSchedulesDate(params),
     select: ({ data }) => data,
     ...options
@@ -51,7 +51,7 @@ const getSchedulesTimes = async (
   }
 };
 export const useGetSchedulesTimes = (
-  key: string,
+  userId: string,
   params: SchedulesParams,
   options?: CustomUseQueryOptions<
     AxiosResponse<ApiResponse<ScheduleTimeScheme[]>>,
@@ -60,7 +60,7 @@ export const useGetSchedulesTimes = (
   >
 ) => {
   return useQuery({
-    queryKey: ['schedule-times', key, params],
+    queryKey: ['schedule-times', userId, params],
     queryFn: () => getSchedulesTimes(params),
     select: ({ data }) => data,
     ...options

@@ -1,6 +1,6 @@
 import { ApiResponse } from '@/_shared';
 
-export interface BannerResponse extends ApiResponse<BannerSchema> {
+export interface BannerResponse extends ApiResponse<BannerSchema[]> {
   gubun: string;
   use: string;
 }
@@ -21,8 +21,7 @@ export interface BannerSchema {
   link: string;
   prior: string;
   fileCode: string;
-  fileUrl: string;
-  startDate?: string;
-  endDate?: string;
-  isVisible?: boolean;
+  fileurl: string;
+  sdate?: string;
+  edate?: string;
 }

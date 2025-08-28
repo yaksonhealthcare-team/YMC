@@ -4,8 +4,8 @@ import { BranchesSchema, ReservationFormValues, TimeSlot } from '@/_domain/reser
 import { DateBottomSheet, formatReservationDate, InputBox, setMultipleValues } from '@/_shared';
 import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
-import { useOverlay } from '@/stores/ModalContext';
 import { MembershipBranchSelectModal } from '@/pages/membership/_fragments/MembershipBranchSelectModal';
+import { useOverlay } from '@/stores/ModalContext';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useCallback, useMemo, useState } from 'react';
@@ -19,9 +19,10 @@ export const ReservationRestSection = () => {
     control,
     name: ['type', 'branch', 'date', 'timeSlot', 'request']
   });
-  const { user } = useUserStore();
+  const { getUserId } = useUserStore();
+  const userId = getUserId();
   const { openBottomSheet, showToast, closeOverlay } = useOverlay();
-  const { data: guideMessagesData } = useGetGuideMessages(user?.hp || '');
+  const { data: guideMessagesData } = useGetGuideMessages(userId);
 
   const handleSelectBranch = (branch: BranchesSchema) => {
     setMultipleValues(setValue, {

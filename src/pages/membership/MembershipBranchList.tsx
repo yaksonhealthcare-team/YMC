@@ -15,24 +15,25 @@ interface MembershipBranchListProps {
   // memberShipId?: string;
 }
 
-const MembershipBranchList = ({ onSelect, query /* memberShipId */ }: MembershipBranchListProps) => {
+const MembershipBranchList = ({ onSelect, query }: MembershipBranchListProps) => {
   const location = useLocation();
   const loadMoreRef = useRef(null);
   const { location: geolocationLocation } = useGeolocation();
-  const { user } = useUserStore();
+  const { getUserId } = useUserStore();
+  const userId = getUserId();
 
   const debouncedQuery = useDebounce(query, 300);
 
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading, isError, error, isFetching } =
     useGetBranches(
-      user?.hp || '',
+      userId,
       {
         nowlat: geolocationLocation?.latitude || DEFAULT_COORDINATE.latitude,
         nowlon: geolocationLocation?.longitude || DEFAULT_COORDINATE.longitude,
         search: debouncedQuery,
         mp_idx: location.state?.selectedItem
       },
-      { enabled: !!user, initialPageParam: 1 }
+      { enabled: !!userId, initialPageParam: 1 }
     );
 
   const handleNextPage = useCallback(() => {

@@ -1,23 +1,24 @@
 import { useUserStore } from '@/_domain/auth';
+import { useGetReservationDetail } from '@/_domain/reservation';
 import { Button } from '@/components/Button';
 import FixedButtonContainer from '@/components/FixedButtonContainer';
 import { TextArea } from '@/components/TextArea';
-import { useLayout } from '@/stores/LayoutContext';
-import { useOverlay } from '@/stores/ModalContext';
 import { useReservationGuideMessages } from '@/hooks/useGuideMessages';
 import { useCancelReservation } from '@/queries/useReservationQueries';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { escapeHtml } from '@/utils/sanitize';
 import { Divider } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ReservationCancelBottomSheetContent from './_fragments/ReservationCancelBottomSheetContent';
-import { useGetReservationDetail } from '@/_domain/reservation';
 
 const ReservationCancelPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { user } = useUserStore();
+  const { getUserId } = useUserStore();
+  const userId = getUserId();
   const { setHeader, setNavigation } = useLayout();
   const { showToast, openBottomSheet } = useOverlay();
   const [cancelReason, setCancelReason] = useState('');
@@ -25,13 +26,7 @@ const ReservationCancelPage = () => {
 
   const { mutate: cancelReservation } = useCancelReservation();
   const { reservationCancelMessage, isLoading: isGuideMessageLoading } = useReservationGuideMessages();
-  const { data: detailData } = useGetReservationDetail(
-    user?.hp || '',
-    {
-      r_idx: id || ''
-    },
-    { enabled: !!user }
-  );
+  const { data: detailData } = useGetReservationDetail(userId, { r_idx: id || '' }, { enabled: !!userId });
 
   useEffect(() => {
     setHeader({

@@ -11,12 +11,13 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 const ReserveCardSection = () => {
   const navigate = useNavigate();
-  const { user } = useUserStore();
+  const { getUserId } = useUserStore();
+  const userId = getUserId();
   const { setFilter } = useReservationStore();
   const { data, isLoading } = useGetReservations(
-    user?.hp || '',
+    userId,
     { r_status: '001' },
-    { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0, initialPageParam: 1, enabled: !!user }
+    { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0, initialPageParam: 1, enabled: !!userId }
   );
 
   const firstPage = data?.[0]?.data;

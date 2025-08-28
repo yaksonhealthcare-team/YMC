@@ -13,14 +13,16 @@ export const DateBottomSheet = ({ values, onClose, onSelect, ...props }: DateBot
   const [searchDate, setSearchDate] = useState<Dayjs>(date || dayjs());
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(date);
   const [selectedTime, setSelectedTime] = useState<TimeSlot | null>(timeSlot);
-  const { user } = useUserStore();
+  const { getUserId } = useUserStore();
+  const userId = getUserId();
+  const enabled = !!userId && !!selectedDate;
 
   const {
     data: schedulesDateData,
     isLoading: isScheduleDateLoading,
     isFetching: isScheduleDateFetching
-  } = useGetSchedulesDate(user?.hp || '', buildParams('date', values, searchDate), {
-    enabled: !!searchDate,
+  } = useGetSchedulesDate(userId, buildParams('date', values, searchDate), {
+    enabled,
     refetchOnMount: true,
     staleTime: 0
   });
@@ -28,8 +30,8 @@ export const DateBottomSheet = ({ values, onClose, onSelect, ...props }: DateBot
     data: schedulesTimesData,
     isLoading: isScheduleTimesLoading,
     isFetching: isScheduleTimesFetching
-  } = useGetSchedulesTimes(user?.hp || '', buildParams('times', values, selectedDate), {
-    enabled: !!selectedDate,
+  } = useGetSchedulesTimes(userId, buildParams('times', values, selectedDate), {
+    enabled,
     refetchOnMount: true,
     staleTime: 0
   });

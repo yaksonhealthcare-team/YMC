@@ -7,6 +7,7 @@ import {
   handleError,
   ListResponse
 } from '@/_shared';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { CreateReservationBody } from '../types';
 import {
@@ -17,7 +18,6 @@ import {
   ReservationsParams,
   ReservationsSchema
 } from '../types/reservation.types';
-import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
 const BASE_URL = `/reservation`;
 
@@ -59,7 +59,7 @@ const getReservations = async (params: ReservationsParams) => {
   }
 };
 export const useGetReservations = (
-  key: string,
+  userId: string,
   params: ReservationsParams,
   options?: CustomUseInfiniteQueryOptions<
     AxiosResponse<ListResponse<ReservationsSchema>>,
@@ -68,7 +68,7 @@ export const useGetReservations = (
   >
 ) => {
   return useInfiniteQuery({
-    queryKey: ['get-reservations', key, params],
+    queryKey: ['get-reservations', userId, params],
     queryFn: ({ pageParam = 1 }) => getReservations({ ...params, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
@@ -93,7 +93,7 @@ const getReservationCount = async (): Promise<AxiosResponse<ApiResponse<Reservat
   }
 };
 export const useGetReservationConsultCount = (
-  key: string,
+  userId: string,
   options?: CustomUseQueryOptions<
     AxiosResponse<ApiResponse<ReservationConsultCountSchema>>,
     AxiosError,
@@ -101,7 +101,7 @@ export const useGetReservationConsultCount = (
   >
 ) => {
   return useQuery({
-    queryKey: ['consultation-count', key],
+    queryKey: ['consultation-count', userId],
     queryFn: () => getReservationCount(),
     select: ({ data }) => data,
     ...options
@@ -124,7 +124,7 @@ const getReservationDetail = async (
   }
 };
 export const useGetReservationDetail = (
-  key: string,
+  userId: string,
   params: ReservationDetailParams,
   options?: CustomUseQueryOptions<
     AxiosResponse<ApiResponse<ReservationDetailSchema[]>>,
@@ -133,7 +133,7 @@ export const useGetReservationDetail = (
   >
 ) => {
   return useQuery({
-    queryKey: ['reservation-detail', key, params],
+    queryKey: ['reservation-detail', userId, params],
     queryFn: () => getReservationDetail(params),
     select: ({ data }) => data,
     ...options

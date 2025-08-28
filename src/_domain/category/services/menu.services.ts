@@ -1,9 +1,9 @@
 import { authApi, CustomUseInfiniteQueryOptions } from '@/_shared';
 import { ListResponse } from '@/_shared/types/response.types';
 import { handleError } from '@/_shared/utils';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ConsultMenuParams, ConsultMenuSchema, PrepaidMenuParams, PrepaidMenuSchema } from '../types/menu.types';
-import { useInfiniteQuery } from '@tanstack/react-query';
 
 const BASE_URL = `/memberships`;
 
@@ -23,6 +23,7 @@ export const getConsultMenu = async (
   }
 };
 export const useGetConsultMenu = (
+  userId: string,
   params: ConsultMenuParams,
   options?: CustomUseInfiniteQueryOptions<
     AxiosResponse<ListResponse<ConsultMenuSchema>>,
@@ -31,7 +32,7 @@ export const useGetConsultMenu = (
   >
 ) => {
   return useInfiniteQuery({
-    queryKey: ['get-consultation-memberships', params],
+    queryKey: ['get-consultation-memberships', userId, params],
     queryFn: ({ pageParam = 1 }) => getConsultMenu({ ...params, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
@@ -56,6 +57,7 @@ export const getPrepaidMenu = async (params: PrepaidMenuParams) => {
   }
 };
 export const useGetPrepaidMenu = (
+  userId: string,
   params: PrepaidMenuParams,
   options?: CustomUseInfiniteQueryOptions<
     AxiosResponse<ListResponse<PrepaidMenuSchema>>,
@@ -64,7 +66,7 @@ export const useGetPrepaidMenu = (
   >
 ) => {
   return useInfiniteQuery({
-    queryKey: ['get-flat-memberships', params],
+    queryKey: ['get-flat-memberships', userId, params],
     queryFn: ({ pageParam = 1 }) => getPrepaidMenu({ ...params, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {

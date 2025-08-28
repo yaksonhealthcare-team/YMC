@@ -5,10 +5,12 @@ export interface UserStore {
   user: UserSchema | null;
   setUser: (user: UserSchema | null) => void;
   resetUser: () => void;
+  getUserId: () => string;
 }
 
-export const useUserStore = create<UserStore>((set) => ({
+export const useUserStore = create<UserStore>((set, get) => ({
   user: null,
   setUser: (user) => set({ user }),
-  resetUser: () => set({ user: null })
+  resetUser: () => set({ user: null }),
+  getUserId: () => get().user?.id ?? ''
 }));

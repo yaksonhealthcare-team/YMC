@@ -1,36 +1,42 @@
-import { ApiResponse, authApi, CustomUseQueryOptions, handleError } from '@/_shared';
+import { authApi, CustomUseInfiniteQueryOptions, handleError } from '@/_shared';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
-import { PopupParams, PopupSchema } from '../types';
-import { useQuery } from '@tanstack/react-query';
+import { ContentsParams } from '../types';
+import { ContentsResponse } from '../types/contents.types';
 
 const BASE_URL = `/contents`;
 
 /**
- * 팝업 전체 조회
+ * 콘텐츠 조회
  * @link
- * https://yaksonhc.postman.co/workspace/Team-Workspace~34821a51-840a-442c-80f4-eeb9dc894ed4/request/37761356-e5329f84-e682-44d9-af85-e8afe8c02f82?action=share&source=copy-link&creator=45468383
+ * https://yaksonhc.postman.co/workspace/Team-Workspace~34821a51-840a-442c-80f4-eeb9dc894ed4/request/37761356-095809c2-7215-4ce1-b6bb-8c39f7597b1c?action=share&source=copy-link&creator=45468383
  */
-const getPopup = async (params: PopupParams): Promise<AxiosResponse<ApiResponse<PopupSchema[]>, AxiosError>> => {
+const getContents = async (params: ContentsParams): Promise<AxiosResponse<ContentsResponse, AxiosError>> => {
   try {
-    const endpoint = `${BASE_URL}/popup`;
+    const endpoint = `${BASE_URL}/contents`;
 
     return await authApi.get(endpoint, { params });
   } catch (error) {
-    throw handleError(error, 'getPopup');
+    throw handleError(error, 'getContents');
   }
 };
-export const useGetPopup = (
+export const useGetContents = (
   key: string,
-  params: PopupParams,
-  options?: CustomUseQueryOptions<
-    AxiosResponse<ApiResponse<PopupSchema[]>>,
+  params: ContentsParams,
+  options?: CustomUseInfiniteQueryOptions<
+    AxiosResponse<ContentsResponse, AxiosError>,
     AxiosError,
-    AxiosResponse<ApiResponse<PopupSchema[]>>
+    AxiosResponse<ContentsResponse, AxiosError>[]
   >
 ) => {
-  return useQuery({
-    queryKey: ['get-popup', key, params],
-    queryFn: () => getPopup(params),
+  return useInfiniteQuery({
+    queryKey: ['get-contents', key, params],
+    queryFn: ({ pageParam = 1 }) => getContents({ ...params, page: pageParam as number }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      return lastPage.data.current_page < lastPage.data.total_page_count ? lastPage.data.current_page + 1 : undefined;
+    },
+    select: (data) => data.pages.flatMap((page) => page),
     ...options
   });
 };

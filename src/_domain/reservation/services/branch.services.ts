@@ -6,9 +6,9 @@ import {
   handleError,
   ResultResponse
 } from '@/_shared';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { BranchDetailParams, BranchDetailSchema, BranchesParams, BranchesSchema } from '../types/branch.types';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 const BASE_URL = `/branches`;
 
@@ -28,7 +28,7 @@ const getBranchDetail = async (
   }
 };
 export const useGetBranchDetail = (
-  key: string,
+  userId: string,
   params: BranchDetailParams,
   options?: CustomUseQueryOptions<
     AxiosResponse<ApiResponse<BranchDetailSchema[]>>,
@@ -37,7 +37,7 @@ export const useGetBranchDetail = (
   >
 ) => {
   return useQuery({
-    queryKey: ['get-branch-detail', key, params],
+    queryKey: ['get-branch-detail', userId, params],
     queryFn: () => getBranchDetail(params),
     select: ({ data }) => data,
     staleTime: 1000 * 60 * 5,
@@ -59,7 +59,7 @@ const getBranches = async (params: BranchesParams): Promise<AxiosResponse<Result
   }
 };
 export const useGetBranches = (
-  key: string,
+  userId: string,
   params: BranchesParams,
   options?: CustomUseInfiniteQueryOptions<
     AxiosResponse<ResultResponse<BranchesSchema>>,
@@ -68,7 +68,7 @@ export const useGetBranches = (
   >
 ) => {
   return useInfiniteQuery({
-    queryKey: ['get-branches', key, params],
+    queryKey: ['get-branches', userId, params],
     queryFn: ({ pageParam = 1 }) => getBranches({ ...params, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {

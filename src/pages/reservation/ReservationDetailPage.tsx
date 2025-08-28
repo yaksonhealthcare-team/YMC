@@ -14,20 +14,22 @@ import MembershipUsage from './_fragments/MembershipUsage';
 import ReservationSummary from './_fragments/ReservationSummary';
 
 const ReservationDetailPage = () => {
+  const { id = '' } = useParams<{ id: string }>();
+  const { getUserId } = useUserStore();
+  const userId = getUserId();
+
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { setHeader, setNavigation } = useLayout();
   const { openBottomSheet, closeOverlay, overlayState } = useOverlay();
 
-  const { id = '' } = useParams<{ id: string }>();
-  const { user } = useUserStore();
   const navigate = useNavigate();
 
   const { data, isLoading, isError, error } = useGetReservationDetail(
-    user?.hp || '',
+    userId,
     { r_idx: id },
-    { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0, enabled: !!user }
+    { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0, enabled: !!userId }
   );
 
   const reservation = useMemo(() => data?.body[0], [data]);

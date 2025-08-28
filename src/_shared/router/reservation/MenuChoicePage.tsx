@@ -1,10 +1,14 @@
+import {
+  convertConsultMenu,
+  ConvertedConsultMenuData,
+  convertPrepaidMenu,
+  MenuCardProps,
+  MenuChoiceTemplate,
+  useUserStore
+} from '@/_domain';
+import { ConsultMenuParams, PrepaidMenuParams, useGetConsultMenu, useGetPrepaidMenu } from '@/_domain/category';
 import { useDebounce } from '@/_shared/hooks/useDebounce';
 import { useMemo, useState } from 'react';
-import { ConvertedConsultMenuData, convertConsultMenu } from '../../../_domain/reservation/business';
-import { convertPrepaidMenu } from '../../../_domain/reservation/business/menu.business';
-import { MenuCardProps } from '../../../_domain/reservation/components/organisms';
-import { MenuChoiceTemplate } from '../../../_domain/reservation/components/templates';
-import { ConsultMenuParams, PrepaidMenuParams, useGetConsultMenu, useGetPrepaidMenu } from '@/_domain/category';
 
 export interface MenuChoicePageProps {
   onBack: () => void;
@@ -14,6 +18,8 @@ export interface MenuChoicePageProps {
 }
 
 const MenuChoicePage = ({ onBack, onClickCard, fetchParams, type = 'standard' }: MenuChoicePageProps) => {
+  const { getUserId } = useUserStore();
+  const userId = getUserId();
   const isConsult = type === 'standard' && 'b_idx' in fetchParams;
   const isPrepaid = type === 'pre-paid' && 'mp_idx' in fetchParams;
 
@@ -26,11 +32,12 @@ const MenuChoicePage = ({ onBack, onClickCard, fetchParams, type = 'standard' }:
     hasNextPage: consultHasNextPage,
     isPending: consultIsPending
   } = useGetConsultMenu(
+    userId,
     {
       b_idx: isConsult ? fetchParams.b_idx : '',
       search: debouncedValue
     },
-    { enabled: type === 'standard', initialPageParam: 1 }
+    { enabled: type === 'standard' && !!userId, initialPageParam: 1 }
   );
   const {
     data: prepaidData,
@@ -38,8 +45,9 @@ const MenuChoicePage = ({ onBack, onClickCard, fetchParams, type = 'standard' }:
     hasNextPage: prepaidHasNextPage,
     isPending: prepaidIsPending
   } = useGetPrepaidMenu(
+    userId,
     { mp_idx: isPrepaid ? fetchParams.mp_idx : '', search: debouncedValue },
-    { enabled: type === 'pre-paid', initialPageParam: 1 }
+    { enabled: type === 'pre-paid' && !!userId, initialPageParam: 1 }
   );
 
   const consultMenuData = useMemo(() => consultData?.flatMap((page) => page.data.body), [consultData]);

@@ -1,12 +1,5 @@
 import { useUserStore } from '@/_domain/auth';
 import { useGetUserMembership, UserMembershipSchema } from '@/_domain/membership';
-import { DEFAULT_COORDINATE, Loading, parseScheduleTime } from '@/_shared';
-import { useOverlay } from '@/stores/ModalContext';
-import { useGeolocation } from '@/hooks/useGeolocation';
-import dayjs from 'dayjs';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   ReservationFormValues,
   ReservationMenuSectionProps,
@@ -15,6 +8,13 @@ import {
   useGetBranchDetail,
   useGetReservationConsultCount
 } from '@/_domain/reservation';
+import { DEFAULT_COORDINATE, Loading, parseScheduleTime } from '@/_shared';
+import { useGeolocation } from '@/hooks/useGeolocation';
+import { useOverlay } from '@/stores/ModalContext';
+import dayjs from 'dayjs';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 /**
  * 예약하기 페이지
@@ -34,16 +34,17 @@ const ReservationPage = () => {
   });
   const branchValues = useWatch({ control: methods.control, name: 'branch' });
   const [searchParams] = useSearchParams();
-  const { user } = useUserStore();
+  const { getUserId } = useUserStore();
+  const userId = getUserId();
   const { location } = useGeolocation();
   const navigate = useNavigate();
   const membershipId = searchParams.get('membershipId') ?? '';
 
   const { showToast, openModal, closeOverlay } = useOverlay();
-  const { data: consultCountData } = useGetReservationConsultCount(user?.hp || '');
-  const { data: membershipData, isLoading } = useGetUserMembership(user?.hp || '', { search_type: 'T' });
+  const { data: consultCountData } = useGetReservationConsultCount(userId);
+  const { data: membershipData, isLoading } = useGetUserMembership(userId, { search_type: 'T' });
   const { data: branchData } = useGetBranchDetail(
-    user?.hp || '',
+    userId,
     {
       b_idx: branchValues?.id || '',
       nowlat: location?.latitude || DEFAULT_COORDINATE.latitude,
