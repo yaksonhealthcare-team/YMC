@@ -1,7 +1,7 @@
 import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
 
-const Home = lazy(() => import('../../pages/home/Home'));
+const Home = lazy(() => import('./home/HomePage'));
 const Login = lazy(() => import('../../pages/login/Login'));
 const WithdrawalPage = lazy(() => import('../../pages/profile/WithdrawalPage'));
 const Membership = lazy(() => import('../../pages/membership/Membership'));
