@@ -19,12 +19,13 @@ const HomeOverview = ({ user, banners, notices, notiCount }: HomeOverviewProps) 
 
   return (
     <div className={clsx('px-5 mb-6', 'drop-shadow-[0px_1px_4px_rgba(46,43,41,0.15)]')}>
-      <OverviewHeader color="white" className="relative" />
+      <div className="relative">
+        <OverviewHeader color="white" className="w-full" />
 
-      <div className="absolute flex flex-col justify-between w-full h-full top-0 left-0 px-5">
-        <HeaderSection notices={notices} notiCount={notiCount} />
+        <div className="absolute flex flex-col justify-between w-full h-full top-0 left-0">
+          <HeaderSection notices={notices} notiCount={notiCount} />
+        </div>
       </div>
-
       <div className="bg-white rounded-b-3xl px-5 -mt-1">
         <div className="pt-4 pb-5">
           <ContentsSection user={user} />
