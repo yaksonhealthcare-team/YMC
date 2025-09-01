@@ -1,4 +1,11 @@
-import { Button } from '@/_shared';
+import {
+  Button,
+  getAppleLoginUrl,
+  getGoogleLoginUrl,
+  getKakaoLoginUrl,
+  getNaverLoginUrl,
+  requestNotificationPermission
+} from '@/_shared';
 import AppleIcon from '@/assets/icons/AppleIcon.svg?react';
 import GoogleIcon from '@/assets/icons/GoogleIcon.svg?react';
 import KakaoIcon from '@/assets/icons/KakaoIcon.svg?react';
@@ -6,13 +13,8 @@ import NaverIcon from '@/assets/icons/NaverIcon.svg?react';
 import Logo from '@/components/Logo';
 import { useLayout } from '@/stores/LayoutContext';
 import { useOverlay } from '@/stores/ModalContext';
-import { requestNotificationPermission } from '@/libs/firebase';
-import { getGoogleLoginUrl } from '@/libs/google';
-import { getKakaoLoginUrl } from '@/libs/kakao';
-import { getNaverLoginUrl } from '@/libs/naver';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAppleLoginUrl } from '@/libs/apple';
 
 const Login = () => {
   const [loadingProvider, setLoadingProvider] = useState<'kakao' | 'naver' | 'google' | 'apple' | null>(null);

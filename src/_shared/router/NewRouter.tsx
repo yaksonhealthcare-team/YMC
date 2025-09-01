@@ -1,12 +1,12 @@
 import { getUser, removeAccessToken, useUserStore } from '@/_domain/auth';
+import { useOverlayBackHandler } from '@/_shared';
+import { useNewAppBridge } from '@/_shared/hooks/useNewAppBridge';
 import ErrorPage from '@/components/ErrorPage';
 import { LayoutProvider } from '@/stores/LayoutContext';
 import { OverlayProvider } from '@/stores/ModalContext';
 import { SignupProvider } from '@/stores/SignupContext';
 import { PropsWithChildren } from 'react';
 import { createBrowserRouter, LoaderFunction, Outlet, redirect, RouterProvider } from 'react-router-dom';
-import { useNewAppBridge } from '@/_shared/hooks/useNewAppBridge';
-import { useOverlayBackHandler } from '@/_shared';
 import { CustomRouteObject, routeConfig } from './newConfig';
 
 export const Router = () => {
@@ -28,7 +28,7 @@ export const Router = () => {
       path: '/',
       element: (
         <AppProviders>
-          <BridgeMount />
+          <HookBridges />
           <Outlet />
         </AppProviders>
       ),
@@ -49,9 +49,9 @@ const AppProviders = ({ children }: PropsWithChildren) => (
 );
 
 /**
- * 웹뷰 통신을 위한 훅 선언
+ * 라우팅 전에 실행시킬 훅 선언
  */
-const BridgeMount = () => {
+const HookBridges = () => {
   useNewAppBridge();
   useOverlayBackHandler();
 
@@ -59,7 +59,7 @@ const BridgeMount = () => {
 };
 
 /**
- * 유저 검증 및 데이터 호출
+ * 라우팅 시 유저 검증 및 데이터 호출
  */
 const requireAuth: LoaderFunction = async () => {
   try {
