@@ -39,6 +39,8 @@ export const useGetConsultMenu = (
       return lastPage.data.current_page < lastPage.data.total_page_count ? lastPage.data.current_page + 1 : undefined;
     },
     select: (data) => data.pages.flatMap((page) => page),
+    gcTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 3,
     ...options
   });
 };
@@ -73,6 +75,8 @@ export const useGetPrepaidMenu = (
       return lastPage.data.current_page < lastPage.data.total_page_count ? lastPage.data.current_page + 1 : undefined;
     },
     select: (data) => data.pages.flatMap((page) => page),
+    gcTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 3,
     ...options
   });
 };

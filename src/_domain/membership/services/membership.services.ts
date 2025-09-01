@@ -44,6 +44,8 @@ export const useGetUserMembership = (
       return lastPage.data.current_page < lastPage.data.total_page_count ? lastPage.data.current_page + 1 : undefined;
     },
     select: (data) => data.pages.flatMap((page) => page),
+    gcTime: 0,
+    staleTime: 0,
     ...options
   });
 };
@@ -80,6 +82,8 @@ export const useGetUserMembershipDetail = (
       return lastPage.data.current_page < lastPage.data.total_page_count ? lastPage.data.current_page + 1 : undefined;
     },
     select: (data) => data.pages.flatMap((page) => page),
+    gcTime: 1000 * 60 * 60 * 24,
+    staleTime: 1000 * 60 * 60 * 18,
     ...options
   });
 };

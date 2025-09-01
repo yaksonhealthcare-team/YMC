@@ -1,6 +1,8 @@
+import { CustomUseMutationOptions, CustomUseQueryOptions } from '@/_shared';
 import { authApi, publicApi } from '@/_shared/services/instance';
 import { ApiResponse } from '@/_shared/types/response.types';
 import { handleError } from '@/_shared/utils';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { UserSchema } from '../types';
 import {
@@ -12,8 +14,6 @@ import {
   TermsParams,
   TermsSchema
 } from '../types/auth.types';
-import { CustomUseMutationOptions, CustomUseQueryOptions } from '@/_shared';
-import { useMutation, useQuery } from '@tanstack/react-query';
 
 const BASE_URL = `/auth`;
 
@@ -145,6 +145,8 @@ export const useGetTerms = (
   return useQuery({
     queryKey: ['get-terms', params],
     queryFn: () => getTerms(params),
+    gcTime: 1000 * 60 * 60 * 24,
+    staleTime: 1000 * 60 * 60 * 18,
     ...options
   });
 };

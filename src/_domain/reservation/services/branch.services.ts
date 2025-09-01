@@ -40,7 +40,6 @@ export const useGetBranchDetail = (
     queryKey: ['get-branch-detail', userId, params],
     queryFn: () => getBranchDetail(params),
     select: ({ data }) => data,
-    staleTime: 1000 * 60 * 5,
     ...options
   });
 };

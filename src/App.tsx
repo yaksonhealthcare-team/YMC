@@ -45,7 +45,7 @@ const theme = createTheme({
     }
   },
   typography: {
-    fontFamily: 'Pretendard, sans-serif' // Pretendard 폰트 설정
+    fontFamily: 'Pretendard, sans-serif'
   }
 });
 
@@ -54,7 +54,10 @@ const queryClient = new QueryClient({
     queries: {
       retry: false,
       refetchOnMount: false,
-      refetchOnWindowFocus: false
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      gcTime: 1000 * 60 * 4, // 기본 4분
+      staleTime: 1000 * 60 * 2 // 기본 2분
     },
     mutations: {
       retry: false

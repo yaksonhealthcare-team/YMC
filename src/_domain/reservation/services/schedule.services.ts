@@ -31,6 +31,8 @@ export const useGetSchedulesDate = (
     queryKey: ['schedule-date', userId, params],
     queryFn: () => getSchedulesDate(params),
     select: ({ data }) => data,
+    gcTime: 0,
+    staleTime: 0,
     ...options
   });
 };
@@ -63,6 +65,8 @@ export const useGetSchedulesTimes = (
     queryKey: ['schedule-times', userId, params],
     queryFn: () => getSchedulesTimes(params),
     select: ({ data }) => data,
+    gcTime: 0,
+    staleTime: 0,
     ...options
   });
 };

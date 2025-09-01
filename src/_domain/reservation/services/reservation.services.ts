@@ -46,7 +46,7 @@ export const useCreateReservationMutation = (
 };
 
 /**
- * 예약 조회
+ * 예약 목록 조회
  * @link https://yaksonhc.postman.co/workspace/Team-Workspace~34821a51-840a-442c-80f4-eeb9dc894ed4/request/37761356-78cbb602-b61d-4d6a-84d4-a02a6e5ee8d0?action=share&source=copy-link&creator=45468383
  */
 const getReservations = async (params: ReservationsParams) => {
@@ -75,6 +75,8 @@ export const useGetReservations = (
       return lastPage.data.current_page < lastPage.data.total_page_count ? lastPage.data.current_page + 1 : undefined;
     },
     select: (data) => data.pages.flatMap((page) => page),
+    gcTime: 0,
+    staleTime: 0,
     ...options
   });
 };
@@ -104,6 +106,8 @@ export const useGetReservationConsultCount = (
     queryKey: ['consultation-count', userId],
     queryFn: () => getReservationCount(),
     select: ({ data }) => data,
+    gcTime: 1000 * 60 * 15,
+    staleTime: 1000 * 60 * 10,
     ...options
   });
 };
@@ -136,6 +140,8 @@ export const useGetReservationDetail = (
     queryKey: ['reservation-detail', userId, params],
     queryFn: () => getReservationDetail(params),
     select: ({ data }) => data,
+    gcTime: 1000 * 60 * 30,
+    staleTime: 1000 * 60 * 20,
     ...options
   });
 };

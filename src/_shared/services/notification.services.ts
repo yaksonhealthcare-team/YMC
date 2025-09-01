@@ -31,6 +31,8 @@ export const useGetUnreadCount = (
   return useQuery({
     queryKey: ['get-unread-count', userId],
     queryFn: () => getUnreadCount(),
+    gcTime: 0,
+    staleTime: 0,
     ...options
   });
 };
