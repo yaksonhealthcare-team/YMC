@@ -1,4 +1,4 @@
-import { authApi, CustomUseQueryOptions, handleError } from '@/_shared';
+import { authApi, CustomUseQueryOptions, GET_BANNERS, handleError } from '@/_shared';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { BannerParams, BannerResponse } from '../types/banners.types';
@@ -25,7 +25,7 @@ export const useGetBanners = (
   options?: CustomUseQueryOptions<AxiosResponse<BannerResponse>, AxiosError, AxiosResponse<BannerResponse>>
 ) => {
   return useQuery({
-    queryKey: [userId, params, 'get-banners'],
+    queryKey: [GET_BANNERS, userId, params],
     queryFn: () => getBanners(params),
     ...options
   });

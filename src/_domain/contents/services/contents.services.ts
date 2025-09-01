@@ -1,4 +1,4 @@
-import { authApi, CustomUseInfiniteQueryOptions, handleError } from '@/_shared';
+import { authApi, CustomUseInfiniteQueryOptions, GET_CONTENTS, handleError } from '@/_shared';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ContentsParams } from '../types';
@@ -30,7 +30,7 @@ export const useGetContents = (
   >
 ) => {
   return useInfiniteQuery({
-    queryKey: ['get-contents', key, params],
+    queryKey: [GET_CONTENTS, key, params],
     queryFn: ({ pageParam = 1 }) => getContents({ ...params, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {

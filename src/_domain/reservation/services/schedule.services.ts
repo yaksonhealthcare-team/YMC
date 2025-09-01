@@ -1,4 +1,11 @@
-import { ApiResponse, authApi, CustomUseQueryOptions, handleError } from '@/_shared';
+import {
+  ApiResponse,
+  authApi,
+  CustomUseQueryOptions,
+  GET_SCHEDULES_DATE,
+  GET_SCHEDULES_TIMES,
+  handleError
+} from '@/_shared';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ScheduleDateScheme, SchedulesParams, ScheduleTimeScheme } from '../types/schedule.types';
@@ -28,7 +35,7 @@ export const useGetSchedulesDate = (
   >
 ) => {
   return useQuery({
-    queryKey: ['schedule-date', userId, params],
+    queryKey: [GET_SCHEDULES_DATE, userId, params],
     queryFn: () => getSchedulesDate(params),
     select: ({ data }) => data,
     gcTime: 0,
@@ -62,7 +69,7 @@ export const useGetSchedulesTimes = (
   >
 ) => {
   return useQuery({
-    queryKey: ['schedule-times', userId, params],
+    queryKey: [GET_SCHEDULES_TIMES, userId, params],
     queryFn: () => getSchedulesTimes(params),
     select: ({ data }) => data,
     gcTime: 0,

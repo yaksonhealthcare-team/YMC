@@ -3,7 +3,7 @@ import {
   HomeOverview,
   useGetBanners,
   useGetContents,
-  useGetUserMembership,
+  useGetUserMemberships,
   useUserStore
 } from '@/_domain';
 import { useGetUnreadCount } from '@/_shared/services';
@@ -30,7 +30,7 @@ const HomePage = () => {
     staleTime: 0,
     gcTime: 0
   });
-  const { data: membershipData, isLoading: isMembershipLoading } = useGetUserMembership(
+  const { data: membershipData, isLoading: isMembershipLoading } = useGetUserMemberships(
     userId,
     { search_type: 'T' },
     { enabled, initialPageParam: 1 }

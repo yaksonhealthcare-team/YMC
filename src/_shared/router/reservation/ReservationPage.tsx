@@ -1,5 +1,5 @@
 import { useUserStore } from '@/_domain/auth';
-import { useGetUserMembership, UserMembershipSchema } from '@/_domain/membership';
+import { useGetUserMemberships, UserMembershipSchema } from '@/_domain/membership';
 import {
   ReservationFormValues,
   ReservationMenuSectionProps,
@@ -8,9 +8,10 @@ import {
   useGetBranchDetail,
   useGetReservationConsultCount
 } from '@/_domain/reservation';
-import { DEFAULT_COORDINATE, Loading, parseScheduleTime } from '@/_shared';
+import { DEFAULT_COORDINATE, GET_RESERVATIONS, Loading, parseScheduleTime } from '@/_shared';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { useOverlay } from '@/stores/ModalContext';
+import { useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
@@ -38,11 +39,12 @@ const ReservationPage = () => {
   const userId = getUserId();
   const { location } = useGeolocation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const membershipId = searchParams.get('membershipId') ?? '';
 
   const { showToast, openModal, closeOverlay } = useOverlay();
   const { data: consultCountData } = useGetReservationConsultCount(userId);
-  const { data: membershipData, isLoading } = useGetUserMembership(userId, { search_type: 'T' });
+  const { data: membershipData, isLoading } = useGetUserMemberships(userId, { search_type: 'T' });
   const { data: branchData } = useGetBranchDetail(
     userId,
     {
@@ -52,7 +54,7 @@ const ReservationPage = () => {
     },
     { enabled: !!branchValues?.id }
   );
-  const { mutateAsync, isPending } = useCreateReservationMutation();
+  const { mutateAsync: reservationMutate, isPending } = useCreateReservationMutation();
 
   const handleSubmit = useCallback(
     async (values: ReservationFormValues) => {
@@ -87,7 +89,7 @@ const ReservationPage = () => {
           })
           .filter((obj) => Object.keys(obj).length > 0);
 
-        const response = await mutateAsync({
+        const response = await reservationMutate({
           r_gubun: type === 'consult' ? 'C' : 'R',
           b_idx: branch.id,
           r_date: formattedDate,
@@ -100,6 +102,8 @@ const ReservationPage = () => {
           const message = response.data.resultMessage || '예약에 실패했습니다. 다시 시도해주세요.';
           throw new Error(message);
         }
+
+        queryClient.invalidateQueries({ queryKey: [GET_RESERVATIONS, userId] });
 
         openModal({
           title: '예약 완료',
@@ -124,7 +128,7 @@ const ReservationPage = () => {
         }
       }
     },
-    [closeOverlay, mutateAsync, navigate, openModal, showToast]
+    [reservationMutate, queryClient, userId, openModal, closeOverlay, navigate, showToast]
   );
 
   const consultCount = useMemo(() => {

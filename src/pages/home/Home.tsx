@@ -1,11 +1,14 @@
-import { convertMembershipForCard, useGetUserMembership } from '@/_domain/membership';
+import { useUserStore } from '@/_domain/auth';
+import { convertMembershipForCard, useGetUserMemberships } from '@/_domain/membership';
 import '@/assets/css/swiper-custom.css';
 import NotiIcon from '@/assets/icons/NotiIcon.svg?react';
 import { FloatingButton } from '@/components/FloatingButton';
 import Logo from '@/components/Logo';
 import NoticesSummarySlider from '@/components/NoticesSummarySlider';
-import { useLayout } from '@/stores/LayoutContext';
+import { useBanner } from '@/queries/useBannerQueries';
 import { useUnreadNotificationsCount } from '@/queries/useNotificationQueries';
+import { useLayout } from '@/stores/LayoutContext';
+import { BannerRequestType } from '@/types/Banner';
 import { Container, Typography } from '@mui/material';
 import { lazy, Suspense, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -14,9 +17,6 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import DynamicHomeHeaderBackground from './_fragments/DynamicHomeHeaderBackground';
 import { MembershipCardSection } from './_fragments/MembershipCardSection';
 import ReserveCardSection from './_fragments/ReserveCardSection';
-import { useUserStore } from '@/_domain/auth';
-import { useBanner } from '@/queries/useBannerQueries';
-import { BannerRequestType } from '@/types/Banner';
 
 // 단일 코드 청크로 그룹화하여 불필요한 네트워크 요청 줄이기
 const SecondaryContentChunk = lazy(
@@ -33,7 +33,7 @@ const Home = () => {
     { enabled: !!user }
   );
   const { data: unreadCount = 0 } = useUnreadNotificationsCount(user);
-  const { data, isLoading: isMembershipLoading } = useGetUserMembership(
+  const { data, isLoading: isMembershipLoading } = useGetUserMemberships(
     user?.hp || '',
     { search_type: 'T' },
     { enabled: !!user, initialPageParam: 1 }

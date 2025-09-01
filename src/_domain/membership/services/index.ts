@@ -1,1 +1,1 @@
-export { useGetUserMembership, useGetUserMembershipDetail } from './membership.services';
+export { useGetUserMembershipDetail, useGetUserMemberships } from './membership.services';

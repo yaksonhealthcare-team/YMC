@@ -115,7 +115,7 @@ const ContentsSection = ({ user }: ContentsSectionProps) => {
       </div>
 
       <button
-        className="rounded-full bg-white text-primary-300 py-2 px-5 font-sb whitespace-nowrap text-14px"
+        className="rounded-full bg-white text-primary-300 py-2 px-5 font-sb whitespace-nowrap text-14px z-10"
         onClick={handleClick}
       >
         {user ? '예약하기' : '로그인하기'}

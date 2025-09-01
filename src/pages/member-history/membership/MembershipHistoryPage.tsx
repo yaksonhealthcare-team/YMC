@@ -3,7 +3,7 @@ import {
   convertMembershipForCard,
   MembershipCard,
   MembershipStatusType,
-  useGetUserMembership
+  useGetUserMemberships
 } from '@/_domain/membership';
 import { Loading, useIntersectionObserver } from '@/_shared';
 import { Button } from '@/components/Button';
@@ -22,7 +22,7 @@ const MembershipContent = ({ filterId }: { filterId: string }) => {
   const navigate = useNavigate();
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useGetUserMembership(
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useGetUserMemberships(
     userId,
     { search_type: filterId === '-' ? '' : (filterId as MembershipStatusType) },
     { refetchOnMount: 'always', staleTime: 0, initialPageParam: 1, enabled: !!userId }

@@ -1,4 +1,4 @@
-import { ApiResponse, authApi, CustomUseQueryOptions, handleError } from '@/_shared';
+import { ApiResponse, authApi, CustomUseQueryOptions, GET_GUIDE_MESSAGES, handleError } from '@/_shared';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { GuideMessagesSchema } from '../types';
@@ -27,7 +27,7 @@ export const useGetGuideMessages = (
   >
 ) => {
   return useQuery({
-    queryKey: ['get-guide-messages', userId],
+    queryKey: [GET_GUIDE_MESSAGES, userId],
     queryFn: () => getGuideMessages(),
     select: ({ data }) => data,
     gcTime: 1000 * 60 * 20,

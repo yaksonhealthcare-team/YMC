@@ -1,4 +1,4 @@
-import { CustomUseMutationOptions, CustomUseQueryOptions } from '@/_shared';
+import { CustomUseMutationOptions, CustomUseQueryOptions, GET_TERMS, GET_USER } from '@/_shared';
 import { authApi, publicApi } from '@/_shared/services/instance';
 import { ApiResponse } from '@/_shared/types/response.types';
 import { handleError } from '@/_shared/utils';
@@ -78,7 +78,7 @@ export const useGetUser = (
   >
 ) => {
   return useQuery({
-    queryKey: ['get-user'],
+    queryKey: [GET_USER],
     queryFn: () => getUser(),
     ...options
   });
@@ -143,7 +143,7 @@ export const useGetTerms = (
   options?: CustomUseQueryOptions<AxiosResponse<ApiResponse<TermsSchema>, AxiosError>>
 ) => {
   return useQuery({
-    queryKey: ['get-terms', params],
+    queryKey: [GET_TERMS, params],
     queryFn: () => getTerms(params),
     gcTime: 1000 * 60 * 60 * 24,
     staleTime: 1000 * 60 * 60 * 18,

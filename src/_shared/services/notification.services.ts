@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
+import { GET_UNREAD_COUNT } from '../constants';
 import { ApiResponse, CustomUseQueryOptions } from '../types';
 import { handleError } from '../utils';
 import { authApi } from './instance';
@@ -29,7 +30,7 @@ export const useGetUnreadCount = (
   >
 ) => {
   return useQuery({
-    queryKey: ['get-unread-count', userId],
+    queryKey: [GET_UNREAD_COUNT, userId],
     queryFn: () => getUnreadCount(),
     gcTime: 0,
     staleTime: 0,

@@ -1,4 +1,4 @@
-import { authApi, CustomUseInfiniteQueryOptions } from '@/_shared';
+import { authApi, CustomUseInfiniteQueryOptions, GET_USER_MEMBERSHIP_DETAIL, GET_USER_MEMBERSHIPS } from '@/_shared';
 import { ListResponse } from '@/_shared/types/response.types';
 import { handleError } from '@/_shared/utils';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -27,7 +27,7 @@ const getUserMemberships = async (
     throw handleError(error, 'getUserMemberships');
   }
 };
-export const useGetUserMembership = (
+export const useGetUserMemberships = (
   userId: string,
   params: UserMembershipParams,
   options?: CustomUseInfiniteQueryOptions<
@@ -37,7 +37,7 @@ export const useGetUserMembership = (
   >
 ) => {
   return useInfiniteQuery({
-    queryKey: ['get-user-memberships', userId, params],
+    queryKey: [GET_USER_MEMBERSHIPS, userId, params],
     queryFn: ({ pageParam = 1 }) => getUserMemberships({ ...params, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
@@ -75,7 +75,7 @@ export const useGetUserMembershipDetail = (
   >
 ) => {
   return useInfiniteQuery({
-    queryKey: ['get-user-membership-detail', userId, params],
+    queryKey: [GET_USER_MEMBERSHIP_DETAIL, userId, params],
     queryFn: ({ pageParam = 1 }) => getUserMembershipsDetail({ ...params, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {

@@ -4,6 +4,9 @@ import {
   CustomUseInfiniteQueryOptions,
   CustomUseMutationOptions,
   CustomUseQueryOptions,
+  GET_RESERVATION_CONSULT_COUNT,
+  GET_RESERVATION_DETAIL,
+  GET_RESERVATIONS,
   handleError,
   ListResponse
 } from '@/_shared';
@@ -68,15 +71,15 @@ export const useGetReservations = (
   >
 ) => {
   return useInfiniteQuery({
-    queryKey: ['get-reservations', userId, params],
+    queryKey: [GET_RESERVATIONS, userId, params],
     queryFn: ({ pageParam = 1 }) => getReservations({ ...params, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       return lastPage.data.current_page < lastPage.data.total_page_count ? lastPage.data.current_page + 1 : undefined;
     },
     select: (data) => data.pages.flatMap((page) => page),
-    gcTime: 0,
-    staleTime: 0,
+    gcTime: 1000 * 60 * 60 * 24,
+    staleTime: 1000 * 60 * 60 * 18,
     ...options
   });
 };
@@ -103,7 +106,7 @@ export const useGetReservationConsultCount = (
   >
 ) => {
   return useQuery({
-    queryKey: ['consultation-count', userId],
+    queryKey: [GET_RESERVATION_CONSULT_COUNT, userId],
     queryFn: () => getReservationCount(),
     select: ({ data }) => data,
     gcTime: 1000 * 60 * 15,
@@ -137,7 +140,7 @@ export const useGetReservationDetail = (
   >
 ) => {
   return useQuery({
-    queryKey: ['reservation-detail', userId, params],
+    queryKey: [GET_RESERVATION_DETAIL, userId, params],
     queryFn: () => getReservationDetail(params),
     select: ({ data }) => data,
     gcTime: 1000 * 60 * 30,

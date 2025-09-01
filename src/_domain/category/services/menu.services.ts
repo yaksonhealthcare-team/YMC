@@ -1,4 +1,4 @@
-import { authApi, CustomUseInfiniteQueryOptions } from '@/_shared';
+import { authApi, CustomUseInfiniteQueryOptions, GET_CONSULT_MENU, GET_PREPAID_MENU } from '@/_shared';
 import { ListResponse } from '@/_shared/types/response.types';
 import { handleError } from '@/_shared/utils';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -32,7 +32,7 @@ export const useGetConsultMenu = (
   >
 ) => {
   return useInfiniteQuery({
-    queryKey: ['get-consultation-memberships', userId, params],
+    queryKey: [GET_CONSULT_MENU, userId, params],
     queryFn: ({ pageParam = 1 }) => getConsultMenu({ ...params, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
@@ -68,7 +68,7 @@ export const useGetPrepaidMenu = (
   >
 ) => {
   return useInfiniteQuery({
-    queryKey: ['get-flat-memberships', userId, params],
+    queryKey: [GET_PREPAID_MENU, userId, params],
     queryFn: ({ pageParam = 1 }) => getPrepaidMenu({ ...params, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {

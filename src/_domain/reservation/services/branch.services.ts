@@ -3,6 +3,8 @@ import {
   authApi,
   CustomUseInfiniteQueryOptions,
   CustomUseQueryOptions,
+  GET_BRANCH_DETAIL,
+  GET_BRANCHES,
   handleError,
   ResultResponse
 } from '@/_shared';
@@ -37,7 +39,7 @@ export const useGetBranchDetail = (
   >
 ) => {
   return useQuery({
-    queryKey: ['get-branch-detail', userId, params],
+    queryKey: [GET_BRANCH_DETAIL, userId, params],
     queryFn: () => getBranchDetail(params),
     select: ({ data }) => data,
     ...options
@@ -67,7 +69,7 @@ export const useGetBranches = (
   >
 ) => {
   return useInfiniteQuery({
-    queryKey: ['get-branches', userId, params],
+    queryKey: [GET_BRANCHES, userId, params],
     queryFn: ({ pageParam = 1 }) => getBranches({ ...params, page: pageParam as number }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
