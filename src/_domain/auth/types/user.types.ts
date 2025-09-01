@@ -1,5 +1,5 @@
 export interface UserSchema {
-  id?: string;
+  id: string;
   name: string;
   level?: string;
   level_name?: string;

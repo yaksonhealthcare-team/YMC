@@ -36,10 +36,6 @@ export const fetchBranch = async (id: string, coords?: Coordinate): Promise<Bran
   return BranchMapper.toDetailEntity(data.body[0]);
 };
 
-export const bookmarkBranch = async (id: string): Promise<void> => {
-  await authApi.post('/bookmarks/bookmarks', { b_idx: id });
-};
-
 // 즐겨찾는 지점 목록 조회
 export const getBranchBookmarks = async (coords?: Coordinate) => {
   if (!coords) return { branches: [], address: '' };

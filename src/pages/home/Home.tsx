@@ -30,7 +30,7 @@ const Home = () => {
 
   const { data: mainBanner } = useBanner(
     { gubun: BannerRequestType.SLIDE, area01: 'Y', area02: 'Y' },
-    { retry: 3, enabled: !!user }
+    { enabled: !!user }
   );
   const { data: unreadCount = 0 } = useUnreadNotificationsCount(user);
   const { data, isLoading: isMembershipLoading } = useGetUserMembership(

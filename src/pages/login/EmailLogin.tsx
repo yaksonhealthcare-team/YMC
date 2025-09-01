@@ -1,4 +1,5 @@
 import { getUser, saveAccessToken, SigninEmailBody, useSigninEmailMutation, useUserStore } from '@/_domain/auth';
+import { requestForToken } from '@/_shared';
 import { DeviceType } from '@/apis/auth.api';
 import EyeIcon from '@/assets/icons/EyeIcon.svg?react';
 import EyeSlashIcon from '@/assets/icons/EyeSlashIcon.svg?react';
@@ -6,7 +7,6 @@ import { Button } from '@/components/Button';
 import CustomTextField from '@/components/CustomTextField';
 import { useLayout } from '@/stores/LayoutContext';
 import { useOverlay } from '@/stores/ModalContext';
-import { requestForToken } from '@/libs/firebase';
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

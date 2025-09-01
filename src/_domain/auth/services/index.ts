@@ -1,2 +1,8 @@
-export { getUser, logout, refreshAccessToken, signinEmail, signinSocial } from './auth.services';
-export * from './queries';
+export { getUser, refreshAccessToken } from './auth.services';
+export {
+  useGetUser,
+  useLogoutMutation,
+  useSigninEmailMutation,
+  useSigninSocialMutation,
+  useGetTerms
+} from './auth.services';

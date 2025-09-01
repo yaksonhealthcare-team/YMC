@@ -1,21 +1,6 @@
 import { authApi } from '@/_shared';
 import { Location } from '@/types/Location';
 
-export interface AddressSearchResult {
-  title: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-}
-
-export interface AddressBookmark {
-  id: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-  isBaseAddress: boolean;
-}
-
 export interface ApiResponse<T> {
   resultCode: string;
   resultMessage: string;

@@ -1,8 +1,9 @@
-import { authApi } from '@/_shared';
+import { authApi, CustomUseInfiniteQueryOptions } from '@/_shared';
 import { ListResponse } from '@/_shared/types/response.types';
 import { handleError } from '@/_shared/utils';
-import { AxiosResponse } from 'axios';
-import { ConsultMenuParams, ConsultMenuSchema, PrepaidMenuParams } from '../types/menu.types';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { ConsultMenuParams, ConsultMenuSchema, PrepaidMenuParams, PrepaidMenuSchema } from '../types/menu.types';
 
 const BASE_URL = `/memberships`;
 
@@ -21,6 +22,28 @@ export const getConsultMenu = async (
     throw handleError(error, 'getConsultMenu');
   }
 };
+export const useGetConsultMenu = (
+  userId: string,
+  params: ConsultMenuParams,
+  options?: CustomUseInfiniteQueryOptions<
+    AxiosResponse<ListResponse<ConsultMenuSchema>>,
+    AxiosError,
+    AxiosResponse<ListResponse<ConsultMenuSchema>>[]
+  >
+) => {
+  return useInfiniteQuery({
+    queryKey: ['get-consultation-memberships', userId, params],
+    queryFn: ({ pageParam = 1 }) => getConsultMenu({ ...params, page: pageParam as number }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      return lastPage.data.current_page < lastPage.data.total_page_count ? lastPage.data.current_page + 1 : undefined;
+    },
+    select: (data) => data.pages.flatMap((page) => page),
+    gcTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 3,
+    ...options
+  });
+};
 
 /**
  * 정액권 관리메뉴 선택
@@ -34,4 +57,26 @@ export const getPrepaidMenu = async (params: PrepaidMenuParams) => {
   } catch (error) {
     throw handleError(error, 'getPrepaidMenu');
   }
+};
+export const useGetPrepaidMenu = (
+  userId: string,
+  params: PrepaidMenuParams,
+  options?: CustomUseInfiniteQueryOptions<
+    AxiosResponse<ListResponse<PrepaidMenuSchema>>,
+    AxiosError,
+    AxiosResponse<ListResponse<PrepaidMenuSchema>>[]
+  >
+) => {
+  return useInfiniteQuery({
+    queryKey: ['get-flat-memberships', userId, params],
+    queryFn: ({ pageParam = 1 }) => getPrepaidMenu({ ...params, page: pageParam as number }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      return lastPage.data.current_page < lastPage.data.total_page_count ? lastPage.data.current_page + 1 : undefined;
+    },
+    select: (data) => data.pages.flatMap((page) => page),
+    gcTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 3,
+    ...options
+  });
 };

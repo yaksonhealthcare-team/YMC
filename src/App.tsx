@@ -7,10 +7,12 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { Suspense } from 'react';
-import 'swiper/swiper-bundle.css';
 import { Loading, useVConsole } from './_shared';
+import { Router } from './_shared/router';
 import ErrorBoundary from './components/ErrorBoundary';
-import Router from './router/NewRouter';
+
+dayjs.extend(customParseFormat);
+dayjs.locale('ko');
 
 /**
  * @deprecated
@@ -43,19 +45,19 @@ const theme = createTheme({
     }
   },
   typography: {
-    fontFamily: 'Pretendard, sans-serif' // Pretendard 폰트 설정
+    fontFamily: 'Pretendard, sans-serif'
   }
 });
-
-dayjs.extend(customParseFormat);
-dayjs.locale('ko');
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: false,
       refetchOnMount: false,
-      refetchOnWindowFocus: false
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      gcTime: 1000 * 60 * 4, // 기본 4분
+      staleTime: 1000 * 60 * 2 // 기본 2분
     },
     mutations: {
       retry: false

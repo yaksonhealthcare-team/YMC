@@ -16,15 +16,16 @@ import { useNavigate } from 'react-router-dom';
 import MainTabs from '../_fragments/MainTabs';
 
 const MembershipContent = ({ filterId }: { filterId: string }) => {
-  const { user } = useUserStore();
+  const { getUserId } = useUserStore();
+  const userId = getUserId();
   const { setHeader, setNavigation } = useLayout();
   const navigate = useNavigate();
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useGetUserMembership(
-    user?.hp || '',
+    userId,
     { search_type: filterId === '-' ? '' : (filterId as MembershipStatusType) },
-    { refetchOnMount: 'always', staleTime: 0, initialPageParam: 1, enabled: !!user }
+    { refetchOnMount: 'always', staleTime: 0, initialPageParam: 1, enabled: !!userId }
   );
 
   const handleNextFetch = useCallback(() => {

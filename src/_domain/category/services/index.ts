@@ -1,2 +1,1 @@
-export { getConsultMenu } from './menu.services';
-export * from './queries';
+export { useGetConsultMenu, useGetPrepaidMenu } from './menu.services';

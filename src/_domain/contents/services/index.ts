@@ -1,3 +1,2 @@
-export { getPopup } from './contents.services';
-export { getBanners, type BannerResponse } from './banners.services';
-export * from './queries';
+export { useGetBanners } from './banners.services';
+export { useGetContents } from './contents.services';
