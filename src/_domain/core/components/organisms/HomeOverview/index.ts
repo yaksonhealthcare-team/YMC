@@ -1,1 +1,2 @@
-export { default as HomeOverview, type HomeOverviewProps } from './HomeOverview';
+export { default as HomeOverview } from './HomeOverview';
+export * from './HomeOverview.types';

@@ -1,18 +1,13 @@
 import { UserSchema } from '@/_domain/auth';
-import { BannerSchema, BannerSwiper, ContentsSchema, NotificationButton } from '@/_domain/contents';
+import { BannerSwiper, ContentsSchema, NotificationButton } from '@/_domain/contents';
 import { TextSwiper } from '@/_shared';
 import Logo from '@/assets/_icons/logo.svg?react';
 import OverviewHeader from '@/assets/_icons/overview-header.svg?react';
 import clsx from 'clsx';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { HomeOverviewProps } from './HomeOverview.types';
 
-export interface HomeOverviewProps {
-  user: UserSchema | null;
-  banners?: BannerSchema[];
-  notices?: ContentsSchema[];
-  notiCount: number;
-}
 const HomeOverview = ({ user, banners, notices, notiCount }: HomeOverviewProps) => {
   const hasBanners = banners && banners.length > 0;
 
