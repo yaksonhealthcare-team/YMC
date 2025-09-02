@@ -15,7 +15,7 @@ export const DateBottomSheet = ({ values, onClose, onSelect, ...props }: DateBot
   const [selectedTime, setSelectedTime] = useState<TimeSlot | null>(timeSlot);
   const { getUserId } = useUserStore();
   const userId = getUserId();
-  const enabled = !!userId && !!selectedDate;
+  const enabled = !!userId;
 
   const {
     data: schedulesDateData,
