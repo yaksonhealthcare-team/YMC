@@ -1,7 +1,6 @@
-import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
-import { cancelPayments, fetchBankList, fetchPayment, fetchPayments, requestPayment } from '../apis/payments.api';
-import { PaymentHistory, PaymentRequest } from '../types/Payment';
-import { queryClient } from './clients';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { cancelPayments, fetchPayment, fetchPayments } from '../apis/payments.api';
+import { PaymentHistory } from '../types/Payment';
 import { queryKeys } from './query.keys';
 
 export const usePaymentHistories = () =>
@@ -38,8 +37,9 @@ export const usePaymentHistory = (paymentId: string) =>
     retry: false
   });
 
-export const usePaymentCancel = () =>
-  useMutation({
+export const usePaymentCancel = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: ({ orderId, paymentIds, reason }: { orderId: string; paymentIds: string[]; reason: string }) =>
       cancelPayments(orderId, paymentIds, reason),
     onSettled: () =>
@@ -47,55 +47,6 @@ export const usePaymentCancel = () =>
         queryKey: queryKeys.payments.histories.list({ page: 1 }),
         exact: true
       }),
-    retry: false
-  });
-
-export const useBankList = () =>
-  useQuery({
-    queryKey: queryKeys.payments.banks,
-    queryFn: () => fetchBankList(),
-    retry: false
-  });
-
-export const useRequestPayment = () =>
-  useMutation({
-    mutationFn: (paymentData: PaymentRequest) => requestPayment(paymentData),
-    onSettled: () =>
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.payments.histories.list({ page: 1 }),
-        exact: true
-      }),
-    retry: false
-  });
-
-export const usePayment = (id: number) => {
-  return useQuery({
-    queryKey: ['payments', id],
-    queryFn: () => Promise.reject(new Error('Not implemented')),
-    enabled: false,
-    retry: false
-  });
-};
-
-export const useCreatePayment = () => {
-  return useMutation({
-    mutationFn: () => Promise.reject(new Error('Not implemented')),
-    retry: false
-  });
-};
-
-export const usePaymentByReservation = (reservationId: number) => {
-  return useQuery({
-    queryKey: ['payments', 'reservation', reservationId],
-    queryFn: () => Promise.reject(new Error('Not implemented')),
-    enabled: false,
-    retry: false
-  });
-};
-
-export const useCancelPayment = () => {
-  return useMutation({
-    mutationFn: () => Promise.reject(new Error('Not implemented')),
     retry: false
   });
 };

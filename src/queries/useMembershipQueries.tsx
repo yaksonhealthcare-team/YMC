@@ -3,7 +3,6 @@ import {
   fetchMembershipDetail,
   fetchMembershipCategories,
   fetchUserMemberships,
-  fetchAdditionalManagement,
   fetchMembershipList,
   ListResponse
 } from '../apis/membership.api';
@@ -57,48 +56,5 @@ export const useUserMemberships = (searchType?: string, user?: User | null) => {
     },
     retry: true,
     enabled: !!user
-  });
-};
-
-export const useAdditionalManagement = (membershipIdx?: string) => {
-  return useQuery({
-    queryKey: ['memberships', 'additional', membershipIdx],
-    queryFn: () => {
-      if (!membershipIdx) {
-        throw new Error('membershipIdx is required');
-      }
-      return fetchAdditionalManagement(membershipIdx);
-    },
-    enabled: !!membershipIdx,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    retry: true
-  });
-};
-
-export const useMembership = (id: number) => {
-  return useQuery({
-    queryKey: ['memberships', id],
-    queryFn: () => Promise.reject(new Error('Not implemented')),
-    enabled: false,
-    retry: true
-  });
-};
-
-export const useMembershipByUser = () => {
-  return useQuery({
-    queryKey: ['memberships', 'user'],
-    queryFn: () => Promise.reject(new Error('Not implemented')),
-    enabled: false,
-    retry: true
-  });
-};
-
-export const useAvailableMemberships = () => {
-  return useQuery({
-    queryKey: ['memberships', 'available'],
-    queryFn: () => Promise.reject(new Error('Not implemented')),
-    enabled: false,
-    retry: true
   });
 };

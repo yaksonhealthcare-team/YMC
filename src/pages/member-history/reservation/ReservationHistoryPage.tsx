@@ -1,11 +1,11 @@
+import { useUserStore } from '@/_domain/auth';
 import { useGetReservations } from '@/_domain/reservation';
-import { useIntersectionObserver } from '@/_shared';
+import { Loading, useIntersectionObserver } from '@/_shared';
 import ReservationIcon from '@/assets/icons/ReservationIcon.svg?react';
 import { Button } from '@/components/Button';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { ReserveCard } from '@/components/ReserveCard';
-import { useAuth } from '@/contexts/AuthContext';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useReservationStore } from '@/stores/reservationStore';
 import { FilterItem, reservationFilters, ReservationStatusCode } from '@/types/Reservation';
 import clsx from 'clsx';
@@ -14,12 +14,19 @@ import { useNavigate } from 'react-router-dom';
 import MainTabs from '../_fragments/MainTabs';
 
 const ReservationContent = ({ filterId }: { filterId: ReservationStatusCode }) => {
-  const { user } = useAuth();
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = useGetReservations(
-    user?.phone || '',
+  const { user } = useUserStore();
+  const { data, isPending, isRefetching, hasNextPage, fetchNextPage, isFetchingNextPage } = useGetReservations(
+    user?.hp || '',
     { r_status: filterId },
-    { refetchOnMount: 'always', refetchOnWindowFocus: 'always', staleTime: 0, initialPageParam: 1 }
+    {
+      refetchOnMount: 'always',
+      refetchOnWindowFocus: 'always',
+      staleTime: 0,
+      initialPageParam: 1,
+      enabled: !!user
+    }
   );
+
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const handleNextFetch = useCallback(() => {
@@ -31,10 +38,10 @@ const ReservationContent = ({ filterId }: { filterId: ReservationStatusCode }) =
   useIntersectionObserver(loadMoreRef, handleNextFetch, { rootMargin: '200px' });
 
   const reservations = useMemo(() => data?.flatMap((page) => page.data.body) ?? [], [data]);
+  const hasReservation = reservations && reservations.length > 0;
 
-  if (!reservations || reservations.length === 0) {
-    return <div className="flex justify-center items-center p-4">예약 내역이 없습니다.</div>;
-  }
+  if (isPending || isRefetching) return <Loading />;
+  if (!hasReservation) return <div className="flex justify-center items-center p-4">예약 내역이 없습니다.</div>;
 
   return (
     <div className="flex-1 overflow-y-auto pb-[100px] scrollbar-hide" key={`reservation-content-${filterId}`}>
@@ -113,7 +120,7 @@ const ReservationHistoryPage = () => {
       backgroundColor: 'bg-system-bg'
     });
     setNavigation({ display: true });
-  }, []);
+  }, [setHeader, setNavigation]);
 
   useEffect(() => {
     return () => {

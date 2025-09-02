@@ -1,6 +1,6 @@
 import { Button } from '@/components/Button';
-import { useLayout } from '@/contexts/LayoutContext';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { useCallback, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 

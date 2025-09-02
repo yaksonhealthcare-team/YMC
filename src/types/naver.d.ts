@@ -1,16 +1,10 @@
-interface NaverLoginResponse {
-  access_token: string;
-  refresh_token: string;
-  token_type: string;
-  expires_in: string;
+interface NaverLoginInstance {
+  init: () => void;
+  getLoginStatus: (callback: (status: boolean) => void) => void;
+  logout: () => void;
 }
 
-interface NaverError {
-  error: string;
-  error_description: string;
-}
-
-interface NaverLoginWithNaverId {
+export interface NaverLoginWithNaverId {
   new (params: {
     clientId: string;
     callbackUrl: string;
@@ -21,16 +15,4 @@ interface NaverLoginWithNaverId {
       height: number;
     };
   }): NaverLoginInstance;
-}
-
-interface NaverLoginInstance {
-  init: () => void;
-  getLoginStatus: (callback: (status: boolean) => void) => void;
-  logout: () => void;
-}
-
-interface Window {
-  naver: {
-    LoginWithNaverId: NaverLoginWithNaverId;
-  };
 }

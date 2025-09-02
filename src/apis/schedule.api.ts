@@ -1,9 +1,9 @@
-import { axiosClient } from '@/queries/clients';
+import { authApi } from '@/_shared';
 import { ScheduleDate, ScheduleFilters, ScheduleTime } from '@/types/Schedule';
 import dayjs from 'dayjs';
 
 export const fetchScheduleDates = async (filters: ScheduleFilters): Promise<ScheduleDate[]> => {
-  const { data } = await axiosClient.get('/schedules/date', {
+  const { data } = await authApi.get('/schedules/date', {
     params: {
       ...(filters.membershipIndex !== 0 && { mp_idx: filters.membershipIndex }),
       add_services: filters.addServices && filters.addServices.length > 0 ? filters.addServices.join(',') : undefined,
@@ -17,7 +17,7 @@ export const fetchScheduleDates = async (filters: ScheduleFilters): Promise<Sche
 };
 
 export const fetchScheduleTimes = async (filters: ScheduleFilters): Promise<ScheduleTime[]> => {
-  const { data } = await axiosClient.get('/schedules/times', {
+  const { data } = await authApi.get('/schedules/times', {
     params: {
       ...(filters.membershipIndex !== 0 && { mp_idx: filters.membershipIndex }),
       add_services: filters.addServices && filters.addServices.length > 0 ? filters.addServices.join(',') : undefined,

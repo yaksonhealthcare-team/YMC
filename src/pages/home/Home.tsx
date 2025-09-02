@@ -1,15 +1,13 @@
-import { convertMembershipForCard, useGetUserMembership } from '@/_domain/membership';
+import { useUserStore } from '@/_domain/auth';
+import { convertMembershipForCard, useGetUserMemberships } from '@/_domain/membership';
 import '@/assets/css/swiper-custom.css';
 import NotiIcon from '@/assets/icons/NotiIcon.svg?react';
 import { FloatingButton } from '@/components/FloatingButton';
-import LoadingIndicator from '@/components/LoadingIndicator';
 import Logo from '@/components/Logo';
 import NoticesSummarySlider from '@/components/NoticesSummarySlider';
-import { useAuth } from '@/contexts/AuthContext';
-import { useLayout } from '@/contexts/LayoutContext';
-import { usePreventGoBack } from '@/hooks/usePreventGoBack';
 import { useBanner } from '@/queries/useBannerQueries';
 import { useUnreadNotificationsCount } from '@/queries/useNotificationQueries';
+import { useLayout } from '@/stores/LayoutContext';
 import { BannerRequestType } from '@/types/Banner';
 import { Container, Typography } from '@mui/material';
 import { lazy, Suspense, useEffect, useMemo } from 'react';
@@ -28,29 +26,22 @@ const SecondaryContentChunk = lazy(
 const Home = () => {
   const { setHeader, setNavigation } = useLayout();
   const navigate = useNavigate();
-  const { user, isLoading } = useAuth();
-  const { data: mainBanner } = useBanner(
-    {
-      gubun: BannerRequestType.SLIDE,
-      area01: 'Y',
-      area02: 'Y'
-    },
-    {
-      retry: 3,
-      enabled: !!user
-    }
-  );
+  const { user } = useUserStore();
 
-  const { data, isLoading: isMembershipLoading } = useGetUserMembership(user?.phone || '', { search_type: 'T' });
+  const { data: mainBanner } = useBanner(
+    { gubun: BannerRequestType.SLIDE, area01: 'Y', area02: 'Y' },
+    { enabled: !!user }
+  );
+  const { data: unreadCount = 0 } = useUnreadNotificationsCount(user);
+  const { data, isLoading: isMembershipLoading } = useGetUserMemberships(
+    user?.hp || '',
+    { search_type: 'T' },
+    { enabled: !!user, initialPageParam: 1 }
+  );
   const memberships = useMemo(() => data?.flatMap((page) => page.data.body) || [], [data]);
   const totalCount = data?.[0]?.data?.total_count || 0;
   const convertedMemberships = convertMembershipForCard(memberships);
   const hasMembership = memberships && memberships.length > 0;
-
-  const { data: unreadCount = 0 } = useUnreadNotificationsCount(user);
-
-  // 뒤로가기 방지 훅 적용
-  usePreventGoBack();
 
   const getDisplayCount = (count: number) => {
     if (count > 99) return '99+';
@@ -63,7 +54,7 @@ const Home = () => {
       backgroundColor: 'bg-system-bg'
     });
     setNavigation({ display: true });
-  }, []);
+  }, [setHeader, setNavigation]);
 
   const handleReservationClick = () => {
     if (!user) {
@@ -76,14 +67,6 @@ const Home = () => {
 
     navigate('/reservation');
   };
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-full">
-        <LoadingIndicator />
-      </div>
-    );
-  }
 
   return (
     <div className="w-full bg-system-bg h-full">
@@ -117,8 +100,8 @@ const Home = () => {
                 <Typography className="font-m text-14px">
                   {user ? (
                     <>
-                      <span className="mr-2">{user?.levelName}</span>{' '}
-                      <span className="font-b mr-[2px]">{user?.point}</span>
+                      <span className="mr-2">{user?.level_name}</span>{' '}
+                      <span className="font-b mr-[2px]">{user?.points}</span>
                       <span>P</span>
                     </>
                   ) : (

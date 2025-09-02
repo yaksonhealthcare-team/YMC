@@ -1,13 +1,13 @@
+import { useUserStore } from '@/_domain/auth';
 import {
   convertMembershipForCard,
   MembershipCard,
   MembershipStatusType,
-  useGetUserMembership
+  useGetUserMemberships
 } from '@/_domain/membership';
 import { Loading, useIntersectionObserver } from '@/_shared';
 import { Button } from '@/components/Button';
-import { useAuth } from '@/contexts/AuthContext';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useMembershipStore } from '@/stores/membershipStore';
 import { MyMembershipFilterItem, myMembershipFilters } from '@/types/Membership';
 import clsx from 'clsx';
@@ -16,15 +16,16 @@ import { useNavigate } from 'react-router-dom';
 import MainTabs from '../_fragments/MainTabs';
 
 const MembershipContent = ({ filterId }: { filterId: string }) => {
-  const { user } = useAuth();
+  const { getUserId } = useUserStore();
+  const userId = getUserId();
   const { setHeader, setNavigation } = useLayout();
   const navigate = useNavigate();
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useGetUserMembership(
-    user?.phone || '',
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useGetUserMemberships(
+    userId,
     { search_type: filterId === '-' ? '' : (filterId as MembershipStatusType) },
-    { refetchOnMount: 'always', staleTime: 0, initialPageParam: 1 }
+    { refetchOnMount: 'always', staleTime: 0, initialPageParam: 1, enabled: !!userId }
   );
 
   const handleNextFetch = useCallback(() => {

@@ -1,7 +1,7 @@
 import { Button } from '@/components/Button';
 import { EmptyCard } from '@/components/EmptyCard';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useIntersection } from '@/hooks/useIntersection';
 import { useReviews } from '@/queries/useReviewQueries';
 import { useEffect } from 'react';

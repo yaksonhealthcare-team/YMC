@@ -2,7 +2,7 @@ import { ReservationDetailSchema } from '@/_domain/reservation';
 import PhoneIcon from '@/assets/icons/PhoneIcon.svg?react';
 import PinIcon from '@/assets/icons/PinIcon.svg?react';
 import MapView from '@/components/MapView';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { Branch } from '@/types/Branch';
 import { copyToClipboard } from '@/utils/copyUtils';
 import { ReactNode } from 'react';

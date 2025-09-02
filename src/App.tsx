@@ -1,15 +1,18 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import 'swiper/swiper-bundle.css';
+import { Suspense } from 'react';
+import { Loading, useVConsole } from './_shared';
+import { Router } from './_shared/router';
 import ErrorBoundary from './components/ErrorBoundary';
-import { queryClient } from './queries/clients';
-import { AppRouter } from './router/router';
+
+dayjs.extend(customParseFormat);
+dayjs.locale('ko');
 
 /**
  * @deprecated
@@ -42,26 +45,43 @@ const theme = createTheme({
     }
   },
   typography: {
-    fontFamily: 'Pretendard, sans-serif' // Pretendard 폰트 설정
+    fontFamily: 'Pretendard, sans-serif'
   }
 });
 
-dayjs.extend(customParseFormat);
-dayjs.locale('ko');
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      gcTime: 1000 * 60 * 4, // 기본 4분
+      staleTime: 1000 * 60 * 2 // 기본 2분
+    },
+    mutations: {
+      retry: false
+    }
+  }
+});
 
-function App() {
+const App = () => {
+  useVConsole();
+
   return (
     <ErrorBoundary>
-      <ThemeProvider theme={theme}>
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
             <ReactQueryDevtools initialIsOpen={false} />
-            <AppRouter />
+            <Suspense fallback={<Loading variant="global" />}>
+              <Router />
+            </Suspense>
           </LocalizationProvider>
-        </QueryClientProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
     </ErrorBoundary>
   );
-}
+};
 
 export default App;

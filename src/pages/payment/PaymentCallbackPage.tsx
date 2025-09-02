@@ -1,10 +1,9 @@
 import { fetchPoints } from '@/apis/points.api';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { usePaymentStore } from '@/hooks/usePaymentStore';
-import { queryClient } from '@/queries/clients';
 import { PaymentResponse, PaymentStatus } from '@/types/Payment';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -58,6 +57,7 @@ export default function PaymentCallbackPage() {
   const navigate = useNavigate();
   const { openModal } = useOverlay();
   const { setPaymentStatus, clear: clearPayment } = usePaymentStore();
+  const queryClient = useQueryClient();
 
   const { data: availablePoint = 0 } = useQuery({
     queryKey: ['points'],

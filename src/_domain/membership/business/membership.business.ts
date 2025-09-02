@@ -51,22 +51,10 @@ export function convertMembershipForSwiperBySlot(
     return [];
   }
 
-  const placeholder: ReservationMembershipCardItem = {
-    mp_idx: '',
-    branchId: '',
-    branchName: '',
-    serviceName: '',
-    startDate: '',
-    expireDate: '',
-    remainAmount: '',
-    totalAmount: '',
-    type: '' as ReservationMembershipType
-  };
-
-  // ③ 같은 branchId인 data만 map → excludedSet에 있으면 placeholder, 아니면 toCardItem
+  // ③ 같은 branchId인 data만 map → excludedSet에 있으면 제외, 아니면 toCardItem
   return data
-    .filter((item) => item.branchs[0].b_idx === firstBranchId)
-    .map((item) => (excludedSet.has(item.mp_idx) ? placeholder : toCardItem(item)));
+    .filter((item) => item.branchs[0].b_idx === firstBranchId && !excludedSet.has(item.mp_idx))
+    .map(toCardItem);
 }
 
 export type ConvertedMembershipForCardData = ReturnType<typeof convertMembershipForCard>;

@@ -2,7 +2,7 @@ import { fetchPoints } from '@/apis/points.api';
 import { Button } from '@/components/Button';
 import FixedButtonContainer from '@/components/FixedButtonContainer';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { usePayment } from '@/hooks/usePayment';
 import { usePaymentHandlers } from '@/hooks/usePaymentHandlers';
 import { usePaymentStore } from '@/hooks/usePaymentStore';

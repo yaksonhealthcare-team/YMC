@@ -1,6 +1,6 @@
 import { EmptyCard } from '@/components/EmptyCard';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import useIntersection from '@/hooks/useIntersection';
 import { usePaymentHistories } from '@/queries/usePaymentQueries';
 import { useQueryClient } from '@tanstack/react-query';

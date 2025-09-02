@@ -1,4 +1,4 @@
-import { DEFAULT_COORDINATE } from '@/constants/coordinate';
+import { DEFAULT_COORDINATE } from '@/_shared';
 import { useGeolocationStore } from '@/stores/geolocationStore';
 import { GeolocationOptions } from '@/types/Coordinate';
 import { useEffect } from 'react';

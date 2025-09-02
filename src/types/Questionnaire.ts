@@ -54,6 +54,4 @@ export interface QuestionnaireFormValues {
   [key: `${string}_${'text' | 'option'}`]: string | OptionValue[];
 }
 
-export type QuestionValue = string | OptionValue[] | undefined;
-
 export type QuestionFieldName = `${string}_${'text' | 'option'}`;

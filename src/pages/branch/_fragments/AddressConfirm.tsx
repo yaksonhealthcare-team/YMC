@@ -1,8 +1,8 @@
 import HeartDisabledIcon from '@/assets/icons/HeartDisabledIcon.svg?react';
 import HeartEnabledIcon from '@/assets/icons/HeartEnabledIcon.svg?react';
 import { Button } from '@/components/Button';
-import { useLayout } from '@/contexts/LayoutContext';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useLayout } from '@/stores/LayoutContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { useAddressFromCoords } from '@/hooks/useAddressFromCoords';
 import { useBranchLocationSelect } from '@/hooks/useBranchLocationSelect';
 import {

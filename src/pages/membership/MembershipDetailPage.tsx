@@ -6,7 +6,7 @@ import StoreIcon from '@/assets/icons/StoreIcon.svg?react';
 import MembershipPlaceholderImage from '@/assets/images/MembershipPlaceholderImage.jpg';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { Image } from '@/components/common/Image';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useMembershipDetail } from '@/queries/useMembershipQueries';
 import { formatPrice, parsePrice } from '@/utils/format';
 import { calculateDiscountRate, toNumber } from '@/utils/number';

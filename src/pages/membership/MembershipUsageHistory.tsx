@@ -1,3 +1,4 @@
+import { useUserStore } from '@/_domain';
 import {
   convertMembershipForCard,
   MembershipCard,
@@ -7,7 +8,7 @@ import {
 import { Loading } from '@/_shared';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import DateAndTime from '@/components/DateAndTime';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -20,10 +21,16 @@ interface ReservationThumbnailProps {
 
 const MembershipUsageHistory = () => {
   const { setHeader, setNavigation } = useLayout();
+  const { getUserId } = useUserStore();
+  const userId = getUserId();
   const { id = '' } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data, isLoading } = useGetUserMembershipDetail({ mp_idx: id }, { enabled: !!id, initialPageParam: 1 });
+  const { data, isLoading } = useGetUserMembershipDetail(
+    userId,
+    { mp_idx: id },
+    { enabled: !!id && !!userId, initialPageParam: 1 }
+  );
   const membershipDetail = useMemo(() => data?.flatMap((page) => page.data.body) || [], [data]);
   const hasMembershipDetail = membershipDetail && membershipDetail.length > 0;
 

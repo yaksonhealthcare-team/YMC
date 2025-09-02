@@ -1,4 +1,4 @@
-import { User } from '@/types/User';
+import { UserSchema } from '@/_domain/auth';
 import { InfiniteData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   fetchNotifications,
@@ -46,7 +46,7 @@ export const useUpdateNotificationSettings = () => {
   });
 };
 
-export const useUnreadNotificationsCount = (user: User | null) => {
+export const useUnreadNotificationsCount = (user: UserSchema | null) => {
   return useQuery({
     queryKey: ['unreadNotificationsCount'],
     queryFn: async () => {
@@ -101,15 +101,6 @@ export const useReadNotification = () => {
         return Math.max(0, (oldCount || 0) - 1);
       });
     },
-    retry: false
-  });
-};
-
-export const useUnreadNotificationCount = () => {
-  return useQuery({
-    queryKey: ['notifications', 'unread'],
-    queryFn: () => Promise.reject(new Error('Not implemented')),
-    enabled: false,
     retry: false
   });
 };

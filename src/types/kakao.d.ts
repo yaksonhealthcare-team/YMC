@@ -12,7 +12,7 @@ interface KakaoError {
   error_description: string;
 }
 
-interface KakaoSDK {
+export interface KakaoSDK {
   init: (appKey: string) => void;
   isInitialized: () => boolean;
   Auth: {
@@ -20,8 +20,4 @@ interface KakaoSDK {
     login: (settings: { success: (response: KakaoAuthResponse) => void; fail: (error: KakaoError) => void }) => void;
     getAccessToken: () => string | null;
   };
-}
-
-interface Window {
-  Kakao: KakaoSDK;
 }

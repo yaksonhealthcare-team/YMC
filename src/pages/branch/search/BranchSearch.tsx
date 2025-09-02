@@ -1,5 +1,5 @@
 import { SearchField } from '@/components/SearchField';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

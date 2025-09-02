@@ -2,7 +2,7 @@ import { Image } from '@/components/common/Image';
 import { EmptyCard } from '@/components/EmptyCard';
 import Header from '@/components/Header';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/contexts/LayoutContext';
+import { useLayout } from '@/stores/LayoutContext';
 import { useEvents } from '@/queries/useEventQueries';
 import { Event, Tab } from '@/types/Event';
 import clsx from 'clsx';

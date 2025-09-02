@@ -1,14 +1,15 @@
+import { useUserStore } from '@/_domain/auth';
 import { resetPassword } from '@/apis/auth.api';
 import ResetPassword from '@/components/resetPassword/ResetPassword';
-import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const ProfileResetPassword = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useUserStore();
 
   const handleChangePassword = async (password: string) => {
     if (!user) return;
+
     try {
       await resetPassword(password);
       navigate('complete');

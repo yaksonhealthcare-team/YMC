@@ -1,4 +1,4 @@
-import { axiosClient } from '@/queries/clients';
+import { authApi, publicApi } from '@/_shared/services/instance';
 import { HTTPResponse } from '@/types/HTTPResponse';
 
 export interface DecryptRequest {
@@ -12,14 +12,14 @@ export interface FindEmailResponse {
 }
 
 export const findEmailWithDecryptData = async (request: DecryptRequest): Promise<FindEmailResponse> => {
-  const { data } = await axiosClient.post<HTTPResponse<FindEmailResponse[]>>('/auth/account/find-account', {
+  const { data } = await publicApi.post<HTTPResponse<FindEmailResponse[]>>('/auth/account/find-account', {
     ...request
   });
   return data.body[0];
 };
 
 export const changePhoneNumberWithDecryptData = async (request: DecryptRequest): Promise<unknown> => {
-  const { data } = await axiosClient.post<HTTPResponse<unknown>>('/auth/account/change-phone-number', { ...request });
+  const { data } = await authApi.post<HTTPResponse<unknown>>('/auth/account/change-phone-number', { ...request });
 
   return data;
 };
@@ -30,7 +30,7 @@ export interface FindPasswordResponse {
 }
 
 export const findPasswordWithDecryptData = async (request: DecryptRequest): Promise<FindPasswordResponse> => {
-  const { data } = await axiosClient.post<HTTPResponse<FindPasswordResponse[]>>('/auth/account/find-password', {
+  const { data } = await publicApi.post<HTTPResponse<FindPasswordResponse[]>>('/auth/account/find-password', {
     ...request
   });
   return data.body[0];

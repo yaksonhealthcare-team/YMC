@@ -1,5 +1,9 @@
-export { getBranchDetail, getBranches } from './branch.services';
-export { getGuideMessages } from './guide.services';
-export * from './queries';
-export { createReservation, getReservationCount, getReservationDetail, getReservations } from './reservation.services';
-export { getSchedulesDate, getSchedulesTimes } from './schedule.services';
+export { useGetBranchDetail, useGetBranches } from './branch.services';
+export { useGetGuideMessages } from './guide.services';
+export {
+  useCreateReservationMutation,
+  useGetReservationConsultCount,
+  useGetReservationDetail,
+  useGetReservations
+} from './reservation.services';
+export { useGetSchedulesDate, useGetSchedulesTimes } from './schedule.services';

@@ -1,0 +1,17 @@
+export const GET_USER = 'get-user';
+export const GET_TERMS = 'get-terms';
+export const GET_CONSULT_MENU = 'get-consultation-memberships';
+export const GET_PREPAID_MENU = 'get-flat-memberships';
+export const GET_GUIDE_MESSAGES = 'get-guide-messages';
+export const GET_BRANCH_DETAIL = 'get-branch-detail';
+export const GET_BRANCHES = 'get-branches';
+export const GET_BANNERS = 'get-banners';
+export const GET_CONTENTS = 'get-contents';
+export const GET_USER_MEMBERSHIPS = 'get-user-memberships';
+export const GET_USER_MEMBERSHIP_DETAIL = 'get-user-membership-detail';
+export const GET_RESERVATIONS = 'get-reservations';
+export const GET_RESERVATION_CONSULT_COUNT = 'get-reservation-consult-count';
+export const GET_RESERVATION_DETAIL = 'get-reservation-detail';
+export const GET_UNREAD_COUNT = 'get-unread-count';
+export const GET_SCHEDULES_DATE = 'get-schedules-date';
+export const GET_SCHEDULES_TIMES = 'get-schedules-times';

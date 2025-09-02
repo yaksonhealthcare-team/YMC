@@ -1,6 +1,6 @@
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import { Button } from '@/components/Button';
-import { useOverlay } from '@/contexts/ModalContext';
+import { useOverlay } from '@/stores/ModalContext';
 import { usePointsEarn } from '@/queries/usePointQueries';
 import { PaymentHistory } from '@/types/Payment';
 import { formatDate } from '@/utils/date';

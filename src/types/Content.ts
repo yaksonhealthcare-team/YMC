@@ -13,19 +13,6 @@ export interface Event {
   }[];
 }
 
-export interface EventDetail {
-  code: string;
-  gubun: string;
-  title: string;
-  sdate: string;
-  edate: string;
-  contents: string;
-  files: {
-    fileCode: string;
-    fileurl: string;
-  }[];
-}
-
 export interface Notice {
   code: string;
   gubun: string;
