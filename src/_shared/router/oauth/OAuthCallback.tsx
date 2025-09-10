@@ -1,5 +1,5 @@
 import { getUser, saveAccessToken, useSigninSocialMutation, useUserStore } from '@/_domain/auth';
-import { requestForToken } from '@/_shared';
+import { requestForToken, setSentryUser } from '@/_shared';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { useLayout } from '@/stores/LayoutContext';
 import { useOverlay } from '@/stores/ModalContext';
@@ -64,6 +64,8 @@ const OAuthCallback = () => {
           const data = await getUser();
           const user = data.data.body[0];
           setUser(user);
+          setSentryUser(user);
+
           navigate('/', { replace: true });
           return;
         } catch (error: any) {

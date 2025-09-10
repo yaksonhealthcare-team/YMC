@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 import react from '@vitejs/plugin-react-swc';
 import autoprefixer from 'autoprefixer';
 import path from 'path';
@@ -64,6 +65,12 @@ export default defineConfig(({ mode }) => {
         threshold: 10240, // 10KB
         deleteOriginFile: false,
         verbose: true
+      }),
+      sentryVitePlugin({
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        org: 'yaksonhealthcare',
+        project: 'therapist',
+        disable: process.env.NODE_ENV !== 'production'
       })
     ],
     resolve: {

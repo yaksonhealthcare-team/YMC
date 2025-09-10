@@ -1,6 +1,7 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import * as Sentry from '@sentry/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import dayjs from 'dayjs';
@@ -13,6 +14,16 @@ import ErrorBoundary from './components/ErrorBoundary';
 
 dayjs.extend(customParseFormat);
 dayjs.locale('ko');
+
+Sentry.init({
+  dsn: import.meta.env.VITE_SENTRY_DSN,
+  tracesSampleRate: 0.1,
+  replaysSessionSampleRate: 0,
+  replaysOnErrorSampleRate: 1.0,
+  enabled: import.meta.env.NODE_ENV === 'production',
+  sendDefaultPii: true,
+  integrations: [Sentry.replayIntegration()]
+});
 
 /**
  * @deprecated

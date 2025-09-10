@@ -1,4 +1,5 @@
 import { useLogoutMutation, useUserStore } from '@/_domain/auth';
+import { setSentryUser } from '@/_shared';
 import Logo from '@/components/Logo';
 import { useLayout } from '@/stores/LayoutContext';
 import { Typography } from '@mui/material';
@@ -16,6 +17,7 @@ const Logout = () => {
     localStorage.clear();
     sessionStorage.clear();
     resetUser();
+    setSentryUser(null);
 
     navigate('/login', { replace: true });
   }, [mutateAsync, navigate, resetUser]);
