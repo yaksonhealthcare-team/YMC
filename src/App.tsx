@@ -25,12 +25,7 @@ Sentry.init({
   integrations: [Sentry.replayIntegration()]
 });
 
-/**
- * @deprecated
- * 점진적으로 mui를 tailwind로 대체합니다.
- */
 const theme = createTheme({
-  // MUI 테마 설정
   components: {
     MuiSvgIcon: {
       styleOverrides: {

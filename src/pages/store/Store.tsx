@@ -3,6 +3,8 @@ import LoadingIndicator from '@/components/LoadingIndicator';
 import { useLayout } from '@/stores/LayoutContext';
 import { useEffect, useRef, useState } from 'react';
 
+const STORE_URL = import.meta.env.VITE_HOMECARE_MALL_URL;
+
 const Store = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const { setHeader, setNavigation } = useLayout();
@@ -26,7 +28,7 @@ const Store = () => {
           type: 'AUTH_TOKEN',
           accessToken: getAccessToken()
         },
-        'https://mall.yaksonhc.com'
+        STORE_URL
       );
       setIsLoading(false);
     };
@@ -46,7 +48,7 @@ const Store = () => {
       )}
       <iframe
         ref={iframeRef}
-        src="https://mall.yaksonhc.com/"
+        src={STORE_URL}
         style={{
           width: '100%',
           height: '100%',
