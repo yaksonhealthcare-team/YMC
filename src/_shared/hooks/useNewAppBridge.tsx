@@ -114,11 +114,12 @@ export const useNewAppBridge = () => {
           case 'DEVICE_TYPE':
             localStorage.setItem('DEVICE_TYPE', data.deviceType);
             break;
+          case 'PUSH_NAVIGATE':
+            navigate(data.url);
+            break;
           default:
             break;
         }
-
-        window.ReactNativeWebView?.postMessage(JSON.stringify({ type: 'LOADING_END' }));
       } catch (error) {
         logger.error(error);
       }
@@ -128,5 +129,5 @@ export const useNewAppBridge = () => {
     return () => {
       window.removeEventListener('message', handleWebviewMessage, true);
     };
-  }, [handleSocialLogin]);
+  }, [handleSocialLogin, navigate]);
 };
