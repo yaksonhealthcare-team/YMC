@@ -37,6 +37,13 @@ const Login = () => {
     setInit();
   }, [setHeader, setNavigation]);
 
+  useEffect(() => {
+    // 앱에 알림 토큰 요청
+    if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'FCM_TOKEN_REQUIRED' }));
+    }
+  }, []);
+
   /**
    * NOTE: 앱에서 애플 native 로그인 시, signinWithSocial 네트워크 에러 있어 url 방식으로 임시 구현
    */
