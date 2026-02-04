@@ -47,9 +47,10 @@ export const SignupComplete = () => {
     } finally {
       setIsNewUserLoading(false);
     }
-    navigate('/mypage/questionnaire/common', {
-      state: { fromSignup: true }
-    });
+    navigate('/');
+    // navigate('/mypage/questionnaire/common', {
+    //   state: { fromSignup: true }
+    // });
   };
 
   return (

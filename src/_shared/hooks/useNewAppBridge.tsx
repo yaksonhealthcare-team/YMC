@@ -114,9 +114,11 @@ export const useNewAppBridge = () => {
           case 'DEVICE_TYPE':
             localStorage.setItem('DEVICE_TYPE', data.deviceType);
             break;
-          case 'PUSH_NAVIGATE':
-            navigate(data.url);
+          case 'PUSH_NAVIGATE': {
+            const url = data?.url ?? data?.data?.url;
+            if (url) navigate(url);
             break;
+          }
           default:
             break;
         }
@@ -126,8 +128,13 @@ export const useNewAppBridge = () => {
     };
 
     window.addEventListener('message', handleWebviewMessage, true);
+    document.addEventListener('message', handleWebviewMessage as any, true);
+
+    window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'WEB_LOADED' }));
+
     return () => {
       window.removeEventListener('message', handleWebviewMessage, true);
+      document.removeEventListener('message', handleWebviewMessage as any, true);
     };
   }, [handleSocialLogin, navigate]);
 };

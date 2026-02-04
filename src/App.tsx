@@ -20,7 +20,7 @@ Sentry.init({
   tracesSampleRate: 0.1,
   replaysSessionSampleRate: 0,
   replaysOnErrorSampleRate: 1.0,
-  enabled: import.meta.env.NODE_ENV === 'production',
+  environment: import.meta.env.MODE === 'production' ? 'production' : 'development',
   sendDefaultPii: true,
   integrations: [Sentry.replayIntegration()]
 });

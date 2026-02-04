@@ -13,7 +13,9 @@ import { BusinessInfo } from '@/pages/home/_fragments/BusinessInfo';
 import { EventSection } from '@/pages/home/_fragments/EventSection';
 import { MembershipCardSection } from '@/pages/home/_fragments/MembershipCardSection';
 import ReserveCardSection from '@/pages/home/_fragments/ReserveCardSection';
+import { useStartupPopups } from '@/queries/useContentQueries';
 import { useLayout } from '@/stores/LayoutContext';
+import { usePopupActions } from '@/stores/popupStore';
 import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,6 +23,7 @@ const HomePage = () => {
   const navigate = useNavigate();
   const { user, getUserId: getUserKey } = useUserStore();
   const userId = getUserKey();
+  const { openPopup } = usePopupActions();
   const enabled = !!userId;
 
   const { data: unreadCountData } = useGetUnreadCount(userId, {
@@ -37,6 +40,7 @@ const HomePage = () => {
   );
   const { data: bannersData } = useGetBanners(userId, { gubun: 'S01', area01: 'Y', area02: 'Y' }, { enabled });
   const { data: noticesData } = useGetContents(userId, { gubun: 'N01' }, { enabled, initialPageParam: 1 });
+  const { data: popupData } = useStartupPopups({ enabled: !!user });
 
   const handleClickBranch = () => {
     navigate('/branch');
@@ -56,6 +60,12 @@ const HomePage = () => {
   const notices = useMemo(() => noticesData?.flatMap((page) => page.data.body) || [], [noticesData]);
 
   const hasMembership = memberships && memberships.length > 0;
+
+  useEffect(() => {
+    if (popupData && popupData.length > 0) {
+      openPopup(popupData);
+    }
+  }, [popupData, openPopup]);
 
   return (
     <>

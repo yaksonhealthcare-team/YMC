@@ -4,7 +4,6 @@ import EventIcon from '@/assets/icons/EventIcon.svg?react';
 import InquiryIcon from '@/assets/icons/InquiryIcon.svg?react';
 import NoticeIcon from '@/assets/icons/NoticeIcon.svg?react';
 import NotificationIcon from '@/assets/icons/NotificationIcon.svg?react';
-import PaymentIcon from '@/assets/icons/PaymentIcon.svg?react';
 import ReviewIcon from '@/assets/icons/ReviewIcon.svg?react';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,12 +14,12 @@ const menuItems = [
     path: '/favorite',
     icon: BookmarkIcon
   },
-  {
-    id: 'payment',
-    title: '결제 내역',
-    path: '/payment_history',
-    icon: PaymentIcon
-  },
+  // {
+  //   id: 'payment',
+  //   title: '결제 내역',
+  //   path: '/payment_history',
+  //   icon: PaymentIcon
+  // },
   {
     id: 'review',
     title: '작성한 만족도',
