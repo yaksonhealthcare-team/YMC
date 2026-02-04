@@ -177,7 +177,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
             <NavButton
               activeIcon={'/assets/navIcon/store_active.png'}
               inactiveIcon={'/assets/navIcon/store_inactive.png'}
-              title={'홈케어'}
+              title={'스토어'}
               link={'/store'}
             />
             <NavButton
