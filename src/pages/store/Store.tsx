@@ -1,19 +1,25 @@
 import { getAccessToken } from '@/_domain/auth';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { useLayout } from '@/stores/LayoutContext';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const STORE_URL = import.meta.env.VITE_HOMECARE_MALL_URL;
 
 const Store = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const { setHeader, setNavigation } = useLayout();
+  const { setHeader, setNavigation, storeKey } = useLayout();
   const [isLoading, setIsLoading] = useState(true);
+
+  const STORE_ORIGIN = useMemo(() => new URL(STORE_URL).origin, []);
 
   useEffect(() => {
     setHeader({ display: false, backgroundColor: 'bg-white' });
     setNavigation({ display: true });
   }, [setHeader, setNavigation]);
+
+  useEffect(() => {
+    setIsLoading(true);
+  }, [storeKey]);
 
   useEffect(() => {
     const iframeEl = iframeRef.current;
@@ -28,7 +34,7 @@ const Store = () => {
           type: 'AUTH_TOKEN',
           accessToken: getAccessToken()
         },
-        STORE_URL
+        STORE_ORIGIN
       );
       setIsLoading(false);
     };
@@ -37,7 +43,7 @@ const Store = () => {
     return () => {
       iframeEl.removeEventListener('load', onLoad);
     };
-  }, []);
+  }, [storeKey, STORE_ORIGIN]);
 
   return (
     <div className="bg-white" style={{ width: '100%', height: 'calc(100vh - 82px)' }}>
@@ -46,7 +52,9 @@ const Store = () => {
           <LoadingIndicator />
         </div>
       )}
+
       <iframe
+        key={storeKey}
         ref={iframeRef}
         src={STORE_URL}
         style={{

@@ -1,3 +1,4 @@
+import { Router } from '@/pages/NewRouter';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -9,7 +10,6 @@ import 'dayjs/locale/ko';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { Suspense } from 'react';
 import { Loading, useVConsole } from './_shared';
-import { Router } from './_shared/router';
 import ErrorBoundary from './components/ErrorBoundary';
 
 dayjs.extend(customParseFormat);
@@ -30,8 +30,8 @@ const theme = createTheme({
     MuiSvgIcon: {
       styleOverrides: {
         root: {
-          width: 'auto', // 기본 width를 'auto'로 설정
-          height: 'auto' // 기본 height를 'auto'로 설정
+          width: 'auto',
+          height: 'auto'
         }
       }
     }
