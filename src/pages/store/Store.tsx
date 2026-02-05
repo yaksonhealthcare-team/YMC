@@ -5,6 +5,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 const STORE_URL = import.meta.env.VITE_HOMECARE_MALL_URL;
 
+const STORE_URL = import.meta.env.VITE_HOMECARE_MALL_URL;
+
 const Store = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const { setHeader, setNavigation, storeKey } = useLayout();
