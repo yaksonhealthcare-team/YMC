@@ -34,6 +34,8 @@ export interface LayoutContextValue {
   navigation: NavigationConfig;
   setNavigation: (navigation: NavigationConfig) => void;
   setTitle: (title: string) => void;
+  storeKey: number;
+  reloadStore: () => void;
 }
 
 const LayoutContext = createContext<LayoutContextValue | null>({
@@ -41,7 +43,9 @@ const LayoutContext = createContext<LayoutContextValue | null>({
   setNavigation: () => {},
   header: { display: false },
   setHeader: () => {},
-  setTitle: () => {}
+  setTitle: () => {},
+  storeKey: 0,
+  reloadStore: () => {}
 });
 
 interface LayoutProviderProps {
@@ -56,8 +60,11 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
     display: true,
     title: ''
   });
-  const location = useLocation();
+  const [storeKey, setStoreKey] = useState(0);
+  const reloadStore = () => setStoreKey((k) => k + 1);
+
   const pageContainerRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
 
   // 경로 변경 시 스크롤을 맨 위로 이동
   useEffect(() => {
@@ -138,7 +145,9 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
         setNavigation,
         header,
         setHeader,
-        setTitle
+        setTitle,
+        storeKey,
+        reloadStore
       }}
     >
       <StartupPopup />
@@ -179,6 +188,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
               inactiveIcon={'/assets/navIcon/store_inactive.png'}
               title={'스토어'}
               link={'/store'}
+              enableReloadOnActive
             />
             <NavButton
               activeIcon={'/assets/navIcon/reservation_active.png'}
@@ -206,6 +216,7 @@ interface NavButtonProps {
   title: string;
   link: string;
   isActive?: (currentPath: string) => boolean;
+  enableReloadOnActive?: boolean;
 }
 
 const defaultIsActive = (currentPath: string, link: string) => currentPath === link;
@@ -215,14 +226,20 @@ const NavButton = ({
   inactiveIcon,
   title,
   link,
-  isActive = (path) => defaultIsActive(path, link)
+  isActive = (path) => defaultIsActive(path, link),
+  enableReloadOnActive = false
 }: NavButtonProps) => {
   const path = window.location.pathname;
-  const { navigation } = useLayout();
+  const { navigation, reloadStore } = useLayout();
   const active = navigation.activeTab ? title === navigation.activeTab : isActive(path);
   const navigate = useNavigate();
 
   const handleClick = () => {
+    if (enableReloadOnActive && active) {
+      reloadStore();
+      return;
+    }
+
     navigate(link);
   };
 
