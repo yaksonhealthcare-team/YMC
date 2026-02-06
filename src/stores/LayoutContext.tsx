@@ -1,7 +1,7 @@
 import Header from '@/components/Header';
 import PageContainer from '@/components/PageContainer';
 import { StartupPopup } from '@/components/popup/StartupPopup';
-import { Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -65,6 +65,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
 
   const pageContainerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const { palette } = useTheme();
 
   // 경로 변경 시 스크롤을 맨 위로 이동
   useEffect(() => {
@@ -168,12 +169,14 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
               maxWidth: '500px'
             }}
           >
-            <NavButton
-              activeIcon={'/assets/navIcon/home_active.png'}
-              inactiveIcon={'/assets/navIcon/home_inactive.png'}
-              title={'홈'}
-              link={'/'}
-            />
+            <Box flex={1}>
+              <NavButton
+                activeIcon={'/assets/navIcon/home_active.png'}
+                inactiveIcon={'/assets/navIcon/home_inactive.png'}
+                title={'홈'}
+                link={'/'}
+              />
+            </Box>
             {/* 
               <NavButton
                 activeIcon={"/assets/navIcon/membership_active.png"}
@@ -183,26 +186,46 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
                 isActive={(path) => path.startsWith("/membership")}
               />
               */}
-            <NavButton
-              activeIcon={'/assets/navIcon/store_active.png'}
-              inactiveIcon={'/assets/navIcon/store_inactive.png'}
-              title={'스토어'}
-              link={'/store'}
-              enableReloadOnActive
-            />
-            <NavButton
-              activeIcon={'/assets/navIcon/reservation_active.png'}
-              inactiveIcon={'/assets/navIcon/reservation_inactive.png'}
-              title={'예약/회원권'}
-              link={'/member-history/reservation'}
-              isActive={(path) => path.startsWith('/member-history')}
-            />
-            <NavButton
-              activeIcon={'/assets/navIcon/mypage_active.png'}
-              inactiveIcon={'/assets/navIcon/mypage_inactive.png'}
-              title={'마이페이지'}
-              link={'/mypage'}
-            />
+            <Box position="relative" flex={1}>
+              <NavButton
+                activeIcon={'/assets/navIcon/store_active.png'}
+                inactiveIcon={'/assets/navIcon/store_inactive.png'}
+                title={'스토어'}
+                link={'/store'}
+                enableReloadOnActive
+              />
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 4,
+                  right: 0,
+                  backgroundColor: palette.primary.main,
+                  color: '#FFFFFF',
+                  padding: '2px 4px',
+                  borderRadius: '4px',
+                  zIndex: -1
+                }}
+              >
+                <Typography variant="subtitle2">open</Typography>
+              </Box>
+            </Box>
+            <Box flex={1}>
+              <NavButton
+                activeIcon={'/assets/navIcon/reservation_active.png'}
+                inactiveIcon={'/assets/navIcon/reservation_inactive.png'}
+                title={'예약/회원권'}
+                link={'/member-history/reservation'}
+                isActive={(path) => path.startsWith('/member-history')}
+              />
+            </Box>
+            <Box flex={1}>
+              <NavButton
+                activeIcon={'/assets/navIcon/mypage_active.png'}
+                inactiveIcon={'/assets/navIcon/mypage_inactive.png'}
+                title={'마이페이지'}
+                link={'/mypage'}
+              />
+            </Box>
           </div>
         )}
       </PageContainer>
@@ -245,7 +268,7 @@ const NavButton = ({
 
   return (
     <button
-      className={'min-h-[82px] pt-3 pb-3 flex-1 flex flex-col gap-1 items-center cursor-pointer'}
+      className={'min-h-[82px] pt-3 pb-3 flex-1 flex flex-col gap-1 items-center cursor-pointer w-full'}
       onClick={handleClick}
       style={{ color: active ? '#F37165' : '#BDBDBD' }}
       aria-label={`${title} 메뉴`}
