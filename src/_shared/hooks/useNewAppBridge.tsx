@@ -1,6 +1,7 @@
 import { getUser, saveAccessToken, useSigninSocialMutation, useUserStore } from '@/_domain/auth';
 import { logger } from '@/_shared';
 import { publicApi } from '@/_shared/services/instance';
+import { normalizeAppInfo, useAppInfoStore } from '@/stores/appInfoStore';
 import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,6 +24,7 @@ interface SocialLoginBody {
 export const useNewAppBridge = () => {
   const navigate = useNavigate();
   const { setUser } = useUserStore();
+  const { setAppInfo } = useAppInfoStore();
   const { mutateAsync: signinMutateAsync } = useSigninSocialMutation();
 
   const handleSocialLogin = useCallback(
@@ -119,6 +121,11 @@ export const useNewAppBridge = () => {
             if (url) navigate(url);
             break;
           }
+          case 'APP_INFO': {
+            const appInfo = normalizeAppInfo(data);
+            if (appInfo) setAppInfo(appInfo);
+            break;
+          }
           default:
             break;
         }
@@ -136,5 +143,5 @@ export const useNewAppBridge = () => {
       window.removeEventListener('message', handleWebviewMessage, true);
       document.removeEventListener('message', handleWebviewMessage as any, true);
     };
-  }, [handleSocialLogin, navigate]);
+  }, [handleSocialLogin, navigate, setAppInfo]);
 };
