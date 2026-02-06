@@ -1,4 +1,3 @@
-import { useAppInfoStore } from '@/stores/appInfoStore';
 import { useOverlay } from '@/stores/ModalContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,7 +7,21 @@ const IOS_SCHEME = 'itms-apps://itunes.apple.com/app/id6739484377';
 const ANDROID_WEB = 'https://play.google.com/store/apps/details?id=com.yaksonhc.therapist';
 const ANDROID_SCHEME = 'market://details?id=com.yaksonhc.therapist';
 
-export const openStoreFromWebView = (platform?: 'ios' | 'android') => {
+const detectPlatform = (): 'ios' | 'android' | 'web' => {
+  const userAgent = navigator.userAgent.toLowerCase();
+
+  if (/iphone|ipad|ipod/.test(userAgent)) {
+    return 'ios';
+  }
+
+  if (/android/.test(userAgent)) {
+    return 'android';
+  }
+
+  return 'web';
+};
+
+export const openStoreFromWebView = (platform: 'ios' | 'android' | 'web') => {
   let schemeUrl = '';
   let webUrl = '';
 
@@ -44,11 +57,12 @@ export const openStoreFromWebView = (platform?: 'ios' | 'android') => {
     cancelFallback();
     window.location.href = webUrl;
   }, 1000);
+
+  return true;
 };
 
 export const useForceUpdateModal = () => {
   const { openModal, closeOverlay } = useOverlay();
-  const { appInfo } = useAppInfoStore();
   const navigate = useNavigate();
 
   const redirectHome = () => {
@@ -57,6 +71,9 @@ export const useForceUpdateModal = () => {
   };
 
   const openForceUpdateModal = () => {
+    const detectedPlatform = detectPlatform();
+    const platform = detectedPlatform;
+
     openModal({
       title: '앱 업데이트 필요',
       message: '최신 버전으로 업데이트 후 이용해주세요.',
@@ -69,10 +86,13 @@ export const useForceUpdateModal = () => {
         redirectHome();
       },
       onConfirm: () => {
-        redirectHome();
+        const shouldRedirect = openStoreFromWebView(platform);
 
-        const platform = appInfo?.platform as 'ios' | 'android' | undefined;
-        if (platform) openStoreFromWebView(platform);
+        if (shouldRedirect) {
+          setTimeout(() => {
+            redirectHome();
+          }, 1000);
+        }
       }
     });
   };

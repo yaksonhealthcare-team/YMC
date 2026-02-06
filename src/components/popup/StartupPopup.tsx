@@ -1,23 +1,19 @@
+import type { ApiPopupItem } from '@/apis/contents.api';
 import { PopupState, usePopupActions, usePopupStore } from '@/stores/popupStore';
 import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
 import { useEffect, useMemo, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-// Import AppPopupData from the correct API file
-import { AppPopupData } from '@/apis/contents.api';
 
-// Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
-// Import Swiper core and types
 import SwiperCore from 'swiper';
-
-// Placeholder image URL
-const TEMP_IMAGE_URL = 'https://via.placeholder.com/400x400.png?text=Square+Popup';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 export function StartupPopup() {
   const isOpen = usePopupStore((state: PopupState) => state.isOpen);
   const popupDataArray = usePopupStore((state: PopupState) => state.popupData);
+
   const { closePopup, setDontShowAgain } = usePopupActions();
   const swiperRef = useRef<SwiperCore | null>(null);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,11 +25,20 @@ export function StartupPopup() {
     setDontShowAgain(7);
   };
 
-  const handleImageClick = (code: string) => {
-    if (code) {
-      navigate(`/popup/${code}`);
-      closePopup();
+  const handleImageClick = (popup: ApiPopupItem) => {
+    // 1) 외부 링크 (http/https) -> 새 창(또는 웹뷰에서 열기)
+    if (/^https?:\/\//i.test(popup.link)) {
+      window.open(popup.link, '_blank');
+    } else if (popup.link.includes('/popup')) {
+      // 2) 팝업 링크 (ex: /popup) -> 팝업 상세 페이지로 이동
+      const base = popup.link.replace(/\/$/, '');
+      navigate(`${base}/${popup.code}`);
+    } else {
+      // 3) 내부 링크 (ex: /event) -> 내부 페이지로 이동
+      navigate(popup.link);
     }
+
+    closePopup();
   };
 
   useEffect(() => {
@@ -49,19 +54,14 @@ export function StartupPopup() {
 
   const isSwiperActive = !!(popupDataArray && popupDataArray.length > 1);
 
-  // Create array for display, duplicate if exactly 2 items for better loop
   const displayPopupData = useMemo(() => {
     if (popupDataArray && popupDataArray.length === 2) {
-      // Duplicate the array to ensure loop works smoothly
       return [...popupDataArray, ...popupDataArray];
     }
-    return popupDataArray; // Return original array otherwise
+    return popupDataArray;
   }, [popupDataArray]);
+  console.log('🔥 / StartupPopup / displayPopupData:', displayPopupData);
 
-  // Check if popup should be rendered:
-  // 1. Store says it should be open
-  // 2. We are on the home route ('/')
-  // 3. There is valid popup data to display
   const shouldRenderPopup = isOpen && location.pathname === '/' && displayPopupData && displayPopupData.length > 0;
 
   if (!shouldRenderPopup) {
@@ -112,20 +112,22 @@ export function StartupPopup() {
           className="w-full"
           style={{ overflow: 'visible' }}
         >
-          {displayPopupData.map((popup: AppPopupData, index) => (
-            <SwiperSlide
-              key={`${popup.code}-${index}`}
-              className="aspect-square bg-[#eee] rounded-xl overflow-hidden flex items-center justify-center"
-              style={{ maxHeight: '360px' }}
-            >
-              <img
-                src={popup.imageUrl || TEMP_IMAGE_URL}
-                alt={`Startup Promotion ${popup.code}`}
-                onClick={() => handleImageClick(popup.code)}
-                className={`block w-full h-full object-cover ${popup.code ? 'cursor-pointer' : ''}`}
-              />
-            </SwiperSlide>
-          ))}
+          {displayPopupData.map((popup: ApiPopupItem, index) => {
+            return (
+              <SwiperSlide
+                key={`${popup.code}-${index}`}
+                className="aspect-square bg-[#eee] rounded-xl overflow-hidden flex items-center justify-center"
+                style={{ maxHeight: '360px' }}
+              >
+                <img
+                  src={popup.files?.[0]?.fileurl || ''}
+                  alt={`Startup Promotion ${popup.code}`}
+                  onClick={() => handleImageClick(popup)}
+                  className={`block w-full h-full object-cover ${popup.code ? 'cursor-pointer' : ''}`}
+                />
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       </DialogContent>
 
