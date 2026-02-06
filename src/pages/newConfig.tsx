@@ -22,7 +22,6 @@ const BranchDetail = lazy(() => import('./branch/[id]/BranchDetail'));
 const FavoritePage = lazy(() => import('./favorite/FavoritePage'));
 const PaymentHistoryPage = lazy(() => import('./payment/PaymentHistoryPage'));
 const ReviewPage = lazy(() => import('./review/ReviewPage'));
-const InquiryPage = lazy(() => import('./inquiry/InquiryPage'));
 const EventPage = lazy(() => import('./event/EventPage'));
 const NoticePage = lazy(() => import('./notice/NoticePage'));
 const SettingsPage = lazy(() => import('./settings/SettingsPage'));
@@ -111,7 +110,6 @@ const authRoutes: CustomRouteObject[] = [
   { path: '/mypage/questionnaire/common', element: <GeneralQuestionnaireHistory /> },
   { path: '/mypage/questionnaire/reservation', element: <ReservationQuestionnaireHistory /> },
   { path: '/payment_history', element: <PaymentHistoryPage /> },
-  { path: '/inquiry', element: <InquiryPage /> },
   { path: '/favorite', element: <FavoritePage /> },
   { path: '/cart', element: <CartPage /> },
   { path: '/payment', element: <PaymentPage /> },

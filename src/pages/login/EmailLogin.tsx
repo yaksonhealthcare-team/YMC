@@ -1,5 +1,5 @@
 import { getUser, saveAccessToken, SigninEmailBody, useSigninEmailMutation, useUserStore } from '@/_domain/auth';
-import { requestForToken, setSentryUser } from '@/_shared';
+import { requestForToken } from '@/_shared';
 import { DeviceType } from '@/apis/auth.api';
 import EyeIcon from '@/assets/icons/EyeIcon.svg?react';
 import EyeSlashIcon from '@/assets/icons/EyeSlashIcon.svg?react';
@@ -71,7 +71,6 @@ const EmailLogin = () => {
       const data = await getUser();
       const user = data.data.body[0];
       setUser(user);
-      setSentryUser(user);
 
       navigate('/', { replace: true });
     } catch (error) {
