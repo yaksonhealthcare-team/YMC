@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const CHANNEL_TALK_VISIBLE_PATHS = ['/mypage'];
+const CHANNEL_TALK_VISIBLE_PATHS = ['/mypage', '/store'];
 
 export const useChannelTalkVisibility = () => {
   const { pathname } = useLocation();
