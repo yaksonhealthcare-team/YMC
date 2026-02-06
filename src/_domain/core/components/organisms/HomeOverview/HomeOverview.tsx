@@ -9,13 +9,20 @@ import { useNavigate } from 'react-router-dom';
 import { HomeOverviewProps } from './HomeOverview.types';
 
 const HomeOverview = ({ user, banners, notices, notiCount }: HomeOverviewProps) => {
+  const navigate = useNavigate();
+
   const hasBanners = banners && banners.length > 0;
 
-  const handleClickBanner = useCallback((link: string) => {
-    const url = link.startsWith('http') ? link : `https://${link}`;
-
-    window.location.href = url;
-  }, []);
+  const handleClickBanner = useCallback(
+    (link: string) => {
+      if (/^https?:\/\//i.test(link)) {
+        window.open(link, '_blank');
+      } else {
+        navigate(link);
+      }
+    },
+    [navigate]
+  );
 
   return (
     <div className={clsx('px-5 mb-6', 'drop-shadow-[0px_1px_4px_rgba(46,43,41,0.15)]')}>
