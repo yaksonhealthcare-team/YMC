@@ -206,7 +206,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
                   zIndex: -1
                 }}
               >
-                <Typography variant="subtitle2">open</Typography>
+                <Typography variant="subtitle2">예정</Typography>
               </Box>
             </Box>
             <Box flex={1}>
