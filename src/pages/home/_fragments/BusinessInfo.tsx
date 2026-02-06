@@ -21,7 +21,7 @@ export const BusinessInfo = () => {
       <div className="flex items-center gap-3">
         <span
           className="font-sb text-14px text-gray-400 cursor-pointer hover:text-gray-600"
-          onClick={() => navigate('/terms/privacy')}
+          onClick={() => navigate('/terms/2')}
         >
           개인정보처리방침
         </span>
