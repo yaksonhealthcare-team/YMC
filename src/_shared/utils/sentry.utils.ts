@@ -66,3 +66,45 @@ export const setSentryAction = (action: string, data?: Record<string, any>) => {
     }
   });
 };
+
+/**
+ * Sentry에 에러 캡쳐
+ *
+ * @param error 실제 에러 객체 (Error | unknown)
+ * @param context 추가 컨텍스트 정보 (선택)
+ * @param tags 추가 태그 (선택)
+ */
+export const captureSentryError = (
+  error: unknown,
+  options?: {
+    context?: Record<string, any>;
+    tags?: Record<string, string>;
+    level?: Sentry.SeverityLevel;
+  }
+) => {
+  // Error 객체 보장
+  const normalizedError =
+    error instanceof Error ? error : new Error(typeof error === 'string' ? error : JSON.stringify(error));
+
+  Sentry.withScope((scope) => {
+    // level 기본값: error
+    scope.setLevel(options?.level ?? 'error');
+
+    // 태그 세팅
+    if (options?.tags) {
+      Object.entries(options.tags).forEach(([key, value]) => {
+        scope.setTag(key, value);
+      });
+    }
+
+    // 컨텍스트 세팅
+    if (options?.context) {
+      scope.setContext('error_context', {
+        ...options.context,
+        capturedAt: new Date().toISOString()
+      });
+    }
+
+    Sentry.captureException(normalizedError);
+  });
+};

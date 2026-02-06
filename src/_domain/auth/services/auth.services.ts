@@ -70,6 +70,7 @@ export const getUser = async (): Promise<AxiosResponse<ApiResponse<UserSchema[]>
     throw handleError(error, 'getUser');
   }
 };
+
 export const useGetUser = (
   options?: CustomUseQueryOptions<
     AxiosResponse<ApiResponse<UserSchema[]>>,

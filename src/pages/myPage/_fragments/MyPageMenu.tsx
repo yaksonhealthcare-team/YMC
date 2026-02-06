@@ -1,7 +1,6 @@
 import BookmarkIcon from '@/assets/icons/BookmarkIcon.svg?react';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import EventIcon from '@/assets/icons/EventIcon.svg?react';
-import InquiryIcon from '@/assets/icons/InquiryIcon.svg?react';
 import NoticeIcon from '@/assets/icons/NoticeIcon.svg?react';
 import NotificationIcon from '@/assets/icons/NotificationIcon.svg?react';
 import ReviewIcon from '@/assets/icons/ReviewIcon.svg?react';
@@ -26,12 +25,12 @@ const menuItems = [
     path: '/review',
     icon: ReviewIcon
   },
-  {
-    id: 'inquiry',
-    title: '1:1 문의',
-    path: 'https://o33vp.channel.io',
-    icon: InquiryIcon
-  },
+  // {
+  //   id: 'inquiry',
+  //   title: '1:1 문의',
+  //   path: 'https://o33vp.channel.io',
+  //   icon: InquiryIcon
+  // },
   {
     id: 'event',
     title: '이벤트',

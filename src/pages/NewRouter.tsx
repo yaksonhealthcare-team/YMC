@@ -1,5 +1,5 @@
 import { getUser, removeAccessToken, useUserStore } from '@/_domain/auth';
-import { useOverlayBackHandler } from '@/_shared';
+import { useChannelTalkVisibility, useOverlayBackHandler } from '@/_shared';
 import { useNewAppBridge } from '@/_shared/hooks/useNewAppBridge';
 import ErrorPage from '@/components/ErrorPage';
 import { LayoutProvider } from '@/stores/LayoutContext';
@@ -54,6 +54,7 @@ const AppProviders = ({ children }: PropsWithChildren) => (
 const HookBridges = () => {
   useNewAppBridge();
   useOverlayBackHandler();
+  useChannelTalkVisibility();
 
   return null;
 };
