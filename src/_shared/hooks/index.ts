@@ -1,5 +1,7 @@
+export * from './useChannelTalk';
+export * from './useChannelTalkVisibility';
 export { useDebounce } from './useDebounce';
-export { useVConsole } from './useVConsole';
 export { useIntersectionObserver, type IntersectionObserverOptions } from './useIntersectionObserver';
-export { useOverlayBackHandler } from './useOverlayBackHandler';
 export { useNewAppBridge } from './useNewAppBridge';
+export { useOverlayBackHandler } from './useOverlayBackHandler';
+export { useVConsole } from './useVConsole';

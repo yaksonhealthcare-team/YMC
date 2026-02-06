@@ -1,3 +1,4 @@
+import { Initialization } from '@/Initialization';
 import { Router } from '@/pages/NewRouter';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -81,6 +82,7 @@ const App = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
             <ReactQueryDevtools initialIsOpen={false} />
             <Suspense fallback={<Loading variant="global" />}>
+              <Initialization />
               <Router />
             </Suspense>
           </LocalizationProvider>

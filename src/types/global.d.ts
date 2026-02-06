@@ -24,7 +24,15 @@ declare global {
     naver: {
       LoginWithNaverId: NaverLoginWithNaverId;
     };
+    ChannelIO?: IChannelIO;
+    ChannelIOInitialized?: boolean;
   }
+}
+
+export interface IChannelIO {
+  c?: (...args: any) => void;
+  q?: [methodName: string, ...args: any[]][];
+  (...args: any): void;
 }
 
 declare module '*.svg' {

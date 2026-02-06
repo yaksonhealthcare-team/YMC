@@ -18,6 +18,7 @@ const Logout = () => {
     sessionStorage.clear();
     resetUser();
     setSentryUser(null);
+    window.ChannelIO?.('shutdown');
 
     navigate('/login', { replace: true });
   }, [mutateAsync, navigate, resetUser]);
