@@ -46,10 +46,12 @@ const loadChannelIOOnce = (): Promise<void> => {
   return channelLoadPromise;
 };
 
-export const useChannelTalk = (user: ChannelUser) => {
+export const useChannelTalk = (user: ChannelUser | null) => {
   const bootedRef = useRef(false);
 
   useEffect(() => {
+    if (!user?.userId) return;
+
     let cancelled = false;
 
     (async () => {
@@ -57,19 +59,23 @@ export const useChannelTalk = (user: ChannelUser) => {
         await loadChannelIOOnce();
         if (cancelled) return;
         if (!CHANNEL_PLUGIN_KEY) throw new Error('VITE_CHANNEL_PLUGIN_KEY is missing');
+
         if (!bootedRef.current) {
           bootedRef.current = true;
 
           window.ChannelIO?.('boot', {
             pluginKey: CHANNEL_PLUGIN_KEY,
-            memberId: user.userId ?? undefined,
-            profile: { name: user.userName, mobileNumber: user.mobileNumber }
+            memberId: user.userId,
+            profile: {
+              name: user.userName,
+              mobileNumber: user.mobileNumber
+            }
           });
         }
       } catch (error) {
         captureSentryError(error, {
           tags: { feature: 'channel_talk', action: 'boot_failed' },
-          context: { where: 'useChannelTalk_boot', userId: user.userId ?? null }
+          context: { where: 'useChannelTalk_boot', userId: user.userId }
         });
       }
     })();
@@ -77,28 +83,30 @@ export const useChannelTalk = (user: ChannelUser) => {
     return () => {
       cancelled = true;
     };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user?.userId]);
 
   useEffect(() => {
     if (!bootedRef.current) return;
     if (!window.ChannelIO) return;
+    if (!user?.userId) return;
 
     try {
       window.ChannelIO('updateUser', {
         memberId: user.userId,
-        profile: { name: user.userName, mobileNumber: user.mobileNumber }
+        profile: {
+          name: user.userName,
+          mobileNumber: user.mobileNumber
+        }
       });
     } catch (error) {
       captureSentryError(error, {
         tags: { feature: 'channel_talk', action: 'update_user_failed' },
         context: {
-          userId: user.userId ?? null,
+          userId: user.userId,
           userName: user.userName ?? null,
           where: 'useChannelTalk_updateUser'
         }
       });
     }
-  }, [user.mobileNumber, user.userId, user.userName]);
+  }, [user?.mobileNumber, user?.userName]);
 };
