@@ -6,9 +6,12 @@ import { useEffect, useMemo } from 'react';
 export const Initialization = () => {
   const { data, isSuccess } = useQuery({ ...useGetUser() });
 
-  const user = useMemo(() => data?.data.body[0] ?? null, [data]);
+  const user = useMemo(() => {
+    const body = data?.data?.body;
+    return Array.isArray(body) && body.length > 0 ? body[0] : null;
+  }, [data]);
 
-  useChannelTalk(isSuccess ? { userId: user?.id, userName: user?.name, mobileNumber: user?.hp } : null);
+  useChannelTalk(isSuccess && user ? { userId: user?.id, userName: user?.name, mobileNumber: user?.hp } : null);
 
   useEffect(() => {
     if (!user) return;

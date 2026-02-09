@@ -60,7 +60,6 @@ export function StartupPopup() {
     }
     return popupDataArray;
   }, [popupDataArray]);
-  console.log('🔥 / StartupPopup / displayPopupData:', displayPopupData);
 
   const shouldRenderPopup = isOpen && location.pathname === '/' && displayPopupData && displayPopupData.length > 0;
 
