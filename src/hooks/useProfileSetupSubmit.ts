@@ -12,7 +12,9 @@ import { useOverlay } from '@/stores/ModalContext';
 import { useSignup } from '@/stores/SignupContext';
 import { UserSignup } from '@/types/User';
 import { AxiosError } from 'axios';
+import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { DEFAULT_SIGNUP_ERROR_MESSAGE, executeWithRetry, normalizeSignupFailureMessage } from './useProfileSetupSubmit.utils';
 
 type SocialProvider = 'N' | 'K' | 'G' | 'A';
 
@@ -33,9 +35,10 @@ export const useProfileSetupSubmit = () => {
   const navigate = useNavigate();
   const { setUser } = useUserStore();
   const { showToast } = useOverlay();
-  const { signupData: storedSignupData, cleanup } = useSignup();
+  const { cleanup } = useSignup();
   const { mutateAsync: loginMutateAsync } = useSigninEmailMutation();
   const { mutateAsync: signinMutateAsync } = useSigninSocialMutation();
+  const isSubmittingRef = useRef(false);
 
   const handleSocialSignup = async (socialInfo: SocialSignupInfo, signupData: UserSignup) => {
     const response = await signupWithSocial({
@@ -72,13 +75,13 @@ export const useProfileSetupSubmit = () => {
       deviceToken: socialInfo.deviceToken ?? (await requestForToken()),
       deviceType: socialInfo.deviceType ?? window.osType ?? 'web'
     };
-    const signinResponse = await signinMutateAsync(body);
+    const signinResponse = await executeWithRetry(() => signinMutateAsync(body), 1);
     const accessToken = signinResponse.data.body[0].accessToken;
 
-    if (!accessToken) throw new Error('회원가입에 실패했습니다. 계속 문제가 발생할 경우 고객센터에 문의해 주세요.');
+    if (!accessToken) throw new Error(DEFAULT_SIGNUP_ERROR_MESSAGE);
     saveAccessToken(accessToken);
 
-    const data = await getUser();
+    const data = await executeWithRetry(() => getUser(), 1);
     const user = data.data.body[0];
     setUser(user);
     cleanup();
@@ -120,13 +123,13 @@ export const useProfileSetupSubmit = () => {
       deviceToken: await requestForToken(),
       deviceType: window.osType ?? 'web'
     };
-    const loginResponse = await loginMutateAsync(body);
+    const loginResponse = await executeWithRetry(() => loginMutateAsync(body), 1);
     const accessToken = loginResponse.data.body[0]?.accessToken;
 
     if (!accessToken) throw new Error(loginResponse.data.resultMessage || '로그인에 실패했습니다.');
     saveAccessToken(accessToken);
 
-    const data = await getUser();
+    const data = await executeWithRetry(() => getUser(), 1);
     const user = data.data.body[0];
     setUser(user);
     cleanup();
@@ -136,37 +139,33 @@ export const useProfileSetupSubmit = () => {
   const handleError = (error: unknown) => {
     if (error instanceof AxiosError) {
       const errorMessage = error.response?.data?.resultMessage;
-      showToast(errorMessage || '회원가입에 실패했습니다. 계속 문제가 발생할 경우 고객센터에 문의해 주세요.');
+      showToast(normalizeSignupFailureMessage(errorMessage));
     } else if (error instanceof Error) {
-      showToast(error.message || '회원가입에 실패했습니다. 계속 문제가 발생할 경우 고객센터에 문의해 주세요.');
+      showToast(normalizeSignupFailureMessage(error.message));
     } else {
-      showToast('회원가입에 실패했습니다. 계속 문제가 발생할 경우 고객센터에 문의해 주세요.');
+      showToast(DEFAULT_SIGNUP_ERROR_MESSAGE);
     }
   };
 
-  const handleSubmit = async (signupData?: UserSignup) => {
+  const handleSubmit = async (signupData: UserSignup) => {
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
+
     try {
       const socialInfo = sessionStorage.getItem('socialSignupInfo');
       if (socialInfo) {
         const socialSignupInfo: SocialSignupInfo = JSON.parse(socialInfo);
-        if (signupData) {
-          await handleSocialSignup(socialSignupInfo, signupData);
-          return;
-        }
-
-        await handleSocialSignup(socialSignupInfo, storedSignupData);
+        await handleSocialSignup(socialSignupInfo, signupData);
         return;
       }
 
-      if (signupData) {
-        await handleEmailSignup(signupData);
-        return;
-      }
-
-      await handleEmailSignup(storedSignupData);
+      await handleEmailSignup(signupData);
       return;
     } catch (error: unknown) {
       handleError(error);
+      throw error;
+    } finally {
+      isSubmittingRef.current = false;
     }
   };
 
