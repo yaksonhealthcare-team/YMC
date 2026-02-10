@@ -244,14 +244,6 @@ const ReservationDetailPage = () => {
   return (
     <div className="flex-1 px-[20px] pt-[16px] pb-[150px] bg-system-bg">
       <ReservationSummary reservation={reservation} />
-      <Button
-        variantType="line"
-        sizeType="s"
-        className="w-full mt-[24px]"
-        onClick={() => navigate('/mypage/questionnaire/reservation')}
-      >
-        예약 문진 확인하기
-      </Button>
       <Location reservation={reservation} />
       <Divider className="my-[24px] border-gray-100" />
       {reservation.r_gubun === ReservationType.MANAGEMENT && (
