@@ -5,6 +5,7 @@ import { useLayout } from '@/stores/LayoutContext';
 import { useOverlay } from '@/stores/ModalContext';
 import { useEffect, useRef } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { safeDecodeAndParseJson } from '@/_shared/utils/sentry.utils';
 
 const OAuthCallback = () => {
   const { provider } = useParams();
@@ -30,8 +31,12 @@ const OAuthCallback = () => {
         const jsonData = searchParams.get('jsonData');
         if (!jsonData) return;
 
-        const decodedData = decodeURIComponent(jsonData);
-        const parsedData = JSON.parse(decodedData);
+        const parsedData = safeDecodeAndParseJson<{ body?: any[] }>(jsonData, {
+          source: 'oauth_callback_jsonData',
+          tags: { feature: 'oauth_callback' },
+          context: { provider }
+        });
+        if (!parsedData?.body?.[0]) throw new Error('유효하지 않은 소셜 로그인 응답입니다.');
         const socialData = parsedData.body[0];
 
         // next_action_type에 따라 분기 처리

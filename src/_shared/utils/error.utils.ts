@@ -1,6 +1,7 @@
 import { AxiosError } from 'axios';
 import { ERROR_CODES } from '../constants';
 import { logger } from './logger.utils';
+import { captureSentryError } from './sentry.utils';
 
 export const getErrorMessage = (code: string): string => {
   switch (code) {
@@ -34,9 +35,24 @@ export const getErrorMessage = (code: string): string => {
 
 export const handleError = (error: unknown, msg: string) => {
   if (error instanceof AxiosError) {
+    captureSentryError(error, {
+      tags: {
+        feature: 'api',
+        function: msg,
+        status: String(error.response?.status ?? 'unknown')
+      },
+      context: {
+        url: error.config?.url,
+        method: error.config?.method,
+        responseData: error.response?.data
+      }
+    });
     logger.error(`${msg}: ${error.message}`, error);
     throw error;
   }
+  captureSentryError(error, {
+    tags: { feature: 'api', source: msg, status: 'unknown' }
+  });
   logger.error(msg, error);
   throw error;
 };
