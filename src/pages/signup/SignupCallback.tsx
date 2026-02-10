@@ -73,7 +73,7 @@ const SignupCallback = () => {
           }
 
           if (initialSignupData.isIdExist === 'Y') {
-            handleSubmit(initialSignupData);
+            await handleSubmit(initialSignupData);
             return;
           }
 

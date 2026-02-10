@@ -76,6 +76,8 @@ export const ProfileSetup = () => {
   }, [isSocialSignup, setSignupData]);
 
   const handleSignupSubmit = async () => {
+    if (isSubmitting) return;
+
     if (!validateForm(signupData.name)) {
       return;
     }
@@ -93,23 +95,23 @@ export const ProfileSetup = () => {
           });
 
           if (uploadedUrls && uploadedUrls.length > 0) {
-            // 업로드된 이미지 URL로 업데이트하고 새 객체 생성하여 참조 변경
-            setSignupData((prev) => ({
-              ...prev,
+            const submitData = {
+              ...signupData,
               profileUrl: uploadedUrls[0]
-            }));
-
-            // 업로드된 이미지 URL을 사용하여 회원가입 진행
-            await handleSubmit();
+            };
+            setSignupData((prev) => ({ ...prev, profileUrl: uploadedUrls[0] }));
+            await handleSubmit(submitData);
+          } else {
+            await handleSubmit(signupData);
           }
         } catch (error) {
           console.error('이미지 업로드 실패:', error);
           // 이미지 업로드 실패해도 회원가입은 계속 진행
-          await handleSubmit();
+          await handleSubmit(signupData);
         }
       } else {
         // 이미지가 없는 경우 바로 회원가입 진행
-        await handleSubmit();
+        await handleSubmit(signupData);
       }
     } catch (error) {
       console.error('회원가입 실패:', error);
