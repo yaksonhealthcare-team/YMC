@@ -8,8 +8,8 @@ import { useBlocker } from 'react-router-dom';
  */
 export const useOverlayBackHandler = () => {
   const { overlayState, closeOverlay } = useOverlay();
-  const { state, reset } = useBlocker(({ historyAction, currentLocation, nextLocation }) => {
-    return overlayState.isOpen && historyAction === 'POP' && currentLocation.pathname !== nextLocation.pathname;
+  const { state, reset } = useBlocker(({ historyAction }) => {
+    return overlayState.isOpen && historyAction === 'POP';
   });
 
   useEffect(() => {

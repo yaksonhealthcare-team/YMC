@@ -1,6 +1,74 @@
 import { UserSchema } from '@/_domain/auth/types';
 import * as Sentry from '@sentry/react';
 
+const NON_ACTIONABLE_ERROR_PATTERNS: Array<string | RegExp> = [
+  /ResizeObserver loop limit exceeded/i,
+  /ResizeObserver loop completed with undelivered notifications/i,
+  /Script error\.?/i,
+  /The operation was aborted/i,
+  /AbortError/i,
+  /NetworkError when attempting to fetch resource/i
+];
+
+const NOISY_SCRIPT_URL_PATTERNS: Array<string | RegExp> = [
+  /^chrome-extension:\/\//i,
+  /^moz-extension:\/\//i,
+  /^safari-extension:\/\//i,
+  /^edge-extension:\/\//i
+];
+
+let isSentryInitialized = false;
+const SENTRY_CAPTURED_FLAG = '__sentry_captured__';
+
+/**
+ * Sentry 이벤트 노이즈 이벤트 제거
+ */
+const shouldDropNoiseEvent = (event: Sentry.Event) => {
+  const values = event.exception?.values ?? [];
+  const messages = values.map((v) => `${v.type ?? ''} ${v.value ?? ''}`.trim()).filter(Boolean);
+
+  return messages.some((message) =>
+    NON_ACTIONABLE_ERROR_PATTERNS.some((pattern) =>
+      typeof pattern === 'string' ? message.includes(pattern) : pattern.test(message)
+    )
+  );
+};
+
+export const initSentry = () => {
+  if (isSentryInitialized) return;
+
+  Sentry.init({
+    dsn: import.meta.env.VITE_SENTRY_DSN,
+    tracesSampleRate: 0.01,
+    replaysSessionSampleRate: 0,
+    replaysOnErrorSampleRate: 0.1,
+    environment: import.meta.env.MODE === 'production' ? 'production' : 'development',
+    sendDefaultPii: true,
+    integrations: [Sentry.replayIntegration()],
+    ignoreErrors: NON_ACTIONABLE_ERROR_PATTERNS,
+    denyUrls: NOISY_SCRIPT_URL_PATTERNS,
+    beforeSend(event) {
+      if (shouldDropNoiseEvent(event)) {
+        return null;
+      }
+
+      return event;
+    }
+  });
+
+  isSentryInitialized = true;
+};
+
+const hasSentryCaptured = (error: unknown): boolean => {
+  if (!error || typeof error !== 'object') return false;
+  return Boolean((error as Record<string, unknown>)[SENTRY_CAPTURED_FLAG]);
+};
+
+const markSentryCaptured = (error: unknown) => {
+  if (!error || typeof error !== 'object') return;
+  (error as Record<string, unknown>)[SENTRY_CAPTURED_FLAG] = true;
+};
+
 /**
  * Sentry에 사용자 정보 설정
  * @param user 사용자 정보
@@ -82,9 +150,13 @@ export const captureSentryError = (
     level?: Sentry.SeverityLevel;
   }
 ) => {
+  if (hasSentryCaptured(error)) return;
+
   // Error 객체 보장
   const normalizedError =
     error instanceof Error ? error : new Error(typeof error === 'string' ? error : JSON.stringify(error));
+  markSentryCaptured(error);
+  markSentryCaptured(normalizedError);
 
   Sentry.withScope((scope) => {
     // level 기본값: error
@@ -107,4 +179,53 @@ export const captureSentryError = (
 
     Sentry.captureException(normalizedError);
   });
+};
+
+export const safeJsonParse = <T>(
+  raw: string,
+  options?: {
+    source?: string;
+    tags?: Record<string, string>;
+    context?: Record<string, unknown>;
+  }
+): T | null => {
+  try {
+    return JSON.parse(raw) as T;
+  } catch (error) {
+    captureSentryError(error, {
+      tags: { feature: 'json_parse', source: options?.source ?? 'unknown', ...(options?.tags ?? {}) },
+      context: {
+        ...options?.context,
+        rawPreview: raw.slice(0, 300)
+      }
+    });
+    return null;
+  }
+};
+
+export const safeDecodeAndParseJson = <T>(
+  encoded: string,
+  options?: {
+    source?: string;
+    tags?: Record<string, string>;
+    context?: Record<string, unknown>;
+  }
+): T | null => {
+  try {
+    const decoded = decodeURIComponent(encoded);
+    return safeJsonParse<T>(decoded, {
+      source: options?.source,
+      tags: options?.tags,
+      context: { ...(options?.context ?? {}), decodedPreview: decoded.slice(0, 300) }
+    });
+  } catch (error) {
+    captureSentryError(error, {
+      tags: { feature: 'decode_uri', source: options?.source ?? 'unknown', ...(options?.tags ?? {}) },
+      context: {
+        ...options?.context,
+        encodedPreview: encoded.slice(0, 300)
+      }
+    });
+    return null;
+  }
 };

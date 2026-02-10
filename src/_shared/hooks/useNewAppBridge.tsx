@@ -1,5 +1,5 @@
 import { getUser, saveAccessToken, useSigninSocialMutation, useUserStore } from '@/_domain/auth';
-import { logger } from '@/_shared';
+import { logger, safeJsonParse } from '@/_shared';
 import { publicApi } from '@/_shared/services/instance';
 import { normalizeAppInfo, useAppInfoStore } from '@/stores/appInfoStore';
 import { useCallback, useEffect } from 'react';
@@ -104,17 +104,29 @@ export const useNewAppBridge = () => {
 
     const handleWebviewMessage = async (event: MessageEvent) => {
       try {
-        const data = JSON.parse(event.data);
+        const data = safeJsonParse<{ type?: string; data?: any; fcmToken?: string; deviceType?: string; url?: string }>(
+          String(event.data ?? ''),
+          {
+            source: 'webview_message',
+            tags: { feature: 'app_bridge' },
+            context: { eventType: event.type }
+          }
+        );
+        if (!data) return;
 
         switch (data.type) {
           case 'SOCIAL_LOGIN':
             await handleSocialLogin(data.data);
             break;
           case 'FCM_TOKEN':
-            localStorage.setItem('FCM_TOKEN', data.fcmToken);
+            if (data.fcmToken) {
+              localStorage.setItem('FCM_TOKEN', data.fcmToken);
+            }
             break;
           case 'DEVICE_TYPE':
-            localStorage.setItem('DEVICE_TYPE', data.deviceType);
+            if (data.deviceType) {
+              localStorage.setItem('DEVICE_TYPE', data.deviceType);
+            }
             break;
           case 'PUSH_NAVIGATE': {
             const url = data?.url ?? data?.data?.url;

@@ -3,6 +3,7 @@ import LoadingIndicator from '@/components/LoadingIndicator';
 import { useOverlay } from '@/stores/ModalContext';
 import { usePaymentStore } from '@/hooks/usePaymentStore';
 import { PaymentResponse, PaymentStatus } from '@/types/Payment';
+import { safeDecodeAndParseJson } from '@/_shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -87,8 +88,13 @@ export default function PaymentCallbackPage() {
     }
 
     try {
-      const decodedStr = decodeURIComponent(jsonDataStr);
-      const jsonData: PaymentResponse = JSON.parse(decodedStr);
+      const jsonData = safeDecodeAndParseJson<PaymentResponse>(jsonDataStr, {
+        source: 'payment_callback_jsonData',
+        tags: { feature: 'payment_callback' }
+      });
+      if (!jsonData) {
+        throw new Error('결제 콜백 데이터 파싱 실패');
+      }
 
       // 필수 데이터 검증
       if (!jsonData.body?.orderid || !jsonData.body?.items || !jsonData.body?.pay_info) {
