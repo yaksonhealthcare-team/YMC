@@ -14,6 +14,7 @@ import { getFormattedTimestamp } from './src/utils/date';
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const buildTimestamp = getFormattedTimestamp();
+  const shouldCompressAsset = (file: string) => /\.(js|css)$/i.test(file) && !/index\.html$/i.test(file);
 
   return {
     server: {
@@ -56,6 +57,7 @@ export default defineConfig(({ mode }) => {
         algorithm: 'gzip', // 'gzip' | 'brotliCompress' | 'deflate' | 'deflateRaw'
         ext: '.gz', // 압축된 파일의 확장자
         threshold: 10240, // 압축이 시작되는 최소 파일 크기 (bytes)
+        filter: shouldCompressAsset,
         deleteOriginFile: false, // 원본 파일 삭제 여부
         verbose: true // 로그 출력 여부
       }),
@@ -63,6 +65,7 @@ export default defineConfig(({ mode }) => {
         algorithm: 'brotliCompress',
         ext: '.br',
         threshold: 10240, // 10KB
+        filter: shouldCompressAsset,
         deleteOriginFile: false,
         verbose: true
       }),
