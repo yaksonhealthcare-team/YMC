@@ -1,4 +1,5 @@
 import { useOverlay } from '@/stores/ModalContext';
+import { safeDecodeAndParseJson } from '@/_shared';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -52,7 +53,13 @@ export const useNiceAuthCallback = () => {
           return null;
         }
 
-        const decodedData: NiceAuthResponse = JSON.parse(decodeURIComponent(jsonData));
+        const decodedData = safeDecodeAndParseJson<NiceAuthResponse>(jsonData, {
+          source: 'nice_auth_callback_jsonData',
+          tags: { feature: 'nice_auth' }
+        });
+        if (!decodedData) {
+          throw new Error('본인인증 응답 파싱에 실패했습니다.');
+        }
 
         if (decodedData.resultCode !== '00') {
           console.error('NICE Authentication failed:', decodedData.resultCode, decodedData.resultMessage);

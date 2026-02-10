@@ -1,12 +1,12 @@
 import { useUserStore } from '@/_domain/auth';
-import { ReservationFormValues, TimeSlot, useGetSchedulesDate, useGetSchedulesTimes } from '@/_domain/reservation';
-import { SchedulesParams } from '@/_domain/reservation/types/schedule.types';
+import { TimeSlot, useGetSchedulesDate, useGetSchedulesTimes } from '@/_domain/reservation';
 import { BottomFixedSection, Button, Calendar, Loading, TimePicker } from '@/_shared';
 import { formatScheduleTime } from '@/_shared/utils/date.utils';
 import CloseIcon from '@/assets/icons/CloseIcon.svg?react';
 import dayjs, { Dayjs } from 'dayjs';
 import { useCallback, useMemo, useState } from 'react';
 import { DateBottomSheetProps } from './DateBottomSheet.types';
+import { buildScheduleParams, getDateBottomSheetQueryEnabled } from './DateBottomSheet.utils';
 
 export const DateBottomSheet = ({ values, onClose, onSelect, ...props }: DateBottomSheetProps) => {
   const { date, timeSlot } = values;
@@ -15,14 +15,24 @@ export const DateBottomSheet = ({ values, onClose, onSelect, ...props }: DateBot
   const [selectedTime, setSelectedTime] = useState<TimeSlot | null>(timeSlot);
   const { getUserId } = useUserStore();
   const userId = getUserId();
-  const enabled = !!userId;
+  const branchId = values.branch?.id ?? '';
+  const { isDateQueryEnabled, isTimeQueryEnabled } = getDateBottomSheetQueryEnabled(userId, branchId, selectedDate);
+  const dateParams = useMemo(() => buildScheduleParams('date', values, searchDate), [searchDate, values]);
+  const fallbackTimesParams = useMemo(
+    () => ({ search_date: dayjs().format('YYYY-MM-DD'), b_idx: branchId }),
+    [branchId]
+  );
+  const timesParams = useMemo(
+    () => (selectedDate ? buildScheduleParams('times', values, selectedDate) : fallbackTimesParams),
+    [fallbackTimesParams, selectedDate, values]
+  );
 
   const {
     data: schedulesDateData,
     isLoading: isScheduleDateLoading,
     isFetching: isScheduleDateFetching
-  } = useGetSchedulesDate(userId, buildParams('date', values, searchDate), {
-    enabled,
+  } = useGetSchedulesDate(userId, dateParams, {
+    enabled: isDateQueryEnabled,
     refetchOnMount: true,
     staleTime: 0
   });
@@ -30,8 +40,8 @@ export const DateBottomSheet = ({ values, onClose, onSelect, ...props }: DateBot
     data: schedulesTimesData,
     isLoading: isScheduleTimesLoading,
     isFetching: isScheduleTimesFetching
-  } = useGetSchedulesTimes(userId, buildParams('times', values, selectedDate), {
-    enabled,
+  } = useGetSchedulesTimes(userId, timesParams, {
+    enabled: isTimeQueryEnabled,
     refetchOnMount: true,
     staleTime: 0
   });
@@ -122,30 +132,4 @@ const Header = ({ onClose }: { onClose: () => void }) => {
       </button>
     </div>
   );
-};
-
-const buildParams = (
-  scheduleType: 'date' | 'times',
-  values: ReservationFormValues,
-  searchDate: Dayjs | null
-): SchedulesParams => {
-  if (!searchDate) {
-    return { search_date: '', b_idx: '' };
-  }
-
-  const { consultService, services, type, branch } = values;
-  const base = {
-    b_idx: branch?.id ?? '',
-    search_date: scheduleType === 'times' ? dayjs(searchDate).format('YYYY-MM-DD') : dayjs(searchDate).format('YYYY-MM')
-  };
-
-  const idxSource = type === 'consult' ? consultService : type === 'membership' ? services : [];
-  const mp_idx = idxSource.map((s) => (typeof s.mp_idx === 'string' && s.mp_idx.length > 0 ? s.mp_idx : ''));
-  const ss_idx = idxSource.map((s) => (typeof s.ss_idx === 'string' && s.ss_idx.length > 0 ? s.ss_idx : ''));
-
-  return {
-    ...base,
-    ...(mp_idx.some((v) => v) && { mp_idx }),
-    ...(ss_idx.some((v) => v) && { ss_idx })
-  };
 };

@@ -1,12 +1,12 @@
 import { getUser, removeAccessToken, useUserStore } from '@/_domain/auth';
-import { useChannelTalkVisibility, useOverlayBackHandler } from '@/_shared';
+import { setSentryBreadcrumb, useChannelTalkVisibility, useOverlayBackHandler } from '@/_shared';
 import { useNewAppBridge } from '@/_shared/hooks/useNewAppBridge';
 import ErrorPage from '@/components/ErrorPage';
 import { LayoutProvider } from '@/stores/LayoutContext';
 import { OverlayProvider } from '@/stores/ModalContext';
 import { SignupProvider } from '@/stores/SignupContext';
-import { PropsWithChildren } from 'react';
-import { createBrowserRouter, LoaderFunction, Outlet, redirect, RouterProvider } from 'react-router-dom';
+import { PropsWithChildren, useEffect } from 'react';
+import { createBrowserRouter, LoaderFunction, Outlet, redirect, RouterProvider, useLocation } from 'react-router-dom';
 import { CustomRouteObject, routeConfig } from './newConfig';
 
 export const Router = () => {
@@ -55,8 +55,17 @@ const HookBridges = () => {
   useNewAppBridge();
   useOverlayBackHandler();
   useChannelTalkVisibility();
+  useRouteSentryBreadcrumb();
 
   return null;
+};
+
+const useRouteSentryBreadcrumb = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    setSentryBreadcrumb(location.pathname, new URLSearchParams(location.search));
+  }, [location.pathname, location.search]);
 };
 
 /**

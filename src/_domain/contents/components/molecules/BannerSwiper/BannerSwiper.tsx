@@ -9,7 +9,7 @@ const BannerSwiper = ({ banners, onClickBanner }: BannerSwiperProps) => {
       pagination={{ clickable: true }}
       slidesPerView={1}
       className="w-full aspect-[8/5] rounded-2xl"
-      loop={true}
+      loop={banners.length > 1}
     >
       {banners.map((banner, idx) => {
         const key = `${banner.code}-${idx}`;
