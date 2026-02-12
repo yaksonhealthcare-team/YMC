@@ -10,6 +10,7 @@ import 'dayjs/locale/ko';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { Suspense } from 'react';
 import { Loading, useVConsole } from './_shared';
+import { initGA } from './_shared/utils/ga.utils';
 import { initSentry } from './_shared/utils/sentry.utils';
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -17,6 +18,7 @@ dayjs.extend(customParseFormat);
 dayjs.locale('ko');
 
 initSentry();
+initGA();
 
 const theme = createTheme({
   components: {
