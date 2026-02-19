@@ -1,3 +1,4 @@
+import { logger } from '@/_shared/utils/logger.utils';
 import ReactGA from 'react-ga4';
 
 const isDevelopment = import.meta.env.DEV;
@@ -20,12 +21,12 @@ export const initGA = () => {
 
   // 개발 환경에서는 GA 비활성화
   if (isDevelopment) {
-    console.log('🔧 [개발 모드] Google Analytics 비활성화');
+    logger.info('🔧 [개발 모드] Google Analytics 비활성화');
     return;
   }
 
   if (!measurementId) {
-    console.warn('⚠️ GA Measurement ID가 설정되지 않았습니다.');
+    logger.warn('⚠️ GA Measurement ID가 설정되지 않았습니다.');
     return;
   }
 
@@ -38,7 +39,7 @@ export const initGA = () => {
     }
   });
 
-  console.log('✅ Google Analytics 초기화 완료:', measurementId);
+  logger.info('✅ Google Analytics 초기화 완료:', measurementId);
 };
 
 /**
