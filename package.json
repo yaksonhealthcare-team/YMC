@@ -6,16 +6,12 @@
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
   "scripts": {
     "dev": "vite --mode development",
-    "dev:prod": "vite --mode production",
-    "build:dev": "yarn clean:dev && tsc -b && vite build --mode development",
-    "build": "yarn clean:prod && tsc -b && vite build --mode production",
+    "build": "tsc -b && vite build",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config jest.config.cjs",
     "lint": "eslint . \"**/*.{ts,tsx}\" --report-unused-disable-directives",
     "preview": "vite preview",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "prepare": "node .husky/install.mjs",
-    "clean:prod": "rm -rf dist/dist_prod",
-    "clean:dev": "rm -rf dist/dist_dev",
     "release": "release-it"
   },
   "dependencies": {
