@@ -12,43 +12,10 @@
       name="keywords"
       content="테라피스트, 약손명가, 약손명가 리프팅, 약손명가 예약, 피부 관리, 얼굴 붓기 빼는법, 경락, 스파, 에스테틱"
     />
-    <script>
-      (function () {
-        const RETRY_KEY = '__boot_retry_unexpected_eof__';
-
-        window.addEventListener(
-          'error',
-          function (event) {
-            const message = String(event?.message || '');
-            const filename = String(event?.filename || '');
-            const isSyntaxEof = /Unexpected EOF|Unexpected end of input/i.test(message);
-            const isSameOriginScript = !filename || filename.startsWith(window.location.origin);
-
-            if (!isSyntaxEof || !isSameOriginScript) return;
-            if (sessionStorage.getItem(RETRY_KEY)) return;
-
-            sessionStorage.setItem(RETRY_KEY, '1');
-
-            const nextUrl = new URL(window.location.href);
-            nextUrl.searchParams.set('_reload', Date.now().toString());
-            window.location.replace(nextUrl.toString());
-          },
-          true
-        );
-
-        window.addEventListener(
-          'load',
-          function () {
-            sessionStorage.removeItem(RETRY_KEY);
-          },
-          { once: true }
-        );
-      })();
-    </script>
     <!-- 중요한 API 도메인 미리 연결 -->
-    <link rel="preconnect" href="https://yaksonhc.com" crossorigin />
+    <!-- <link rel="preconnect" href="https://yaksonhc.com" crossorigin />
     <link rel="preconnect" href="https://devapi.yaksonhc.com" crossorigin />
-    <link rel="preconnect" href="https://image.yaksonhc.com" crossorigin />
+    <link rel="preconnect" href="https://image.yaksonhc.com" crossorigin /> -->
 
     <!-- 폰트 미리 로드 -->
     <link rel="preload" href="/fonts/Pretendard-Regular.woff2" as="font" type="font/woff2" crossorigin />

@@ -1,6 +1,7 @@
 import { getUser, removeAccessToken, useUserStore } from '@/_domain/auth';
 import { setSentryBreadcrumb, useChannelTalkVisibility, useOverlayBackHandler } from '@/_shared';
 import { useNewAppBridge } from '@/_shared/hooks/useNewAppBridge';
+import { sendPageView, setUserId, setUserProperties } from '@/_shared/utils/ga.utils';
 import ErrorPage from '@/components/ErrorPage';
 import { LayoutProvider } from '@/stores/LayoutContext';
 import { OverlayProvider } from '@/stores/ModalContext';
@@ -56,6 +57,7 @@ const HookBridges = () => {
   useOverlayBackHandler();
   useChannelTalkVisibility();
   useRouteSentryBreadcrumb();
+  useRouteGAPageView();
 
   return null;
 };
@@ -69,6 +71,17 @@ const useRouteSentryBreadcrumb = () => {
 };
 
 /**
+ * 라우팅 시 Google Analytics 페이지뷰 전송
+ */
+const useRouteGAPageView = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    sendPageView(location.pathname, location.search);
+  }, [location.pathname, location.search]);
+};
+
+/**
  * 라우팅 시 유저 검증 및 데이터 호출
  */
 const requireAuth: LoaderFunction = async () => {
@@ -78,6 +91,15 @@ const requireAuth: LoaderFunction = async () => {
     const response = await getUser();
     const user = response.data.body[0] || null;
     setUser(user);
+
+    // GA 사용자 정보 설정
+    if (user) {
+      setUserId(user.id);
+      setUserProperties({
+        user_gender: user.sex,
+        user_phone: user.hp
+      });
+    }
 
     return null;
   } catch {
