@@ -1,0 +1,37 @@
+name: Tag on Main
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: package.json 버전 확인
+        id: version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: 태그 및 GitHub Release 생성
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          VERSION=v${{ steps.version.outputs.version }}
+
+          if git ls-remote --tags origin | grep -q "refs/tags/$VERSION"; then
+            echo "태그 $VERSION 이미 존재, 스킵"
+          else
+            git tag $VERSION
+            git push origin $VERSION
+            gh release create $VERSION \
+              --title "$VERSION" \
+              --generate-notes
+            echo "릴리즈 $VERSION 생성 완료"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
