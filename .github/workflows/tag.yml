@@ -39,4 +39,4 @@ jobs:
             echo "릴리즈 $VERSION 생성 완료"
           fi
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
