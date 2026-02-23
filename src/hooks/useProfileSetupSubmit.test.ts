@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals';
+import { describe, expect, it, vi } from 'vitest';
 import {
   DEFAULT_SIGNUP_ERROR_MESSAGE,
   executeWithRetry,
@@ -22,12 +22,12 @@ describe('useProfileSetupSubmit helpers', () => {
 
   it('retries and succeeds on second attempt', async () => {
     let count = 0;
-    const task = jest.fn(async () => {
+    const task = vi.fn(async () => {
       count += 1;
       if (count === 1) throw new Error('temporary');
       return 'ok';
     });
-    const sleepFn = jest.fn(async () => undefined);
+    const sleepFn = vi.fn(async () => undefined);
 
     const result = await executeWithRetry(task, 1, 10, sleepFn);
 
@@ -39,10 +39,10 @@ describe('useProfileSetupSubmit helpers', () => {
 
   it('throws after exhausting retries', async () => {
     const error = new Error('final');
-    const task = jest.fn(async () => {
+    const task = vi.fn(async () => {
       throw error;
     });
-    const sleepFn = jest.fn(async () => undefined);
+    const sleepFn = vi.fn(async () => undefined);
 
     await expect(executeWithRetry(task, 1, 10, sleepFn)).rejects.toThrow('final');
     expect(task).toHaveBeenCalledTimes(2);

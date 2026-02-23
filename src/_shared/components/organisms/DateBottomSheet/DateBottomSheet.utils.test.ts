@@ -1,6 +1,6 @@
 import { ReservationFormValues } from '@/_domain/reservation';
 import dayjs from 'dayjs';
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import { buildScheduleParams, getDateBottomSheetQueryEnabled } from './DateBottomSheet.utils';
 
 const baseValues: ReservationFormValues = {

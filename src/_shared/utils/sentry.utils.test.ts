@@ -1,9 +1,9 @@
 import { safeDecodeAndParseJson, safeJsonParse } from './sentry.utils';
-import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('sentry parser utils', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('safeJsonParse should parse valid json', () => {
