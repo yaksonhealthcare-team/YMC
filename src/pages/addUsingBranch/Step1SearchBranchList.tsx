@@ -1,16 +1,16 @@
 import CloseGrayFillIcon from '@/assets/icons/CloseGrayFillIcon.svg?react';
-import CustomTextField from '@/components/CustomTextField';
-import LoadingIndicator from '@/components/LoadingIndicator';
-import BranchIcon from '@/components/icons/BranchIcon';
-import CheckIcon from '@/components/icons/CheckIcon';
-import SearchIcon from '@/components/icons/SearchIcon';
-import { useDebounce } from '@/hooks/useDebounce';
-import { useGeolocation } from '@/hooks/useGeolocation';
-import useIntersection from '@/hooks/useIntersection';
-import { useBranches } from '@/queries/useBranchQueries';
-import { Branch } from '@/types/Branch';
+import CustomTextField from '@/shared/ui/text-field/CustomTextField';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
+import BranchIcon from '@/shared/ui/icons/BranchIcon';
+import CheckIcon from '@/shared/ui/icons/CheckIcon';
+import SearchIcon from '@/shared/ui/icons/SearchIcon';
+import { useDebounce } from '@/shared/lib/hooks/useDebounce';
+import { useGeolocation } from '@/features/search-branch/lib/useGeolocation';
+import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObserver';
+import { useBranches } from '@/entities/branch/api/useBranchQueries';
+import { Branch } from '@/entities/branch/model/Branch';
 import { IconButton } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 interface SearchBranchListProps {
   selectedBranches: Branch[];
@@ -21,11 +21,10 @@ const Step1SearchBranchList = ({ selectedBranches, setSelectedBranches }: Search
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
   const { location: currentLocation } = useGeolocation();
-  const { observerTarget } = useIntersection({
-    onIntersect: () => {
-      if (hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
-      }
+  const observerTarget = useRef<HTMLDivElement>(null);
+  useIntersectionObserver(observerTarget, () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
     }
   });
 

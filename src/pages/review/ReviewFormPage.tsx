@@ -1,14 +1,14 @@
 import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
 import CaretLeftIcon from '@/assets/icons/CaretLeftIcon.svg?react';
 import PlusIcon from '@/assets/icons/PlusIcon.svg?react';
-import { Button } from '@/components/Button';
-import { Image } from '@/components/common/Image';
-import FixedButtonContainer from '@/components/FixedButtonContainer';
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { TextArea } from '@/components/TextArea';
-import { useLayout } from '@/stores/LayoutContext';
-import { useReviewSections } from '@/queries/useReviewQueries';
-import { escapeHtml, validateFile } from '@/utils/sanitize';
+import { Button } from '@/shared/ui/button/Button';
+import { Image } from '@/shared/ui/image/Image';
+import FixedButtonContainer from '@/shared/ui/button/FixedButtonContainer';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
+import { TextArea } from '@/shared/ui/text-field/TextArea';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { useReviewSections } from '@/entities/review/api/useReviewQueries';
+import { escapeHtml, validateFile } from '@/shared/lib/utils/sanitize';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

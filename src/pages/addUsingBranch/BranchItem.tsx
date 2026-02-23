@@ -1,5 +1,5 @@
-import BranchIcon from '@/components/icons/BranchIcon';
-import { Branch } from '@/types/Branch';
+import BranchIcon from '@/shared/ui/icons/BranchIcon';
+import { Branch } from '@/entities/branch/model/Branch';
 
 interface BranchItemProps {
   branch: Branch;

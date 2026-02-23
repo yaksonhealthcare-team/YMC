@@ -1,17 +1,17 @@
-import { useUserStore } from '@/_domain/auth';
-import { useGetReservationDetail } from '@/_domain/reservation';
-import { Button } from '@/components/Button';
-import FixedButtonContainer from '@/components/FixedButtonContainer';
-import { TextArea } from '@/components/TextArea';
-import { useReservationGuideMessages } from '@/hooks/useGuideMessages';
-import { useCancelReservation } from '@/queries/useReservationQueries';
-import { useLayout } from '@/stores/LayoutContext';
-import { useOverlay } from '@/stores/ModalContext';
-import { escapeHtml } from '@/utils/sanitize';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { useGetReservationDetail } from '@/features/reservation/lib/reservation.services';
+import { Button } from '@/shared/ui/button/Button';
+import FixedButtonContainer from '@/shared/ui/button/FixedButtonContainer';
+import { TextArea } from '@/shared/ui/text-field/TextArea';
+import { useReservationGuideMessages } from '@/features/reservation/lib/useGuideMessages';
+import { useCancelReservation } from '@/entities/reservation/api/useReservationQueries';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
+import { escapeHtml } from '@/shared/lib/utils/sanitize';
 import { Divider } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import ReservationCancelBottomSheetContent from './_fragments/ReservationCancelBottomSheetContent';
+import ReservationCancelBottomSheetContent from './ui/ReservationCancelBottomSheetContent';
 
 const ReservationCancelPage = () => {
   const { id } = useParams<{ id: string }>();

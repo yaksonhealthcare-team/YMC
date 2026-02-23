@@ -1,10 +1,10 @@
-import { fetchEncryptDataForNice } from '@/apis/pass.api';
-import { Button } from '@/components/Button';
-import CheckFillCircleIcon from '@/components/icons/CheckFillCircleIcon';
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/stores/LayoutContext';
-import { useSignup } from '@/stores/SignupContext';
-import { checkByNice } from '@/utils/niceCheck';
+import { fetchEncryptDataForNice } from '@/entities/user/api/pass.api';
+import { Button } from '@/shared/ui/button/Button';
+import CheckFillCircleIcon from '@/shared/ui/icons/CheckFillCircleIcon';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { useSignup } from '@/features/auth/model/SignupContext';
+import { checkByNice } from '@/shared/lib/utils/niceCheck';
 import { Checkbox } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

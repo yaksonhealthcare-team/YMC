@@ -1,10 +1,10 @@
-import { useUserStore } from '@/_domain/auth';
+import { useUserStore } from '@/features/auth/model/user.store';
 import InformationIcon from '@/assets/icons/InformationIcon.svg?react';
-import BranchCard from '@/components/BranchCard';
-import { Button } from '@/components/Button';
-import { EmptyCard } from '@/components/EmptyCard';
-import { useLayout } from '@/stores/LayoutContext';
-import { useOverlay } from '@/stores/ModalContext';
+import BranchCard from '@/entities/branch/ui/BranchCard';
+import { Button } from '@/shared/ui/button/Button';
+import { EmptyCard } from '@/shared/ui/EmptyCard';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { useCallback, useEffect } from 'react';
 
 interface InformationBottomSheetProps {

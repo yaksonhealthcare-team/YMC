@@ -1,10 +1,10 @@
-import { EmptyCard } from '@/components/EmptyCard';
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { Tag } from '@/components/Tag';
-import { useLayout } from '@/stores/LayoutContext';
-import useIntersection from '@/hooks/useIntersection';
-import { usePointHistories } from '@/queries/usePointQueries';
-import { useEffect } from 'react';
+import { EmptyCard } from '@/shared/ui/EmptyCard';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
+import { Tag } from '@/shared/ui/tag/Tag';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObserver';
+import { usePointHistories } from '@/entities/point/api/usePointQueries';
+import { useEffect, useRef } from 'react';
 
 const PointPage = () => {
   const { setHeader, setNavigation } = useLayout();
@@ -21,11 +21,10 @@ const PointPage = () => {
     setNavigation({ display: false });
   }, []);
 
-  const { observerTarget } = useIntersection({
-    onIntersect: () => {
-      if (hasNextPage && !isFetchingNextPage) {
-        void fetchNextPage();
-      }
+  const observerTarget = useRef<HTMLDivElement>(null);
+  useIntersectionObserver(observerTarget, () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      void fetchNextPage();
     }
   });
 

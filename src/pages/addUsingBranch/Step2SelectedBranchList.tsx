@@ -1,4 +1,4 @@
-import { Branch } from '@/types/Branch';
+import { Branch } from '@/entities/branch/model/Branch';
 import BranchItem from './BranchItem';
 
 interface SelectedBranchListProps {

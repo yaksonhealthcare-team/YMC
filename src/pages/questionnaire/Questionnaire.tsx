@@ -1,11 +1,11 @@
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { useQuestionnaire } from '@/hooks/useQuestionnaire';
-import { Question, QuestionFieldName, QuestionnaireType } from '@/types/Questionnaire';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
+import { useQuestionnaire } from '@/features/questionnaire-submit/lib/useQuestionnaire';
+import { Question, QuestionFieldName, QuestionnaireType } from '@/entities/user/model/questionnaire.types';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { QuestionItem } from './_fragments/QuestionItem';
-import { QuestionnaireHeader } from './_fragments/QuestionnaireHeader';
-import { QuestionnaireNavigation } from './_fragments/QuestionnaireNavigation';
+import { QuestionItem } from './ui/QuestionItem';
+import { QuestionnaireHeader } from './ui/QuestionnaireHeader';
+import { QuestionnaireNavigation } from './ui/QuestionnaireNavigation';
 
 /**
  * 문진 페이지

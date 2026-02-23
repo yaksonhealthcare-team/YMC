@@ -1,15 +1,15 @@
 import CheckCircleIcon from '@/assets/icons/CheckCircle.svg?react';
-import { Button } from '@/components/Button';
-import FixedButtonContainer from '@/components/FixedButtonContainer';
-import { XIcon } from '@/components/icons/XIcon';
-import { useLayout } from '@/stores/LayoutContext';
-import { useOverlay } from '@/stores/ModalContext';
-import { PaymentCompleteState } from '@/types/Payment';
+import { Button } from '@/shared/ui/button/Button';
+import FixedButtonContainer from '@/shared/ui/button/FixedButtonContainer';
+import { XIcon } from '@/shared/ui/icons/XIcon';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
+import { PaymentCompleteState } from '@/entities/payment/model/Payment';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import PaymentInfo from './_fragments/PaymentCompleteInfo';
-import PaymentItemCard from './_fragments/PaymentCompleteItemCard';
-import PaymentSummary from './_fragments/PaymentCompleteSummary';
+import PaymentInfo from './ui/PaymentCompleteInfo';
+import PaymentItemCard from './ui/PaymentCompleteItemCard';
+import PaymentSummary from './ui/PaymentCompleteSummary';
 
 const PaymentCompletePage = () => {
   const { setHeader, setNavigation } = useLayout();

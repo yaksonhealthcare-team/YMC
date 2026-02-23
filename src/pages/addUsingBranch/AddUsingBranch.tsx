@@ -1,7 +1,7 @@
-import { postVisitedStore } from '@/apis/user.api';
-import { Button } from '@/components/Button';
-import { useLayout } from '@/stores/LayoutContext';
-import { Branch } from '@/types/Branch';
+import { postVisitedStore } from '@/entities/user/api/user.api';
+import { Button } from '@/shared/ui/button/Button';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { Branch } from '@/entities/branch/model/Branch';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Step1SearchBranchList from './Step1SearchBranchList';
