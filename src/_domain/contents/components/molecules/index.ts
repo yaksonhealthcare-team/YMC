@@ -1,1 +1,1 @@
-export * from './BannerSwiper';
+export * from '@/widgets/banner-swiper/ui';

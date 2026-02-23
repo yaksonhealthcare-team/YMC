@@ -1,2 +1,2 @@
-export { ReservationMembershipSwiper } from './ReservationMembershipSwiper';
-export type { ReservationMembershipSwiperProps } from './ReservationMembershipSwiper.types';
+export { ReservationMembershipSwiper } from '@/features/reservation/ui/ReservationMembershipSwiper';
+export type { ReservationMembershipSwiperProps } from '@/features/reservation/ui/ReservationMembershipSwiper.types';

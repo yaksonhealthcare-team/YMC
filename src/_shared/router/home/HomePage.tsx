@@ -14,8 +14,8 @@ import { EventSection } from '@/pages/home/_fragments/EventSection';
 import { MembershipCardSection } from '@/pages/home/_fragments/MembershipCardSection';
 import ReserveCardSection from '@/pages/home/_fragments/ReserveCardSection';
 import { useStartupPopups } from '@/entities/content/api/useContentQueries';
-import { useLayout } from '@/stores/LayoutContext';
-import { usePopupActions } from '@/stores/popupStore';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { usePopupActions } from '@/widgets/startup-popup/model/popupStore';
 import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 

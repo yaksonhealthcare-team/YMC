@@ -1,10 +1,10 @@
 import { getConsultationCount } from '@/entities/reservation/api/reservation.api';
 import { Button } from '@/shared/ui/button/Button';
-import CartCard from '@/components/CartCard';
+import CartCard from '@/entities/cart/ui/CartCard';
 import FixedButtonContainer from '@/shared/ui/button/FixedButtonContainer';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
-import { useLayout } from '@/stores/LayoutContext';
-import { usePaymentStore } from '@/hooks/usePaymentStore';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { usePaymentStore } from '@/features/payment/lib/usePaymentStore';
 import { useCartItems, useDeleteCartItemsMutation, useUpdateCartItemMutation } from '@/entities/cart/api/useCartQueries';
 import { formatPriceWithUnit } from '@/shared/lib/utils/format';
 import { useQuery } from '@tanstack/react-query';

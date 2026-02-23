@@ -1,7 +1,7 @@
 import { useLogoutMutation, useUserStore } from '@/_domain/auth';
 import { setSentryUser } from '@/_shared';
 import Logo from '@/shared/ui/layout/Logo';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { Typography } from '@mui/material';
 import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';

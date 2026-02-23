@@ -1,5 +1,5 @@
 import { useUserStore } from '@/_domain/auth';
-import BranchCard from '@/components/BranchCard';
+import BranchCard from '@/entities/branch/ui/BranchCard';
 import { useNavigate } from 'react-router-dom';
 
 const ActiveBranchList = () => {

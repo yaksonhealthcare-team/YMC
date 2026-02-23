@@ -2,7 +2,7 @@ import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
 import EditIcon from '@/assets/icons/EditIcon.svg?react';
 import StoreIcon from '@/assets/icons/StoreIcon.svg?react';
 import { Image } from '@/shared/ui/image/Image';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { ReviewDetail } from '@/entities/review/model/Review';
 import { formatDate, formatDateWithDay } from '@/shared/lib/utils/date';
 import { useEffect } from 'react';

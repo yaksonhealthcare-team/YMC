@@ -1,7 +1,7 @@
 import { EmptyCard } from '@/shared/ui/EmptyCard';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { Tag } from '@/shared/ui/tag/Tag';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObserver';
 import { usePointHistories } from '@/entities/point/api/usePointQueries';
 import { useEffect, useRef } from 'react';

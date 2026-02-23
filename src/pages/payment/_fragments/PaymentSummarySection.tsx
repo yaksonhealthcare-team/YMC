@@ -1,4 +1,4 @@
-import PriceSummary from '@/components/PriceSummary';
+import PriceSummary from '@/widgets/price-summary/ui/PriceSummary';
 
 interface PaymentSummarySectionProps {
   totalAmount: number;

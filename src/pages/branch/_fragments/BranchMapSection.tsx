@@ -1,7 +1,7 @@
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import MapView from '@/shared/ui/map-view/MapView';
-import { useBranchLocationSelect } from '@/hooks/useBranchLocationSelect';
-import { useGeolocation } from '@/hooks/useGeolocation';
+import { useBranchLocationSelect } from '@/features/search-branch/lib/useBranchLocationSelect';
+import { useGeolocation } from '@/features/search-branch/lib/useGeolocation';
 import { useBranchBookmarkMutation, useBranchUnbookmarkMutation } from '@/entities/branch/api/useBranchQueries';
 import { Branch } from '@/entities/branch/model/Branch';
 import { Coordinate } from '@/shared/types/Coordinate';

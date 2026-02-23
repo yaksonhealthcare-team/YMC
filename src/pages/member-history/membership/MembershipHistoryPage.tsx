@@ -7,8 +7,8 @@ import {
 } from '@/_domain/membership';
 import { Loading, useIntersectionObserver } from '@/_shared';
 import { Button } from '@/shared/ui/button/Button';
-import { useLayout } from '@/stores/LayoutContext';
-import { useMembershipStore } from '@/stores/membershipStore';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { useMembershipStore } from '@/features/membership-purchase/model/membershipStore';
 import { MyMembershipFilterItem, myMembershipFilters } from '@/entities/membership/model/Membership';
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useRef } from 'react';

@@ -5,7 +5,7 @@ import { Button } from '@/shared/ui/button/Button';
 import { Image } from '@/shared/ui/image/Image';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { TextArea } from '@/shared/ui/text-field/TextArea';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { useCreateReviewMutation, useReviewQuestions } from '@/entities/review/api/useReviewQueries';
 import { formatDate } from '@/shared/lib/utils/date';

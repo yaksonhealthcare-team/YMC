@@ -10,7 +10,7 @@ import CustomTextField from '@/shared/ui/text-field/CustomTextField';
 import { GenderSelect } from '@/shared/ui/radio/GenderSelect';
 import PostcodeModal from '@/shared/ui/modal/PostcodeModal';
 import Switch from '@/shared/ui/switch/Switch';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { UpdateUserProfileRequest } from '@/entities/user/model/User';
 import { Gender } from '@/shared/lib/utils/gender';

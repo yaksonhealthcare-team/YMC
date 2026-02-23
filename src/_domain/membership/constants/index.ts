@@ -1,1 +1,1 @@
-export { MembershipStatus, MembershipType } from './membership.constants';
+export { MembershipStatus, MembershipType } from '@/features/membership-purchase/model/membership.constants';

@@ -1,5 +1,5 @@
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
-import { useQuestionnaire } from '@/hooks/useQuestionnaire';
+import { useQuestionnaire } from '@/features/questionnaire-submit/lib/useQuestionnaire';
 import { Question, QuestionFieldName, QuestionnaireType } from '@/types/Questionnaire';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';

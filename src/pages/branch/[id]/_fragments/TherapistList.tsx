@@ -1,4 +1,4 @@
-import ProfileCard from '@/components/ProfileCard';
+import ProfileCard from '@/entities/user/ui/ProfileCard';
 
 const TherapistList = ({
   therapists

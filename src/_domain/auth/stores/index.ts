@@ -1,1 +1,1 @@
-export { useUserStore, type UserStore } from './user.store';
+export { useUserStore, type UserStore } from '@/features/auth/model/user.store';

@@ -3,4 +3,4 @@ export {
   convertPrepaidMenu,
   type ConvertedConsultMenuData,
   type ConvertedPrepaidMenuData
-} from './menu.business';
+} from '@/features/reservation/lib/menu.business';

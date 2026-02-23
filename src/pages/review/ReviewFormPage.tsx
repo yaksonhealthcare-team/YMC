@@ -6,7 +6,7 @@ import { Image } from '@/shared/ui/image/Image';
 import FixedButtonContainer from '@/shared/ui/button/FixedButtonContainer';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { TextArea } from '@/shared/ui/text-field/TextArea';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useReviewSections } from '@/entities/review/api/useReviewQueries';
 import { escapeHtml, validateFile } from '@/shared/lib/utils/sanitize';
 import { useCallback, useEffect, useState } from 'react';

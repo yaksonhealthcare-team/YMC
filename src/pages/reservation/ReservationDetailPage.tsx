@@ -2,7 +2,7 @@ import { useUserStore } from '@/_domain/auth';
 import { useGetReservationDetail } from '@/_domain/reservation';
 import { Button } from '@/shared/ui/button/Button';
 import FixedButtonContainer from '@/shared/ui/button/FixedButtonContainer';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { ReservationType } from '@/entities/reservation/model/Reservation';
 import { Skeleton } from '@mui/material';

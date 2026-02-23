@@ -1,5 +1,5 @@
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 

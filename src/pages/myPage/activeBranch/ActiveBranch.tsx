@@ -1,9 +1,9 @@
 import { useUserStore } from '@/_domain/auth';
 import InformationIcon from '@/assets/icons/InformationIcon.svg?react';
-import BranchCard from '@/components/BranchCard';
+import BranchCard from '@/entities/branch/ui/BranchCard';
 import { Button } from '@/shared/ui/button/Button';
 import { EmptyCard } from '@/shared/ui/EmptyCard';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { useCallback, useEffect } from 'react';
 

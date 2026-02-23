@@ -1,7 +1,7 @@
 import ErrorPage from '@/shared/ui/error/ErrorPage';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { usePopupDetail } from '@/entities/content/api/useContentQueries';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { Box, Container, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';

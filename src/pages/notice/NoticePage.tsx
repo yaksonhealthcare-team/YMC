@@ -1,7 +1,7 @@
 import { fetchNotices } from '@/entities/content/api/contents.api';
 import { EmptyCard } from '@/shared/ui/EmptyCard';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { Notice } from '@/entities/content/model/Content';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import React, { useEffect } from 'react';

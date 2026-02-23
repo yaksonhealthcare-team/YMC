@@ -1,8 +1,8 @@
 import { EmptyCard } from '@/shared/ui/EmptyCard';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
-import { useGeolocation } from '@/hooks/useGeolocation';
+import { useGeolocation } from '@/features/search-branch/lib/useGeolocation';
 import { useBranchBookmarksQuery, useBranchUnbookmarkMutation } from '@/entities/branch/api/useBranchQueries';
 import { Branch } from '@/entities/branch/model/Branch';
 import { useEffect, useState } from 'react';

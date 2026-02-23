@@ -1,5 +1,5 @@
 import { useUserStore } from '@/_domain/auth';
-import BranchCard from '@/components/BranchCard';
+import BranchCard from '@/entities/branch/ui/BranchCard';
 import { Branch } from '@/entities/branch/model/Branch';
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';

@@ -1,4 +1,4 @@
-import PriceSummary from '@/components/PriceSummary';
+import PriceSummary from '@/widgets/price-summary/ui/PriceSummary';
 import { AdditionalManagement } from '@/entities/membership/model/Membership';
 import { parsePrice } from '@/shared/lib/utils/format';
 

@@ -1,6 +1,6 @@
 import { useUserStore } from '@/_domain/auth';
 import { resetPassword } from '@/entities/user/api/auth.api';
-import ResetPassword from '@/components/resetPassword/ResetPassword';
+import ResetPassword from '@/features/auth/ui/resetPassword/ResetPassword';
 import { useNavigate } from 'react-router-dom';
 
 const ProfileResetPassword = () => {

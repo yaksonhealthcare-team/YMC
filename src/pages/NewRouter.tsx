@@ -3,9 +3,9 @@ import { setSentryBreadcrumb, useChannelTalkVisibility, useOverlayBackHandler } 
 import { useNewAppBridge } from '@/shared/lib/hooks/useNewAppBridge';
 import { sendPageView, setUserId, setUserProperties } from '@/shared/lib/utils/ga.utils';
 import ErrorPage from '@/shared/ui/error/ErrorPage';
-import { LayoutProvider } from '@/stores/LayoutContext';
+import { LayoutProvider } from '@/widgets/layout/model/LayoutContext';
 import { OverlayProvider } from '@/shared/ui/modal/ModalContext';
-import { SignupProvider } from '@/stores/SignupContext';
+import { SignupProvider } from '@/features/auth/model/SignupContext';
 import { PropsWithChildren, useEffect } from 'react';
 import { createBrowserRouter, LoaderFunction, Outlet, redirect, RouterProvider, useLocation } from 'react-router-dom';
 import { CustomRouteObject, routeConfig } from './newConfig';

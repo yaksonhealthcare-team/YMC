@@ -1,5 +1,5 @@
 import { Button } from '@/shared/ui/button/Button';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 

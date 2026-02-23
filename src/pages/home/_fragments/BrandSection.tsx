@@ -1,6 +1,6 @@
-import { SwiperBrandCard } from '@/components/SwiperBrandCard';
+import { SwiperBrandCard } from '@/widgets/brand-swiper/ui/SwiperBrandCard';
 import { Title } from '@/shared/ui/Title';
-import { useDisplayBrands } from '@/hooks/useDisplayBrands';
+import { useDisplayBrands } from '@/entities/brand/lib/useDisplayBrands';
 import { useNavigate } from 'react-router-dom';
 
 export const BrandSection = () => {

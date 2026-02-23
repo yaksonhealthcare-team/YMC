@@ -1,1 +1,1 @@
-export * from './organisms';
+export * from '@/widgets/membership-card/ui';

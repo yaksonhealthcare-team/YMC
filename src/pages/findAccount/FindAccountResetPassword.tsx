@@ -2,8 +2,8 @@ import { resetPassword } from '@/entities/user/api/auth.api';
 import { FindPasswordResponse, findPasswordWithDecryptData } from '@/shared/api/decrypt-result.api';
 import { Button } from '@/shared/ui/button/Button';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
-import ResetPassword from '@/components/resetPassword/ResetPassword';
-import { useLayout } from '@/stores/LayoutContext';
+import ResetPassword from '@/features/auth/ui/resetPassword/ResetPassword';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 

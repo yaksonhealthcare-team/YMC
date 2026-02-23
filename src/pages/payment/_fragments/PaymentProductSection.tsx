@@ -1,4 +1,4 @@
-import PaymentCard from '@/components/PaymentCard';
+import PaymentCard from '@/entities/payment/ui/PaymentCard';
 import { CartItemOption } from '@/entities/cart/model/Cart';
 import { PaymentItem } from '@/entities/payment/model/Payment';
 

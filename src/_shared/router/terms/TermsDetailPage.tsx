@@ -1,5 +1,5 @@
 import { useGetTerms } from '@/_domain/auth';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 

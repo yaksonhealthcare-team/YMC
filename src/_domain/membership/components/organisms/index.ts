@@ -1,1 +1,1 @@
-export * from './MembershipCard';
+export * from '@/widgets/membership-card/ui';

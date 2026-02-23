@@ -5,7 +5,7 @@ import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { Image } from '@/shared/ui/image/Image';
 import SearchIcon from '@/shared/ui/icons/SearchIcon';
 import { useDebounce } from '@/shared/lib/hooks/useDebounce';
-import { useGeolocation } from '@/hooks/useGeolocation';
+import { useGeolocation } from '@/features/search-branch/lib/useGeolocation';
 import { useCallback, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 

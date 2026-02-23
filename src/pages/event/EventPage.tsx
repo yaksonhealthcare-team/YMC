@@ -2,7 +2,7 @@ import { Image } from '@/shared/ui/image/Image';
 import { EmptyCard } from '@/shared/ui/EmptyCard';
 import Header from '@/shared/ui/layout/Header';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useEvents } from '@/entities/content/api/useEventQueries';
 import { Event, Tab } from '@/entities/content/model/Event';
 import clsx from 'clsx';

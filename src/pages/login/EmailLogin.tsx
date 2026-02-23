@@ -5,7 +5,7 @@ import EyeIcon from '@/assets/icons/EyeIcon.svg?react';
 import EyeSlashIcon from '@/assets/icons/EyeSlashIcon.svg?react';
 import { Button } from '@/shared/ui/button/Button';
 import CustomTextField from '@/shared/ui/text-field/CustomTextField';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';

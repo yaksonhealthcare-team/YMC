@@ -1,1 +1,1 @@
-export { getAccessToken, removeAccessToken, saveAccessToken } from './token.utils';
+export { getAccessToken, removeAccessToken, saveAccessToken } from '@/entities/user/lib/token.utils';

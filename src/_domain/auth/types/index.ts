@@ -8,5 +8,5 @@ export type {
   TermsCategory,
   TermsItem,
   TermsSchema
-} from './auth.types';
-export type { UserSchema } from './user.types';
+} from '@/entities/user/model/auth.types';
+export type { UserSchema } from '@/entities/user/model/user.types';

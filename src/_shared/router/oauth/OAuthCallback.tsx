@@ -1,7 +1,7 @@
 import { getUser, saveAccessToken, useSigninSocialMutation, useUserStore } from '@/_domain/auth';
 import { requestForToken } from '@/_shared';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { useEffect, useRef } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';

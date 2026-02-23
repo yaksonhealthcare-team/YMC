@@ -1,6 +1,6 @@
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
-import { useSignup } from '@/stores/SignupContext';
-import { useProfileSetupSubmit } from '@/hooks/useProfileSetupSubmit';
+import { useSignup } from '@/features/auth/model/SignupContext';
+import { useProfileSetupSubmit } from '@/features/auth/lib/useProfileSetupSubmit';
 import { Gender } from '@/shared/lib/utils/gender';
 import { useNiceAuthCallback } from '@/shared/lib/utils/niceAuth';
 import { CircularProgress } from '@mui/material';

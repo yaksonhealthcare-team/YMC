@@ -8,7 +8,7 @@ import {
 import { Loading } from '@/_shared';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import DateAndTime from '@/shared/ui/DateAndTime';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 

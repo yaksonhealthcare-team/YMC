@@ -2,7 +2,7 @@ import CheckCircleIcon from '@/assets/icons/CheckCircle.svg?react';
 import { Button } from '@/shared/ui/button/Button';
 import FixedButtonContainer from '@/shared/ui/button/FixedButtonContainer';
 import { XIcon } from '@/shared/ui/icons/XIcon';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { PaymentCompleteState } from '@/entities/payment/model/Payment';
 import { useEffect } from 'react';

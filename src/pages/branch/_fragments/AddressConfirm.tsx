@@ -1,10 +1,10 @@
 import HeartDisabledIcon from '@/assets/icons/HeartDisabledIcon.svg?react';
 import HeartEnabledIcon from '@/assets/icons/HeartEnabledIcon.svg?react';
 import { Button } from '@/shared/ui/button/Button';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
-import { useAddressFromCoords } from '@/hooks/useAddressFromCoords';
-import { useBranchLocationSelect } from '@/hooks/useBranchLocationSelect';
+import { useAddressFromCoords } from '@/features/search-branch/lib/useAddressFromCoords';
+import { useBranchLocationSelect } from '@/features/search-branch/lib/useBranchLocationSelect';
 import {
   useAddAddressBookmarkMutation,
   useAddressBookmarks,

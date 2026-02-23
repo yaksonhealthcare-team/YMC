@@ -33,7 +33,7 @@ const SatisfactionPage = lazyWithRetry(() => import('./reservation/satisfaction/
 const MembershipUsageHistory = lazyWithRetry(() => import('./membership/MembershipUsageHistory'));
 const ReservationPage = lazyWithRetry(() => import('@/_shared/router/reservation/ReservationPage'));
 const BranchSearch = lazyWithRetry(() => import('./branch/search/BranchSearch'));
-const ResetPasswordComplete = lazyWithRetry(() => import('@/components/resetPassword/ResetPasswordComplete'));
+const ResetPasswordComplete = lazyWithRetry(() => import('@/features/auth/ui/resetPassword/ResetPasswordComplete'));
 const ReviewFormPage = lazyWithRetry(() => import('./review/ReviewFormPage'));
 const ReviewDetailPage = lazyWithRetry(() => import('./review/ReviewDetailPage'));
 const ActiveBranch = lazyWithRetry(() => import('./myPage/activeBranch/ActiveBranch'));

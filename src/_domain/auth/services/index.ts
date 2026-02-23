@@ -1,8 +1,8 @@
-export { getUser, refreshAccessToken } from './auth.services';
+export { getUser, refreshAccessToken } from '@/features/auth/lib/auth.services';
 export {
   useGetUser,
   useLogoutMutation,
   useSigninEmailMutation,
   useSigninSocialMutation,
   useGetTerms
-} from './auth.services';
+} from '@/features/auth/lib/auth.services';

@@ -1,6 +1,6 @@
 import CheckCircle from '@/assets/icons/CheckCircle.svg?react';
 import { Button } from '@/shared/ui/button/Button';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 

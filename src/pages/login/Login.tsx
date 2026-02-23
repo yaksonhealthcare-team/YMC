@@ -11,7 +11,7 @@ import GoogleIcon from '@/assets/icons/GoogleIcon.svg?react';
 import KakaoIcon from '@/assets/icons/KakaoIcon.svg?react';
 import NaverIcon from '@/assets/icons/NaverIcon.svg?react';
 import Logo from '@/shared/ui/layout/Logo';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

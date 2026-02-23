@@ -5,4 +5,4 @@ export type {
   MembershipStatusValue,
   UserMembershipParams,
   UserMembershipSchema
-} from './membership.types';
+} from '@/entities/membership/model/membership.types';

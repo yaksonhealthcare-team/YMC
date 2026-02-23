@@ -1,6 +1,6 @@
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import MegaPhoneIcon from '@/assets/icons/MegaPhoneIcon.svg?react';
-import NoticesSummarySlider from '@/components/NoticesSummarySlider';
+import NoticesSummarySlider from '@/widgets/notices-slider/ui/NoticesSummarySlider';
 import { useNoticesSummary } from '@/entities/content/api/useContentQueries';
 import { useNavigate } from 'react-router-dom';
 

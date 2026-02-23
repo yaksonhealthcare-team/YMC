@@ -1,8 +1,8 @@
 import { fetchCartCount } from '@/entities/cart/api/cart.api';
 import { ListResponse } from '@/entities/membership/api/membership.api';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
-import { useLayout } from '@/stores/LayoutContext';
-import { useDisplayBrands } from '@/hooks/useDisplayBrands';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { useDisplayBrands } from '@/entities/brand/lib/useDisplayBrands';
 import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObserver';
 import { useMembershipCategories, useMembershipList } from '@/entities/membership/api/useMembershipQueries';
 import { MembershipCategory, MembershipItem } from '@/entities/membership/model/Membership';

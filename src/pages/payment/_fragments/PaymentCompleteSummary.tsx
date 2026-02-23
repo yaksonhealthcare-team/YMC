@@ -1,4 +1,4 @@
-import PriceSummary, { PriceItem } from '@/components/PriceSummary';
+import PriceSummary, { PriceItem } from '@/widgets/price-summary/ui/PriceSummary';
 import { PaymentCompleteState } from '@/entities/payment/model/Payment';
 import { toNumber } from '@/shared/lib/utils/number';
 

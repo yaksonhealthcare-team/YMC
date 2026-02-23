@@ -7,9 +7,9 @@ export type {
   BranchDetailStaff,
   BranchesParams,
   BranchesSchema
-} from './branch.types';
-export type { GuideMessagesSchema } from './guide.types';
-export { isConsultReservationType, isReservationType } from './reservation.types';
+} from '@/entities/branch/model/branch.types';
+export type { GuideMessagesSchema } from '@/entities/reservation/model/guide.types';
+export { isConsultReservationType, isReservationType } from '@/entities/reservation/model/reservation.types';
 export type {
   ConsultReservationService,
   ConsultReservationType,
@@ -27,5 +27,5 @@ export type {
   ReservationsSchema,
   ReservationStatusCode,
   ReservationType
-} from './reservation.types';
-export type { ScheduleDateScheme, SchedulesParams, ScheduleTimeScheme, TimeSlot } from './schedule.types';
+} from '@/entities/reservation/model/reservation.types';
+export type { ScheduleDateScheme, SchedulesParams, ScheduleTimeScheme, TimeSlot } from '@/entities/schedule/model/schedule.types';

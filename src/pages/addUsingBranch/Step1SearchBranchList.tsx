@@ -5,7 +5,7 @@ import BranchIcon from '@/shared/ui/icons/BranchIcon';
 import CheckIcon from '@/shared/ui/icons/CheckIcon';
 import SearchIcon from '@/shared/ui/icons/SearchIcon';
 import { useDebounce } from '@/shared/lib/hooks/useDebounce';
-import { useGeolocation } from '@/hooks/useGeolocation';
+import { useGeolocation } from '@/features/search-branch/lib/useGeolocation';
 import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObserver';
 import { useBranches } from '@/entities/branch/api/useBranchQueries';
 import { Branch } from '@/entities/branch/model/Branch';

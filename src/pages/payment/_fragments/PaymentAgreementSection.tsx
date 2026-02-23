@@ -3,7 +3,7 @@ interface PaymentAgreementSectionProps {
   onAgreementChange: (checked: boolean) => void;
 }
 
-import { usePaymentGuideMessages } from '@/hooks/useGuideMessages';
+import { usePaymentGuideMessages } from '@/features/reservation/lib/useGuideMessages';
 
 const PaymentAgreementSection = ({ isAgreed, onAgreementChange }: PaymentAgreementSectionProps) => {
   const { paymentMessage, isLoading: isGuideMessageLoading } = usePaymentGuideMessages();

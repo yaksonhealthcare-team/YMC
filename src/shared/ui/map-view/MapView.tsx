@@ -1,5 +1,5 @@
 import CrosshairIcon from '@/assets/icons/CrosshairIcon.svg?react';
-import { useNaverMapBranchMarkers } from '@/hooks/useNaverMapBranchMarkers';
+import { useNaverMapBranchMarkers } from '@/features/search-branch/lib/useNaverMapBranchMarkers';
 import { Branch } from '@/entities/branch/model/Branch';
 import { Coordinate } from '@/shared/types/Coordinate';
 import { getCurrentLocation } from '@/shared/lib/utils/getCurrentLocation';

@@ -1,1 +1,1 @@
-export * from './HomeOverview';
+export * from '@/widgets/home-overview/ui';

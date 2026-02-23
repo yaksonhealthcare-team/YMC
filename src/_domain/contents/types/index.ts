@@ -1,4 +1,4 @@
-export type { BannerGubun, BannerParams, BannerResponse, BannerSchema } from './banners.types';
+export type { BannerGubun, BannerParams, BannerResponse, BannerSchema } from '@/entities/banner/model/banners.types';
 export type {
   ContentsFile,
   ContentsGubun,
@@ -6,4 +6,4 @@ export type {
   ContentsResponse,
   ContentsSchema,
   ContentsStatus
-} from './contents.types';
+} from '@/entities/content/model/contents.types';

@@ -1,2 +1,2 @@
-export { convertMembershipForCard, convertMembershipForSwiperBySlot } from './membership.business';
-export type { ConvertedMembershipForCardData } from './membership.business';
+export { convertMembershipForCard, convertMembershipForSwiperBySlot } from '@/features/membership-purchase/lib/membership.business';
+export type { ConvertedMembershipForCardData } from '@/features/membership-purchase/lib/membership.business';

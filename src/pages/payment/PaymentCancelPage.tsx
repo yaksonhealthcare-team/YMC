@@ -1,9 +1,9 @@
 import { Button } from '@/shared/ui/button/Button';
 import CheckIcon from '@/shared/ui/icons/CheckIcon';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
-import { usePaymentGuideMessages } from '@/hooks/useGuideMessages';
+import { usePaymentGuideMessages } from '@/features/reservation/lib/useGuideMessages';
 import { usePaymentCancel, usePaymentHistory } from '@/entities/payment/api/usePaymentQueries';
 import { PaymentHistoryItem } from '@/entities/payment/model/Payment';
 import { escapeHtml } from '@/shared/lib/utils/sanitize';

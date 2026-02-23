@@ -1,1 +1,1 @@
-export { ReservationRestSection } from './ReservationRestSection';
+export { ReservationRestSection } from '@/features/reservation/ui/ReservationRestSection';

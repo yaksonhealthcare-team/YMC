@@ -1,1 +1,1 @@
-export { formatAmount } from './format.utils';
+export { formatAmount } from '@/features/reservation/lib/format.utils';

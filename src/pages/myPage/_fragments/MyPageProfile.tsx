@@ -2,7 +2,7 @@ import { useUserStore } from '@/_domain/auth';
 import { fetchCRMUser } from '@/entities/user/api/user.api';
 import Profile from '@/assets/icons/Profile.svg?react';
 import { Image } from '@/shared/ui/image/Image';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';

@@ -2,7 +2,7 @@ import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
 import { Image } from '@/shared/ui/image/Image';
 import { EmptyCard } from '@/shared/ui/EmptyCard';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useEventDetail } from '@/entities/content/api/useEventQueries';
 import { EventDetail } from '@/entities/content/model/Event';
 import { sanitizeHtml } from '@/shared/lib/utils/sanitize';

@@ -1,5 +1,5 @@
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { usePaymentHistory } from '@/entities/payment/api/usePaymentQueries';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';

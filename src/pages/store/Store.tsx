@@ -2,7 +2,7 @@ import { getAccessToken } from '@/_domain/auth';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { useForceUpdateModal } from '@/shared/lib/hooks/useForceUpdateModal';
 import { useAppInfoStore } from '@/stores/appInfoStore';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { isLowerVersion } from '@/shared/lib/utils/isLowerVersion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 

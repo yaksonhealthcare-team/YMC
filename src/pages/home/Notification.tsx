@@ -1,7 +1,7 @@
 import SettingIcon from '@/assets/icons/SettingIcon.svg?react';
 import { Filter } from '@/shared/ui/filter/Filter';
-import { NotificationCard } from '@/components/NotificationCard';
-import { useLayout } from '@/stores/LayoutContext';
+import { NotificationCard } from '@/entities/notification/ui/NotificationCard';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObserver';
 import { useNotifications, useReadNotification } from '@/entities/notification/api/useNotificationQueries';
 import { getSearchType, NotificationFilter, NotificationSearchType } from '@/entities/notification/model/Notification';

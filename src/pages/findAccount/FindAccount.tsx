@@ -1,6 +1,6 @@
 import { fetchEncryptDataForNice } from '@/entities/user/api/pass.api';
 import { Button } from '@/shared/ui/button/Button';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { checkByNice } from '@/shared/lib/utils/niceCheck';
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';

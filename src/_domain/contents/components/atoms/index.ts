@@ -1,1 +1,1 @@
-export * from './NotificationButton';
+export * from '@/widgets/notification-button/ui';

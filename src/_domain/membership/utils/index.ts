@@ -2,4 +2,4 @@ export {
   convertMembershipPriceUnit,
   convertMembershipStatusKey,
   convertMembershipStatusValue
-} from './membership.utils';
+} from '@/features/membership-purchase/lib/membership.utils';

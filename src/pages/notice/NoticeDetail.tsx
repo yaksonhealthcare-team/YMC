@@ -1,7 +1,7 @@
 import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { Image } from '@/shared/ui/image/Image';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useNotice } from '@/entities/content/api/useContentQueries';
 import { NoticeDetail as Notice } from '@/entities/content/model/Content';
 import React, { useEffect } from 'react';

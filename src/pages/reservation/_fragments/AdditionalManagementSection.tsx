@@ -1,4 +1,4 @@
-import { AdditionalServiceCard } from '@/components/AdditionalServiceCard';
+import { AdditionalServiceCard } from '@/entities/reservation/ui/AdditionalServiceCard';
 import { AdditionalManagement } from '@/entities/membership/model/Membership';
 
 interface AdditionalManagementSectionProps {

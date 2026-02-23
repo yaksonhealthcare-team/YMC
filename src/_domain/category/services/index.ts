@@ -1,1 +1,1 @@
-export { useGetConsultMenu, useGetPrepaidMenu } from './menu.services';
+export { useGetConsultMenu, useGetPrepaidMenu } from '@/features/reservation/lib/menu.services';

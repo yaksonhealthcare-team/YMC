@@ -1,4 +1,4 @@
-import { useBranchLocationSelect } from '@/hooks/useBranchLocationSelect';
+import { useBranchLocationSelect } from '@/features/search-branch/lib/useBranchLocationSelect';
 import { useAddressBookmarks, useDeleteAddressBookmarkMutation } from '@/shared/api/useAddressQueries';
 import { useNavigate } from 'react-router-dom';
 import LocationSearchPlaceholder from './LocationSearchPlaceholder';
