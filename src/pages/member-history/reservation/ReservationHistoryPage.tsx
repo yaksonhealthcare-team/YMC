@@ -1,6 +1,7 @@
-import { useUserStore } from '@/_domain/auth';
-import { useGetReservations } from '@/_domain/reservation';
-import { Loading, useIntersectionObserver } from '@/_shared';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { useGetReservations } from '@/features/reservation/lib/reservation.services';
+import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObserver';
+import { Loading } from '@/shared/ui/loading/Loading';
 import ReservationIcon from '@/assets/icons/ReservationIcon.svg?react';
 import { Button } from '@/shared/ui/button/Button';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';

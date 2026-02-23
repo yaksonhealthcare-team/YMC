@@ -1,6 +1,8 @@
-import { UserSchema } from '@/_domain/auth';
-import { BannerSwiper, ContentsSchema, NotificationButton } from '@/_domain/contents';
-import { TextSwiper } from '@/_shared';
+import { UserSchema } from '@/entities/user/model/user.types';
+import { ContentsSchema } from '@/entities/content/model/contents.types';
+import BannerSwiper from '@/widgets/banner-swiper/ui/BannerSwiper';
+import NotificationButton from '@/widgets/notification-button/ui/NotificationButton';
+import TextSwiper from '@/shared/ui/text-swiper/TextSwiper';
 import Logo from '@/assets/_icons/logo.svg?react';
 import OverviewHeader from '@/assets/_icons/overview-header.svg?react';
 import clsx from 'clsx';

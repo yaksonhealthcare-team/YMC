@@ -1,4 +1,4 @@
-import { useUserStore } from '@/_domain/auth';
+import { useUserStore } from '@/features/auth/model/user.store';
 import { resetPassword } from '@/entities/user/api/auth.api';
 import ResetPassword from '@/features/auth/ui/resetPassword/ResetPassword';
 import { useNavigate } from 'react-router-dom';

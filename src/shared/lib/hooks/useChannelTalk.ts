@@ -1,4 +1,4 @@
-import { captureSentryError } from '@/_shared';
+import { captureSentryError } from '@/shared/lib/utils/sentry.utils';
 import { useEffect, useRef } from 'react';
 
 type ChannelUser = {

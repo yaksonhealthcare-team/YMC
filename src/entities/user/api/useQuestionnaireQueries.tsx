@@ -7,7 +7,7 @@ import {
   submitReservationQuestionnaire
 } from '@/entities/user/api/questionnaire.api';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Question, QuestionnaireFormValues, QuestionnaireType } from '@/types/Questionnaire';
+import { Question, QuestionnaireFormValues, QuestionnaireType } from '@/entities/user/model/questionnaire.types';
 import { queryKeys } from '@/shared/constants/queryKeys/query.keys';
 
 // 문진 질문 목록 조회

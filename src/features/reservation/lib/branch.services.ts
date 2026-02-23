@@ -1,13 +1,8 @@
-import {
-  ApiResponse,
-  authApi,
-  CustomUseInfiniteQueryOptions,
-  CustomUseQueryOptions,
-  GET_BRANCH_DETAIL,
-  GET_BRANCHES,
-  handleError,
-  ResultResponse
-} from '@/_shared';
+import { authApi } from '@/shared/api/instance';
+import { GET_BRANCH_DETAIL, GET_BRANCHES } from '@/shared/constants/queryKeys/queryKey.constants';
+import { handleError } from '@/shared/lib/utils/error.utils';
+import { ApiResponse, ResultResponse } from '@/shared/types/response.types';
+import { CustomUseInfiniteQueryOptions, CustomUseQueryOptions } from '@/shared/types/util.types';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { BranchDetailParams, BranchDetailSchema, BranchesParams, BranchesSchema } from '@/entities/branch/model/branch.types';

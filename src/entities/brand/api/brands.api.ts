@@ -1,4 +1,4 @@
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 import { BrandDetailMapper, BrandMapper } from '@/entities/brand/lib/BrandMapper';
 import { Brand, BrandDetail, BrandDetailResponse, BrandResponse } from '@/entities/brand/model/Brand';
 import { HTTPResponse } from '@/shared/types/HTTPResponse';

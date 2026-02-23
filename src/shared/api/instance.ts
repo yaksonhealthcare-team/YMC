@@ -1,5 +1,5 @@
-import { refreshAccessToken } from '@/_domain/auth/services';
-import { getAccessToken, removeAccessToken, saveAccessToken } from '@/_domain/auth/utils';
+import { refreshAccessToken } from '@/features/auth/lib/auth.services';
+import { getAccessToken, removeAccessToken, saveAccessToken } from '@/entities/user/lib/token.utils';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { replace } from 'react-router-dom';
 import { ERROR_CODES } from '@/shared/constants/error.constants';

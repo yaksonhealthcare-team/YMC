@@ -1,5 +1,9 @@
-import { getUser, removeAccessToken, useUserStore } from '@/_domain/auth';
-import { setSentryBreadcrumb, useChannelTalkVisibility, useOverlayBackHandler } from '@/_shared';
+import { getUser } from '@/features/auth/lib/auth.services';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { removeAccessToken } from '@/entities/user/lib/token.utils';
+import { useChannelTalkVisibility } from '@/shared/lib/hooks/useChannelTalkVisibility';
+import { useOverlayBackHandler } from '@/shared/lib/hooks/useOverlayBackHandler';
+import { setSentryBreadcrumb } from '@/shared/lib/utils/sentry.utils';
 import { useNewAppBridge } from '@/shared/lib/hooks/useNewAppBridge';
 import { sendPageView, setUserId, setUserProperties } from '@/shared/lib/utils/ga.utils';
 import ErrorPage from '@/shared/ui/error/ErrorPage';

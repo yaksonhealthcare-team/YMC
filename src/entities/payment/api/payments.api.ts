@@ -1,4 +1,4 @@
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 import { PaymentMapper } from '@/entities/payment/lib/PaymentMapper';
 import { HTTPResponse } from '@/shared/types/HTTPResponse';
 import { PaymentHistoryDetailResponse, PaymentHistoryResponse } from '@/entities/payment/model/Payment';

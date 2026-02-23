@@ -1,4 +1,4 @@
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 import { ApiResponse } from '@/shared/api/address.api';
 import { HTTPResponse } from '@/shared/types/HTTPResponse';
 import { CRMUserResponse } from '@/entities/user/model/User';

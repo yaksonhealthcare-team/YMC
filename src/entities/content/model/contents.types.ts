@@ -1,4 +1,4 @@
-import { ListResponse } from '@/_shared';
+import { ListResponse } from '@/shared/types/response.types';
 
 export type ContentsGubun = 'E01' | 'N01' | 'P01';
 export type ContentsStatus = 'ALL' | 'ING' | 'END' | 'TBD';

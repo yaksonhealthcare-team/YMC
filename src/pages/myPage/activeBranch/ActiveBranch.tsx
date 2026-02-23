@@ -1,4 +1,4 @@
-import { useUserStore } from '@/_domain/auth';
+import { useUserStore } from '@/features/auth/model/user.store';
 import InformationIcon from '@/assets/icons/InformationIcon.svg?react';
 import BranchCard from '@/entities/branch/ui/BranchCard';
 import { Button } from '@/shared/ui/button/Button';

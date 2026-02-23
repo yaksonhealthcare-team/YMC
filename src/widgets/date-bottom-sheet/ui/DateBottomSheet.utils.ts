@@ -1,4 +1,4 @@
-import { ReservationFormValues } from '@/_domain/reservation';
+import { ReservationFormValues } from '@/entities/reservation/model/reservation.types';
 import { SchedulesParams } from '@/entities/schedule/model/schedule.types';
 import dayjs, { Dayjs } from 'dayjs';
 

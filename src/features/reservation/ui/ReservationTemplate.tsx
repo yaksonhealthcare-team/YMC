@@ -1,5 +1,7 @@
-import { UserMembershipSchema } from '@/_domain/membership';
-import { BottomFixedSection, Button, Divider } from '@/_shared';
+import { UserMembershipSchema } from '@/entities/membership/model/membership.types';
+import { Button } from '@/shared/ui/button/DsButton';
+import { Divider } from '@/shared/ui/divider/Divider';
+import { BottomFixedSection } from '@/widgets/bottom-fixed-section/ui/BottomFixedSection';
 import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';

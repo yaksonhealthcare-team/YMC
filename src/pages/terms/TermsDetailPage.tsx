@@ -1,4 +1,4 @@
-import { useGetTerms } from '@/_domain/auth';
+import { useGetTerms } from '@/features/auth/lib/auth.services';
 import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';

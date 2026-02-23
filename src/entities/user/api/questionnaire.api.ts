@@ -1,6 +1,6 @@
 import { HTTPResponse } from '@/shared/types/HTTPResponse';
-import { Question, QuestionnaireFormValues, QuestionnaireResult } from '@/types/Questionnaire';
-import { authApi } from '@/_shared';
+import { Question, QuestionnaireFormValues, QuestionnaireResult } from '@/entities/user/model/questionnaire.types';
+import { authApi } from '@/shared/api/instance';
 
 // 사용자 공통 문진 결과 조회
 export const fetchUserGeneralQuestionnaireResult = async () => {

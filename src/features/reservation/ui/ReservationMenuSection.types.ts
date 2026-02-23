@@ -1,4 +1,4 @@
-import { UserMembershipSchema } from '@/_domain/membership';
+import { UserMembershipSchema } from '@/entities/membership/model/membership.types';
 
 export interface ReservationMenuSectionProps {
   memberships: UserMembershipSchema[];

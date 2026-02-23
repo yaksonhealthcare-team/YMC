@@ -1,5 +1,8 @@
-import { getUser, saveAccessToken, SigninEmailBody, useSigninEmailMutation, useUserStore } from '@/_domain/auth';
-import { requestForToken } from '@/_shared';
+import { getUser, useSigninEmailMutation } from '@/features/auth/lib/auth.services';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { saveAccessToken } from '@/entities/user/lib/token.utils';
+import { SigninEmailBody } from '@/entities/user/model/auth.types';
+import { requestForToken } from '@/shared/lib/utils/sdk.utils';
 import { DeviceType } from '@/entities/user/api/auth.api';
 import EyeIcon from '@/assets/icons/EyeIcon.svg?react';
 import EyeSlashIcon from '@/assets/icons/EyeSlashIcon.svg?react';

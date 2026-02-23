@@ -3,7 +3,7 @@ import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { usePaymentStore } from '@/features/payment/lib/usePaymentStore';
 import { PaymentResponse, PaymentStatus } from '@/entities/payment/model/Payment';
-import { safeDecodeAndParseJson } from '@/_shared';
+import { safeDecodeAndParseJson } from '@/shared/lib/utils/sentry.utils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';

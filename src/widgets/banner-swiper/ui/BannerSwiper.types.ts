@@ -1,4 +1,4 @@
-import { BannerSchema } from '@/_domain/contents/types';
+import { BannerSchema } from '@/entities/banner/model/banners.types';
 
 export interface BannerSwiperProps {
   banners: BannerSchema[];

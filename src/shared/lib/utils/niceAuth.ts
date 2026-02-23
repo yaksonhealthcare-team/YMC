@@ -1,5 +1,5 @@
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
-import { safeDecodeAndParseJson } from '@/_shared';
+import { safeDecodeAndParseJson } from '@/shared/lib/utils/sentry.utils';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 

@@ -1,4 +1,4 @@
-import { formatPriceKO } from '@/_shared';
+import { formatPriceKO } from '@/shared/lib/utils/format.utils';
 
 /**
  * 정액권 / 횟수권 단위 변환

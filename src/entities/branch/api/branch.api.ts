@@ -1,4 +1,4 @@
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 import { BranchMapper } from '@/entities/branch/lib/BranchMapper';
 import { BranchDetail, BranchesWithCurrentAddress, BranchFilters } from '@/entities/branch/model/Branch';
 import { Coordinate } from '@/shared/types/Coordinate';

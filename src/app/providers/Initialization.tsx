@@ -1,4 +1,5 @@
-import { setSentryUser, useChannelTalk } from '@/_shared';
+import { useChannelTalk } from '@/shared/lib/hooks/useChannelTalk';
+import { setSentryUser } from '@/shared/lib/utils/sentry.utils';
 import { useGetUser } from '@/entities/user';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';

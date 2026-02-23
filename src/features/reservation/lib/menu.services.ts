@@ -1,6 +1,8 @@
-import { authApi, CustomUseInfiniteQueryOptions, GET_CONSULT_MENU, GET_PREPAID_MENU } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
+import { GET_CONSULT_MENU, GET_PREPAID_MENU } from '@/shared/constants/queryKeys/queryKey.constants';
+import { CustomUseInfiniteQueryOptions } from '@/shared/types/util.types';
 import { ListResponse } from '@/shared/types/response.types';
-import { handleError } from '@/_shared/utils';
+import { handleError } from '@/shared/lib/utils/error.utils';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ConsultMenuParams, ConsultMenuSchema, PrepaidMenuParams, PrepaidMenuSchema } from '@/entities/reservation/model/menu.types';

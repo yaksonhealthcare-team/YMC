@@ -1,4 +1,4 @@
-import { ReservationDetailSchema } from '@/_domain/reservation';
+import { ReservationDetailSchema } from '@/entities/reservation/model/reservation.types';
 import PhoneIcon from '@/assets/icons/PhoneIcon.svg?react';
 import PinIcon from '@/assets/icons/PinIcon.svg?react';
 import MapView from '@/shared/ui/map-view/MapView';

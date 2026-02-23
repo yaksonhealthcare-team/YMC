@@ -1,4 +1,4 @@
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 import { HTTPResponse } from '@/shared/types/HTTPResponse';
 import { MembershipCategory, MembershipDetail, MembershipItem, MyMembership } from '@/entities/membership/model/Membership';
 

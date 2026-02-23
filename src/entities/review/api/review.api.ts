@@ -1,4 +1,4 @@
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 import { ReviewMapper } from '@/entities/review/lib/ReviewMapper';
 import { HTTPResponse } from '@/shared/types/HTTPResponse';
 import { Review, ReviewDetail, ReviewResponse, ReviewSection } from '@/entities/review/model/Review';

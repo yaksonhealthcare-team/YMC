@@ -1,4 +1,4 @@
-import { useUserStore } from '@/_domain/auth';
+import { useUserStore } from '@/features/auth/model/user.store';
 import BranchCard from '@/entities/branch/ui/BranchCard';
 import { useNavigate } from 'react-router-dom';
 

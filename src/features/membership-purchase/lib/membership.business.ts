@@ -1,6 +1,7 @@
-import { ReservationFormValues, ReservationMembershipCardItem, ReservationMembershipType } from '@/_domain/reservation';
+import { ReservationMembershipCardItem } from '@/features/reservation/ui/ReservationMembershipCard.types';
+import { ReservationFormValues, ReservationMembershipType } from '@/entities/reservation/model/reservation.types';
 import dayjs from 'dayjs';
-import { MembershipChipProps } from '@/_domain/membership/components/molecules';
+import { MembershipChipProps } from '@/widgets/membership-card/ui/MembershipChip.types';
 import { MembershipStatusValue, UserMembershipDetailSchema, UserMembershipSchema } from '@/entities/membership/model/membership.types';
 import { convertMembershipPriceUnit, convertMembershipStatusValue } from '@/features/membership-purchase/lib/membership.utils';
 

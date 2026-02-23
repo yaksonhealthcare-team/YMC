@@ -1,4 +1,8 @@
-import { ApiResponse, authApi, CustomUseQueryOptions, GET_GUIDE_MESSAGES, handleError } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
+import { GET_GUIDE_MESSAGES } from '@/shared/constants/queryKeys/queryKey.constants';
+import { handleError } from '@/shared/lib/utils/error.utils';
+import { ApiResponse } from '@/shared/types/response.types';
+import { CustomUseQueryOptions } from '@/shared/types/util.types';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { GuideMessagesSchema } from '@/entities/reservation/model/guide.types';

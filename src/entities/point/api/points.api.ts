@@ -1,4 +1,4 @@
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 import { PointMapper } from '@/entities/point/lib/PointMapper';
 import { HTTPResponse } from '@/shared/types/HTTPResponse';
 import { PointHistoryResponse } from '@/entities/point/model/Point';

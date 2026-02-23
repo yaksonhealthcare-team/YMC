@@ -1,4 +1,4 @@
-import { ScheduleDateScheme, TimeSlot } from '@/_domain/reservation';
+import { ScheduleDateScheme, TimeSlot } from '@/entities/schedule/model/schedule.types';
 import dayjs, { Dayjs } from 'dayjs';
 
 export const formatReservationDate = (date: Dayjs | null | string, timeSlot: TimeSlot | null) => {

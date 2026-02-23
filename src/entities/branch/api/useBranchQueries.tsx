@@ -8,7 +8,7 @@ import {
 } from './branch.api';
 import { BranchDetail, BranchSearchResponse } from '@/entities/branch/model/Branch';
 import { Coordinate } from '@/shared/types/Coordinate';
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 
 interface BranchFilters {
   page?: number;

@@ -1,4 +1,4 @@
-import { useUserStore } from '@/_domain/auth';
+import { useUserStore } from '@/features/auth/model/user.store';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import { useNavigate } from 'react-router-dom';
 

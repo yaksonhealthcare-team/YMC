@@ -1,4 +1,4 @@
-import { ReservationFormValues } from '@/_domain/reservation';
+import { ReservationFormValues } from '@/entities/reservation/model/reservation.types';
 import dayjs from 'dayjs';
 import { describe, expect, it } from 'vitest';
 import { buildScheduleParams, getDateBottomSheetQueryEnabled } from './DateBottomSheet.utils';

@@ -1,5 +1,5 @@
-import { formatAmount } from '@/_domain/reservation/utils';
-import { RadioButton } from '@/_shared/components';
+import { formatAmount } from '@/features/reservation/lib/format.utils';
+import { RadioButton } from '@/shared/ui/radio/RadioButton';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { ReservationMembershipCardProps } from '@/features/reservation/ui/ReservationMembershipCard.types';

@@ -1,6 +1,6 @@
 import { HTTPResponse } from '@/shared/types/HTTPResponse';
 import { ApiResponse } from '@/shared/api/address.api';
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 
 export const cancelReservation = async (reservationId: string, cancelMemo: string): Promise<ApiResponse<null>> => {
   const { data } = await authApi.delete(`/reservation/reservations`, {

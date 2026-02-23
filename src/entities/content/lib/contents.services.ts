@@ -1,4 +1,7 @@
-import { authApi, CustomUseInfiniteQueryOptions, GET_CONTENTS, handleError } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
+import { GET_CONTENTS } from '@/shared/constants/queryKeys/queryKey.constants';
+import { handleError } from '@/shared/lib/utils/error.utils';
+import { CustomUseInfiniteQueryOptions } from '@/shared/types/util.types';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ContentsParams } from '@/entities/content/model/contents.types';

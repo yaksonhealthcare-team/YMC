@@ -1,5 +1,5 @@
-import { useUserStore } from '@/_domain/auth';
-import { useGetReservations } from '@/_domain/reservation';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { useGetReservations } from '@/features/reservation/lib/reservation.services';
 import { EmptyCard } from '@/shared/ui/EmptyCard';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { ReserveCard } from '@/entities/reservation/ui/ReserveCard';

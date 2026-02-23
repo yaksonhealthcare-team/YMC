@@ -1,4 +1,7 @@
-import { authApi, CustomUseQueryOptions, GET_BANNERS, handleError } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
+import { GET_BANNERS } from '@/shared/constants/queryKeys/queryKey.constants';
+import { handleError } from '@/shared/lib/utils/error.utils';
+import { CustomUseQueryOptions } from '@/shared/types/util.types';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { BannerParams, BannerResponse } from '@/entities/banner/model/banners.types';

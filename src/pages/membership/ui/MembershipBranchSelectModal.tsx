@@ -1,4 +1,4 @@
-import { BranchesSchema } from '@/_domain/reservation';
+import { BranchesSchema } from '@/entities/branch/model/branch.types';
 import Header from '@/shared/ui/layout/Header';
 import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useEffect } from 'react';

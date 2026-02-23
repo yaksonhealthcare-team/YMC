@@ -1,11 +1,10 @@
-import { useUserStore } from '@/_domain/auth';
-import {
-  convertMembershipForCard,
-  MembershipCard,
-  MembershipStatusType,
-  useGetUserMemberships
-} from '@/_domain/membership';
-import { Loading, useIntersectionObserver } from '@/_shared';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { convertMembershipForCard } from '@/features/membership-purchase/lib/membership.business';
+import { useGetUserMemberships } from '@/features/membership-purchase/lib/membership.services';
+import { MembershipStatusType } from '@/entities/membership/model/membership.types';
+import { MembershipCard } from '@/widgets/membership-card/ui/MembershipCard';
+import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObserver';
+import { Loading } from '@/shared/ui/loading/Loading';
 import { Button } from '@/shared/ui/button/Button';
 import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useMembershipStore } from '@/features/membership-purchase/model/membershipStore';

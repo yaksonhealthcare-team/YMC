@@ -1,5 +1,6 @@
-import { useUserStore } from '@/_domain/auth';
-import { convertMembershipForCard, useGetUserMemberships } from '@/_domain/membership';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { convertMembershipForCard } from '@/features/membership-purchase/lib/membership.business';
+import { useGetUserMemberships } from '@/features/membership-purchase/lib/membership.services';
 import '@/app/styles/swiper-custom.css';
 import NotiIcon from '@/assets/icons/NotiIcon.svg?react';
 import { FloatingButton } from '@/shared/ui/button/FloatingButton';

@@ -1,5 +1,5 @@
-import { DEFAULT_COORDINATE } from '@/_shared';
-import { useGeolocationStore } from '@/stores/geolocationStore';
+import { DEFAULT_COORDINATE } from '@/shared/constants/location.constants';
+import { useGeolocationStore } from '@/features/search-branch/model/geolocationStore';
 import { GeolocationOptions } from '@/shared/types/Coordinate';
 import { useEffect } from 'react';
 

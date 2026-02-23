@@ -1,5 +1,5 @@
 import { ReservationMembershipType } from '@/entities/reservation/model/reservation.types';
-import { RadioButtonProps } from '@/_shared/components';
+import { RadioButtonProps } from '@/shared/ui/radio/RadioButton.types';
 
 export interface ReservationMembershipCardProps {
   data: ReservationMembershipCardItem;

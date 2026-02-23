@@ -1,4 +1,5 @@
-import { getUser, useUserStore } from '@/_domain/auth';
+import { getUser } from '@/features/auth/lib/auth.services';
+import { useUserStore } from '@/features/auth/model/user.store';
 import { updateUserProfile } from '@/entities/user/api/auth.api';
 import { uploadImages } from '@/shared/api/image.api';
 import CaretLeftIcon from '@/assets/icons/CaretLeftIcon.svg?react';

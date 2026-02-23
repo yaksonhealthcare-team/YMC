@@ -1,4 +1,4 @@
-import { QuestionnaireResult } from '@/types/Questionnaire';
+import { QuestionnaireResult } from '@/entities/user/model/questionnaire.types';
 
 const QuestionnaireFormList = ({ questions }: { questions: QuestionnaireResult[] }) => {
   return (

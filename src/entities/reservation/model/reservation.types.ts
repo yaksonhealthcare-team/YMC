@@ -1,4 +1,4 @@
-import { MembershipGubunType } from '@/_domain/membership';
+import { MembershipGubunType } from '@/entities/membership/model/membership.types';
 import dayjs from 'dayjs';
 import { TimeSlot } from '@/entities/schedule/model/schedule.types';
 

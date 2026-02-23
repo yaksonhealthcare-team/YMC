@@ -1,6 +1,11 @@
-import { useUserStore } from '@/_domain/auth';
-import { TimeSlot, useGetSchedulesDate, useGetSchedulesTimes } from '@/_domain/reservation';
-import { BottomFixedSection, Button, Calendar, Loading, TimePicker } from '@/_shared';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { TimeSlot } from '@/entities/schedule/model/schedule.types';
+import { useGetSchedulesDate, useGetSchedulesTimes } from '@/features/reservation/lib/schedule.services';
+import { Button } from '@/shared/ui/button/DsButton';
+import { Calendar } from '@/shared/ui/calendar/Calendar';
+import { Loading } from '@/shared/ui/loading/Loading';
+import { TimePicker } from '@/shared/ui/time-picker/TimePicker';
+import { BottomFixedSection } from '@/widgets/bottom-fixed-section/ui/BottomFixedSection';
 import { formatScheduleTime } from '@/shared/lib/utils/date.utils';
 import CloseIcon from '@/assets/icons/CloseIcon.svg?react';
 import dayjs, { Dayjs } from 'dayjs';

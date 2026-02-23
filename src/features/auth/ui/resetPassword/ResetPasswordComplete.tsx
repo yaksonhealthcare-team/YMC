@@ -1,4 +1,4 @@
-import { useUserStore } from '@/_domain/auth';
+import { useUserStore } from '@/features/auth/model/user.store';
 import CaretLeftIcon from '@/assets/icons/CaretLeftIcon.svg?react';
 import CheckCircle from '@/assets/icons/CheckCircle.svg?react';
 import { Button } from '@/shared/ui/button/Button';

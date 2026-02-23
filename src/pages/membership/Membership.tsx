@@ -10,7 +10,7 @@ import { Tab, Tabs } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { MembershipCard } from './ui/MembershipCard';
-import { BRAND_CODE } from '@/_shared';
+import { BRAND_CODE } from '@/shared/constants/brands.constants';
 
 const MembershipPage = () => {
   const navigate = useNavigate();

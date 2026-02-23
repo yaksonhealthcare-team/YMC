@@ -1,4 +1,4 @@
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 import { BannerMapper } from '@/entities/banner/lib/BannerMapper';
 import { Banner, BannerRequestParams, BannerResponse } from '@/entities/banner/model/Banner';
 

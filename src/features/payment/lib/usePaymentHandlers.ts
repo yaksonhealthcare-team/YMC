@@ -1,6 +1,6 @@
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { usePaymentStore } from './usePaymentStore';
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 
 export const usePaymentHandlers = () => {
   const { points, setPoints } = usePaymentStore();

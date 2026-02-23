@@ -1,11 +1,8 @@
-import {
-  ApiResponse,
-  authApi,
-  CustomUseQueryOptions,
-  GET_SCHEDULES_DATE,
-  GET_SCHEDULES_TIMES,
-  handleError
-} from '@/_shared';
+import { authApi } from '@/shared/api/instance';
+import { GET_SCHEDULES_DATE, GET_SCHEDULES_TIMES } from '@/shared/constants/queryKeys/queryKey.constants';
+import { handleError } from '@/shared/lib/utils/error.utils';
+import { ApiResponse } from '@/shared/types/response.types';
+import { CustomUseQueryOptions } from '@/shared/types/util.types';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ScheduleDateScheme, SchedulesParams, ScheduleTimeScheme } from '@/entities/schedule/model/schedule.types';

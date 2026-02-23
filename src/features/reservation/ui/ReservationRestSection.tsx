@@ -1,7 +1,12 @@
-import { useUserStore } from '@/_domain/auth';
-import { useGetGuideMessages } from '@/_domain/reservation/services';
-import { BranchesSchema, ReservationFormValues, TimeSlot } from '@/_domain/reservation/types';
-import { DateBottomSheet, formatReservationDate, InputBox, setMultipleValues } from '@/_shared';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { useGetGuideMessages } from '@/features/reservation/lib/guide.services';
+import type { BranchesSchema } from '@/entities/branch/model/branch.types';
+import type { ReservationFormValues } from '@/entities/reservation/model/reservation.types';
+import type { TimeSlot } from '@/entities/schedule/model/schedule.types';
+import { formatReservationDate } from '@/shared/lib/utils/date.utils';
+import { setMultipleValues } from '@/shared/lib/utils/form.utils';
+import { InputBox } from '@/shared/ui/text-field/InputBox';
+import { DateBottomSheet } from '@/widgets/date-bottom-sheet/ui/DateBottomSheet';
 import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import { MembershipBranchSelectModal } from '@/pages/membership/ui/MembershipBranchSelectModal';

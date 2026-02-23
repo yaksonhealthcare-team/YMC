@@ -1,7 +1,11 @@
 import { convertMembershipForSwiperBySlot } from '@/features/membership-purchase/lib/membership.business';
 import { ConvertedConsultMenuData } from '@/features/reservation/lib/menu.business';
 import { isConsultReservationType, isReservationType, ReservationFormValues } from '@/entities/reservation/model';
-import { Collapse, Divider, InputBox, RadioLabelCard, setMultipleValues } from '@/_shared';
+import { setMultipleValues } from '@/shared/lib/utils/form.utils';
+import { Collapse } from '@/shared/ui/collapse/Collapse';
+import { Divider } from '@/shared/ui/divider/Divider';
+import { RadioLabelCard } from '@/shared/ui/radio/RadioLabelCard';
+import { InputBox } from '@/shared/ui/text-field/InputBox';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import CloseIcon from '@/assets/icons/CloseIcon.svg?react';
 import { useOverlay } from '@/shared/ui/modal/ModalContext';

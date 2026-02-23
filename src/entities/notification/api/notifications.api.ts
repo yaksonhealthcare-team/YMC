@@ -1,4 +1,4 @@
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 import { NotificationMapper } from '@/entities/notification/lib/NotificationMapper';
 import { HTTPResponse } from '@/shared/types/HTTPResponse';
 import { NotificationResponse, NotificationSettings, NotificationSettingsResponse } from '@/entities/notification/model/Notification';

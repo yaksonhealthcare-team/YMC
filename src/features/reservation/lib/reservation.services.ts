@@ -1,15 +1,8 @@
-import {
-  ApiResponse,
-  authApi,
-  CustomUseInfiniteQueryOptions,
-  CustomUseMutationOptions,
-  CustomUseQueryOptions,
-  GET_RESERVATION_CONSULT_COUNT,
-  GET_RESERVATION_DETAIL,
-  GET_RESERVATIONS,
-  handleError,
-  ListResponse
-} from '@/_shared';
+import { authApi } from '@/shared/api/instance';
+import { GET_RESERVATION_CONSULT_COUNT, GET_RESERVATION_DETAIL, GET_RESERVATIONS } from '@/shared/constants/queryKeys/queryKey.constants';
+import { handleError } from '@/shared/lib/utils/error.utils';
+import { ApiResponse, ListResponse } from '@/shared/types/response.types';
+import { CustomUseInfiniteQueryOptions, CustomUseMutationOptions, CustomUseQueryOptions } from '@/shared/types/util.types';
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { CreateReservationBody } from '@/entities/reservation/model/reservation.types';

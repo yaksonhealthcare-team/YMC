@@ -1,5 +1,5 @@
-import { MembershipGubunType } from '@/_domain/membership';
-import { formatAmount } from '@/_domain/reservation';
+import { MembershipGubunType } from '@/entities/membership/model/membership.types';
+import { formatAmount } from '@/features/reservation/lib/format.utils';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import { useNavigate } from 'react-router-dom';
 

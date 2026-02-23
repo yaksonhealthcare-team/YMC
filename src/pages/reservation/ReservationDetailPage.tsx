@@ -1,5 +1,5 @@
-import { useUserStore } from '@/_domain/auth';
-import { useGetReservationDetail } from '@/_domain/reservation';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { useGetReservationDetail } from '@/features/reservation/lib/reservation.services';
 import { Button } from '@/shared/ui/button/Button';
 import FixedButtonContainer from '@/shared/ui/button/FixedButtonContainer';
 import { useLayout } from '@/widgets/layout/model/LayoutContext';

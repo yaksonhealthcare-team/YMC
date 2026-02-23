@@ -1,4 +1,4 @@
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 import { CartMapper } from '@/entities/cart/lib/CartMapper';
 import { CartItemPostRequest, CartItemResponse, CartSummary, CartWithSummary } from '@/entities/cart/model/Cart';
 

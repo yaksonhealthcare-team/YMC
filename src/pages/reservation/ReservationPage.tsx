@@ -1,14 +1,15 @@
-import { useUserStore } from '@/_domain/auth';
-import { useGetUserMemberships, UserMembershipSchema } from '@/_domain/membership';
-import {
-  ReservationFormValues,
-  ReservationMenuSectionProps,
-  ReservationTemplate,
-  useCreateReservationMutation,
-  useGetBranchDetail,
-  useGetReservationConsultCount
-} from '@/_domain/reservation';
-import { DEFAULT_COORDINATE, GET_RESERVATIONS, Loading, parseScheduleTime } from '@/_shared';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { useGetUserMemberships } from '@/features/membership-purchase/lib/membership.services';
+import { useGetBranchDetail } from '@/features/reservation/lib/branch.services';
+import { useCreateReservationMutation, useGetReservationConsultCount } from '@/features/reservation/lib/reservation.services';
+import { ReservationFormValues } from '@/entities/reservation/model/reservation.types';
+import { UserMembershipSchema } from '@/entities/membership/model/membership.types';
+import { ReservationMenuSectionProps } from '@/features/reservation/ui/ReservationMenuSection.types';
+import { ReservationTemplate } from '@/features/reservation/ui/ReservationTemplate';
+import { DEFAULT_COORDINATE } from '@/shared/constants/location.constants';
+import { GET_RESERVATIONS } from '@/shared/constants/queryKeys/queryKey.constants';
+import { parseScheduleTime } from '@/shared/lib/utils/date.utils';
+import { Loading } from '@/shared/ui/loading/Loading';
 import { useGeolocation } from '@/features/search-branch/lib/useGeolocation';
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { useQueryClient } from '@tanstack/react-query';

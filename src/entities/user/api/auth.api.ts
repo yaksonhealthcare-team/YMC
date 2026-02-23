@@ -1,4 +1,4 @@
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 import { publicApi } from '@/shared/api/instance';
 import { UserMapper } from '@/entities/user/lib/UserMapper';
 import { HTTPResponse } from '@/shared/types/HTTPResponse';

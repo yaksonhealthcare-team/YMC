@@ -1,4 +1,4 @@
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 import { ContentMapper } from '@/entities/content/lib/ContentMapper';
 import { Notice, NoticeDetail, PopupDetail } from '@/entities/content/model/Content';
 import { Event, EventDetail, Tab } from '@/entities/content/model/Event';

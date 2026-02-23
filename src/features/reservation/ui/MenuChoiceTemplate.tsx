@@ -1,6 +1,9 @@
-import { Divider, Layout, Loading, SearchTextField } from '@/_shared/components';
+import { Divider } from '@/shared/ui/divider/Divider';
+import { Loading } from '@/shared/ui/loading/Loading';
+import { SearchTextField } from '@/shared/ui/text-field/SearchTextField';
+import { Layout } from '@/widgets/layout/ui/Layout';
 import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObserver';
-import { useHeaderStore } from '@/_shared/stores';
+import { useHeaderStore } from '@/shared/lib/stores/header.store';
 import { useLayoutEffect, useRef } from 'react';
 import { ConvertedConsultMenuData } from '@/features/reservation/lib/menu.business';
 import { MenuCard, MenuCardProps } from '@/features/reservation/ui';

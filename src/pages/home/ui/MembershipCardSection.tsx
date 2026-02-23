@@ -1,4 +1,5 @@
-import { ConvertedMembershipForCardData, MembershipCard } from '@/_domain/membership';
+import { ConvertedMembershipForCardData } from '@/features/membership-purchase/lib/membership.business';
+import { MembershipCard } from '@/widgets/membership-card/ui/MembershipCard';
 import { EmptyCard } from '@/shared/ui/EmptyCard';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { Title } from '@/shared/ui/Title';

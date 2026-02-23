@@ -1,4 +1,4 @@
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 import { Location } from '@/shared/types/Location';
 
 export interface ApiResponse<T> {

@@ -1,4 +1,4 @@
-import { ApiResponse } from '@/_shared';
+import { ApiResponse } from '@/shared/types/response.types';
 
 export interface BannerResponse extends ApiResponse<BannerSchema[]> {
   gubun: string;

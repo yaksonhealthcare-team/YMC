@@ -1,4 +1,4 @@
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 import { HTTPResponse } from '@/shared/types/HTTPResponse';
 
 // 가이드 메시지 응답 타입 정의

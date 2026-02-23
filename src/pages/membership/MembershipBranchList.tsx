@@ -1,6 +1,8 @@
-import { useUserStore } from '@/_domain/auth';
-import { BranchesSchema, useGetBranches } from '@/_domain/reservation';
-import { DEFAULT_COORDINATE, useIntersectionObserver } from '@/_shared';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { useGetBranches } from '@/features/reservation/lib/branch.services';
+import { BranchesSchema } from '@/entities/branch/model/branch.types';
+import { DEFAULT_COORDINATE } from '@/shared/constants/location.constants';
+import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObserver';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { Image } from '@/shared/ui/image/Image';
 import SearchIcon from '@/shared/ui/icons/SearchIcon';

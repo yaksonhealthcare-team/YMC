@@ -1,7 +1,10 @@
-import { getUser, saveAccessToken, useSigninSocialMutation, useUserStore } from '@/_domain/auth';
-import { logger, safeJsonParse } from '@/_shared';
+import { getUser, useSigninSocialMutation } from '@/features/auth/lib/auth.services';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { saveAccessToken } from '@/entities/user/lib/token.utils';
+import { logger } from '@/shared/lib/utils/logger.utils';
+import { safeJsonParse } from '@/shared/lib/utils/sentry.utils';
 import { publicApi } from '@/shared/api/instance';
-import { normalizeAppInfo, useAppInfoStore } from '@/stores/appInfoStore';
+import { normalizeAppInfo, useAppInfoStore } from '@/shared/lib/stores/appInfo.store';
 import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 

@@ -1,12 +1,10 @@
-import {
-  convertMembershipForCard,
-  HomeOverview,
-  useGetBanners,
-  useGetContents,
-  useGetUserMemberships,
-  useUserStore
-} from '@/_domain';
-import { useGetUnreadCount } from '@/_shared/services';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { convertMembershipForCard } from '@/features/membership-purchase/lib/membership.business';
+import { useGetUserMemberships } from '@/features/membership-purchase/lib/membership.services';
+import { useGetUnreadCount } from '@/entities/notification/api/notification.services';
+import { useGetBanners } from '@/entities/banner/lib/banners.services';
+import { useGetContents } from '@/entities/content/lib/contents.services';
+import HomeOverview from '@/widgets/home-overview/ui/HomeOverview';
 import { FloatingButton } from '@/shared/ui/button/FloatingButton';
 import { BrandSection } from '@/pages/home/ui/BrandSection';
 import { BusinessInfo } from '@/pages/home/ui/BusinessInfo';

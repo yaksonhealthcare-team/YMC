@@ -1,7 +1,7 @@
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { BasePaymentParams, OrderResponse, PaymentItem } from '@/entities/payment/model/Payment';
 import { usePaymentStore } from './usePaymentStore';
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 
 export const usePayment = () => {
   const { showToast } = useOverlay();

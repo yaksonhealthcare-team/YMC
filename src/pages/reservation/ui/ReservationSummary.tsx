@@ -1,4 +1,4 @@
-import { ReservationDetailSchema } from '@/_domain/reservation';
+import { ReservationDetailSchema } from '@/entities/reservation/model/reservation.types';
 import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
 import { Divider } from '@mui/material';
 import dayjs from 'dayjs';

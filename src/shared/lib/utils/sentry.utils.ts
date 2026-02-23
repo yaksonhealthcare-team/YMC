@@ -1,4 +1,4 @@
-import { UserSchema } from '@/_domain/auth/types';
+import { UserSchema } from '@/entities/user/model/user.types';
 import * as Sentry from '@sentry/react';
 
 const NON_ACTIONABLE_ERROR_PATTERNS: Array<string | RegExp> = [

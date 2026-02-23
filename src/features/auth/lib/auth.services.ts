@@ -1,7 +1,8 @@
-import { CustomUseMutationOptions, CustomUseQueryOptions, GET_TERMS, GET_USER } from '@/_shared';
+import { GET_TERMS, GET_USER } from '@/shared/constants/queryKeys/queryKey.constants';
+import { CustomUseMutationOptions, CustomUseQueryOptions } from '@/shared/types/util.types';
 import { authApi, publicApi } from '@/shared/api/instance';
 import { ApiResponse } from '@/shared/types/response.types';
-import { handleError } from '@/_shared/utils';
+import { handleError } from '@/shared/lib/utils/error.utils';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { UserSchema } from '@/entities/user/model';

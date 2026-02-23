@@ -8,7 +8,7 @@ import {
   QuestionFieldName,
   QuestionnaireFormValues,
   QuestionOption
-} from '@/types/Questionnaire';
+} from '@/entities/user/model/questionnaire.types';
 import clsx from 'clsx';
 import { Fragment, useEffect } from 'react';
 import BirthDateInput from './BirthDateInput';

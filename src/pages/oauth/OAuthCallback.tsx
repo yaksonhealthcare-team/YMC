@@ -1,5 +1,7 @@
-import { getUser, saveAccessToken, useSigninSocialMutation, useUserStore } from '@/_domain/auth';
-import { requestForToken } from '@/_shared';
+import { getUser, useSigninSocialMutation } from '@/features/auth/lib/auth.services';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { saveAccessToken } from '@/entities/user/lib/token.utils';
+import { requestForToken } from '@/shared/lib/utils/sdk.utils';
 import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useOverlay } from '@/shared/ui/modal/ModalContext';

@@ -1,4 +1,4 @@
-import { authApi } from '@/_shared';
+import { authApi } from '@/shared/api/instance';
 import { ScheduleDate, ScheduleFilters, ScheduleTime } from '@/entities/schedule/model/Schedule';
 import dayjs from 'dayjs';
 

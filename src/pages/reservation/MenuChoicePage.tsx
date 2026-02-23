@@ -1,12 +1,9 @@
-import {
-  convertConsultMenu,
-  ConvertedConsultMenuData,
-  convertPrepaidMenu,
-  MenuCardProps,
-  MenuChoiceTemplate,
-  useUserStore
-} from '@/_domain';
-import { ConsultMenuParams, PrepaidMenuParams, useGetConsultMenu, useGetPrepaidMenu } from '@/_domain/category';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { convertConsultMenu, ConvertedConsultMenuData, convertPrepaidMenu } from '@/features/reservation/lib/menu.business';
+import { MenuCardProps } from '@/features/reservation/ui/MenuCard.types';
+import { MenuChoiceTemplate } from '@/features/reservation/ui/MenuChoiceTemplate';
+import { ConsultMenuParams, PrepaidMenuParams } from '@/entities/reservation/model/menu.types';
+import { useGetConsultMenu, useGetPrepaidMenu } from '@/features/reservation/lib/menu.services';
 import { useDebounce } from '@/shared/lib/hooks/useDebounce';
 import { useMemo, useState } from 'react';
 

@@ -1,18 +1,12 @@
-import {
-  Button,
-  getAppleLoginUrl,
-  getGoogleLoginUrl,
-  getKakaoLoginUrl,
-  getNaverLoginUrl,
-  requestNotificationPermission
-} from '@/_shared';
 import AppleIcon from '@/assets/icons/AppleIcon.svg?react';
 import GoogleIcon from '@/assets/icons/GoogleIcon.svg?react';
 import KakaoIcon from '@/assets/icons/KakaoIcon.svg?react';
 import NaverIcon from '@/assets/icons/NaverIcon.svg?react';
+import { Button } from '@/shared/ui/button/DsButton';
 import Logo from '@/shared/ui/layout/Logo';
-import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useOverlay } from '@/shared/ui/modal/ModalContext';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { getAppleLoginUrl, getGoogleLoginUrl, getKakaoLoginUrl, getNaverLoginUrl, requestNotificationPermission } from '@/shared/lib/utils/sdk.utils';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

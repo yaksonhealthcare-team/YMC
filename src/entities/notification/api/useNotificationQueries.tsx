@@ -1,4 +1,4 @@
-import { UserSchema } from '@/_domain/auth';
+import { UserSchema } from '@/entities/user/model/user.types';
 import { InfiniteData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   fetchNotifications,

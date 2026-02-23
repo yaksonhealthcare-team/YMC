@@ -1,4 +1,4 @@
-import { formatPriceKO } from '@/_shared/utils';
+import { formatPriceKO } from '@/shared/lib/utils/format.utils';
 import { MembershipStatus } from '@/features/membership-purchase/model/membership.constants';
 import { MembershipGubunType, MembershipStatusType, MembershipStatusValue } from '@/entities/membership/model/membership.types';
 

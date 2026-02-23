@@ -1,4 +1,4 @@
-import { ReservationsSchema } from '@/_domain/reservation';
+import { ReservationsSchema } from '@/entities/reservation/model/reservation.types';
 import { ReservationStatusCode } from '@/entities/reservation/model/Reservation';
 import clsx from 'clsx';
 import { ReactNode } from 'react';
