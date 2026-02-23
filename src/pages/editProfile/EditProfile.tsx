@@ -17,9 +17,9 @@ import { Gender } from '@/shared/lib/utils/gender';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import BottomSheetForm from './_fragments/EditProfileBottomSheetForm';
-import { FieldWithButton, LabeledForm } from './_fragments/ProfileFormComponents';
-import ProfileImageButton from './_fragments/ProfileImageButton';
+import BottomSheetForm from './ui/EditProfileBottomSheetForm';
+import { FieldWithButton, LabeledForm } from './ui/ProfileFormComponents';
+import ProfileImageButton from './ui/ProfileImageButton';
 
 const EditProfile = () => {
   const { user, setUser } = useUserStore();

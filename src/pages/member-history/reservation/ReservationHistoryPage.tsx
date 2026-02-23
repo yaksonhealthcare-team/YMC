@@ -11,7 +11,7 @@ import { FilterItem, reservationFilters, ReservationStatusCode } from '@/entitie
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MainTabs from '../_fragments/MainTabs';
+import MainTabs from '../ui/MainTabs';
 
 const ReservationContent = ({ filterId }: { filterId: ReservationStatusCode }) => {
   const { user } = useUserStore();

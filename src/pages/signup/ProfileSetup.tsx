@@ -10,7 +10,7 @@ import { useSignup } from '@/features/auth/model/SignupContext';
 import { useProfileSetupHandlers } from '@/features/auth/lib/useProfileSetupHandlers';
 import { useProfileSetupSubmit } from '@/features/auth/lib/useProfileSetupSubmit';
 import { useProfileSetupValidation } from '@/features/auth/lib/useProfileSetupValidation';
-import ProfileImageButton from '@/pages/editProfile/_fragments/ProfileImageButton';
+import ProfileImageButton from '@/pages/editProfile/ui/ProfileImageButton';
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

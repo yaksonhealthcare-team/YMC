@@ -10,11 +10,11 @@ import { formatPriceWithUnit } from '@/shared/lib/utils/format';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PaymentAgreementSection from './_fragments/PaymentAgreementSection';
-import PaymentMethodSection from './_fragments/PaymentMethodSection';
-import PaymentPointSection from './_fragments/PaymentPointSection';
-import PaymentProductSection from './_fragments/PaymentProductSection';
-import PaymentSummarySection from './_fragments/PaymentSummarySection';
+import PaymentAgreementSection from './ui/PaymentAgreementSection';
+import PaymentMethodSection from './ui/PaymentMethodSection';
+import PaymentPointSection from './ui/PaymentPointSection';
+import PaymentProductSection from './ui/PaymentProductSection';
+import PaymentSummarySection from './ui/PaymentSummarySection';
 
 const PaymentPage = () => {
   const navigate = useNavigate();

@@ -3,7 +3,7 @@ import SearchIcon from '@/shared/ui/icons/SearchIcon';
 import { useGeolocation } from '@/features/search-branch/lib/useGeolocation';
 import { useBranches } from '@/entities/branch/api/useBranchQueries';
 import { Branch } from '@/entities/branch/model/Branch';
-import BranchFilterList from '../../_fragments/BranchFilterList';
+import BranchFilterList from '../../ui/BranchFilterList';
 
 interface BranchSearchResultListProps {
   query: string;

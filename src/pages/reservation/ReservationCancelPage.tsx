@@ -11,7 +11,7 @@ import { escapeHtml } from '@/shared/lib/utils/sanitize';
 import { Divider } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import ReservationCancelBottomSheetContent from './_fragments/ReservationCancelBottomSheetContent';
+import ReservationCancelBottomSheetContent from './ui/ReservationCancelBottomSheetContent';
 
 const ReservationCancelPage = () => {
   const { id } = useParams<{ id: string }>();

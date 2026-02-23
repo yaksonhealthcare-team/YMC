@@ -3,10 +3,10 @@ import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { usePaymentHistory } from '@/entities/payment/api/usePaymentQueries';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import PaymentCancelReasonSection from './_fragments/detail/PaymentCancelReasonSection';
-import PaymentItemSection from './_fragments/detail/PaymentItemSection';
-import PaymentPointSection from './_fragments/detail/PaymentPointSection';
-import PaymentRefundDescriptionSection from './_fragments/detail/PaymentRefundDescriptionSection';
+import PaymentCancelReasonSection from './ui/detail/PaymentCancelReasonSection';
+import PaymentItemSection from './ui/detail/PaymentItemSection';
+import PaymentPointSection from './ui/detail/PaymentPointSection';
+import PaymentRefundDescriptionSection from './ui/detail/PaymentRefundDescriptionSection';
 
 const PaymentCancelDetailPage = () => {
   const { id } = useParams();

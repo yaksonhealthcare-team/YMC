@@ -9,9 +9,9 @@ import { Skeleton } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Location from './_fragments/Location';
-import MembershipUsage from './_fragments/MembershipUsage';
-import ReservationSummary from './_fragments/ReservationSummary';
+import Location from './ui/Location';
+import MembershipUsage from './ui/MembershipUsage';
+import ReservationSummary from './ui/ReservationSummary';
 
 const ReservationDetailPage = () => {
   const { id = '' } = useParams<{ id: string }>();

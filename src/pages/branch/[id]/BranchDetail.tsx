@@ -8,11 +8,11 @@ import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // const MembershipAvailableBanner = lazy(
-//   () => import("./_fragments/MembershipAvailableBanner.tsx"),
+//   () => import("./ui/MembershipAvailableBanner.tsx"),
 // )
-const BranchHeader = lazy(() => import('./_fragments/BranchHeader'));
-const BranchTabs = lazy(() => import('./_fragments/BranchTabs'));
-const BranchActions = lazy(() => import('./_fragments/BranchActions'));
+const BranchHeader = lazy(() => import('./ui/BranchHeader'));
+const BranchTabs = lazy(() => import('./ui/BranchTabs'));
+const BranchActions = lazy(() => import('./ui/BranchActions'));
 
 type BranchDetailTab = 'programs' | 'information';
 /*

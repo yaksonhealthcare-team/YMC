@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { ReservationMembershipCardItem, ReservationMembershipSwiper } from '@/features/reservation/ui';
 import { ReservationMenuSectionProps } from '@/features/reservation/ui/ReservationMenuSection.types';
-import MenuChoicePage from '@/_shared/router/reservation/MenuChoicePage';
+import MenuChoicePage from '@/pages/reservation/MenuChoicePage';
 
 export const ReservationMenuSection = ({ memberships, consultCount }: ReservationMenuSectionProps) => {
   const [showMenuPage, setShowMenuPage] = useState<{ open: boolean; idx?: number }>({ open: false });

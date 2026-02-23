@@ -2,12 +2,12 @@ import { Button } from '@/shared/ui/button/Button';
 import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MyPageBranchInfo from './_fragments/MyPageBranchInfo';
-import MyPageFooter from './_fragments/MyPageFooter';
-import MyPageMenu from './_fragments/MyPageMenu';
-import MyPageNotice from './_fragments/MyPageNotice';
-import MyPagePointMembership from './_fragments/MyPagePointMembership';
-import MyPageProfile from './_fragments/MyPageProfile';
+import MyPageBranchInfo from './ui/MyPageBranchInfo';
+import MyPageFooter from './ui/MyPageFooter';
+import MyPageMenu from './ui/MyPageMenu';
+import MyPageNotice from './ui/MyPageNotice';
+import MyPagePointMembership from './ui/MyPagePointMembership';
+import MyPageProfile from './ui/MyPageProfile';
 
 const MyPage = () => {
   const navigate = useNavigate();

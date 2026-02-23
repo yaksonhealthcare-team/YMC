@@ -8,11 +8,11 @@ import {
 } from '@/_domain';
 import { useGetUnreadCount } from '@/_shared/services';
 import { FloatingButton } from '@/shared/ui/button/FloatingButton';
-import { BrandSection } from '@/pages/home/_fragments/BrandSection';
-import { BusinessInfo } from '@/pages/home/_fragments/BusinessInfo';
-import { EventSection } from '@/pages/home/_fragments/EventSection';
-import { MembershipCardSection } from '@/pages/home/_fragments/MembershipCardSection';
-import ReserveCardSection from '@/pages/home/_fragments/ReserveCardSection';
+import { BrandSection } from '@/pages/home/ui/BrandSection';
+import { BusinessInfo } from '@/pages/home/ui/BusinessInfo';
+import { EventSection } from '@/pages/home/ui/EventSection';
+import { MembershipCardSection } from '@/pages/home/ui/MembershipCardSection';
+import ReserveCardSection from '@/pages/home/ui/ReserveCardSection';
 import { useStartupPopups } from '@/entities/content/api/useContentQueries';
 import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { usePopupActions } from '@/widgets/startup-popup/model/popupStore';

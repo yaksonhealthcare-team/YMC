@@ -15,10 +15,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import BranchFilterBottomSheet, { FilterItem } from './_fragments/BranchFilterBottomSheet';
-import BranchFilterList from './_fragments/BranchFilterList';
-import BranchFilterSection from './_fragments/BranchFilterSection';
-import BranchMapSection from './_fragments/BranchMapSection';
+import BranchFilterBottomSheet, { FilterItem } from './ui/BranchFilterBottomSheet';
+import BranchFilterList from './ui/BranchFilterList';
+import BranchFilterSection from './ui/BranchFilterSection';
+import BranchMapSection from './ui/BranchMapSection';
 
 // 기본 주소 상수 정의
 const DEFAULT_ADDRESS = '서울특별시 중구 세종대로 110';

@@ -3,9 +3,9 @@ import { useQuestionnaire } from '@/features/questionnaire-submit/lib/useQuestio
 import { Question, QuestionFieldName, QuestionnaireType } from '@/types/Questionnaire';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { QuestionItem } from './_fragments/QuestionItem';
-import { QuestionnaireHeader } from './_fragments/QuestionnaireHeader';
-import { QuestionnaireNavigation } from './_fragments/QuestionnaireNavigation';
+import { QuestionItem } from './ui/QuestionItem';
+import { QuestionnaireHeader } from './ui/QuestionnaireHeader';
+import { QuestionnaireNavigation } from './ui/QuestionnaireNavigation';
 
 /**
  * 문진 페이지

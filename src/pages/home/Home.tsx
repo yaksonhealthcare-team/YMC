@@ -1,6 +1,6 @@
 import { useUserStore } from '@/_domain/auth';
 import { convertMembershipForCard, useGetUserMemberships } from '@/_domain/membership';
-import '@/assets/css/swiper-custom.css';
+import '@/app/styles/swiper-custom.css';
 import NotiIcon from '@/assets/icons/NotiIcon.svg?react';
 import { FloatingButton } from '@/shared/ui/button/FloatingButton';
 import Logo from '@/shared/ui/layout/Logo';
@@ -14,13 +14,13 @@ import { lazy, Suspense, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import DynamicHomeHeaderBackground from './_fragments/DynamicHomeHeaderBackground';
-import { MembershipCardSection } from './_fragments/MembershipCardSection';
-import ReserveCardSection from './_fragments/ReserveCardSection';
+import DynamicHomeHeaderBackground from './ui/DynamicHomeHeaderBackground';
+import { MembershipCardSection } from './ui/MembershipCardSection';
+import ReserveCardSection from './ui/ReserveCardSection';
 
 // 단일 코드 청크로 그룹화하여 불필요한 네트워크 요청 줄이기
 const SecondaryContentChunk = lazy(
-  () => import(/* webpackChunkName: "home-secondary" */ './_fragments/SecondaryContentChunk')
+  () => import(/* webpackChunkName: "home-secondary" */ './ui/SecondaryContentChunk')
 );
 
 const Home = () => {

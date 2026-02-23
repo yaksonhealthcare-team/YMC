@@ -6,7 +6,7 @@ import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObser
 import { useReviews } from '@/entities/review/api/useReviewQueries';
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ReviewListItem } from './_fragments/ReviewListItem';
+import { ReviewListItem } from './ui/ReviewListItem';
 
 const ReviewPage = () => {
   const { setHeader, setNavigation } = useLayout();

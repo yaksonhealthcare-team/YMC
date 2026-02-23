@@ -1,5 +1,5 @@
-import { Initialization } from '@/Initialization';
-import { Router } from '@/pages/NewRouter';
+import { Initialization } from '@/app/providers/Initialization';
+import { Router } from '@/app/router/NewRouter';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { Suspense } from 'react';
-import { Loading, useVConsole } from './_shared';
+import { Loading, useVConsole } from '@/_shared';
 import { initGA } from '@/shared/lib/utils/ga.utils';
 import { initSentry } from '@/shared/lib/utils/sentry.utils';
 import ErrorBoundary from '@/shared/ui/error/ErrorBoundary';

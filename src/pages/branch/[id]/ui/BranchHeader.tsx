@@ -2,7 +2,7 @@ import PinIcon from '@/assets/icons/PinIcon.svg?react';
 import ShareIcon from '@/assets/icons/ShareIcon.svg?react';
 import StoreIcon from '@/assets/icons/StoreIcon.svg?react';
 import ProfileCard from '@/entities/user/ui/ProfileCard';
-import DynamicHomeHeaderBackground from '@/pages/home/_fragments/DynamicHomeHeaderBackground';
+import DynamicHomeHeaderBackground from '@/pages/home/ui/DynamicHomeHeaderBackground';
 import { BranchDetail as BranchDetailType } from '@/entities/branch/model/Branch';
 import { memo, ReactNode } from 'react';
 import StaffSection from './StaffSection';

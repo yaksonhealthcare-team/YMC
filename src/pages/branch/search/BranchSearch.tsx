@@ -3,8 +3,8 @@ import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useDebounce } from '@/shared/lib/hooks/useDebounce';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ActiveBranchList from './_fragments/ActiveBranchList';
-import BranchSearchResultList from './_fragments/BranchSearchResultList';
+import ActiveBranchList from './ui/ActiveBranchList';
+import BranchSearchResultList from './ui/BranchSearchResultList';
 
 const BranchSearch = () => {
   const { setHeader, setNavigation } = useLayout();

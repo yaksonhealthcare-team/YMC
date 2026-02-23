@@ -7,9 +7,9 @@ import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { PaymentCompleteState } from '@/entities/payment/model/Payment';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import PaymentInfo from './_fragments/PaymentCompleteInfo';
-import PaymentItemCard from './_fragments/PaymentCompleteItemCard';
-import PaymentSummary from './_fragments/PaymentCompleteSummary';
+import PaymentInfo from './ui/PaymentCompleteInfo';
+import PaymentItemCard from './ui/PaymentCompleteItemCard';
+import PaymentSummary from './ui/PaymentCompleteSummary';
 
 const PaymentCompletePage = () => {
   const { setHeader, setNavigation } = useLayout();

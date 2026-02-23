@@ -8,7 +8,7 @@ import { OverlayProvider } from '@/shared/ui/modal/ModalContext';
 import { SignupProvider } from '@/features/auth/model/SignupContext';
 import { PropsWithChildren, useEffect } from 'react';
 import { createBrowserRouter, LoaderFunction, Outlet, redirect, RouterProvider, useLocation } from 'react-router-dom';
-import { CustomRouteObject, routeConfig } from './newConfig';
+import { CustomRouteObject, routeConfig } from './config';
 
 export const Router = () => {
   const routes: CustomRouteObject[] = routeConfig.map((route) => {

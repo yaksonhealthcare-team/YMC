@@ -1,7 +1,7 @@
 import { useReviewDetail } from '@/entities/review/api/useReviewQueries';
 import { useParams } from 'react-router-dom';
-import { ReviewDetailContent } from './_fragments/ReviewDetailContent';
-import { ReviewDetailSkeleton } from './_fragments/ReviewDetailSkeleton';
+import { ReviewDetailContent } from './ui/ReviewDetailContent';
+import { ReviewDetailSkeleton } from './ui/ReviewDetailSkeleton';
 
 const ReviewDetailPage = () => {
   const { reviewId } = useParams();

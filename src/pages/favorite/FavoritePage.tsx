@@ -7,7 +7,7 @@ import { useBranchBookmarksQuery, useBranchUnbookmarkMutation } from '@/entities
 import { Branch } from '@/entities/branch/model/Branch';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BranchFilterListItem } from '../branch/_fragments/BranchFilterList';
+import { BranchFilterListItem } from '../branch/ui/BranchFilterList';
 
 const FavoritePage = () => {
   const { setHeader, setNavigation } = useLayout();

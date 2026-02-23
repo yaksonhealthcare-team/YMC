@@ -4,8 +4,8 @@ import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useUserGeneralQuestionnaireResult } from '@/entities/user/api/useQuestionnaireQueries';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import QuestionnaireFormList from './_fragments/QuestionnaireFormList';
-import QuestionnaireHistoryNotExist from './_fragments/QuestionnaireHistoryNotExist';
+import QuestionnaireFormList from './ui/QuestionnaireFormList';
+import QuestionnaireHistoryNotExist from './ui/QuestionnaireHistoryNotExist';
 
 const GeneralQuestionnaireHistory = () => {
   const { data: questionnaire, isLoading } = useUserGeneralQuestionnaireResult();

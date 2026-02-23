@@ -9,7 +9,7 @@ import { MembershipCategory, MembershipItem } from '@/entities/membership/model/
 import { Tab, Tabs } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { MembershipCard } from './_fragments/MembershipCard';
+import { MembershipCard } from './ui/MembershipCard';
 import { BRAND_CODE } from '@/_shared';
 
 const MembershipPage = () => {

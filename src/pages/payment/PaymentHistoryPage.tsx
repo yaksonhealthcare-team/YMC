@@ -6,7 +6,7 @@ import { usePaymentHistories } from '@/entities/payment/api/usePaymentQueries';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PaymentHistoryListItem from './_fragments/PaymentHistoryListItem';
+import PaymentHistoryListItem from './ui/PaymentHistoryListItem';
 
 const SCROLL_POSITION_KEY = ['payment_history_scroll_position'] as const;
 

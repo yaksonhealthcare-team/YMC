@@ -13,7 +13,7 @@ import { MyMembershipFilterItem, myMembershipFilters } from '@/entities/membersh
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MainTabs from '../_fragments/MainTabs';
+import MainTabs from '../ui/MainTabs';
 
 const MembershipContent = ({ filterId }: { filterId: string }) => {
   const { getUserId } = useUserStore();
