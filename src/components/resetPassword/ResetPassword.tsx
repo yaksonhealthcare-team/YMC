@@ -1,8 +1,8 @@
 import CaretLeftIcon from '@/assets/icons/CaretLeftIcon.svg?react';
-import { Button } from '@/components/Button';
-import PasswordCustomInput from '@/components/input/PasswordCustomInput';
+import { Button } from '@/shared/ui/button/Button';
+import PasswordCustomInput from '@/shared/ui/text-field/PasswordCustomInput';
 import { useLayout } from '@/stores/LayoutContext';
-import validatePassword from '@/utils/passwordValidator';
+import validatePassword from '@/shared/lib/utils/passwordValidator';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

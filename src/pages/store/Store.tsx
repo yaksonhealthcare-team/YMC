@@ -1,9 +1,9 @@
 import { getAccessToken } from '@/_domain/auth';
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { useForceUpdateModal } from '@/hooks/useForceUpdateModal';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
+import { useForceUpdateModal } from '@/shared/lib/hooks/useForceUpdateModal';
 import { useAppInfoStore } from '@/stores/appInfoStore';
 import { useLayout } from '@/stores/LayoutContext';
-import { isLowerVersion } from '@/utils/isLowerVersion';
+import { isLowerVersion } from '@/shared/lib/utils/isLowerVersion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 const STORE_URL = import.meta.env.VITE_HOMECARE_MALL_URL;

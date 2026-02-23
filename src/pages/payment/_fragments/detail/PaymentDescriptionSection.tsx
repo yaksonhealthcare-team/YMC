@@ -1,4 +1,4 @@
-import { PaymentHistoryDetail } from '@/types/Payment';
+import { PaymentHistoryDetail } from '@/entities/payment/model/Payment';
 
 const PaymentDescriptionSection = ({ payment }: { payment: PaymentHistoryDetail }) => {
   return (

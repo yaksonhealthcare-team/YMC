@@ -1,2 +1,2 @@
-export { api, authApi } from './instance';
+export { api, authApi } from '@/shared/api/instance';
 export { useGetUnreadCount } from './notification.services';

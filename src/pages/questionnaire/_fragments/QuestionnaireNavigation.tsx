@@ -1,4 +1,4 @@
-import { Button } from '@/components/Button';
+import { Button } from '@/shared/ui/button/Button';
 
 interface QuestionnaireNavigationProps {
   currentQuestionNumber: number;

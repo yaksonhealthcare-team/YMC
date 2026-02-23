@@ -1,5 +1,5 @@
-import { Branch } from '@/types/Branch';
-import { PaymentItem, PaymentStatus } from '@/types/Payment';
+import { Branch } from '@/entities/branch/model/Branch';
+import { PaymentItem, PaymentStatus } from '@/entities/payment/model/Payment';
 import { create } from 'zustand';
 
 interface Points {

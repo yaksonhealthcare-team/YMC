@@ -4,7 +4,7 @@ import CrownIcon from '@/assets/icons/CrownIcon.svg?react';
 import InformationIcon from '@/assets/icons/InformationIcon.svg?react';
 import PersonalCardIcon from '@/assets/icons/PersonalCardIcon.svg?react';
 import PointIcon from '@/assets/icons/PointIcon.svg?react';
-import { useOverlay } from '@/stores/ModalContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { Divider, Stack, Typography } from '@mui/material';
 import clsx from 'clsx';
 import { useNavigate } from 'react-router-dom';

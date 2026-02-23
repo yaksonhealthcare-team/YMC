@@ -1,8 +1,8 @@
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { Image } from '@/components/common/Image';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
+import { Image } from '@/shared/ui/image/Image';
 import { MembershipCard } from '@/pages/membership/_fragments/MembershipCard';
-import { useMembershipCategories, useMembershipList } from '@/queries/useMembershipQueries';
-import { MembershipCategory } from '@/types/Membership';
+import { useMembershipCategories, useMembershipList } from '@/entities/membership/api/useMembershipQueries';
+import { MembershipCategory } from '@/entities/membership/model/Membership';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 

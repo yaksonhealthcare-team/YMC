@@ -1,5 +1,5 @@
 import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
-import { Notification } from '@/types/Notification';
+import { Notification } from '@/entities/notification/model/Notification';
 import clsx from 'clsx';
 
 interface NotificationCardProps {

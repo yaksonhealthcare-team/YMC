@@ -1,7 +1,7 @@
 import { useUserStore } from '@/_domain/auth';
-import { fetchCRMUser } from '@/apis/user.api';
+import { fetchCRMUser } from '@/entities/user/api/user.api';
 import CheckCircle from '@/assets/icons/CheckCircle.svg?react';
-import { Button } from '@/components/Button';
+import { Button } from '@/shared/ui/button/Button';
 import { useLayout } from '@/stores/LayoutContext';
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';

@@ -1,4 +1,4 @@
-import { useOverlay } from '@/stores/ModalContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import clsx from 'clsx';
 import { useNavigate } from 'react-router-dom';
 

@@ -1,4 +1,4 @@
-import type { ApiPopupItem } from '@/apis/contents.api';
+import type { ApiPopupItem } from '@/entities/content/api/contents.api';
 import { PopupState, usePopupActions, usePopupStore } from '@/stores/popupStore';
 import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
 import { useEffect, useMemo, useRef } from 'react';

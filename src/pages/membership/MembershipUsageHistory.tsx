@@ -7,7 +7,7 @@ import {
 } from '@/_domain/membership';
 import { Loading } from '@/_shared';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
-import DateAndTime from '@/components/DateAndTime';
+import DateAndTime from '@/shared/ui/DateAndTime';
 import { useLayout } from '@/stores/LayoutContext';
 import { useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';

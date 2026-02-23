@@ -1,15 +1,15 @@
 import HeartDisabledIcon from '@/assets/icons/HeartDisabledIcon.svg?react';
 import HeartEnabledIcon from '@/assets/icons/HeartEnabledIcon.svg?react';
-import { Button } from '@/components/Button';
+import { Button } from '@/shared/ui/button/Button';
 import { useLayout } from '@/stores/LayoutContext';
-import { useOverlay } from '@/stores/ModalContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { useAddressFromCoords } from '@/hooks/useAddressFromCoords';
 import { useBranchLocationSelect } from '@/hooks/useBranchLocationSelect';
 import {
   useAddAddressBookmarkMutation,
   useAddressBookmarks,
   useDeleteAddressBookmarkMutation
-} from '@/queries/useAddressQueries';
+} from '@/shared/api/useAddressQueries';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 

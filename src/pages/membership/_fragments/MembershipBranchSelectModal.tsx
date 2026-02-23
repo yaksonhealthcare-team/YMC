@@ -1,5 +1,5 @@
 import { BranchesSchema } from '@/_domain/reservation';
-import Header from '@/components/Header';
+import Header from '@/shared/ui/layout/Header';
 import { useLayout } from '@/stores/LayoutContext';
 import { useEffect } from 'react';
 import MembershipBranchSelectPage from '../MembershipBranchSelectPage';

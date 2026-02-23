@@ -1,7 +1,7 @@
-import Switch from '@/components/Switch';
+import Switch from '@/shared/ui/switch/Switch';
 import { useLayout } from '@/stores/LayoutContext';
-import { useNotificationSettings, useUpdateNotificationSettings } from '@/queries/useNotificationQueries';
-import { NotificationSettings } from '@/types/Notification';
+import { useNotificationSettings, useUpdateNotificationSettings } from '@/entities/notification/api/useNotificationQueries';
+import { NotificationSettings } from '@/entities/notification/model/Notification';
 import { useEffect } from 'react';
 
 const SettingsPage = () => {

@@ -1,10 +1,10 @@
-import { EmptyCard } from '@/components/EmptyCard';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import { EmptyCard } from '@/shared/ui/EmptyCard';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { useLayout } from '@/stores/LayoutContext';
-import { useOverlay } from '@/stores/ModalContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { useGeolocation } from '@/hooks/useGeolocation';
-import { useBranchBookmarksQuery, useBranchUnbookmarkMutation } from '@/queries/useBranchQueries';
-import { Branch } from '@/types/Branch';
+import { useBranchBookmarksQuery, useBranchUnbookmarkMutation } from '@/entities/branch/api/useBranchQueries';
+import { Branch } from '@/entities/branch/model/Branch';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BranchFilterListItem } from '../branch/_fragments/BranchFilterList';

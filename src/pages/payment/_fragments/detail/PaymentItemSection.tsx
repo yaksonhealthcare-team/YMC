@@ -1,4 +1,4 @@
-import { PaymentHistoryDetail } from '@/types/Payment';
+import { PaymentHistoryDetail } from '@/entities/payment/model/Payment';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';

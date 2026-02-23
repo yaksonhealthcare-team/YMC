@@ -1,5 +1,5 @@
 import { useUserStore } from '@/_domain/auth';
-import { resetPassword } from '@/apis/auth.api';
+import { resetPassword } from '@/entities/user/api/auth.api';
 import ResetPassword from '@/components/resetPassword/ResetPassword';
 import { useNavigate } from 'react-router-dom';
 

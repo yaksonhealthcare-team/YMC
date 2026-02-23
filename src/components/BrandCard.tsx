@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Image } from './common/Image';
+import { Image } from '@/shared/ui/image/Image';
 
 const BRAND_CONTAINER_STYLES = {
   default: 'border-gray-100 bg-white hover:bg-gray-50',

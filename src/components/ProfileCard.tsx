@@ -1,5 +1,5 @@
 import BranchPlaceholderImage from '@/assets/images/BranchPlaceholderImage.png';
-import { Image } from './common/Image';
+import { Image } from '@/shared/ui/image/Image';
 
 interface ProfileCardProps {
   type: 'primary' | 'default';

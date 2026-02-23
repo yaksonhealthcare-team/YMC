@@ -1,9 +1,9 @@
 import { useUserStore } from '@/_domain/auth';
-import { fetchCRMUser } from '@/apis/user.api';
+import { fetchCRMUser } from '@/entities/user/api/user.api';
 import Profile from '@/assets/icons/Profile.svg?react';
-import { Image } from '@/components/common/Image';
+import { Image } from '@/shared/ui/image/Image';
 import { useLayout } from '@/stores/LayoutContext';
-import { useOverlay } from '@/stores/ModalContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 

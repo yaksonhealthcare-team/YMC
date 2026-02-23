@@ -1,5 +1,5 @@
 import DocumentEditIcon from '@/assets/icons/DocumentEditIcon.svg?react';
-import { Button } from '@/components/Button';
+import { Button } from '@/shared/ui/button/Button';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const QuestionnaireHistoryNotExist = ({ onStartQuestionnaire }: { onStartQuestionnaire: () => void }) => {

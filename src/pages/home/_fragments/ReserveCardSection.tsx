@@ -1,11 +1,11 @@
 import { useUserStore } from '@/_domain/auth';
 import { useGetReservations } from '@/_domain/reservation';
-import { EmptyCard } from '@/components/EmptyCard';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import { EmptyCard } from '@/shared/ui/EmptyCard';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { ReserveCard } from '@/components/ReserveCard';
-import { Title } from '@/components/Title';
+import { Title } from '@/shared/ui/Title';
 import { useReservationStore } from '@/stores/reservationStore';
-import { reservationFilters } from '@/types/Reservation';
+import { reservationFilters } from '@/entities/reservation/model/Reservation';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 

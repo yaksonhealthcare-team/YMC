@@ -1,6 +1,6 @@
 import StoreIcon from '@/assets/icons/StoreIcon.svg?react';
-import { Button } from '@/components/Button';
-import { PaymentHistory, PaymentHistoryItem } from '@/types/Payment';
+import { Button } from '@/shared/ui/button/Button';
+import { PaymentHistory, PaymentHistoryItem } from '@/entities/payment/model/Payment';
 
 const PaymentItemCard = ({
   canceled,

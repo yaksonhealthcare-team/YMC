@@ -10,9 +10,9 @@ import AppleIcon from '@/assets/icons/AppleIcon.svg?react';
 import GoogleIcon from '@/assets/icons/GoogleIcon.svg?react';
 import KakaoIcon from '@/assets/icons/KakaoIcon.svg?react';
 import NaverIcon from '@/assets/icons/NaverIcon.svg?react';
-import Logo from '@/components/Logo';
+import Logo from '@/shared/ui/layout/Logo';
 import { useLayout } from '@/stores/LayoutContext';
-import { useOverlay } from '@/stores/ModalContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

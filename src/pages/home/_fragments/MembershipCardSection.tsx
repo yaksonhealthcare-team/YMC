@@ -1,7 +1,7 @@
 import { ConvertedMembershipForCardData, MembershipCard } from '@/_domain/membership';
-import { EmptyCard } from '@/components/EmptyCard';
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { Title } from '@/components/Title';
+import { EmptyCard } from '@/shared/ui/EmptyCard';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
+import { Title } from '@/shared/ui/Title';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 

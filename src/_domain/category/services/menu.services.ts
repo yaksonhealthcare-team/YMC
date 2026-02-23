@@ -1,5 +1,5 @@
 import { authApi, CustomUseInfiniteQueryOptions, GET_CONSULT_MENU, GET_PREPAID_MENU } from '@/_shared';
-import { ListResponse } from '@/_shared/types/response.types';
+import { ListResponse } from '@/shared/types/response.types';
 import { handleError } from '@/_shared/utils';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';

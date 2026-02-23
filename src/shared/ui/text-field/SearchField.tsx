@@ -1,0 +1,56 @@
+import SearchIcon from '@/shared/ui/icons/SearchIcon';
+import XCircleIcon from '@/shared/ui/icons/XCircleIcon';
+import { InputAdornment, TextField } from '@mui/material';
+import { ChangeEventHandler } from 'react';
+
+interface SearchFieldProps {
+  placeholder?: string;
+  value?: string;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  disabled?: boolean;
+  onClear?: () => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
+}
+
+export const SearchField = ({ placeholder, value, onChange, disabled, onClear, onFocus, onBlur }: SearchFieldProps) => (
+  <TextField
+    placeholder={placeholder}
+    value={value}
+    onChange={onChange}
+    onFocus={onFocus}
+    onBlur={onBlur}
+    disabled={disabled}
+    variant="outlined"
+    fullWidth
+    InputProps={{
+      startAdornment: (
+        <InputAdornment position="start">
+          <SearchIcon className="w-6 h-6" />
+        </InputAdornment>
+      ),
+      endAdornment: onClear && (
+        <InputAdornment position="end">
+          <XCircleIcon className="w-5 h-5 cursor-pointer" onClick={onClear} />
+        </InputAdornment>
+      )
+    }}
+    sx={{
+      '& .MuiOutlinedInput-root': {
+        paddingX: 2,
+        borderColor: '#ECECEC',
+        borderRadius: '12px',
+        '& fieldset': { borderColor: '#ECECEC' },
+        '&:hover fieldset': { borderColor: '#ECECEC' },
+        '&.Mui-focused fieldset': {
+          borderWidth: 1,
+          borderColor: '#757575'
+        },
+        '& input::placeholder': {
+          color: '#BDBDBD',
+          opacity: 1
+        }
+      }
+    }}
+  />
+);

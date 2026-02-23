@@ -7,13 +7,13 @@ import {
   useUserStore
 } from '@/_domain';
 import { useGetUnreadCount } from '@/_shared/services';
-import { FloatingButton } from '@/components/FloatingButton';
+import { FloatingButton } from '@/shared/ui/button/FloatingButton';
 import { BrandSection } from '@/pages/home/_fragments/BrandSection';
 import { BusinessInfo } from '@/pages/home/_fragments/BusinessInfo';
 import { EventSection } from '@/pages/home/_fragments/EventSection';
 import { MembershipCardSection } from '@/pages/home/_fragments/MembershipCardSection';
 import ReserveCardSection from '@/pages/home/_fragments/ReserveCardSection';
-import { useStartupPopups } from '@/queries/useContentQueries';
+import { useStartupPopups } from '@/entities/content/api/useContentQueries';
 import { useLayout } from '@/stores/LayoutContext';
 import { usePopupActions } from '@/stores/popupStore';
 import { useEffect, useMemo } from 'react';

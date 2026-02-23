@@ -1,14 +1,14 @@
 import HeartDisabledIcon from '@/assets/icons/HeartDisabledIcon.svg?react';
 import HeartEnabledIcon from '@/assets/icons/HeartEnabledIcon.svg?react';
 import BranchPlaceholderImage from '@/assets/images/BranchPlaceholderImage.png';
-import { Image } from '@/components/common/Image';
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { useOverlay } from '@/stores/ModalContext';
-import useIntersection from '@/hooks/useIntersection';
-import { useBranchBookmarkMutation, useBranchUnbookmarkMutation } from '@/queries/useBranchQueries';
-import { Branch } from '@/types/Branch';
+import { Image } from '@/shared/ui/image/Image';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
+import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObserver';
+import { useBranchBookmarkMutation, useBranchUnbookmarkMutation } from '@/entities/branch/api/useBranchQueries';
+import { Branch } from '@/entities/branch/model/Branch';
 import clsx from 'clsx';
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 
 interface BranchFilterListProps {
   branches: Branch[];
@@ -94,9 +94,8 @@ const BranchFilterList = ({
   totalCount = 0,
   branchesLoading
 }: BranchFilterListProps) => {
-  const { observerTarget } = useIntersection<HTMLLIElement>({
-    onIntersect
-  });
+  const observerTarget = useRef<HTMLLIElement>(null);
+  useIntersectionObserver(observerTarget, onIntersect);
 
   const { mutate: bookmark } = useBranchBookmarkMutation();
   const { mutate: unbookmark } = useBranchUnbookmarkMutation();

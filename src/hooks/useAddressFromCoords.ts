@@ -1,4 +1,4 @@
-import { Coordinate } from '@/types/Coordinate';
+import { Coordinate } from '@/shared/types/Coordinate';
 import { useState } from 'react';
 
 interface AddressInfo {

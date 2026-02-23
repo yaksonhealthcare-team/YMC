@@ -1,12 +1,12 @@
-import { fetchPoints } from '@/apis/points.api';
-import { Button } from '@/components/Button';
-import FixedButtonContainer from '@/components/FixedButtonContainer';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import { fetchPoints } from '@/entities/point/api/points.api';
+import { Button } from '@/shared/ui/button/Button';
+import FixedButtonContainer from '@/shared/ui/button/FixedButtonContainer';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { useLayout } from '@/stores/LayoutContext';
 import { usePayment } from '@/hooks/usePayment';
 import { usePaymentHandlers } from '@/hooks/usePaymentHandlers';
 import { usePaymentStore } from '@/hooks/usePaymentStore';
-import { formatPriceWithUnit } from '@/utils/format';
+import { formatPriceWithUnit } from '@/shared/lib/utils/format';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

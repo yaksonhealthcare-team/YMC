@@ -1,11 +1,11 @@
-import { uploadImages } from '@/apis/image.api';
-import { Button } from '@/components/Button';
-import CustomTextField from '@/components/CustomTextField';
-import { GenderSelect } from '@/components/GenderSelect';
+import { uploadImages } from '@/shared/api/image.api';
+import { Button } from '@/shared/ui/button/Button';
+import CustomTextField from '@/shared/ui/text-field/CustomTextField';
+import { GenderSelect } from '@/shared/ui/radio/GenderSelect';
 import { SwiperBrandCard } from '@/components/SwiperBrandCard';
-import PostcodeModal from '@/components/modal/PostcodeModal';
+import PostcodeModal from '@/shared/ui/modal/PostcodeModal';
 import { useLayout } from '@/stores/LayoutContext';
-import { useOverlay } from '@/stores/ModalContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { useSignup } from '@/stores/SignupContext';
 import { useProfileSetupHandlers } from '@/hooks/useProfileSetupHandlers';
 import { useProfileSetupSubmit } from '@/hooks/useProfileSetupSubmit';

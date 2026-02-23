@@ -1,4 +1,4 @@
-import { PaymentCompleteState } from '@/types/Payment';
+import { PaymentCompleteState } from '@/entities/payment/model/Payment';
 import { Divider } from '@mui/material';
 
 const BANK_CODE_MAP: { [key: string]: string } = {

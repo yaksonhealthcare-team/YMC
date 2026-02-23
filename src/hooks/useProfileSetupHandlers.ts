@@ -1,5 +1,5 @@
 import { useSignup } from '@/stores/SignupContext';
-import { UserSignup } from '@/types/User';
+import { UserSignup } from '@/entities/user/model/User';
 import { useState } from 'react';
 import { Address } from 'react-daum-postcode/lib/loadPostcode';
 

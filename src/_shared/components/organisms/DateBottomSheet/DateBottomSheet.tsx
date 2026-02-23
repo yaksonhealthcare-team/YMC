@@ -1,7 +1,7 @@
 import { useUserStore } from '@/_domain/auth';
 import { TimeSlot, useGetSchedulesDate, useGetSchedulesTimes } from '@/_domain/reservation';
 import { BottomFixedSection, Button, Calendar, Loading, TimePicker } from '@/_shared';
-import { formatScheduleTime } from '@/_shared/utils/date.utils';
+import { formatScheduleTime } from '@/shared/lib/utils/date.utils';
 import CloseIcon from '@/assets/icons/CloseIcon.svg?react';
 import dayjs, { Dayjs } from 'dayjs';
 import { useCallback, useMemo, useState } from 'react';

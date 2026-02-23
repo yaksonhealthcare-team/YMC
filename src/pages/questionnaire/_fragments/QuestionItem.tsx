@@ -1,7 +1,7 @@
-import { Image } from '@/components/common/Image';
-import CustomTextField from '@/components/CustomTextField';
-import FilledCheckIcon from '@/components/icons/FilledCheckIcon';
-import { TextArea } from '@/components/TextArea';
+import { Image } from '@/shared/ui/image/Image';
+import CustomTextField from '@/shared/ui/text-field/CustomTextField';
+import FilledCheckIcon from '@/shared/ui/icons/FilledCheckIcon';
+import { TextArea } from '@/shared/ui/text-field/TextArea';
 import {
   OptionValue,
   Question,

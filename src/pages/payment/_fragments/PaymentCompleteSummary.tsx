@@ -1,6 +1,6 @@
 import PriceSummary, { PriceItem } from '@/components/PriceSummary';
-import { PaymentCompleteState } from '@/types/Payment';
-import { toNumber } from '@/utils/number';
+import { PaymentCompleteState } from '@/entities/payment/model/Payment';
+import { toNumber } from '@/shared/lib/utils/number';
 
 interface PaymentSummaryProps {
   state: PaymentCompleteState;

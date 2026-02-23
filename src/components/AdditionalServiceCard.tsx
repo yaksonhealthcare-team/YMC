@@ -1,5 +1,5 @@
-import { AdditionalManagement } from '@/types/Membership';
-import { parsePrice } from '@/utils/format';
+import { AdditionalManagement } from '@/entities/membership/model/Membership';
+import { parsePrice } from '@/shared/lib/utils/format';
 import { Checkbox } from '@mui/material';
 import { ClockIcon } from '@mui/x-date-pickers';
 

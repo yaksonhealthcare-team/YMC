@@ -1,4 +1,4 @@
-import { fetchGuideMessages, GuideMessage } from '@/apis/guidemessages.api';
+import { fetchGuideMessages, GuideMessage } from '@/entities/reservation/api/guidemessages.api';
 import { useQuery } from '@tanstack/react-query';
 
 /**

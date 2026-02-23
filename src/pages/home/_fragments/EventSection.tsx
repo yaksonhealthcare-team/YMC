@@ -1,7 +1,7 @@
-import { Title } from '@/components/Title';
-import { useEvents } from '@/queries/useEventQueries';
-import { Event } from '@/types/Event';
-import { formatDate } from '@/utils/date';
+import { Title } from '@/shared/ui/Title';
+import { useEvents } from '@/entities/content/api/useEventQueries';
+import { Event } from '@/entities/content/model/Event';
+import { formatDate } from '@/shared/lib/utils/date';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 

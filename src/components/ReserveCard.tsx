@@ -1,11 +1,11 @@
 import { ReservationsSchema } from '@/_domain/reservation';
-import { ReservationStatusCode } from '@/types/Reservation';
+import { ReservationStatusCode } from '@/entities/reservation/model/Reservation';
 import clsx from 'clsx';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import DateAndTime from './DateAndTime';
-import ReserveTag from './ReserveTag';
-import { Tag } from './Tag';
+import DateAndTime from '@/shared/ui/DateAndTime';
+import ReserveTag from '@/shared/ui/tag/ReserveTag';
+import { Tag } from '@/shared/ui/tag/Tag';
 
 interface ReserveCardProps {
   reservation: ReservationsSchema;

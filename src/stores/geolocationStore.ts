@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { GeolocationState } from '../types/Coordinate';
+import { GeolocationState } from '@/shared/types/Coordinate';
 
 interface GeolocationStore extends GeolocationState {
   setLocation: (latitude: number, longitude: number) => void;

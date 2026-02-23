@@ -1,9 +1,9 @@
 import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { Image } from '@/components/common/Image';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
+import { Image } from '@/shared/ui/image/Image';
 import { useLayout } from '@/stores/LayoutContext';
-import { useNotice } from '@/queries/useContentQueries';
-import { NoticeDetail as Notice } from '@/types/Content';
+import { useNotice } from '@/entities/content/api/useContentQueries';
+import { NoticeDetail as Notice } from '@/entities/content/model/Content';
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 

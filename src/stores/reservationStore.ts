@@ -1,4 +1,4 @@
-import { FilterItem, reservationFilters } from '@/types/Reservation';
+import { FilterItem, reservationFilters } from '@/entities/reservation/model/Reservation';
 import { create } from 'zustand';
 
 interface ReservationStore {

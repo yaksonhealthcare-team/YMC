@@ -1,10 +1,10 @@
 import CaretLeftIcon from '@/assets/icons/CaretLeftIcon.svg?react';
 import CaretRigthIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import CloseIcon from '@/assets/icons/CloseIcon.svg?react';
-import { Button } from '@/components/Button';
-import { useScheduleDateQueries, useScheduleTimesQueries } from '@/queries/useScheduleQueries';
-import { TimeSlot } from '@/types/Schedule';
-import { mapTimesToTimeSlots } from '@/utils/formatToTimeSlot';
+import { Button } from '@/shared/ui/button/Button';
+import { useScheduleDateQueries, useScheduleTimesQueries } from '@/entities/schedule/api/useScheduleQueries';
+import { TimeSlot } from '@/entities/schedule/model/Schedule';
+import { mapTimesToTimeSlots } from '@/shared/lib/utils/formatToTimeSlot';
 import CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/material/styles';
 import { DateCalendar, DateCalendarProps, LocalizationProvider, PickersCalendarHeaderProps } from '@mui/x-date-pickers';

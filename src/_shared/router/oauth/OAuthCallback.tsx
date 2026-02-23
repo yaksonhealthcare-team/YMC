@@ -1,11 +1,11 @@
 import { getUser, saveAccessToken, useSigninSocialMutation, useUserStore } from '@/_domain/auth';
 import { requestForToken } from '@/_shared';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { useLayout } from '@/stores/LayoutContext';
-import { useOverlay } from '@/stores/ModalContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { useEffect, useRef } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { safeDecodeAndParseJson } from '@/_shared/utils/sentry.utils';
+import { safeDecodeAndParseJson } from '@/shared/lib/utils/sentry.utils';
 
 const OAuthCallback = () => {
   const { provider } = useParams();

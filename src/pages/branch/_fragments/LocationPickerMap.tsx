@@ -1,13 +1,13 @@
-import { fetchBranches } from '@/apis/branch.api';
+import { fetchBranches } from '@/entities/branch/api/branch.api';
 import LocationSelectorPin from '@/assets/icons/pin/LocationSelectorPin.svg?react';
-import { Button } from '@/components/Button';
-import MapView from '@/components/MapView';
+import { Button } from '@/shared/ui/button/Button';
+import MapView from '@/shared/ui/map-view/MapView';
 import { useLayout } from '@/stores/LayoutContext';
 import { useAddressFromCoords } from '@/hooks/useAddressFromCoords';
 import { useBranchLocationSelect } from '@/hooks/useBranchLocationSelect';
 import { useGeolocation } from '@/hooks/useGeolocation';
-import { Branch } from '@/types/Branch';
-import { Coordinate } from '@/types/Coordinate';
+import { Branch } from '@/entities/branch/model/Branch';
+import { Coordinate } from '@/shared/types/Coordinate';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 

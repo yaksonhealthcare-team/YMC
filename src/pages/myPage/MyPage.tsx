@@ -1,4 +1,4 @@
-import { Button } from '@/components/Button';
+import { Button } from '@/shared/ui/button/Button';
 import { useLayout } from '@/stores/LayoutContext';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';

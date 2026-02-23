@@ -1,4 +1,4 @@
-import { useReviewDetail } from '@/queries/useReviewQueries';
+import { useReviewDetail } from '@/entities/review/api/useReviewQueries';
 import { useParams } from 'react-router-dom';
 import { ReviewDetailContent } from './_fragments/ReviewDetailContent';
 import { ReviewDetailSkeleton } from './_fragments/ReviewDetailSkeleton';

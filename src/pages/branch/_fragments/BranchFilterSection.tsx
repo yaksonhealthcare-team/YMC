@@ -1,4 +1,4 @@
-import { Filter } from '@/components/Filter';
+import { Filter } from '@/shared/ui/filter/Filter';
 import { FilterItem } from './BranchFilterBottomSheet';
 
 const BranchFilterSection = ({

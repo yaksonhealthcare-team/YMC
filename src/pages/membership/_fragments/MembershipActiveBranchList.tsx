@@ -1,6 +1,6 @@
 import { useUserStore } from '@/_domain/auth';
 import BranchCard from '@/components/BranchCard';
-import { Branch } from '@/types/Branch';
+import { Branch } from '@/entities/branch/model/Branch';
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 

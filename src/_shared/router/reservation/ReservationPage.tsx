@@ -10,7 +10,7 @@ import {
 } from '@/_domain/reservation';
 import { DEFAULT_COORDINATE, GET_RESERVATIONS, Loading, parseScheduleTime } from '@/_shared';
 import { useGeolocation } from '@/hooks/useGeolocation';
-import { useOverlay } from '@/stores/ModalContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useCallback, useEffect, useMemo, useState } from 'react';

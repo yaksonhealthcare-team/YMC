@@ -1,5 +1,5 @@
 import { SwiperBrandCard } from '@/components/SwiperBrandCard';
-import { Title } from '@/components/Title';
+import { Title } from '@/shared/ui/Title';
 import { useDisplayBrands } from '@/hooks/useDisplayBrands';
 import { useNavigate } from 'react-router-dom';
 

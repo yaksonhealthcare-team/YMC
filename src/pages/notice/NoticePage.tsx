@@ -1,8 +1,8 @@
-import { fetchNotices } from '@/apis/contents.api';
-import { EmptyCard } from '@/components/EmptyCard';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import { fetchNotices } from '@/entities/content/api/contents.api';
+import { EmptyCard } from '@/shared/ui/EmptyCard';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { useLayout } from '@/stores/LayoutContext';
-import { Notice } from '@/types/Content';
+import { Notice } from '@/entities/content/model/Content';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';

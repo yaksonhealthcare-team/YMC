@@ -1,1 +1,1 @@
-export { useHeaderStore, type HeaderState } from './header.stores';
+export { useHeaderStore, type HeaderState } from '@/shared/lib/stores/header.store';

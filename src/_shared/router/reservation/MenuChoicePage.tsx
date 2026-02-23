@@ -7,7 +7,7 @@ import {
   useUserStore
 } from '@/_domain';
 import { ConsultMenuParams, PrepaidMenuParams, useGetConsultMenu, useGetPrepaidMenu } from '@/_domain/category';
-import { useDebounce } from '@/_shared/hooks/useDebounce';
+import { useDebounce } from '@/shared/lib/hooks/useDebounce';
 import { useMemo, useState } from 'react';
 
 export interface MenuChoicePageProps {

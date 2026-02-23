@@ -1,4 +1,4 @@
-import { BranchDetail as BranchDetailType } from '@/types/Branch';
+import { BranchDetail as BranchDetailType } from '@/entities/branch/model/Branch';
 import { memo } from 'react';
 import BranchDetailBottomActionBar from './BranchDetailBottomActionBar';
 

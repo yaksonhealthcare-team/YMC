@@ -1,4 +1,4 @@
-import { PaymentHistoryDetail } from '@/types/Payment';
+import { PaymentHistoryDetail } from '@/entities/payment/model/Payment';
 
 const PaymentRefundDescriptionSection = ({ payment }: { payment: PaymentHistoryDetail }) => {
   const payMethod = payment.items[0].cancel.payMethod;

@@ -1,4 +1,4 @@
-import { UserSignup } from '@/types/User';
+import { UserSignup } from '@/entities/user/model/User';
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react';
 
 interface SignupContextType {

@@ -1,7 +1,7 @@
-import { resetPassword } from '@/apis/auth.api';
-import { FindPasswordResponse, findPasswordWithDecryptData } from '@/apis/decrypt-result.api';
-import { Button } from '@/components/Button';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import { resetPassword } from '@/entities/user/api/auth.api';
+import { FindPasswordResponse, findPasswordWithDecryptData } from '@/shared/api/decrypt-result.api';
+import { Button } from '@/shared/ui/button/Button';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import ResetPassword from '@/components/resetPassword/ResetPassword';
 import { useLayout } from '@/stores/LayoutContext';
 import { useEffect, useState } from 'react';

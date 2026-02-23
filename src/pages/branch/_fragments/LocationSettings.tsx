@@ -1,12 +1,12 @@
 import CloseIcon from '@/assets/icons/CloseIcon.svg?react';
 import CrosshairIcon from '@/assets/icons/CrosshairIcon.svg?react';
-import { SearchField } from '@/components/SearchField';
+import { SearchField } from '@/shared/ui/text-field/SearchField';
 import { useLayout } from '@/stores/LayoutContext';
-import { useOverlay } from '@/stores/ModalContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { useBranchLocationSelect } from '@/hooks/useBranchLocationSelect';
-import { useDebounce } from '@/hooks/useDebounce';
+import { useDebounce } from '@/shared/lib/hooks/useDebounce';
 import { useGeolocation } from '@/hooks/useGeolocation';
-import { useAddressBookmarks, useAddressSearch } from '@/queries/useAddressQueries';
+import { useAddressBookmarks, useAddressSearch } from '@/shared/api/useAddressQueries';
 import { Divider } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';

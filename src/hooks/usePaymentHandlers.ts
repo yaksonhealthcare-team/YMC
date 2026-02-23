@@ -1,4 +1,4 @@
-import { useOverlay } from '@/stores/ModalContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { usePaymentStore } from './usePaymentStore';
 import { authApi } from '@/_shared';
 

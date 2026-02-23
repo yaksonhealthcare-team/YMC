@@ -6,10 +6,10 @@ import {
   useGetUserMemberships
 } from '@/_domain/membership';
 import { Loading, useIntersectionObserver } from '@/_shared';
-import { Button } from '@/components/Button';
+import { Button } from '@/shared/ui/button/Button';
 import { useLayout } from '@/stores/LayoutContext';
 import { useMembershipStore } from '@/stores/membershipStore';
-import { MyMembershipFilterItem, myMembershipFilters } from '@/types/Membership';
+import { MyMembershipFilterItem, myMembershipFilters } from '@/entities/membership/model/Membership';
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';

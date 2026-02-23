@@ -1,5 +1,5 @@
-import { useOverlay } from '@/stores/ModalContext';
-import { useQuestionnaire as useQuestionnaireQuery, useSubmitQuestionnaire } from '@/queries/useQuestionnaireQueries';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
+import { useQuestionnaire as useQuestionnaireQuery, useSubmitQuestionnaire } from '@/entities/user/api/useQuestionnaireQueries';
 import { Question, QuestionFieldName, QuestionnaireFormValues, QuestionnaireType } from '@/types/Questionnaire';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

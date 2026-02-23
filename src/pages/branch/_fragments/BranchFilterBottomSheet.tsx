@@ -1,8 +1,8 @@
 import CloseIcon from '@/assets/icons/CloseIcon.svg?react';
-import { Button } from '@/components/Button';
-import { Filter } from '@/components/Filter';
-import ReloadIcon from '@/components/icons/ReloadIcon';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import { Button } from '@/shared/ui/button/Button';
+import { Filter } from '@/shared/ui/filter/Filter';
+import ReloadIcon from '@/shared/ui/icons/ReloadIcon';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { useEffect, useState } from 'react';
 
 export type FilterItem = {

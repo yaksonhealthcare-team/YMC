@@ -1,7 +1,7 @@
 import ClockIcon from '@/assets/icons/ClockIcon.svg?react';
-import { Tag } from '@/components/Tag';
-import { MembershipItem } from '@/types/Membership';
-import { formatPrice, parsePrice } from '@/utils/format';
+import { Tag } from '@/shared/ui/tag/Tag';
+import { MembershipItem } from '@/entities/membership/model/Membership';
+import { formatPrice, parsePrice } from '@/shared/lib/utils/format';
 
 interface MembershipCardProps {
   membership: MembershipItem;

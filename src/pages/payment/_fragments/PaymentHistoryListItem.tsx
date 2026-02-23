@@ -1,10 +1,10 @@
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
-import { Button } from '@/components/Button';
-import { useOverlay } from '@/stores/ModalContext';
-import { usePointsEarn } from '@/queries/usePointQueries';
-import { PaymentHistory } from '@/types/Payment';
-import { formatDate } from '@/utils/date';
-import { formatPoint } from '@/utils/format';
+import { Button } from '@/shared/ui/button/Button';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
+import { usePointsEarn } from '@/entities/point/api/usePointQueries';
+import { PaymentHistory } from '@/entities/payment/model/Payment';
+import { formatDate } from '@/shared/lib/utils/date';
+import { formatPoint } from '@/shared/lib/utils/format';
 import PaymentHistoryItemCard from './PaymentItemList';
 
 const PointCard = ({ point }: { point: number }) => (

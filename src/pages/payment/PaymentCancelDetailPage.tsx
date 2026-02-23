@@ -1,6 +1,6 @@
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { useLayout } from '@/stores/LayoutContext';
-import { usePaymentHistory } from '@/queries/usePaymentQueries';
+import { usePaymentHistory } from '@/entities/payment/api/usePaymentQueries';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import PaymentCancelReasonSection from './_fragments/detail/PaymentCancelReasonSection';

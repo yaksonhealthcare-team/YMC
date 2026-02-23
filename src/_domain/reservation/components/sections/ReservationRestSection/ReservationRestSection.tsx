@@ -5,7 +5,7 @@ import { DateBottomSheet, formatReservationDate, InputBox, setMultipleValues } f
 import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import { MembershipBranchSelectModal } from '@/pages/membership/_fragments/MembershipBranchSelectModal';
-import { useOverlay } from '@/stores/ModalContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useCallback, useMemo, useState } from 'react';

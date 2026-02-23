@@ -1,5 +1,5 @@
-import { CustomTabs } from '@/components/Tabs';
-import { MemberHistoryState, MemberHistoryTab } from '@/types/MemberHistory';
+import { CustomTabs } from '@/shared/ui/tabs/Tabs';
+import { MemberHistoryState, MemberHistoryTab } from '@/entities/membership/model/MemberHistory';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const mainTabs = [

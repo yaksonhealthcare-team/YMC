@@ -1,5 +1,5 @@
-import CustomTextField from '@/components/CustomTextField';
-import { isInRange } from '@/utils/number';
+import CustomTextField from '@/shared/ui/text-field/CustomTextField';
+import { isInRange } from '@/shared/lib/utils/number';
 import { useEffect, useState } from 'react';
 
 interface BirthDateInputProps {

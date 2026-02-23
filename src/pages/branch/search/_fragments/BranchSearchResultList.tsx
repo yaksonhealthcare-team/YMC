@@ -1,8 +1,8 @@
-import LoadingIndicator from '@/components/LoadingIndicator';
-import SearchIcon from '@/components/icons/SearchIcon';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
+import SearchIcon from '@/shared/ui/icons/SearchIcon';
 import { useGeolocation } from '@/hooks/useGeolocation';
-import { useBranches } from '@/queries/useBranchQueries';
-import { Branch } from '@/types/Branch';
+import { useBranches } from '@/entities/branch/api/useBranchQueries';
+import { Branch } from '@/entities/branch/model/Branch';
 import BranchFilterList from '../../_fragments/BranchFilterList';
 
 interface BranchSearchResultListProps {

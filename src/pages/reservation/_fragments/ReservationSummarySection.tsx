@@ -1,6 +1,6 @@
 import PriceSummary from '@/components/PriceSummary';
-import { AdditionalManagement } from '@/types/Membership';
-import { parsePrice } from '@/utils/format';
+import { AdditionalManagement } from '@/entities/membership/model/Membership';
+import { parsePrice } from '@/shared/lib/utils/format';
 
 interface ReservationSummarySectionProps {
   additionalServices: AdditionalManagement[];

@@ -1,6 +1,6 @@
 import CloseIcon from '@/assets/icons/CloseIcon.svg?react';
 import BranchPlaceholderImage from '@/assets/images/BranchPlaceholderImage.png';
-import { Image } from '@/components/common/Image';
+import { Image } from '@/shared/ui/image/Image';
 import { Dialog } from '@mui/material';
 import { useState } from 'react';
 import Slider from 'react-slick';

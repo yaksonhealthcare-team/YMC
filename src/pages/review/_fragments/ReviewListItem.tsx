@@ -1,10 +1,10 @@
 import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
 import EditIcon from '@/assets/icons/EditIcon.svg?react';
 import StoreIcon from '@/assets/icons/StoreIcon.svg?react';
-import { Image } from '@/components/common/Image';
-import { Review } from '@/types/Review';
-import { formatDate, formatDateWithDay } from '@/utils/date';
-import { getGradeLabel } from '@/utils/grade';
+import { Image } from '@/shared/ui/image/Image';
+import { Review } from '@/entities/review/model/Review';
+import { formatDate, formatDateWithDay } from '@/shared/lib/utils/date';
+import { getGradeLabel } from '@/shared/lib/utils/grade';
 
 interface ReviewListItemProps {
   review: Review;

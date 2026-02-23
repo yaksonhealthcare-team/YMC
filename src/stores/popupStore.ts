@@ -1,4 +1,4 @@
-import type { ApiPopupItem } from '@/apis/contents.api';
+import type { ApiPopupItem } from '@/entities/content/api/contents.api';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 

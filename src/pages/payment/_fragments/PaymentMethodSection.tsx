@@ -1,4 +1,4 @@
-import { Radio } from '@/components/Radio';
+import { Radio } from '@/shared/ui/radio/Radio';
 
 interface PaymentMethodSectionProps {
   selectedPayment: 'card' | 'bank' | 'vbank';

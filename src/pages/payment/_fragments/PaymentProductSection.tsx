@@ -1,6 +1,6 @@
 import PaymentCard from '@/components/PaymentCard';
-import { CartItemOption } from '@/types/Cart';
-import { PaymentItem } from '@/types/Payment';
+import { CartItemOption } from '@/entities/cart/model/Cart';
+import { PaymentItem } from '@/entities/payment/model/Payment';
 
 interface PaymentProductSectionProps {
   items: PaymentItem[];

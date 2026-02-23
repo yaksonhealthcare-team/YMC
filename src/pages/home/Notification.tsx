@@ -1,12 +1,12 @@
 import SettingIcon from '@/assets/icons/SettingIcon.svg?react';
-import { Filter } from '@/components/Filter';
+import { Filter } from '@/shared/ui/filter/Filter';
 import { NotificationCard } from '@/components/NotificationCard';
 import { useLayout } from '@/stores/LayoutContext';
-import useIntersection from '@/hooks/useIntersection';
-import { useNotifications, useReadNotification } from '@/queries/useNotificationQueries';
-import { getSearchType, NotificationFilter, NotificationSearchType } from '@/types/Notification';
+import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObserver';
+import { useNotifications, useReadNotification } from '@/entities/notification/api/useNotificationQueries';
+import { getSearchType, NotificationFilter, NotificationSearchType } from '@/entities/notification/model/Notification';
 import { Container } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const filters = [
@@ -65,11 +65,10 @@ export const Notification = () => {
     }
   };
 
-  const { observerTarget } = useIntersection({
-    onIntersect: () => {
-      if (hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
-      }
+  const observerTarget = useRef<HTMLDivElement>(null);
+  useIntersectionObserver(observerTarget, () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
     }
   });
 

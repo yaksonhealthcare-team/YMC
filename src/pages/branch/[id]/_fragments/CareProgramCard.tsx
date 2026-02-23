@@ -1,6 +1,6 @@
 import ClockIcon from '@/assets/icons/ClockIcon.svg?react';
-import { Tag } from '@/components/Tag';
-import { MembershipProgram } from '@/types/MembershipProgram';
+import { Tag } from '@/shared/ui/tag/Tag';
+import { MembershipProgram } from '@/entities/membership/model/MembershipProgram';
 
 interface CareProgramCardProps {
   program: MembershipProgram;

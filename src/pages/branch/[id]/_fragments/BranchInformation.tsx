@@ -2,12 +2,12 @@ import ClockIcon from '@/assets/icons/ClockIcon.svg?react';
 import CopyIcon from '@/assets/icons/CopyIcon.svg?react';
 import PhoneIcon from '@/assets/icons/PhoneIcon.svg?react';
 import PinIcon from '@/assets/icons/PinIcon.svg?react';
-import MapView from '@/components/MapView';
-import { Tag } from '@/components/Tag';
-import { Image } from '@/components/common/Image';
-import { useOverlay } from '@/stores/ModalContext';
-import { BranchDetail } from '@/types/Branch';
-import { copyToClipboard } from '@/utils/copyUtils';
+import MapView from '@/shared/ui/map-view/MapView';
+import { Tag } from '@/shared/ui/tag/Tag';
+import { Image } from '@/shared/ui/image/Image';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
+import { BranchDetail } from '@/entities/branch/model/Branch';
+import { copyToClipboard } from '@/shared/lib/utils/copyUtils';
 import { ReactNode, useState } from 'react';
 import BranchImageCarousel from './BranchImageCarousel';
 

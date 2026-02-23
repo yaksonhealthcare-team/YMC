@@ -1,5 +1,5 @@
-import Header from '@/components/Header';
-import PageContainer from '@/components/PageContainer';
+import Header from '@/shared/ui/layout/Header';
+import PageContainer from '@/shared/ui/layout/PageContainer';
 import { StartupPopup } from '@/components/popup/StartupPopup';
 import { Box, Typography, useTheme } from '@mui/material';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';

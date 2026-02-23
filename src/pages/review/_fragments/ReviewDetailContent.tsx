@@ -1,10 +1,10 @@
 import CalendarIcon from '@/assets/icons/CalendarIcon.svg?react';
 import EditIcon from '@/assets/icons/EditIcon.svg?react';
 import StoreIcon from '@/assets/icons/StoreIcon.svg?react';
-import { Image } from '@/components/common/Image';
+import { Image } from '@/shared/ui/image/Image';
 import { useLayout } from '@/stores/LayoutContext';
-import { ReviewDetail } from '@/types/Review';
-import { formatDate, formatDateWithDay } from '@/utils/date';
+import { ReviewDetail } from '@/entities/review/model/Review';
+import { formatDate, formatDateWithDay } from '@/shared/lib/utils/date';
 import { useEffect } from 'react';
 
 const RATING_TYPE_LABEL: Record<'H' | 'M' | 'L', string> = {

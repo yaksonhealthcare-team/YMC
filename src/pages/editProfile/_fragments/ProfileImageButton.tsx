@@ -1,7 +1,7 @@
 import GearIcon from '@/assets/icons/GearIcon.svg?react';
 import Profile from '@/assets/icons/Profile.svg?react';
-import { Image } from '@/components/common/Image';
-import { useOverlay } from '@/stores/ModalContext';
+import { Image } from '@/shared/ui/image/Image';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { ChangeEvent, useRef } from 'react';
 
 interface ProfileImageButtonProps {

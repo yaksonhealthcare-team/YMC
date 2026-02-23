@@ -1,6 +1,6 @@
 import HeartEnabledIcon from '@/assets/icons/HeartEnabledIcon.svg?react';
 import PinIcon from '@/assets/icons/PinIcon.svg?react';
-import { Location } from '@/types/Location';
+import { Location } from '@/shared/types/Location';
 import LocationSearchPlaceholder from './LocationSearchPlaceholder';
 
 interface LocationSearchResultListProps {

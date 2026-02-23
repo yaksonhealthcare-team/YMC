@@ -1,4 +1,4 @@
-import { useNoticesSummary } from '@/queries/useContentQueries';
+import { useNoticesSummary } from '@/entities/content/api/useContentQueries';
 import { useNavigate } from 'react-router-dom';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';

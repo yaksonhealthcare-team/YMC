@@ -1,5 +1,5 @@
-import { Image } from '@/components/common/Image';
-import { Event } from '@/types/Content';
+import { Image } from '@/shared/ui/image/Image';
+import { Event } from '@/entities/content/model/Content';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 

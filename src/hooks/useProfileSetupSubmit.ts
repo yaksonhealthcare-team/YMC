@@ -7,10 +7,10 @@ import {
   useUserStore
 } from '@/_domain/auth';
 import { requestForToken } from '@/_shared';
-import { signup, signupWithSocial } from '@/apis/auth.api';
-import { useOverlay } from '@/stores/ModalContext';
+import { signup, signupWithSocial } from '@/entities/user/api/auth.api';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { useSignup } from '@/stores/SignupContext';
-import { UserSignup } from '@/types/User';
+import { UserSignup } from '@/entities/user/model/User';
 import { AxiosError } from 'axios';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';

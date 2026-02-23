@@ -1,4 +1,4 @@
-import { formatPriceWithUnit } from '@/utils/format';
+import { formatPriceWithUnit } from '@/shared/lib/utils/format';
 import { Divider } from '@mui/material';
 
 export type PriceItemType = 'default' | 'success' | 'error';

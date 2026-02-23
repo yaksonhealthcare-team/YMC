@@ -1,4 +1,4 @@
-import { MyMembership } from '@/types/Membership';
+import { MyMembership } from '@/entities/membership/model/Membership';
 import { Radio } from '@mui/material';
 import clsx from 'clsx';
 

@@ -1,8 +1,8 @@
-import { EmptyCard } from '@/components/EmptyCard';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import { EmptyCard } from '@/shared/ui/EmptyCard';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { useLayout } from '@/stores/LayoutContext';
-import useIntersection from '@/hooks/useIntersection';
-import { usePaymentHistories } from '@/queries/usePaymentQueries';
+import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObserver';
+import { usePaymentHistories } from '@/entities/payment/api/usePaymentQueries';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -18,11 +18,10 @@ const PaymentHistoryPage = () => {
 
   const { data: payments, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = usePaymentHistories();
 
-  const { observerTarget } = useIntersection({
-    onIntersect: () => {
-      if (hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
-      }
+  const observerTarget = useRef<HTMLDivElement>(null);
+  useIntersectionObserver(observerTarget, () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
     }
   });
 

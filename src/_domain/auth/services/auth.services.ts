@@ -1,6 +1,6 @@
 import { CustomUseMutationOptions, CustomUseQueryOptions, GET_TERMS, GET_USER } from '@/_shared';
-import { authApi, publicApi } from '@/_shared/services/instance';
-import { ApiResponse } from '@/_shared/types/response.types';
+import { authApi, publicApi } from '@/shared/api/instance';
+import { ApiResponse } from '@/shared/types/response.types';
 import { handleError } from '@/_shared/utils';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';

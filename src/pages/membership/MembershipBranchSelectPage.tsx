@@ -1,7 +1,7 @@
 import { BranchesSchema } from '@/_domain/reservation';
-import { SearchField } from '@/components/SearchField';
+import { SearchField } from '@/shared/ui/text-field/SearchField';
 import { useLayout } from '@/stores/LayoutContext';
-import { useDebounce } from '@/hooks/useDebounce';
+import { useDebounce } from '@/shared/lib/hooks/useDebounce';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MembershipBranchList from './MembershipBranchList';

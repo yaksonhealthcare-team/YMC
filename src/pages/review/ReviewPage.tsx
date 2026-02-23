@@ -1,10 +1,10 @@
-import { Button } from '@/components/Button';
-import { EmptyCard } from '@/components/EmptyCard';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import { Button } from '@/shared/ui/button/Button';
+import { EmptyCard } from '@/shared/ui/EmptyCard';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { useLayout } from '@/stores/LayoutContext';
-import { useIntersection } from '@/hooks/useIntersection';
-import { useReviews } from '@/queries/useReviewQueries';
-import { useEffect } from 'react';
+import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObserver';
+import { useReviews } from '@/entities/review/api/useReviewQueries';
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ReviewListItem } from './_fragments/ReviewListItem';
 
@@ -12,13 +12,11 @@ const ReviewPage = () => {
   const { setHeader, setNavigation } = useLayout();
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, isError, refetch } = useReviews();
 
-  const { observerTarget } = useIntersection({
-    onIntersect: () => {
-      if (hasNextPage && !isFetchingNextPage) {
-        void fetchNextPage();
-      }
-    },
-    enabled: hasNextPage && !isFetchingNextPage
+  const observerTarget = useRef<HTMLDivElement>(null);
+  useIntersectionObserver(observerTarget, () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      void fetchNextPage();
+    }
   });
 
   useEffect(() => {

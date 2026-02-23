@@ -1,5 +1,5 @@
-import { Button } from '@/components/Button';
-import { useOverlay } from '@/stores/ModalContext';
+import { Button } from '@/shared/ui/button/Button';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
 
 interface ReservationCancelBottomSheetContentProps {
   onConfirm: () => void;

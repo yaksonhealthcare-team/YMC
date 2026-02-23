@@ -1,10 +1,10 @@
 import CheckCircleIcon from '@/assets/icons/CheckCircle.svg?react';
-import { Button } from '@/components/Button';
-import FixedButtonContainer from '@/components/FixedButtonContainer';
-import { XIcon } from '@/components/icons/XIcon';
+import { Button } from '@/shared/ui/button/Button';
+import FixedButtonContainer from '@/shared/ui/button/FixedButtonContainer';
+import { XIcon } from '@/shared/ui/icons/XIcon';
 import { useLayout } from '@/stores/LayoutContext';
-import { useOverlay } from '@/stores/ModalContext';
-import { PaymentCompleteState } from '@/types/Payment';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
+import { PaymentCompleteState } from '@/entities/payment/model/Payment';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PaymentInfo from './_fragments/PaymentCompleteInfo';

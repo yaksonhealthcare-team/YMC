@@ -1,10 +1,10 @@
 import { getUser, removeAccessToken, useUserStore } from '@/_domain/auth';
 import { setSentryBreadcrumb, useChannelTalkVisibility, useOverlayBackHandler } from '@/_shared';
-import { useNewAppBridge } from '@/_shared/hooks/useNewAppBridge';
-import { sendPageView, setUserId, setUserProperties } from '@/_shared/utils/ga.utils';
-import ErrorPage from '@/components/ErrorPage';
+import { useNewAppBridge } from '@/shared/lib/hooks/useNewAppBridge';
+import { sendPageView, setUserId, setUserProperties } from '@/shared/lib/utils/ga.utils';
+import ErrorPage from '@/shared/ui/error/ErrorPage';
 import { LayoutProvider } from '@/stores/LayoutContext';
-import { OverlayProvider } from '@/stores/ModalContext';
+import { OverlayProvider } from '@/shared/ui/modal/ModalContext';
 import { SignupProvider } from '@/stores/SignupContext';
 import { PropsWithChildren, useEffect } from 'react';
 import { createBrowserRouter, LoaderFunction, Outlet, redirect, RouterProvider, useLocation } from 'react-router-dom';

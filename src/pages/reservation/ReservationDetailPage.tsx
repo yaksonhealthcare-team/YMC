@@ -1,10 +1,10 @@
 import { useUserStore } from '@/_domain/auth';
 import { useGetReservationDetail } from '@/_domain/reservation';
-import { Button } from '@/components/Button';
-import FixedButtonContainer from '@/components/FixedButtonContainer';
+import { Button } from '@/shared/ui/button/Button';
+import FixedButtonContainer from '@/shared/ui/button/FixedButtonContainer';
 import { useLayout } from '@/stores/LayoutContext';
-import { useOverlay } from '@/stores/ModalContext';
-import { ReservationType } from '@/types/Reservation';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
+import { ReservationType } from '@/entities/reservation/model/Reservation';
 import { Skeleton } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import { useEffect, useMemo, useState } from 'react';

@@ -1,4 +1,4 @@
-import { Coordinate } from '@/types/Coordinate';
+import { Coordinate } from '@/shared/types/Coordinate';
 import { create } from 'zustand';
 
 interface BranchLocationSelect {

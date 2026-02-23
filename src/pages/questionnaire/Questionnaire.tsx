@@ -1,4 +1,4 @@
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { useQuestionnaire } from '@/hooks/useQuestionnaire';
 import { Question, QuestionFieldName, QuestionnaireType } from '@/types/Questionnaire';
 import { useEffect } from 'react';

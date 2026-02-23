@@ -3,7 +3,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { GET_UNREAD_COUNT } from '../constants';
 import { ApiResponse, CustomUseQueryOptions } from '../types';
 import { handleError } from '../utils';
-import { authApi } from './instance';
+import { authApi } from '@/shared/api/instance';
 
 const BASE_URL = `/notifications`;
 

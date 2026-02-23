@@ -1,5 +1,5 @@
 import { RouteObject } from 'react-router-dom';
-import { lazyWithRetry } from '@/_shared/utils/lazyWithRetry';
+import { lazyWithRetry } from '@/shared/lib/utils/lazyWithRetry';
 
 const Home = lazyWithRetry(() => import('../_shared/router/home/HomePage'));
 const Login = lazyWithRetry(() => import('./login/Login'));
@@ -8,7 +8,6 @@ const Membership = lazyWithRetry(() => import('./membership/Membership'));
 const MembershipBranchSelectPage = lazyWithRetry(() => import('./membership/MembershipBranchSelectPage'));
 const MyPage = lazyWithRetry(() => import('./myPage/MyPage'));
 const Logout = lazyWithRetry(() => import('./logout/Logout'));
-const Dev = lazyWithRetry(() => import('./DevPage'));
 const Notification = lazyWithRetry(() => import('./home/Notification'));
 const MembershipDetailPage = lazyWithRetry(() => import('./membership/MembershipDetailPage'));
 const EmailLogin = lazyWithRetry(() => import('./login/EmailLogin'));
@@ -150,7 +149,6 @@ const authRoutes: CustomRouteObject[] = [
  * 로그인 여부 미검증 페이지
  */
 const noAuthRoutes: CustomRouteObject[] = [
-  { path: '/dev', element: <Dev />, noAuth: true, isDev: true },
   { path: '/login', element: <Login />, noAuth: true },
   { path: '/login/email', element: <EmailLogin />, noAuth: true },
   { path: '/logout', element: <Logout />, noAuth: true },

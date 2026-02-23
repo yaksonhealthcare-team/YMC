@@ -1,4 +1,4 @@
-import { ServiceCategory } from '@/types/Membership';
+import { ServiceCategory } from '@/entities/membership/model/Membership';
 import { useEffect, useState } from 'react';
 
 const CareProgramTabItem = ({

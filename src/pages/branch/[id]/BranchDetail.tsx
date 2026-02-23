@@ -1,9 +1,9 @@
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
 import { useLayout } from '@/stores/LayoutContext';
-import { useOverlay } from '@/stores/ModalContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
 import { useGeolocation } from '@/hooks/useGeolocation';
-import { useBranch, useBranchBookmarkMutation, useBranchUnbookmarkMutation } from '@/queries/useBranchQueries';
-import { useUserMemberships } from '@/queries/useMembershipQueries';
+import { useBranch, useBranchBookmarkMutation, useBranchUnbookmarkMutation } from '@/entities/branch/api/useBranchQueries';
+import { useUserMemberships } from '@/entities/membership/api/useMembershipQueries';
 import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 

@@ -1,5 +1,5 @@
 import { AdditionalServiceCard } from '@/components/AdditionalServiceCard';
-import { AdditionalManagement } from '@/types/Membership';
+import { AdditionalManagement } from '@/entities/membership/model/Membership';
 
 interface AdditionalManagementSectionProps {
   additionalManagements: AdditionalManagement[];

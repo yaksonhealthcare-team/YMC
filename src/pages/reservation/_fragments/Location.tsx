@@ -1,10 +1,10 @@
 import { ReservationDetailSchema } from '@/_domain/reservation';
 import PhoneIcon from '@/assets/icons/PhoneIcon.svg?react';
 import PinIcon from '@/assets/icons/PinIcon.svg?react';
-import MapView from '@/components/MapView';
-import { useOverlay } from '@/stores/ModalContext';
-import { Branch } from '@/types/Branch';
-import { copyToClipboard } from '@/utils/copyUtils';
+import MapView from '@/shared/ui/map-view/MapView';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
+import { Branch } from '@/entities/branch/model/Branch';
+import { copyToClipboard } from '@/shared/lib/utils/copyUtils';
 import { ReactNode } from 'react';
 
 const InfoGroup = ({ icon, children }: { icon: ReactNode; children: ReactNode }) => (

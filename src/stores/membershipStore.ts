@@ -1,4 +1,4 @@
-import { MyMembershipFilterItem, myMembershipFilters } from '@/types/Membership';
+import { MyMembershipFilterItem, myMembershipFilters } from '@/entities/membership/model/Membership';
 import { create } from 'zustand';
 
 interface MembershipStore {

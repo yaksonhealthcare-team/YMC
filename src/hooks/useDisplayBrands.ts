@@ -1,5 +1,5 @@
-import { useBrands } from '@/queries/useBrandQueries';
-import { Brand } from '@/types/Brand';
+import { useBrands } from '@/entities/brand/api/useBrandQueries';
+import { Brand } from '@/entities/brand/model/Brand';
 
 export function useDisplayBrands() {
   const { data: brands, ...rest } = useBrands();

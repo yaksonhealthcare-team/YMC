@@ -1,4 +1,4 @@
-import { Button } from '@/components/Button';
+import { Button } from '@/shared/ui/button/Button';
 import clsx from 'clsx';
 import { ReactNode } from 'react';
 

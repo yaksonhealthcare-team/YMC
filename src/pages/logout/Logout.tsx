@@ -1,6 +1,6 @@
 import { useLogoutMutation, useUserStore } from '@/_domain/auth';
 import { setSentryUser } from '@/_shared';
-import Logo from '@/components/Logo';
+import Logo from '@/shared/ui/layout/Logo';
 import { useLayout } from '@/stores/LayoutContext';
 import { Typography } from '@mui/material';
 import { useCallback, useEffect } from 'react';

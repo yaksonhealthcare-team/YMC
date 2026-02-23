@@ -1,5 +1,5 @@
-import { PaymentItem } from '@/types/Payment';
-import { formatPriceWithUnit } from '@/utils/format';
+import { PaymentItem } from '@/entities/payment/model/Payment';
+import { formatPriceWithUnit } from '@/shared/lib/utils/format';
 
 interface PaymentItemCardProps {
   item: PaymentItem;

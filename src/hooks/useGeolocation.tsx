@@ -1,6 +1,6 @@
 import { DEFAULT_COORDINATE } from '@/_shared';
 import { useGeolocationStore } from '@/stores/geolocationStore';
-import { GeolocationOptions } from '@/types/Coordinate';
+import { GeolocationOptions } from '@/shared/types/Coordinate';
 import { useEffect } from 'react';
 
 const isReactNative = () => window.ReactNativeWebView;

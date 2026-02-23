@@ -1,7 +1,7 @@
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
 import MegaPhoneIcon from '@/assets/icons/MegaPhoneIcon.svg?react';
 import NoticesSummarySlider from '@/components/NoticesSummarySlider';
-import { useNoticesSummary } from '@/queries/useContentQueries';
+import { useNoticesSummary } from '@/entities/content/api/useContentQueries';
 import { useNavigate } from 'react-router-dom';
 
 const MyPageNotice = () => {

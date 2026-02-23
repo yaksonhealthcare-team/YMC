@@ -1,5 +1,5 @@
-import { CustomTabs as Tabs } from '@/components/Tabs';
-import { BranchDetail as BranchDetailType } from '@/types/Branch';
+import { CustomTabs as Tabs } from '@/shared/ui/tabs/Tabs';
+import { BranchDetail as BranchDetailType } from '@/entities/branch/model/Branch';
 import { memo } from 'react';
 import BranchInformation from './BranchInformation';
 import ProgramList from './ProgramList';

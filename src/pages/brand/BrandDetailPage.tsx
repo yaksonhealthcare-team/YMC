@@ -1,8 +1,8 @@
-import { Button } from '@/components/Button';
-import { Image } from '@/components/common/Image';
-import FullPageLoading from '@/components/FullPageLoading';
+import { Button } from '@/shared/ui/button/Button';
+import { Image } from '@/shared/ui/image/Image';
+import FullPageLoading from '@/shared/ui/loading/FullPageLoading';
 import { useLayout } from '@/stores/LayoutContext';
-import { useBrand } from '@/queries/useBrandQueries';
+import { useBrand } from '@/entities/brand/api/useBrandQueries';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
