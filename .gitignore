@@ -33,3 +33,4 @@ dist-ssr
 
 # MCP 로컬 설정 (DB 접속 정보 포함, git 제외)
 .mcp.json
+dbhub.toml
