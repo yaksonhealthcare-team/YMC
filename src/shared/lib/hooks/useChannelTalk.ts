@@ -69,7 +69,8 @@ export const useChannelTalk = (user: ChannelUser | null) => {
             profile: {
               name: user.userName,
               mobileNumber: user.mobileNumber
-            }
+            },
+            hideChannelButtonOnBoot: true
           });
         }
       } catch (error) {

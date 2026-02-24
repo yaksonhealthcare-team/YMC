@@ -203,7 +203,7 @@ const LayoutProvider = ({ children }: LayoutProviderProps) => {
                   color: '#FFFFFF',
                   padding: '2px 4px',
                   borderRadius: '4px',
-                  zIndex: -1
+                  zIndex: 1
                 }}
               >
                 <Typography variant="subtitle2">OPEN</Typography>
