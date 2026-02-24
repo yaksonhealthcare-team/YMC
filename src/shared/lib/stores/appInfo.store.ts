@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react';
 import { create } from 'zustand';
 
 export type AppInfo = {
@@ -18,7 +19,10 @@ type State = {
 
 export const useAppInfoStore = create<State>((set) => ({
   appInfo: null,
-  setAppInfo: (info) => set({ appInfo: info })
+  setAppInfo: (info) => {
+    set({ appInfo: info });
+    Sentry.setTag('app.version', info.appVersion);
+  }
 }));
 
 export const normalizeAppInfo = (data: any): AppInfo | null => {
