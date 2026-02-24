@@ -1,8 +1,8 @@
-import { withdrawal } from '@/apis/auth.api';
-import { Button } from '@/components/Button';
-import { useLayout } from '@/stores/LayoutContext';
-import { useOverlay } from '@/stores/ModalContext';
-import { useWithdrawalGuideMessage } from '@/hooks/useGuideMessages';
+import { withdrawal } from '@/entities/user/api/auth.api';
+import { Button } from '@/shared/ui/button/Button';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
+import { useWithdrawalGuideMessage } from '@/features/reservation/lib/useGuideMessages';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

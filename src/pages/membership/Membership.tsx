@@ -1,16 +1,16 @@
-import { fetchCartCount } from '@/apis/cart.api';
-import { ListResponse } from '@/apis/membership.api';
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/stores/LayoutContext';
-import { useDisplayBrands } from '@/hooks/useDisplayBrands';
-import useIntersection from '@/hooks/useIntersection';
-import { useMembershipCategories, useMembershipList } from '@/queries/useMembershipQueries';
-import { MembershipCategory, MembershipItem } from '@/types/Membership';
+import { fetchCartCount } from '@/entities/cart/api/cart.api';
+import { ListResponse } from '@/entities/membership/api/membership.api';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { useDisplayBrands } from '@/entities/brand/lib/useDisplayBrands';
+import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObserver';
+import { useMembershipCategories, useMembershipList } from '@/entities/membership/api/useMembershipQueries';
+import { MembershipCategory, MembershipItem } from '@/entities/membership/model/Membership';
 import { Tab, Tabs } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { MembershipCard } from './_fragments/MembershipCard';
-import { BRAND_CODE } from '@/_shared';
+import { MembershipCard } from './ui/MembershipCard';
+import { BRAND_CODE } from '@/shared/constants/brands.constants';
 
 const MembershipPage = () => {
   const navigate = useNavigate();
@@ -34,11 +34,10 @@ const MembershipPage = () => {
     isFetchingNextPage
   } = useMembershipList(brandCode, undefined, selectedCategory);
 
-  const { observerTarget } = useIntersection({
-    onIntersect: () => {
-      if (hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
-      }
+  const observerTarget = useRef<HTMLDivElement>(null);
+  useIntersectionObserver(observerTarget, () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
     }
   });
 

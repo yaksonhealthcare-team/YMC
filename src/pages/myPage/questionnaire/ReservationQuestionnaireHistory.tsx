@@ -1,11 +1,11 @@
-import { Button } from '@/components/Button';
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/stores/LayoutContext';
-import { useUserReservationQuestionnaireResult } from '@/queries/useQuestionnaireQueries';
+import { Button } from '@/shared/ui/button/Button';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { useUserReservationQuestionnaireResult } from '@/entities/user/api/useQuestionnaireQueries';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import QuestionnaireFormList from './_fragments/QuestionnaireFormList';
-import QuestionnaireHistoryNotExist from './_fragments/QuestionnaireHistoryNotExist';
+import QuestionnaireFormList from './ui/QuestionnaireFormList';
+import QuestionnaireHistoryNotExist from './ui/QuestionnaireHistoryNotExist';
 
 const ReservationQuestionnaireHistory = () => {
   const { data: questionnaire, isLoading } = useUserReservationQuestionnaireResult();

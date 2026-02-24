@@ -1,18 +1,18 @@
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/stores/LayoutContext';
-import { useOverlay } from '@/stores/ModalContext';
-import { useGeolocation } from '@/hooks/useGeolocation';
-import { useBranch, useBranchBookmarkMutation, useBranchUnbookmarkMutation } from '@/queries/useBranchQueries';
-import { useUserMemberships } from '@/queries/useMembershipQueries';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
+import { useGeolocation } from '@/features/search-branch/lib/useGeolocation';
+import { useBranch, useBranchBookmarkMutation, useBranchUnbookmarkMutation } from '@/entities/branch/api/useBranchQueries';
+import { useUserMemberships } from '@/entities/membership/api/useMembershipQueries';
 import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // const MembershipAvailableBanner = lazy(
-//   () => import("./_fragments/MembershipAvailableBanner.tsx"),
+//   () => import("./ui/MembershipAvailableBanner.tsx"),
 // )
-const BranchHeader = lazy(() => import('./_fragments/BranchHeader'));
-const BranchTabs = lazy(() => import('./_fragments/BranchTabs'));
-const BranchActions = lazy(() => import('./_fragments/BranchActions'));
+const BranchHeader = lazy(() => import('./ui/BranchHeader'));
+const BranchTabs = lazy(() => import('./ui/BranchTabs'));
+const BranchActions = lazy(() => import('./ui/BranchActions'));
 
 type BranchDetailTab = 'programs' | 'information';
 /*

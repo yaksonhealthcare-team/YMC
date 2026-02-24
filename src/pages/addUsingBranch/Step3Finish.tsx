@@ -1,4 +1,4 @@
-import BranchIcon from '@/components/icons/BranchIcon';
+import BranchIcon from '@/shared/ui/icons/BranchIcon';
 
 const Step3Finish = () => {
   return (

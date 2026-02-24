@@ -1,14 +1,12 @@
-import { useUserStore } from '@/_domain';
-import {
-  convertMembershipForCard,
-  MembershipCard,
-  MembershipCardProps,
-  useGetUserMembershipDetail
-} from '@/_domain/membership';
-import { Loading } from '@/_shared';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { convertMembershipForCard } from '@/features/membership-purchase/lib/membership.business';
+import { useGetUserMembershipDetail } from '@/features/membership-purchase/lib/membership.services';
+import { MembershipCard } from '@/widgets/membership-card/ui/MembershipCard';
+import { MembershipCardProps } from '@/widgets/membership-card/ui/MembershipCard.types';
+import { Loading } from '@/shared/ui/loading/Loading';
 import CaretRightIcon from '@/assets/icons/CaretRightIcon.svg?react';
-import DateAndTime from '@/components/DateAndTime';
-import { useLayout } from '@/stores/LayoutContext';
+import DateAndTime from '@/shared/ui/DateAndTime';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 

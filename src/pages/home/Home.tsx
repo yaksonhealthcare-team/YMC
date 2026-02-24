@@ -1,26 +1,27 @@
-import { useUserStore } from '@/_domain/auth';
-import { convertMembershipForCard, useGetUserMemberships } from '@/_domain/membership';
-import '@/assets/css/swiper-custom.css';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { convertMembershipForCard } from '@/features/membership-purchase/lib/membership.business';
+import { useGetUserMemberships } from '@/features/membership-purchase/lib/membership.services';
+import '@/app/styles/swiper-custom.css';
 import NotiIcon from '@/assets/icons/NotiIcon.svg?react';
-import { FloatingButton } from '@/components/FloatingButton';
-import Logo from '@/components/Logo';
-import NoticesSummarySlider from '@/components/NoticesSummarySlider';
-import { useBanner } from '@/queries/useBannerQueries';
-import { useUnreadNotificationsCount } from '@/queries/useNotificationQueries';
-import { useLayout } from '@/stores/LayoutContext';
-import { BannerRequestType } from '@/types/Banner';
+import { FloatingButton } from '@/shared/ui/button/FloatingButton';
+import Logo from '@/shared/ui/layout/Logo';
+import NoticesSummarySlider from '@/widgets/notices-slider/ui/NoticesSummarySlider';
+import { useBanner } from '@/entities/banner/api/useBannerQueries';
+import { useUnreadNotificationsCount } from '@/entities/notification/api/useNotificationQueries';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { BannerRequestType } from '@/entities/banner/model/Banner';
 import { Container, Typography } from '@mui/material';
 import { lazy, Suspense, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import DynamicHomeHeaderBackground from './_fragments/DynamicHomeHeaderBackground';
-import { MembershipCardSection } from './_fragments/MembershipCardSection';
-import ReserveCardSection from './_fragments/ReserveCardSection';
+import DynamicHomeHeaderBackground from './ui/DynamicHomeHeaderBackground';
+import { MembershipCardSection } from './ui/MembershipCardSection';
+import ReserveCardSection from './ui/ReserveCardSection';
 
 // 단일 코드 청크로 그룹화하여 불필요한 네트워크 요청 줄이기
 const SecondaryContentChunk = lazy(
-  () => import(/* webpackChunkName: "home-secondary" */ './_fragments/SecondaryContentChunk')
+  () => import(/* webpackChunkName: "home-secondary" */ './ui/SecondaryContentChunk')
 );
 
 const Home = () => {

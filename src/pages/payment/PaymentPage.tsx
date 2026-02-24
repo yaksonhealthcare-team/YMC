@@ -1,20 +1,20 @@
-import { fetchPoints } from '@/apis/points.api';
-import { Button } from '@/components/Button';
-import FixedButtonContainer from '@/components/FixedButtonContainer';
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/stores/LayoutContext';
-import { usePayment } from '@/hooks/usePayment';
-import { usePaymentHandlers } from '@/hooks/usePaymentHandlers';
-import { usePaymentStore } from '@/hooks/usePaymentStore';
-import { formatPriceWithUnit } from '@/utils/format';
+import { fetchPoints } from '@/entities/point/api/points.api';
+import { Button } from '@/shared/ui/button/Button';
+import FixedButtonContainer from '@/shared/ui/button/FixedButtonContainer';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { usePayment } from '@/features/payment/lib/usePayment';
+import { usePaymentHandlers } from '@/features/payment/lib/usePaymentHandlers';
+import { usePaymentStore } from '@/features/payment/lib/usePaymentStore';
+import { formatPriceWithUnit } from '@/shared/lib/utils/format';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PaymentAgreementSection from './_fragments/PaymentAgreementSection';
-import PaymentMethodSection from './_fragments/PaymentMethodSection';
-import PaymentPointSection from './_fragments/PaymentPointSection';
-import PaymentProductSection from './_fragments/PaymentProductSection';
-import PaymentSummarySection from './_fragments/PaymentSummarySection';
+import PaymentAgreementSection from './ui/PaymentAgreementSection';
+import PaymentMethodSection from './ui/PaymentMethodSection';
+import PaymentPointSection from './ui/PaymentPointSection';
+import PaymentProductSection from './ui/PaymentProductSection';
+import PaymentSummarySection from './ui/PaymentSummarySection';
 
 const PaymentPage = () => {
   const navigate = useNavigate();

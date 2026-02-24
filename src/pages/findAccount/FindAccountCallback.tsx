@@ -1,6 +1,6 @@
-import { findEmailWithDecryptData } from '@/apis/decrypt-result.api';
-import { useOverlay } from '@/stores/ModalContext';
-import { useNiceAuthCallback } from '@/utils/niceAuth';
+import { findEmailWithDecryptData } from '@/shared/api/decrypt-result.api';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
+import { useNiceAuthCallback } from '@/shared/lib/utils/niceAuth';
 import { useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 

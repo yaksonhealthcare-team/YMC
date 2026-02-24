@@ -1,7 +1,7 @@
-import { fetchEncryptDataForNice } from '@/apis/pass.api';
-import { Button } from '@/components/Button';
-import { useLayout } from '@/stores/LayoutContext';
-import { checkByNice } from '@/utils/niceCheck';
+import { fetchEncryptDataForNice } from '@/entities/user/api/pass.api';
+import { Button } from '@/shared/ui/button/Button';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { checkByNice } from '@/shared/lib/utils/niceCheck';
 import { useEffect } from 'react';
 
 const ProfileChangePhoneNumber = () => {

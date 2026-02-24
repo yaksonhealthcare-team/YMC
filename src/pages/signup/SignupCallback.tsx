@@ -1,8 +1,8 @@
-import { useOverlay } from '@/stores/ModalContext';
-import { useSignup } from '@/stores/SignupContext';
-import { useProfileSetupSubmit } from '@/hooks/useProfileSetupSubmit';
-import { Gender } from '@/utils/gender';
-import { useNiceAuthCallback } from '@/utils/niceAuth';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
+import { useSignup } from '@/features/auth/model/SignupContext';
+import { useProfileSetupSubmit } from '@/features/auth/lib/useProfileSetupSubmit';
+import { Gender } from '@/shared/lib/utils/gender';
+import { useNiceAuthCallback } from '@/shared/lib/utils/niceAuth';
 import { CircularProgress } from '@mui/material';
 import { useCallback, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';

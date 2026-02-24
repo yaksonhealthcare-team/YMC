@@ -1,17 +1,18 @@
-import { useUserStore } from '@/_domain/auth';
-import { useGetReservations } from '@/_domain/reservation';
-import { Loading, useIntersectionObserver } from '@/_shared';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { useGetReservations } from '@/features/reservation/lib/reservation.services';
+import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObserver';
+import { Loading } from '@/shared/ui/loading/Loading';
 import ReservationIcon from '@/assets/icons/ReservationIcon.svg?react';
-import { Button } from '@/components/Button';
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { ReserveCard } from '@/components/ReserveCard';
-import { useLayout } from '@/stores/LayoutContext';
-import { useReservationStore } from '@/stores/reservationStore';
-import { FilterItem, reservationFilters, ReservationStatusCode } from '@/types/Reservation';
+import { Button } from '@/shared/ui/button/Button';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
+import { ReserveCard } from '@/entities/reservation/ui/ReserveCard';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { useReservationStore } from '@/features/reservation/model/reservationStore';
+import { FilterItem, reservationFilters, ReservationStatusCode } from '@/entities/reservation/model/Reservation';
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MainTabs from '../_fragments/MainTabs';
+import MainTabs from '../ui/MainTabs';
 
 const ReservationContent = ({ filterId }: { filterId: ReservationStatusCode }) => {
   const { user } = useUserStore();

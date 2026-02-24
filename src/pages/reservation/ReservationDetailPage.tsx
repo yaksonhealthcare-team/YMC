@@ -1,17 +1,17 @@
-import { useUserStore } from '@/_domain/auth';
-import { useGetReservationDetail } from '@/_domain/reservation';
-import { Button } from '@/components/Button';
-import FixedButtonContainer from '@/components/FixedButtonContainer';
-import { useLayout } from '@/stores/LayoutContext';
-import { useOverlay } from '@/stores/ModalContext';
-import { ReservationType } from '@/types/Reservation';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { useGetReservationDetail } from '@/features/reservation/lib/reservation.services';
+import { Button } from '@/shared/ui/button/Button';
+import FixedButtonContainer from '@/shared/ui/button/FixedButtonContainer';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { useOverlay } from '@/shared/ui/modal/ModalContext';
+import { ReservationType } from '@/entities/reservation/model/Reservation';
 import { Skeleton } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Location from './_fragments/Location';
-import MembershipUsage from './_fragments/MembershipUsage';
-import ReservationSummary from './_fragments/ReservationSummary';
+import Location from './ui/Location';
+import MembershipUsage from './ui/MembershipUsage';
+import ReservationSummary from './ui/ReservationSummary';
 
 const ReservationDetailPage = () => {
   const { id = '' } = useParams<{ id: string }>();

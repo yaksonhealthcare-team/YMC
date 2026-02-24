@@ -1,7 +1,7 @@
 import ReceiptEditIcon from '@/assets/icons/ReceiptEditIcon.svg?react';
-import { Button } from '@/components/Button';
-import FixedButtonContainer from '@/components/FixedButtonContainer';
-import { useLayout } from '@/stores/LayoutContext';
+import { Button } from '@/shared/ui/button/Button';
+import FixedButtonContainer from '@/shared/ui/button/FixedButtonContainer';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 

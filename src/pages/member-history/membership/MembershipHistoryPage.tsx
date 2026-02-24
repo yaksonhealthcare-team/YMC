@@ -1,19 +1,18 @@
-import { useUserStore } from '@/_domain/auth';
-import {
-  convertMembershipForCard,
-  MembershipCard,
-  MembershipStatusType,
-  useGetUserMemberships
-} from '@/_domain/membership';
-import { Loading, useIntersectionObserver } from '@/_shared';
-import { Button } from '@/components/Button';
-import { useLayout } from '@/stores/LayoutContext';
-import { useMembershipStore } from '@/stores/membershipStore';
-import { MyMembershipFilterItem, myMembershipFilters } from '@/types/Membership';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { convertMembershipForCard } from '@/features/membership-purchase/lib/membership.business';
+import { useGetUserMemberships } from '@/features/membership-purchase/lib/membership.services';
+import { MembershipStatusType } from '@/entities/membership/model/membership.types';
+import { MembershipCard } from '@/widgets/membership-card/ui/MembershipCard';
+import { useIntersectionObserver } from '@/shared/lib/hooks/useIntersectionObserver';
+import { Loading } from '@/shared/ui/loading/Loading';
+import { Button } from '@/shared/ui/button/Button';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { useMembershipStore } from '@/features/membership-purchase/model/membershipStore';
+import { MyMembershipFilterItem, myMembershipFilters } from '@/entities/membership/model/Membership';
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MainTabs from '../_fragments/MainTabs';
+import MainTabs from '../ui/MainTabs';
 
 const MembershipContent = ({ filterId }: { filterId: string }) => {
   const { getUserId } = useUserStore();

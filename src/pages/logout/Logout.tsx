@@ -1,7 +1,8 @@
-import { useLogoutMutation, useUserStore } from '@/_domain/auth';
-import { setSentryUser } from '@/_shared';
-import Logo from '@/components/Logo';
-import { useLayout } from '@/stores/LayoutContext';
+import { useLogoutMutation } from '@/features/auth/lib/auth.services';
+import { useUserStore } from '@/features/auth/model/user.store';
+import { setSentryUser } from '@/shared/lib/utils/sentry.utils';
+import Logo from '@/shared/ui/layout/Logo';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
 import { Typography } from '@mui/material';
 import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';

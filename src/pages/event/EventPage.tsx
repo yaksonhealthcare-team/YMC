@@ -1,10 +1,10 @@
-import { Image } from '@/components/common/Image';
-import { EmptyCard } from '@/components/EmptyCard';
-import Header from '@/components/Header';
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLayout } from '@/stores/LayoutContext';
-import { useEvents } from '@/queries/useEventQueries';
-import { Event, Tab } from '@/types/Event';
+import { Image } from '@/shared/ui/image/Image';
+import { EmptyCard } from '@/shared/ui/EmptyCard';
+import Header from '@/shared/ui/layout/Header';
+import LoadingIndicator from '@/shared/ui/loading/LoadingIndicator';
+import { useLayout } from '@/widgets/layout/model/LayoutContext';
+import { useEvents } from '@/entities/content/api/useEventQueries';
+import { Event, Tab } from '@/entities/content/model/Event';
 import clsx from 'clsx';
 import { useLayoutEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
