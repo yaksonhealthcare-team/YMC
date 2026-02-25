@@ -5,16 +5,24 @@ const CHANNEL_TALK_VISIBLE_PATHS = ['/mypage', '/store'];
 
 export const useChannelTalkVisibility = () => {
   const { pathname } = useLocation();
-  const [booted, setBooted] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const handleBooted = () => setBooted(true);
-    window.addEventListener('channeltalk:booted', handleBooted);
-    return () => window.removeEventListener('channeltalk:booted', handleBooted);
-  }, []);
+    if (ready) return;
+
+    const check = () => {
+      if (window.ChannelIOInitialized && window.ChannelIO) {
+        setReady(true);
+      }
+    };
+
+    check();
+    const id = setInterval(check, 500);
+    return () => clearInterval(id);
+  }, [ready]);
 
   useEffect(() => {
-    if (!booted || !window.ChannelIO) return;
+    if (!ready || !window.ChannelIO) return;
 
     const shouldShow = CHANNEL_TALK_VISIBLE_PATHS.some((p) => pathname.startsWith(p));
 
@@ -24,7 +32,7 @@ export const useChannelTalkVisibility = () => {
       window.ChannelIO('hideChannelButton');
       window.ChannelIO('hideMessenger');
     }
-  }, [pathname, booted]);
+  }, [pathname, ready]);
 
   return null;
 };
