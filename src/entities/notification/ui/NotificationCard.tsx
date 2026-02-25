@@ -61,9 +61,7 @@ export const NotificationCard = ({ notification, onClick, className }: Notificat
         </span>
       </div>
 
-      <span className={STYLES.store.base}>{notification.title}</span>
-
-      <span className={STYLES.content.base}>{notification.content}</span>
+      <span className={STYLES.store.base}>{notification.content}</span>
 
       {notification.message && <span className={STYLES.message.base}>{notification.message}</span>}
 
