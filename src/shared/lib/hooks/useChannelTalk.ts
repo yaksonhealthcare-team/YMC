@@ -8,6 +8,7 @@ type ChannelUser = {
 };
 
 const CHANNEL_PLUGIN_KEY = import.meta.env.VITE_CHANNEL_PLUGIN_KEY;
+const CHANNEL_TALK_VISIBLE_PATHS = ['/mypage', '/store'];
 
 let channelLoadPromise: Promise<void> | null = null;
 
@@ -71,6 +72,12 @@ export const useChannelTalk = (user: ChannelUser | null) => {
               mobileNumber: user.mobileNumber
             },
             hideChannelButtonOnBoot: true
+          }, () => {
+            // boot 완료 시 현재 경로에 따라 즉시 버튼 표시
+            const shouldShow = CHANNEL_TALK_VISIBLE_PATHS.some((p) => window.location.pathname.startsWith(p));
+            if (shouldShow) {
+              window.ChannelIO?.('showChannelButton');
+            }
           });
         }
       } catch (error) {
