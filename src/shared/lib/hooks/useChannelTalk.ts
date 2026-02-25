@@ -71,6 +71,8 @@ export const useChannelTalk = (user: ChannelUser | null) => {
               mobileNumber: user.mobileNumber
             },
             hideChannelButtonOnBoot: true
+          }, () => {
+            window.dispatchEvent(new Event('channeltalk:booted'));
           });
         }
       } catch (error) {
