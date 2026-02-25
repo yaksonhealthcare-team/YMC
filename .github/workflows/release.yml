@@ -3,6 +3,11 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
+      notice:
+        description: "⚠️ 브랜치 선택은 main으로 해주세요"
+        required: false
+        type: string
+        default: "이 값은 사용되지 않습니다"
       version:
         description: "릴리즈 버전 (X.X.X)"
         required: true
@@ -26,9 +31,16 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: release 브랜치 생성 및 푸시
+      - name: release 브랜치 생성
+        run: git checkout -b release/v${{ github.event.inputs.version }}
+
+      - name: package.json 버전 업데이트
+        run: npm version ${{ github.event.inputs.version }} --no-git-tag-version
+
+      - name: 커밋 및 푸시
         run: |
-          git checkout -b release/v${{ github.event.inputs.version }}
+          git add package.json
+          git commit -m "CHORE: release v${{ github.event.inputs.version }}"
           git push origin release/v${{ github.event.inputs.version }}
 
       - name: main PR 생성

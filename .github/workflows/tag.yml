@@ -48,7 +48,7 @@ jobs:
           git fetch origin develop
           git checkout develop
 
-          sed -i "s/default: \".*\"/default: \"${{ steps.version.outputs.version }}\"/" .github/workflows/release.yml
+          sed -i '/릴리즈 버전/,/default:/s/default: \".*\"/default: \"${{ steps.version.outputs.version }}\"/' .github/workflows/release.yml
 
           if git diff --quiet; then
             echo "변경 없음, 스킵"
