@@ -41,3 +41,21 @@ jobs:
           fi
         env:
           GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+
+      - name: release.yml default 버전 갱신
+        if: steps.version.outputs.changed == 'true'
+        run: |
+          git fetch origin develop
+          git checkout develop
+
+          sed -i '/릴리즈 버전/,/default:/s/default: \".*\"/default: \"${{ steps.version.outputs.version }}\"/' .github/workflows/release.yml
+
+          if git diff --quiet; then
+            echo "변경 없음, 스킵"
+          else
+            git add .github/workflows/release.yml
+            git commit -m "CHORE: release.yml default 버전 ${{ steps.version.outputs.version }}으로 갱신"
+            git push origin develop
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
