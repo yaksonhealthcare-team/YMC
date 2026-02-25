@@ -25,7 +25,7 @@ describe('useChannelTalkVisibility', () => {
     vi.resetModules();
   });
 
-  it('ChannelIO 초기화 전에는 show/hide를 호출하지 않는다', async () => {
+  it('초기화 전에는 show/hide를 호출하지 않는다', async () => {
     const { useChannelTalkVisibility } = await import('./useChannelTalkVisibility');
 
     renderHook(() => useChannelTalkVisibility(), {
@@ -33,19 +33,31 @@ describe('useChannelTalkVisibility', () => {
     });
 
     expect(mockChannelIO).not.toHaveBeenCalledWith('showChannelButton');
-    expect(mockChannelIO).not.toHaveBeenCalledWith('hideChannelButton');
   });
 
-  it('ChannelIO 초기화 후 /store에서 showChannelButton을 호출한다', async () => {
+  it('boot 콜백 이벤트로 /store에서 showChannelButton을 호출한다', async () => {
     const { useChannelTalkVisibility } = await import('./useChannelTalkVisibility');
 
     renderHook(() => useChannelTalkVisibility(), {
       wrapper: createWrapper('/store')
     });
 
-    expect(mockChannelIO).not.toHaveBeenCalledWith('showChannelButton');
+    // boot 콜백 이벤트 발생
+    act(() => {
+      window.dispatchEvent(new Event('channeltalk:booted'));
+    });
 
-    // ChannelIO 초기화 시뮬레이션
+    expect(mockChannelIO).toHaveBeenCalledWith('showChannelButton');
+  });
+
+  it('polling fallback으로 /store에서 showChannelButton을 호출한다', async () => {
+    const { useChannelTalkVisibility } = await import('./useChannelTalkVisibility');
+
+    renderHook(() => useChannelTalkVisibility(), {
+      wrapper: createWrapper('/store')
+    });
+
+    // 이벤트 없이 ChannelIOInitialized만 설정
     window.ChannelIOInitialized = true;
 
     act(() => {
@@ -55,74 +67,51 @@ describe('useChannelTalkVisibility', () => {
     expect(mockChannelIO).toHaveBeenCalledWith('showChannelButton');
   });
 
-  it('ChannelIO 초기화 후 /mypage에서 showChannelButton을 호출한다', async () => {
+  it('boot 후 2초 뒤 재시도가 실행된다', async () => {
     const { useChannelTalkVisibility } = await import('./useChannelTalkVisibility');
 
     renderHook(() => useChannelTalkVisibility(), {
-      wrapper: createWrapper('/mypage')
+      wrapper: createWrapper('/store')
     });
 
-    window.ChannelIOInitialized = true;
-
     act(() => {
-      vi.advanceTimersByTime(500);
+      window.dispatchEvent(new Event('channeltalk:booted'));
+    });
+
+    mockChannelIO.mockClear();
+
+    // 2초 후 재시도
+    act(() => {
+      vi.advanceTimersByTime(2000);
     });
 
     expect(mockChannelIO).toHaveBeenCalledWith('showChannelButton');
   });
 
-  it('ChannelIO 초기화 후 /home에서 hideChannelButton을 호출한다', async () => {
+  it('/home에서 hideChannelButton을 호출한다', async () => {
     const { useChannelTalkVisibility } = await import('./useChannelTalkVisibility');
 
     renderHook(() => useChannelTalkVisibility(), {
       wrapper: createWrapper('/home')
     });
 
-    window.ChannelIOInitialized = true;
-
     act(() => {
-      vi.advanceTimersByTime(500);
+      window.dispatchEvent(new Event('channeltalk:booted'));
     });
 
     expect(mockChannelIO).toHaveBeenCalledWith('hideChannelButton');
     expect(mockChannelIO).toHaveBeenCalledWith('hideMessenger');
   });
 
-  it('초기화 감지 후 polling이 중단된다', async () => {
+  it('/mypage에서 showChannelButton을 호출한다', async () => {
     const { useChannelTalkVisibility } = await import('./useChannelTalkVisibility');
 
     renderHook(() => useChannelTalkVisibility(), {
-      wrapper: createWrapper('/store')
+      wrapper: createWrapper('/mypage')
     });
-
-    window.ChannelIOInitialized = true;
 
     act(() => {
-      vi.advanceTimersByTime(500);
-    });
-
-    mockChannelIO.mockClear();
-
-    // 추가 polling 시간이 지나도 다시 호출되지 않음
-    act(() => {
-      vi.advanceTimersByTime(2000);
-    });
-
-    expect(mockChannelIO).not.toHaveBeenCalledWith('showChannelButton');
-  });
-
-  it('이미 초기화된 상태에서 마운트되면 즉시 동작한다', async () => {
-    window.ChannelIOInitialized = true;
-
-    const { useChannelTalkVisibility } = await import('./useChannelTalkVisibility');
-
-    renderHook(() => useChannelTalkVisibility(), {
-      wrapper: createWrapper('/store')
-    });
-
-    // polling 없이 즉시 체크
-    act(() => {
-      vi.advanceTimersByTime(0);
+      window.dispatchEvent(new Event('channeltalk:booted'));
     });
 
     expect(mockChannelIO).toHaveBeenCalledWith('showChannelButton');
