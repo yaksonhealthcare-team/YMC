@@ -14,7 +14,7 @@ import { Loading } from '@/shared/ui/loading/Loading';
 import { initGA } from '@/shared/lib/utils/ga.utils';
 import { initSentry } from '@/shared/lib/utils/sentry.utils';
 import ErrorBoundary from '@/shared/ui/error/ErrorBoundary';
-import { Inspector, gotoVSCode } from 'react-dev-inspector';
+import { Inspector } from 'react-dev-inspector';
 
 dayjs.extend(customParseFormat);
 dayjs.locale('ko');
