@@ -14,6 +14,7 @@ import { Loading } from '@/shared/ui/loading/Loading';
 import { initGA } from '@/shared/lib/utils/ga.utils';
 import { initSentry } from '@/shared/lib/utils/sentry.utils';
 import ErrorBoundary from '@/shared/ui/error/ErrorBoundary';
+import { Inspector, gotoVSCode } from 'react-dev-inspector';
 
 dayjs.extend(customParseFormat);
 dayjs.locale('ko');
@@ -72,6 +73,15 @@ const App = () => {
 
   return (
     <ErrorBoundary>
+      <Inspector
+        keys={['option', 'c']}
+        onInspectElement={({ codeInfo }) => {
+          if (!codeInfo?.absolutePath) return;
+          const { absolutePath, lineNumber, columnNumber } = codeInfo;
+          const url = `cursor://file/${absolutePath}:${lineNumber}:${columnNumber}`;
+          window.open(url, '_self');
+        }}
+      />
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
