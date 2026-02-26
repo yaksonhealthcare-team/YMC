@@ -1,5 +1,6 @@
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import react from '@vitejs/plugin-react-swc';
+import { inspectorServer } from '@react-dev-inspector/vite-plugin';
 import autoprefixer from 'autoprefixer';
 import path from 'path';
 import tailwindcss from 'tailwindcss';
@@ -19,6 +20,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    inspectorServer(),
     tsconfigPaths(),
     svgr(),
     sentryVitePlugin({
