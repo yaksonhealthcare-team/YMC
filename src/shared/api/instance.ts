@@ -4,6 +4,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { replace } from 'react-router-dom';
 import { ERROR_CODES } from '@/shared/constants/error.constants';
 import { ListResponse } from '@/shared/types/response.types';
+import { captureSentryError } from '@/shared/lib/utils/sentry.utils';
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -70,8 +71,26 @@ authApi.interceptors.response.use(
     return response;
   },
   async (error: AxiosError<ListResponse<[]>>) => {
-    return Promise.reject(
-      new AxiosError('네트워크 에러', undefined, error.config, error.response?.request, error.response)
+    const networkError = new AxiosError(
+      '네트워크 에러',
+      error.code,
+      error.config,
+      error.response?.request,
+      error.response
     );
+
+    captureSentryError(networkError, {
+      tags: {
+        feature: 'api',
+        source: 'authApi_interceptor',
+        status: String(error.response?.status ?? 'unknown')
+      },
+      context: {
+        url: error.config?.url,
+        method: error.config?.method
+      }
+    });
+
+    return Promise.reject(networkError);
   }
 );
